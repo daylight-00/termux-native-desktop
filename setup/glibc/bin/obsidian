@@ -1,0 +1,17 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# Obsidian CLI — glibc environment wrapper
+set -u -o pipefail
+
+source "$HOME/gl/env"
+
+CLI="$HOME/.local/bin/obsidian"
+
+if [ ! -x "$CLI" ]; then
+    echo "Obsidian CLI is not registered: $CLI" >&2
+    echo "Enable Command line interface in Obsidian Settings > General." >&2
+    exit 127
+fi
+
+exec env LD_PRELOAD= \
+    "$CLI" \
+    "$@"

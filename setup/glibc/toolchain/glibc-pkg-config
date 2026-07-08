@@ -1,0 +1,9 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# Resolve dependencies from the glibc prefix ONLY (never bionic .pc files).
+unset LD_LIBRARY_PATH
+unset LD_PRELOAD
+G=/data/data/com.termux/files/usr/glibc
+export PKG_CONFIG_LIBDIR="$G/lib/pkgconfig:$G/share/pkgconfig:$G/lib/aarch64-linux-gnu/pkgconfig"
+export PKG_CONFIG_PATH=
+export PKG_CONFIG_SYSROOT_DIR=
+exec pkg-config "$@"

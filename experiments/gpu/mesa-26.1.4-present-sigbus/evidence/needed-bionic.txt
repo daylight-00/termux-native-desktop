@@ -1,0 +1,46 @@
+Dynamic section at offset 0xdf9d40 contains 44 entries:
+  Tag                Type           Name/Value
+  0x000000000000001d (RUNPATH)      Library runpath: [/data/data/com.termux/files/usr/bin/../../usr/lib]
+  0x0000000000000001 (NEEDED)       Shared library: [libandroid-shmem.so]
+  0x0000000000000001 (NEEDED)       Shared library: [libm.so]
+  0x0000000000000001 (NEEDED)       Shared library: [libz.so.1]
+  0x0000000000000001 (NEEDED)       Shared library: [libzstd.so.1]
+  0x0000000000000001 (NEEDED)       Shared library: [libdrm.so]
+  0x0000000000000001 (NEEDED)       Shared library: [libxcb-dri3.so]
+  0x0000000000000001 (NEEDED)       Shared library: [libwayland-client.so]
+  0x0000000000000001 (NEEDED)       Shared library: [libxcb.so]
+  0x0000000000000001 (NEEDED)       Shared library: [libX11-xcb.so]
+  0x0000000000000001 (NEEDED)       Shared library: [libxcb-present.so]
+  0x0000000000000001 (NEEDED)       Shared library: [libxcb-xfixes.so]
+  0x0000000000000001 (NEEDED)       Shared library: [libxcb-sync.so]
+  0x0000000000000001 (NEEDED)       Shared library: [libxcb-randr.so]
+  0x0000000000000001 (NEEDED)       Shared library: [libxcb-shm.so]
+  0x0000000000000001 (NEEDED)       Shared library: [libxshmfence.so]
+  0x0000000000000001 (NEEDED)       Shared library: [libdisplay-info.so]
+  0x0000000000000001 (NEEDED)       Shared library: [libc++_shared.so]
+  0x0000000000000001 (NEEDED)       Shared library: [libdl.so]
+  0x0000000000000001 (NEEDED)       Shared library: [libc.so]
+  0x000000000000000e (SONAME)       Library soname: [libvulkan_freedreno.so]
+  0x000000000000001e (FLAGS)        SYMBOLIC BIND_NOW 
+  0x000000006ffffffb (FLAGS_1)      NOW 
+  0x0000000000000007 (RELA)         0x3f278
+  0x0000000000000008 (RELASZ)       464304 (bytes)
+  0x0000000000000009 (RELAENT)      24 (bytes)
+  0x000000006ffffff9 (RELACOUNT)    17463
+  0x0000000000000017 (JMPREL)       0xb0828
+  0x0000000000000002 (PLTRELSZ)     11232 (bytes)
+  0x0000000000000003 (PLTGOT)       0xdfea68
+  0x0000000000000014 (PLTREL)       RELA
+  0x0000000000000006 (SYMTAB)       0x2f8
+  0x000000000000000b (SYMENT)       24 (bytes)
+  0x0000000000000005 (STRTAB)       0xf1c0
+  0x000000000000000a (STRSZ)        196789 (bytes)
+  0x000000006ffffef5 (GNU_HASH)     0xf198
+  0x0000000000000019 (INIT_ARRAY)   0xdfdd30
+  0x000000000000001b (INIT_ARRAYSZ) 16 (bytes)
+  0x000000000000001a (FINI_ARRAY)   0xdfdd20
+  0x000000000000001c (FINI_ARRAYSZ) 16 (bytes)
+  0x000000006ffffff0 (VERSYM)       0xded0
+  0x000000006ffffffe (VERNEED)      0xf124
+  0x000000006fffffff (VERNEEDNUM)   3
+  0x0000000000000000 (NULL)         0x0

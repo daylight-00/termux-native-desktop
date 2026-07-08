@@ -1,0 +1,49 @@
+Dynamic section at offset 0xcbf1f8 contains 47 entries:
+  Tag                Type           Name/Value
+  0x0000000000000001 (NEEDED)       Shared library: [libz.so.1]
+  0x0000000000000001 (NEEDED)       Shared library: [libzstd.so.1]
+  0x0000000000000001 (NEEDED)       Shared library: [libdrm.so.2]
+  0x0000000000000001 (NEEDED)       Shared library: [libxcb-dri3.so.0]
+  0x0000000000000001 (NEEDED)       Shared library: [libxcb.so.1]
+  0x0000000000000001 (NEEDED)       Shared library: [libX11-xcb.so.1]
+  0x0000000000000001 (NEEDED)       Shared library: [libxcb-present.so.0]
+  0x0000000000000001 (NEEDED)       Shared library: [libxcb-xfixes.so.0]
+  0x0000000000000001 (NEEDED)       Shared library: [libxcb-sync.so.1]
+  0x0000000000000001 (NEEDED)       Shared library: [libxcb-randr.so.0]
+  0x0000000000000001 (NEEDED)       Shared library: [libxcb-shm.so.0]
+  0x0000000000000001 (NEEDED)       Shared library: [libxshmfence.so.1]
+  0x0000000000000001 (NEEDED)       Shared library: [libexpat.so.1]
+  0x0000000000000001 (NEEDED)       Shared library: [libstdc++.so.6]
+  0x0000000000000001 (NEEDED)       Shared library: [libm.so.6]
+  0x0000000000000001 (NEEDED)       Shared library: [libgcc_s.so.1]
+  0x0000000000000001 (NEEDED)       Shared library: [libc.so.6]
+  0x0000000000000001 (NEEDED)       Shared library: [ld-linux-aarch64.so.1]
+  0x000000000000000e (SONAME)       Library soname: [libvulkan_freedreno.so]
+  0x0000000000000010 (SYMBOLIC)     0x0
+  0x000000000000001d (RUNPATH)      Library runpath: [/data/data/com.termux/files/home/opt/mesa-26-glibc/lib]
+  0x000000000000000c (INIT)         0x98420
+  0x000000000000000d (FINI)         0x413d98
+  0x0000000000000019 (INIT_ARRAY)   0xc42d20
+  0x000000000000001b (INIT_ARRAYSZ) 16 (bytes)
+  0x000000000000001a (FINI_ARRAY)   0xc42d30
+  0x000000000000001c (FINI_ARRAYSZ) 8 (bytes)
+  0x000000006ffffef5 (GNU_HASH)     0x228
+  0x0000000000000005 (STRTAB)       0xc428
+  0x0000000000000006 (SYMTAB)       0x260
+  0x000000000000000a (STRSZ)        175645 (bytes)
+  0x000000000000000b (SYMENT)       24 (bytes)
+  0x0000000000000003 (PLTGOT)       0xcbffe8
+  0x0000000000000002 (PLTRELSZ)     8904 (bytes)
+  0x0000000000000014 (PLTREL)       RELA
+  0x0000000000000017 (JMPREL)       0x96158
+  0x000000006ffffef6 (TLSDESC_PLT)  0x99b60
+  0x000000006ffffef7 (TLSDESC_GOT)  0xcbffe0
+  0x0000000000000007 (RELA)         0x38390
+  0x0000000000000008 (RELASZ)       384456 (bytes)
+  0x0000000000000009 (RELAENT)      24 (bytes)
+  0x000000000000001e (FLAGS)        SYMBOLIC 
+  0x000000006ffffffe (VERNEED)      0x38270
+  0x000000006fffffff (VERNEEDNUM)   5
+  0x000000006ffffff0 (VERSYM)       0x37246
+  0x000000006ffffff9 (RELACOUNT)    14326
+  0x0000000000000000 (NULL)         0x0

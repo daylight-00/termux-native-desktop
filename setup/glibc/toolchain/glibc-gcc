@@ -1,0 +1,12 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# gl toolchain: run Termux-glibc gcc from a bionic shell.
+# Scoped injection: library path is passed to ld.so only; nothing leaks to bionic children.
+unset LD_LIBRARY_PATH
+unset LD_PRELOAD
+PREFIX="${PREFIX:-/data/data/com.termux/files/usr}"
+export PATH="$PREFIX/glibc/bin:$PATH"
+exec "$PREFIX/glibc/lib/ld-linux-aarch64.so.1" \
+  --library-path "$PREFIX/glibc/lib" \
+  "$PREFIX/glibc/bin/gcc" \
+  -B"$PREFIX/glibc/bin/" \
+  "$@"

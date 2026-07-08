@@ -1,0 +1,44 @@
+Dynamic section at offset 0xdaf248 contains 42 entries:
+  Tag                Type           Name/Value
+  0x0000000000000001 (NEEDED)       Shared library: [libz.so.1]
+  0x0000000000000001 (NEEDED)       Shared library: [libzstd.so.1]
+  0x0000000000000001 (NEEDED)       Shared library: [libxcb.so.1]
+  0x0000000000000001 (NEEDED)       Shared library: [libX11-xcb.so.1]
+  0x0000000000000001 (NEEDED)       Shared library: [libxcb-xfixes.so.0]
+  0x0000000000000001 (NEEDED)       Shared library: [libxcb-randr.so.0]
+  0x0000000000000001 (NEEDED)       Shared library: [libxcb-shm.so.0]
+  0x0000000000000001 (NEEDED)       Shared library: [libexpat.so.1]
+  0x0000000000000001 (NEEDED)       Shared library: [libstdc++.so.6]
+  0x0000000000000001 (NEEDED)       Shared library: [libm.so.6]
+  0x0000000000000001 (NEEDED)       Shared library: [libgcc_s.so.1]
+  0x0000000000000001 (NEEDED)       Shared library: [libc.so.6]
+  0x0000000000000001 (NEEDED)       Shared library: [ld-linux-aarch64.so.1]
+  0x000000000000000e (SONAME)       Library soname: [libvulkan_freedreno.so]
+  0x0000000000000010 (SYMBOLIC)     0x0
+  0x000000000000001d (RUNPATH)      Library runpath: [/data/data/com.termux/files/home/gl/opt/mesa-glibc-26.1.4-turnip/lib]
+  0x000000000000000c (INIT)         0x9e5a0
+  0x000000000000000d (FINI)         0x4463d8
+  0x0000000000000019 (INIT_ARRAY)   0xd2b190
+  0x000000000000001b (INIT_ARRAYSZ) 16 (bytes)
+  0x000000000000001a (FINI_ARRAY)   0xd2b1a0
+  0x000000000000001c (FINI_ARRAYSZ) 8 (bytes)
+  0x000000006ffffef5 (GNU_HASH)     0x228
+  0x0000000000000005 (STRTAB)       0xc9f8
+  0x0000000000000006 (SYMTAB)       0x260
+  0x000000000000000a (STRSZ)        189800 (bytes)
+  0x000000000000000b (SYMENT)       24 (bytes)
+  0x0000000000000003 (PLTGOT)       0xdaffe8
+  0x0000000000000002 (PLTRELSZ)     6336 (bytes)
+  0x0000000000000014 (PLTREL)       RELA
+  0x0000000000000017 (JMPREL)       0x9cce0
+  0x000000006ffffef6 (TLSDESC_PLT)  0x9f610
+  0x000000006ffffef7 (TLSDESC_GOT)  0xdaffe0
+  0x0000000000000007 (RELA)         0x3c188
+  0x0000000000000008 (RELASZ)       396120 (bytes)
+  0x0000000000000009 (RELAENT)      24 (bytes)
+  0x000000000000001e (FLAGS)        SYMBOLIC 
+  0x000000006ffffffe (VERNEED)      0x3c008
+  0x000000006fffffff (VERNEEDNUM)   5
+  0x000000006ffffff0 (VERSYM)       0x3af60
+  0x000000006ffffff9 (RELACOUNT)    14643
+  0x0000000000000000 (NULL)         0x0

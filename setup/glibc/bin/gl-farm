@@ -1,0 +1,19 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# rootfs 라이브러리를 팜에 노출 (Debian libc 계열 제외)
+set -eu
+ROOTFS=$PREFIX/var/lib/proot-distro/containers/debian/rootfs
+FARM=$HOME/gl/lib
+DENY='^(libc\.so|libc-|libm\.so|libm-|ld-linux|libpthread|librt\.so|librt-|libdl\.so|libdl-|libresolv|libnss_|libmvec|libanl|libutil\.so|libutil-|libBrokenLocale|libthread_db)'
+rm -rf "$FARM"; mkdir -p "$FARM"
+n=0
+for d in "$ROOTFS/usr/lib/aarch64-linux-gnu" "$ROOTFS/usr/lib" "$ROOTFS/lib/aarch64-linux-gnu"; do
+  [ -d "$d" ] || continue
+  for f in "$d"/*.so*; do
+    [ -e "$f" ] || continue
+    b=$(basename "$f")
+    echo "$b" | grep -qE "$DENY" && continue
+    [ -e "$FARM/$b" ] || { ln -s "$f" "$FARM/$b"; n=$((n+1)); }
+  done
+done
+echo "farm: $n links"
+env LD_PRELOAD= $PREFIX/glibc/bin/ldconfig

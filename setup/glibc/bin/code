@@ -1,0 +1,24 @@
+#!/data/data/com.termux/files/usr/bin/bash
+set -u -o pipefail
+source "$HOME/gl/env"
+export PATH="$HOME/gl/shims:$PATH"
+APP="$HOME/gl/apps/vscode"
+MESA="$HOME/gl/opt/mesa-glibc"
+[ -x "$APP/bin/code" ] || { echo "vscode not found: $APP" >&2; exit 1; }
+
+GPU_FLAGS="--disable-gpu"
+if [ "${GL_GPU:-1}" = "1" ] && [ -r "$MESA/share/vulkan/icd.d/freedreno_icd.aarch64.json" ]; then
+  export VK_ICD_FILENAMES="$MESA/share/vulkan/icd.d/freedreno_icd.aarch64.json"
+  export VK_DRIVER_FILES="$VK_ICD_FILENAMES"
+  GPU_FLAGS="--disable-gpu-sandbox --ignore-gpu-blocklist --enable-features=Vulkan --use-gl=angle --use-angle=vulkan --disable-gpu-vsync"
+fi
+
+export SSL_CERT_FILE="$PREFIX/etc/tls/cert.pem"
+export NODE_EXTRA_CA_CERTS="$SSL_CERT_FILE"
+export GIT_SSL_CAINFO="$SSL_CERT_FILE"
+export CURL_CA_BUNDLE="$SSL_CERT_FILE"
+export REQUESTS_CA_BUNDLE="$SSL_CERT_FILE"
+export SHELL="$PREFIX/bin/bash"
+
+exec env LD_PRELOAD= bash "$APP/bin/code" \
+  --disable-dev-shm-usage --ozone-platform=x11 $GPU_FLAGS "$@"
