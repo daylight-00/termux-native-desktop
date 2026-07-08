@@ -32,7 +32,7 @@ PRoot remains useful as an install-time dependency resolver, library source, and
 
 ## Repository map
 
-- `docs/` — project context, architecture, timeline, and durable decisions.
+- `docs/` — project context, architecture, integrated operational guides, timeline, and durable decisions.
 - `experiments/` — the living workbench. Each experiment keeps a concise canonical `README.md`; session-derived full reports live beside it as `report.md`; raw captures go in `evidence/` when useful.
 - `setup/` — promoted runtime configuration and launch artifacts used by the live device.
 - `scripts/` — repository/deployment helpers.
@@ -46,10 +46,17 @@ question
   -> evidence
   -> working conclusion (STATUS.md)
   -> durable decision (docs/decisions/)
-  -> promoted knowledge or runtime artifact
+  -> integrated guide or promoted runtime artifact
 ```
 
-See [`docs/PROJECT_CONTEXT.md`](docs/PROJECT_CONTEXT.md) for the motivation and scope, [`docs/architecture.md`](docs/architecture.md) for the system model, and [`experiments/README.md`](experiments/README.md) for the experiment index.
+## Documentation guide
+
+- [`docs/PROJECT_CONTEXT.md`](docs/PROJECT_CONTEXT.md) — motivation and scope.
+- [`docs/architecture.md`](docs/architecture.md) — current system model.
+- [`docs/glibc-layer.md`](docs/glibc-layer.md) — glibc layer bootstrap, boundaries, onboarding, traps, maintenance.
+- [`docs/gpu.md`](docs/gpu.md) — Turnip/Zink build and runtime contract plus diagnostic history.
+- [`docs/desktop-session.md`](docs/desktop-session.md) — Termux:X11/XFCE two-world session contract.
+- [`experiments/README.md`](experiments/README.md) — experiment index and provenance contract.
 
 ## Companion project
 

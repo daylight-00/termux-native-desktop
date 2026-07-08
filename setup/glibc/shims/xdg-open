@@ -1,2 +1,5 @@
 #!/data/data/com.termux/files/usr/bin/bash
+# glibc apps -> Android intent (default browser). Requires the Termux app to
+# have "Display over other apps" permission (Android BAL policy) — see
+# docs/desktop-session.md §6.
 exec /data/data/com.termux/files/usr/bin/termux-open "$@"

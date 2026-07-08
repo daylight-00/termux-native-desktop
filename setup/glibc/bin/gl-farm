@@ -1,5 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/bash
-# rootfs 라이브러리를 팜에 노출 (Debian libc 계열 제외)
+# gl-farm — expose Debian rootfs libraries to the glibc layer (~/gl/lib),
+# excluding the Debian libc family (denylist), then refresh the glibc ld cache.
 set -eu
 ROOTFS=$PREFIX/var/lib/proot-distro/containers/debian/rootfs
 FARM=$HOME/gl/lib
@@ -16,4 +17,8 @@ for d in "$ROOTFS/usr/lib/aarch64-linux-gnu" "$ROOTFS/usr/lib" "$ROOTFS/lib/aarc
   done
 done
 echo "farm: $n links"
-env LD_PRELOAD= $PREFIX/glibc/bin/ldconfig
+# contamination check (must print OK)
+ls "$FARM" | grep -qE 'libc\.so|ld-linux|libpthread' \
+  && echo "FAIL: libc contamination in farm!" && exit 1 || echo "denylist: OK"
+# farm refresh = cache refresh, always together
+env LD_PRELOAD= "$PREFIX/glibc/bin/ldconfig"

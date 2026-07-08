@@ -1,0 +1,12 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# gl-run — run a glibc GL (OpenGL) application on Zink -> Turnip.
+#   gl-run glxinfo -B
+#   gl-run <patchelf'd GL app> [args...]
+# Vulkan-native apps don't need this; ~/gl/env alone is enough for them.
+set -u
+source "$HOME/gl/env"
+[ -n "${VK_DRIVER_FILES:-}" ] || {
+  echo "gl-run: no glibc mesa found (~/gl/opt/mesa-glibc). Build it first (build/build-mesa.sh)." >&2
+  exit 1
+}
+exec env LD_PRELOAD= MESA_LOADER_DRIVER_OVERRIDE=zink "$@"

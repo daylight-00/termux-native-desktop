@@ -1,0 +1,174 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# startxfce-x11 — XFCE session on termux-x11 (bionic world, GPU via Zink/Turnip)
+#
+# Usage:
+#   startxfce-x11            start (or restart) the session
+#   startxfce-x11 stop       tear the session down cleanly
+#   KILL_BROWSER=1 startxfce-x11   also kill running chromium on (re)start
+#
+# This script manages the BIONIC side of the desktop (X server, DE, bionic GL).
+# glibc apps launched inside the session get their own environment from
+# ~/gl/env — see docs/desktop-session.md for how the two worlds interact.
+set -u
+
+PREFIX="${PREFIX:-/data/data/com.termux/files/usr}"
+HOME="${HOME:-/data/data/com.termux/files/home}"
+# Guard against `set -u` when launched from contexts without TMPDIR
+# (.desktop files, am/intent). Session convention: TMPDIR-based runtime dir.
+export TMPDIR="${TMPDIR:-$PREFIX/tmp}"
+
+LOGDIR="$HOME/.cache/termux-x11-session"
+PIDDIR="$LOGDIR/pids"
+mkdir -p "$LOGDIR" "$PIDDIR"
+
+DISPLAY_NUM=":1"
+# TCP listening is deliberately OFF (unix socket only). If you ever need it:
+# X11_EXTRA_ARGS="-listen tcp -ac"  — but see docs: local socket is correct
+# since the glibc-repo libxcb fix; TCP was only ever a workaround.
+X11_EXTRA_ARGS=""
+
+# ---------------------------------------------------------------------------
+# session teardown (shared by `stop` and by restart-cleanup)
+# ---------------------------------------------------------------------------
+kill_session() {
+    # DE daemons: exact-name matching only
+    for p in picom xfce4-panel xfdesktop xfwm4 xfsettingsd \
+             xfce4-session xfce4-power-manager; do
+        pkill -x "$p" 2>/dev/null
+    done
+    # dbus from a previous run (leak prevention)
+    if [ -f "$PIDDIR/dbus.pid" ]; then
+        kill "$(cat "$PIDDIR/dbus.pid")" 2>/dev/null
+        rm -f "$PIDDIR/dbus.pid"
+    fi
+}
+
+kill_xserver() {
+    pkill -f "termux-x11 ${DISPLAY_NUM}" 2>/dev/null
+    pkill -f 'com.termux.x11.CmdEntryPoint' 2>/dev/null
+}
+
+if [ "${1:-}" = "stop" ]; then
+    kill_session
+    kill_xserver
+    echo "Session stopped."
+    exit 0
+fi
+
+# ---------------------------------------------------------------------------
+# 1. Clean up any previous session
+# ---------------------------------------------------------------------------
+kill_session
+# Browser kill is opt-in (it used to be unconditional, which was surprising).
+if [ "${KILL_BROWSER:-0}" = "1" ]; then
+    pkill -f 'chromium' 2>/dev/null
+fi
+kill_xserver
+sleep 1
+
+# ---------------------------------------------------------------------------
+# 2. Session environment (BIONIC world)
+# ---------------------------------------------------------------------------
+unset LD_LIBRARY_PATH LIBGL_ALWAYS_SOFTWARE PULSE_SERVER GALLIUM_DRIVER
+
+export DISPLAY="$DISPLAY_NUM"
+export PATH="$HOME/.local/bin:$PATH"
+export XDG_CONFIG_DIRS="$PREFIX/etc/xdg"
+# INTENTIONAL DUALITY — do not "unify":
+#   * this SESSION uses $TMPDIR as XDG_RUNTIME_DIR (termux-x11 socket
+#     discovery convention),
+#   * glibc apps use $PREFIX/tmp/gl-runtime (0700), set by ~/gl/env.
+# Each is correct for its world.
+export XDG_RUNTIME_DIR="$TMPDIR"
+
+# Vulkan ICD (Turnip) — BIONIC build, for bionic GL clients (picom, chromium).
+# WARNING: this is inherited by everything started from the session, including
+# glibc launchers. That is safe ONLY because ~/gl/env re-pins
+# VK_ICD_FILENAMES/VK_DRIVER_FILES to the glibc ICD. A glibc process that
+# loads this bionic .so dies with "libm.so: invalid ELF header".
+FREEDRENO_ICD="$PREFIX/share/vulkan/icd.d/freedreno_icd.aarch64.json"
+if [ -r "$FREEDRENO_ICD" ]; then
+    export VK_ICD_FILENAMES="$FREEDRENO_ICD"   # legacy loader variable
+    export VK_DRIVER_FILES="$FREEDRENO_ICD"    # modern loader variable
+else
+    unset VK_ICD_FILENAMES VK_DRIVER_FILES
+fi
+
+# Session-wide OpenGL = Zink on Turnip. Without this every bionic GL client
+# (incl. picom, if enabled) falls back to llvmpipe (CPU).
+export MESA_LOADER_DRIVER_OVERRIDE=zink
+export vblank_mode=0                 # termux-x11 has no real vblank
+# export TU_DEBUG=noconform          # enable if glxinfo falls back to llvmpipe
+# export MESA_NO_ERROR=1             # micro-opt; keep OFF while debugging
+
+# Best-effort Chromium GPU flags. Verify via chrome://gpu -> Command Line.
+export CHROMIUM_FLAGS="--ignore-gpu-blocklist --enable-gpu-rasterization \
+--enable-zero-copy --enable-accelerated-video-decode \
+--enable-features=Vulkan --use-gl=angle --use-angle=vulkan"
+
+# ---------------------------------------------------------------------------
+# 3. Audio + X server
+# ---------------------------------------------------------------------------
+pulseaudio --start --exit-idle-time=-1 >/dev/null 2>&1
+
+# The X server itself starts CLEAN — no GPU overrides. (It is a display
+# server, not a GL client; leaking zink/ICD into it caused subtle breakage.)
+env -u MESA_LOADER_DRIVER_OVERRIDE -u GALLIUM_DRIVER \
+    -u VK_ICD_FILENAMES -u VK_DRIVER_FILES -u LIBGL_ALWAYS_SOFTWARE \
+    termux-x11 "$DISPLAY_NUM" $X11_EXTRA_ARGS >"$LOGDIR/termux-x11.log" 2>&1 &
+
+am start --user 0 -n com.termux.x11/com.termux.x11.MainActivity >/dev/null 2>&1
+
+# Poll for X readiness (~10s max); fixed wait if xdpyinfo is unavailable.
+if command -v xdpyinfo >/dev/null 2>&1; then
+    for _ in $(seq 1 50); do
+        xdpyinfo >/dev/null 2>&1 && break
+        sleep 0.2
+    done
+else
+    sleep 3
+fi
+
+# ---------------------------------------------------------------------------
+# 4. dbus + XFCE
+# ---------------------------------------------------------------------------
+eval "$(dbus-launch --sh-syntax)"
+echo "${DBUS_SESSION_BUS_PID:-}" > "$PIDDIR/dbus.pid"
+
+# Permanently disable xfwm4's built-in compositor at the settings level
+# (prevents double-compositing if picom is ever enabled).
+xfconf-query -c xfwm4 -p /general/use_compositing -s false 2>/dev/null \
+    || xfconf-query -c xfwm4 -p /general/use_compositing -n -t bool -s false 2>/dev/null
+
+xfsettingsd  >"$LOGDIR/xfsettingsd.log"  2>&1 &
+xfwm4 --compositor=off >"$LOGDIR/xfwm4.log" 2>&1 &
+xfdesktop    >"$LOGDIR/xfdesktop.log"    2>&1 &
+xfce4-panel  >"$LOGDIR/xfce4-panel.log"  2>&1 &
+
+# ---------------------------------------------------------------------------
+# 5. picom (GLX backend on Zink) — OFF by default.
+# Enable by uncommenting; xfwm4 compositing is already off (§4), so there is
+# no double-compositing risk. Check $LOGDIR/picom.log and glxinfo.log after.
+# ---------------------------------------------------------------------------
+sleep 1   # let the WM settle first
+#picom --config "$HOME/.config/picom/picom.conf" >"$LOGDIR/picom.log" 2>&1 &
+
+# Renderer sanity log (expect: zink ... Turnip Adreno (TM) 730)
+if command -v glxinfo >/dev/null 2>&1; then
+    ( sleep 3; glxinfo -B >"$LOGDIR/glxinfo.log" 2>&1 ) &
+fi
+
+# ---------------------------------------------------------------------------
+# Teardown on Ctrl-C / kill
+# ---------------------------------------------------------------------------
+cleanup() { kill_session; }
+trap cleanup INT TERM
+
+echo "XFCE session started"
+echo "  DISPLAY=$DISPLAY"
+echo "  GL (bionic): MESA_LOADER_DRIVER_OVERRIDE=$MESA_LOADER_DRIVER_OVERRIDE  (check: $LOGDIR/glxinfo.log)"
+echo "  VK (bionic): ${VK_DRIVER_FILES:-<unset>}"
+echo "  glibc apps get their own env from ~/gl/env"
+echo "  Logs: $LOGDIR   |   stop with: startxfce-x11 stop"
+
+wait

@@ -1,26 +1,51 @@
-# source 해서 쓰는 공통 glibc 환경
-export GL_LD="$PREFIX/glibc/lib:$HOME/gl/lib"
-GL_ICD="$HOME/gl/opt/mesa-glibc/share/vulkan/icd.d/freedreno_icd.aarch64.json"
-if [ -r "$GL_ICD" ]; then
-  export VK_ICD_FILENAMES="$GL_ICD" VK_DRIVER_FILES="$GL_ICD"
-else
-  unset VK_ICD_FILENAMES VK_DRIVER_FILES
-fi
+# ~/gl/env — shared environment for glibc-world apps. `source` from launchers.
+# English docs: README.md / docs/. Rules distilled from the build-out sessions.
+
 export DISPLAY=${DISPLAY:-:1}
+
+# glibc-world runtime dir (intentionally different from the session's TMPDIR
+# based one — see docs/desktop-session.md §2)
 mkdir -p "$PREFIX/tmp/gl-runtime" && chmod 700 "$PREFIX/tmp/gl-runtime"
 export XDG_RUNTIME_DIR="$PREFIX/tmp/gl-runtime"
 export TMPDIR="$PREFIX/tmp"
+
+# Debian rootfs = data companion for farm libraries (fonts, schemas, locale)
 ROOTFS="$PREFIX/var/lib/proot-distro/containers/debian/rootfs"
 export XDG_DATA_DIRS="$ROOTFS/usr/share:$ROOTFS/usr/local/share"
 export FONTCONFIG_PATH="$ROOTFS/etc/fonts"
 export FONTCONFIG_FILE="$ROOTFS/etc/fonts/fonts.conf"
 export LOCPATH="$ROOTFS/usr/lib/locale"
 export LC_ALL=en_US.UTF-8
+
 export GSETTINGS_BACKEND=memory
 export NO_AT_BRIDGE=1
+# SUID sandbox check runs BEFORE argv.json is parsed — env var is the only
+# clean global fix (README pitfall #5).
+export ELECTRON_DISABLE_SANDBOX=1
 unset DBUS_SESSION_BUS_ADDRESS DBUS_SYSTEM_BUS_ADDRESS
+
+# TLS: glibc apps cannot find /etc/ssl; point everything at Termux's bundle.
 if [ -r "$PREFIX/etc/tls/cert.pem" ]; then
   export SSL_CERT_FILE="$PREFIX/etc/tls/cert.pem"
-  export NODE_EXTRA_CA_CERTS="$PREFIX/etc/tls/cert.pem"
+  export NODE_EXTRA_CA_CERTS="$SSL_CERT_FILE"
+  export GIT_SSL_CAINFO="$SSL_CERT_FILE"
+  export CURL_CA_BUNDLE="$SSL_CERT_FILE"
+  export REQUESTS_CA_BUNDLE="$SSL_CERT_FILE"
 fi
-export ELECTRON_DISABLE_SANDBOX=1
+
+# Vulkan ICD — pin to the GLIBC driver stack. This deliberately OVERRIDES the
+# bionic ICD the desktop session exports (shielding; docs/desktop-session.md).
+# Both variables are required: modern loaders prefer VK_DRIVER_FILES, and an
+# unset pair makes the loader default-scan and load the bionic .so
+# ("libm.so: invalid ELF header").
+GL_ICD="$HOME/gl/opt/mesa-glibc/share/vulkan/icd.d/freedreno_icd.aarch64.json"
+if [ -r "$GL_ICD" ]; then
+  export VK_ICD_FILENAMES="$GL_ICD"
+  export VK_DRIVER_FILES="$GL_ICD"
+else
+  unset VK_ICD_FILENAMES VK_DRIVER_FILES
+fi
+
+# NOTE: never set LD_LIBRARY_PATH here (bionic children would load glibc's
+# libc.so linker script and die). Library resolution = $ORIGIN rpath +
+# $PREFIX/glibc/etc/ld.so.conf (glibc/lib first, then ~/gl/lib farm).

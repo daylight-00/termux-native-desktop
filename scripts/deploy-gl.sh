@@ -23,7 +23,7 @@ link_optional() {
     dst="$2"
 
     if [ ! -e "$src" ]; then
-        printf 'warning: source not tracked yet, leaving target unchanged: %s\n' "$src" >&2
+        printf 'warning: optional source not present, leaving target unchanged: %s\n' "$src" >&2
         return 0
     fi
 
@@ -42,9 +42,7 @@ done
 link_optional "$R/setup/mesa/patches" "$HOME/gl/build/patches"
 link_replace  "$R/setup/mesa/diag"    "$HOME/gl/build/diag"
 
-# The canonical launcher is currently absent from the GitHub tree.
-# Do not replace a working on-device target with a dangling symlink.
-link_optional "$R/setup/session/startxfce-x11" "$HOME/.local/bin/startxfce-x11"
-link_replace  "$R/setup/glibc/bin/code"         "$HOME/.local/bin/code"
+link_replace "$R/setup/session/startxfce-x11" "$HOME/.local/bin/startxfce-x11"
+link_replace "$R/setup/glibc/bin/code"         "$HOME/.local/bin/code"
 
 printf 'deployed: repo -> live Termux paths\n'

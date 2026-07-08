@@ -1,7 +1,27 @@
 # Session setup
 
-The hardened `startxfce-x11` launcher is described by `experiments/desktop/session-launch/README.md`, but its canonical source file is not present in the current GitHub tree.
+`startxfce-x11` is the recovered canonical launcher for the current Termux:X11 + XFCE session.
 
-The live on-device copy or source-linked repository file must be recovered and reviewed before `setup/session/startxfce-x11` is committed. Do not reconstruct it from an old report: the experiment record documents several field-hardening changes that postdate earlier representative scripts.
+The script manages the bionic side of the desktop:
 
-`scripts/deploy-gl.sh` therefore treats this launcher as optional and will not replace a working local target with a dangling symlink.
+- clean restart and explicit `stop` teardown;
+- `TMPDIR` guard for non-interactive launch contexts;
+- local Unix-socket X11 on `DISPLAY=:1` with TCP disabled;
+- bionic Turnip ICD selection for native clients;
+- session-wide bionic Zink policy for OpenGL clients;
+- a clean X-server process with client GPU overrides removed;
+- stale D-Bus PID cleanup;
+- opt-in browser termination through `KILL_BROWSER=1`;
+- XFWM compositor disablement and optional Picom path;
+- renderer sanity logging.
+
+The corresponding architecture and troubleshooting guide is `docs/desktop-session.md`.
+
+The live link contract remains:
+
+```text
+setup/session/startxfce-x11
+    -> ~/.local/bin/startxfce-x11
+```
+
+`scripts/deploy-gl.sh` installs that link together with the other promoted runtime paths.

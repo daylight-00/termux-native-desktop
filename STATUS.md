@@ -5,28 +5,36 @@
 
 ## Working conclusions
 
-- **No PRoot runtime.** PRoot is retained as an install/debug-time tool and library source, but not as the normal execution environment. The decision originated from observed VS Code I/O sluggishness in the PRoot path.
-- **The glibc layer is viable for real desktop applications.** Official Microsoft VS Code and an extracted Obsidian AppImage have been run as native glibc processes while the surrounding Termux desktop remains bionic-native.
-- **The library boundary matters.** The working model keeps the Termux glibc core and Android-sensitive libraries ahead of a Debian-rootfs-derived library farm, with application-local libraries preserved through `$ORIGIN` where required.
-- **Real GPU acceleration works in both execution worlds.** Native Chromium/Code OSS and glibc Electron applications can use ANGLE Vulkan on Turnip/Adreno. For official VS Code, the minimum experimentally demonstrated GPU-specific workaround was `--disable-gpu-vsync`.
-- **The current glibc Mesa 26.1.x build policy uses `-Dfreedreno-kmds=msm,kgsl`.** In the investigated configuration, kgsl-only 26.1.x dropped the libdrm dependency and the X11 present path failed with SIGBUS; retaining `msm` restored the working dependency shape. The exact low-level crash mechanism remains intentionally unclaimed.
-- **Zink is available for glibc OpenGL consumers.** OpenGL 4.6 has been observed through the Zink -> Turnip path.
-- **A glibc Miniforge/Conda stack is viable.** Conda and Mamba ran, environments were created, and a compiled NumPy workload executed successfully after Termux-specific runtime adaptation.
+- **No PRoot runtime.** PRoot is retained as an install/debug-time tool and library source, not as the normal execution environment.
+- **The glibc layer is viable for real desktop applications.** Official VS Code and an extracted Obsidian AppImage run as glibc processes while the surrounding desktop stays bionic-native.
+- **The core/farm boundary is load-bearing.** Termux glibc and Android-sensitive libraries must remain isolated from the Debian-rootfs-derived library farm; application-local libraries are preserved through `$ORIGIN` where required.
+- **Real GPU acceleration works in both ABI worlds.** Native Chromium/Code OSS and glibc Electron applications can use Turnip/Adreno paths. Official VS Code's minimum demonstrated GPU-specific workaround is `--disable-gpu-vsync`.
+- **The current glibc Mesa 26.1.x build policy uses `-Dfreedreno-kmds=msm,kgsl`.** In the investigated builds, the working/broken split tracked whether the Turnip ICD retained its libdrm dependency. The exact low-level crash mechanism remains open.
+- **Zink OpenGL 4.6 is available for glibc consumers.** The runtime contract is encoded in `setup/glibc/env` plus `setup/glibc/bin/gl-run`.
+- **The desktop session source is recovered and tracked.** `setup/session/startxfce-x11` now records the current two-world session contract, clean X-server startup, Unix-socket X11, bionic ICD policy, optional Picom path, and clean teardown behavior.
+- **A glibc Miniforge/Conda stack is viable.** Conda, Mamba, environment creation, and a compiled NumPy workload were validated.
+
+## Integrated guides
+
+- `docs/glibc-layer.md` — bootstrap, library boundary, application onboarding, traps, maintenance.
+- `docs/gpu.md` — glibc Turnip/Zink build and runtime contract plus diagnostic history.
+- `docs/desktop-session.md` — bionic/glibc session boundary and troubleshooting.
+- `docs/architecture.md` — current whole-system model.
 
 ## Open questions
 
 - Hardware video decoding remains unresolved across the investigated MediaCodec/Vulkan, VA-API/V4L2, FFmpeg/mpv, and Chromium paths.
-- Native Dawn WebGPU exposure remains unresolved: conventional Chromium/Electron GPU acceleration works, but the dedicated WebGPU investigation did not expose Turnip as a native WebGPU adapter.
-- PyMOL is the next major end-to-end scientific workload target.
-- The hardened `startxfce-x11` launcher described by the experiment record is not currently tracked in the GitHub tree at `setup/session/startxfce-x11`; the on-device source must be recovered rather than reconstructed from memory.
+- Native Dawn WebGPU exposure remains unresolved: conventional Chromium/Electron GPU acceleration works, but the dedicated WebGPU investigation did not expose Turnip as the desired native WebGPU adapter.
+- PyMOL remains the next major end-to-end scientific workload target.
+- A proper kgsl+Zink+X11 solution that removes the practical need for the `msm` backend remains worth watching upstream; the current `msm,kgsl` build is the validated local policy.
 
 ## Current focus
 
-- [ ] recover and commit the on-device session launcher source without changing its live path contract
-- [ ] run the PyMOL pilot against the current glibc/Conda/GPU stack
+- [ ] run the PyMOL pilot against the current glibc/Conda/Zink stack
 - [ ] continue converting session reports into concise canonical experiment records without discarding the original reports
-- [ ] add repeatable validation gates where an experiment has produced a stable runtime contract
+- [ ] add repeatable validation gates where experiments have produced stable runtime contracts
+- [ ] formalize application onboarding helpers (`gl-adopt`, `gl-doctor`) only after the current manual contracts remain stable
 
 ## Evidence policy
 
-A passing application screenshot is not enough by itself. Claims are kept at the strongest level directly supported by the available evidence. For example, successful ANGLE Vulkan rendering is recorded as such; complete end-to-end zero-copy presentation is not claimed without instrumentation proving it.
+A passing screenshot is not enough by itself. Claims stay at the strongest level directly supported by available evidence. In particular, successful default-WSI presentation and ANGLE-Vulkan rendering are recorded as such; complete end-to-end zero-copy presentation is not claimed without instrumentation that proves it.

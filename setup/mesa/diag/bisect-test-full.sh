@@ -1,5 +1,7 @@
 #!/data/data/com.termux/files/usr/bin/bash
 # bisect-test.sh — git bisect judge for the 26.0.x -> 26.1.x Turnip WSI SIGBUS.
+# FULL-CONFIG variant: reproduces the zink-enabled configuration.
+# Use this one when the failure only appears in full builds (see docs/gpu.md §4).
 # Run from inside the mesa source tree (git bisect run ./bisect-test.sh).
 #
 # Exit codes (git bisect contract):
@@ -13,8 +15,8 @@ set -u
 GL="$HOME/gl"
 TC="$GL/toolchain"
 VENV="$GL/build/.venv"
-BUILDDIR="build-bisect-dri3"
-PREFIX_DIR="$GL/opt/mesa-bisect-dri3"          # throwaway install target
+BUILDDIR="build-bisect-full"
+PREFIX_DIR="$GL/opt/mesa-bisect-full"          # throwaway install target
 JOBS="${JOBS:-$(nproc)}"
 
 unset LD_LIBRARY_PATH LD_PRELOAD || true
