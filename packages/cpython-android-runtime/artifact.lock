@@ -1,0 +1,11 @@
+[artifact]
+name = "cpython-3.14-aarch64-linux-android-for-uv.tar.gz"
+producer_repository = "daylight-00/cpython-android-cli"
+target = "aarch64-linux-android"
+python_version = "3.14.6"
+sha256 = "7083ad89661d73278c2165dfff7506a6de26c8ec9471d6621a5c06c3aa9a49be"
+
+[install]
+prefix = "$HOME/opt/cpython-3.14/prefix"
+python = "$HOME/opt/cpython-3.14/prefix/bin/python3.14"
+program_interpreter = "/system/bin/linker64"
