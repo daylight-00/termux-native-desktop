@@ -28,13 +28,13 @@ glx=dri
 llvm=disabled
 ```
 
-Host orchestration remains bionic-native; artifacts target Termux glibc through the wrappers in `setup/glibc/toolchain/`.
+Host orchestration remains bionic-native; artifacts target Termux glibc through the wrappers in `modules/gl/overlay/home/gl/toolchain/`.
 
-`setup/mesa/build-mesa.sh` builds into versioned prefixes under `~/gl/opt/` and only expects the stable `~/gl/opt/mesa-glibc` symlink to be promoted after verification.
+`packages/mesa-glibc/build.sh` builds into versioned prefixes under `~/gl/opt/` and only expects the stable `~/gl/opt/mesa-glibc` symlink to be promoted after verification. `tools/deploy` preserves the current live compatibility path `~/gl/build/build-mesa.sh` while the package build workflow is further normalized.
 
 ## Runtime contract
 
-`setup/glibc/env` pins both Vulkan variables to the glibc ICD:
+`modules/gl/overlay/home/gl/env` pins both Vulkan variables to the glibc ICD:
 
 ```sh
 VK_ICD_FILENAMES=$ICD
@@ -70,6 +70,8 @@ The exact low-level path from the missing dependency shape to `BUS_ADRALN` is **
 - still-open crash mechanism.
 
 See `experiments/gpu/mesa-26.1.4-present-sigbus/` and `docs/decisions/0003-mesa-kmds-msm-kgsl.md`.
+
+The two `git bisect` judge scripts are preserved with that experiment under its `recipe/` directory rather than deployed into the live maintenance build tree.
 
 ## Diagnostic lessons
 

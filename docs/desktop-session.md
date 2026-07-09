@@ -1,6 +1,6 @@
 # Desktop Session: Termux:X11 + XFCE
 
-This document is the current operational companion to `setup/session/startxfce-x11`.
+This document is the current operational companion to `modules/desktop/overlay/home/.local/bin/startxfce-x11`.
 
 ## One display, two ABI worlds
 

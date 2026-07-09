@@ -40,7 +40,7 @@ Important rules:
 3. Populate required general libraries inside the rootfs.
 4. Run `gl-farm` to rebuild `~/gl/lib` from allowed rootfs libraries.
 5. Register core then farm in the glibc loader configuration and refresh `ldconfig`.
-6. Deploy `setup/glibc/env`, launchers, shims, and toolchain wrappers through `scripts/deploy-gl.sh`.
+6. Deploy module overlays and package-owned launchers through `tools/deploy`.
 
 A representative core setup includes:
 
@@ -54,7 +54,7 @@ The rootfs path may vary across proot-distro generations; the current project co
 
 ## Library farm
 
-`setup/glibc/bin/gl-farm`:
+`modules/gl/overlay/home/gl/bin/gl-farm`:
 
 - rebuilds `~/gl/lib` as symlinks into selected Debian rootfs library directories;
 - excludes the libc family through a denylist;
@@ -73,7 +73,7 @@ For a conventional tarball or extracted application tree:
 4. patch executable interpreters to the Termux glibc loader;
 5. patch RPATH while preserving `$ORIGIN`;
 6. verify every ELF with the glibc `ldd` path;
-7. create a launcher that sources `~/gl/env` and clears incompatible preload state at process entry;
+7. create a package-owned launcher that sources `~/gl/env` and clears incompatible preload state at process entry;
 8. validate CPU/basic GUI startup before treating GPU enablement as a separate milestone.
 
 AppImage is supported as an input adapter by extracting the embedded SquashFS payload first, then reusing the same onboarding pipeline. See `experiments/glibc/obsidian-appimage/`.
@@ -88,20 +88,28 @@ AppImage is supported as an input adapter by extracting the embedded SquashFS pa
 6. **URL intents silently blocked** — Android background-activity policy requires Termux's Display over other apps permission.
 7. **Wrong Vulkan ICD** — a glibc process inherits or default-scans the bionic ICD; always pin both Vulkan ICD variables in the glibc environment.
 
-## Current promoted artifacts
+## Current promoted owners
 
 ```text
-setup/glibc/env
-setup/glibc/bin/code
-setup/glibc/bin/gl-farm
-setup/glibc/bin/gl-run
-setup/glibc/shims/xdg-open
-setup/glibc/toolchain/*
-setup/mesa/build-mesa.sh
-setup/session/startxfce-x11
+modules/gl/overlay/home/gl/env
+modules/gl/overlay/home/gl/bin/gl-farm
+modules/gl/overlay/home/gl/bin/gl-run
+modules/gl/overlay/home/gl/shims/xdg-open
+modules/gl/overlay/home/gl/toolchain/*
+
+modules/desktop/overlay/home/.local/bin/startxfce-x11
+
+packages/vscode/launcher/code
+packages/obsidian/launcher/obsidian
+packages/obsidian/launcher/obsidian-app
+packages/mesa-glibc/build.sh
+packages/mesa-glibc/build-env/*
+packages/mesa-glibc/patches/
+
+tools/deploy
 ```
 
-Runtime state remains outside Git tracking: application trees, the farm, Mesa install prefixes, build worktrees, and the installed glibc core.
+Runtime state remains outside Git tracking: application trees, the farm, Mesa install prefixes, build worktrees, generated uv environments, and the installed glibc core.
 
 ## Validated workloads
 

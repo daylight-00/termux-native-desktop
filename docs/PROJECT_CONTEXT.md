@@ -43,6 +43,12 @@ A Conda/Miniforge pilot showed that a glibc application stack could be adapted. 
 
 The manual-library approach did not scale. The next idea was to keep a Debian rootfs but demote it from runtime environment to library source. That became the current layer model: Termux glibc provides the core runtime and Android-sensitive libraries; a filtered farm exposes general libraries from the Debian rootfs; applications retain local libraries where appropriate.
 
+### Native user-environment workstream
+
+The workstation also needs a personal software baseline that does not accumulate state in the system Python installation. The accepted `uv-base` experiment demonstrated a persistent uv-managed environment backed by the separately installed Android CPython runtime. The intended ownership model keeps the CPython runtime as an interpreter substrate, the `uv-base` project definition as tracked desired state, and `.venv` as disposable generated state.
+
+This native environment is complementary to the glibc Conda ecosystem: uv-base provides the native personal baseline and project-local uv workflows, while glibc Conda remains valuable for conventional Linux binary packages, scientific stacks, and channel-specific software.
+
 ### GPU workstream
 
 GPU work quickly became as important as the glibc layer itself.
@@ -89,8 +95,20 @@ experiments/<track>/<experiment>/report.md
 experiments/<track>/<experiment>/evidence/
     raw logs, traces, and small captured facts when worth keeping
 
-setup/ and scripts/
-    artifacts promoted from successful experiments into the live system
+modules/
+    project-authored system capabilities and target-relative overlays
+
+packages/
+    external payload lifecycle definitions and package-owned integration
+
+tools/
+    repository operator and deployment commands
+
+tests/
+    cross-cutting repository and system validation
+
+docs/refactor/
+    low-level migration inventory, path map, plan, and execution journal
 
 docs/decisions/
     durable choices whose rationale should survive individual experiments
@@ -100,6 +118,6 @@ A detailed report may describe an intermediate architecture that was later super
 
 ## Project boundary
 
-`termux-native-desktop` is the system project. Its glibc, GPU, desktop/session, and workstation-workflow experiments belong together because they co-evolve around one end-to-end target.
+`termux-native-desktop` is the system project. Its glibc, GPU, desktop/session, native user-environment, and workstation-workflow experiments belong together because they co-evolve around one end-to-end target.
 
 `cpython-android-cli` remains a companion repository. It originated from the need for a good Python workflow on this workstation, but it asks an independent technical question: how to adapt the official Android CPython runtime into a normal Termux CLI interpreter and integrate it with uv. This repository may consume or reference that result without absorbing its experiment history.

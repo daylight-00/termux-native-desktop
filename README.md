@@ -10,12 +10,14 @@ This repository is both the working laboratory and the curated technical record.
 
 Can a stock, non-root Android phone provide a desktop environment suitable for real technical work—coding, remote development, project navigation, scientific visualization, data inspection, Git review, and manuscript writing—without accepting a containerized runtime as the normal execution path?
 
-The project currently answers that question through three tightly coupled workstreams:
+The project currently answers that question through tightly coupled system capabilities:
 
 ```text
 native desktop/session
         |
         +-- bionic-native applications and services
+        |
+        +-- native disposable uv-base environment
         |
         +-- glibc application layer
         |      +-- Termux glibc core
@@ -32,10 +34,12 @@ PRoot remains useful as an install-time dependency resolver, library source, and
 
 ## Repository map
 
-- `docs/` — project context, architecture, integrated operational guides, timeline, and durable decisions.
+- `modules/` — project-owned system capabilities and target-relative overlays.
+- `packages/` — lifecycle definitions and launch integration for external software payloads.
 - `experiments/` — the living workbench. Each experiment keeps a concise canonical `README.md`; session-derived full reports live beside it as `report.md`; raw captures go in `evidence/` when useful.
-- `setup/` — promoted runtime configuration and launch artifacts used by the live device.
-- `scripts/` — repository/deployment helpers.
+- `tests/` — cross-cutting repository and integration validation.
+- `tools/` — repository/deployment operator commands.
+- `docs/` — project context, architecture, integrated operational guides, refactor records, timeline, and durable decisions.
 - `STATUS.md` — current conclusions, unresolved questions, and immediate work.
 
 The intended information flow is:
@@ -46,7 +50,7 @@ question
   -> evidence
   -> working conclusion (STATUS.md)
   -> durable decision (docs/decisions/)
-  -> integrated guide or promoted runtime artifact
+  -> module / package / test / integrated guide
 ```
 
 ## Documentation guide
@@ -56,6 +60,7 @@ question
 - [`docs/glibc-layer.md`](docs/glibc-layer.md) — glibc layer bootstrap, boundaries, onboarding, traps, maintenance.
 - [`docs/gpu.md`](docs/gpu.md) — Turnip/Zink build and runtime contract plus diagnostic history.
 - [`docs/desktop-session.md`](docs/desktop-session.md) — Termux:X11/XFCE two-world session contract.
+- [`docs/refactor/`](docs/refactor/) — low-level repository refactor source of truth and migration journal.
 - [`experiments/README.md`](experiments/README.md) — experiment index and provenance contract.
 
 ## Companion project

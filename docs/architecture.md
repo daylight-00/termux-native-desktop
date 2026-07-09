@@ -15,6 +15,7 @@ Android kernel + device hardware
                 |
                 +-- Termux:X11 + XFCE session
                 +-- native Chromium / Code OSS
+                +-- native uv-base personal environment
                 +-- bionic Mesa / Turnip
                 |
                 +-- glibc application world
@@ -62,9 +63,13 @@ The desktop session:
 
 The X server therefore stays clean even though bionic GL clients inherit the session GPU contract.
 
+### Native personal environment
+
+The native `uv-base` environment is separate from both the system Python and the glibc Conda ecosystem. Its durable definition is intended to be tracked while `.venv` remains disposable generated state. It provides the default personal Python environment and selected PyPI-distributed tools without mutating the infrastructure Python installation.
+
 ### glibc application world
 
-Every glibc launcher sources `setup/glibc/env` through the live `~/gl/env` link. That environment:
+Every glibc launcher sources `modules/gl/overlay/home/gl/env` through the live `~/gl/env` link. That environment:
 
 - uses a separate `$PREFIX/tmp/gl-runtime` runtime directory;
 - pins both `VK_ICD_FILENAMES` and `VK_DRIVER_FILES` to the glibc Mesa ICD;
@@ -130,7 +135,7 @@ compiler target: Termux glibc
 runtime target:  glibc Mesa + Turnip/KGSL + Zink
 ```
 
-This is why `setup/glibc/toolchain/` and `setup/mesa/` belong in the same system repository.
+This is why the glibc target wrappers live under `modules/gl/overlay/home/gl/toolchain/`, while the Mesa acquisition/build/install lifecycle lives under `packages/mesa-glibc/`.
 
 ## 7. Repository lifecycle
 
@@ -142,7 +147,7 @@ baseline
   -> result
   -> working conclusion (STATUS.md)
   -> durable decision (docs/decisions/)
-  -> integrated guide or promoted runtime artifact
+  -> module / package / test / integrated guide
 ```
 
 The repository mirrors that lifecycle:
@@ -151,4 +156,7 @@ The repository mirrors that lifecycle:
 - `STATUS.md` records current conclusions and open questions;
 - `docs/decisions/` preserves durable choices;
 - focused guides in `docs/` integrate current operational knowledge;
-- `setup/` and `scripts/` hold promoted artifacts used by the live device.
+- `modules/` owns project-authored system capabilities and target-relative overlays;
+- `packages/` owns external payload lifecycle definitions and application-specific launch integration;
+- `tools/` owns repository operator and deployment commands;
+- `tests/` holds cross-cutting repository and integration validation.
