@@ -11,7 +11,8 @@ Every structural change must be recorded here before or at the same time as the 
 - `0001-current-state-inventory.md` — observed repository and live-system state before migration.
 - `0002-ownership-map.md` — old path, new owner, new path, live target, and migration method.
 - `0003-migration-plan.md` — ordered repository and live migration procedure.
-- `MIGRATION_JOURNAL.md` — chronological execution log with commands, commit IDs, validation, and deviations.
+- `0004-shell-uv-base-adoption.md` — exact legacy identities, new shell/uv-base ownership, hash-guarded adoption, and non-actions.
+- `MIGRATION_JOURNAL.md` — chronological execution log with commands, commit IDs, validation, incidents, recovery, and deviations.
 - `repo-path-map.tsv` — machine-readable path mapping for moved tracked files.
 
 ## Refactor branch
@@ -24,4 +25,4 @@ Base commit:
 
 ## Environment limitation
 
-The execution container cannot resolve `github.com`, so a normal network `git clone` is not possible inside this runtime. Repository reads and writes are performed through the authenticated GitHub connector. A local working mirror under `/mnt/data/tnd-refactor` stores the design documents, path maps, generated migration material, and validation records used to construct connector-backed Git commits.
+The execution container cannot resolve `github.com`, so a normal network `git clone` is not possible inside this runtime. Repository reads and writes are performed through the authenticated GitHub connector. Local working mirrors under `/mnt/data/` store design documents, generated migration material, candidate files, and validation records used to construct connector-backed Git commits.

@@ -9,7 +9,7 @@
 - refactor branch created: `refactor/module-package-layout`;
 - container network `git clone` attempt failed because `github.com` DNS could not be resolved;
 - authenticated GitHub connector selected for repository reads and Git tree/commit writes;
-- local working mirror created at `/mnt/data/tnd-refactor` for design documents, mapping data, generated migration material, and validation records.
+- local working mirrors under `/mnt/data/` store design documents, path maps, candidate files, and validation records.
 
 ### Decisions confirmed
 
@@ -23,97 +23,42 @@
 
 ## 2026-07-09 — Ownership move preparation
 
-### Additional classification
-
-- `setup/mesa/diag/bisect-test.sh` and `bisect-test-full.sh` are explicit `git bisect` judges and move to the SIGBUS experiment `recipe/` directory.
+- `setup/mesa/diag/bisect-test*.sh` are explicit `git bisect` judges and move to the SIGBUS experiment `recipe/` directory.
 - `setup/glibc/bin/code` is VS Code-specific and moves to `packages/vscode/launcher/`.
 - `setup/glibc/bin/obsidian*` are Obsidian-specific and move to `packages/obsidian/launcher/`.
-- generic `gl/bin` retains only layer commands (`gl-run`, `gl-farm`) in this batch.
+- generic `gl/bin` retains only layer commands (`gl-run`, `gl-farm`) in the first ownership batch.
 - Mesa patch path retains the nested `patches/mesa/` shape because the promoted build script currently reads `$HOME/gl/build/patches/mesa`.
 
-### Deploy rewrite contract
+## 2026-07-09 — Deploy rewrite and smoke validation
 
 `tools/deploy` follows these rules:
 
-1. resolve repository root from the tool location rather than hard-coding `$HOME/termux-native-desktop`;
+1. resolve repository root from tool location;
 2. support `--dry-run`;
 3. deploy module overlays as leaf symlinks;
-4. convert legacy directory symlinks such as `~/gl/bin` into real target directories before leaf deployment;
-5. refuse to overwrite unmanaged real files;
+4. convert legacy directory symlinks before leaf deployment;
+5. refuse unmanaged real-file replacement;
 6. install application-specific public launchers from package owners;
-7. preserve Mesa live build compatibility paths without keeping experiment bisect harnesses in `~/gl/build/diag`;
+7. preserve Mesa live build compatibility paths;
 8. remove only obsolete symlinks, never real directories.
 
-## 2026-07-09 — Deploy smoke validation
-
-### Faults found before live use
-
-A repository-level smoke test reproduced the legacy live layout and found two deploy implementation bugs before device migration:
+A temporary-home smoke test reproduced the legacy live layout and found two implementation faults before device migration:
 
 1. Bash function variables such as `dst` were global, so `link_leaf` lost its destination after calling `ensure_dir`.
-2. dry-run needed to tolerate targets visible only through a legacy directory symlink that would be converted during real deployment.
+2. dry-run needed to tolerate targets visible only through a legacy directory symlink that real deployment would convert first.
 
-### Fix
+Fixes:
 
-- all function-scoped variables are declared `local`;
-- `has_symlink_ancestor` distinguishes dry-run legacy-view leaves from unmanaged direct targets;
-- the Mesa `patches/mesa` compatibility path handles the same simulated legacy-parent case.
+- function variables declared `local`;
+- `has_symlink_ancestor` distinguishes dry-run legacy-view leaves;
+- Mesa `patches/mesa` compatibility path handles the same case.
 
-### Validation
+Validation:
 
 ```text
 tests/repository/deploy-smoke.sh
 deploy smoke test: PASS
 ```
-
-The test verifies:
-
-- dry-run does not mutate legacy links;
-- real deployment converts legacy directory symlinks to target directories;
-- module leaf links are installed;
-- package launchers are installed at their public entry points;
-- Mesa maintenance compatibility links are installed;
-- obsolete experiment `diag` symlink is removed without deleting a real directory.
-
-## 2026-07-09 — Recorded branch commits
-
-```text
-2211dde643ccb8db1971cc7f179a500502b7c709
-    docs: establish refactor source of truth
-
-be7802558e8b55a428abb2bf76e6041ed08e8e80
-    repo: split modules packages and experiment recipes
-
-636533cf9ab9ee27ae2d3c16d262a370751a2c0d
-    test: harden deploy migration path
-
-00638d56297b1ce9d9b87499497649805b4ce2df
-    docs: align integrated guides with new owners
-
-9401429a22a5dfb887fbf89f6fcf9be370b9dfbb
-    docs: align canonical experiment records with promoted owners
-
-4ab6703ba43f566bd27d37e9efd45355c4f0164b
-    docs: define module and package owner contracts
-
-5d241dc8ce401c7f95a6a0c8f5324f1686337c73
-    connector file-update commit adding the CPython owner entry to packages/README.md
-
-fa63b263c3fab871f895cc3ad742aad3c65e0ef7
-    connector file-update commit adding the CPython package README
-```
-
-### Connector write-order incidents
-
-Two contents-API writes advanced the branch while separately created Git-tree commit objects remained unattached. The unattached objects were not merged or force-applied. Recovery strategy: use the actual branch tip as the base for the next Git tree, add the missing CPython package files and journal updates there, and continue without force-rewriting history.
-
-New guard procedure for all subsequent writes:
-
-1. fetch or otherwise resolve the current branch tip;
-2. build the next tree from that exact tip;
-3. create one commit with that tip as parent;
-4. call `update_ref` explicitly;
-5. compare branch against `main` before the next write.
 
 ## 2026-07-09 — CPython consumer identity capture
 
@@ -121,8 +66,8 @@ Live input established:
 
 ```text
 artifact: cpython-3.14-aarch64-linux-android-for-uv.tar.gz
-SHA-256:  7083ad89661d73278c2165dfff7506a6de26c8ec9471d6621a5c06c3aa9a49be
-visible size: 22 MiB
+size: 22474527 bytes
+SHA-256: 7083ad89661d73278c2165dfff7506a6de26c8ec9471d6621a5c06c3aa9a49be
 installed Python: 3.14.6
 program interpreter: /system/bin/linker64
 install prefix: $HOME/opt/cpython-3.14/prefix
@@ -131,18 +76,93 @@ install prefix: $HOME/opt/cpython-3.14/prefix
 Decision:
 
 - do not commit the runtime archive;
-- record its consumer-side identity under `packages/cpython-android-runtime/`;
-- validate the transferred archive by SHA-256;
-- validate the installed runtime by Python version and ELF interpreter;
-- keep the producer/build history in `daylight-00/cpython-android-cli`;
+- record consumer-side identity under `packages/cpython-android-runtime/`;
+- validate archive SHA-256 and installed runtime identity;
+- keep producer/build history in `daylight-00/cpython-android-cli`;
 - let `uv-base` consume the installed runtime rather than own the archive.
 
-### Current state
+## 2026-07-09 — uv-base and shell identity capture
 
-- repository ownership paths are split;
-- deploy migration has a passing repository-level smoke test;
-- integrated guides and canonical experiment READMEs use current owner paths;
-- historical reports remain unchanged;
-- CPython consumer contract is represented as a package owner;
-- live device migration has not yet been run;
-- `uv-base` module promotion is pending exact `uv.lock` content plus shell/Conda live-status guards.
+Device input established:
+
+```text
+uv-base pyproject SHA-256:
+2b89a3855976ca27d81f7bda0c42b7880b52e6b74fae41c83982d115576b4355
+
+uv-base lock SHA-256:
+79dab5fa4e9246ccfd72c28d569400013858723730f599a15ef6e6f566635a53
+
+legacy .bashrc SHA-256:
+3c7b8682c4debff14f68fa2a239635aed7d13ec6c11918ddee8f59040245a7cf
+
+legacy .uvrc SHA-256:
+f851fe1147541c2f6040c5cce66852ba3d848f70b62ef3e843c8e41339a4641c
+```
+
+Conda live-status inspection:
+
+```text
+command -v conda: no result
+$HOME/miniforge3: absent
+```
+
+Decision:
+
+- remove the stale `~/miniforge3/etc/profile.d/conda.sh` source line from the promoted shell model;
+- do not reinterpret this as removal of the separate validated glibc Miniforge experiment;
+- promote exact uv-base project and lock state;
+- retire `.uvrc` after backup and move its responsibilities into module-owned Bash integration;
+- do not globally export `VIRTUAL_ENV`;
+- enforce final command precedence as `gl/bin > uv-base/.venv/bin > .local/bin > remaining PATH`.
+
+### Local mirror validation
+
+```text
+shell layout smoke test: PASS
+adopt user env smoke test: PASS
+```
+
+The candidate project files reproduced the device identities exactly.
+
+`tools/adopt-user-env` defaults to dry-run and performs only the personal shell/uv-base ownership transition. It does not invoke full `tools/deploy`, delete `.venv`, move the CPython archive, or alter gl/Mesa runtime state.
+
+## 2026-07-09 — Connector write-order incidents and recovery
+
+Several GitHub contents-API writes advanced the branch while separately created Git-tree commit objects remained unattached. No force rewrite was used.
+
+Observed classes:
+
+- CPython owner entry and package README were committed separately before the grouped package tree was attached;
+- shell module README and shell/uv-base adoption document were committed separately before the validated full source tree was attached;
+- several intermediate grouped commit objects were created but never became branch ancestors.
+
+Recovery policy:
+
+1. treat the actual branch tip as authoritative;
+2. rebuild the intended complete tree on top of that exact tip;
+3. create a new commit with that tip as parent;
+4. load and call `update_ref` explicitly;
+5. compare `main...refactor/module-package-layout` after each grouped phase;
+6. document the incident rather than force-rewriting history.
+
+The grouped shell/uv-base source tree was finally attached at:
+
+```text
+030cbdc4204d8073813c353491592723140ae817
+    module: promote shell and uv-base ownership
+```
+
+## Branch state before live migration
+
+Repository-level work completed so far:
+
+- legacy promoted source ownership split into modules, packages, and experiment recipes;
+- deploy rewrite and deploy smoke test;
+- integrated/current docs aligned to new owners;
+- module/package owner contracts documented;
+- CPython consumer package recorded;
+- shell module and uv-base module promoted;
+- hash-guarded user-environment adoption tool added;
+- shell composition and adoption smoke tests passing.
+
+Live device migration has not yet been run.
