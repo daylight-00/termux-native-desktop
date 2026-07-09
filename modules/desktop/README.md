@@ -1,14 +1,14 @@
-# Session setup
+# Desktop module
 
 `startxfce-x11` is the recovered canonical launcher for the current Termux:X11 + XFCE session.
 
-The script manages the bionic side of the desktop:
+The module manages the Bionic side of the desktop:
 
 - clean restart and explicit `stop` teardown;
 - `TMPDIR` guard for non-interactive launch contexts;
 - local Unix-socket X11 on `DISPLAY=:1` with TCP disabled;
-- bionic Turnip ICD selection for native clients;
-- session-wide bionic Zink policy for OpenGL clients;
+- Bionic Turnip ICD selection for native clients;
+- session-wide Bionic Zink policy for OpenGL clients;
 - a clean X-server process with client GPU overrides removed;
 - stale D-Bus PID cleanup;
 - opt-in browser termination through `KILL_BROWSER=1`;
@@ -17,11 +17,13 @@ The script manages the bionic side of the desktop:
 
 The corresponding architecture and troubleshooting guide is `docs/desktop-session.md`.
 
-The live link contract remains:
+## Source and live target
 
 ```text
-setup/session/startxfce-x11
-    -> ~/.local/bin/startxfce-x11
+modules/desktop/overlay/home/.local/bin/startxfce-x11
+    -> $HOME/.local/bin/startxfce-x11
 ```
 
-`scripts/deploy-gl.sh` installs that link together with the other promoted runtime paths.
+`tools/deploy` installs the live leaf symlink.
+
+The historical discovery and hardening record remains under `experiments/desktop/session-launch/`.

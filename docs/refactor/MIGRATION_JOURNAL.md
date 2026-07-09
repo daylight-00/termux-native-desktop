@@ -89,3 +89,34 @@ The test verifies:
 - package launchers are installed at their public entry points;
 - Mesa maintenance compatibility links are installed;
 - obsolete experiment `diag` symlink is removed without deleting a real directory.
+
+## 2026-07-09 — Recorded branch commits
+
+The refactor branch history at this point is:
+
+```text
+2211dde643ccb8db1971cc7f179a500502b7c709
+    docs: establish refactor source of truth
+
+be7802558e8b55a428abb2bf76e6041ed08e8e80
+    repo: split modules packages and experiment recipes
+
+636533cf9ab9ee27ae2d3c16d262a370751a2c0d
+    test: harden deploy migration path
+
+00638d56297b1ce9d9b87499497649805b4ce2df
+    docs: align integrated guides with new owners
+
+9401429a22a5dfb887fbf89f6fcf9be370b9dfbb
+    docs: align canonical experiment records with promoted owners
+```
+
+### Current state
+
+- repository ownership paths are split;
+- deploy migration has a passing repository-level smoke test;
+- integrated guides use current owner paths;
+- canonical experiment README files use current promoted paths;
+- historical reports remain unchanged;
+- live device migration has not yet been run;
+- `uv-base` module promotion is pending capture of the live project definition and lock identity.
