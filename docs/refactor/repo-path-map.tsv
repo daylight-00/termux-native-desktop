@@ -18,7 +18,7 @@ setup/glibc/bin/obsidian-app	packages/obsidian/launcher/obsidian-app	obsidian	$H
 setup/mesa/build-mesa.sh	packages/mesa-glibc/build.sh	mesa-glibc	$HOME/gl/build/build-mesa.sh	move
 setup/mesa/pyproject.toml	packages/mesa-glibc/build-env/pyproject.toml	mesa-glibc	$HOME/gl/build/pyproject.toml	move
 setup/mesa/uv.lock	packages/mesa-glibc/build-env/uv.lock	mesa-glibc	$HOME/gl/build/uv.lock	move
-setup/mesa/patches/mesa/.gitkeep	packages/mesa-glibc/patches/.gitkeep	mesa-glibc	$HOME/gl/build/patches/mesa/.gitkeep	move
+setup/mesa/patches/mesa/.gitkeep	packages/mesa-glibc/patches/mesa/.gitkeep	mesa-glibc	$HOME/gl/build/patches/mesa/.gitkeep	move
 setup/mesa/diag/bisect-test.sh	experiments/gpu/mesa-26.1.4-present-sigbus/recipe/bisect-test.sh	mesa-sigbus-experiment	-	move
 setup/mesa/diag/bisect-test-full.sh	experiments/gpu/mesa-26.1.4-present-sigbus/recipe/bisect-test-full.sh	mesa-sigbus-experiment	-	move
 scripts/deploy-gl.sh	tools/deploy	repository-tool	-	rewrite

@@ -33,3 +33,26 @@ Requested from device:
 ### Next action
 
 Create documentation commit, then create one grouped ownership-move commit using Git tree operations with existing blob SHAs.
+
+## 2026-07-09 — Ownership move preparation
+
+### Additional classification
+
+- `setup/mesa/diag/bisect-test.sh` and `bisect-test-full.sh` are explicit `git bisect` judges and will move to the SIGBUS experiment `recipe/` directory.
+- `setup/glibc/bin/code` is VS Code-specific and moves to `packages/vscode/launcher/`.
+- `setup/glibc/bin/obsidian*` are Obsidian-specific and move to `packages/obsidian/launcher/`.
+- generic `gl/bin` retains only layer commands (`gl-run`, `gl-farm`) in this batch.
+- Mesa patch path retains the nested `patches/mesa/` shape because the promoted build script currently reads `$HOME/gl/build/patches/mesa`.
+
+### Deploy rewrite contract
+
+`tools/deploy` is prepared with these rules:
+
+1. resolve repository root from the tool location rather than hard-coding `$HOME/termux-native-desktop`;
+2. support `--dry-run`;
+3. deploy module overlays as leaf symlinks;
+4. convert legacy directory symlinks such as `~/gl/bin` into real target directories before leaf deployment;
+5. refuse to overwrite unmanaged real files;
+6. install application-specific public launchers from package owners;
+7. preserve Mesa live build compatibility paths without keeping experiment bisect harnesses in `~/gl/build/diag`;
+8. remove only obsolete symlinks, never real directories.

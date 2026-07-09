@@ -77,7 +77,7 @@ setup/mesa/uv.lock
     -> packages/mesa-glibc/build-env/uv.lock
 
 setup/mesa/patches/mesa/.gitkeep
-    -> packages/mesa-glibc/patches/.gitkeep
+    -> packages/mesa-glibc/patches/mesa/.gitkeep
 ```
 
 The first migration preserves behavior and blob identity; build-path redesign is a later change.
@@ -101,7 +101,7 @@ scripts/deploy-gl.sh
     -> tools/deploy
 ```
 
-The implementation must be rewritten for module overlays and package launcher entry points.
+The implementation is rewritten for module overlays and package launcher entry points.
 
 ## Deferred ownership
 

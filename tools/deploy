@@ -1,0 +1,120 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# Deploy repository-owned files into the live Termux workstation.
+#
+# This tool deploys module overlays as leaf symlinks and installs selected
+# package-owned public entry points. Generated runtime state is not owned here.
+set -euo pipefail
+
+DRY_RUN=0
+case "${1:-}" in
+  --dry-run) DRY_RUN=1; shift ;;
+  "") ;;
+  *) printf 'usage: %s [--dry-run]\n' "$0" >&2; exit 2 ;;
+esac
+[ "$#" -eq 0 ] || { printf 'usage: %s [--dry-run]\n' "$0" >&2; exit 2; }
+
+R=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+: "${HOME:?HOME must be set}"
+: "${PREFIX:?PREFIX must be set}"
+
+log() { printf '%s\n' "$*"; }
+
+run() {
+  if [ "$DRY_RUN" -eq 1 ]; then
+    printf '+ '
+    printf '%q ' "$@"
+    printf '\n'
+  else
+    "$@"
+  fi
+}
+
+ensure_dir() {
+  dst=$1
+  if [ -L "$dst" ]; then
+    log "convert symlink directory: $dst -> $(readlink "$dst")"
+    run rm -f "$dst"
+  elif [ -e "$dst" ] && [ ! -d "$dst" ]; then
+    printf 'refusing to replace non-directory target: %s\n' "$dst" >&2
+    exit 1
+  fi
+  run mkdir -p "$dst"
+}
+
+link_leaf() {
+  src=$1
+  dst=$2
+  [ -e "$src" ] || { printf 'missing source: %s\n' "$src" >&2; exit 1; }
+  ensure_dir "$(dirname "$dst")"
+  if [ -e "$dst" ] && [ ! -L "$dst" ]; then
+    printf 'refusing to replace unmanaged target: %s\n' "$dst" >&2
+    exit 1
+  fi
+  log "link: $dst -> $src"
+  run ln -sfn "$src" "$dst"
+}
+
+remove_managed_symlink() {
+  dst=$1
+  if [ -L "$dst" ]; then
+    log "remove obsolete symlink: $dst -> $(readlink "$dst")"
+    run rm -f "$dst"
+  elif [ -e "$dst" ]; then
+    printf 'refusing to remove non-symlink target: %s\n' "$dst" >&2
+    exit 1
+  fi
+}
+
+deploy_overlay_root() {
+  src_root=$1
+  dst_root=$2
+  [ -d "$src_root" ] || return 0
+
+  # Convert legacy directory symlinks before linking leaves beneath them.
+  while IFS= read -r rel; do
+    [ -n "$rel" ] || continue
+    ensure_dir "$dst_root/$rel"
+  done < <(cd "$src_root" && find . -mindepth 1 -type d -printf '%P\n' | sort)
+
+  while IFS= read -r rel; do
+    [ -n "$rel" ] || continue
+    link_leaf "$src_root/$rel" "$dst_root/$rel"
+  done < <(cd "$src_root" && find . -mindepth 1 \( -type f -o -type l \) -printf '%P\n' | sort)
+}
+
+deploy_module() {
+  module=$1
+  root="$R/modules/$module/overlay"
+  deploy_overlay_root "$root/home" "$HOME"
+  deploy_overlay_root "$root/prefix" "$PREFIX"
+}
+
+log "== module overlays =="
+for module in desktop gl shell uv-base; do
+  deploy_module "$module"
+done
+
+log "== package-owned public entry points =="
+link_leaf "$R/packages/vscode/launcher/code" "$HOME/.local/bin/code"
+link_leaf "$R/packages/obsidian/launcher/obsidian" "$HOME/gl/bin/obsidian"
+link_leaf "$R/packages/obsidian/launcher/obsidian-app" "$HOME/gl/bin/obsidian-app"
+
+log "== Mesa maintenance compatibility links =="
+link_leaf "$R/packages/mesa-glibc/build.sh" "$HOME/gl/build/build-mesa.sh"
+link_leaf "$R/packages/mesa-glibc/build-env/pyproject.toml" "$HOME/gl/build/pyproject.toml"
+link_leaf "$R/packages/mesa-glibc/build-env/uv.lock" "$HOME/gl/build/uv.lock"
+
+# Preserve the existing build-script contract: $HOME/gl/build/patches/mesa.
+ensure_dir "$HOME/gl/build/patches"
+if [ -L "$HOME/gl/build/patches/mesa" ] || [ ! -e "$HOME/gl/build/patches/mesa" ]; then
+  link_leaf "$R/packages/mesa-glibc/patches/mesa" "$HOME/gl/build/patches/mesa"
+else
+  printf 'refusing to replace unmanaged patch directory: %s\n' "$HOME/gl/build/patches/mesa" >&2
+  exit 1
+fi
+
+# The old diag deployment was experiment-specific and is no longer a live
+# maintenance surface. Remove only the symlink, never a real directory.
+remove_managed_symlink "$HOME/gl/build/diag"
+
+log "deployed: module/package sources -> live Termux paths"
