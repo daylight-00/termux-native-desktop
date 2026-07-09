@@ -5,6 +5,8 @@ ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
 T=$(mktemp -d)
 trap 'rm -rf "$T"' EXIT
 HOME_TEST="$T/home"
+BASH_BIN=$(command -v bash)
+
 mkdir -p "$HOME_TEST/.config/bash/conf.d" "$HOME_TEST/gl/bin" "$HOME_TEST/uv-base/.venv/bin" "$HOME_TEST/.local/bin"
 
 cp "$ROOT/modules/shell/overlay/home/.bashrc" "$HOME_TEST/.bashrc"
@@ -15,7 +17,7 @@ cp "$ROOT/modules/gl/overlay/home/.config/bash/conf.d/40-gl.sh" "$HOME_TEST/.con
 cp "$ROOT/modules/uv-base/overlay/home/.config/bash/conf.d/60-uv-base.sh" "$HOME_TEST/.config/bash/conf.d/60-uv-base.sh"
 cp "$ROOT/modules/shell/overlay/home/.config/bash/conf.d/99-path-policy.sh" "$HOME_TEST/.config/bash/conf.d/99-path-policy.sh"
 
-if ! out=$(HOME="$HOME_TEST" PATH="/usr/bin:/bin:$HOME_TEST/.local/bin:/usr/bin" bash --noprofile --norc -ic '
+if ! out=$(HOME="$HOME_TEST" PATH="/usr/bin:/bin:$HOME_TEST/.local/bin:/usr/bin" "$BASH_BIN" --noprofile --norc -ic '
     unset VIRTUAL_ENV
     . "$HOME/.bashrc"
     printf "PATH=%s\n" "$PATH"
