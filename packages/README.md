@@ -8,6 +8,7 @@ A package answers:
 
 Current owners:
 
+- `cpython-android-runtime/` — consumer-side identity, installation boundary, and validation contract for the custom Android CPython artifact produced by the companion `cpython-android-cli` project.
 - `mesa-glibc/` — Mesa glibc build lifecycle and build environment.
 - `vscode/` — official VS Code glibc application integration; currently the promoted launcher is present while full acquisition/adaptation definition remains to be promoted.
 - `obsidian/` — Obsidian glibc application integration; currently package-owned launchers are present while the AppImage acquisition/adaptation procedure remains documented by its experiment.
