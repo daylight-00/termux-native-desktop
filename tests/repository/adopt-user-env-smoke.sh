@@ -44,6 +44,7 @@ alias con='conda activate venv'
 
 source $HOME/uv-base/.uvrc
 
+# gl layer commands first; upstream per-user tools second.
 case ":$PATH:" in
   *":$HOME/gl/bin:"*) ;;
   *) PATH="$HOME/gl/bin:$PATH" ;;
@@ -54,6 +55,7 @@ case ":$PATH:" in
   *) PATH="$HOME/.local/bin:$PATH" ;;
 esac
 
+# Ensure gl wrappers take precedence over upstream registered binaries.
 PATH="$HOME/gl/bin:$HOME/.local/bin:$(printf '%s' "$PATH" | \
   tr ':' '\n' | \
   grep -v -Fx "$HOME/gl/bin" | \
@@ -62,6 +64,15 @@ PATH="$HOME/gl/bin:$HOME/.local/bin:$(printf '%s' "$PATH" | \
 
 export PATH
 OLD_BASHRC
+
+expected_bashrc_sha=3c7b8682c4debff14f68fa2a239635aed7d13ec6c11918ddee8f59040245a7cf
+fixture_bashrc_sha=$(sha256sum "$HOME_TEST/.bashrc" | awk '{print $1}')
+[ "$fixture_bashrc_sha" = "$expected_bashrc_sha" ] || {
+    echo "legacy .bashrc fixture drift" >&2
+    echo "expected: $expected_bashrc_sha" >&2
+    echo "actual:   $fixture_bashrc_sha" >&2
+    exit 1
+}
 
 printf 'fixture uvrc for adoption smoke test\n' > "$HOME_TEST/uv-base/.uvrc"
 cp "$REPO/modules/uv-base/overlay/home/uv-base/pyproject.toml" "$HOME_TEST/uv-base/pyproject.toml"
