@@ -22,7 +22,4 @@ attempt fail)?
 
 ## Result / Decision
 
-Contract encoded in `setup/glibc/env` (pins BOTH VK vars to the glibc ICD,
-deliberately overriding the desktop session's bionic export) and in
-`bin/gl-run` (adds the zink override for GL apps). Rule of thumb:
-**always set both VK variables.**
+Contract encoded in `modules/gl/overlay/home/gl/env` (pins BOTH VK vars to the glibc ICD, deliberately overriding the desktop session's bionic export) and in `modules/gl/overlay/home/gl/bin/gl-run` (adds the Zink override for GL apps). Rule of thumb: **always set both VK variables.**

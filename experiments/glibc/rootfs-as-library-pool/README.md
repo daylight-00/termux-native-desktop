@@ -22,7 +22,7 @@ If the project needs the library files and package metadata rather than the PRoo
 1. Build `~/gl/lib` as symlinks into selected rootfs library directories.
 2. Exclude the libc family and related core runtime libraries with a denylist; never mix two glibc implementations.
 3. Register the glibc core first and the farm second in the glibc loader configuration.
-4. Couple farm regeneration with `ldconfig` refresh and contamination checks through `setup/glibc/bin/gl-farm`.
+4. Couple farm regeneration with `ldconfig` refresh and contamination checks through `modules/gl/overlay/home/gl/bin/gl-farm`.
 
 ## Evidence
 
@@ -44,4 +44,4 @@ The exact lookup behavior is described in `docs/architecture.md` and the durable
 
 ## Decision
 
-Adopted as the glibc layer foundation. PRoot remains install/debug-time infrastructure rather than the normal application runtime. `gl-farm`, the denylist, and coupled loader-cache refresh are promoted artifacts/contracts.
+Adopted as the glibc layer foundation. PRoot remains install/debug-time infrastructure rather than the normal application runtime. `gl-farm`, the denylist, and coupled loader-cache refresh are promoted artifacts/contracts owned by the gl module.

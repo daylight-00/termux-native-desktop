@@ -105,17 +105,10 @@ then passes everything: vkcube zero-copy (no WSI env vars), VS Code GPU
 
 ## Decision
 
-decisions/0003. build-mesa.sh hard-codes msm,kgsl + post-install libdrm
-check pointing here. Upstream context: kgsl↛libdrm is a 2020 design
-("turnip: Only link libdrm in the DRM case, not KGSL", Mesa 20.3);
-kgsl+X11 is a documented rough edge (24.2 relnotes); ecosystem alternative
-is the wsi-termux-x11(-only-kgsl) patch family — ours is the patch-free
-route. Not filed upstream as a new bug (known design; mechanism unproven).
-Diag runners preserved: setup/mesa/diag/. Narrative: docs/gpu-stack.md.
+`docs/decisions/0003-mesa-kmds-msm-kgsl.md`. `packages/mesa-glibc/build.sh` hard-codes msm,kgsl + post-install libdrm check pointing here. Upstream context: kgsl↛libdrm is a 2020 design ("turnip: Only link libdrm in the DRM case, not KGSL", Mesa 20.3); kgsl+X11 is a documented rough edge (24.2 relnotes); ecosystem alternative is the wsi-termux-x11(-only-kgsl) patch family — ours is the patch-free route. Not filed upstream as a new bug (known design; mechanism unproven). Diag runners are preserved under `recipe/`. Narrative: `docs/gpu.md`.
 
 ## Artifacts
 
 - `evidence/` — strace captures (see CAPTURE.md), readelf outputs.
-- Runtime (outside repo, referenced): `~/opt/mesa-26-glibc` (26.0.6 A/B
-  control), `~/gl/opt/mesa-glibc-26.1.4{,-turnip,-full}` (BAD / config
-  proof / FIX), `~/ark/build/termux-packages` (bionic patchset backup).
+- `recipe/bisect-test.sh` and `recipe/bisect-test-full.sh` — preserved bisect judge harnesses.
+- Runtime (outside repo, referenced): `~/opt/mesa-26-glibc` (26.0.6 A/B control), `~/gl/opt/mesa-glibc-26.1.4{,-turnip,-full}` (BAD / config proof / FIX), `~/ark/build/termux-packages` (bionic patchset backup).

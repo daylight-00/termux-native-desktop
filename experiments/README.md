@@ -11,6 +11,7 @@ experiment/
 ├── README.md     # concise canonical record: current interpretation
 ├── report.md     # detailed session-derived report, when available
 ├── evidence/     # raw traces, logs, tables, captures worth preserving
+├── recipe/       # experiment-specific reproduction material, when useful
 └── work/         # local scratch space; ignored
 ```
 
@@ -37,7 +38,7 @@ experiment
   -> evidence
   -> working conclusion (STATUS.md)
   -> durable decision (docs/decisions/)
-  -> integrated docs or promoted setup/scripts artifact
+  -> module / package / test / integrated guide
 ```
 
 Provenance labels:
@@ -51,7 +52,7 @@ Provenance labels:
 
 | track | experiment | status | provenance |
 |---|---|---|---|
-| desktop | `session-launch` | passed; artifact recovery pending | first-hand summary |
+| desktop | `session-launch` | passed; launcher promoted | first-hand summary |
 | glibc | `miniforge-conda` | passed | first-hand report |
 | glibc | `rootfs-as-library-pool` | passed; layer foundation | first-hand summary |
 | glibc | `vscode` | passed | first-hand report + current canonical summary |
@@ -59,7 +60,7 @@ Provenance labels:
 | gpu | `chromium-bionic-gpu` | passed conventional GPU path | first-hand report |
 | gpu | `mesa-glibc-26.0.6` | passed; historical control | first-hand report + later controls |
 | gpu | `mesa-bionic-26.1.4` | passed; bionic daily-driver lineage | first-hand report + later validation |
-| gpu | `mesa-26.1.4-present-sigbus` | passed investigation; fix adopted | first-hand summary + raw evidence |
+| gpu | `mesa-26.1.4-present-sigbus` | passed investigation; fix adopted | first-hand summary + raw evidence + recipe |
 | gpu | `glibc-cross-toolchain` | passed | first-hand summary |
 | gpu | `zink-runtime-contract` | passed | first-hand summary |
 | gpu | `vscode-angle-vulkan` | passed | first-hand report |

@@ -39,7 +39,7 @@ The later project architecture superseded them with:
 - glibc-repo X11/xcb libraries and local Unix-socket X11;
 - a filtered Debian-rootfs library farm;
 - RPATH/loader-cache based dependency resolution rather than broad library-path injection;
-- the promoted launcher at `setup/glibc/bin/code`.
+- the package-owned launcher at `packages/vscode/launcher/code`, deployed to `~/.local/bin/code`.
 
 The GPU enablement investigation is intentionally separate at `experiments/gpu/vscode-angle-vulkan/`.
 

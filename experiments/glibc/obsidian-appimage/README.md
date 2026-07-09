@@ -48,6 +48,6 @@ Passed. AppImage is a viable front-end format for the same downstream glibc onbo
 
 ## Decision
 
-Keep AppImage extraction as a narrow input adapter, not as a separate runtime architecture. The runtime artifacts remain in `setup/glibc/bin/obsidian` and `setup/glibc/bin/obsidian-app`.
+Keep AppImage extraction as a narrow input adapter, not as a separate runtime architecture. The package-owned launchers are now `packages/obsidian/launcher/obsidian` and `packages/obsidian/launcher/obsidian-app`; `tools/deploy` exposes them at the live entry points.
 
 See [`report.md`](report.md).

@@ -23,6 +23,6 @@ The live session model is stable enough for the current workstation and supports
 
 ## Promoted artifacts
 
-- `setup/session/startxfce-x11` — recovered canonical launcher.
+- `modules/desktop/overlay/home/.local/bin/startxfce-x11` — recovered canonical launcher.
 - `docs/desktop-session.md` — integrated two-world environment contract and troubleshooting guide.
-- `scripts/deploy-gl.sh` — live symlink deployment contract.
+- `tools/deploy` — module/package live deployment contract.
