@@ -30,7 +30,7 @@ run() {
 }
 
 ensure_dir() {
-  dst=$1
+  local dst=$1
   if [ -L "$dst" ]; then
     log "convert symlink directory: $dst -> $(readlink "$dst")"
     run rm -f "$dst"
@@ -41,21 +41,38 @@ ensure_dir() {
   run mkdir -p "$dst"
 }
 
+has_symlink_ancestor() {
+  local p
+  p=$(dirname "$1")
+  while [ "$p" != "/" ]; do
+    [ -L "$p" ] && return 0
+    p=$(dirname "$p")
+  done
+  return 1
+}
+
 link_leaf() {
-  src=$1
-  dst=$2
+  local src=$1
+  local dst=$2
   [ -e "$src" ] || { printf 'missing source: %s\n' "$src" >&2; exit 1; }
   ensure_dir "$(dirname "$dst")"
   if [ -e "$dst" ] && [ ! -L "$dst" ]; then
-    printf 'refusing to replace unmanaged target: %s\n' "$dst" >&2
-    exit 1
+    # During dry-run a legacy symlink-directory conversion is only simulated,
+    # so a leaf may still appear as a real file through that symlink. Real
+    # deployment converts the parent first; tolerate only that simulated case.
+    if [ "$DRY_RUN" -eq 1 ] && has_symlink_ancestor "$dst"; then
+      :
+    else
+      printf 'refusing to replace unmanaged target: %s\n' "$dst" >&2
+      exit 1
+    fi
   fi
   log "link: $dst -> $src"
   run ln -sfn "$src" "$dst"
 }
 
 remove_managed_symlink() {
-  dst=$1
+  local dst=$1
   if [ -L "$dst" ]; then
     log "remove obsolete symlink: $dst -> $(readlink "$dst")"
     run rm -f "$dst"
@@ -66,8 +83,9 @@ remove_managed_symlink() {
 }
 
 deploy_overlay_root() {
-  src_root=$1
-  dst_root=$2
+  local src_root=$1
+  local dst_root=$2
+  local rel
   [ -d "$src_root" ] || return 0
 
   # Convert legacy directory symlinks before linking leaves beneath them.
@@ -83,8 +101,8 @@ deploy_overlay_root() {
 }
 
 deploy_module() {
-  module=$1
-  root="$R/modules/$module/overlay"
+  local module=$1
+  local root="$R/modules/$module/overlay"
   deploy_overlay_root "$root/home" "$HOME"
   deploy_overlay_root "$root/prefix" "$PREFIX"
 }
@@ -106,7 +124,9 @@ link_leaf "$R/packages/mesa-glibc/build-env/uv.lock" "$HOME/gl/build/uv.lock"
 
 # Preserve the existing build-script contract: $HOME/gl/build/patches/mesa.
 ensure_dir "$HOME/gl/build/patches"
-if [ -L "$HOME/gl/build/patches/mesa" ] || [ ! -e "$HOME/gl/build/patches/mesa" ]; then
+if [ -L "$HOME/gl/build/patches/mesa" ] || \
+   [ ! -e "$HOME/gl/build/patches/mesa" ] || \
+   { [ "$DRY_RUN" -eq 1 ] && has_symlink_ancestor "$HOME/gl/build/patches/mesa"; }; then
   link_leaf "$R/packages/mesa-glibc/patches/mesa" "$HOME/gl/build/patches/mesa"
 else
   printf 'refusing to replace unmanaged patch directory: %s\n' "$HOME/gl/build/patches/mesa" >&2

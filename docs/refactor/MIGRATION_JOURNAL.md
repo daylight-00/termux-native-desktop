@@ -56,3 +56,36 @@ Create documentation commit, then create one grouped ownership-move commit using
 6. install application-specific public launchers from package owners;
 7. preserve Mesa live build compatibility paths without keeping experiment bisect harnesses in `~/gl/build/diag`;
 8. remove only obsolete symlinks, never real directories.
+
+## 2026-07-09 — Deploy smoke validation
+
+### Faults found before live use
+
+A repository-level smoke test reproduced the legacy live layout and found two deploy implementation bugs before device migration:
+
+1. Bash function variables such as `dst` were global, so `link_leaf` lost its destination after calling `ensure_dir`.
+2. dry-run needed to tolerate targets visible only through a legacy directory symlink that would be converted during real deployment.
+
+### Fix
+
+- all function-scoped variables are declared `local`;
+- `has_symlink_ancestor` distinguishes dry-run legacy-view leaves from unmanaged direct targets;
+- the Mesa `patches/mesa` compatibility path handles the same simulated legacy-parent case.
+
+### Validation
+
+Local repository-level test:
+
+```text
+tests/repository/deploy-smoke.sh
+deploy smoke test: PASS
+```
+
+The test verifies:
+
+- dry-run does not mutate legacy links;
+- real deployment converts legacy directory symlinks to target directories;
+- module leaf links are installed;
+- package launchers are installed at their public entry points;
+- Mesa maintenance compatibility links are installed;
+- obsolete experiment `diag` symlink is removed without deleting a real directory.
