@@ -1,0 +1,11 @@
+[project]
+name = "base"
+version = "0.1.0"
+description = "User-level uv base environment"
+requires-python = ">=3.14,<3.15"
+dependencies = []
+
+[tool.uv]
+package = false
+python-downloads = "never"
+python-preference = "only-system"
