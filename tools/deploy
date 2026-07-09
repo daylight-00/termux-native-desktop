@@ -60,7 +60,10 @@ ensure_dir() {
   fi
 
   run mkdir -p "$dst"
-  [ "$DRY_RUN" -eq 1 ] && mark_planned_dir "$dst"
+  if [ "$DRY_RUN" -eq 1 ]; then
+    mark_planned_dir "$dst"
+  fi
+  return 0
 }
 
 has_symlink_ancestor() {
