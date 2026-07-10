@@ -34,6 +34,7 @@ The post-handoff evidence and decision records are:
 0021-glibc-242-downgrade-simulation-passed.md
 0022-glibc-242-recovery-and-core-gate-false-negative.md
 0023-cli-level-abi-incident-recovery-closed.md
+0024-vscode-gui-recovery-validation-passed.md
 ```
 
 Full top-down rationale is on `main`:
@@ -55,7 +56,7 @@ refactor/0015
 refactor/0016
     -> handoff into semantic review
 
-refactor/0017-0023
+refactor/0017-0024
     -> current branch evidence/design records produced under that direction
 
 refactor/0014
@@ -99,6 +100,7 @@ refactor/0014
 - `0021-glibc-242-downgrade-simulation-passed.md` — bounded one-package APT downgrade simulation result.
 - `0022-glibc-242-recovery-and-core-gate-false-negative.md` — package-managed 2.42 recovery evidence, provider/VS Code recovery, core-gate SIGPIPE false negative, and harness pipeline caveat.
 - `0023-cli-level-abi-incident-recovery-closed.md` — strict rerun showing core ABI PASS, provider relocation PASS, VS Code GPU/CPU CLI PASS, and CLI-level incident closure.
+- `0024-vscode-gui-recovery-validation-passed.md` — real GUI workload validation showing persistent VS Code main, GPU, utility, and renderer processes plus user-confirmed normal execution; actual graphics-provider selection remains a separate claim.
 
 ### Supporting records
 
@@ -121,7 +123,7 @@ The system-foundation documentation was added separately on `main` after this br
 
 ## Current incident state
 
-The CLI-level ABI incident is closed.
+The tested VS Code workload has recovered through CLI and real GUI validation.
 
 Current device state:
 
@@ -130,7 +132,8 @@ SUBSTRATE_RECOVERED
 PROVIDER_RELOCATION_VALID
 VS_CODE_GPU_CLI_VALID
 VS_CODE_CPU_CLI_VALID
-CLI_LEVEL_INCIDENT_CLOSED
+VS_CODE_GUI_WORKLOAD_VALID
+ABI_INCIDENT_RECOVERY_COMPLETE_FOR_TESTED_VSCODE_WORKLOAD
 ```
 
 Current containment state:
@@ -143,7 +146,9 @@ glibc temporarily held from upgrading to known-broken 2.43
 
 The hold is temporary incident containment only. The long-term latest-first direction remains a corrected current/newer substrate validated by the same gates.
 
-Real VS Code GUI validation remains a separate workload gate. The bounded selected-closure pilot defined in `0019` may begin only after the GUI workload gate is recorded or explicitly scoped as independent.
+The GUI workload gate is closed. Actual Vulkan ICD/driver/provider selection remains an independent graphics-evidence track; successful GPU-process creation and Vulkan/ANGLE flags do not by themselves prove the selected provider bytes.
+
+The bounded selected-closure pilot defined in `0019` may now begin from the recovered substrate while preserving the broad farm unchanged as control/reference.
 
 ## Current implementation stop line
 
@@ -162,7 +167,7 @@ new global gl environment policy
 Allowed work includes:
 
 ```text
-real GUI workload validation
+graphics-provider actual-selection evidence
 read-only inspection
 identity capture
 regression gates
