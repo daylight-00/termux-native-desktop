@@ -155,6 +155,11 @@ while IFS= read -r path; do
             package=KERNEL_DEVICE
             version=NOT_APPLICABLE
             ;;
+        /memfd:allocation*)
+            path_class=RUNTIME_ANON_MEMORY
+            package=RUNTIME_MEMORY
+            version=NOT_APPLICABLE
+            ;;
         "$HOME/.cache/"*)
             path_class=RUNTIME_CACHE
             package=RUNTIME_STATE
@@ -167,7 +172,12 @@ while IFS= read -r path; do
             ;;
     esac
 
-    if [ -f "$path" ]; then
+    if [ "$path_class" = RUNTIME_ANON_MEMORY ]; then
+        state=RUNTIME_ANONYMOUS_MAPPING
+        sha=NOT_APPLICABLE
+        build_id=NOT_APPLICABLE
+        soname=NOT_APPLICABLE
+    elif [ -f "$path" ]; then
         state=PRESENT
         sha=$(sha256sum "$path" | awk '{print $1}')
         build_id=$(build_id_of "$path")
