@@ -30,6 +30,7 @@ The first post-handoff Stage 2–4 records are:
 0017-gl-umbrella-semantic-inventory.md
 0018-real-device-glibc-substrate-authority.md
 0019-selected-closure-pilot-decision-criteria.md
+0020-glibc-242-243-binary-abi-regression.md
 ```
 
 Full top-down rationale is on `main`:
@@ -51,7 +52,7 @@ refactor/0015
 refactor/0016
     -> handoff into semantic review
 
-refactor/0017-0019
+refactor/0017-0020
     -> current branch evidence/design records produced under that direction
 
 refactor/0014
@@ -91,6 +92,7 @@ refactor/0014
 - `0017-gl-umbrella-semantic-inventory.md` — Stage 2 inventory of current `gl` files, environment variables, helpers, actual consumers, minimum scopes, candidate owners, and migration conditions.
 - `0018-real-device-glibc-substrate-authority.md` — Stage 3 evidence that the current device substrate is dpkg-owned and APT-supplied, with version availability, transaction history, control-state semantics, rollback limits, and the next non-mutating recovery experiment.
 - `0019-selected-closure-pilot-decision-criteria.md` — Stage 4 target choice and acceptance criteria for a bounded D-Bus provider-chain pilot, including world protection, locality, provenance, byte materialization, candidate-selection proof, and decision outcomes.
+- `0020-glibc-242-243-binary-abi-regression.md` — exact non-installing A/B evidence that the repository `glibc=2.42` artifact exports `__vsyslog_chk@@GLIBC_2.17` while the active 2.43 libc does not, plus the bounded recovery decision gate.
 
 ### Supporting records
 
@@ -133,7 +135,17 @@ explicit apt/full-upgrade update path
 
 Pacman is absent on the device and is not part of the current substrate authority path.
 
-The immediate recovery experiment is exact, non-installing inspection of the repository-addressable `glibc=2.42` artifact before deciding whether downgrade or corrected 2.43 replacement is justified.
+The exact non-installing binary A/B comparison is now complete:
+
+```text
+glibc 2.42 artifact:
+    __vsyslog_chk@@GLIBC_2.17 PRESENT
+
+glibc 2.43 active libc:
+    __vsyslog_chk@@GLIBC_2.17 ABSENT
+```
+
+The immediate recovery step is APT transaction simulation for `glibc=2.42`, followed by review of dependency and removal effects before any active mutation.
 
 ## Current implementation stop line
 
