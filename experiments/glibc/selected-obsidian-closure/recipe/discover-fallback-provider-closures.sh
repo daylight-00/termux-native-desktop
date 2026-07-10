@@ -66,7 +66,11 @@ while IFS=$'\t' read -r semantic_class path_class path package version build_id;
         >>"$INDEX"
 done <"$UNIVERSE"
 
-sort -u "$INDEX" -o "$INDEX"
+{
+    head -n 1 "$INDEX"
+    tail -n +2 "$INDEX" | sort -u
+} >"$INDEX.tmp"
+mv "$INDEX.tmp" "$INDEX"
 
 printf 'root_label\tconsumer\tneeded\tresolution\tselected_path\tselected_class\n' >"$GRAPH"
 printf 'root_label\tpath\tsemantic_class\n' >"$REACHABLE"
