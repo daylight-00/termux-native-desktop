@@ -37,7 +37,9 @@ classify() {
 
     case "$path_class" in
         APP_LOCAL)
-            if [ "$build_id" = NONE ]; then
+            if [[ "$path" == */libvk_swiftshader.so ]]; then
+                printf 'APP_LOCAL_GRAPHICS_VULKAN_SWIFTSHADER_ELF\n'
+            elif [ "$build_id" = NONE ]; then
                 printf 'APP_LOCAL_DATA\n'
             else
                 printf 'APP_LOCAL_ELF\n'
@@ -63,6 +65,10 @@ classify() {
                 printf 'PROVIDER_SCHEMA_DATA\n'
             elif [[ "$path" == */libVkLayer_MESA_device_select.so ]]; then
                 printf 'PROVIDER_GRAPHICS_VULKAN_LAYER_ELF\n'
+            elif [[ "$path" == */libvulkan_lvp.so ]]; then
+                printf 'PROVIDER_GRAPHICS_VULKAN_SOFTWARE_LVP_ELF\n'
+            elif [[ "$path" == */libvulkan_gfxstream.so ]]; then
+                printf 'PROVIDER_GRAPHICS_VULKAN_VIRTUAL_GFXSTREAM_ELF\n'
             elif [[ "$path" == */libgbm.so.* ]]; then
                 printf 'PROVIDER_GRAPHICS_GBM_ELF\n'
             elif [ "$build_id" != NONE ]; then
