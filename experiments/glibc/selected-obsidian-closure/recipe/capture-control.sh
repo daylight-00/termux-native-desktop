@@ -25,7 +25,7 @@ done
     exit 1
 }
 
-PROCESS_PATTERN="$APP/(obsidian|chrome_crashpad_handler)"
+PROCESS_PATTERN="$APP/"
 
 existing=$(pgrep -af "$PROCESS_PATTERN" || true)
 if [ -n "$existing" ]; then
@@ -35,6 +35,8 @@ if [ -n "$existing" ]; then
 fi
 
 mkdir -p "$OUT/maps"
+printf 'sample\tpid\tclass\tcmdline\n' >"$OUT/poll-observed.tsv"
+printf 'pid\tclass\tcmdline\n' >"$OUT/last-processes.tsv"
 
 printf 'app: %s\n' "$APP" | tee "$OUT/app-path.txt"
 printf 'launcher: %s\n' "$LAUNCHER" | tee "$OUT/launcher-path.txt"
@@ -78,8 +80,23 @@ classify_cmdline() {
     esac
 }
 
+write_last_processes() {
+    local pid cmdline class
+    printf 'pid\tclass\tcmdline\n' >"$OUT/last-processes.tsv"
+    for pid in "${current_pids[@]:-}"; do
+        [ -r "/proc/$pid/cmdline" ] || continue
+        cmdline=$(tr '\0' ' ' <"/proc/$pid/cmdline")
+        class=$(classify_cmdline "$cmdline")
+        printf '%s\t%s\t%s\n' "$pid" "$class" "$cmdline" \
+            >>"$OUT/last-processes.tsv"
+    done
+}
+
 stable=0
+sample=0
 for _ in $(seq 1 $((STARTUP_TIMEOUT_SECONDS * 2))); do
+    sample=$((sample + 1))
+
     mapfile -t current_pids < <(
         pgrep -f "$PROCESS_PATTERN" 2>/dev/null \
             | sort -n \
@@ -94,16 +111,22 @@ for _ in $(seq 1 $((STARTUP_TIMEOUT_SECONDS * 2))); do
     have_renderer=0
     have_utility=0
 
-    for pid in "${current_pids[@]}"; do
+    for pid in "${current_pids[@]:-}"; do
         [ -r "/proc/$pid/cmdline" ] || continue
         cmdline=$(tr '\0' ' ' <"/proc/$pid/cmdline")
         class=$(classify_cmdline "$cmdline")
+
+        printf '%s\t%s\t%s\t%s\n' "$sample" "$pid" "$class" "$cmdline" \
+            >>"$OUT/poll-observed.tsv"
+
         case "$class" in
             main) have_main=1 ;;
             renderer) have_renderer=1 ;;
             utility) have_utility=1 ;;
         esac
     done
+
+    write_last_processes
 
     if [ "$have_main" -eq 1 ] && [ "$have_renderer" -eq 1 ] && [ "$have_utility" -eq 1 ]; then
         stable=1
@@ -115,8 +138,20 @@ done
 
 if [ "$stable" -ne 1 ]; then
     printf 'required process classes did not stabilize before timeout\n' >&2
+
+    printf '\n===== final observed process topology =====\n' >&2
+    cat "$OUT/last-processes.tsv" >&2 || true
+
+    printf '\n===== process classes ever observed =====\n' >&2
+    awk -F $'\t' 'NR > 1 { seen[$3]=1 } END { for (c in seen) print c }' \
+        "$OUT/poll-observed.tsv" \
+        | sort \
+        >&2 || true
+
     printf '\n===== stderr =====\n' >&2
     sed -n '1,200p' "$OUT/launch.stderr" >&2 || true
+
+    printf '\npartial evidence: %s\n' "$OUT" >&2
     exit 1
 fi
 
