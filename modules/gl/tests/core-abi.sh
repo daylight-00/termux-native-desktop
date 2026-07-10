@@ -4,8 +4,12 @@ set -euo pipefail
 LIBC=${LIBC:-$PREFIX/glibc/lib/libc.so.6}
 [ -r "$LIBC" ] || { echo "missing libc: $LIBC" >&2; exit 1; }
 
-if readelf --dyn-syms --wide "$LIBC" \
-    | grep -qE '[[:space:]]__vsyslog_chk(@@|@)GLIBC_2\.17([[:space:]]|$)'; then
+symbols=$(mktemp)
+trap 'rm -f "$symbols"' EXIT
+
+readelf --dyn-syms --wide "$LIBC" >"$symbols"
+
+if grep -qE '[[:space:]]__vsyslog_chk(@@|@)GLIBC_2\.17([[:space:]]|$)' "$symbols"; then
     printf 'glibc core ABI: PASS (__vsyslog_chk@GLIBC_2.17 exported)\n'
 else
     printf 'glibc core ABI: FAIL\n' >&2
