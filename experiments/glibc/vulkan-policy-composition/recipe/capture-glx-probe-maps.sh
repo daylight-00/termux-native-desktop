@@ -72,14 +72,10 @@ done <"$OUT/mapped-paths.raw.txt" \
     >"$OUT/mapped-paths.real.txt"
 
 awk '
-    /libGL(X|dispatch|\.so)/ ||
-    /zink/ ||
-    /vulkan/ ||
-    /mesa/ ||
-    /dri/ ||
-    /libdrm/ ||
-    /kgsl/ {
-        print
+    {
+        lower = tolower($0)
+        if ($0 ~ /libGL(X|dispatch|\.so)/ || lower ~ /zink/ || lower ~ /vulkan/ || lower ~ /mesa/ || lower ~ /dri/ || lower ~ /libdrm/ || lower ~ /kgsl/)
+            print
     }
 ' "$OUT/mapped-paths.real.txt" \
     >"$OUT/graphics-related-paths.txt"
