@@ -70,6 +70,10 @@ The post-handoff evidence and decision records are:
 0041-obsidian-fallback-provider-closure-attribution.md
 0042-vulkan-policy-producer-consumer-inventory.md
 0043-scoped-vulkan-policy-composition-experiment.md
+0044-self-contained-glx-consumer-probe.md
+0045-explicit-freedreno-zink-consumer-validation-passed.md
+0046-zink-turnip-mixed-provider-version-signal.md
+0047-explicit-zink-turnip-physical-provider-graph.md
 ```
 
 Full top-down rationale is on `main`:
@@ -91,7 +95,7 @@ refactor/0015
 refactor/0016
     -> handoff into semantic review
 
-refactor/0017-0043
+refactor/0017-0047
     -> current branch evidence/design records produced under that direction
 
 refactor/0014
@@ -155,6 +159,10 @@ refactor/0014
 - `0041-obsidian-fallback-provider-closure-attribution.md` — attributes all 11 strict-only paths to SwiftShader, Lavapipe, or Gfxstream roots with zero unresolved or ambiguous mapped-universe SONAME edges.
 - `0042-vulkan-policy-producer-consumer-inventory.md` — separates bionic session policy from glibc provider-selection policy, inventories gl-run/VS Code/Obsidian consumers, and defines the minimum future composition contract.
 - `0043-scoped-vulkan-policy-composition-experiment.md` — starts a cross-consumer experiment that separates application feature mode from Vulkan provider-selection policy without modifying promoted runtime paths.
+- `0044-self-contained-glx-consumer-probe.md` — replaces the unavailable `glxinfo` assumption with an experiment-owned GLX pbuffer consumer that avoids adding a diagnostic package dependency.
+- `0045-explicit-freedreno-zink-consumer-validation-passed.md` — records the passing scoped explicit-Freedreno Zink/GLX consumer validation and Turnip Adreno 730 renderer identity.
+- `0046-zink-turnip-mixed-provider-version-signal.md` — records the version-domain signal and adds bounded process-map capture before stronger physical-path claims.
+- `0047-explicit-zink-turnip-physical-provider-graph.md` — records the actual cross-supply-root GLX/OpenGL, Vulkan loader/support, Turnip driver, and KGSL physical composition.
 
 ### Supporting records
 
@@ -231,7 +239,9 @@ selected Obsidian AppDir closure pilot
 scoped Vulkan policy composition experiment
 ```
 
-For Obsidian, the baseline control covers 161 mapped paths with semantic review count zero. The strict policy-isolation run covers 169 mapped paths and preserves topology/survival while replacing the explicit Freedreno/KGSL relation with an alternate provider composition. All 11 strict-only paths are attributed inside the captured mapped universe: SwiftShader root 1, Lavapipe root plus closure 9, and Gfxstream root 1, with zero unresolved or ambiguous SONAME edges. Vulkan policy producers and real launch consumers are inventoried. Experiment-local adapters now separate `GL_GPU` application mode from `VULKAN_POLICY_MODE` provider policy without changing promoted runtime paths. The active next gate is bounded consumer validation, followed by locality-shadowing and non-graphics static/runtime closure analysis. Candidate materialization remains blocked.
+For Obsidian, the baseline control covers 161 mapped paths with semantic review count zero. The strict policy-isolation run covers 169 mapped paths and preserves topology/survival while replacing the explicit Freedreno/KGSL relation with an alternate provider composition. All 11 strict-only paths are attributed inside the captured mapped universe: SwiftShader root 1, Lavapipe root plus closure 9, and Gfxstream root 1, with zero unresolved or ambiguous SONAME edges. Vulkan policy producers and real launch consumers are inventoried.
+
+For scoped Vulkan composition, policy identity validation has passed, the self-contained GLX consumer builds as a minimal glibc executable, explicit-Freedreno Zink/Turnip validation has passed, and process maps show a real mixed physical graph: rootfs GL/GLX dispatch and Mesa GLX vendor plane, prefix Vulkan loader/DRM/XCB support, Mesa provider-store Freedreno driver, and KGSL device interface. The current next gate is complete map provenance enrichment to identify the Mesa/Gallium/Zink frontend object and package lineage, then an implicit-discovery GLX A/B. Electron consumer validation follows afterward. Candidate materialization remains blocked pending these graphics composition gates plus locality-shadowing and non-graphics static/runtime closure analysis.
 
 ## Current implementation stop line
 
