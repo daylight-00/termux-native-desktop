@@ -57,6 +57,7 @@ The post-handoff evidence and decision records are:
 0028-selected-dbus-candidate-validation-passed.md
 0029-second-selected-closure-pilot-target.md
 0030-obsidian-control-capture-first-timeout.md
+0031-obsidian-cpu-topology-and-survival-gate.md
 ```
 
 Full top-down rationale is on `main`:
@@ -78,7 +79,7 @@ refactor/0015
 refactor/0016
     -> handoff into semantic review
 
-refactor/0017-0030
+refactor/0017-0031
     -> current branch evidence/design records produced under that direction
 
 refactor/0014
@@ -129,6 +130,7 @@ refactor/0014
 - `0028-selected-dbus-candidate-validation-passed.md` — concrete three-object provider bytes, receipt/map equality, actual candidate selection, and zero broad-farm/rootfs leakage.
 - `0029-second-selected-closure-pilot-target.md` — Obsidian AppDir CPU path selected to test `$ORIGIN` locality and real application-domain composition.
 - `0030-obsidian-control-capture-first-timeout.md` — first Obsidian control-capture timeout, harness observability defect, and topology-preserving correction.
+- `0031-obsidian-cpu-topology-and-survival-gate.md` — actual CPU-path topology evidence, utility-class requirement correction, descendant-tree discovery, and separate workload survival gate.
 
 ### Supporting records
 
@@ -203,7 +205,7 @@ The active next experiment is:
 selected Obsidian AppDir CPU-path closure pilot
 ```
 
-The first control capture timed out before the required main/renderer/utility topology gate completed. That run is currently interpreted as a capture-harness observability failure, not an application failure. The corrected harness preserves polling topology and timeout diagnostics. Candidate materialization for Obsidian remains blocked.
+Observed CPU topology currently supports `main + renderer + zygote`, with `utility` absent across the captured startup samples. A later `GPU process isn't usable. Goodbye.` fatal requires an explicit survival gate. The current harness follows launch descendants by PPID tree and separates topology from survival before map classification. Candidate materialization for Obsidian remains blocked.
 
 ## Current implementation stop line
 
