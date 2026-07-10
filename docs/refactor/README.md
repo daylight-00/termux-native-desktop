@@ -40,44 +40,6 @@ The operational handoff that initiated the semantic review is:
 0016-next-session-handoff.md
 ```
 
-The post-handoff evidence and decision records are:
-
-```text
-0017-gl-umbrella-semantic-inventory.md
-0018-real-device-glibc-substrate-authority.md
-0019-selected-closure-pilot-decision-criteria.md
-0020-glibc-242-243-binary-abi-regression.md
-0021-glibc-242-downgrade-simulation-passed.md
-0022-glibc-242-recovery-and-core-gate-false-negative.md
-0023-cli-level-abi-incident-recovery-closed.md
-0024-vscode-gui-recovery-validation-passed.md
-0025-repository-checkout-relocation-to-projects.md
-0026-dbus-pilot-control-static-selection-mismatch.md
-0027-dbus-static-runtime-closure-agreement.md
-0028-selected-dbus-candidate-validation-passed.md
-0029-second-selected-closure-pilot-target.md
-0030-obsidian-control-capture-first-timeout.md
-0031-obsidian-cpu-topology-and-survival-gate.md
-0032-obsidian-control-wall-clock-gate-timing.md
-0033-obsidian-control-maps-captured-provenance-split.md
-0034-obsidian-control-semantic-decomposition.md
-0035-obsidian-semantic-classifier-awk-portability-fix.md
-0036-obsidian-graphics-provider-and-device-node-boundary.md
-0037-obsidian-graphics-process-class-mapping.md
-0038-obsidian-cpu-control-vulkan-policy-leak-hypothesis.md
-0039-obsidian-strict-cpu-vulkan-policy-ab-result.md
-0040-obsidian-explicit-freedreno-vs-implicit-fallback-provider-set.md
-0041-obsidian-fallback-provider-closure-attribution.md
-0042-vulkan-policy-producer-consumer-inventory.md
-0043-scoped-vulkan-policy-composition-experiment.md
-0044-self-contained-glx-consumer-probe.md
-0045-explicit-freedreno-zink-consumer-validation-passed.md
-0046-zink-turnip-mixed-provider-version-signal.md
-0047-explicit-zink-turnip-physical-provider-graph.md
-0048-zink-frontend-and-cross-version-graphics-composition-confirmed.md
-0049-implicit-discovery-zink-consumer-failure.md
-```
-
 Full top-down rationale is on `main`:
 
 ```text
@@ -97,7 +59,7 @@ refactor/0015
 refactor/0016
     -> handoff into semantic review
 
-refactor/0017-0049
+refactor/0017-0050
     -> current branch evidence/design records produced under that direction
 
 refactor/0014
@@ -105,68 +67,163 @@ refactor/0014
        not the current next implementation sequence
 ```
 
-## Documents
+## Document index
 
 ### Baseline and ownership migration
 
-- `0001-current-state-inventory.md` — observed repository and live-system state before migration.
-- `0002-ownership-map.md` — old path, new owner, new path, live target, and migration method.
-- `0003-migration-plan.md` — ordered repository and live migration procedure.
-- `0004-shell-uv-base-adoption.md` — exact legacy identities, new shell/uv-base ownership, hash-guarded adoption, and non-actions.
-- `0005-device-preflight-test-failures.md` — first real-device preflight test failures and test-isolation corrections.
-- `0006-second-device-preflight-findings.md` — second device preflight observations and corrections.
-- `0007-third-device-preflight-deploy-return-status.md` — deploy return-status fault and repair.
-- `0008-pre-apply-gate-passed.md` — repository/device pre-apply validation gate result.
-- `0009-phase-a-user-env-adoption-passed.md` — live shell and uv-base adoption result.
-- `0010-phase-b-runtime-deploy-plan.md` — scoped runtime-facing topology migration plan.
-- `0011-phase-b-runtime-deploy-passed.md` — real-device ownership/deployment migration result.
+```text
+0001-current-state-inventory.md
+0002-ownership-map.md
+0003-migration-plan.md
+0004-shell-uv-base-adoption.md
+0005-device-preflight-test-failures.md
+0006-second-device-preflight-findings.md
+0007-third-device-preflight-deploy-return-status.md
+0008-pre-apply-gate-passed.md
+0009-phase-a-user-env-adoption-passed.md
+0010-phase-b-runtime-deploy-plan.md
+0011-phase-b-runtime-deploy-passed.md
+```
+
+These records preserve the initial inventory, ownership map, migration procedure, shell/uv-base adoption, real-device preflight corrections, and the completed Phase A/B ownership migration.
 
 ### ABI incident and lifecycle reasoning
 
-- `0012-post-refactor-vscode-libdbus-abi-regression.md` — workload failure capture and hypothesis separation.
-- `0013-vscode-libdbus-root-cause-confirmed.md` — independent core/provider ABI root-cause confirmation and regression gates.
-- `0014-robust-gl-update-and-farm-lifecycle.md` — candidate/validation/promotion principles and an earlier concrete lifecycle proposal; partially superseded for implementation order.
+```text
+0012-post-refactor-vscode-libdbus-abi-regression.md
+0013-vscode-libdbus-root-cause-confirmed.md
+0014-robust-gl-update-and-farm-lifecycle.md
+```
+
+`0012` and `0013` preserve the ABI incident evidence and root cause. `0014` retains candidate/validation/promotion and transactional principles but is not the current implementation order.
 
 ### Current architecture direction
 
-- `0015-architecture-reassessment-and-hard-refactor-direction.md` — branch-specific semantic hard-refactor decision, `gl` umbrella critique, farm status, substrate authority, and stop line.
-- `0016-next-session-handoff.md` — mandatory reading order, allowed/blocked work, incident context, and expected next-session outputs.
+```text
+0015-architecture-reassessment-and-hard-refactor-direction.md
+0016-next-session-handoff.md
+```
 
-### Semantic review and current evidence
+These define the branch-local semantic hard-refactor direction, stop line, and the handoff into evidence-driven semantic review.
 
-- `0017-gl-umbrella-semantic-inventory.md` — Stage 2 inventory of current `gl` files, environment variables, helpers, actual consumers, minimum scopes, candidate owners, and migration conditions.
-- `0018-real-device-glibc-substrate-authority.md` — Stage 3 evidence that the current device substrate is dpkg-owned and APT-supplied, with rollback and update-path facts.
-- `0019-selected-closure-pilot-decision-criteria.md` — Stage 4 criteria for a bounded selected-provider pilot.
-- `0020-glibc-242-243-binary-abi-regression.md` — exact binary A/B evidence for the missing fortified syslog export.
-- `0021-glibc-242-downgrade-simulation-passed.md` — bounded one-package APT downgrade simulation result.
-- `0022-glibc-242-recovery-and-core-gate-false-negative.md` — package-managed recovery evidence and test-harness corrections.
-- `0023-cli-level-abi-incident-recovery-closed.md` — strict core/provider/VS Code CLI recovery gate closure.
-- `0024-vscode-gui-recovery-validation-passed.md` — real GUI workload recovery validation.
-- `0025-repository-checkout-relocation-to-projects.md` — canonical checkout move and relocation-safe relinking contract.
-- `0026-dbus-pilot-control-static-selection-mismatch.md` — path-based world inference rejected after libcap control/static mismatch.
-- `0027-dbus-static-runtime-closure-agreement.md` — ownership-aware static selection matches runtime provider maps.
-- `0028-selected-dbus-candidate-validation-passed.md` — concrete three-object provider bytes, receipt/map equality, actual candidate selection, and zero broad-farm/rootfs leakage.
-- `0029-second-selected-closure-pilot-target.md` — Obsidian AppDir CPU path selected to test `$ORIGIN` locality and real application-domain composition.
-- `0030-obsidian-control-capture-first-timeout.md` — first Obsidian control-capture timeout, harness observability defect, and topology-preserving correction.
-- `0031-obsidian-cpu-topology-and-survival-gate.md` — actual CPU-path topology evidence, utility-class requirement correction, descendant-tree discovery, and separate workload survival gate.
-- `0032-obsidian-control-wall-clock-gate-timing.md` — fixes sample-count timing so startup and survival budgets use wall-clock deadlines and emit progress.
-- `0033-obsidian-control-maps-captured-provenance-split.md` — records successful final multiprocess maps capture, broad heterogeneous runtime object classes, and separation of live capture from post-processing provenance enrichment.
-- `0034-obsidian-control-semantic-decomposition.md` — decomposes mapped objects into app-local ELF/data, substrate, locale, prefix ELF providers, rootfs ELF providers, font data, schema data, and mutable runtime state.
-- `0035-obsidian-semantic-classifier-awk-portability-fix.md` — records and corrects the device AWK parse failure in the review-filter stage without changing semantic classification rules.
-- `0036-obsidian-graphics-provider-and-device-node-boundary.md` — resolves the final review objects into a Mesa Vulkan provider ELF and the KGSL GPU device node, and records that CPU-mode launch flags do not prove graphics-provider non-participation.
-- `0037-obsidian-graphics-process-class-mapping.md` — records the process-class-specific graphics mappings, the repeated ad-hoc AWK portability error, and the refined graphics capability split across AppDir, Mesa store, rootfs, and device interface.
-- `0038-obsidian-cpu-control-vulkan-policy-leak-hypothesis.md` — records that `GL_GPU=0` changes argv but leaves global Vulkan provider-selection variables active, and defines a strict CPU A/B control before any promoted policy change.
-- `0039-obsidian-strict-cpu-vulkan-policy-ab-result.md` — records the completed strict CPU A/B: removing explicit Vulkan provider-selection variables preserves topology/survival while removing Freedreno driver and KGSL mappings.
-- `0040-obsidian-explicit-freedreno-vs-implicit-fallback-provider-set.md` — records that unsetting the explicit driver override does not create a graphics-free runtime; the strict run instead maps SwiftShader, Lavapipe, Gfxstream, and a coherent dependency-candidate cluster.
-- `0041-obsidian-fallback-provider-closure-attribution.md` — attributes all 11 strict-only paths to SwiftShader, Lavapipe, or Gfxstream roots with zero unresolved or ambiguous mapped-universe SONAME edges.
-- `0042-vulkan-policy-producer-consumer-inventory.md` — separates bionic session policy from glibc provider-selection policy, inventories gl-run/VS Code/Obsidian consumers, and defines the minimum future composition contract.
-- `0043-scoped-vulkan-policy-composition-experiment.md` — starts a cross-consumer experiment that separates application feature mode from Vulkan provider-selection policy without modifying promoted runtime paths.
-- `0044-self-contained-glx-consumer-probe.md` — replaces the unavailable `glxinfo` assumption with an experiment-owned GLX pbuffer consumer that avoids adding a diagnostic package dependency.
-- `0045-explicit-freedreno-zink-consumer-validation-passed.md` — records the passing scoped explicit-Freedreno Zink/GLX consumer validation and Turnip Adreno 730 renderer identity.
-- `0046-zink-turnip-mixed-provider-version-signal.md` — records the version-domain signal and adds bounded process-map capture before stronger physical-path claims.
-- `0047-explicit-zink-turnip-physical-provider-graph.md` — records the actual cross-supply-root GLX/OpenGL, Vulkan loader/support, Turnip driver, and KGSL physical composition.
-- `0048-zink-frontend-and-cross-version-graphics-composition-confirmed.md` — identifies the mapped rootfs Gallium/Zink frontend lineage and confirms the exact tested cross-version graph through prefix Vulkan loader/support and provider-store Turnip.
-- `0049-implicit-discovery-zink-consumer-failure.md` — records that implicit discovery reaches Zink but fails usable physical-device selection and GLX screen formation for the tested consumer.
+### Semantic review, substrate, and selected closure
+
+```text
+0017-gl-umbrella-semantic-inventory.md
+0018-real-device-glibc-substrate-authority.md
+0019-selected-closure-pilot-decision-criteria.md
+0020-glibc-242-243-binary-abi-regression.md
+0021-glibc-242-downgrade-simulation-passed.md
+0022-glibc-242-recovery-and-core-gate-false-negative.md
+0023-cli-level-abi-incident-recovery-closed.md
+0024-vscode-gui-recovery-validation-passed.md
+0025-repository-checkout-relocation-to-projects.md
+0026-dbus-pilot-control-static-selection-mismatch.md
+0027-dbus-static-runtime-closure-agreement.md
+0028-selected-dbus-candidate-validation-passed.md
+```
+
+These records establish:
+
+```text
+semantic decomposition of the old gl umbrella
+real APT/dpkg substrate authority
+binary glibc 2.42 -> 2.43 ABI regression evidence
+package-managed recovery and corrected gates
+VS Code CLI/GUI recovery closure
+canonical checkout relocation
+ownership-aware D-Bus closure selection
+materialized selected-provider candidate validation
+```
+
+### Obsidian application-domain composition pilot
+
+```text
+0029-second-selected-closure-pilot-target.md
+0030-obsidian-control-capture-first-timeout.md
+0031-obsidian-cpu-topology-and-survival-gate.md
+0032-obsidian-control-wall-clock-gate-timing.md
+0033-obsidian-control-maps-captured-provenance-split.md
+0034-obsidian-control-semantic-decomposition.md
+0035-obsidian-semantic-classifier-awk-portability-fix.md
+0036-obsidian-graphics-provider-and-device-node-boundary.md
+0037-obsidian-graphics-process-class-mapping.md
+0038-obsidian-cpu-control-vulkan-policy-leak-hypothesis.md
+0039-obsidian-strict-cpu-vulkan-policy-ab-result.md
+0040-obsidian-explicit-freedreno-vs-implicit-fallback-provider-set.md
+0041-obsidian-fallback-provider-closure-attribution.md
+```
+
+The Obsidian records establish:
+
+```text
+real multiprocess topology and survival gates
+wall-clock-bounded capture semantics
+161-path baseline semantic decomposition with zero review objects
+process-class-specific graphics mappings
+baseline explicit Freedreno/KGSL participation
+strict policy-isolation topology/survival pass
+strict alternate provider set:
+    SwiftShader root 1
+    Lavapipe root + strict-only closure 9
+    Gfxstream root 1
+zero unresolved or ambiguous mapped-universe SONAME edges
+```
+
+### Vulkan policy ownership and scoped composition
+
+```text
+0042-vulkan-policy-producer-consumer-inventory.md
+0043-scoped-vulkan-policy-composition-experiment.md
+0044-self-contained-glx-consumer-probe.md
+0045-explicit-freedreno-zink-consumer-validation-passed.md
+0046-zink-turnip-mixed-provider-version-signal.md
+0047-explicit-zink-turnip-physical-provider-graph.md
+0048-zink-frontend-and-cross-version-graphics-composition-confirmed.md
+0049-implicit-discovery-zink-consumer-failure.md
+0050-implicit-loader-discovery-and-zink-cpu-device-gate.md
+```
+
+The current Vulkan composition records establish:
+
+```text
+producer/consumer inventory:
+    bionic session producer
+    glibc shared producer
+    gl-run consumer
+    VS Code launcher consumer
+    Obsidian launcher consumer
+
+policy dimensions:
+    provider discovery/selection policy
+    application feature/argv mode
+    consumer device-class intent
+
+explicit-Freedreno GLX/Zink control:
+    PASS
+    Zink -> Turnip Adreno 730
+    GLX/OpenGL 4.6 context
+
+captured explicit physical graph:
+    rootfs GLVND/GLX 1.7.0
+    rootfs Mesa GLX vendor 25.0.7-2
+    rootfs Gallium/Zink frontend 25.0.7-2
+    rootfs Mesa device-selection layer 25.0.7-2
+    prefix Vulkan loader 1.3.301 and support libraries
+    provider-store Turnip/Freedreno 26.1.4 lineage
+    KGSL device interface
+
+implicit-discovery Zink control:
+    manifest discovery PASS
+    eight rootfs ICD manifests discovered
+    Mesa device-select layer inserted
+    sole surviving pdev: llvmpipe CPU
+    rootfs Freedreno path: zero physical devices
+    Zink default CPU-device acceptance: FAIL
+    GLX/OpenGL path: FAIL before renderer identity
+```
+
+`0050` refines the failure model: implicit discovery did provide a Vulkan CPU physical device, but the tested Zink path did not accept CPU selection without explicit software intent. The next discriminating control changes only `LIBGL_ALWAYS_SOFTWARE=1` while keeping `VULKAN_POLICY_MODE=implicit-discovery`.
 
 ### Supporting records
 
@@ -210,7 +267,7 @@ glibc temporarily held from upgrading to known-broken 2.43
 
 The hold is temporary incident containment only. The long-term latest-first direction remains a corrected current/newer substrate validated by the same gates.
 
-## Current selected-closure state
+## Current selected-closure and composition state
 
 The bounded D-Bus selected-provider pilot is passed for the captured probe.
 
@@ -225,7 +282,7 @@ rootfs provider leakage: ZERO
 protected substrate boundary: PASS
 ```
 
-The proven selected provider set is:
+The proven D-Bus selected provider set is:
 
 ```text
 libdbus
@@ -235,17 +292,44 @@ libcap
 
 This validates a materialized selected-provider closure as a real object class, but does not prove a world-global shared-provider boundary.
 
-The active architecture-discrimination work is now:
+The active architecture-discrimination work is:
 
 ```text
-selected Obsidian AppDir closure pilot
+selected Obsidian AppDir composition pilot
     +
 scoped Vulkan policy composition experiment
 ```
 
-For Obsidian, the baseline control covers 161 mapped paths with semantic review count zero. The strict policy-isolation run covers 169 mapped paths and preserves topology/survival while replacing the explicit Freedreno/KGSL relation with an alternate provider composition. All 11 strict-only paths are attributed inside the captured mapped universe: SwiftShader root 1, Lavapipe root plus closure 9, and Gfxstream root 1, with zero unresolved or ambiguous SONAME edges. Vulkan policy producers and real launch consumers are inventoried.
+For Obsidian, the 161-path baseline and 169-path strict policy-isolation control are semantically classified with zero review objects. The strict-only 11-path set is fully attributed to SwiftShader, Lavapipe, and Gfxstream roots inside the captured mapped universe.
 
-For scoped Vulkan composition, policy identity validation has passed, the self-contained GLX consumer builds as a minimal glibc executable, and explicit-Freedreno Zink/Turnip validation has passed. Enriched process maps confirm a tested cross-version graph: rootfs GLVND/GLX and Mesa 25.0.7 Gallium/Zink frontend, rootfs Mesa device-selection layer, prefix Vulkan loader/DRM/XCB support, Mesa provider-store Freedreno driver from the 26.1.4 lineage, and KGSL device interface. The same Zink/GLX consumer fails under implicit discovery before renderer identity: Zink cannot choose a usable physical device and GLX screen/FBConfig formation fails. The active next gate is loader-side discovery diagnostics for that failure, followed by Electron consumer validation. Candidate materialization remains blocked pending these graphics composition gates plus locality-shadowing and non-graphics static/runtime closure analysis.
+For scoped Vulkan composition, explicit-Freedreno Zink/Turnip validation passed and the successful mixed physical graph is enriched with package/version identity. The implicit control failed, but loader diagnostics now show the exact reason chain:
+
+```text
+rootfs manifest discovery
+    PASS
+        ↓
+multiple ICD loading/enumeration attempts
+        ↓
+sole surviving pdev
+    llvmpipe CPU
+        ↓
+software device-class intent absent
+        ↓
+Zink rejects CPU pdev in default path
+        ↓
+GLX screen and FBConfig path fail
+```
+
+The active next gate is the one-variable control:
+
+```text
+VULKAN_POLICY_MODE=implicit-discovery
+LIBGL_ALWAYS_SOFTWARE=1
+```
+
+with the same GLX probe and maps capture. If it passes, the resulting software graph will be enriched and compared with the explicit hardware graph before Electron consumer validation.
+
+Candidate materialization remains blocked pending these graphics composition gates plus locality-shadowing and non-graphics static/runtime closure analysis.
 
 ## Current implementation stop line
 
