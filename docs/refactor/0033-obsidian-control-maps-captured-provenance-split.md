@@ -28,7 +28,7 @@ TOPOLOGY_CAPTURE_VALID
 SURVIVAL_OBSERVATION_COMPLETED
 FINAL_PROCESS_MAPS_CAPTURED
 UNIQUE_OBJECT_SET_CAPTURED
-PROVENANCE_ENRICHMENT_INCOMPLETE
+PROVENANCE_ENRICHMENT_FAILED_ON_NON_ELF_BUILD_ID_PROBE
 ```
 
 The evidence root is:
@@ -36,6 +36,54 @@ The evidence root is:
 ```text
 $PREFIX/tmp/selected-obsidian-control-survival-20260710-220652
 ```
+
+## Exact enrichment failure mechanism
+
+The old integrated enrichment loop applied:
+
+```text
+readelf -n <mapped object>
+```
+
+to every regular mapped file while running under:
+
+```text
+set -o pipefail
+```
+
+The captured APP_LOCAL set begins with non-ELF objects such as:
+
+```text
+chrome_100_percent.pak
+chrome_200_percent.pak
+icudtl.dat
+```
+
+For a non-ELF input, `readelf -n` returns non-zero. Under `pipefail`, the Build-ID helper therefore returned non-zero and the assignment invoking it terminated the script under `set -e`.
+
+This explains the exact evidence boundary:
+
+```text
+unique-objects.tsv
+    present
+
+object-identities.tsv
+    incomplete
+
+class-counts.tsv
+    absent
+
+process-class-observation-counts.tsv
+    absent
+```
+
+The separated enrichment tool now treats non-ELF Build-ID absence as:
+
+```text
+build_id = NONE
+```
+
+rather than as an experiment failure.
 
 ## Final process set
 
@@ -181,7 +229,7 @@ capture-control.sh
 enrich-control-identities.sh
     -> package ownership/version
     -> SHA-256
-    -> Build ID
+    -> Build ID or NONE for non-ELF objects
 ```
 
 The enrichment implementation batches package ownership and version queries rather than starting one Debian login transaction per rootfs object.
