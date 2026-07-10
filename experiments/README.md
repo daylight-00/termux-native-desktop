@@ -57,6 +57,7 @@ Provenance labels:
 | glibc | `rootfs-as-library-pool` | passed; layer foundation | first-hand summary |
 | glibc | `vscode` | passed | first-hand report + current canonical summary |
 | glibc | `obsidian-appimage` | passed | first-hand report |
+| glibc | `selected-dbus-closure` | active; control/static closure stage | first-hand experiment |
 | gpu | `chromium-bionic-gpu` | passed conventional GPU path | first-hand report |
 | gpu | `mesa-glibc-26.0.6` | passed; historical control | first-hand report + later controls |
 | gpu | `mesa-bionic-26.1.4` | passed; bionic daily-driver lineage | first-hand report + later validation |
