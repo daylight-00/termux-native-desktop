@@ -58,7 +58,8 @@ Provenance labels:
 | glibc | `vscode` | passed | first-hand report + current canonical summary |
 | glibc | `obsidian-appimage` | passed | first-hand report |
 | glibc | `selected-dbus-closure` | passed bounded selected-provider candidate | first-hand experiment |
-| glibc | `selected-obsidian-closure` | active; CPU-path locality/control capture stage | first-hand experiment |
+| glibc | `selected-obsidian-closure` | active; semantic decomposition and graphics-policy A/B complete | first-hand experiment |
+| glibc | `vulkan-policy-composition` | active; scoped producer/consumer validation stage | first-hand experiment |
 | gpu | `chromium-bionic-gpu` | passed conventional GPU path | first-hand report |
 | gpu | `mesa-glibc-26.0.6` | passed; historical control | first-hand report + later controls |
 | gpu | `mesa-bionic-26.1.4` | passed; bionic daily-driver lineage | first-hand report + later validation |
