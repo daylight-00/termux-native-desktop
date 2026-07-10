@@ -24,13 +24,16 @@ The operational handoff that initiated the semantic review is:
 0016-next-session-handoff.md
 ```
 
-The first post-handoff Stage 2–4 records are:
+The post-handoff evidence and decision records are:
 
 ```text
 0017-gl-umbrella-semantic-inventory.md
 0018-real-device-glibc-substrate-authority.md
 0019-selected-closure-pilot-decision-criteria.md
 0020-glibc-242-243-binary-abi-regression.md
+0021-glibc-242-downgrade-simulation-passed.md
+0022-glibc-242-recovery-and-core-gate-false-negative.md
+0023-cli-level-abi-incident-recovery-closed.md
 ```
 
 Full top-down rationale is on `main`:
@@ -52,7 +55,7 @@ refactor/0015
 refactor/0016
     -> handoff into semantic review
 
-refactor/0017-0020
+refactor/0017-0023
     -> current branch evidence/design records produced under that direction
 
 refactor/0014
@@ -90,9 +93,12 @@ refactor/0014
 ### Semantic review and current evidence
 
 - `0017-gl-umbrella-semantic-inventory.md` — Stage 2 inventory of current `gl` files, environment variables, helpers, actual consumers, minimum scopes, candidate owners, and migration conditions.
-- `0018-real-device-glibc-substrate-authority.md` — Stage 3 evidence that the current device substrate is dpkg-owned and APT-supplied, with version availability, transaction history, control-state semantics, rollback limits, and the next non-mutating recovery experiment.
-- `0019-selected-closure-pilot-decision-criteria.md` — Stage 4 target choice and acceptance criteria for a bounded D-Bus provider-chain pilot, including world protection, locality, provenance, byte materialization, candidate-selection proof, and decision outcomes.
-- `0020-glibc-242-243-binary-abi-regression.md` — exact non-installing A/B evidence that the repository `glibc=2.42` artifact exports `__vsyslog_chk@@GLIBC_2.17` while the active 2.43 libc does not, plus the bounded recovery decision gate.
+- `0018-real-device-glibc-substrate-authority.md` — Stage 3 evidence that the current device substrate is dpkg-owned and APT-supplied, with version availability, transaction history, control-state semantics, rollback limits, and recovery acquisition path.
+- `0019-selected-closure-pilot-decision-criteria.md` — Stage 4 target choice and acceptance criteria for a bounded D-Bus provider-chain pilot.
+- `0020-glibc-242-243-binary-abi-regression.md` — exact non-installing A/B evidence that `glibc=2.42` exports `__vsyslog_chk@@GLIBC_2.17` while active 2.43 did not.
+- `0021-glibc-242-downgrade-simulation-passed.md` — bounded one-package APT downgrade simulation result.
+- `0022-glibc-242-recovery-and-core-gate-false-negative.md` — package-managed 2.42 recovery evidence, provider/VS Code recovery, core-gate SIGPIPE false negative, and harness pipeline caveat.
+- `0023-cli-level-abi-incident-recovery-closed.md` — strict rerun showing core ABI PASS, provider relocation PASS, VS Code GPU/CPU CLI PASS, and CLI-level incident closure.
 
 ### Supporting records
 
@@ -115,41 +121,33 @@ The system-foundation documentation was added separately on `main` after this br
 
 ## Current incident state
 
-The current device remains:
+The CLI-level ABI incident is closed.
+
+Current device state:
 
 ```text
-BLOCKED_SUBSTRATE
+SUBSTRATE_RECOVERED
+PROVIDER_RELOCATION_VALID
+VS_CODE_GPU_CLI_VALID
+VS_CODE_CPU_CLI_VALID
+CLI_LEVEL_INCIDENT_CLOSED
 ```
 
-because the active glibc 2.43 substrate does not export `__vsyslog_chk@GLIBC_2.17`, while the active Debian-derived `libdbus-1.so.3` requires it.
-
-The current device substrate authority is now established:
+Current containment state:
 
 ```text
-dpkg database ownership
-    +
-Termux APT repository supply
-    +
-explicit apt/full-upgrade update path
+glibc 2.42 installed
+exact 2.42 recovery artifact preserved
+glibc temporarily held from upgrading to known-broken 2.43
 ```
 
-Pacman is absent on the device and is not part of the current substrate authority path.
+The hold is temporary incident containment only. The long-term latest-first direction remains a corrected current/newer substrate validated by the same gates.
 
-The exact non-installing binary A/B comparison is now complete:
-
-```text
-glibc 2.42 artifact:
-    __vsyslog_chk@@GLIBC_2.17 PRESENT
-
-glibc 2.43 active libc:
-    __vsyslog_chk@@GLIBC_2.17 ABSENT
-```
-
-The immediate recovery step is APT transaction simulation for `glibc=2.42`, followed by review of dependency and removal effects before any active mutation.
+Real VS Code GUI validation remains a separate workload gate. The bounded selected-closure pilot defined in `0019` may begin only after the GUI workload gate is recorded or explicitly scoped as independent.
 
 ## Current implementation stop line
 
-Until incident recovery is complete and semantic/pilot evidence justifies physical changes, do not implement:
+Do not implement by inertia:
 
 ```text
 gl-sync
@@ -164,14 +162,14 @@ new global gl environment policy
 Allowed work includes:
 
 ```text
+real GUI workload validation
 read-only inspection
 identity capture
-incident recovery
 regression gates
 semantic inventory
 contract design
 small discriminating experiments
-selected-closure pilot work after substrate recovery
+bounded selected-closure pilot work
 ```
 
 ## Environment limitation
