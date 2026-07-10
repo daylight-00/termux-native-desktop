@@ -26,9 +26,19 @@ self-contained GLX probe build: PASS
 explicit-freedreno Zink/OpenGL probe: PASS
 explicit-freedreno maps capture: PASS
 explicit-freedreno map provenance enrichment: PASS
-implicit-discovery Zink/OpenGL probe: NOT YET RUN
+implicit-discovery Zink/OpenGL probe: FAIL before renderer gate
+implicit loader discovery diagnostics: NEXT
 Obsidian adapter validation: NOT YET RUN
 VS Code adapter validation: NOT YET RUN
+```
+
+Observed implicit failure:
+
+```text
+MESA: error: ZINK: failed to choose pdev
+glx: failed to create drisw screen
+failed to load driver: zink
+glXChooseFBConfig found no pbuffer-capable RGBA config
 ```
 
 ## Question
@@ -55,6 +65,16 @@ strict policy-isolation run:
 ```
 
 All 11 strict-only paths were attributed to the three alternate provider roots with zero unresolved or ambiguous mapped-universe SONAME edges.
+
+The GLX/Zink consumer now adds a second distinction:
+
+```text
+provider discovery or provider mapping
+    !=
+consumer-suitable physical-device selection
+```
+
+The implicit path may discover drivers, but the tested Zink consumer did not form a usable Vulkan-backed OpenGL path without explicit Freedreno selection.
 
 ## Current policy problem
 
@@ -110,6 +130,8 @@ allow loader discovery behavior
 
 This mode is **not** called `no-vulkan` because direct evidence shows that removing the explicit override can map alternate Vulkan providers.
 
+For the tested Zink/OpenGL consumer, however, implicit discovery failed to provide a usable physical device. This is consumer-specific evidence, not a global statement that implicit discovery never works.
+
 ## Separation of controls
 
 The experiment keeps these dimensions separate:
@@ -146,7 +168,10 @@ recipe/enrich-glx-probe-maps.sh
     package/version/identity/SONAME enrichment for mapped paths
 
 recipe/compare-glx-provider-graphs.sh
-    explicit vs implicit renderer and physical graph comparison
+    explicit vs successful implicit renderer and physical graph comparison
+
+recipe/capture-implicit-loader-debug.sh
+    preserves loader discovery diagnostics for the failing implicit Zink path
 
 recipe/launch-vscode-with-policy.sh
     VS Code adapter
@@ -222,6 +247,7 @@ Observed physical provider graph:
 rootfs libGL/libGLX/libGLdispatch 1.7.0
     -> rootfs libGLX_mesa 25.0.7-2
     -> rootfs mesa-libgallium 25.0.7-2
+    -> rootfs Mesa device-selection layer 25.0.7-2
     -> prefix Vulkan loader 1.3.301 and support libraries
     -> Mesa provider-store libvulkan_freedreno.so 26.1.4 lineage
     -> /dev/kgsl-3d0
@@ -233,6 +259,8 @@ Interpretation:
 scoped explicit Freedreno provider policy
     +
 rootfs Gallium/Zink frontend
+    +
+rootfs Mesa device-selection layer
     +
 prefix Vulkan loader/support plane
     +
@@ -246,6 +274,33 @@ working GLX context and Zink/Turnip renderer identity
 This is the first cross-consumer proof that the explicit provider-selection contract can be applied at launch scope while preserving the core behavior currently consumed by `gl-run`.
 
 The exact captured graph is a tested cross-version composition. It does not imply arbitrary compatibility among Mesa release lineages.
+
+## Implicit-discovery result
+
+Observed:
+
+```text
+VULKAN_POLICY_MODE=implicit-discovery
+VK_DRIVER_FILES=<unset>
+
+ZINK: failed to choose pdev
+GLX screen creation failed
+Zink driver load failed
+GLX FBConfig gate failed
+renderer identity not reached
+```
+
+A/B conclusion for this consumer:
+
+```text
+explicit-freedreno
+    PASS
+
+implicit-discovery
+    FAIL
+```
+
+Therefore explicit provider selection is functionally significant for the tested Zink/GLX consumer. The next gate is loader-side discovery diagnostics, not an attempt to patch the implicit path.
 
 ## Non-goals
 
@@ -270,11 +325,12 @@ The only goal is to validate that explicit provider policy can be composed at la
 2. build self-contained GLX renderer probe — PASS
 3. Zink/OpenGL explicit-freedreno probe validation — PASS
 4. explicit maps capture and provenance enrichment — PASS
-5. compare implicit-discovery renderer and physical graph — NEXT
-6. Obsidian explicit-freedreno control
-7. Obsidian implicit-discovery control comparison
-8. VS Code explicit-freedreno GPU validation
-9. VS Code CPU/implicit policy behavior check
+5. implicit-discovery Zink/OpenGL probe — FAIL before renderer gate
+6. capture loader discovery diagnostics for implicit failure — NEXT
+7. Obsidian explicit-freedreno control
+8. Obsidian implicit-discovery control comparison
+9. VS Code explicit-freedreno GPU validation
+10. VS Code CPU/implicit policy behavior check
 ```
 
 Promoted launchers and `gl/env` remain unchanged during this experiment.
