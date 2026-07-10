@@ -24,6 +24,8 @@ Current validation state:
 policy identity gate: PASS
 self-contained GLX probe build: PASS
 explicit-freedreno Zink/OpenGL probe: PASS
+explicit-freedreno maps capture: PASS
+explicit-freedreno map provenance enrichment: PASS
 implicit-discovery Zink/OpenGL probe: NOT YET RUN
 Obsidian adapter validation: NOT YET RUN
 VS Code adapter validation: NOT YET RUN
@@ -137,6 +139,15 @@ recipe/glx-renderer-probe.c
 recipe/build-glx-renderer-probe.sh
     builds the probe through the existing glibc GCC wrapper
 
+recipe/capture-glx-probe-maps.sh
+    bounded process-map capture while the context is current
+
+recipe/enrich-glx-probe-maps.sh
+    package/version/identity/SONAME enrichment for mapped paths
+
+recipe/compare-glx-provider-graphs.sh
+    explicit vs implicit renderer and physical graph comparison
+
 recipe/launch-vscode-with-policy.sh
     VS Code adapter
 
@@ -205,23 +216,36 @@ GL_RENDERER=zink Vulkan 1.4(Turnip Adreno (TM) 730 (MESA_TURNIP))
 GL_VERSION=4.6 (Compatibility Profile) Mesa 25.0.7-2
 ```
 
+Observed physical provider graph:
+
+```text
+rootfs libGL/libGLX/libGLdispatch 1.7.0
+    -> rootfs libGLX_mesa 25.0.7-2
+    -> rootfs mesa-libgallium 25.0.7-2
+    -> prefix Vulkan loader 1.3.301 and support libraries
+    -> Mesa provider-store libvulkan_freedreno.so 26.1.4 lineage
+    -> /dev/kgsl-3d0
+```
+
 Interpretation:
 
 ```text
 scoped explicit Freedreno provider policy
     +
-Zink OpenGL composition
+rootfs Gallium/Zink frontend
     +
-self-contained GLX consumer
+prefix Vulkan loader/support plane
+    +
+provider-store Turnip driver
+    +
+KGSL device interface
     ->
-working GLX context
-    ->
-Mesa Zink renderer
-    ->
-Turnip Adreno 730 provider identity
+working GLX context and Zink/Turnip renderer identity
 ```
 
 This is the first cross-consumer proof that the explicit provider-selection contract can be applied at launch scope while preserving the core behavior currently consumed by `gl-run`.
+
+The exact captured graph is a tested cross-version composition. It does not imply arbitrary compatibility among Mesa release lineages.
 
 ## Non-goals
 
@@ -245,11 +269,12 @@ The only goal is to validate that explicit provider policy can be composed at la
 1. environment identity check — PASS
 2. build self-contained GLX renderer probe — PASS
 3. Zink/OpenGL explicit-freedreno probe validation — PASS
-4. compare implicit-discovery behavior — NEXT
-5. Obsidian explicit-freedreno control
-6. Obsidian implicit-discovery control comparison
-7. VS Code explicit-freedreno GPU validation
-8. VS Code CPU/implicit policy behavior check
+4. explicit maps capture and provenance enrichment — PASS
+5. compare implicit-discovery renderer and physical graph — NEXT
+6. Obsidian explicit-freedreno control
+7. Obsidian implicit-discovery control comparison
+8. VS Code explicit-freedreno GPU validation
+9. VS Code CPU/implicit policy behavior check
 ```
 
 Promoted launchers and `gl/env` remain unchanged during this experiment.
