@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 typedef struct _XDisplay Display;
 typedef unsigned long XID;
@@ -56,6 +57,22 @@ static void *load_symbol(void *handle, const char *name) {
         exit(3);
     }
     return symbol;
+}
+
+static unsigned int hold_seconds_from_env(void) {
+    const char *value = getenv("PROBE_HOLD_SECONDS");
+    if (value == NULL || *value == '\0') {
+        return 0;
+    }
+
+    char *end = NULL;
+    long parsed = strtol(value, &end, 10);
+    if (end == value || *end != '\0' || parsed < 0 || parsed > 600) {
+        fprintf(stderr, "invalid PROBE_HOLD_SECONDS: %s\n", value);
+        exit(11);
+    }
+
+    return (unsigned int)parsed;
 }
 
 int main(void) {
@@ -153,6 +170,13 @@ int main(void) {
     printf("GL_VENDOR=%s\n", vendor);
     printf("GL_RENDERER=%s\n", renderer);
     printf("GL_VERSION=%s\n", version);
+    fflush(stdout);
+
+    unsigned int hold_seconds = hold_seconds_from_env();
+    if (hold_seconds > 0) {
+        fprintf(stderr, "probe hold seconds: %u\n", hold_seconds);
+        sleep(hold_seconds);
+    }
 
     glXMakeContextCurrent_fn(display, 0, 0, NULL);
     glXDestroyPbuffer_fn(display, pbuffer);
