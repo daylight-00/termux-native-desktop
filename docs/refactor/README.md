@@ -64,6 +64,7 @@ The post-handoff evidence and decision records are:
 0035-obsidian-semantic-classifier-awk-portability-fix.md
 0036-obsidian-graphics-provider-and-device-node-boundary.md
 0037-obsidian-graphics-process-class-mapping.md
+0038-obsidian-cpu-control-vulkan-policy-leak-hypothesis.md
 ```
 
 Full top-down rationale is on `main`:
@@ -85,7 +86,7 @@ refactor/0015
 refactor/0016
     -> handoff into semantic review
 
-refactor/0017-0037
+refactor/0017-0038
     -> current branch evidence/design records produced under that direction
 
 refactor/0014
@@ -143,6 +144,7 @@ refactor/0014
 - `0035-obsidian-semantic-classifier-awk-portability-fix.md` — records and corrects the device AWK parse failure in the review-filter stage without changing semantic classification rules.
 - `0036-obsidian-graphics-provider-and-device-node-boundary.md` — resolves the final review objects into a Mesa Vulkan provider ELF and the KGSL GPU device node, and records that CPU-mode launch flags do not prove graphics-provider non-participation.
 - `0037-obsidian-graphics-process-class-mapping.md` — records the process-class-specific graphics mappings, the repeated ad-hoc AWK portability error, and the refined graphics capability split across AppDir, Mesa store, rootfs, and device interface.
+- `0038-obsidian-cpu-control-vulkan-policy-leak-hypothesis.md` — records that `GL_GPU=0` changes argv but leaves global Vulkan provider-selection variables active, and defines a strict CPU A/B control before any promoted policy change.
 
 ### Supporting records
 
@@ -217,7 +219,7 @@ The active next experiment is:
 selected Obsidian AppDir CPU-path closure pilot
 ```
 
-For Obsidian, topology/survival observation completed, final multiprocess maps and provenance enrichment cover all 161 mapped paths, and semantic review count is zero. Graphics process-class analysis shows GBM mapped across main, renderer, utility, and zygote classes, while one zygote-class PID contains the app-local Vulkan/EGL/GLES objects, Freedreno Vulkan driver, Mesa device-selection layer, GBM, and KGSL device mapping. The classifier now separates graphics driver, graphics layer, GBM, and device interface rather than grouping them by supply location. Candidate materialization remains blocked pending locality-shadowing and static/runtime closure analysis.
+For Obsidian, topology/survival observation completed, final multiprocess maps and provenance enrichment cover all 161 mapped paths, and semantic review count is zero. Graphics process-class analysis shows GBM mapped across main, renderer, utility, and zygote classes, while one zygote-class PID contains the app-local Vulkan/EGL/GLES objects, Freedreno Vulkan driver, Mesa device-selection layer, GBM, and KGSL device mapping. Source inspection shows the CPU control still inherits global Vulkan provider-selection variables from `gl/env`; the active next discriminating experiment is a strict CPU A/B that unsets only those variables in an experiment-local launcher. Candidate materialization remains blocked pending that A/B plus locality-shadowing and static/runtime closure analysis.
 
 ## Current implementation stop line
 
