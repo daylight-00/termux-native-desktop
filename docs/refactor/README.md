@@ -56,6 +56,7 @@ The post-handoff evidence and decision records are:
 0027-dbus-static-runtime-closure-agreement.md
 0028-selected-dbus-candidate-validation-passed.md
 0029-second-selected-closure-pilot-target.md
+0030-obsidian-control-capture-first-timeout.md
 ```
 
 Full top-down rationale is on `main`:
@@ -77,7 +78,7 @@ refactor/0015
 refactor/0016
     -> handoff into semantic review
 
-refactor/0017-0029
+refactor/0017-0030
     -> current branch evidence/design records produced under that direction
 
 refactor/0014
@@ -127,6 +128,7 @@ refactor/0014
 - `0027-dbus-static-runtime-closure-agreement.md` — ownership-aware static selection matches runtime provider maps.
 - `0028-selected-dbus-candidate-validation-passed.md` — concrete three-object provider bytes, receipt/map equality, actual candidate selection, and zero broad-farm/rootfs leakage.
 - `0029-second-selected-closure-pilot-target.md` — Obsidian AppDir CPU path selected to test `$ORIGIN` locality and real application-domain composition.
+- `0030-obsidian-control-capture-first-timeout.md` — first Obsidian control-capture timeout, harness observability defect, and topology-preserving correction.
 
 ### Supporting records
 
@@ -201,7 +203,7 @@ The active next experiment is:
 selected Obsidian AppDir CPU-path closure pilot
 ```
 
-Its immediate stage is multiprocess control capture and locality classification. Candidate materialization for Obsidian is not yet allowed.
+The first control capture timed out before the required main/renderer/utility topology gate completed. That run is currently interpreted as a capture-harness observability failure, not an application failure. The corrected harness preserves polling topology and timeout diagnostics. Candidate materialization for Obsidian remains blocked.
 
 ## Current implementation stop line
 
