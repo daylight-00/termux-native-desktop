@@ -17,6 +17,19 @@ printf 'semantic_class\tpath_class\tpath\tpackage\tversion\tsha256\tbuild_id\tst
 classify() {
     local path_class=$1 path=$2 package=$3 build_id=$4 state=$5
 
+    if [ "$state" = DEVICE_NODE ]; then
+        case "$path" in
+            /dev/kgsl-3d0) printf 'DEVICE_NODE_GPU\n' ;;
+            *) printf 'DEVICE_NODE_REVIEW\n' ;;
+        esac
+        return 0
+    fi
+
+    if [ "$state" = PRESENT_NONREGULAR ]; then
+        printf 'PRESENT_NONREGULAR_REVIEW\n'
+        return 0
+    fi
+
     if [ "$state" = MISSING_AT_ENRICHMENT ]; then
         printf 'MISSING_AT_ENRICHMENT\n'
         return 0
@@ -60,6 +73,7 @@ classify() {
                 "$HOME/.cache/fontconfig/"*) printf 'RUNTIME_CACHE_FONTCONFIG\n' ;;
                 "$HOME/.cache/mesa_shader_cache/"*) printf 'RUNTIME_CACHE_MESA\n' ;;
                 "$HOME/.config/obsidian/"*) printf 'APP_MUTABLE_STATE\n' ;;
+                "$HOME/gl/opt/mesa-glibc-"*/lib/libvulkan_*.so*) printf 'PROVIDER_GRAPHICS_VULKAN_ELF\n' ;;
                 *)
                     if [ "$build_id" != NONE ]; then
                         printf 'OTHER_ABSOLUTE_ELF_REVIEW\n'
