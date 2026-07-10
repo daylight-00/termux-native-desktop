@@ -69,6 +69,7 @@ The post-handoff evidence and decision records are:
 0040-obsidian-explicit-freedreno-vs-implicit-fallback-provider-set.md
 0041-obsidian-fallback-provider-closure-attribution.md
 0042-vulkan-policy-producer-consumer-inventory.md
+0043-scoped-vulkan-policy-composition-experiment.md
 ```
 
 Full top-down rationale is on `main`:
@@ -90,7 +91,7 @@ refactor/0015
 refactor/0016
     -> handoff into semantic review
 
-refactor/0017-0042
+refactor/0017-0043
     -> current branch evidence/design records produced under that direction
 
 refactor/0014
@@ -153,6 +154,7 @@ refactor/0014
 - `0040-obsidian-explicit-freedreno-vs-implicit-fallback-provider-set.md` — records that unsetting the explicit driver override does not create a graphics-free runtime; the strict run instead maps SwiftShader, Lavapipe, Gfxstream, and a coherent dependency-candidate cluster.
 - `0041-obsidian-fallback-provider-closure-attribution.md` — attributes all 11 strict-only paths to SwiftShader, Lavapipe, or Gfxstream roots with zero unresolved or ambiguous mapped-universe SONAME edges.
 - `0042-vulkan-policy-producer-consumer-inventory.md` — separates bionic session policy from glibc provider-selection policy, inventories gl-run/VS Code/Obsidian consumers, and defines the minimum future composition contract.
+- `0043-scoped-vulkan-policy-composition-experiment.md` — starts a cross-consumer experiment that separates application feature mode from Vulkan provider-selection policy without modifying promoted runtime paths.
 
 ### Supporting records
 
@@ -221,13 +223,15 @@ libcap
 
 This validates a materialized selected-provider closure as a real object class, but does not prove a world-global shared-provider boundary.
 
-The active next experiment is:
+The active architecture-discrimination work is now:
 
 ```text
-selected Obsidian AppDir CPU-path closure pilot
+selected Obsidian AppDir closure pilot
+    +
+scoped Vulkan policy composition experiment
 ```
 
-For Obsidian, the baseline control covers 161 mapped paths with semantic review count zero. The strict policy-isolation run covers 169 mapped paths and preserves topology/survival while replacing the explicit Freedreno/KGSL relation with an alternate provider composition. All 11 strict-only paths are attributed inside the captured mapped universe: SwiftShader root 1, Lavapipe root plus closure 9, and Gfxstream root 1, with zero unresolved or ambiguous SONAME edges. Vulkan policy producers and real launch consumers are now inventoried. The active next gate is an experiment-local explicit composition contract and bounded consumer validation, followed by locality-shadowing and non-graphics static/runtime closure analysis. Candidate materialization remains blocked.
+For Obsidian, the baseline control covers 161 mapped paths with semantic review count zero. The strict policy-isolation run covers 169 mapped paths and preserves topology/survival while replacing the explicit Freedreno/KGSL relation with an alternate provider composition. All 11 strict-only paths are attributed inside the captured mapped universe: SwiftShader root 1, Lavapipe root plus closure 9, and Gfxstream root 1, with zero unresolved or ambiguous SONAME edges. Vulkan policy producers and real launch consumers are inventoried. Experiment-local adapters now separate `GL_GPU` application mode from `VULKAN_POLICY_MODE` provider policy without changing promoted runtime paths. The active next gate is bounded consumer validation, followed by locality-shadowing and non-graphics static/runtime closure analysis. Candidate materialization remains blocked.
 
 ## Current implementation stop line
 
