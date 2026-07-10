@@ -6,9 +6,10 @@ LAUNCHER=${LAUNCHER:-$HOME/gl/bin/obsidian-app}
 ROOTFS=${ROOTFS:-$PREFIX/var/lib/proot-distro/containers/debian/rootfs}
 OUT=${OUT:-$PREFIX/tmp/selected-obsidian-control-$(date +%Y%m%d-%H%M%S)}
 STARTUP_TIMEOUT_SECONDS=${STARTUP_TIMEOUT_SECONDS:-30}
-STABLE_SETTLE_SECONDS=${STABLE_SETTLE_SECONDS:-5}
+TOPOLOGY_SETTLE_SECONDS=${TOPOLOGY_SETTLE_SECONDS:-5}
+SURVIVAL_SECONDS=${SURVIVAL_SECONDS:-100}
 
-for command in pgrep readelf sha256sum file dpkg-query proot-distro; do
+for command in readelf sha256sum file dpkg-query proot-distro; do
     command -v "$command" >/dev/null 2>&1 || {
         printf 'missing required command: %s\n' "$command" >&2
         exit 1
@@ -25,9 +26,7 @@ done
     exit 1
 }
 
-PROCESS_PATTERN="$APP/"
-
-existing=$(pgrep -af "$PROCESS_PATTERN" || true)
+existing=$(pgrep -af "$APP/" || true)
 if [ -n "$existing" ]; then
     printf 'existing Obsidian AppDir processes detected; close them before control capture:\n' >&2
     printf '%s\n' "$existing" >&2
@@ -35,15 +34,17 @@ if [ -n "$existing" ]; then
 fi
 
 mkdir -p "$OUT/maps"
-printf 'sample\tpid\tclass\tcmdline\n' >"$OUT/poll-observed.tsv"
+printf 'phase\tsample\tpid\tclass\tcmdline\n' >"$OUT/poll-observed.tsv"
 printf 'pid\tclass\tcmdline\n' >"$OUT/last-processes.tsv"
+printf 'pid\n' >"$OUT/observed-pids.tsv"
 
 printf 'app: %s\n' "$APP" | tee "$OUT/app-path.txt"
 printf 'launcher: %s\n' "$LAUNCHER" | tee "$OUT/launcher-path.txt"
 printf 'mode: CPU path (GL_GPU=0)\n' | tee "$OUT/mode.txt"
+printf 'survival seconds: %s\n' "$SURVIVAL_SECONDS" | tee "$OUT/survival-contract.txt"
 
 printf '\n===== launch Obsidian control =====\n'
-printf 'Observe the CPU-path window during the startup interval.\n'
+printf 'Observe the CPU-path window during topology and survival gates.\n'
 
 GL_GPU=0 \
 "$LAUNCHER" \
@@ -53,82 +54,112 @@ LAUNCH_PID=$!
 printf '%s\n' "$LAUNCH_PID" >"$OUT/launch.pid"
 printf 'launch pid: %s\n' "$LAUNCH_PID"
 
-cleanup_pids=("$LAUNCH_PID")
-cleanup() {
-    local pid
-    for pid in "${cleanup_pids[@]}"; do
-        [ -n "$pid" ] || continue
-        kill -TERM "$pid" 2>/dev/null || true
+declare -A OBSERVED_PIDS=()
+OBSERVED_PIDS["$LAUNCH_PID"]=1
+
+collect_tree_pids() {
+    local root=$1
+    local changed=1 status pid ppid
+    declare -A member=()
+    member["$root"]=1
+
+    while [ "$changed" -eq 1 ]; do
+        changed=0
+        for status in /proc/[0-9]*/status; do
+            [ -r "$status" ] || continue
+            pid=${status#/proc/}
+            pid=${pid%/status}
+
+            [ -n "${member[$pid]:-}" ] && continue
+
+            ppid=$(awk '/^PPid:/ { print $2; exit }' "$status" 2>/dev/null || true)
+            [ -n "$ppid" ] || continue
+
+            if [ -n "${member[$ppid]:-}" ]; then
+                member["$pid"]=1
+                changed=1
+            fi
+        done
     done
-    sleep 1
-    for pid in "${cleanup_pids[@]}"; do
-        [ -n "$pid" ] || continue
-        kill -KILL "$pid" 2>/dev/null || true
-    done
+
+    printf '%s\n' "${!member[@]}" | sort -n
 }
-trap cleanup EXIT
 
 classify_cmdline() {
-    local cmdline=$1
+    local pid=$1 cmdline=$2
+    if [ "$pid" = "$LAUNCH_PID" ]; then
+        printf 'main\n'
+        return 0
+    fi
+
     case "$cmdline" in
         *chrome_crashpad_handler*) printf 'crashpad\n' ;;
         *--type=renderer*) printf 'renderer\n' ;;
         *--type=utility*) printf 'utility\n' ;;
         *--type=gpu-process*) printf 'gpu\n' ;;
         *--type=zygote*) printf 'zygote\n' ;;
-        *) printf 'main\n' ;;
+        *) printf 'helper\n' ;;
     esac
 }
 
-write_last_processes() {
-    local pid cmdline class
-    printf 'pid\tclass\tcmdline\n' >"$OUT/last-processes.tsv"
-    for pid in "${current_pids[@]:-}"; do
+observe_tree() {
+    local phase=$1 sample=$2 pid cmdline class
+    mapfile -t CURRENT_TREE < <(collect_tree_pids "$LAUNCH_PID")
+
+    for pid in "${CURRENT_TREE[@]:-}"; do
         [ -r "/proc/$pid/cmdline" ] || continue
         cmdline=$(tr '\0' ' ' <"/proc/$pid/cmdline")
-        class=$(classify_cmdline "$cmdline")
-        printf '%s\t%s\t%s\n' "$pid" "$class" "$cmdline" \
-            >>"$OUT/last-processes.tsv"
+        class=$(classify_cmdline "$pid" "$cmdline")
+
+        OBSERVED_PIDS["$pid"]=1
+        printf '%s\t%s\t%s\t%s\t%s\n' \
+            "$phase" "$sample" "$pid" "$class" "$cmdline" \
+            >>"$OUT/poll-observed.tsv"
+    done
+
+    {
+        printf 'pid\tclass\tcmdline\n'
+        for pid in "${CURRENT_TREE[@]:-}"; do
+            [ -r "/proc/$pid/cmdline" ] || continue
+            cmdline=$(tr '\0' ' ' <"/proc/$pid/cmdline")
+            class=$(classify_cmdline "$pid" "$cmdline")
+            printf '%s\t%s\t%s\n' "$pid" "$class" "$cmdline"
+        done
+    } >"$OUT/last-processes.tsv"
+}
+
+cleanup() {
+    local pid
+    for pid in "${!OBSERVED_PIDS[@]}"; do
+        kill -TERM "$pid" 2>/dev/null || true
+    done
+    sleep 1
+    for pid in "${!OBSERVED_PIDS[@]}"; do
+        kill -KILL "$pid" 2>/dev/null || true
     done
 }
+trap cleanup EXIT
 
 stable=0
 sample=0
 for _ in $(seq 1 $((STARTUP_TIMEOUT_SECONDS * 2))); do
     sample=$((sample + 1))
-
-    mapfile -t current_pids < <(
-        pgrep -f "$PROCESS_PATTERN" 2>/dev/null \
-            | sort -n \
-            || true
-    )
-
-    if [ "${#current_pids[@]}" -gt 0 ]; then
-        cleanup_pids=("${current_pids[@]}")
-    fi
+    observe_tree startup "$sample"
 
     have_main=0
     have_renderer=0
-    have_utility=0
+    have_zygote=0
 
-    for pid in "${current_pids[@]:-}"; do
-        [ -r "/proc/$pid/cmdline" ] || continue
-        cmdline=$(tr '\0' ' ' <"/proc/$pid/cmdline")
-        class=$(classify_cmdline "$cmdline")
-
-        printf '%s\t%s\t%s\t%s\n' "$sample" "$pid" "$class" "$cmdline" \
-            >>"$OUT/poll-observed.tsv"
-
+    while IFS=$'\t' read -r pid class cmdline; do
+        [ "$pid" = pid ] && continue
         case "$class" in
             main) have_main=1 ;;
             renderer) have_renderer=1 ;;
-            utility) have_utility=1 ;;
+            zygote) have_zygote=1 ;;
         esac
-    done
+    done <"$OUT/last-processes.tsv"
 
-    write_last_processes
-
-    if [ "$have_main" -eq 1 ] && [ "$have_renderer" -eq 1 ] && [ "$have_utility" -eq 1 ]; then
+    if [ "$have_main" -eq 1 ] && [ "$have_renderer" -eq 1 ] && [ "$have_zygote" -eq 1 ]; then
         stable=1
         break
     fi
@@ -138,37 +169,49 @@ done
 
 if [ "$stable" -ne 1 ]; then
     printf 'required process classes did not stabilize before timeout\n' >&2
-
     printf '\n===== final observed process topology =====\n' >&2
     cat "$OUT/last-processes.tsv" >&2 || true
-
-    printf '\n===== process classes ever observed =====\n' >&2
-    awk -F $'\t' 'NR > 1 { seen[$3]=1 } END { for (c in seen) print c }' \
-        "$OUT/poll-observed.tsv" \
-        | sort \
-        >&2 || true
-
-    printf '\n===== stderr =====\n' >&2
-    sed -n '1,200p' "$OUT/launch.stderr" >&2 || true
-
     printf '\npartial evidence: %s\n' "$OUT" >&2
     exit 1
 fi
 
-sleep "$STABLE_SETTLE_SECONDS"
+printf '\ntopology gate: PASS\n'
+printf 'required classes: main renderer zygote\n'
 
-mapfile -t capture_pids < <(
-    pgrep -f "$PROCESS_PATTERN" 2>/dev/null \
-        | sort -n \
-        || true
-)
+sleep "$TOPOLOGY_SETTLE_SECONDS"
 
-[ "${#capture_pids[@]}" -gt 0 ] || {
-    printf 'no Obsidian process remained for capture\n' >&2
+printf '\n===== survival gate =====\n'
+printf 'seconds: %s\n' "$SURVIVAL_SECONDS"
+
+survival_samples=$((SURVIVAL_SECONDS * 2))
+for i in $(seq 1 "$survival_samples"); do
+    if [ ! -d "/proc/$LAUNCH_PID" ]; then
+        printf 'survival gate: FAIL (main process exited)\n' >&2
+        printf '\n===== stderr =====\n' >&2
+        sed -n '1,240p' "$OUT/launch.stderr" >&2 || true
+        exit 1
+    fi
+
+    observe_tree survival "$i"
+    sleep 0.5
+done
+
+if grep -q 'FATAL:' "$OUT/launch.stderr"; then
+    printf 'survival gate: FAIL (FATAL diagnostic observed)\n' >&2
+    printf '\n===== fatal diagnostics =====\n' >&2
+    grep 'FATAL:' "$OUT/launch.stderr" >&2 || true
+    exit 1
+fi
+
+[ -d "/proc/$LAUNCH_PID" ] || {
+    printf 'survival gate: FAIL (main process absent at final gate)\n' >&2
     exit 1
 }
 
-cleanup_pids=("${capture_pids[@]}")
+printf 'survival gate: PASS\n'
+
+observe_tree final 1
+mapfile -t capture_pids < <(collect_tree_pids "$LAUNCH_PID")
 
 printf 'pid\tclass\tcmdline\n' >"$OUT/processes.tsv"
 printf 'pid\tclass\tpath_class\tpath\n' >"$OUT/mapped-objects.tsv"
@@ -183,46 +226,35 @@ classify_path() {
     esac
 }
 
-printf '\n===== stable process set =====\n'
+printf '\n===== final process set =====\n'
 for pid in "${capture_pids[@]}"; do
     [ -r "/proc/$pid/cmdline" ] || continue
     [ -r "/proc/$pid/maps" ] || continue
 
     cmdline=$(tr '\0' ' ' <"/proc/$pid/cmdline")
-    class=$(classify_cmdline "$cmdline")
+    class=$(classify_cmdline "$pid" "$cmdline")
 
-    printf '%s\t%s\t%s\n' "$pid" "$class" "$cmdline" \
-        >>"$OUT/processes.tsv"
+    printf '%s\t%s\t%s\n' "$pid" "$class" "$cmdline" >>"$OUT/processes.tsv"
     printf '%s\t%s\n' "$pid" "$class"
 
     cat "/proc/$pid/maps" >"$OUT/maps/$pid.maps"
 
-    awk '$NF ~ /^\// { print $NF }' "$OUT/maps/$pid.maps" \
-        | sort -u \
-        | while IFS= read -r path; do
-            [ -n "$path" ] || continue
-            path_class=$(classify_path "$path")
-            printf '%s\t%s\t%s\t%s\n' \
-                "$pid" "$class" "$path_class" "$path" \
-                >>"$OUT/mapped-objects.tsv"
-        done
+    awk '$NF ~ /^\// { print $NF }' "$OUT/maps/$pid.maps" | sort -u | while IFS= read -r path; do
+        [ -n "$path" ] || continue
+        path_class=$(classify_path "$path")
+        printf '%s\t%s\t%s\t%s\n' "$pid" "$class" "$path_class" "$path" >>"$OUT/mapped-objects.tsv"
+    done
 done
 
 {
     printf 'path_class\tpath\n'
-    awk -F $'\t' 'NR > 1 { print $3 "\t" $4 }' "$OUT/mapped-objects.tsv" \
-        | sort -u
+    awk -F $'\t' 'NR > 1 { print $3 "\t" $4 }' "$OUT/mapped-objects.tsv" | sort -u
 } >"$OUT/unique-objects.tsv"
 
-printf 'path_class\tpath\tpackage\tversion\tsha256\tbuild_id\n' \
-    >"$OUT/object-identities.tsv"
+printf 'path_class\tpath\tpackage\tversion\tsha256\tbuild_id\n' >"$OUT/object-identities.tsv"
 
 build_id_of() {
-    readelf -n "$1" 2>/dev/null \
-        | awk '
-            /Build ID:/ && id == "" { id = $3 }
-            END { if (id != "") print id }
-        '
+    readelf -n "$1" 2>/dev/null | awk '/Build ID:/ && id == "" { id = $3 } END { if (id != "") print id }'
 }
 
 while IFS=$'\t' read -r path_class path; do
@@ -234,8 +266,7 @@ while IFS=$'\t' read -r path_class path; do
 
     case "$path_class" in
         PREFIX_GLIBC)
-            package=$(dpkg-query -S "$path" 2>/dev/null \
-                | awk -F': ' 'NR == 1 { print $1 }' || true)
+            package=$(dpkg-query -S "$path" 2>/dev/null | awk -F': ' 'NR == 1 { print $1 }' || true)
             [ -n "$package" ] || package=UNOWNED
             if [ "$package" != UNOWNED ]; then
                 version=$(dpkg-query -W -f='${Version}' "$package" 2>/dev/null || true)
@@ -244,14 +275,11 @@ while IFS=$'\t' read -r path_class path; do
             ;;
         ROOTFS_PROVIDER)
             inside=${path#"$ROOTFS"}
-            owner_line=$(proot-distro login debian -- \
-                dpkg-query -S "$inside" 2>/dev/null \
-                | head -n 1 || true)
+            owner_line=$(proot-distro login debian -- dpkg-query -S "$inside" 2>/dev/null | head -n 1 || true)
             package=$(printf '%s\n' "$owner_line" | sed -E 's/: \/.*$//')
             [ -n "$package" ] || package=UNOWNED
             if [ "$package" != UNOWNED ]; then
-                version=$(proot-distro login debian -- \
-                    dpkg-query -W -f='${Version}' "$package" 2>/dev/null || true)
+                version=$(proot-distro login debian -- dpkg-query -W -f='${Version}' "$package" 2>/dev/null || true)
                 [ -n "$version" ] || version=UNKNOWN
             fi
             ;;
@@ -265,31 +293,26 @@ while IFS=$'\t' read -r path_class path; do
     build_id=$(build_id_of "$path")
     [ -n "$build_id" ] || build_id=NONE
 
-    printf '%s\t%s\t%s\t%s\t%s\t%s\n' \
-        "$path_class" "$path" "$package" "$version" "$sha" "$build_id" \
-        >>"$OUT/object-identities.tsv"
+    printf '%s\t%s\t%s\t%s\t%s\t%s\n' "$path_class" "$path" "$package" "$version" "$sha" "$build_id" >>"$OUT/object-identities.tsv"
 done <"$OUT/unique-objects.tsv"
 
 {
     printf 'path_class\tunique_object_count\n'
-    awk -F $'\t' 'NR > 1 { count[$1]++ } END { for (c in count) print c "\t" count[c] }' \
-        "$OUT/unique-objects.tsv" \
-        | sort
+    awk -F $'\t' 'NR > 1 { count[$1]++ } END { for (c in count) print c "\t" count[c] }' "$OUT/unique-objects.tsv" | sort
 } >"$OUT/class-counts.tsv"
+
+{
+    printf 'class\tsamples\n'
+    awk -F $'\t' 'NR > 1 { count[$4]++ } END { for (c in count) print c "\t" count[c] }' "$OUT/poll-observed.tsv" | sort
+} >"$OUT/process-class-observation-counts.tsv"
+
+printf '%s\n' "${!OBSERVED_PIDS[@]}" | sort -n >>"$OUT/observed-pids.tsv"
 
 printf '\n===== class counts =====\n'
 cat "$OUT/class-counts.tsv"
 
-printf '\n===== required process classes =====\n'
-for required in main renderer utility; do
-    if awk -F $'\t' -v c="$required" 'NR > 1 && $2 == c { found=1 } END { exit !found }' \
-        "$OUT/processes.tsv"; then
-        printf '%s: PASS\n' "$required"
-    else
-        printf '%s: FAIL\n' "$required" >&2
-        exit 1
-    fi
-done
+printf '\n===== process observation counts =====\n'
+cat "$OUT/process-class-observation-counts.tsv"
 
 printf '\ncontrol capture: PASS\n'
 printf 'evidence: %s\n' "$OUT"
