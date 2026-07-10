@@ -65,6 +65,8 @@ The post-handoff evidence and decision records are:
 0036-obsidian-graphics-provider-and-device-node-boundary.md
 0037-obsidian-graphics-process-class-mapping.md
 0038-obsidian-cpu-control-vulkan-policy-leak-hypothesis.md
+0039-obsidian-strict-cpu-vulkan-policy-ab-result.md
+0040-obsidian-explicit-freedreno-vs-implicit-fallback-provider-set.md
 ```
 
 Full top-down rationale is on `main`:
@@ -86,7 +88,7 @@ refactor/0015
 refactor/0016
     -> handoff into semantic review
 
-refactor/0017-0038
+refactor/0017-0040
     -> current branch evidence/design records produced under that direction
 
 refactor/0014
@@ -145,6 +147,8 @@ refactor/0014
 - `0036-obsidian-graphics-provider-and-device-node-boundary.md` — resolves the final review objects into a Mesa Vulkan provider ELF and the KGSL GPU device node, and records that CPU-mode launch flags do not prove graphics-provider non-participation.
 - `0037-obsidian-graphics-process-class-mapping.md` — records the process-class-specific graphics mappings, the repeated ad-hoc AWK portability error, and the refined graphics capability split across AppDir, Mesa store, rootfs, and device interface.
 - `0038-obsidian-cpu-control-vulkan-policy-leak-hypothesis.md` — records that `GL_GPU=0` changes argv but leaves global Vulkan provider-selection variables active, and defines a strict CPU A/B control before any promoted policy change.
+- `0039-obsidian-strict-cpu-vulkan-policy-ab-result.md` — records the completed strict CPU A/B: removing explicit Vulkan provider-selection variables preserves topology/survival while removing Freedreno driver and KGSL mappings.
+- `0040-obsidian-explicit-freedreno-vs-implicit-fallback-provider-set.md` — records that unsetting the explicit driver override does not create a graphics-free runtime; the strict run instead maps SwiftShader, Lavapipe, Gfxstream, and a coherent dependency-candidate cluster.
 
 ### Supporting records
 
@@ -219,7 +223,7 @@ The active next experiment is:
 selected Obsidian AppDir CPU-path closure pilot
 ```
 
-For Obsidian, topology/survival observation completed, final multiprocess maps and provenance enrichment cover all 161 mapped paths, and semantic review count is zero. Graphics process-class analysis shows GBM mapped across main, renderer, utility, and zygote classes, while one zygote-class PID contains the app-local Vulkan/EGL/GLES objects, Freedreno Vulkan driver, Mesa device-selection layer, GBM, and KGSL device mapping. Source inspection shows the CPU control still inherits global Vulkan provider-selection variables from `gl/env`; the active next discriminating experiment is a strict CPU A/B that unsets only those variables in an experiment-local launcher. Candidate materialization remains blocked pending that A/B plus locality-shadowing and static/runtime closure analysis.
+For Obsidian, the baseline control covers 161 mapped paths with semantic review count zero. The strict CPU policy-isolation run covers 169 mapped paths and preserves topology/survival while replacing the explicit Freedreno/KGSL relation with an alternate Vulkan-provider set containing AppDir SwiftShader, rootfs Lavapipe, rootfs Gfxstream, and a coherent dependency-candidate cluster. The current next gate is bounded static DT_NEEDED attribution of those fallback roots, followed by VK_* consumer inventory and narrow graphics-provider composition design. Candidate materialization remains blocked pending fallback closure attribution, locality-shadowing, and static/runtime closure analysis.
 
 ## Current implementation stop line
 
