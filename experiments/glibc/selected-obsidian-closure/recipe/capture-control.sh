@@ -25,7 +25,9 @@ done
     exit 1
 }
 
-existing=$(pgrep -af "$APP/(obsidian|chrome_crashpad_handler)" || true)
+PROCESS_PATTERN="$APP/(obsidian|chrome_crashpad_handler)"
+
+existing=$(pgrep -af "$PROCESS_PATTERN" || true)
 if [ -n "$existing" ]; then
     printf 'existing Obsidian AppDir processes detected; close them before control capture:\n' >&2
     printf '%s\n' "$existing" >&2
@@ -49,15 +51,15 @@ LAUNCH_PID=$!
 printf '%s\n' "$LAUNCH_PID" >"$OUT/launch.pid"
 printf 'launch pid: %s\n' "$LAUNCH_PID"
 
-cleanup_pids=()
+cleanup_pids=("$LAUNCH_PID")
 cleanup() {
     local pid
-    for pid in "${cleanup_pids[@]:-}"; do
+    for pid in "${cleanup_pids[@]}"; do
         [ -n "$pid" ] || continue
         kill -TERM "$pid" 2>/dev/null || true
     done
     sleep 1
-    for pid in "${cleanup_pids[@]:-}"; do
+    for pid in "${cleanup_pids[@]}"; do
         [ -n "$pid" ] || continue
         kill -KILL "$pid" 2>/dev/null || true
     done
@@ -79,16 +81,20 @@ classify_cmdline() {
 stable=0
 for _ in $(seq 1 $((STARTUP_TIMEOUT_SECONDS * 2))); do
     mapfile -t current_pids < <(
-        pgrep -f "$APP/(obsidian|chrome_crashpad_handler)" 2>/dev/null \
+        pgrep -f "$PROCESS_PATTERN" 2>/dev/null \
             | sort -n \
             || true
     )
+
+    if [ "${#current_pids[@]}" -gt 0 ]; then
+        cleanup_pids=("${current_pids[@]}")
+    fi
 
     have_main=0
     have_renderer=0
     have_utility=0
 
-    for pid in "${current_pids[@]:-}"; do
+    for pid in "${current_pids[@]}"; do
         [ -r "/proc/$pid/cmdline" ] || continue
         cmdline=$(tr '\0' ' ' <"/proc/$pid/cmdline")
         class=$(classify_cmdline "$cmdline")
@@ -117,7 +123,7 @@ fi
 sleep "$STABLE_SETTLE_SECONDS"
 
 mapfile -t capture_pids < <(
-    pgrep -f "$APP/(obsidian|chrome_crashpad_handler)" 2>/dev/null \
+    pgrep -f "$PROCESS_PATTERN" 2>/dev/null \
         | sort -n \
         || true
 )
