@@ -56,7 +56,7 @@ refactor/0015
 refactor/0016
     -> handoff into semantic review
 
-refactor/0017-0052
+refactor/0017-0053
     -> current branch evidence/design records under that direction
 
 refactor/0014
@@ -181,6 +181,7 @@ zero unresolved or ambiguous mapped-universe SONAME edges
 0050-implicit-loader-discovery-and-zink-cpu-device-gate.md
 0051-implicit-software-intent-zink-llvmpipe-validation-passed.md
 0052-glx-map-runtime-anonymous-memory-classification.md
+0053-obsidian-capture-feature-mode-parameterization.md
 ```
 
 The Vulkan records now establish a completed bounded Zink/GLX three-state matrix.
@@ -310,6 +311,8 @@ software-control-only:
 
 `0052` corrects enrichment classification for the narrow observed `/memfd:allocation*` pattern so it is represented as runtime anonymous memory rather than unresolved package provenance.
 
+`0053` parameterizes the Obsidian capture harness with `CONTROL_GL_GPU=0|1`, defaulting to the original CPU control behavior. This allows the same topology/survival/maps harness to vary application feature mode independently from `VULKAN_POLICY_MODE` during Electron adapter validation.
+
 ### Supporting records
 
 - `MIGRATION_JOURNAL.md` — chronological commands, commit IDs, validations, incidents, recovery, and deviations.
@@ -389,7 +392,7 @@ For Obsidian, the 161-path baseline and 169-path strict policy-isolation control
 
 For scoped Vulkan composition, the bounded Zink hardware/default, implicit/default, and implicit/software controls are complete. Hardware and software renderer graphs have been captured, enriched, and compared. The remaining immediate evidence correction is device-side re-enrichment of the software evidence root using the committed runtime-anonymous memfd classification.
 
-After that, the next gate is real Electron consumer adapter validation:
+After that, the next gate is real Electron consumer adapter validation. The Obsidian capture harness now exposes `CONTROL_GL_GPU` so application feature mode can be varied independently from provider policy.
 
 ```text
 1. Obsidian explicit-freedreno adapter control
