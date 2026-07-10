@@ -18,8 +18,10 @@ implicit-discovery/software-intent Zink probe: PASS
 software graph maps capture: PASS
 software graph provenance enrichment: PASS
 hardware-vs-software graph comparison: PASS
-runtime anonymous memfd classification correction: COMMITTED, DEVICE RE-RUN PENDING
-Obsidian adapter validation: NEXT
+runtime anonymous memfd classification: PASS ON DEVICE
+Obsidian explicit-freedreno GPU adapter: PASS
+Obsidian explicit GPU process-class graphics relation report: NEXT
+Obsidian implicit-discovery GPU adapter: NEXT
 VS Code adapter validation: NOT YET RUN
 ```
 
@@ -27,7 +29,7 @@ VS Code adapter validation: NOT YET RUN
 
 Can Vulkan provider-selection policy move from unconditional shared glibc environment state into narrow launch composition without changing promoted launchers yet?
 
-The completed Zink controls also answer a second question:
+The completed Zink controls prove that:
 
 ```text
 provider discovery/selection policy
@@ -37,17 +39,26 @@ consumer device-class intent
 
 must be independent composition inputs.
 
+The active Electron phase now asks:
+
+```text
+how does a real Electron consumer compose
+application feature mode
+provider policy
+and actual mapped provider/device relations?
+```
+
 ## Evidence basis
 
 The Obsidian selected-closure pilot previously established:
 
 ```text
-baseline:
+baseline CPU-path control:
     explicit Freedreno override
     Freedreno mapped
     KGSL mapped
 
-strict policy-isolation:
+strict CPU policy-isolation control:
     explicit VK_* overrides removed
     SwiftShader mapped
     Lavapipe root + strict-only closure mapped
@@ -56,7 +67,7 @@ strict policy-isolation:
     KGSL absent
 ```
 
-The Zink/GLX controls now refine the graphics decision chain:
+The Zink/GLX controls refined the graphics decision chain:
 
 ```text
 provider discovery
@@ -70,6 +81,19 @@ consumer device-class acceptance
 selected renderer identity
     !=
 usable rendering path
+```
+
+The first same-experiment real Electron GPU-path control now establishes:
+
+```text
+GL_GPU=1
+explicit-freedreno
+    -> topology PASS
+    -> final gpu process PRESENT
+    -> 100-second survival PASS
+    -> semantic review 0
+    -> hardware driver class PRESENT
+    -> KGSL device class PRESENT
 ```
 
 ## Independent control dimensions
@@ -175,7 +199,7 @@ print renderer identity
 hold process for bounded map capture
 ```
 
-## Completed three-state matrix
+## Completed Zink three-state matrix
 
 ### 1. Explicit hardware provider + default device intent
 
@@ -252,7 +276,7 @@ Result:
 PASS
 ```
 
-## Causal conclusion
+## Zink causal conclusion
 
 The completed matrix is:
 
@@ -318,7 +342,7 @@ rootfs Mesa device-selection layer
 prefix Vulkan loader/support plane
 ```
 
-Its provider tail is:
+Its selected provider tail is:
 
 ```text
 rootfs libvulkan_lvp.so
@@ -338,7 +362,7 @@ The captured software set also maps:
 libvulkan_gfxstream.so
 ```
 
-but this must not be called the selected rendering provider. Previous loader diagnostics showed Gfxstream discovery/loading participation followed by removal for exposing no surviving physical device.
+but this must not be called the selected rendering provider. Loader diagnostics showed Gfxstream discovery/loading participation followed by removal for exposing no surviving physical device.
 
 Therefore:
 
@@ -366,7 +390,24 @@ $ROOTFS/usr/lib/aarch64-linux-gnu/libvulkan_lvp.so
 /memfd:allocation
 ```
 
-The `/memfd:allocation` entry is a runtime anonymous mapping, not package-provenance evidence. The enrichment classifier has been corrected for the narrow observed `/memfd:allocation*` pattern and requires device-side re-enrichment to regenerate the evidence summary.
+The `/memfd:allocation` entry is a runtime anonymous mapping, not package-provenance evidence.
+
+The corrected enrichment now reports the observed narrow pattern as:
+
+```text
+path_class=RUNTIME_ANON_MEMORY
+package=RUNTIME_MEMORY
+version=NOT_APPLICABLE
+state=RUNTIME_ANONYMOUS_MAPPING
+```
+
+Device re-enrichment passed and the previous:
+
+```text
+OTHER UNKNOWN UNKNOWN 1
+```
+
+summary row is gone for that mapping.
 
 ## Supply-root distinction
 
@@ -383,6 +424,114 @@ same runtime capability
 ```
 
 when supply root, build lineage, and platform adaptation differ.
+
+## Obsidian explicit-Freedreno GPU adapter result
+
+Evidence root:
+
+```text
+$PREFIX/tmp/tnd-vulkan-policy-composition/obsidian-explicit-gpu-20260711-080703
+```
+
+Inputs:
+
+```text
+CONTROL_GL_GPU=1
+VULKAN_POLICY_MODE=explicit-freedreno
+LIBGL_ALWAYS_SOFTWARE unset
+SURVIVAL_SECONDS=100
+```
+
+Observed:
+
+```text
+topology gate: PASS
+startup elapsed: 3 seconds
+survival gate: PASS
+survival elapsed: 100 seconds
+identity enrichment: PASS
+objects recorded: 160
+coverage: 160/160
+semantic classification: PASS
+semantic review objects: 0
+```
+
+Final process topology:
+
+```text
+main      1
+zygote    2
+gpu       1
+utility   1
+renderer  1
+```
+
+The GPU process argv includes:
+
+```text
+--type=gpu-process
+--use-gl=angle
+--use-angle=vulkan
+--enable-features=...Vulkan
+```
+
+Semantic graphics classes include:
+
+```text
+DEVICE_NODE_GPU                        1
+PROVIDER_GRAPHICS_GBM_ELF              1
+PROVIDER_GRAPHICS_VULKAN_DRIVER_ELF    1
+PROVIDER_GRAPHICS_VULKAN_LAYER_ELF     1
+```
+
+This proves that the tested Obsidian GPU-feature path is compatible with scoped explicit-Freedreno policy and survives the real Electron topology gate.
+
+It does not yet prove which process class owns the Freedreno or KGSL mappings. The next step is the process-class graphics relation report, followed by an implicit-discovery control with the same `GL_GPU=1` feature mode.
+
+## Obsidian same-feature-mode comparison rule
+
+Raw total object counts from older CPU controls must not be treated as provider-policy deltas.
+
+The explicit GPU control captured 160 objects while older CPU controls captured different totals. Lazy data/font mapping can vary with capture timing.
+
+The policy A/B therefore keeps:
+
+```text
+CONTROL_GL_GPU=1
+LIBGL_ALWAYS_SOFTWARE unset
+same launcher adapter
+same capture harness
+same survival budget
+```
+
+and changes only:
+
+```text
+VULKAN_POLICY_MODE=explicit-freedreno
+```
+
+versus:
+
+```text
+VULKAN_POLICY_MODE=implicit-discovery
+```
+
+The dedicated helper:
+
+```text
+recipe/compare-obsidian-policy-controls.sh
+```
+
+compares:
+
+```text
+process-class counts
+exact semantic class/path sets
+explicit-only semantic paths
+implicit-only semantic paths
+graphics class/object relations
+graphics relation deltas
+```
 
 ## Architecture interpretation
 
@@ -435,7 +584,7 @@ recipe/enrich-glx-probe-maps.sh
     includes narrow runtime-anonymous allocation classification
 
 recipe/compare-glx-provider-graphs.sh
-    A/B graph comparison
+    GLX hardware/software graph comparison
 
 recipe/capture-implicit-loader-debug.sh
     loader discovery diagnostics
@@ -445,6 +594,9 @@ recipe/launch-vscode-with-policy.sh
 
 recipe/launch-obsidian-with-policy.sh
     Obsidian experiment adapter
+
+recipe/compare-obsidian-policy-controls.sh
+    same-feature-mode explicit-vs-implicit Obsidian policy comparison
 ```
 
 ## Non-goals
@@ -485,18 +637,21 @@ Completed:
 7. implicit/software-intent Zink control — PASS
 8. software maps capture/enrichment — PASS
 9. hardware-vs-software graph comparison — PASS
+10. software memfd classification device re-enrichment — PASS
+11. Obsidian explicit-freedreno GPU adapter control — PASS
 ```
 
 Next:
 
 ```text
-10. re-run software enrichment with runtime-anonymous memfd classification
-11. Obsidian explicit-freedreno adapter control
-12. Obsidian implicit-discovery adapter control comparison
-13. VS Code explicit-freedreno GPU validation
-14. VS Code CPU/software-intent behavior check
-15. compare consumer-specific policy requirements
-16. define minimum graphics composition contract only from proven consumer evidence
+12. explicit Obsidian GPU process-class graphics relation report
+13. Obsidian implicit-discovery GPU adapter control
+14. implicit identity enrichment and semantic classification
+15. same-feature-mode Obsidian policy comparison
+16. VS Code explicit-freedreno GPU validation
+17. VS Code CPU/software-intent behavior check
+18. compare consumer-specific policy requirements
+19. define minimum graphics composition contract only from proven consumer evidence
 ```
 
 Promoted launchers and `gl/env` remain unchanged during this experiment.
