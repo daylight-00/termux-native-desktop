@@ -6,6 +6,22 @@ This directory is the low-level source of truth for the repository refactor from
 
 Every structural change must be recorded here before or at the same time as the repository change. Session context is not authoritative.
 
+## Current checkout root
+
+The canonical live-device checkout is:
+
+```text
+$HOME/projects/termux-native-desktop
+```
+
+The legacy checkout root:
+
+```text
+$HOME/termux-native-desktop
+```
+
+is retained only as a migration source identity. It must not remain as a compatibility symlink after relocation.
+
 ## Current direction and precedence
 
 The ownership migration in `0001` through `0011` remains accepted.
@@ -35,6 +51,7 @@ The post-handoff evidence and decision records are:
 0022-glibc-242-recovery-and-core-gate-false-negative.md
 0023-cli-level-abi-incident-recovery-closed.md
 0024-vscode-gui-recovery-validation-passed.md
+0025-repository-checkout-relocation-to-projects.md
 ```
 
 Full top-down rationale is on `main`:
@@ -56,7 +73,7 @@ refactor/0015
 refactor/0016
     -> handoff into semantic review
 
-refactor/0017-0024
+refactor/0017-0025
     -> current branch evidence/design records produced under that direction
 
 refactor/0014
@@ -101,6 +118,7 @@ refactor/0014
 - `0022-glibc-242-recovery-and-core-gate-false-negative.md` — package-managed 2.42 recovery evidence, provider/VS Code recovery, core-gate SIGPIPE false negative, and harness pipeline caveat.
 - `0023-cli-level-abi-incident-recovery-closed.md` — strict rerun showing core ABI PASS, provider relocation PASS, VS Code GPU/CPU CLI PASS, and CLI-level incident closure.
 - `0024-vscode-gui-recovery-validation-passed.md` — real GUI workload validation showing persistent VS Code main, GPU, utility, and renderer processes plus user-confirmed normal execution; actual graphics-provider selection remains a separate claim.
+- `0025-repository-checkout-relocation-to-projects.md` — canonical checkout move to `~/projects/termux-native-desktop`, relocation-safe adoption/deploy relinking, stale-link validation, and historical-path provenance policy.
 
 ### Supporting records
 
@@ -148,7 +166,7 @@ The hold is temporary incident containment only. The long-term latest-first dire
 
 The GUI workload gate is closed. Actual Vulkan ICD/driver/provider selection remains an independent graphics-evidence track; successful GPU-process creation and Vulkan/ANGLE flags do not by themselves prove the selected provider bytes.
 
-The bounded selected-closure pilot defined in `0019` may now begin from the recovered substrate while preserving the broad farm unchanged as control/reference.
+The bounded selected-closure pilot is active. Its first control capture passed; the first static run is classified as incomplete due a harness early-exit bug and must be rerun with the corrected script after checkout relocation.
 
 ## Current implementation stop line
 
@@ -167,6 +185,7 @@ new global gl environment policy
 Allowed work includes:
 
 ```text
+repository checkout relocation validation
 graphics-provider actual-selection evidence
 read-only inspection
 identity capture

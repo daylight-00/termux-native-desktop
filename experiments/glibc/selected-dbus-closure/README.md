@@ -4,13 +4,21 @@
 
 Active architecture-discrimination experiment.
 
+Current stage:
+
+```text
+control capture: PASS
+first static discovery run: INCOMPLETE due harness early-exit bug
+corrected static discovery rerun: pending after checkout relocation
+```
+
 ## Dates
 
 Started after the glibc/libdbus ABI incident was recovered and VS Code passed real GUI workload validation.
 
 ## Provenance
 
-First-hand experiment design derived from:
+First-hand experiment design and first-hand device evidence derived from:
 
 ```text
 docs/refactor/0019-selected-closure-pilot-decision-criteria.md
@@ -94,23 +102,115 @@ and then remains alive for a bounded interval so `/proc/<pid>/maps` can be captu
 
 This avoids requiring a running D-Bus daemon while still executing code from the selected `libdbus` provider and its transitive runtime closure.
 
+## First control result
+
+Probe identity:
+
+```text
+ELF:
+    AArch64 PIE
+    interpreter $PREFIX/glibc/lib/ld-linux-aarch64.so.1
+
+Build ID:
+    0a310fa7489d5754b03ab936da9462869bb05198
+
+SHA-256:
+    d55c783cd68c97b9d5976935cfcb26538cbded69dc119179a2050b318809a9a4
+```
+
+Probe dynamic requirements:
+
+```text
+libdbus-1.so.3
+libc.so.6
+ld-linux-aarch64.so.1
+```
+
+Runtime result:
+
+```text
+libdbus runtime version: 1.16.2
+control capture: PASS
+```
+
+Actual mapped objects relevant to the pilot were:
+
+```text
+WORLD / substrate:
+    $PREFIX/glibc/lib/ld-linux-aarch64.so.1
+    $PREFIX/glibc/lib/libc.so.6
+    $PREFIX/glibc/lib/libm.so.6
+
+ROOTFS providers:
+    libdbus-1.so.3.38.3
+    libsystemd.so.0.40.0
+    libcap.so.2.75
+```
+
+This first runtime result is already a useful boundedness signal: the direct probe mapped three rootfs provider objects and three substrate objects in the observed relevant set.
+
+It is not yet the final selected closure because static graph traversal must be completed and static/runtime differences must be reconciled.
+
+## First static discovery run
+
+The first static run produced only a partial graph:
+
+```text
+libdbus-1.so.3.38.3
+    -> libsystemd.so.0   PROVIDER_ROOTFS
+    -> libc.so.6         WORLD_PREFIX
+```
+
+and recorded provider identities for:
+
+```text
+libdbus-1-3:arm64  1.16.2-2
+libsystemd0:arm64  257.13-1~deb13u1
+```
+
+The run did not print its terminal PASS/FAIL summary and `world-prefix.tsv` contained only its header.
+
+This was not interpreted as a real static/runtime closure mismatch. Inspection of the harness showed another `pipefail` plus early-exit consumer pattern in Build-ID extraction:
+
+```text
+readelf -n object
+    |
+awk '... { print; exit }'
+```
+
+For sufficiently long producer output, the consumer exits after the Build ID and the producer may receive SIGPIPE. Under `set -o pipefail`, the helper can fail while recording the first world-prefix object, terminating traversal early.
+
+The helper was corrected to consume the complete `readelf` stream before printing the captured Build ID.
+
+Therefore:
+
+```text
+first control capture:
+    valid evidence
+
+first static closure result:
+    partial evidence only
+    not an architectural conclusion
+
+next static run:
+    required with corrected harness
+```
+
 ## Current hypothesis
 
 The selected provider closure will be substantially smaller and more explainable than the broad farm.
 
-The expected first-order shape is:
+The current observed runtime shape is:
 
 ```text
 probe
     -> libdbus-1.so.3             PROVIDER_ROOTFS
         -> libsystemd.so.0        PROVIDER_ROOTFS
-        -> low-level dependencies classified per observed path
-
-world-owned / prefix-owned objects
-    remain outside candidate materialization
+            -> libcap.so.2        PROVIDER_ROOTFS or transitive provider edge
+        -> substrate objects      WORLD
 ```
 
-The actual closure must be derived from evidence, not from this expectation.
+The exact static edge structure must come from the corrected rerun rather than from this expectation.
 
 ## Procedure
 
@@ -118,8 +218,9 @@ The actual closure must be derived from evidence, not from this expectation.
 1. build the minimal probe
 2. capture broad-farm control behavior
 3. discover the bounded static provider closure
-4. inspect graph.tsv and providers.tsv
-5. only then design candidate byte materialization
+4. compare static graph with actual mapped objects
+5. inspect graph.tsv and providers.tsv
+6. only then design candidate byte materialization
 ```
 
 Commands:
@@ -166,7 +267,6 @@ Expected artifacts include:
 
 ```text
 probe.stdout
-probe.stderr
 loader-debug.log
 maps.txt
 control-ldd.txt
