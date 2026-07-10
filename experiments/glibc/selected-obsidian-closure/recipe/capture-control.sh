@@ -8,6 +8,8 @@ OUT=${OUT:-$PREFIX/tmp/selected-obsidian-control-$(date +%Y%m%d-%H%M%S)}
 STARTUP_TIMEOUT_SECONDS=${STARTUP_TIMEOUT_SECONDS:-30}
 TOPOLOGY_SETTLE_SECONDS=${TOPOLOGY_SETTLE_SECONDS:-5}
 SURVIVAL_SECONDS=${SURVIVAL_SECONDS:-100}
+POLL_SLEEP_SECONDS=${POLL_SLEEP_SECONDS:-0.5}
+PROGRESS_INTERVAL_SECONDS=${PROGRESS_INTERVAL_SECONDS:-10}
 
 for command in readelf sha256sum file dpkg-query proot-distro; do
     command -v "$command" >/dev/null 2>&1 || {
@@ -41,6 +43,7 @@ printf 'pid\n' >"$OUT/observed-pids.tsv"
 printf 'app: %s\n' "$APP" | tee "$OUT/app-path.txt"
 printf 'launcher: %s\n' "$LAUNCHER" | tee "$OUT/launcher-path.txt"
 printf 'mode: CPU path (GL_GPU=0)\n' | tee "$OUT/mode.txt"
+printf 'startup timeout seconds: %s\n' "$STARTUP_TIMEOUT_SECONDS" | tee "$OUT/startup-contract.txt"
 printf 'survival seconds: %s\n' "$SURVIVAL_SECONDS" | tee "$OUT/survival-contract.txt"
 
 printf '\n===== launch Obsidian control =====\n'
@@ -142,7 +145,10 @@ trap cleanup EXIT
 
 stable=0
 sample=0
-for _ in $(seq 1 $((STARTUP_TIMEOUT_SECONDS * 2))); do
+startup_started=$SECONDS
+startup_deadline=$((startup_started + STARTUP_TIMEOUT_SECONDS))
+
+while (( SECONDS < startup_deadline )); do
     sample=$((sample + 1))
     observe_tree startup "$sample"
 
@@ -159,16 +165,18 @@ for _ in $(seq 1 $((STARTUP_TIMEOUT_SECONDS * 2))); do
         esac
     done <"$OUT/last-processes.tsv"
 
-    if [ "$have_main" -eq 1 ] && [ "$have_renderer" -eq 1 ] && [ "$have_zygote" -eq 1 ]; then
+    if [ "$have_main" -eq 1 ] && \
+       [ "$have_renderer" -eq 1 ] && \
+       [ "$have_zygote" -eq 1 ]; then
         stable=1
         break
     fi
 
-    sleep 0.5
+    sleep "$POLL_SLEEP_SECONDS"
 done
 
 if [ "$stable" -ne 1 ]; then
-    printf 'required process classes did not stabilize before timeout\n' >&2
+    printf 'required process classes did not stabilize before wall-clock timeout\n' >&2
     printf '\n===== final observed process topology =====\n' >&2
     cat "$OUT/last-processes.tsv" >&2 || true
     printf '\npartial evidence: %s\n' "$OUT" >&2
@@ -177,14 +185,19 @@ fi
 
 printf '\ntopology gate: PASS\n'
 printf 'required classes: main renderer zygote\n'
+printf 'elapsed seconds: %s\n' "$((SECONDS - startup_started))"
 
 sleep "$TOPOLOGY_SETTLE_SECONDS"
 
 printf '\n===== survival gate =====\n'
 printf 'seconds: %s\n' "$SURVIVAL_SECONDS"
 
-survival_samples=$((SURVIVAL_SECONDS * 2))
-for i in $(seq 1 "$survival_samples"); do
+survival_started=$SECONDS
+survival_deadline=$((survival_started + SURVIVAL_SECONDS))
+next_progress=$((survival_started + PROGRESS_INTERVAL_SECONDS))
+survival_sample=0
+
+while (( SECONDS < survival_deadline )); do
     if [ ! -d "/proc/$LAUNCH_PID" ]; then
         printf 'survival gate: FAIL (main process exited)\n' >&2
         printf '\n===== stderr =====\n' >&2
@@ -192,8 +205,18 @@ for i in $(seq 1 "$survival_samples"); do
         exit 1
     fi
 
-    observe_tree survival "$i"
-    sleep 0.5
+    survival_sample=$((survival_sample + 1))
+    observe_tree survival "$survival_sample"
+
+    if (( SECONDS >= next_progress )); then
+        elapsed=$((SECONDS - survival_started))
+        remaining=$((survival_deadline - SECONDS))
+        (( remaining < 0 )) && remaining=0
+        printf 'survival progress: %ss elapsed, %ss remaining\n' "$elapsed" "$remaining"
+        next_progress=$((SECONDS + PROGRESS_INTERVAL_SECONDS))
+    fi
+
+    sleep "$POLL_SLEEP_SECONDS"
 done
 
 if grep -q 'FATAL:' "$OUT/launch.stderr"; then
@@ -209,6 +232,7 @@ fi
 }
 
 printf 'survival gate: PASS\n'
+printf 'elapsed seconds: %s\n' "$((SECONDS - survival_started))"
 
 observe_tree final 1
 mapfile -t capture_pids < <(collect_tree_pids "$LAUNCH_PID")
