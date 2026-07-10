@@ -58,6 +58,7 @@ The post-handoff evidence and decision records are:
 0029-second-selected-closure-pilot-target.md
 0030-obsidian-control-capture-first-timeout.md
 0031-obsidian-cpu-topology-and-survival-gate.md
+0032-obsidian-control-wall-clock-gate-timing.md
 ```
 
 Full top-down rationale is on `main`:
@@ -79,7 +80,7 @@ refactor/0015
 refactor/0016
     -> handoff into semantic review
 
-refactor/0017-0031
+refactor/0017-0032
     -> current branch evidence/design records produced under that direction
 
 refactor/0014
@@ -131,6 +132,7 @@ refactor/0014
 - `0029-second-selected-closure-pilot-target.md` — Obsidian AppDir CPU path selected to test `$ORIGIN` locality and real application-domain composition.
 - `0030-obsidian-control-capture-first-timeout.md` — first Obsidian control-capture timeout, harness observability defect, and topology-preserving correction.
 - `0031-obsidian-cpu-topology-and-survival-gate.md` — actual CPU-path topology evidence, utility-class requirement correction, descendant-tree discovery, and separate workload survival gate.
+- `0032-obsidian-control-wall-clock-gate-timing.md` — fixes sample-count timing so startup and survival budgets use wall-clock deadlines and emit progress.
 
 ### Supporting records
 
@@ -205,7 +207,7 @@ The active next experiment is:
 selected Obsidian AppDir CPU-path closure pilot
 ```
 
-Observed CPU topology currently supports `main + renderer + zygote`, with `utility` absent across the captured startup samples. A later `GPU process isn't usable. Goodbye.` fatal requires an explicit survival gate. The current harness follows launch descendants by PPID tree and separates topology from survival before map classification. Candidate materialization for Obsidian remains blocked.
+Observed CPU topology currently supports `main + renderer + zygote`, with `utility` absent across the captured startup samples. A later `GPU process isn't usable. Goodbye.` fatal requires an explicit survival gate. The current harness follows launch descendants by PPID tree, separates topology from survival, and uses wall-clock-bounded startup/survival deadlines before map classification. Candidate materialization for Obsidian remains blocked.
 
 ## Current implementation stop line
 
