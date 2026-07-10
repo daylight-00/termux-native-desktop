@@ -8,210 +8,139 @@ Current stage:
 
 ```text
 control capture: PASS
-initial static traversal harness bug: fixed
-complete static traversal: PASS
-control/static libcap selection mismatch: found
-ownership-aware static rerun: pending
-candidate materialization: blocked until static/runtime sets agree
-```
-
-## Provenance
-
-First-hand experiment design and device evidence derived from:
-
-```text
-docs/refactor/0019-selected-closure-pilot-decision-criteria.md
-docs/refactor/0026-dbus-pilot-control-static-selection-mismatch.md
+static traversal harness bug: fixed
+control/static libcap mismatch: found and modeled
+ownership-aware static discovery: PASS
+static selected provider set == runtime mapped provider set: PASS
+candidate byte materialization and isolated validation: ready to run
 ```
 
 ## Question
 
-Can the broad Debian-rootfs library farm be replaced, for one bounded workload class, by a smaller selected provider closure that has:
+Can the broad Debian-rootfs library farm be replaced, for one bounded workload class, by a smaller selected provider closure with explicit identity, concrete bytes, provenance, world-owned exclusion, and provable actual selection?
+
+## Current evidence
+
+### Runtime control provider set
 
 ```text
-explicit identity
-concrete provider bytes
-package provenance
-world-owned exclusion
-candidate-specific validation
-provable actual selection
+libdbus-1.so.3.38.3
+libsystemd.so.0.40.0
+libcap.so.2.75
 ```
 
-without changing the active broad farm used as control/reference?
-
-## Baseline
+### Ownership-aware static provider set
 
 ```text
-active substrate:
-    APT/dpkg-owned glibc 2.42 recovery substrate
-
-active provider control:
-    broad farm under $HOME/gl/lib
-
-root provider under study:
-    libdbus-1.so.3
+libdbus-1.so.3.38.3
+libsystemd.so.0.40.0
+libcap.so.2.75
 ```
 
-## Minimal probe
-
-The probe calls only:
+Therefore, for the bounded `dbus_get_version()` probe:
 
 ```text
-dbus_get_version()
+STATIC_SELECTED_PROVIDER_SET
+    ==
+RUNTIME_MAPPED_PROVIDER_SET
 ```
 
-and remains alive briefly so `/proc/<pid>/maps` can be captured.
+### Protected substrate set
 
-Observed result:
+Objects selected from package owner `glibc`:
 
 ```text
-libdbus runtime version: 1.16.2
-control capture: PASS
+ld-linux-aarch64.so.1
+libc.so.6
+libm.so.6
 ```
 
-## Control runtime evidence
+The prefix `libcap.so.2.69` is owned by `libcap-glibc`, not `glibc`, and is not classified as protected world substrate merely because it lives under `$PREFIX/glibc/lib`.
 
-Relevant actual mapped objects:
+## Current graph
 
 ```text
-WORLD / substrate paths:
-    $PREFIX/glibc/lib/ld-linux-aarch64.so.1
-    $PREFIX/glibc/lib/libc.so.6
-    $PREFIX/glibc/lib/libm.so.6
+probe
+    -> libdbus                  candidate provider root
+        -> libsystemd           selected provider
+            -> libcap           selected provider
+            -> libm             protected world substrate
+            -> libc             protected world substrate
+            -> loader           protected world substrate
+        -> libc                 protected world substrate
+        -> loader               protected world substrate
 
-ROOTFS provider paths:
-    libdbus-1.so.3.38.3
-    libsystemd.so.0.40.0
-    libcap.so.2.75
+libcap
+    -> libc                     protected world substrate
+    -> loader                   protected world substrate
 ```
 
-This is a strong boundedness signal, but candidate work remains blocked until static classification matches actual control selection.
+## Candidate stage
 
-## Static traversal finding
+### Materialization
 
-The completed static graph showed:
+`materialize-candidate.sh`:
 
 ```text
-libdbus
-    -> libsystemd
-    -> libc
-    -> loader
-
-libsystemd
-    -> libcap
-    -> libm
-    -> libc
-    -> loader
+reads successful static evidence
+verifies source SHA-256 and Build ID before copy
+copies concrete provider bytes into candidate/lib
+creates only candidate-internal SONAME links
+records source and candidate identity in receipt.tsv
+snapshots graph and world-substrate evidence
+computes a candidate ID
 ```
 
-The first classifier incorrectly selected prefix `libcap.so.2.69` as `WORLD_PREFIX`, while runtime maps proved that farm-first control selected Debian rootfs `libcap.so.2.75`.
+The candidate does not symlink back into the mutable Debian rootfs.
 
-The rule:
+### Validation
+
+`validate-candidate.sh` runs the same minimal probe with:
 
 ```text
-exists under $PREFIX/glibc/lib
-    => WORLD
+candidate/lib:$PREFIX/glibc/lib
 ```
 
-is therefore rejected.
-
-## Current classification model
-
-The discovery harness now models:
+and proves:
 
 ```text
-1. actual farm-first control search order
-2. explicit protected package ownership
-3. prefix providers separately from world substrate
+all receipt providers were actually mapped from candidate bytes
+mapped candidate set equals receipt provider set
+candidate hashes and Build IDs still match the receipt
+no $HOME/gl/lib provider object was mapped
+no Debian rootfs provider object was mapped
+mapped prefix objects stay inside the protected world whitelist
 ```
 
-Classes:
+## Procedure
 
-```text
-WORLD_SUBSTRATE
-PROVIDER_ROOTFS
-PROVIDER_PREFIX
-REJECTED_SHADOWS_WORLD
-REJECTED_NON_ROOTFS_CONTROL
-UNRESOLVED
+Given the successful ownership-aware static evidence directory:
+
+```bash
+STATIC_OUT=/path/to/selected-dbus-static-ownership-...
+CANDIDATE=/path/to/candidate
+
+STATIC_OUT="$STATIC_OUT" \
+CANDIDATE="$CANDIDATE" \
+bash recipe/materialize-candidate.sh
+
+CANDIDATE="$CANDIDATE" \
+bash recipe/validate-candidate.sh
 ```
-
-Default protected package set for the pilot:
-
-```text
-glibc
-```
-
-This keeps the first world contract narrow and evidence-based.
-
-## Evidence contract
-
-### `graph.tsv`
-
-```text
-consumer
-needed
-classification
-selected_path
-selection_reason
-```
-
-### `providers.tsv`
-
-Rootfs providers:
-
-```text
-path
-package
-version
-sha256
-build_id
-```
-
-### `prefix-providers.tsv`
-
-Non-protected prefix providers:
-
-```text
-path
-package
-version
-sha256
-build_id
-```
-
-### `world-prefix.tsv`
-
-Protected substrate objects only:
-
-```text
-path
-package
-version
-sha256
-build_id
-```
-
-The historical filename is retained for continuity, but its semantics are now explicitly protected ownership rather than all prefix objects.
 
 ## Decision boundary
 
-Do not yet implement:
+A candidate validation PASS proves only the bounded pilot claim.
+
+It does not yet justify:
 
 ```text
-provider store
-candidate activation
-universal resolver
-global gl sync
-farm replacement
+global provider store
+activation pointer
+gl-sync
+one global fingerprint
+broad-farm replacement
+application-wide migration
 ```
 
-Next gate:
-
-```text
-ownership-aware static provider set
-    ==
-actual runtime mapped provider set
-```
-
-Only then proceed to concrete provider-byte materialization and candidate-specific loader validation.
+After a PASS, the next task is to interpret what semantic owner this closure belongs to and whether the same mechanism survives a second, more discriminating workload/application-family pilot.
