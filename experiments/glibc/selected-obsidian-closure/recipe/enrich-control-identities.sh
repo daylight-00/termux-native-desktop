@@ -145,6 +145,14 @@ while IFS=$'\t' read -r path_class path; do
         sha=$(sha256sum "$path" | awk '{print $1}')
         build_id=$(build_id_of "$path")
         [ -n "$build_id" ] || build_id=NONE
+    elif [ -c "$path" ] || [ -b "$path" ]; then
+        state=DEVICE_NODE
+        sha=NOT_APPLICABLE
+        build_id=NOT_APPLICABLE
+    elif [ -e "$path" ]; then
+        state=PRESENT_NONREGULAR
+        sha=NOT_APPLICABLE
+        build_id=NOT_APPLICABLE
     else
         state=MISSING_AT_ENRICHMENT
         sha=MISSING
