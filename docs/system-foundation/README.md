@@ -4,7 +4,7 @@
 >
 > **Refactoring note:** another development session may be actively refactoring the repository. This set therefore defines stable reasoning, boundaries, target contracts, and migration order. It intentionally avoids assuming that every current path or file layout will remain unchanged.
 >
-> **Precedence note:** `11-architecture-reassessment-and-hard-refactor-decision.md` is the latest architectural direction. Where earlier migration documents can be read as requiring preservation of current command names, compatibility facades, the broad farm, or the `gl` umbrella object, document 11 takes precedence. Preserve validated semantics and evidence, not accidental object identity.
+> **Precedence note:** `11-architecture-reassessment-and-hard-refactor-decision.md` is the latest architectural reasoning and decision authority. `12-document-consistency-audit-and-execution-order.md` is the current cross-document consistency index and execution-order guide. Where earlier migration documents can be read as requiring preservation of current command names, compatibility facades, the broad farm, or the `gl` umbrella object, documents 11 and 12 take precedence. Preserve validated semantics and evidence, not accidental object identity.
 
 This documentation set starts above individual implementations. It asks:
 
@@ -41,7 +41,8 @@ Neither pure bottom-up accumulation nor pure top-down design is sufficient. The 
 9. [`09-validation-promotion-and-evidence.md`](09-validation-promotion-and-evidence.md) — validation gates, promotion rules, evidence quality, and rollback.
 10. [`10-open-design-questions.md`](10-open-design-questions.md) — decisions intentionally left open until further evidence exists.
 11. [`11-architecture-reassessment-and-hard-refactor-decision.md`](11-architecture-reassessment-and-hard-refactor-decision.md) — reconciliation with the refactor branch and ABI incident; supersession rules, `gl` object critique, farm lifecycle judgment, substrate authority, and hard-refactor sequence.
-12. [`REFERENCES.md`](REFERENCES.md) — project-local and external references.
+12. [`12-document-consistency-audit-and-execution-order.md`](12-document-consistency-audit-and-execution-order.md) — document authority map, resolved apparent contradictions, settled/open decision matrix, implementation stop line, and current execution order.
+13. [`REFERENCES.md`](REFERENCES.md) — project-local and external references.
 
 ## Document evolution and precedence
 
@@ -79,6 +80,16 @@ preserve modules/gl as one semantic owner
 preserve one package-manager integration
 ```
 
+When deciding what to do next:
+
+```text
+11
+    -> why the direction changed and what the architecture decides
+
+12
+    -> how all documents fit together and what the current execution order is
+```
+
 ## Relationship to existing repository documents
 
 This set has a different responsibility from existing guides:
@@ -98,7 +109,7 @@ experiments/
 
 system-foundation/
     -> abstract identity, invariants, target architecture,
-       reassessment, and migration model
+       reassessment, consistency audit, and migration model
 ```
 
 The target architecture should not rewrite historical experiment reports to pretend the final model existed from the beginning. It should consume their evidence and make future changes more coherent.
@@ -109,4 +120,4 @@ The project is best understood as:
 
 > **A heterogeneous userspace composition system for a non-root Android workstation: it keeps the Android/Termux host native, constructs coherent foreign application runtime domains beside it, connects worlds through explicit bridges, provides hardware and desktop capabilities through ABI-appropriate providers, and promotes only experimentally validated contracts into the live system.**
 
-The latest implementation-direction interpretation of this thesis is in document 11.
+The latest architectural rationale is in document 11; the current cross-document interpretation and execution order are in document 12.
