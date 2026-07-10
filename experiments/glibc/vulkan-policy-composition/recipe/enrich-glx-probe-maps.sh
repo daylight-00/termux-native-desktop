@@ -205,7 +205,7 @@ done <"$INPUT"
     ' "$OUTPUT" | sort
 } >"$PACKAGE_SUMMARY"
 
-awk -F $'\t' 'NR > 1 && ($2 ~ /libGL/ || $2 ~ /libgallium/ || $2 ~ /zink/ || $2 ~ /vulkan/ || $2 ~ /mesa/ || $2 ~ /\/dri\// || $2 ~ /libdrm/ || $2 ~ /libgbm/ || $2 ~ /xcb-dri/ || $2 ~ /kgsl/) { print $0 }' \
+awk -F $'\t' 'NR > 1 { lower = tolower($2); if ($2 ~ /libGL/ || lower ~ /libgallium/ || lower ~ /zink/ || lower ~ /vulkan/ || lower ~ /mesa/ || lower ~ /\/dri\// || lower ~ /libdrm/ || lower ~ /libgbm/ || lower ~ /xcb-dri/ || lower ~ /kgsl/) print $0 }' \
     "$OUTPUT" >"$GRAPHICS"
 
 printf 'GLX probe map enrichment: PASS\n'
