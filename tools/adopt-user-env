@@ -12,6 +12,7 @@ esac
 R=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 STATE_HOME=${XDG_STATE_HOME:-$HOME/.local/state}
 BACKUP_ROOT="$STATE_HOME/termux-native-desktop/adoption/pre-module-layout"
+LEGACY_REPO_ROOT=${LEGACY_REPO_ROOT:-$HOME/termux-native-desktop}
 
 EXPECTED_BASHRC=3c7b8682c4debff14f68fa2a239635aed7d13ec6c11918ddee8f59040245a7cf
 EXPECTED_UVRC=f851fe1147541c2f6040c5cce66852ba3d848f70b62ef3e843c8e41339a4641c
@@ -58,10 +59,33 @@ backup_file() {
 
 adopt_link() {
     local dst=$1 src=$2 expected=$3 rel=$4
-    if [ -L "$dst" ] && [ "$(readlink -f "$dst")" = "$(readlink -f "$src")" ]; then
-        log "already adopted: $dst"
-        return 0
+    local resolved_dst resolved_src raw_target src_rel legacy_src
+
+    resolved_src=$(readlink -f "$src")
+
+    if [ -L "$dst" ]; then
+        resolved_dst=$(readlink -f "$dst" 2>/dev/null || true)
+        if [ "$resolved_dst" = "$resolved_src" ]; then
+            log "already adopted: $dst"
+            return 0
+        fi
+
+        raw_target=$(readlink "$dst")
+        src_rel=${src#"$R"/}
+        legacy_src="$LEGACY_REPO_ROOT/$src_rel"
+
+        if [ "$raw_target" = "$legacy_src" ]; then
+            run ln -sfn "$src" "$dst"
+            log "relinked moved repository source: $dst -> $src"
+            return 0
+        fi
+
+        echo "refusing to replace unmanaged symlink: $dst -> $raw_target" >&2
+        echo "expected current source: $src" >&2
+        echo "accepted legacy source: $legacy_src" >&2
+        exit 1
     fi
+
     verify_regular_hash "$dst" "$expected"
     backup_file "$dst" "$rel"
     run rm -f "$dst"
@@ -93,6 +117,8 @@ link_config_leaf() {
 }
 
 log "mode: $MODE"
+log "repository root: $R"
+log "accepted legacy repository root: $LEGACY_REPO_ROOT"
 log "backup root: $BACKUP_ROOT"
 
 adopt_link "$HOME/.bashrc" "$R/modules/shell/overlay/home/.bashrc" "$EXPECTED_BASHRC" home/.bashrc

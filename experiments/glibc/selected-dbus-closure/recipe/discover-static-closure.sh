@@ -35,7 +35,10 @@ declare -A world_recorded=()
 
 build_id_of() {
     readelf -n "$1" 2>/dev/null \
-        | awk '/Build ID:/ {print $3; exit}'
+        | awk '
+            /Build ID:/ && id == "" { id = $3 }
+            END { if (id != "") print id }
+        '
 }
 
 record_provider() {
@@ -130,10 +133,6 @@ while [ "$index" -lt "${#queue[@]}" ]; do
             | sed -n 's/.*Shared library: \[\(.*\)\]/\1/p'
     )
 done
-
-sort -u "$OUT/graph.tsv" -o "$OUT/graph.tsv"
-sort -u "$OUT/providers.tsv" -o "$OUT/providers.tsv"
-sort -u "$OUT/world-prefix.tsv" -o "$OUT/world-prefix.tsv"
 
 printf '\n===== graph =====\n'
 column -t -s $'\t' "$OUT/graph.tsv" 2>/dev/null || cat "$OUT/graph.tsv"

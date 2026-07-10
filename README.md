@@ -32,6 +32,16 @@ native desktop/session
 
 PRoot remains useful as an install-time dependency resolver, library source, and debugging control environment. It is intentionally excluded from the normal application runtime.
 
+## Repository checkout
+
+The canonical live-device checkout location is:
+
+```text
+$HOME/projects/termux-native-desktop
+```
+
+Repository operator tools must derive the source root from their own location rather than treating the checkout pathname as architectural identity. Historical evidence keeps the path that was real when the evidence was captured.
+
 ## Repository map
 
 - `modules/` — project-owned system capabilities and target-relative overlays.
