@@ -8,19 +8,19 @@ Every structural change must be recorded here before or at the same time as the 
 
 ## Current checkout root
 
-The canonical live-device checkout is:
+Canonical live-device checkout:
 
 ```text
 $HOME/projects/termux-native-desktop
 ```
 
-The legacy checkout root:
+Legacy checkout root:
 
 ```text
 $HOME/termux-native-desktop
 ```
 
-is retained only as a migration source identity. It must not remain as a compatibility symlink after relocation.
+The legacy root is only a migration source identity and must not remain as a compatibility symlink after relocation.
 
 ## Current direction and precedence
 
@@ -28,26 +28,23 @@ The ownership migration in `0001` through `0011` remains accepted.
 
 The ABI incident analysis in `0012` and `0013` remains evidence.
 
-`0014` contains valuable transactional principles, but its concrete implementation sequence is partially superseded by:
+`0014` retains useful transaction, validation, candidate, and rollback principles, but its concrete implementation sequence is partially superseded.
+
+Branch-local architecture direction:
 
 ```text
 0015-architecture-reassessment-and-hard-refactor-direction.md
-```
-
-The operational handoff that initiated the semantic review is:
-
-```text
 0016-next-session-handoff.md
 ```
 
-Full top-down rationale is on `main`:
+Full top-down rationale on `main`:
 
 ```text
 docs/system-foundation/11-architecture-reassessment-and-hard-refactor-decision.md
 docs/system-foundation/12-document-consistency-audit-and-execution-order.md
 ```
 
-Use this precedence where migration tactics conflict:
+Precedence:
 
 ```text
 system-foundation/11 and /12
@@ -59,12 +56,12 @@ refactor/0015
 refactor/0016
     -> handoff into semantic review
 
-refactor/0017-0050
-    -> current branch evidence/design records produced under that direction
+refactor/0017-0052
+    -> current branch evidence/design records under that direction
 
 refactor/0014
     -> retained transaction/validation insights,
-       not the current next implementation sequence
+       not the current implementation order
 ```
 
 ## Document index
@@ -85,7 +82,7 @@ refactor/0014
 0011-phase-b-runtime-deploy-passed.md
 ```
 
-These records preserve the initial inventory, ownership map, migration procedure, shell/uv-base adoption, real-device preflight corrections, and the completed Phase A/B ownership migration.
+These records preserve the initial inventory, ownership map, migration procedure, shell/uv-base adoption, preflight corrections, and completed Phase A/B ownership migration.
 
 ### ABI incident and lifecycle reasoning
 
@@ -95,7 +92,7 @@ These records preserve the initial inventory, ownership map, migration procedure
 0014-robust-gl-update-and-farm-lifecycle.md
 ```
 
-`0012` and `0013` preserve the ABI incident evidence and root cause. `0014` retains candidate/validation/promotion and transactional principles but is not the current implementation order.
+`0012` and `0013` preserve the ABI incident and confirmed root cause. `0014` is retained for lifecycle principles only where it does not conflict with the later architecture direction.
 
 ### Current architecture direction
 
@@ -104,7 +101,7 @@ These records preserve the initial inventory, ownership map, migration procedure
 0016-next-session-handoff.md
 ```
 
-These define the branch-local semantic hard-refactor direction, stop line, and the handoff into evidence-driven semantic review.
+These define the semantic hard-refactor direction, stop line, and evidence-driven handoff.
 
 ### Semantic review, substrate, and selected closure
 
@@ -123,12 +120,12 @@ These define the branch-local semantic hard-refactor direction, stop line, and t
 0028-selected-dbus-candidate-validation-passed.md
 ```
 
-These records establish:
+These establish:
 
 ```text
 semantic decomposition of the old gl umbrella
 real APT/dpkg substrate authority
-binary glibc 2.42 -> 2.43 ABI regression evidence
+glibc 2.42 -> 2.43 binary ABI regression evidence
 package-managed recovery and corrected gates
 VS Code CLI/GUI recovery closure
 canonical checkout relocation
@@ -182,52 +179,140 @@ zero unresolved or ambiguous mapped-universe SONAME edges
 0048-zink-frontend-and-cross-version-graphics-composition-confirmed.md
 0049-implicit-discovery-zink-consumer-failure.md
 0050-implicit-loader-discovery-and-zink-cpu-device-gate.md
+0051-implicit-software-intent-zink-llvmpipe-validation-passed.md
+0052-glx-map-runtime-anonymous-memory-classification.md
 ```
 
-The current Vulkan composition records establish:
+The Vulkan records now establish a completed bounded Zink/GLX three-state matrix.
+
+#### Explicit hardware provider + default device intent
 
 ```text
-producer/consumer inventory:
-    bionic session producer
-    glibc shared producer
-    gl-run consumer
-    VS Code launcher consumer
-    Obsidian launcher consumer
+provider policy:
+    explicit-freedreno
 
-policy dimensions:
-    provider discovery/selection policy
-    application feature/argv mode
-    consumer device-class intent
-
-explicit-Freedreno GLX/Zink control:
-    PASS
+renderer:
     Zink -> Turnip Adreno 730
-    GLX/OpenGL 4.6 context
 
-captured explicit physical graph:
-    rootfs GLVND/GLX 1.7.0
-    rootfs Mesa GLX vendor 25.0.7-2
-    rootfs Gallium/Zink frontend 25.0.7-2
-    rootfs Mesa device-selection layer 25.0.7-2
-    prefix Vulkan loader 1.3.301 and support libraries
-    provider-store Turnip/Freedreno 26.1.4 lineage
-    KGSL device interface
+physical tail:
+    provider-store libvulkan_freedreno.so
+    -> /dev/kgsl-3d0
 
-implicit-discovery Zink control:
-    manifest discovery PASS
-    eight rootfs ICD manifests discovered
-    Mesa device-select layer inserted
-    sole surviving pdev: llvmpipe CPU
-    rootfs Freedreno path: zero physical devices
-    Zink default CPU-device acceptance: FAIL
-    GLX/OpenGL path: FAIL before renderer identity
+result:
+    PASS
 ```
 
-`0050` refines the failure model: implicit discovery did provide a Vulkan CPU physical device, but the tested Zink path did not accept CPU selection without explicit software intent. The next discriminating control changes only `LIBGL_ALWAYS_SOFTWARE=1` while keeping `VULKAN_POLICY_MODE=implicit-discovery`.
+#### Implicit discovery + default device intent
+
+```text
+manifest discovery:
+    PASS
+
+device-select layer:
+    inserted
+
+sole surviving pdev:
+    llvmpipe CPU
+
+Zink default CPU-device acceptance:
+    FAIL
+
+renderer identity:
+    NOT REACHED
+```
+
+#### Implicit discovery + explicit software device intent
+
+```text
+provider policy:
+    implicit-discovery
+
+device-class intent:
+    LIBGL_ALWAYS_SOFTWARE=1
+
+renderer:
+    zink Vulkan 1.4(llvmpipe ... MESA_LLVMPIPE)
+
+GLX/OpenGL:
+    PASS
+```
+
+The completed causal matrix is:
+
+```text
+explicit-freedreno + default intent
+    -> Turnip/KGSL
+    -> PASS
+
+implicit-discovery + default intent
+    -> llvmpipe discovered
+    -> CPU pdev rejected
+    -> FAIL
+
+implicit-discovery + software intent
+    -> llvmpipe selected
+    -> Zink/GLX/OpenGL 4.6
+    -> PASS
+```
+
+Therefore:
+
+```text
+provider discovery/selection policy
+    and
+consumer device-class intent
+```
+
+are independent composition dimensions for the tested Zink/GLX consumer.
+
+The successful hardware graph is:
+
+```text
+rootfs GLVND / libGL / libGLX 1.7.0
+    -> rootfs Mesa GLX vendor 25.0.7-2
+    -> rootfs Gallium/Zink frontend 25.0.7-2
+    -> rootfs Mesa device-selection layer 25.0.7-2
+    -> prefix Vulkan loader 1.3.301 and support plane
+    -> provider-store Turnip/Freedreno 26.1.4 lineage
+    -> KGSL device interface
+```
+
+The successful software graph shares the application-facing front half and changes the provider tail:
+
+```text
+rootfs GLVND / Mesa GLX / Gallium Zink
+    -> prefix Vulkan loader/support
+    -> rootfs Lavapipe
+    -> llvmpipe CPU renderer
+```
+
+The software capture also maps `libvulkan_gfxstream.so`, but previous loader diagnostics show it as discovery/loading participation without a surviving physical device. Therefore:
+
+```text
+mapped ICD object
+    !=
+selected rendering provider
+```
+
+The explicit-vs-software comparison reported:
+
+```text
+explicit-only:
+    mesa_shader_cache/index
+    provider-store libvulkan_freedreno.so
+    /dev/kgsl-3d0
+
+software-control-only:
+    rootfs libvulkan_gfxstream.so
+    rootfs libvulkan_lvp.so
+    /memfd:allocation
+```
+
+`0052` corrects enrichment classification for the narrow observed `/memfd:allocation*` pattern so it is represented as runtime anonymous memory rather than unresolved package provenance.
 
 ### Supporting records
 
-- `MIGRATION_JOURNAL.md` — chronological execution log with commands, commit IDs, validation, incidents, recovery, and deviations.
+- `MIGRATION_JOURNAL.md` — chronological commands, commit IDs, validations, incidents, recovery, and deviations.
 - `repo-path-map.tsv` — machine-readable path mapping for moved tracked files.
 
 ## Refactor branch
@@ -242,7 +327,7 @@ Base commit:
 3cf41d6fc47050b06e18e956a23cefe25e4fb82a
 ```
 
-The system-foundation documentation was added separately on `main` after this branch diverged. The histories must be reconciled deliberately; branch-local absence does not make foundation direction irrelevant.
+The system-foundation documentation was added separately on `main` after this branch diverged. Branch-local absence does not make foundation direction irrelevant; histories must be reconciled deliberately.
 
 ## Current device and incident state
 
@@ -265,7 +350,7 @@ exact 2.42 recovery artifact preserved
 glibc temporarily held from upgrading to known-broken 2.43
 ```
 
-The hold is temporary incident containment only. The long-term latest-first direction remains a corrected current/newer substrate validated by the same gates.
+The hold is temporary containment only. The long-term latest-first direction remains a corrected current/newer substrate validated by the same gates.
 
 ## Current selected-closure and composition state
 
@@ -282,7 +367,7 @@ rootfs provider leakage: ZERO
 protected substrate boundary: PASS
 ```
 
-The proven D-Bus selected provider set is:
+Proven D-Bus selected provider set:
 
 ```text
 libdbus
@@ -302,32 +387,18 @@ scoped Vulkan policy composition experiment
 
 For Obsidian, the 161-path baseline and 169-path strict policy-isolation control are semantically classified with zero review objects. The strict-only 11-path set is fully attributed to SwiftShader, Lavapipe, and Gfxstream roots inside the captured mapped universe.
 
-For scoped Vulkan composition, explicit-Freedreno Zink/Turnip validation passed and the successful mixed physical graph is enriched with package/version identity. The implicit control failed, but loader diagnostics now show the exact reason chain:
+For scoped Vulkan composition, the bounded Zink hardware/default, implicit/default, and implicit/software controls are complete. Hardware and software renderer graphs have been captured, enriched, and compared. The remaining immediate evidence correction is device-side re-enrichment of the software evidence root using the committed runtime-anonymous memfd classification.
+
+After that, the next gate is real Electron consumer adapter validation:
 
 ```text
-rootfs manifest discovery
-    PASS
-        ↓
-multiple ICD loading/enumeration attempts
-        ↓
-sole surviving pdev
-    llvmpipe CPU
-        ↓
-software device-class intent absent
-        ↓
-Zink rejects CPU pdev in default path
-        ↓
-GLX screen and FBConfig path fail
+1. Obsidian explicit-freedreno adapter control
+2. Obsidian implicit-discovery adapter comparison
+3. VS Code explicit-freedreno GPU adapter validation
+4. VS Code CPU/software-intent behavior check
+5. compare consumer-specific policy requirements
+6. define minimum graphics composition contract from evidence
 ```
-
-The active next gate is the one-variable control:
-
-```text
-VULKAN_POLICY_MODE=implicit-discovery
-LIBGL_ALWAYS_SOFTWARE=1
-```
-
-with the same GLX probe and maps capture. If it passes, the resulting software graph will be enriched and compared with the explicit hardware graph before Electron consumer validation.
 
 Candidate materialization remains blocked pending these graphics composition gates plus locality-shadowing and non-graphics static/runtime closure analysis.
 
