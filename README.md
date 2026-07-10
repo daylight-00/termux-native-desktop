@@ -32,7 +32,7 @@ PRoot remains useful as an install-time dependency resolver, library source, and
 
 ## Repository map
 
-- `docs/` — project context, architecture, integrated operational guides, timeline, and durable decisions.
+- `docs/` — project context, architecture, integrated operational guides, foundational knowledge, target-system design, timeline, and durable decisions.
 - `experiments/` — the living workbench. Each experiment keeps a concise canonical `README.md`; session-derived full reports live beside it as `report.md`; raw captures go in `evidence/` when useful.
 - `setup/` — promoted runtime configuration and launch artifacts used by the live device.
 - `scripts/` — repository/deployment helpers.
@@ -46,6 +46,7 @@ question
   -> evidence
   -> working conclusion (STATUS.md)
   -> durable decision (docs/decisions/)
+  -> contract / validation gate, when stable
   -> integrated guide or promoted runtime artifact
 ```
 
@@ -56,6 +57,8 @@ question
 - [`docs/glibc-layer.md`](docs/glibc-layer.md) — glibc layer bootstrap, boundaries, onboarding, traps, maintenance.
 - [`docs/gpu.md`](docs/gpu.md) — Turnip/Zink build and runtime contract plus diagnostic history.
 - [`docs/desktop-session.md`](docs/desktop-session.md) — Termux:X11/XFCE two-world session contract.
+- [`docs/knowledge/README.md`](docs/knowledge/README.md) — progressive systems knowledge layer developed from the project investigation.
+- [`docs/system-foundation/README.md`](docs/system-foundation/README.md) — project essence, invariants, target architecture, gap analysis, and migration roadmap.
 - [`experiments/README.md`](experiments/README.md) — experiment index and provenance contract.
 
 ## Companion project

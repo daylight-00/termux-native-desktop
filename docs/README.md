@@ -1,6 +1,6 @@
 # Documentation map
 
-The repository separates current integrated knowledge from experiment provenance.
+The repository separates current integrated knowledge from experiment provenance, foundational study material, and target-architecture reasoning.
 
 ## Start here
 
@@ -12,6 +12,21 @@ The repository separates current integrated knowledge from experiment provenance
 - `timeline.md` — chronological navigation aid.
 - `decisions/` — durable choices whose rationale should survive individual experiments.
 
+## Foundational study and design
+
+- `knowledge/` — progressive systems knowledge layer, from package management and bootstrapping through ELF, processes, filesystems, networking, GPU, build systems, and debugging.
+- `system-foundation/` — project essence, architectural invariants, target system model, current-state assessment, refactoring strategy, and implementation/validation roadmap.
+
+The two sets are intentionally different:
+
+```text
+knowledge/
+    -> understand the mechanisms the project depends on
+
+system-foundation/
+    -> derive the project's identity and target architecture from those mechanisms
+```
+
 ## Evidence relationship
 
 Integrated guides summarize the current interpretation. Detailed first-hand session reports, reconstructed records, and raw traces remain under `../experiments/`.
@@ -21,5 +36,6 @@ experiment report / evidence
         -> canonical experiment README
         -> STATUS working conclusion
         -> decision record, when durable
-        -> integrated guide / promoted artifact
+        -> contract and validation gate, when stable
+        -> integrated guide / promoted runtime artifact
 ```
