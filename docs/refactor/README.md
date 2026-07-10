@@ -62,6 +62,7 @@ The post-handoff evidence and decision records are:
 0033-obsidian-control-maps-captured-provenance-split.md
 0034-obsidian-control-semantic-decomposition.md
 0035-obsidian-semantic-classifier-awk-portability-fix.md
+0036-obsidian-graphics-provider-and-device-node-boundary.md
 ```
 
 Full top-down rationale is on `main`:
@@ -83,7 +84,7 @@ refactor/0015
 refactor/0016
     -> handoff into semantic review
 
-refactor/0017-0035
+refactor/0017-0036
     -> current branch evidence/design records produced under that direction
 
 refactor/0014
@@ -139,6 +140,7 @@ refactor/0014
 - `0033-obsidian-control-maps-captured-provenance-split.md` — records successful final multiprocess maps capture, broad heterogeneous runtime object classes, and separation of live capture from post-processing provenance enrichment.
 - `0034-obsidian-control-semantic-decomposition.md` — decomposes mapped objects into app-local ELF/data, substrate, locale, prefix ELF providers, rootfs ELF providers, font data, schema data, and mutable runtime state.
 - `0035-obsidian-semantic-classifier-awk-portability-fix.md` — records and corrects the device AWK parse failure in the review-filter stage without changing semantic classification rules.
+- `0036-obsidian-graphics-provider-and-device-node-boundary.md` — resolves the final review objects into a Mesa Vulkan provider ELF and the KGSL GPU device node, and records that CPU-mode launch flags do not prove graphics-provider non-participation.
 
 ### Supporting records
 
@@ -213,7 +215,7 @@ The active next experiment is:
 selected Obsidian AppDir CPU-path closure pilot
 ```
 
-For Obsidian, topology/survival observation completed and the final multiprocess maps plus unique mapped-object set were captured. Provenance enrichment succeeded, and semantic decomposition now separates app-local ELF/data, protected substrate ELF, locale data, prefix ELF providers, rootfs ELF providers, font data, schema data, and mutable/cache state. The first semantic classifier run failed only in the final AWK review-filter stage; the portable fix is committed and requires only a classifier rerun. Candidate materialization remains blocked pending review-set inspection and locality-shadowing/static-closure analysis.
+For Obsidian, topology/survival observation completed, final multiprocess maps and provenance enrichment are available, and semantic decomposition now covers all 161 mapped paths. The two remaining review objects were identified as the Mesa Freedreno Vulkan provider ELF and the KGSL GPU device node; the enrichment/classifier now model regular files and device nodes separately. Because graphics-related objects and the GPU device node appear even in the CPU-mode control, process-class-specific graphics mapping must be inspected before claiming graphics-provider independence. Candidate materialization remains blocked pending that check plus locality-shadowing and static/runtime closure analysis.
 
 ## Current implementation stop line
 
