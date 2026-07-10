@@ -97,13 +97,8 @@ done <"$INPUT"
 
 {
     printf 'semantic_class\tpath_class\tpath\tpackage\tversion\tsha256\tbuild_id\tstate\n'
-    awk -F $'\t' '
-        NR > 1 && (
-            $1 ~ /REVIEW$/ ||
-            $1 == "MISSING_AT_ENRICHMENT" ||
-            $1 == "UNCLASSIFIED_PATH_CLASS"
-        ) { print }
-    ' "$OUTPUT"
+    awk -F $'\t' 'NR > 1 && ($1 ~ /REVIEW$/ || $1 == "MISSING_AT_ENRICHMENT" || $1 == "UNCLASSIFIED_PATH_CLASS") { print }' \
+        "$OUTPUT"
 } >"$REVIEW"
 
 printf '\nsemantic classification: PASS\n'
