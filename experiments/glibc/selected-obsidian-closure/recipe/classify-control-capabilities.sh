@@ -61,6 +61,10 @@ classify() {
                 printf 'PROVIDER_FONT_DATA\n'
             elif [[ "$path" == */usr/share/glib-2.0/schemas/* ]]; then
                 printf 'PROVIDER_SCHEMA_DATA\n'
+            elif [[ "$path" == */libVkLayer_MESA_device_select.so ]]; then
+                printf 'PROVIDER_GRAPHICS_VULKAN_LAYER_ELF\n'
+            elif [[ "$path" == */libgbm.so.* ]]; then
+                printf 'PROVIDER_GRAPHICS_GBM_ELF\n'
             elif [ "$build_id" != NONE ]; then
                 printf 'PROVIDER_ROOTFS_ELF\n'
             else
@@ -73,7 +77,7 @@ classify() {
                 "$HOME/.cache/fontconfig/"*) printf 'RUNTIME_CACHE_FONTCONFIG\n' ;;
                 "$HOME/.cache/mesa_shader_cache/"*) printf 'RUNTIME_CACHE_MESA\n' ;;
                 "$HOME/.config/obsidian/"*) printf 'APP_MUTABLE_STATE\n' ;;
-                "$HOME/gl/opt/mesa-glibc-"*/lib/libvulkan_*.so*) printf 'PROVIDER_GRAPHICS_VULKAN_ELF\n' ;;
+                "$HOME/gl/opt/mesa-glibc-"*/lib/libvulkan_*.so*) printf 'PROVIDER_GRAPHICS_VULKAN_DRIVER_ELF\n' ;;
                 *)
                     if [ "$build_id" != NONE ]; then
                         printf 'OTHER_ABSOLUTE_ELF_REVIEW\n'
