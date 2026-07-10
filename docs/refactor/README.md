@@ -18,29 +18,41 @@ The ABI incident analysis in `0012` and `0013` remains evidence.
 0015-architecture-reassessment-and-hard-refactor-direction.md
 ```
 
-The operational entrypoint for the next session is:
+The operational handoff that initiated the semantic review is:
 
 ```text
 0016-next-session-handoff.md
+```
+
+The first post-handoff Stage 2–4 records are:
+
+```text
+0017-gl-umbrella-semantic-inventory.md
+0018-real-device-glibc-substrate-authority.md
+0019-selected-closure-pilot-decision-criteria.md
 ```
 
 Full top-down rationale is on `main`:
 
 ```text
 docs/system-foundation/11-architecture-reassessment-and-hard-refactor-decision.md
+docs/system-foundation/12-document-consistency-audit-and-execution-order.md
 ```
 
 Use this precedence where migration tactics conflict:
 
 ```text
-system-foundation/11
-    -> architecture rationale
+system-foundation/11 and /12
+    -> architecture rationale, consistency, execution order
 
 refactor/0015
     -> branch implementation direction
 
 refactor/0016
-    -> next-session operational entrypoint
+    -> handoff into semantic review
+
+refactor/0017-0019
+    -> current branch evidence/design records produced under that direction
 
 refactor/0014
     -> retained transaction/validation insights,
@@ -74,6 +86,12 @@ refactor/0014
 - `0015-architecture-reassessment-and-hard-refactor-direction.md` — branch-specific semantic hard-refactor decision, `gl` umbrella critique, farm status, substrate authority, and stop line.
 - `0016-next-session-handoff.md` — mandatory reading order, allowed/blocked work, incident context, and expected next-session outputs.
 
+### Semantic review and current evidence
+
+- `0017-gl-umbrella-semantic-inventory.md` — Stage 2 inventory of current `gl` files, environment variables, helpers, actual consumers, minimum scopes, candidate owners, and migration conditions.
+- `0018-real-device-glibc-substrate-authority.md` — Stage 3 evidence that the current device substrate is dpkg-owned and APT-supplied, with version availability, transaction history, control-state semantics, rollback limits, and the next non-mutating recovery experiment.
+- `0019-selected-closure-pilot-decision-criteria.md` — Stage 4 target choice and acceptance criteria for a bounded D-Bus provider-chain pilot, including world protection, locality, provenance, byte materialization, candidate-selection proof, and decision outcomes.
+
 ### Supporting records
 
 - `MIGRATION_JOURNAL.md` — chronological execution log with commands, commit IDs, validation, incidents, recovery, and deviations.
@@ -93,9 +111,33 @@ Base commit:
 
 The system-foundation documentation was added separately on `main` after this branch diverged. The histories must be reconciled deliberately; do not assume branch-local absence means architectural irrelevance.
 
+## Current incident state
+
+The current device remains:
+
+```text
+BLOCKED_SUBSTRATE
+```
+
+because the active glibc 2.43 substrate does not export `__vsyslog_chk@GLIBC_2.17`, while the active Debian-derived `libdbus-1.so.3` requires it.
+
+The current device substrate authority is now established:
+
+```text
+dpkg database ownership
+    +
+Termux APT repository supply
+    +
+explicit apt/full-upgrade update path
+```
+
+Pacman is absent on the device and is not part of the current substrate authority path.
+
+The immediate recovery experiment is exact, non-installing inspection of the repository-addressable `glibc=2.42` artifact before deciding whether downgrade or corrected 2.43 replacement is justified.
+
 ## Current implementation stop line
 
-Until semantic inventory and substrate-authority evidence are complete, do not implement:
+Until incident recovery is complete and semantic/pilot evidence justifies physical changes, do not implement:
 
 ```text
 gl-sync
@@ -117,6 +159,7 @@ regression gates
 semantic inventory
 contract design
 small discriminating experiments
+selected-closure pilot work after substrate recovery
 ```
 
 ## Environment limitation
