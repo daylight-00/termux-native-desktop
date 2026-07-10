@@ -16,17 +16,18 @@ implicit-discovery
     VK_ICD_FILENAMES unset
 ```
 
-The first Zink/OpenGL validation attempt did not execute the workload because `glxinfo` was not installed or available on `PATH`.
+The first `glxinfo` attempt did not execute because `glxinfo` was not installed or available on `PATH`. A self-contained GLX renderer probe was then added and used successfully.
 
-Classification:
+Current validation state:
 
 ```text
 policy identity gate: PASS
-Zink/OpenGL workload: NOT RUN
-failure boundary: consumer command availability
+self-contained GLX probe build: PASS
+explicit-freedreno Zink/OpenGL probe: PASS
+implicit-discovery Zink/OpenGL probe: NOT YET RUN
+Obsidian adapter validation: NOT YET RUN
+VS Code adapter validation: NOT YET RUN
 ```
-
-The experiment now carries a self-contained GLX renderer probe so validation does not depend on `mesa-utils` or another diagnostic package.
 
 ## Question
 
@@ -156,11 +157,24 @@ compiler:
     $HOME/gl/toolchain/glibc-gcc
 
 link-time dependency:
-    libc / libdl only
+    libc / loader only
 
 runtime libraries:
     dlopen libX11.so.6
     dlopen libGL.so.1
+```
+
+Observed build result:
+
+```text
+GLX renderer probe build: PASS
+
+interpreter:
+    $PREFIX/glibc/lib/ld-linux-aarch64.so.1
+
+NEEDED:
+    libc.so.6
+    ld-linux-aarch64.so.1
 ```
 
 Runtime behavior:
@@ -179,7 +193,35 @@ print:
     GL_VERSION
 ```
 
-This validates actual context creation and renderer identity without requiring X11 or GL development headers in the experiment build path.
+Observed explicit-Freedreno result:
+
+```text
+VULKAN_POLICY_MODE=explicit-freedreno
+VK_DRIVER_FILES=$HOME/gl/opt/mesa-glibc/share/vulkan/icd.d/freedreno_icd.aarch64.json
+
+GLX_VERSION=1.4
+GL_VENDOR=Mesa
+GL_RENDERER=zink Vulkan 1.4(Turnip Adreno (TM) 730 (MESA_TURNIP))
+GL_VERSION=4.6 (Compatibility Profile) Mesa 25.0.7-2
+```
+
+Interpretation:
+
+```text
+scoped explicit Freedreno provider policy
+    +
+Zink OpenGL composition
+    +
+self-contained GLX consumer
+    ->
+working GLX context
+    ->
+Mesa Zink renderer
+    ->
+Turnip Adreno 730 provider identity
+```
+
+This is the first cross-consumer proof that the explicit provider-selection contract can be applied at launch scope while preserving the core behavior currently consumed by `gl-run`.
 
 ## Non-goals
 
@@ -201,9 +243,9 @@ The only goal is to validate that explicit provider policy can be composed at la
 
 ```text
 1. environment identity check — PASS
-2. build self-contained GLX renderer probe
-3. Zink/OpenGL explicit-freedreno probe validation
-4. optionally compare implicit-discovery behavior
+2. build self-contained GLX renderer probe — PASS
+3. Zink/OpenGL explicit-freedreno probe validation — PASS
+4. compare implicit-discovery behavior — NEXT
 5. Obsidian explicit-freedreno control
 6. Obsidian implicit-discovery control comparison
 7. VS Code explicit-freedreno GPU validation
