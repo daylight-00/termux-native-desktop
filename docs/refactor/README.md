@@ -54,6 +54,8 @@ The post-handoff evidence and decision records are:
 0025-repository-checkout-relocation-to-projects.md
 0026-dbus-pilot-control-static-selection-mismatch.md
 0027-dbus-static-runtime-closure-agreement.md
+0028-selected-dbus-candidate-validation-passed.md
+0029-second-selected-closure-pilot-target.md
 ```
 
 Full top-down rationale is on `main`:
@@ -75,7 +77,7 @@ refactor/0015
 refactor/0016
     -> handoff into semantic review
 
-refactor/0017-0027
+refactor/0017-0029
     -> current branch evidence/design records produced under that direction
 
 refactor/0014
@@ -113,16 +115,18 @@ refactor/0014
 ### Semantic review and current evidence
 
 - `0017-gl-umbrella-semantic-inventory.md` — Stage 2 inventory of current `gl` files, environment variables, helpers, actual consumers, minimum scopes, candidate owners, and migration conditions.
-- `0018-real-device-glibc-substrate-authority.md` — Stage 3 evidence that the current device substrate is dpkg-owned and APT-supplied, with version availability, transaction history, control-state semantics, rollback limits, and recovery acquisition path.
-- `0019-selected-closure-pilot-decision-criteria.md` — Stage 4 target choice and acceptance criteria for a bounded D-Bus provider-chain pilot.
-- `0020-glibc-242-243-binary-abi-regression.md` — exact non-installing A/B evidence that `glibc=2.42` exports `__vsyslog_chk@@GLIBC_2.17` while active 2.43 did not.
+- `0018-real-device-glibc-substrate-authority.md` — Stage 3 evidence that the current device substrate is dpkg-owned and APT-supplied, with rollback and update-path facts.
+- `0019-selected-closure-pilot-decision-criteria.md` — Stage 4 criteria for a bounded selected-provider pilot.
+- `0020-glibc-242-243-binary-abi-regression.md` — exact binary A/B evidence for the missing fortified syslog export.
 - `0021-glibc-242-downgrade-simulation-passed.md` — bounded one-package APT downgrade simulation result.
-- `0022-glibc-242-recovery-and-core-gate-false-negative.md` — package-managed 2.42 recovery evidence, provider/VS Code recovery, core-gate SIGPIPE false negative, and harness pipeline caveat.
-- `0023-cli-level-abi-incident-recovery-closed.md` — strict rerun showing core ABI PASS, provider relocation PASS, VS Code GPU/CPU CLI PASS, and CLI-level incident closure.
-- `0024-vscode-gui-recovery-validation-passed.md` — real GUI workload validation showing persistent VS Code main, GPU, utility, and renderer processes plus user-confirmed normal execution; actual graphics-provider selection remains a separate claim.
-- `0025-repository-checkout-relocation-to-projects.md` — canonical checkout move to `~/projects/termux-native-desktop`, relocation-safe adoption/deploy relinking, stale-link validation, and historical-path provenance policy.
-- `0026-dbus-pilot-control-static-selection-mismatch.md` — evidence that prefix path location was incorrectly treated as world ownership; runtime maps selected rootfs libcap while the first classifier selected prefix libcap, leading to an ownership-aware control-selection model.
-- `0027-dbus-static-runtime-closure-agreement.md` — ownership-aware static selection and actual runtime maps agree on the bounded three-object rootfs provider set, allowing isolated candidate byte materialization to begin.
+- `0022-glibc-242-recovery-and-core-gate-false-negative.md` — package-managed recovery evidence and test-harness corrections.
+- `0023-cli-level-abi-incident-recovery-closed.md` — strict core/provider/VS Code CLI recovery gate closure.
+- `0024-vscode-gui-recovery-validation-passed.md` — real GUI workload recovery validation.
+- `0025-repository-checkout-relocation-to-projects.md` — canonical checkout move and relocation-safe relinking contract.
+- `0026-dbus-pilot-control-static-selection-mismatch.md` — path-based world inference rejected after libcap control/static mismatch.
+- `0027-dbus-static-runtime-closure-agreement.md` — ownership-aware static selection matches runtime provider maps.
+- `0028-selected-dbus-candidate-validation-passed.md` — concrete three-object provider bytes, receipt/map equality, actual candidate selection, and zero broad-farm/rootfs leakage.
+- `0029-second-selected-closure-pilot-target.md` — Obsidian AppDir CPU path selected to test `$ORIGIN` locality and real application-domain composition.
 
 ### Supporting records
 
@@ -141,13 +145,11 @@ Base commit:
 3cf41d6fc47050b06e18e956a23cefe25e4fb82a
 ```
 
-The system-foundation documentation was added separately on `main` after this branch diverged. The histories must be reconciled deliberately; do not assume branch-local absence means architectural irrelevance.
+The system-foundation documentation was added separately on `main` after this branch diverged. The histories must be reconciled deliberately; branch-local absence does not make foundation direction irrelevant.
 
-## Current incident state
+## Current device and incident state
 
 The tested VS Code workload has recovered through CLI and real GUI validation.
-
-Current device state:
 
 ```text
 SUBSTRATE_RECOVERED
@@ -158,7 +160,7 @@ VS_CODE_GUI_WORKLOAD_VALID
 ABI_INCIDENT_RECOVERY_COMPLETE_FOR_TESTED_VSCODE_WORKLOAD
 ```
 
-Current containment state:
+Containment:
 
 ```text
 glibc 2.42 installed
@@ -168,9 +170,22 @@ glibc temporarily held from upgrading to known-broken 2.43
 
 The hold is temporary incident containment only. The long-term latest-first direction remains a corrected current/newer substrate validated by the same gates.
 
-The GUI workload gate is closed. Actual Vulkan ICD/driver/provider selection remains an independent graphics-evidence track; successful GPU-process creation and Vulkan/ANGLE flags do not by themselves prove the selected provider bytes.
+## Current selected-closure state
 
-The bounded selected-closure pilot is active. Control capture passed. Static/runtime selection mismatch around `libcap` was found and corrected by replacing path-based world inference with ownership-aware classification. The ownership-aware static rootfs provider set now matches the actual runtime mapped provider set exactly:
+The bounded D-Bus selected-provider pilot is passed for the captured probe.
+
+```text
+static/runtime provider-set agreement: PASS
+candidate byte materialization: PASS
+provenance receipt: PASS
+candidate actual-selection proof: PASS
+candidate receipt/map equality: PASS
+broad-farm provider leakage: ZERO
+rootfs provider leakage: ZERO
+protected substrate boundary: PASS
+```
+
+The proven selected provider set is:
 
 ```text
 libdbus
@@ -178,7 +193,15 @@ libsystemd
 libcap
 ```
 
-Candidate byte materialization and isolated candidate validation are now the active next gate.
+This validates a materialized selected-provider closure as a real object class, but does not prove a world-global shared-provider boundary.
+
+The active next experiment is:
+
+```text
+selected Obsidian AppDir CPU-path closure pilot
+```
+
+Its immediate stage is multiprocess control capture and locality classification. Candidate materialization for Obsidian is not yet allowed.
 
 ## Current implementation stop line
 
@@ -197,7 +220,6 @@ new global gl environment policy
 Allowed work includes:
 
 ```text
-repository checkout relocation validation
 graphics-provider actual-selection evidence
 read-only inspection
 identity capture
@@ -205,9 +227,10 @@ regression gates
 semantic inventory
 contract design
 small discriminating experiments
-bounded selected-closure pilot work
+bounded selected-closure pilots
+minimum lifecycle work only after the owning semantic object is proven
 ```
 
 ## Environment limitation
 
-The execution container cannot resolve `github.com`, so a normal network `git clone` is not possible inside this runtime. Repository reads and writes are performed through the authenticated GitHub connector. Local working mirrors under `/mnt/data/` store design documents, generated migration material, candidate files, and validation records used to construct connector-backed Git commits.
+The execution container cannot resolve `github.com`, so normal network cloning is not available inside this runtime. Repository reads and writes are performed through the authenticated GitHub connector. Local mirrors under `/mnt/data/` hold design material and generated evidence used to construct connector-backed commits.
