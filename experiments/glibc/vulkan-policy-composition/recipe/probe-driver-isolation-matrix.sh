@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/bash
 set -euo pipefail
 
-SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 PROBE=${PROBE:-$PREFIX/tmp/tnd-vulkan-policy-composition/glx-renderer-probe}
 ROOTFS=${ROOTFS:-$PREFIX/var/lib/proot-distro/containers/debian/rootfs}
 OUT=${OUT:-$PREFIX/tmp/tnd-vulkan-policy-composition/driver-isolation-matrix-$(date +%Y%m%d-%H%M%S)}
@@ -68,21 +67,8 @@ run_case() {
         renderer_gate=NOT_REACHED
     fi
 
-    awk '
-        /Vulkan Loader/ ||
-        /Found ICD manifest/ ||
-        /Searching for ICD drivers named/ ||
-        /physical_devices/ ||
-        /Original order:/ ||
-        /Sorted order:/ ||
-        /Removing driver/ ||
-        /failed to choose pdev/ ||
-        /failed to create drisw screen/ ||
-        /failed to load driver/ ||
-        /^GL_RENDERER=/ {
-            print
-        }
-    ' "$case_dir/probe.stderr" "$case_dir/probe.stdout" \
+    awk '/Vulkan Loader/ || /Found ICD manifest/ || /Searching for ICD drivers named/ || /physical_devices/ || /Original order:/ || /Sorted order:/ || /Removing driver/ || /failed to choose pdev/ || /failed to create drisw screen/ || /failed to load driver/ || /^GL_RENDERER=/ { print }' \
+        "$case_dir/probe.stderr" "$case_dir/probe.stdout" \
         >"$case_dir/selection-summary.txt"
 
     printf '%s\t%s\t%s\t%s\n' \
