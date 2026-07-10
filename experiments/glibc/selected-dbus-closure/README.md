@@ -2,145 +2,141 @@
 
 ## Status
 
-Active architecture-discrimination experiment.
-
-Current stage:
+Passed for the bounded `dbus_get_version()` probe.
 
 ```text
 control capture: PASS
 static traversal harness bug: fixed
-control/static libcap mismatch: found and modeled
+control/static libcap mismatch: found and corrected
 ownership-aware static discovery: PASS
 static selected provider set == runtime mapped provider set: PASS
-candidate byte materialization and isolated validation: ready to run
+candidate byte materialization: PASS
+candidate actual-selection proof: PASS
+broad-farm/rootfs provider leakage: ZERO
+protected world boundary: PASS
 ```
 
-## Question
+## Proven claim
 
-Can the broad Debian-rootfs library farm be replaced, for one bounded workload class, by a smaller selected provider closure with explicit identity, concrete bytes, provenance, world-owned exclusion, and provable actual selection?
-
-## Current evidence
-
-### Runtime control provider set
+For the bounded probe under the captured glibc 2.42 substrate:
 
 ```text
-libdbus-1.so.3.38.3
-libsystemd.so.0.40.0
-libcap.so.2.75
+selected provider candidate:
+    libdbus-1.so.3.38.3
+    libsystemd.so.0.40.0
+    libcap.so.2.75
+
+protected substrate:
+    ld-linux-aarch64.so.1
+    libc.so.6
+    libm.so.6
 ```
 
-### Ownership-aware static provider set
+is sufficient to execute `dbus_get_version()` successfully without mapping provider objects from the broad farm or Debian rootfs.
+
+## Candidate identity
+
+First successful candidate ID:
 
 ```text
-libdbus-1.so.3.38.3
-libsystemd.so.0.40.0
-libcap.so.2.75
+198a0ea278f09518a6b0ead7a228bb198a837e4096343228cfb32b1115286e6b
 ```
 
-Therefore, for the bounded `dbus_get_version()` probe:
+Validation evidence:
 
 ```text
-STATIC_SELECTED_PROVIDER_SET
-    ==
-RUNTIME_MAPPED_PROVIDER_SET
+$PREFIX/tmp/selected-dbus-candidate-validation-20260710-202400
 ```
 
-### Protected substrate set
+## Strong validation result
 
-Objects selected from package owner `glibc`:
-
-```text
-ld-linux-aarch64.so.1
-libc.so.6
-libm.so.6
-```
-
-The prefix `libcap.so.2.69` is owned by `libcap-glibc`, not `glibc`, and is not classified as protected world substrate merely because it lives under `$PREFIX/glibc/lib`.
-
-## Current graph
+The validator proved:
 
 ```text
-probe
-    -> libdbus                  candidate provider root
-        -> libsystemd           selected provider
-            -> libcap           selected provider
-            -> libm             protected world substrate
-            -> libc             protected world substrate
-            -> loader           protected world substrate
-        -> libc                 protected world substrate
-        -> loader               protected world substrate
-
-libcap
-    -> libc                     protected world substrate
-    -> loader                   protected world substrate
-```
-
-## Candidate stage
-
-### Materialization
-
-`materialize-candidate.sh`:
-
-```text
-reads successful static evidence
-verifies source SHA-256 and Build ID before copy
-copies concrete provider bytes into candidate/lib
-creates only candidate-internal SONAME links
-records source and candidate identity in receipt.tsv
-snapshots graph and world-substrate evidence
-computes a candidate ID
-```
-
-The candidate does not symlink back into the mutable Debian rootfs.
-
-### Validation
-
-`validate-candidate.sh` runs the same minimal probe with:
-
-```text
-candidate/lib:$PREFIX/glibc/lib
-```
-
-and proves:
-
-```text
-all receipt providers were actually mapped from candidate bytes
-mapped candidate set equals receipt provider set
-candidate hashes and Build IDs still match the receipt
+candidate providers mapped from candidate bytes only
+candidate receipt provider set == actual mapped candidate set
+candidate file SHA-256 and Build IDs matched the receipt
+protected prefix objects remained inside the world whitelist
 no $HOME/gl/lib provider object was mapped
 no Debian rootfs provider object was mapped
-mapped prefix objects stay inside the protected world whitelist
 ```
 
-## Procedure
+## Important correction discovered by the pilot
 
-Given the successful ownership-aware static evidence directory:
-
-```bash
-STATIC_OUT=/path/to/selected-dbus-static-ownership-...
-CANDIDATE=/path/to/candidate
-
-STATIC_OUT="$STATIC_OUT" \
-CANDIDATE="$CANDIDATE" \
-bash recipe/materialize-candidate.sh
-
-CANDIDATE="$CANDIDATE" \
-bash recipe/validate-candidate.sh
-```
-
-## Decision boundary
-
-A candidate validation PASS proves only the bounded pilot claim.
-
-It does not yet justify:
+The first static classifier incorrectly assumed:
 
 ```text
-global provider store
-activation pointer
-gl-sync
-one global fingerprint
-broad-farm replacement
-application-wide migration
+exists under $PREFIX/glibc/lib
+    => WORLD
 ```
 
-After a PASS, the next task is to interpret what semantic owner this closure belongs to and whether the same mechanism survives a second, more discriminating workload/application-family pilot.
+Runtime maps disproved that rule for `libcap`:
+
+```text
+prefix candidate:
+    libcap.so.2.69
+    owner: libcap-glibc
+
+actual broad-farm control selection:
+    rootfs libcap.so.2.75
+    owner: libcap2:arm64
+```
+
+The corrected model uses explicit protected package ownership plus observed control search order.
+
+## Architecture interpretation
+
+The pilot validates a real object class:
+
+```text
+materialized selected provider closure
+```
+
+with:
+
+```text
+bounded bytes
+provenance receipt
+candidate identity
+actual-selection proof
+protected-world exclusion
+runtime independence from warehouse paths
+```
+
+It does not yet prove a global shared-provider boundary.
+
+The next discriminating pilot should test real application-locality preservation and application-domain composition rather than repeating another synthetic low-level probe.
+
+Current next target:
+
+```text
+Obsidian AppDir CPU-path selected-closure pilot
+```
+
+See:
+
+```text
+docs/refactor/0029-second-selected-closure-pilot-target.md
+```
+
+## Historical evidence policy
+
+The broad farm remains unchanged as a control/reference mechanism.
+
+Historical failed and partial runs remain evidence:
+
+```text
+first static run:
+    incomplete due pipefail/SIGPIPE helper bug
+
+first complete static run:
+    exposed libcap control/static selection mismatch
+
+ownership-aware rerun:
+    static/runtime provider-set agreement
+
+candidate run:
+    isolated selected-provider success
+```
+
+The pilot is not rewritten to make the final successful model appear inevitable.
