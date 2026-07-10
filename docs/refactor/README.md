@@ -53,6 +53,7 @@ The post-handoff evidence and decision records are:
 0024-vscode-gui-recovery-validation-passed.md
 0025-repository-checkout-relocation-to-projects.md
 0026-dbus-pilot-control-static-selection-mismatch.md
+0027-dbus-static-runtime-closure-agreement.md
 ```
 
 Full top-down rationale is on `main`:
@@ -74,7 +75,7 @@ refactor/0015
 refactor/0016
     -> handoff into semantic review
 
-refactor/0017-0026
+refactor/0017-0027
     -> current branch evidence/design records produced under that direction
 
 refactor/0014
@@ -121,6 +122,7 @@ refactor/0014
 - `0024-vscode-gui-recovery-validation-passed.md` — real GUI workload validation showing persistent VS Code main, GPU, utility, and renderer processes plus user-confirmed normal execution; actual graphics-provider selection remains a separate claim.
 - `0025-repository-checkout-relocation-to-projects.md` — canonical checkout move to `~/projects/termux-native-desktop`, relocation-safe adoption/deploy relinking, stale-link validation, and historical-path provenance policy.
 - `0026-dbus-pilot-control-static-selection-mismatch.md` — evidence that prefix path location was incorrectly treated as world ownership; runtime maps selected rootfs libcap while the first classifier selected prefix libcap, leading to an ownership-aware control-selection model.
+- `0027-dbus-static-runtime-closure-agreement.md` — ownership-aware static selection and actual runtime maps agree on the bounded three-object rootfs provider set, allowing isolated candidate byte materialization to begin.
 
 ### Supporting records
 
@@ -168,7 +170,15 @@ The hold is temporary incident containment only. The long-term latest-first dire
 
 The GUI workload gate is closed. Actual Vulkan ICD/driver/provider selection remains an independent graphics-evidence track; successful GPU-process creation and Vulkan/ANGLE flags do not by themselves prove the selected provider bytes.
 
-The bounded selected-closure pilot is active. Control capture passed. The complete first static traversal exposed a `libcap` control/static selection mismatch, proving that prefix path location is not sufficient to infer world ownership. The ownership-aware static rerun is the next gate; candidate materialization remains blocked until static and runtime provider sets agree.
+The bounded selected-closure pilot is active. Control capture passed. Static/runtime selection mismatch around `libcap` was found and corrected by replacing path-based world inference with ownership-aware classification. The ownership-aware static rootfs provider set now matches the actual runtime mapped provider set exactly:
+
+```text
+libdbus
+libsystemd
+libcap
+```
+
+Candidate byte materialization and isolated candidate validation are now the active next gate.
 
 ## Current implementation stop line
 
