@@ -4,118 +4,128 @@
 
 Active architecture-discrimination experiment.
 
-Current stage:
+Current state:
 
 ```text
-control capture harness: ready
-control CPU-path process/maps capture: pending
-static/locality classification: pending
-candidate materialization: not yet allowed
+control topology capture: PASS
+long survival observation: completed
+final multiprocess maps capture: PASS
+unique mapped-object set: captured
+provenance enrichment: separated into post-processing stage
+candidate materialization: blocked pending semantic classification
 ```
 
 ## Question
 
-Can a real Electron AppDir application consume a selected external provider closure while preserving valid application-local `$ORIGIN` locality and protected substrate ownership?
+Can a real Electron AppDir application consume selected external provider closures while preserving valid application-local `$ORIGIN` locality and keeping external capability classes semantically separate?
 
-## Why this target
+## Current control evidence
 
-The historical Obsidian AppImage experiment already established a mixed resolution model:
+Evidence root:
+
+```text
+$PREFIX/tmp/selected-obsidian-control-survival-20260710-220652
+```
+
+### Final process topology
+
+```text
+main      1
+zygote    3
+utility   1
+renderer  1
+```
+
+The startup stabilization contract remains:
+
+```text
+required early:
+    main
+    renderer
+    zygote
+
+late/optional but captured:
+    utility
+    gpu
+    crashpad
+    helper
+```
+
+### APP_LOCAL
+
+Observed AppDir-local runtime objects include the Obsidian executable, Electron-local graphics/media libraries, locale/resource packs, ICU data, and V8 snapshot data.
+
+This is direct evidence that application locality includes both ELF and data payload objects.
+
+### PREFIX_GLIBC
+
+The prefix-mapped set includes both protected substrate candidates and non-world provider candidates.
+
+The pilot therefore preserves the rule established by the D-Bus experiment:
+
+```text
+prefix path location
+    !=
+semantic world ownership
+```
+
+### ROOTFS_PROVIDER
+
+The rootfs-mapped set is broad and heterogeneous.
+
+Observed capability groups include:
+
+```text
+GTK/GDK and accessibility
+GLib/GObject/GIO
+font and text rendering stack
+NSS/NSPR and TLS-related libraries
+X11 extension libraries
+sound
+systemd/udev/D-Bus
+Mesa-related objects
+font files
+compiled GSettings schema data
+```
+
+Therefore the next candidate cannot be modeled as a blind flat copy of every rootfs path into one `lib/` directory.
+
+## Capture/enrichment split
+
+The experiment now separates:
+
+```text
+capture-control.sh
+    live process topology
+    wall-clock survival gate
+    process maps
+    unique mapped object set
+    fast class summaries
+
+enrich-control-identities.sh
+    batched package ownership lookup
+    package versions
+    SHA-256
+    Build IDs
+```
+
+This keeps the live capture transaction bounded and allows provenance work to run later over immutable evidence.
+
+## Next stage
+
+Run provenance enrichment over the successful control evidence, then classify:
 
 ```text
 APP_LOCAL
-    bundled Electron/AppDir libraries selected from $ORIGIN
-
-PREFIX
-    Android-sensitive X11/xcb and other prefix providers
-
-ROOTFS/FARM CONTROL
-    GTK, NSS, GIO, font, desktop, and other general compatibility providers
+WORLD_SUBSTRATE
+PROVIDER_PREFIX
+PROVIDER_ROOTFS_ELF
+PROVIDER_FONT_DATA
+PROVIDER_SCHEMA_DATA
+OTHER_RUNTIME_DATA
 ```
 
-This makes Obsidian a stronger discriminator than another synthetic low-level probe.
-
-## First scope
-
-CPU-path GUI startup only.
-
-The first control launch sets:
-
-```text
-GL_GPU=0
-```
-
-so the closure experiment remains separate from ANGLE/Vulkan/Turnip provider-selection questions.
-
-## Control capture contract
-
-The harness launches the existing promoted Obsidian GUI entrypoint and captures a stable Electron process set.
-
-Required process classes:
-
-```text
-main
-renderer
-utility
-```
-
-Additional classes such as:
-
-```text
-zygote
-gpu
-crashpad
-```
-
-are captured when observed but do not change the first required gate.
-
-For each stable process the harness records:
-
-```text
-PID
-process class
-full command line
-/proc/<pid>/maps
-```
-
-It then aggregates absolute mapped file paths and classifies them initially as:
-
-```text
-APP_LOCAL
-PREFIX_GLIBC
-ROOTFS_PROVIDER
-OTHER_ABSOLUTE
-```
-
-This path classification is only the first evidence partition. Semantic ownership is determined later using package ownership and locality contracts.
-
-## Important locality invariant
-
-The experiment must preserve valid AppDir-local selection.
-
-A selected external provider candidate must not shadow an object intentionally supplied by the Obsidian payload through `$ORIGIN` unless explicit replacement is part of the application contract and independently validated.
-
-## Procedure
-
-```bash
-bash experiments/glibc/selected-obsidian-closure/recipe/capture-control.sh
-```
-
-The script refuses to run if an existing Obsidian AppDir process is already active, so experiment-owned processes can be captured and terminated without affecting an unrelated session.
-
-## Evidence outputs
-
-Expected files:
-
-```text
-launch.stdout
-launch.stderr
-processes.tsv
-maps/<pid>.maps
-mapped-objects.tsv
-unique-objects.tsv
-object-identities.tsv
-class-counts.tsv
-```
+Only after these boundaries are explicit may candidate composition be designed.
 
 ## Stop line
 
@@ -124,9 +134,10 @@ Do not yet:
 ```text
 rewrite Obsidian RPATH
 change the promoted launcher
-copy external providers into a candidate
+copy every rootfs path into candidate/lib
 replace the broad farm
-merge APP_LOCAL and selected external provider bytes
+merge app-local bytes with external provider bytes
+introduce a universal provider store
 ```
 
-First capture and understand the real control process graph and mapped object sets.
+First complete provenance enrichment and semantic capability separation.
