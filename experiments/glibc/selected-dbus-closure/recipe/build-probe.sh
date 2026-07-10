@@ -7,15 +7,21 @@ WORK_DIR=${WORK_DIR:-$EXPERIMENT_DIR/work}
 PROBE=${PROBE:-$WORK_DIR/dbus-version-probe}
 SOURCE=$SCRIPT_DIR/probe.c
 FARM=${FARM:-$HOME/gl/lib}
+GLIBC_GCC=${GLIBC_GCC:-$HOME/gl/toolchain/glibc-gcc}
 
 mkdir -p "$WORK_DIR"
 
-for command in glibc-gcc readelf file; do
+for command in readelf file sha256sum; do
     command -v "$command" >/dev/null 2>&1 || {
         printf 'missing required command: %s\n' "$command" >&2
         exit 1
     }
 done
+
+[ -x "$GLIBC_GCC" ] || {
+    printf 'missing glibc target compiler wrapper: %s\n' "$GLIBC_GCC" >&2
+    exit 1
+}
 
 DBUS_LINK=$FARM/libdbus-1.so.3
 [ -e "$DBUS_LINK" ] || {
@@ -23,9 +29,10 @@ DBUS_LINK=$FARM/libdbus-1.so.3
     exit 1
 }
 
+printf 'compiler wrapper: %s\n' "$GLIBC_GCC"
 printf 'building probe: %s\n' "$PROBE"
 
-glibc-gcc \
+"$GLIBC_GCC" \
     -O2 \
     -Wall \
     -Wextra \
