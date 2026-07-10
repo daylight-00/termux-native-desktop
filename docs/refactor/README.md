@@ -60,6 +60,8 @@ The post-handoff evidence and decision records are:
 0031-obsidian-cpu-topology-and-survival-gate.md
 0032-obsidian-control-wall-clock-gate-timing.md
 0033-obsidian-control-maps-captured-provenance-split.md
+0034-obsidian-control-semantic-decomposition.md
+0035-obsidian-semantic-classifier-awk-portability-fix.md
 ```
 
 Full top-down rationale is on `main`:
@@ -81,7 +83,7 @@ refactor/0015
 refactor/0016
     -> handoff into semantic review
 
-refactor/0017-0033
+refactor/0017-0035
     -> current branch evidence/design records produced under that direction
 
 refactor/0014
@@ -135,6 +137,8 @@ refactor/0014
 - `0031-obsidian-cpu-topology-and-survival-gate.md` — actual CPU-path topology evidence, utility-class requirement correction, descendant-tree discovery, and separate workload survival gate.
 - `0032-obsidian-control-wall-clock-gate-timing.md` — fixes sample-count timing so startup and survival budgets use wall-clock deadlines and emit progress.
 - `0033-obsidian-control-maps-captured-provenance-split.md` — records successful final multiprocess maps capture, broad heterogeneous runtime object classes, and separation of live capture from post-processing provenance enrichment.
+- `0034-obsidian-control-semantic-decomposition.md` — decomposes mapped objects into app-local ELF/data, substrate, locale, prefix ELF providers, rootfs ELF providers, font data, schema data, and mutable runtime state.
+- `0035-obsidian-semantic-classifier-awk-portability-fix.md` — records and corrects the device AWK parse failure in the review-filter stage without changing semantic classification rules.
 
 ### Supporting records
 
@@ -209,7 +213,7 @@ The active next experiment is:
 selected Obsidian AppDir CPU-path closure pilot
 ```
 
-For Obsidian, topology/survival observation completed and the final multiprocess maps plus unique mapped-object set were captured. The final process set included main, renderer, utility, and three zygotes. The external runtime set is heterogeneous: app-local payload/data, prefix objects, rootfs ELF providers, fonts, and compiled schema data. Live capture is now separated from batched provenance enrichment. Candidate materialization remains blocked until semantic capability classes are explicit.
+For Obsidian, topology/survival observation completed and the final multiprocess maps plus unique mapped-object set were captured. Provenance enrichment succeeded, and semantic decomposition now separates app-local ELF/data, protected substrate ELF, locale data, prefix ELF providers, rootfs ELF providers, font data, schema data, and mutable/cache state. The first semantic classifier run failed only in the final AWK review-filter stage; the portable fix is committed and requires only a classifier rerun. Candidate materialization remains blocked pending review-set inspection and locality-shadowing/static-closure analysis.
 
 ## Current implementation stop line
 
