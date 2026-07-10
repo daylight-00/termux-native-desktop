@@ -59,6 +59,7 @@ The post-handoff evidence and decision records are:
 0030-obsidian-control-capture-first-timeout.md
 0031-obsidian-cpu-topology-and-survival-gate.md
 0032-obsidian-control-wall-clock-gate-timing.md
+0033-obsidian-control-maps-captured-provenance-split.md
 ```
 
 Full top-down rationale is on `main`:
@@ -80,7 +81,7 @@ refactor/0015
 refactor/0016
     -> handoff into semantic review
 
-refactor/0017-0032
+refactor/0017-0033
     -> current branch evidence/design records produced under that direction
 
 refactor/0014
@@ -133,6 +134,7 @@ refactor/0014
 - `0030-obsidian-control-capture-first-timeout.md` — first Obsidian control-capture timeout, harness observability defect, and topology-preserving correction.
 - `0031-obsidian-cpu-topology-and-survival-gate.md` — actual CPU-path topology evidence, utility-class requirement correction, descendant-tree discovery, and separate workload survival gate.
 - `0032-obsidian-control-wall-clock-gate-timing.md` — fixes sample-count timing so startup and survival budgets use wall-clock deadlines and emit progress.
+- `0033-obsidian-control-maps-captured-provenance-split.md` — records successful final multiprocess maps capture, broad heterogeneous runtime object classes, and separation of live capture from post-processing provenance enrichment.
 
 ### Supporting records
 
@@ -207,7 +209,7 @@ The active next experiment is:
 selected Obsidian AppDir CPU-path closure pilot
 ```
 
-Observed CPU topology currently supports `main + renderer + zygote`, with `utility` absent across the captured startup samples. A later `GPU process isn't usable. Goodbye.` fatal requires an explicit survival gate. The current harness follows launch descendants by PPID tree, separates topology from survival, and uses wall-clock-bounded startup/survival deadlines before map classification. Candidate materialization for Obsidian remains blocked.
+For Obsidian, topology/survival observation completed and the final multiprocess maps plus unique mapped-object set were captured. The final process set included main, renderer, utility, and three zygotes. The external runtime set is heterogeneous: app-local payload/data, prefix objects, rootfs ELF providers, fonts, and compiled schema data. Live capture is now separated from batched provenance enrichment. Candidate materialization remains blocked until semantic capability classes are explicit.
 
 ## Current implementation stop line
 
