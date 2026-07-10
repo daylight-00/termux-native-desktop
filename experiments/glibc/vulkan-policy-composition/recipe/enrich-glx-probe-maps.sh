@@ -205,22 +205,8 @@ done <"$INPUT"
     ' "$OUTPUT" | sort
 } >"$PACKAGE_SUMMARY"
 
-awk -F $'\t' '
-    NR > 1 && (
-        $2 ~ /libGL/ ||
-        $2 ~ /libgallium/ ||
-        $2 ~ /zink/ ||
-        $2 ~ /vulkan/ ||
-        $2 ~ /mesa/ ||
-        $2 ~ /\/dri\// ||
-        $2 ~ /libdrm/ ||
-        $2 ~ /libgbm/ ||
-        $2 ~ /xcb-dri/ ||
-        $2 ~ /kgsl/
-    ) {
-        print $0
-    }
-' "$OUTPUT" >"$GRAPHICS"
+awk -F $'\t' 'NR > 1 && ($2 ~ /libGL/ || $2 ~ /libgallium/ || $2 ~ /zink/ || $2 ~ /vulkan/ || $2 ~ /mesa/ || $2 ~ /\/dri\// || $2 ~ /libdrm/ || $2 ~ /libgbm/ || $2 ~ /xcb-dri/ || $2 ~ /kgsl/) { print $0 }' \
+    "$OUTPUT" >"$GRAPHICS"
 
 printf 'GLX probe map enrichment: PASS\n'
 printf 'output: %s\n' "$OUTPUT"
