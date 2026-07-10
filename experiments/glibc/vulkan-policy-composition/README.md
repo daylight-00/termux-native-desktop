@@ -11,62 +11,52 @@ policy identity gate: PASS
 self-contained GLX probe build: PASS
 explicit-freedreno Zink/OpenGL probe: PASS
 explicit-freedreno maps capture: PASS
-explicit-freedreno map provenance enrichment: PASS
-implicit-discovery Zink/OpenGL probe: FAIL before renderer gate
+explicit-freedreno provenance enrichment: PASS
+implicit-discovery/default-intent Zink probe: FAIL before renderer gate
 implicit loader discovery diagnostics: PASS
-implicit-discovery + explicit software intent: NEXT
-Obsidian adapter validation: NOT YET RUN
+implicit-discovery/software-intent Zink probe: PASS
+software graph maps capture: PASS
+software graph provenance enrichment: PASS
+hardware-vs-software graph comparison: PASS
+runtime anonymous memfd classification correction: COMMITTED, DEVICE RE-RUN PENDING
+Obsidian adapter validation: NEXT
 VS Code adapter validation: NOT YET RUN
 ```
 
-The policy environment identity gate passed for both experiment modes:
+## Primary question
+
+Can Vulkan provider-selection policy move from unconditional shared glibc environment state into narrow launch composition without changing promoted launchers yet?
+
+The completed Zink controls also answer a second question:
 
 ```text
-explicit-freedreno
-    VK_DRIVER_FILES=<glibc Freedreno ICD>
-    VK_ICD_FILENAMES=<glibc Freedreno ICD>
-
-implicit-discovery
-    VK_DRIVER_FILES unset
-    VK_ICD_FILENAMES unset
+provider discovery/selection policy
+    and
+consumer device-class intent
 ```
 
-The first `glxinfo` attempt did not execute because `glxinfo` was not installed or available on `PATH`. A self-contained GLX renderer probe was then added so the experiment owns its validation consumer and does not require a diagnostic-package installation.
-
-## Question
-
-Can Vulkan provider-selection policy be moved from unconditional shared glibc environment state into narrow launch composition without changing the promoted launchers yet?
-
-The evidence now adds a second question:
-
-```text
-how should provider discovery policy
-and consumer device-class intent
-be represented independently?
-```
+must be independent composition inputs.
 
 ## Evidence basis
 
-The Obsidian selected-closure pilot demonstrated:
+The Obsidian selected-closure pilot previously established:
 
 ```text
 baseline:
     explicit Freedreno override
-    Freedreno driver mapped
-    KGSL device mapped
+    Freedreno mapped
+    KGSL mapped
 
-strict policy-isolation run:
-    explicit VK_* override removed
+strict policy-isolation:
+    explicit VK_* overrides removed
     SwiftShader mapped
-    Lavapipe root + 8 strict-only dependencies mapped
+    Lavapipe root + strict-only closure mapped
     Gfxstream mapped
     Freedreno absent
     KGSL absent
 ```
 
-All 11 strict-only paths were attributed to the three alternate provider roots with zero unresolved or ambiguous mapped-universe SONAME edges.
-
-The GLX/Zink consumer adds the following distinction:
+The Zink/GLX controls now refine the graphics decision chain:
 
 ```text
 provider discovery
@@ -77,34 +67,47 @@ physical-device enumeration
     !=
 consumer device-class acceptance
     !=
+selected renderer identity
+    !=
 usable rendering path
 ```
 
-## Current policy problem
+## Independent control dimensions
 
-The shared glibc environment currently combines two responsibilities:
-
-```text
-shield glibc applications from inherited bionic ICD policy
-
-and
-
-select the glibc Freedreno provider globally
-```
-
-Real glibc consumers include:
+The experiment keeps these dimensions separate:
 
 ```text
-gl-run
-VS Code launcher
-Obsidian launcher
+GL_GPU
+    application feature / argv mode
+
+VULKAN_POLICY_MODE
+    provider discovery/selection policy
+
+LIBGL_ALWAYS_SOFTWARE
+    explicit software CPU device-class intent for the tested Zink path
 ```
 
-The bionic desktop session has its own separate provider policy and is not the target of this experiment.
+These are not interchangeable.
 
-## Experiment modes
+In particular:
 
-The policy helper intentionally implements only two discovery modes.
+```text
+implicit discovery
+    !=
+software rendering intent
+```
+
+and:
+
+```text
+GPU feature mode
+    !=
+Vulkan provider policy
+```
+
+## Policy modes
+
+The experiment policy helper intentionally implements only two provider-policy modes.
 
 ### explicit-freedreno
 
@@ -132,62 +135,17 @@ Intent:
 allow loader default discovery behavior
 ```
 
-This mode is not called `no-vulkan` because direct evidence shows that removing explicit overrides can discover and map alternate Vulkan providers.
-
-## Independent control dimensions
-
-The experiment keeps at least these dimensions separate:
+Software CPU intent is supplied independently with:
 
 ```text
-GL_GPU
-    application argv / feature-mode choice
-
-VULKAN_POLICY_MODE
-    provider discovery/selection policy
-
-LIBGL_ALWAYS_SOFTWARE
-    explicit software/CPU device-class intent for the tested Zink path
+LIBGL_ALWAYS_SOFTWARE=1
 ```
 
-The promoted Electron launchers currently couple GPU feature flags to the presence of `VK_DRIVER_FILES`. The experimental adapters do not make provider-policy identity and application feature mode the same variable.
-
-The loader diagnostics and Zink source behavior now show that software CPU intent is another independent dimension and must not be inferred merely from implicit discovery.
-
-## Files
-
-```text
-recipe/policy-env.sh
-    shared experiment-local policy function
-
-recipe/run-zink-with-policy.sh
-    gl-run-equivalent Zink/OpenGL adapter
-
-recipe/glx-renderer-probe.c
-    self-contained runtime GLX pbuffer probe
-
-recipe/build-glx-renderer-probe.sh
-    builds the probe through the existing glibc GCC wrapper
-
-recipe/capture-glx-probe-maps.sh
-    bounded process-map capture while the context is current
-
-recipe/enrich-glx-probe-maps.sh
-    package/version/identity/SONAME enrichment for mapped paths
-
-recipe/compare-glx-provider-graphs.sh
-    successful control graph comparison
-
-recipe/capture-implicit-loader-debug.sh
-    preserves loader discovery diagnostics for a failing implicit Zink path
-
-recipe/launch-vscode-with-policy.sh
-    VS Code adapter
-
-recipe/launch-obsidian-with-policy.sh
-    Obsidian adapter
-```
+No promoted `explicit-lavapipe` mode has been added.
 
 ## Self-contained GLX probe
+
+The experiment owns a small GLX renderer probe because `glxinfo` was unavailable on the device.
 
 Build contract:
 
@@ -195,25 +153,13 @@ Build contract:
 compiler:
     $HOME/gl/toolchain/glibc-gcc
 
-link-time dependency:
-    libc / loader only
-
-runtime libraries:
-    dlopen libX11.so.6
-    dlopen libGL.so.1
-```
-
-Observed build result:
-
-```text
-GLX renderer probe build: PASS
-
-interpreter:
-    $PREFIX/glibc/lib/ld-linux-aarch64.so.1
-
-NEEDED:
+link-time NEEDED:
     libc.so.6
     ld-linux-aarch64.so.1
+
+runtime dlopen:
+    libX11.so.6
+    libGL.so.1
 ```
 
 Runtime sequence:
@@ -223,22 +169,20 @@ open X display
 query GLX version
 choose pbuffer-capable RGBA FBConfig
 create GLX context
-create 1x1 GLX pbuffer
+create 1x1 pbuffer
 make context current
-print:
-    GLX_VERSION
-    GL_VENDOR
-    GL_RENDERER
-    GL_VERSION
+print renderer identity
+hold process for bounded map capture
 ```
 
-## Explicit-Freedreno result
+## Completed three-state matrix
+
+### 1. Explicit hardware provider + default device intent
 
 Observed:
 
 ```text
 VULKAN_POLICY_MODE=explicit-freedreno
-VK_DRIVER_FILES=$HOME/gl/opt/mesa-glibc/share/vulkan/icd.d/freedreno_icd.aarch64.json
 
 GLX_VERSION=1.4
 GL_VENDOR=Mesa
@@ -246,185 +190,261 @@ GL_RENDERER=zink Vulkan 1.4(Turnip Adreno (TM) 730 (MESA_TURNIP))
 GL_VERSION=4.6 (Compatibility Profile) Mesa 25.0.7-2
 ```
 
-Enriched process maps establish the tested physical graph:
+Result:
 
 ```text
-rootfs libGL/libGLX/libGLdispatch 1.7.0
-    -> rootfs libGLX_mesa 25.0.7-2
-    -> rootfs mesa-libgallium 25.0.7-2
-    -> rootfs Mesa device-selection layer 25.0.7-2
-    -> prefix Vulkan loader 1.3.301 and support libraries
-    -> Mesa provider-store libvulkan_freedreno.so 26.1.4 lineage
-    -> /dev/kgsl-3d0
+PASS
 ```
 
-Interpretation:
+### 2. Implicit discovery + default device intent
 
-```text
-scoped explicit Freedreno provider policy
-    +
-rootfs Gallium/Zink frontend
-    +
-rootfs Mesa device-selection layer
-    +
-prefix Vulkan loader/support plane
-    +
-provider-store Turnip driver
-    +
-KGSL device interface
-    ->
-working GLX context and Zink/Turnip renderer identity
-```
-
-This exact captured graph is a tested cross-version composition. It does not imply arbitrary compatibility among Mesa release lineages.
-
-## Implicit-discovery result
-
-Without explicit software intent, the same Zink/GLX consumer failed before renderer identity:
+Observed:
 
 ```text
 VULKAN_POLICY_MODE=implicit-discovery
-VK_DRIVER_FILES=<unset>
+LIBGL_ALWAYS_SOFTWARE unset
 
 ZINK: failed to choose pdev
 GLX screen creation failed
 Zink driver load failed
-GLX FBConfig gate failed
 renderer identity not reached
 ```
 
-Loader diagnostics show that this was not a manifest-discovery failure.
-
-The loader discovered rootfs ICD manifests for:
+Loader diagnostics showed:
 
 ```text
-freedreno
-gfxstream
-lvp
-nouveau
-panfrost
-radeon
-virtio
-broadcom
-```
-
-It also found and inserted:
-
-```text
-VK_LAYER_MESA_device_select
-```
-
-The one surviving physical device was:
-
-```text
-llvmpipe (LLVM 19.1.7, 128 bits)
-```
-
-Drivers removed for exposing no physical devices included:
-
-```text
-broadcom
-virtio
-radeon
-panfrost
-nouveau
-gfxstream
-freedreno
-```
-
-This means:
-
-```text
-implicit loader discovery: PASS
+manifest discovery: PASS
+Mesa device-select layer insertion: PASS
 physical-device enumeration: PASS
-surviving device: llvmpipe CPU
-Zink default device-class acceptance: FAIL
-GLX/OpenGL path: FAIL
+sole surviving pdev: llvmpipe CPU
+Zink default CPU-device acceptance: FAIL
 ```
 
-## Zink CPU-device gate interpretation
-
-The inspected Zink selection logic distinguishes normal selection from explicitly requested CPU/software selection.
-
-The relevant behavior is:
+Result:
 
 ```text
+FAIL before renderer identity
+```
+
+### 3. Implicit discovery + explicit software device intent
+
+Evidence root:
+
+```text
+$PREFIX/tmp/tnd-vulkan-policy-composition/implicit-software-maps-20260711-025042
+```
+
+Observed:
+
+```text
+VULKAN_POLICY_MODE=implicit-discovery
 LIBGL_ALWAYS_SOFTWARE=1
-    -> CPU device selection is requested
 
-no software intent
-    +
-selected Vulkan device type == CPU
-    -> selected pdev is rejected
+GLX_VERSION=1.4
+GL_VENDOR=Mesa
+GL_RENDERER=zink Vulkan 1.4(llvmpipe (LLVM 19.1.7, 128 bits) (MESA_LLVMPIPE))
+GL_VERSION=4.6 (Compatibility Profile) Mesa 25.0.7-2
 ```
 
-The older `ZINK_USE_LAVAPIPE` path is treated as obsolete in the inspected source and points users toward `LIBGL_ALWAYS_SOFTWARE`.
-
-This is consistent with the observed implicit sequence:
+Result:
 
 ```text
-rootfs LVP manifest discovered
-    -> llvmpipe CPU pdev enumerated
-    -> software intent absent
-    -> Zink rejects CPU pdev
-    -> failed to choose pdev
+PASS
 ```
 
-## Supply-root distinction
+## Causal conclusion
 
-Implicit discovery also found the rootfs Freedreno manifest and searched for `libvulkan_freedreno.so`, but that path exposed no physical devices and was removed.
-
-The passing explicit control instead selected the separately managed provider-store ICD and mapped:
+The completed matrix is:
 
 ```text
-$HOME/gl/opt/mesa-glibc-26.1.4-full/lib/libvulkan_freedreno.so
-/dev/kgsl-3d0
+explicit-freedreno + default intent
+    -> Turnip Adreno 730
+    -> KGSL
+    -> PASS
+
+implicit-discovery + default intent
+    -> llvmpipe CPU discovered
+    -> CPU pdev rejected by Zink default path
+    -> FAIL
+
+implicit-discovery + software intent
+    -> llvmpipe CPU selected
+    -> Zink/GLX/OpenGL 4.6
+    -> PASS
 ```
 
 Therefore:
 
 ```text
-same semantic driver-family name
+provider policy
+    and
+device-class intent
+```
+
+are proven independent for the bounded Zink/GLX consumer.
+
+## Explicit hardware graph
+
+Enriched maps establish the tested explicit physical composition:
+
+```text
+rootfs GLVND / libGL / libGLX 1.7.0
+    -> rootfs Mesa GLX vendor 25.0.7-2
+    -> rootfs Gallium/Zink frontend 25.0.7-2
+    -> rootfs Mesa device-selection layer 25.0.7-2
+    -> prefix Vulkan loader 1.3.301 and support plane
+    -> provider-store Turnip/Freedreno 26.1.4 lineage
+    -> /dev/kgsl-3d0
+```
+
+Renderer identity:
+
+```text
+MESA_TURNIP
+Turnip Adreno 730
+```
+
+This exact cross-version graph is tested. Arbitrary Mesa cross-version compatibility is not claimed.
+
+## Software graph
+
+The passing software control shares the application-facing front half:
+
+```text
+rootfs GLVND
+rootfs Mesa GLX vendor
+rootfs Gallium/Zink frontend
+rootfs Mesa device-selection layer
+prefix Vulkan loader/support plane
+```
+
+Its provider tail is:
+
+```text
+rootfs libvulkan_lvp.so
+    -> llvmpipe CPU renderer
+```
+
+Renderer identity:
+
+```text
+MESA_LLVMPIPE
+llvmpipe (LLVM 19.1.7, 128 bits)
+```
+
+The captured software set also maps:
+
+```text
+libvulkan_gfxstream.so
+```
+
+but this must not be called the selected rendering provider. Previous loader diagnostics showed Gfxstream discovery/loading participation followed by removal for exposing no surviving physical device.
+
+Therefore:
+
+```text
+mapped ICD object
+    !=
+selected renderer provider
+```
+
+## Hardware-vs-software graph comparison
+
+Explicit-only paths:
+
+```text
+$HOME/.cache/mesa_shader_cache/index
+$HOME/gl/opt/mesa-glibc-26.1.4-full/lib/libvulkan_freedreno.so
+/dev/kgsl-3d0
+```
+
+Software-control-only paths:
+
+```text
+$ROOTFS/usr/lib/aarch64-linux-gnu/libvulkan_gfxstream.so
+$ROOTFS/usr/lib/aarch64-linux-gnu/libvulkan_lvp.so
+/memfd:allocation
+```
+
+The `/memfd:allocation` entry is a runtime anonymous mapping, not package-provenance evidence. The enrichment classifier has been corrected for the narrow observed `/memfd:allocation*` pattern and requires device-side re-enrichment to regenerate the evidence summary.
+
+## Supply-root distinction
+
+Implicit discovery found the rootfs Freedreno manifest and searched for rootfs `libvulkan_freedreno.so`, but that path exposed no physical devices and was removed.
+
+The passing hardware control used the separately managed provider-store ICD/driver and reached Turnip/KGSL.
+
+Therefore:
+
+```text
+same upstream driver-family name
     !=
 same runtime capability
 ```
 
-when supply root, provider build, and platform adaptation differ.
+when supply root, build lineage, and platform adaptation differ.
 
 ## Architecture interpretation
 
-The current evidence requires at least:
+A graphics launch composition contract must express at least:
 
 ```text
-provider discovery policy
-    explicit hardware provider
-    implicit/default discovery
-
-consumer device-class intent
-    hardware/default
-    explicit software CPU
-```
-
-These states must not be collapsed into:
-
-```text
-GPU on/off
-```
-
-or inferred solely from whether `VK_DRIVER_FILES` exists.
-
-A consumer composition contract must express:
-
-```text
-consumer intent
-    +
-provider-selection/discovery policy
-    +
+application feature intent
+provider discovery/selection policy
 device-class intent
-    +
-provider suitability validation
-    +
-actual-selection evidence
+consumer validation gate
+actual selected-provider evidence
+```
+
+A single boolean such as:
+
+```text
+GPU=0/1
+```
+
+is not sufficient.
+
+Presence or absence of:
+
+```text
+VK_DRIVER_FILES
+```
+
+must not be used as a proxy for software-device intent.
+
+## Files
+
+```text
+recipe/policy-env.sh
+    experiment-local provider-policy helper
+
+recipe/run-zink-with-policy.sh
+    GLX/Zink consumer adapter
+
+recipe/glx-renderer-probe.c
+    self-contained GLX renderer probe
+
+recipe/build-glx-renderer-probe.sh
+    glibc probe build
+
+recipe/capture-glx-probe-maps.sh
+    bounded process-map capture
+
+recipe/enrich-glx-probe-maps.sh
+    path/package/version/hash/Build-ID/SONAME enrichment
+    includes narrow runtime-anonymous allocation classification
+
+recipe/compare-glx-provider-graphs.sh
+    A/B graph comparison
+
+recipe/capture-implicit-loader-debug.sh
+    loader discovery diagnostics
+
+recipe/launch-vscode-with-policy.sh
+    VS Code experiment adapter
+
+recipe/launch-obsidian-with-policy.sh
+    Obsidian experiment adapter
 ```
 
 ## Non-goals
@@ -441,23 +461,42 @@ global environment migration
 final directory layout
 ```
 
-Do not yet add a promoted `explicit-lavapipe` or software-provider mode.
+Do not yet:
+
+```text
+add global software-rendering policy
+add promoted explicit-lavapipe mode
+change gl/env
+change gl-run
+change promoted Electron launchers
+```
 
 ## Validation order
 
+Completed:
+
 ```text
 1. environment identity check — PASS
-2. build self-contained GLX renderer probe — PASS
-3. Zink/OpenGL explicit-freedreno probe validation — PASS
-4. explicit maps capture and provenance enrichment — PASS
-5. implicit-discovery Zink/OpenGL probe — FAIL before renderer gate
-6. implicit loader discovery diagnostics — PASS
-7. implicit-discovery + LIBGL_ALWAYS_SOFTWARE=1 control — NEXT
-8. if successful, capture/enrich/compare software graph
-9. Obsidian explicit-freedreno control
-10. Obsidian implicit-discovery control comparison
-11. VS Code explicit-freedreno GPU validation
-12. VS Code CPU/implicit policy behavior check
+2. self-contained GLX probe build — PASS
+3. explicit-freedreno Zink validation — PASS
+4. explicit maps capture/enrichment — PASS
+5. implicit/default-intent Zink control — FAIL, discriminating result
+6. implicit loader diagnostics — PASS
+7. implicit/software-intent Zink control — PASS
+8. software maps capture/enrichment — PASS
+9. hardware-vs-software graph comparison — PASS
+```
+
+Next:
+
+```text
+10. re-run software enrichment with runtime-anonymous memfd classification
+11. Obsidian explicit-freedreno adapter control
+12. Obsidian implicit-discovery adapter control comparison
+13. VS Code explicit-freedreno GPU validation
+14. VS Code CPU/software-intent behavior check
+15. compare consumer-specific policy requirements
+16. define minimum graphics composition contract only from proven consumer evidence
 ```
 
 Promoted launchers and `gl/env` remain unchanged during this experiment.
