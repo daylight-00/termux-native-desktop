@@ -4,6 +4,30 @@
 
 Active architecture-discrimination experiment.
 
+The policy environment identity gate has passed for both experiment modes:
+
+```text
+explicit-freedreno
+    VK_DRIVER_FILES=<glibc Freedreno ICD>
+    VK_ICD_FILENAMES=<glibc Freedreno ICD>
+
+implicit-discovery
+    VK_DRIVER_FILES unset
+    VK_ICD_FILENAMES unset
+```
+
+The first Zink/OpenGL validation attempt did not execute the workload because `glxinfo` was not installed or available on `PATH`.
+
+Classification:
+
+```text
+policy identity gate: PASS
+Zink/OpenGL workload: NOT RUN
+failure boundary: consumer command availability
+```
+
+The experiment now carries a self-contained GLX renderer probe so validation does not depend on `mesa-utils` or another diagnostic package.
+
 ## Question
 
 Can Vulkan provider-selection policy be moved from unconditional shared glibc environment state into narrow launch composition without changing the promoted launchers yet?
@@ -106,12 +130,56 @@ recipe/policy-env.sh
 recipe/run-zink-with-policy.sh
     gl-run-equivalent Zink/OpenGL adapter
 
+recipe/glx-renderer-probe.c
+    self-contained runtime GLX pbuffer probe
+
+recipe/build-glx-renderer-probe.sh
+    builds the probe through the existing glibc GCC wrapper
+
 recipe/launch-vscode-with-policy.sh
     VS Code adapter
 
 recipe/launch-obsidian-with-policy.sh
     Obsidian adapter
 ```
+
+## Self-contained GLX probe
+
+The probe exists because the validation host does not currently have `glxinfo` available.
+
+It intentionally avoids a new diagnostic-package dependency.
+
+Build contract:
+
+```text
+compiler:
+    $HOME/gl/toolchain/glibc-gcc
+
+link-time dependency:
+    libc / libdl only
+
+runtime libraries:
+    dlopen libX11.so.6
+    dlopen libGL.so.1
+```
+
+Runtime behavior:
+
+```text
+open X display
+query GLX version
+choose pbuffer-capable RGBA FBConfig
+create direct GLX context
+create 1x1 GLX pbuffer
+make context current
+print:
+    GLX_VERSION
+    GL_VENDOR
+    GL_RENDERER
+    GL_VERSION
+```
+
+This validates actual context creation and renderer identity without requiring X11 or GL development headers in the experiment build path.
 
 ## Non-goals
 
@@ -132,12 +200,14 @@ The only goal is to validate that explicit provider policy can be composed at la
 ## Validation order
 
 ```text
-1. environment identity check
-2. Zink/OpenGL consumer validation
-3. Obsidian explicit-freedreno control
-4. Obsidian implicit-discovery control comparison
-5. VS Code explicit-freedreno GPU validation
-6. VS Code CPU/implicit policy behavior check
+1. environment identity check — PASS
+2. build self-contained GLX renderer probe
+3. Zink/OpenGL explicit-freedreno probe validation
+4. optionally compare implicit-discovery behavior
+5. Obsidian explicit-freedreno control
+6. Obsidian implicit-discovery control comparison
+7. VS Code explicit-freedreno GPU validation
+8. VS Code CPU/implicit policy behavior check
 ```
 
 Promoted launchers and `gl/env` remain unchanged during this experiment.
