@@ -116,12 +116,11 @@ build_id_of() {
     '
 }
 
-printf 'path_class\tpath\tpackage\tversion\tsha256\tbuild_id\n' >"$OUTPUT"
+printf 'path_class\tpath\tpackage\tversion\tsha256\tbuild_id\tstate\n' >"$OUTPUT"
 
 count=0
 while IFS=$'\t' read -r path_class path; do
     [ "$path_class" = path_class ] && continue
-    [ -f "$path" ] || continue
 
     package=UNKNOWN
     version=UNKNOWN
@@ -141,19 +140,36 @@ while IFS=$'\t' read -r path_class path; do
             ;;
     esac
 
-    sha=$(sha256sum "$path" | awk '{print $1}')
-    build_id=$(build_id_of "$path")
-    [ -n "$build_id" ] || build_id=NONE
+    if [ -f "$path" ]; then
+        state=PRESENT
+        sha=$(sha256sum "$path" | awk '{print $1}')
+        build_id=$(build_id_of "$path")
+        [ -n "$build_id" ] || build_id=NONE
+    else
+        state=MISSING_AT_ENRICHMENT
+        sha=MISSING
+        build_id=MISSING
+    fi
 
-    printf '%s\t%s\t%s\t%s\t%s\t%s\n' \
-        "$path_class" "$path" "$package" "$version" "$sha" "$build_id" \
+    printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
+        "$path_class" "$path" "$package" "$version" \
+        "$sha" "$build_id" "$state" \
         >>"$OUTPUT"
 
     count=$((count + 1))
 done <"$UNIQUE"
 
+expected=$(( $(wc -l <"$UNIQUE") - 1 ))
+actual=$(( $(wc -l <"$OUTPUT") - 1 ))
+
+if [ "$actual" -ne "$expected" ]; then
+    printf 'identity coverage mismatch: expected %s, wrote %s\n' "$expected" "$actual" >&2
+    exit 1
+fi
+
 printf 'PASS\n' >"$CONTROL_OUT/identity-enrichment.status"
 
 printf '\nidentity enrichment: PASS\n'
 printf 'objects recorded: %s\n' "$count"
+printf 'coverage: %s/%s\n' "$actual" "$expected"
 printf 'output: %s\n' "$OUTPUT"
