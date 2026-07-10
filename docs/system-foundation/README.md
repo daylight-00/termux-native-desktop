@@ -3,6 +3,8 @@
 > **Status:** design foundation and target model, not a declaration that the repository already implements every element described here.
 >
 > **Refactoring note:** another development session may be actively refactoring the repository. This set therefore defines stable reasoning, boundaries, target contracts, and migration order. It intentionally avoids assuming that every current path or file layout will remain unchanged.
+>
+> **Precedence note:** `11-architecture-reassessment-and-hard-refactor-decision.md` is the latest architectural direction. Where earlier migration documents can be read as requiring preservation of current command names, compatibility facades, the broad farm, or the `gl` umbrella object, document 11 takes precedence. Preserve validated semantics and evidence, not accidental object identity.
 
 This documentation set starts above individual implementations. It asks:
 
@@ -33,12 +35,49 @@ Neither pure bottom-up accumulation nor pure top-down design is sufficient. The 
 3. [`03-system-model-v2.md`](03-system-model-v2.md) — a six-plane model separating host, bridges, capabilities, application domains, supply/build, and knowledge/control.
 4. [`04-domain-capability-bridge-model.md`](04-domain-capability-bridge-model.md) — a reusable object model for applications such as VS Code, Obsidian, and PyMOL.
 5. [`05-ideal-target-architecture.md`](05-ideal-target-architecture.md) — the concrete target state: ownership, runtime materialization, manifests, providers, launch composition, and promotion.
-6. [`06-current-state-assessment.md`](06-current-state-assessment.md) — comparison of the current repository/runtime model with the target.
-7. [`07-gap-analysis-and-refactoring-strategy.md`](07-gap-analysis-and-refactoring-strategy.md) — migration strategy that preserves validated behavior.
-8. [`08-implementation-roadmap.md`](08-implementation-roadmap.md) — phased implementation order and concrete deliverables.
+6. [`06-current-state-assessment.md`](06-current-state-assessment.md) — comparison of the original pre-refactor repository/runtime model with the target.
+7. [`07-gap-analysis-and-refactoring-strategy.md`](07-gap-analysis-and-refactoring-strategy.md) — original migration strategy centered on validation and gradual responsibility transfer.
+8. [`08-implementation-roadmap.md`](08-implementation-roadmap.md) — phased implementation order and concrete deliverables as originally proposed.
 9. [`09-validation-promotion-and-evidence.md`](09-validation-promotion-and-evidence.md) — validation gates, promotion rules, evidence quality, and rollback.
 10. [`10-open-design-questions.md`](10-open-design-questions.md) — decisions intentionally left open until further evidence exists.
-11. [`REFERENCES.md`](REFERENCES.md) — project-local and external references.
+11. [`11-architecture-reassessment-and-hard-refactor-decision.md`](11-architecture-reassessment-and-hard-refactor-decision.md) — reconciliation with the refactor branch and ABI incident; supersession rules, `gl` object critique, farm lifecycle judgment, substrate authority, and hard-refactor sequence.
+12. [`REFERENCES.md`](REFERENCES.md) — project-local and external references.
+
+## Document evolution and precedence
+
+The documents are intentionally historical as well as normative. Earlier files capture the strongest model available when they were written; later evidence may refine them.
+
+Use this rule:
+
+```text
+stable invariant
+    -> keep unless strong evidence changes the project definition
+
+current-state observation
+    -> interpret in its recorded repository/runtime context
+
+migration tactic
+    -> may be superseded when a better object model is established
+
+implementation decision
+    -> replaceable
+```
+
+In particular:
+
+```text
+preserve validated semantics
+preserve evidence
+preserve rollback ability
+
+!=
+
+preserve gl-run
+preserve gl-farm
+preserve ~/gl/env as a monolith
+preserve modules/gl as one semantic owner
+preserve one package-manager integration
+```
 
 ## Relationship to existing repository documents
 
@@ -58,7 +97,8 @@ experiments/
     -> first-hand provenance and investigations
 
 system-foundation/
-    -> abstract identity, invariants, target architecture, and migration model
+    -> abstract identity, invariants, target architecture,
+       reassessment, and migration model
 ```
 
 The target architecture should not rewrite historical experiment reports to pretend the final model existed from the beginning. It should consume their evidence and make future changes more coherent.
@@ -69,4 +109,4 @@ The project is best understood as:
 
 > **A heterogeneous userspace composition system for a non-root Android workstation: it keeps the Android/Termux host native, constructs coherent foreign application runtime domains beside it, connects worlds through explicit bridges, provides hardware and desktop capabilities through ABI-appropriate providers, and promotes only experimentally validated contracts into the live system.**
 
-This thesis is developed in the following documents.
+The latest implementation-direction interpretation of this thesis is in document 11.
