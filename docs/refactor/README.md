@@ -74,6 +74,8 @@ The post-handoff evidence and decision records are:
 0045-explicit-freedreno-zink-consumer-validation-passed.md
 0046-zink-turnip-mixed-provider-version-signal.md
 0047-explicit-zink-turnip-physical-provider-graph.md
+0048-zink-frontend-and-cross-version-graphics-composition-confirmed.md
+0049-implicit-discovery-zink-consumer-failure.md
 ```
 
 Full top-down rationale is on `main`:
@@ -95,7 +97,7 @@ refactor/0015
 refactor/0016
     -> handoff into semantic review
 
-refactor/0017-0047
+refactor/0017-0049
     -> current branch evidence/design records produced under that direction
 
 refactor/0014
@@ -163,6 +165,8 @@ refactor/0014
 - `0045-explicit-freedreno-zink-consumer-validation-passed.md` — records the passing scoped explicit-Freedreno Zink/GLX consumer validation and Turnip Adreno 730 renderer identity.
 - `0046-zink-turnip-mixed-provider-version-signal.md` — records the version-domain signal and adds bounded process-map capture before stronger physical-path claims.
 - `0047-explicit-zink-turnip-physical-provider-graph.md` — records the actual cross-supply-root GLX/OpenGL, Vulkan loader/support, Turnip driver, and KGSL physical composition.
+- `0048-zink-frontend-and-cross-version-graphics-composition-confirmed.md` — identifies the mapped rootfs Gallium/Zink frontend lineage and confirms the exact tested cross-version graph through prefix Vulkan loader/support and provider-store Turnip.
+- `0049-implicit-discovery-zink-consumer-failure.md` — records that implicit discovery reaches Zink but fails usable physical-device selection and GLX screen formation for the tested consumer.
 
 ### Supporting records
 
@@ -241,7 +245,7 @@ scoped Vulkan policy composition experiment
 
 For Obsidian, the baseline control covers 161 mapped paths with semantic review count zero. The strict policy-isolation run covers 169 mapped paths and preserves topology/survival while replacing the explicit Freedreno/KGSL relation with an alternate provider composition. All 11 strict-only paths are attributed inside the captured mapped universe: SwiftShader root 1, Lavapipe root plus closure 9, and Gfxstream root 1, with zero unresolved or ambiguous SONAME edges. Vulkan policy producers and real launch consumers are inventoried.
 
-For scoped Vulkan composition, policy identity validation has passed, the self-contained GLX consumer builds as a minimal glibc executable, explicit-Freedreno Zink/Turnip validation has passed, and process maps show a real mixed physical graph: rootfs GL/GLX dispatch and Mesa GLX vendor plane, prefix Vulkan loader/DRM/XCB support, Mesa provider-store Freedreno driver, and KGSL device interface. The current next gate is complete map provenance enrichment to identify the Mesa/Gallium/Zink frontend object and package lineage, then an implicit-discovery GLX A/B. Electron consumer validation follows afterward. Candidate materialization remains blocked pending these graphics composition gates plus locality-shadowing and non-graphics static/runtime closure analysis.
+For scoped Vulkan composition, policy identity validation has passed, the self-contained GLX consumer builds as a minimal glibc executable, and explicit-Freedreno Zink/Turnip validation has passed. Enriched process maps confirm a tested cross-version graph: rootfs GLVND/GLX and Mesa 25.0.7 Gallium/Zink frontend, rootfs Mesa device-selection layer, prefix Vulkan loader/DRM/XCB support, Mesa provider-store Freedreno driver from the 26.1.4 lineage, and KGSL device interface. The same Zink/GLX consumer fails under implicit discovery before renderer identity: Zink cannot choose a usable physical device and GLX screen/FBConfig formation fails. The active next gate is loader-side discovery diagnostics for that failure, followed by Electron consumer validation. Candidate materialization remains blocked pending these graphics composition gates plus locality-shadowing and non-graphics static/runtime closure analysis.
 
 ## Current implementation stop line
 
