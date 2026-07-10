@@ -12,6 +12,8 @@ The package transaction completed successfully and the active libc identity matc
 
 One regression gate, `modules/gl/tests/core-abi.sh`, reported a false negative because of its shell pipeline structure. Provider relocation and VS Code CLI workload probes passed.
 
+The recovery command block also exposed a separate harness issue: its outer shell enabled `set -e` but not `pipefail`, so a failing gate piped into `tee` did not stop the block. Therefore the final printed `recovery result: PASS` is not itself authoritative; the underlying identity and workload evidence must be interpreted directly.
+
 ## 1. Preserved recovery artifact
 
 The exact artifact was copied to persistent project state:
@@ -172,7 +174,42 @@ symbol pattern is present
 
 without a short-circuit pipeline ambiguity.
 
-## 9. Incident containment
+## 9. Recovery harness status caveat
+
+The recovery command block used:
+
+```bash
+set -e
+
+bash modules/gl/tests/core-abi.sh \
+    | tee "$OUT/core-abi.txt"
+```
+
+Because the outer shell did not enable `pipefail`, the pipeline status was the status of `tee`, not the failing gate command.
+
+Therefore:
+
+```text
+core-abi.sh: FAIL
+tee: success
+pipeline: success
+set -e: did not stop
+final recovery result: PASS printed
+```
+
+This does not negate the underlying successful substrate recovery evidence, but it means the final aggregate PASS line is not an independent validation result.
+
+Future validation harnesses that pipe gates through `tee` must use:
+
+```bash
+set -euo pipefail
+```
+
+or capture command status explicitly.
+
+The corrected rerun should execute the gates in a shell with `pipefail` enabled.
+
+## 10. Incident containment
 
 The device applied:
 
@@ -189,7 +226,7 @@ Candidate: 2.43
 
 The hold is classified only as temporary incident containment. It is not the architecture's substrate lifecycle mechanism.
 
-## 10. Current recovery assessment
+## 11. Current recovery assessment
 
 Evidence supports:
 
@@ -200,7 +237,7 @@ VS_CODE_CLI_VALID
 CORE_ABI_GATE_SCRIPT_FIXED_PENDING_RERUN
 ```
 
-The remaining immediate action is to sync the fixed test and rerun:
+The remaining immediate action is to sync the fixed test and rerun, under a pipefail-enabled shell:
 
 ```text
 modules/gl/tests/core-abi.sh
