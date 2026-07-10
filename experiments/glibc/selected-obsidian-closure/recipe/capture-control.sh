@@ -72,12 +72,9 @@ collect_tree_pids() {
             [ -r "$status" ] || continue
             pid=${status#/proc/}
             pid=${pid%/status}
-
             [ -n "${member[$pid]:-}" ] && continue
-
             ppid=$(awk '/^PPid:/ { print $2; exit }' "$status" 2>/dev/null || true)
             [ -n "$ppid" ] || continue
-
             if [ -n "${member[$ppid]:-}" ]; then
                 member["$pid"]=1
                 changed=1
@@ -113,7 +110,6 @@ observe_tree() {
         [ -r "/proc/$pid/cmdline" ] || continue
         cmdline=$(tr '\0' ' ' <"/proc/$pid/cmdline")
         class=$(classify_cmdline "$pid" "$cmdline")
-
         OBSERVED_PIDS["$pid"]=1
         printf '%s\t%s\t%s\t%s\t%s\n' \
             "$phase" "$sample" "$pid" "$class" "$cmdline" \
@@ -186,6 +182,7 @@ fi
 printf '\ntopology gate: PASS\n'
 printf 'required classes: main renderer zygote\n'
 printf 'elapsed seconds: %s\n' "$((SECONDS - startup_started))"
+printf 'PASS\n' >"$OUT/topology.status"
 
 sleep "$TOPOLOGY_SETTLE_SECONDS"
 
@@ -199,6 +196,7 @@ survival_sample=0
 
 while (( SECONDS < survival_deadline )); do
     if [ ! -d "/proc/$LAUNCH_PID" ]; then
+        printf 'FAIL main process exited\n' >"$OUT/survival.status"
         printf 'survival gate: FAIL (main process exited)\n' >&2
         printf '\n===== stderr =====\n' >&2
         sed -n '1,240p' "$OUT/launch.stderr" >&2 || true
@@ -220,6 +218,7 @@ while (( SECONDS < survival_deadline )); do
 done
 
 if grep -q 'FATAL:' "$OUT/launch.stderr"; then
+    printf 'FAIL fatal diagnostic observed\n' >"$OUT/survival.status"
     printf 'survival gate: FAIL (FATAL diagnostic observed)\n' >&2
     printf '\n===== fatal diagnostics =====\n' >&2
     grep 'FATAL:' "$OUT/launch.stderr" >&2 || true
@@ -227,12 +226,14 @@ if grep -q 'FATAL:' "$OUT/launch.stderr"; then
 fi
 
 [ -d "/proc/$LAUNCH_PID" ] || {
+    printf 'FAIL main process absent at final gate\n' >"$OUT/survival.status"
     printf 'survival gate: FAIL (main process absent at final gate)\n' >&2
     exit 1
 }
 
 printf 'survival gate: PASS\n'
 printf 'elapsed seconds: %s\n' "$((SECONDS - survival_started))"
+printf 'PASS\n' >"$OUT/survival.status"
 
 observe_tree final 1
 mapfile -t capture_pids < <(collect_tree_pids "$LAUNCH_PID")
@@ -275,51 +276,6 @@ done
     awk -F $'\t' 'NR > 1 { print $3 "\t" $4 }' "$OUT/mapped-objects.tsv" | sort -u
 } >"$OUT/unique-objects.tsv"
 
-printf 'path_class\tpath\tpackage\tversion\tsha256\tbuild_id\n' >"$OUT/object-identities.tsv"
-
-build_id_of() {
-    readelf -n "$1" 2>/dev/null | awk '/Build ID:/ && id == "" { id = $3 } END { if (id != "") print id }'
-}
-
-while IFS=$'\t' read -r path_class path; do
-    [ "$path_class" = path_class ] && continue
-    [ -f "$path" ] || continue
-
-    package=UNKNOWN
-    version=UNKNOWN
-
-    case "$path_class" in
-        PREFIX_GLIBC)
-            package=$(dpkg-query -S "$path" 2>/dev/null | awk -F': ' 'NR == 1 { print $1 }' || true)
-            [ -n "$package" ] || package=UNOWNED
-            if [ "$package" != UNOWNED ]; then
-                version=$(dpkg-query -W -f='${Version}' "$package" 2>/dev/null || true)
-                [ -n "$version" ] || version=UNKNOWN
-            fi
-            ;;
-        ROOTFS_PROVIDER)
-            inside=${path#"$ROOTFS"}
-            owner_line=$(proot-distro login debian -- dpkg-query -S "$inside" 2>/dev/null | head -n 1 || true)
-            package=$(printf '%s\n' "$owner_line" | sed -E 's/: \/.*$//')
-            [ -n "$package" ] || package=UNOWNED
-            if [ "$package" != UNOWNED ]; then
-                version=$(proot-distro login debian -- dpkg-query -W -f='${Version}' "$package" 2>/dev/null || true)
-                [ -n "$version" ] || version=UNKNOWN
-            fi
-            ;;
-        APP_LOCAL)
-            package=OBSIDIAN_APPDIR
-            version=PAYLOAD_LOCAL
-            ;;
-    esac
-
-    sha=$(sha256sum "$path" | awk '{print $1}')
-    build_id=$(build_id_of "$path")
-    [ -n "$build_id" ] || build_id=NONE
-
-    printf '%s\t%s\t%s\t%s\t%s\t%s\n' "$path_class" "$path" "$package" "$version" "$sha" "$build_id" >>"$OUT/object-identities.tsv"
-done <"$OUT/unique-objects.tsv"
-
 {
     printf 'path_class\tunique_object_count\n'
     awk -F $'\t' 'NR > 1 { count[$1]++ } END { for (c in count) print c "\t" count[c] }' "$OUT/unique-objects.tsv" | sort
@@ -331,6 +287,7 @@ done <"$OUT/unique-objects.tsv"
 } >"$OUT/process-class-observation-counts.tsv"
 
 printf '%s\n' "${!OBSERVED_PIDS[@]}" | sort -n >>"$OUT/observed-pids.tsv"
+printf 'PASS\n' >"$OUT/maps-capture.status"
 
 printf '\n===== class counts =====\n'
 cat "$OUT/class-counts.tsv"
@@ -340,3 +297,4 @@ cat "$OUT/process-class-observation-counts.tsv"
 
 printf '\ncontrol capture: PASS\n'
 printf 'evidence: %s\n' "$OUT"
+printf 'next: run enrich-control-identities.sh with CONTROL_OUT=%s\n' "$OUT"
