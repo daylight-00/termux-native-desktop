@@ -5,6 +5,7 @@ APP=${APP:-$HOME/gl/apps/obsidian}
 LAUNCHER=${LAUNCHER:-$HOME/gl/bin/obsidian-app}
 ROOTFS=${ROOTFS:-$PREFIX/var/lib/proot-distro/containers/debian/rootfs}
 OUT=${OUT:-$PREFIX/tmp/selected-obsidian-control-$(date +%Y%m%d-%H%M%S)}
+CONTROL_GL_GPU=${CONTROL_GL_GPU:-0}
 STARTUP_TIMEOUT_SECONDS=${STARTUP_TIMEOUT_SECONDS:-30}
 TOPOLOGY_SETTLE_SECONDS=${TOPOLOGY_SETTLE_SECONDS:-5}
 SURVIVAL_SECONDS=${SURVIVAL_SECONDS:-100}
@@ -28,6 +29,14 @@ done
     exit 1
 }
 
+case "$CONTROL_GL_GPU" in
+    0|1) ;;
+    *)
+        printf 'CONTROL_GL_GPU must be 0 or 1: %s\n' "$CONTROL_GL_GPU" >&2
+        exit 2
+        ;;
+esac
+
 existing=$(pgrep -af "$APP/" || true)
 if [ -n "$existing" ]; then
     printf 'existing Obsidian AppDir processes detected; close them before control capture:\n' >&2
@@ -42,14 +51,14 @@ printf 'pid\n' >"$OUT/observed-pids.tsv"
 
 printf 'app: %s\n' "$APP" | tee "$OUT/app-path.txt"
 printf 'launcher: %s\n' "$LAUNCHER" | tee "$OUT/launcher-path.txt"
-printf 'mode: CPU path (GL_GPU=0)\n' | tee "$OUT/mode.txt"
+printf 'mode: GL_GPU=%s\n' "$CONTROL_GL_GPU" | tee "$OUT/mode.txt"
 printf 'startup timeout seconds: %s\n' "$STARTUP_TIMEOUT_SECONDS" | tee "$OUT/startup-contract.txt"
 printf 'survival seconds: %s\n' "$SURVIVAL_SECONDS" | tee "$OUT/survival-contract.txt"
 
 printf '\n===== launch Obsidian control =====\n'
-printf 'Observe the CPU-path window during topology and survival gates.\n'
+printf 'Observe the window during topology and survival gates.\n'
 
-GL_GPU=0 \
+GL_GPU="$CONTROL_GL_GPU" \
 "$LAUNCHER" \
     >"$OUT/launch.stdout" \
     2>"$OUT/launch.stderr" &
