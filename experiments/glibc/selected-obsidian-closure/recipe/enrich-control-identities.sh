@@ -108,11 +108,12 @@ while IFS=$'\t' read -r package version; do
 done <"$WORK/rootfs-versions.raw"
 
 build_id_of() {
-    readelf -n "$1" 2>/dev/null \
-        | awk '
-            /Build ID:/ && id == "" { id = $3 }
-            END { if (id != "") print id }
-        '
+    {
+        readelf -n "$1" 2>/dev/null || true
+    } | awk '
+        /Build ID:/ && id == "" { id = $3 }
+        END { if (id != "") print id }
+    '
 }
 
 printf 'path_class\tpath\tpackage\tversion\tsha256\tbuild_id\n' >"$OUTPUT"
