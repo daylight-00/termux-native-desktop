@@ -56,7 +56,7 @@ refactor/0015
 refactor/0016
     -> handoff into semantic review
 
-refactor/0017-0053
+refactor/0017-0055
     -> current branch evidence/design records under that direction
 
 refactor/0014
@@ -182,9 +182,11 @@ zero unresolved or ambiguous mapped-universe SONAME edges
 0051-implicit-software-intent-zink-llvmpipe-validation-passed.md
 0052-glx-map-runtime-anonymous-memory-classification.md
 0053-obsidian-capture-feature-mode-parameterization.md
+0054-obsidian-explicit-freedreno-gpu-adapter-validation-passed.md
+0055-obsidian-gpu-policy-control-comparison-harness.md
 ```
 
-The Vulkan records now establish a completed bounded Zink/GLX three-state matrix.
+The Vulkan records establish a completed bounded Zink/GLX three-state matrix and have moved into real Electron consumer validation.
 
 #### Explicit hardware provider + default device intent
 
@@ -238,7 +240,7 @@ GLX/OpenGL:
     PASS
 ```
 
-The completed causal matrix is:
+The completed Zink causal matrix is:
 
 ```text
 explicit-freedreno + default intent
@@ -287,7 +289,7 @@ rootfs GLVND / Mesa GLX / Gallium Zink
     -> llvmpipe CPU renderer
 ```
 
-The software capture also maps `libvulkan_gfxstream.so`, but previous loader diagnostics show it as discovery/loading participation without a surviving physical device. Therefore:
+The software capture also maps `libvulkan_gfxstream.so`, but loader diagnostics show discovery/loading participation without a surviving physical device. Therefore:
 
 ```text
 mapped ICD object
@@ -309,9 +311,66 @@ software-control-only:
     /memfd:allocation
 ```
 
-`0052` corrects enrichment classification for the narrow observed `/memfd:allocation*` pattern so it is represented as runtime anonymous memory rather than unresolved package provenance.
+`0052` corrects enrichment classification for the narrow observed `/memfd:allocation*` pattern. Device-side re-enrichment confirmed:
 
-`0053` parameterizes the Obsidian capture harness with `CONTROL_GL_GPU=0|1`, defaulting to the original CPU control behavior. This allows the same topology/survival/maps harness to vary application feature mode independently from `VULKAN_POLICY_MODE` during Electron adapter validation.
+```text
+RUNTIME_ANON_MEMORY
+RUNTIME_MEMORY
+RUNTIME_ANONYMOUS_MAPPING
+```
+
+with no remaining `OTHER UNKNOWN UNKNOWN 1` package-summary row for that mapping.
+
+`0053` parameterizes the Obsidian capture harness with `CONTROL_GL_GPU=0|1`, defaulting to the original CPU-control behavior, so feature mode and provider policy can be varied independently.
+
+`0054` records the first real Electron GPU-feature adapter control:
+
+```text
+CONTROL_GL_GPU=1
+VULKAN_POLICY_MODE=explicit-freedreno
+LIBGL_ALWAYS_SOFTWARE unset
+
+topology gate: PASS
+100-second survival: PASS
+final gpu process: PRESENT
+identity enrichment: PASS
+semantic classification: PASS
+semantic review objects: 0
+hardware Vulkan driver class: 1
+KGSL device-node class: 1
+```
+
+The final process topology was:
+
+```text
+main      1
+zygote    2
+gpu       1
+utility   1
+renderer  1
+```
+
+This proves that the scoped explicit-Freedreno policy is compatible with the tested Obsidian GPU-feature path. Process-class ownership of the hardware driver and KGSL still requires the dedicated graphics relation report.
+
+`0055` adds a same-feature-mode policy comparison helper. The next Obsidian A/B keeps:
+
+```text
+CONTROL_GL_GPU=1
+LIBGL_ALWAYS_SOFTWARE unset
+same capture harness
+same launcher adapter
+same survival budget
+```
+
+and changes only:
+
+```text
+explicit-freedreno
+    versus
+implicit-discovery
+```
+
+The comparison preserves exact semantic class/path deltas, process-class topology counts, and graphics class/object relations.
 
 ### Supporting records
 
@@ -388,19 +447,19 @@ selected Obsidian AppDir composition pilot
 scoped Vulkan policy composition experiment
 ```
 
-For Obsidian, the 161-path baseline and 169-path strict policy-isolation control are semantically classified with zero review objects. The strict-only 11-path set is fully attributed to SwiftShader, Lavapipe, and Gfxstream roots inside the captured mapped universe.
+For Obsidian, the earlier CPU-path controls established baseline semantic composition and alternate fallback-provider sets. The new GPU-feature explicit-Freedreno adapter control now passes topology, 100-second survival, final GPU-process presence, identity enrichment, semantic classification, and zero-review gates.
 
-For scoped Vulkan composition, the bounded Zink hardware/default, implicit/default, and implicit/software controls are complete. Hardware and software renderer graphs have been captured, enriched, and compared. The remaining immediate evidence correction is device-side re-enrichment of the software evidence root using the committed runtime-anonymous memfd classification.
-
-After that, the next gate is real Electron consumer adapter validation. The Obsidian capture harness now exposes `CONTROL_GL_GPU` so application feature mode can be varied independently from provider policy.
+The immediate next evidence sequence is:
 
 ```text
-1. Obsidian explicit-freedreno adapter control
-2. Obsidian implicit-discovery adapter comparison
-3. VS Code explicit-freedreno GPU adapter validation
-4. VS Code CPU/software-intent behavior check
-5. compare consumer-specific policy requirements
-6. define minimum graphics composition contract from evidence
+1. explicit Obsidian GPU process-class graphics relation report
+2. implicit-discovery Obsidian GPU capture with the same feature mode
+3. implicit identity enrichment and semantic classification
+4. same-feature-mode policy-control comparison
+5. interpret consumer-specific provider requirements
+6. VS Code explicit-freedreno GPU adapter validation
+7. VS Code CPU/software-intent behavior check
+8. define minimum graphics composition contract from evidence
 ```
 
 Candidate materialization remains blocked pending these graphics composition gates plus locality-shadowing and non-graphics static/runtime closure analysis.
