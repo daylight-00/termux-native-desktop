@@ -8,20 +8,20 @@ Current stage:
 
 ```text
 control capture: PASS
-first static discovery run: INCOMPLETE due harness early-exit bug
-corrected static discovery rerun: pending after checkout relocation
+initial static traversal harness bug: fixed
+complete static traversal: PASS
+control/static libcap selection mismatch: found
+ownership-aware static rerun: pending
+candidate materialization: blocked until static/runtime sets agree
 ```
-
-## Dates
-
-Started after the glibc/libdbus ABI incident was recovered and VS Code passed real GUI workload validation.
 
 ## Provenance
 
-First-hand experiment design and first-hand device evidence derived from:
+First-hand experiment design and device evidence derived from:
 
 ```text
 docs/refactor/0019-selected-closure-pilot-decision-criteria.md
+docs/refactor/0026-dbus-pilot-control-static-selection-mismatch.md
 ```
 
 ## Question
@@ -41,205 +41,112 @@ without changing the active broad farm used as control/reference?
 
 ## Baseline
 
-Control state:
-
 ```text
 active substrate:
     APT/dpkg-owned glibc 2.42 recovery substrate
 
-active provider mechanism:
+active provider control:
     broad farm under $HOME/gl/lib
 
 root provider under study:
     libdbus-1.so.3
-
-known control behavior:
-    active libdbus relocation PASS
-    VS Code CLI PASS
-    VS Code GUI workload PASS
 ```
-
-## Pilot scope
-
-The pilot begins with two deliberately small phases.
-
-### Phase A — control capture
-
-Capture:
-
-```text
-selected root provider identity
-transitive control resolution
-loader trace
-/proc/<pid>/maps
-probe output and status
-```
-
-### Phase B — control-guided static closure discovery
-
-Starting from `libdbus-1.so.3`:
-
-```text
-read DT_NEEDED
-classify an edge as WORLD_PREFIX when satisfied by $PREFIX/glibc/lib
-otherwise resolve through the active broad-farm control
-require the broad-farm target to resolve into the Debian rootfs
-record package owner/version, SHA-256, and Build ID
-recurse over rootfs provider objects
-```
-
-This is intentionally **not** a universal resolver. It is a bounded discovery harness that converts current control behavior into explicit evidence before candidate materialization is attempted.
 
 ## Minimal probe
 
-The pilot probe calls only:
+The probe calls only:
 
 ```text
 dbus_get_version()
 ```
 
-and then remains alive for a bounded interval so `/proc/<pid>/maps` can be captured.
+and remains alive briefly so `/proc/<pid>/maps` can be captured.
 
-This avoids requiring a running D-Bus daemon while still executing code from the selected `libdbus` provider and its transitive runtime closure.
-
-## First control result
-
-Probe identity:
-
-```text
-ELF:
-    AArch64 PIE
-    interpreter $PREFIX/glibc/lib/ld-linux-aarch64.so.1
-
-Build ID:
-    0a310fa7489d5754b03ab936da9462869bb05198
-
-SHA-256:
-    d55c783cd68c97b9d5976935cfcb26538cbded69dc119179a2050b318809a9a4
-```
-
-Probe dynamic requirements:
-
-```text
-libdbus-1.so.3
-libc.so.6
-ld-linux-aarch64.so.1
-```
-
-Runtime result:
+Observed result:
 
 ```text
 libdbus runtime version: 1.16.2
 control capture: PASS
 ```
 
-Actual mapped objects relevant to the pilot were:
+## Control runtime evidence
+
+Relevant actual mapped objects:
 
 ```text
-WORLD / substrate:
+WORLD / substrate paths:
     $PREFIX/glibc/lib/ld-linux-aarch64.so.1
     $PREFIX/glibc/lib/libc.so.6
     $PREFIX/glibc/lib/libm.so.6
 
-ROOTFS providers:
+ROOTFS provider paths:
     libdbus-1.so.3.38.3
     libsystemd.so.0.40.0
     libcap.so.2.75
 ```
 
-This first runtime result is already a useful boundedness signal: the direct probe mapped three rootfs provider objects and three substrate objects in the observed relevant set.
+This is a strong boundedness signal, but candidate work remains blocked until static classification matches actual control selection.
 
-It is not yet the final selected closure because static graph traversal must be completed and static/runtime differences must be reconciled.
+## Static traversal finding
 
-## First static discovery run
-
-The first static run produced only a partial graph:
+The completed static graph showed:
 
 ```text
-libdbus-1.so.3.38.3
-    -> libsystemd.so.0   PROVIDER_ROOTFS
-    -> libc.so.6         WORLD_PREFIX
+libdbus
+    -> libsystemd
+    -> libc
+    -> loader
+
+libsystemd
+    -> libcap
+    -> libm
+    -> libc
+    -> loader
 ```
 
-and recorded provider identities for:
+The first classifier incorrectly selected prefix `libcap.so.2.69` as `WORLD_PREFIX`, while runtime maps proved that farm-first control selected Debian rootfs `libcap.so.2.75`.
+
+The rule:
 
 ```text
-libdbus-1-3:arm64  1.16.2-2
-libsystemd0:arm64  257.13-1~deb13u1
+exists under $PREFIX/glibc/lib
+    => WORLD
 ```
 
-The run did not print its terminal PASS/FAIL summary and `world-prefix.tsv` contained only its header.
+is therefore rejected.
 
-This was not interpreted as a real static/runtime closure mismatch. Inspection of the harness showed another `pipefail` plus early-exit consumer pattern in Build-ID extraction:
+## Current classification model
+
+The discovery harness now models:
 
 ```text
-readelf -n object
-    |
-awk '... { print; exit }'
+1. actual farm-first control search order
+2. explicit protected package ownership
+3. prefix providers separately from world substrate
 ```
 
-For sufficiently long producer output, the consumer exits after the Build ID and the producer may receive SIGPIPE. Under `set -o pipefail`, the helper can fail while recording the first world-prefix object, terminating traversal early.
-
-The helper was corrected to consume the complete `readelf` stream before printing the captured Build ID.
-
-Therefore:
+Classes:
 
 ```text
-first control capture:
-    valid evidence
-
-first static closure result:
-    partial evidence only
-    not an architectural conclusion
-
-next static run:
-    required with corrected harness
+WORLD_SUBSTRATE
+PROVIDER_ROOTFS
+PROVIDER_PREFIX
+REJECTED_SHADOWS_WORLD
+REJECTED_NON_ROOTFS_CONTROL
+UNRESOLVED
 ```
 
-## Current hypothesis
-
-The selected provider closure will be substantially smaller and more explainable than the broad farm.
-
-The current observed runtime shape is:
+Default protected package set for the pilot:
 
 ```text
-probe
-    -> libdbus-1.so.3             PROVIDER_ROOTFS
-        -> libsystemd.so.0        PROVIDER_ROOTFS
-            -> libcap.so.2        PROVIDER_ROOTFS or transitive provider edge
-        -> substrate objects      WORLD
+glibc
 ```
 
-The exact static edge structure must come from the corrected rerun rather than from this expectation.
-
-## Procedure
-
-```text
-1. build the minimal probe
-2. capture broad-farm control behavior
-3. discover the bounded static provider closure
-4. compare static graph with actual mapped objects
-5. inspect graph.tsv and providers.tsv
-6. only then design candidate byte materialization
-```
-
-Commands:
-
-```bash
-bash experiments/glibc/selected-dbus-closure/recipe/build-probe.sh
-
-bash experiments/glibc/selected-dbus-closure/recipe/capture-control.sh
-
-bash experiments/glibc/selected-dbus-closure/recipe/discover-static-closure.sh
-```
-
-Each script writes evidence under a caller-selected or timestamped directory beneath `$PREFIX/tmp`.
+This keeps the first world contract narrow and evidence-based.
 
 ## Evidence contract
 
 ### `graph.tsv`
-
-Columns:
 
 ```text
 consumer
@@ -251,7 +158,7 @@ selection_reason
 
 ### `providers.tsv`
 
-Columns:
+Rootfs providers:
 
 ```text
 path
@@ -261,20 +168,33 @@ sha256
 build_id
 ```
 
-### control capture
+### `prefix-providers.tsv`
 
-Expected artifacts include:
+Non-protected prefix providers:
 
 ```text
-probe.stdout
-loader-debug.log
-maps.txt
-control-ldd.txt
-root-provider-identity.txt
-substrate-identity.txt
+path
+package
+version
+sha256
+build_id
 ```
 
-## Decision boundary after this stage
+### `world-prefix.tsv`
+
+Protected substrate objects only:
+
+```text
+path
+package
+version
+sha256
+build_id
+```
+
+The historical filename is retained for continuity, but its semantics are now explicitly protected ownership rather than all prefix objects.
+
+## Decision boundary
 
 Do not yet implement:
 
@@ -286,8 +206,12 @@ global gl sync
 farm replacement
 ```
 
-First inspect whether the discovered provider set is actually bounded and semantically coherent.
+Next gate:
 
-If it is bounded, the next experiment stage will materialize concrete provider bytes into an isolated candidate directory and run the same probe under an explicit candidate-only loader path while proving actual mapped identities.
+```text
+ownership-aware static provider set
+    ==
+actual runtime mapped provider set
+```
 
-If it expands toward a broad rootfs pool, the experiment must record that result rather than force the selected-closure model.
+Only then proceed to concrete provider-byte materialization and candidate-specific loader validation.

@@ -5,10 +5,11 @@ FARM=${FARM:-$HOME/gl/lib}
 ROOTFS=${ROOTFS:-$PREFIX/var/lib/proot-distro/containers/debian/rootfs}
 ROOT=${ROOT:-$FARM/libdbus-1.so.3}
 OUT=${OUT:-$PREFIX/tmp/selected-dbus-static-$(date +%Y%m%d-%H%M%S)}
+PROTECTED_WORLD_PACKAGES=${PROTECTED_WORLD_PACKAGES:-glibc}
 
 mkdir -p "$OUT"
 
-for command in readelf sha256sum readlink proot-distro; do
+for command in readelf sha256sum readlink proot-distro dpkg-query; do
     command -v "$command" >/dev/null 2>&1 || {
         printf 'missing required command: %s\n' "$command" >&2
         exit 1
@@ -26,11 +27,13 @@ esac
 
 printf 'consumer\tneeded\tclassification\tselected_path\tselection_reason\n' >"$OUT/graph.tsv"
 printf 'path\tpackage\tversion\tsha256\tbuild_id\n' >"$OUT/providers.tsv"
-printf 'path\tsha256\tbuild_id\n' >"$OUT/world-prefix.tsv"
+printf 'path\tpackage\tversion\tsha256\tbuild_id\n' >"$OUT/prefix-providers.tsv"
+printf 'path\tpackage\tversion\tsha256\tbuild_id\n' >"$OUT/world-prefix.tsv"
 
 queue=("$ROOT")
 declare -A seen=()
 declare -A provider_recorded=()
+declare -A prefix_provider_recorded=()
 declare -A world_recorded=()
 
 build_id_of() {
@@ -41,7 +44,26 @@ build_id_of() {
         '
 }
 
-record_provider() {
+host_owner_of() {
+    local path=$1
+    dpkg-query -S "$path" 2>/dev/null \
+        | awk -F': ' 'NR == 1 { print $1 }'
+}
+
+host_version_of() {
+    local package=$1
+    dpkg-query -W -f='${Version}' "$package" 2>/dev/null || true
+}
+
+is_protected_world_package() {
+    local package=$1 protected
+    for protected in $PROTECTED_WORLD_PACKAGES; do
+        [ "$package" = "$protected" ] && return 0
+    done
+    return 1
+}
+
+record_rootfs_provider() {
     local path=$1
     [ -n "${provider_recorded[$path]:-}" ] && return 0
     provider_recorded[$path]=1
@@ -69,21 +91,43 @@ record_provider() {
         >>"$OUT/providers.tsv"
 }
 
-record_world() {
+record_prefix_provider() {
     local path=$1
-    [ -n "${world_recorded[$path]:-}" ] && return 0
-    world_recorded[$path]=1
+    [ -n "${prefix_provider_recorded[$path]:-}" ] && return 0
+    prefix_provider_recorded[$path]=1
 
-    local sha build_id
+    local package version sha build_id
+    package=$(host_owner_of "$path")
+    [ -n "$package" ] || package=UNOWNED
+    version=$(host_version_of "$package")
+    [ -n "$version" ] || version=UNKNOWN
     sha=$(sha256sum "$path" | awk '{print $1}')
     build_id=$(build_id_of "$path")
     [ -n "$build_id" ] || build_id=NONE
 
-    printf '%s\t%s\t%s\n' "$path" "$sha" "$build_id" \
+    printf '%s\t%s\t%s\t%s\t%s\n' \
+        "$path" "$package" "$version" "$sha" "$build_id" \
+        >>"$OUT/prefix-providers.tsv"
+}
+
+record_world() {
+    local path=$1 package=$2
+    [ -n "${world_recorded[$path]:-}" ] && return 0
+    world_recorded[$path]=1
+
+    local version sha build_id
+    version=$(host_version_of "$package")
+    [ -n "$version" ] || version=UNKNOWN
+    sha=$(sha256sum "$path" | awk '{print $1}')
+    build_id=$(build_id_of "$path")
+    [ -n "$build_id" ] || build_id=NONE
+
+    printf '%s\t%s\t%s\t%s\t%s\n' \
+        "$path" "$package" "$version" "$sha" "$build_id" \
         >>"$OUT/world-prefix.tsv"
 }
 
-record_provider "$ROOT"
+record_rootfs_provider "$ROOT"
 
 index=0
 while [ "$index" -lt "${#queue[@]}" ]; do
@@ -96,35 +140,63 @@ while [ "$index" -lt "${#queue[@]}" ]; do
     while IFS= read -r needed; do
         [ -n "$needed" ] || continue
 
-        if [ -e "$PREFIX/glibc/lib/$needed" ]; then
-            selected=$(readlink -f "$PREFIX/glibc/lib/$needed")
-            printf '%s\t%s\tWORLD_PREFIX\t%s\tprefix exact-name match\n' \
-                "$consumer" "$needed" "$selected" \
-                >>"$OUT/graph.tsv"
-            record_world "$selected"
-            continue
-        fi
+        farm_selected=
+        prefix_selected=
+        prefix_package=
 
         if [ -e "$FARM/$needed" ]; then
-            selected=$(readlink -f "$FARM/$needed")
-            case "$selected" in
+            farm_selected=$(readlink -f "$FARM/$needed")
+        fi
+
+        if [ -e "$PREFIX/glibc/lib/$needed" ]; then
+            prefix_selected=$(readlink -f "$PREFIX/glibc/lib/$needed")
+            prefix_package=$(host_owner_of "$prefix_selected")
+        fi
+
+        if [ -n "$farm_selected" ]; then
+            if [ -n "$prefix_selected" ] && \
+               [ -n "$prefix_package" ] && \
+               is_protected_world_package "$prefix_package"; then
+                printf '%s\t%s\tREJECTED_SHADOWS_WORLD\t%s\tfarm-first control would shadow protected package %s at %s\n' \
+                    "$consumer" "$needed" "$farm_selected" "$prefix_package" "$prefix_selected" \
+                    >>"$OUT/graph.tsv"
+                continue
+            fi
+
+            case "$farm_selected" in
                 "$ROOTFS"/*)
-                    printf '%s\t%s\tPROVIDER_ROOTFS\t%s\tactive broad-farm control target\n' \
-                        "$consumer" "$needed" "$selected" \
+                    printf '%s\t%s\tPROVIDER_ROOTFS\t%s\tfarm-first control target\n' \
+                        "$consumer" "$needed" "$farm_selected" \
                         >>"$OUT/graph.tsv"
-                    record_provider "$selected"
-                    queue+=("$selected")
+                    record_rootfs_provider "$farm_selected"
+                    queue+=("$farm_selected")
                     ;;
                 *)
                     printf '%s\t%s\tREJECTED_NON_ROOTFS_CONTROL\t%s\tcontrol target outside configured rootfs\n' \
-                        "$consumer" "$needed" "$selected" \
+                        "$consumer" "$needed" "$farm_selected" \
                         >>"$OUT/graph.tsv"
                     ;;
             esac
             continue
         fi
 
-        printf '%s\t%s\tUNRESOLVED\t-\tno prefix exact-name or broad-farm control match\n' \
+        if [ -n "$prefix_selected" ]; then
+            if [ -n "$prefix_package" ] && is_protected_world_package "$prefix_package"; then
+                printf '%s\t%s\tWORLD_SUBSTRATE\t%s\tprotected package owner %s\n' \
+                    "$consumer" "$needed" "$prefix_selected" "$prefix_package" \
+                    >>"$OUT/graph.tsv"
+                record_world "$prefix_selected" "$prefix_package"
+            else
+                printf '%s\t%s\tPROVIDER_PREFIX\t%s\tprefix provider owner %s\n' \
+                    "$consumer" "$needed" "$prefix_selected" "${prefix_package:-UNOWNED}" \
+                    >>"$OUT/graph.tsv"
+                record_prefix_provider "$prefix_selected"
+                queue+=("$prefix_selected")
+            fi
+            continue
+        fi
+
+        printf '%s\t%s\tUNRESOLVED\t-\tno farm-first control target or prefix exact-name match\n' \
             "$consumer" "$needed" \
             >>"$OUT/graph.tsv"
 
@@ -140,7 +212,10 @@ column -t -s $'\t' "$OUT/graph.tsv" 2>/dev/null || cat "$OUT/graph.tsv"
 printf '\n===== rootfs providers =====\n'
 column -t -s $'\t' "$OUT/providers.tsv" 2>/dev/null || cat "$OUT/providers.tsv"
 
-printf '\n===== world-prefix objects =====\n'
+printf '\n===== prefix providers =====\n'
+column -t -s $'\t' "$OUT/prefix-providers.tsv" 2>/dev/null || cat "$OUT/prefix-providers.tsv"
+
+printf '\n===== protected world substrate objects =====\n'
 column -t -s $'\t' "$OUT/world-prefix.tsv" 2>/dev/null || cat "$OUT/world-prefix.tsv"
 
 if grep -q $'\tUNRESOLVED\t' "$OUT/graph.tsv"; then
@@ -149,8 +224,8 @@ if grep -q $'\tUNRESOLVED\t' "$OUT/graph.tsv"; then
     exit 1
 fi
 
-if grep -q $'\tREJECTED_NON_ROOTFS_CONTROL\t' "$OUT/graph.tsv"; then
-    printf '\nstatic closure discovery: FAIL (unexpected control target)\n' >&2
+if grep -qE $'\t(REJECTED_NON_ROOTFS_CONTROL|REJECTED_SHADOWS_WORLD)\t' "$OUT/graph.tsv"; then
+    printf '\nstatic closure discovery: FAIL (rejected control selection)\n' >&2
     printf 'evidence: %s\n' "$OUT" >&2
     exit 1
 fi
