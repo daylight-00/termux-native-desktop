@@ -33,16 +33,21 @@ if [ -r "$PREFIX/etc/tls/cert.pem" ]; then
   export REQUESTS_CA_BUNDLE="$SSL_CERT_FILE"
 fi
 
-# Vulkan policy baseline: sanitize the bionic session's provider selection.
-# This is ABI shielding only. It deliberately does NOT choose a glibc Vulkan
-# provider. Consumers that require hardware Vulkan must source the explicit
-# profile at:
+# Graphics-policy baseline: sanitize bionic session choices at the glibc
+# boundary. The desktop session exports a bionic Vulkan ICD and Zink bridge
+# mode for native clients. Neither policy is valid as a glibc-world default.
+#
+# This is ABI/policy shielding only. It deliberately does NOT choose a glibc
+# Vulkan provider or OpenGL bridge. Consumers that require hardware Vulkan
+# source:
 #
 #   $HOME/gl/policy/vulkan/freedreno.sh
 #
-# Keeping sanitation and selection separate prevents provider policy from
-# leaking into CPU-mode or provider-neutral glibc processes.
+# OpenGL consumers then add Zink only through gl-run. Keeping sanitation,
+# provider selection, and bridge selection separate prevents session policy
+# from leaking into CPU-mode, ANGLE-only, or provider-neutral processes.
 unset VK_ICD_FILENAMES VK_DRIVER_FILES
+unset MESA_LOADER_DRIVER_OVERRIDE GALLIUM_DRIVER
 
 # NOTE: never set LD_LIBRARY_PATH here (bionic children would load glibc's
 # libc.so linker script and die). Library resolution = $ORIGIN rpath +
