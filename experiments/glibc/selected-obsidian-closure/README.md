@@ -10,38 +10,25 @@ PHASE_B2_PASS
 PHASE_B3_CORRECTED_PASS
 PHASE_B4_PASS
 PHASE_B5_PASS_WITH_REVIEW
-PHASE_B6_FIRST_RUN_DIAGNOSTIC_ONLY
 PHASE_B6_CORRECTED_PASS
 PHASE_B7_PASS
 PHASE_B8_PASS
 PHASE_B9_PASS
-PHASE_B10_FIRST_RUN_LAUNCHER_DIAGNOSTIC
-PHASE_B10_SECOND_RUN_SHORT_LIVED_MAIN_DIAGNOSTIC
-PHASE_B10_SHORT_RUNTIME_PATH_DISCRIMINATOR_NEXT
+PHASE_B10_LAUNCHER_DIAGNOSTIC_CLOSED
+PHASE_B10_SHORT_PATH_TOPOLOGY_PASS
+PHASE_B10_SURVIVAL_GTK_PIXBUF_FAILURE
+PIXBUF_ICON_MIME_SOURCE_INVENTORY_NEXT
 ```
 
-The selected CPU generation is materialized and published but not activated.
+The selected CPU generation is materialized and immutable but not activated.
 
 ## Authority
 
 ```text
-docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md
-docs/refactor/0093-post-audit-direction-validator-lifecycle-and-selected-closure-reentry.md
-docs/refactor/0094-selected-obsidian-phase-b1-retained-control-locality-pass.md
-docs/refactor/0095-selected-obsidian-phase-b2-static-runtime-closure-pass.md
-docs/refactor/0096-selected-obsidian-phase-b3-first-run-script-failure.md
-docs/refactor/0097-selected-obsidian-phase-b3-capability-grouping-pass.md
-docs/refactor/0098-selected-obsidian-phase-b4-entrypoint-static-matrix-pass.md
-docs/refactor/0099-selected-obsidian-phase-b5-data-provenance-review.md
-docs/refactor/0100-selected-obsidian-phase-b6-source-manifest-gap.md
-docs/refactor/0101-selected-obsidian-phase-b6-corrected-schema-reproduction-pass.md
-docs/refactor/0102-selected-obsidian-phase-b7-complete-cpu-manifest-pass.md
-docs/refactor/0103-selected-obsidian-phase-b8-generation-layout-preflight-pass.md
-docs/refactor/0104-selected-obsidian-phase-b9-first-run-hardlink-publication-failure.md
-docs/refactor/0105-selected-obsidian-phase-b9-generation-directory-publication-failure.md
 docs/refactor/0106-selected-obsidian-phase-b9-generation-materialization-pass.md
 docs/refactor/0107-selected-obsidian-phase-b10-first-run-launcher-environment-failure.md
 docs/refactor/0108-selected-obsidian-phase-b10-second-run-short-lived-main-diagnostic.md
+docs/refactor/0109-selected-obsidian-phase-b10-short-runtime-topology-pass-gtk-pixbuf-survival-failure.md
 ```
 
 ## Closed generation boundary
@@ -66,232 +53,194 @@ current:
     ABSENT
 ```
 
-Immutable content:
-
-```text
-selected external static ELF              87
-required NSS/security dynamic ELF          4
-selected fonts                              4
-generated GSettings aggregate               1
-```
-
-Referenced outside the generation:
-
-```text
-app-local ELF/data                         11
-protected-world ELF/locale                 18
-```
-
-Excluded from CPU mode:
-
-```text
-Vulkan feature/provider ELF                11
-mutable application state                  19
-fontconfig cache                            4
-Mesa cache                                  1
-optional GPU device                         1
-```
-
-## Phase B10 validation target
-
-Files:
-
-```text
-recipe/launch-obsidian-explicit-generation-cpu.sh
-recipe/run-explicit-generation-cpu-validation.sh
-recipe/analyze-explicit-generation-cpu.py
-```
-
-Loader and data contract:
-
-```text
-candidate loader injection:
-    final Obsidian exec only
-
-LD_LIBRARY_PATH:
-    <generation>/lib:$PREFIX/glibc/lib
-
-GSETTINGS_SCHEMA_DIR:
-    <generation>/share/glib-2.0/schemas
-
-font source:
-    <generation>/share/fonts/selected
-
-CPU flag:
-    exact --disable-gpu
-
-Vulkan/Mesa overrides:
-    cleared
-
-current:
-    forbidden
-
-broad farm:
-    forbidden
-
-rootfs providers:
-    forbidden
-```
-
-Expected stable process topology:
-
-```text
-main:
-    exactly 1
-
-renderer:
-    at least 1
-    every renderer has --disable-gpu-compositing
-
-zygote:
-    at least 1
-
-GPU process:
-    0
-
-survival:
-    100 seconds
-```
-
-Expected immutable mapped identities:
-
-```text
-selected object-store identities           96
-app-local identities                       11
-protected-world identities                 18
-                                          ---
-total                                      125
-```
-
 ## Phase B10 diagnostic history
 
-### First run — launcher shell contamination
+### Launcher-shell contamination
 
 ```text
-receipt:
-    selected-obsidian-phase-b10-explicit-generation-cpu-validation-20260712-005240
-
-result:
-    FAIL / capture
-
 application exec:
     not reached
 
 cause:
-    candidate LD_LIBRARY_PATH exported in bionic launcher shell
-    Termux mkdir attempted to resolve glibc libc.so
+    candidate LD_LIBRARY_PATH reached a bionic mkdir
+
+correction:
+    launcher shell LD_LIBRARY_PATH unset
+    candidate loader injection final exec only
 ```
 
-Correction:
+### Long runtime path
 
 ```text
-launcher shell LD_LIBRARY_PATH:
-    UNSET
+explicit main:
+    observed
 
-candidate loader injection:
-    EXEC_ENV_ONLY
+renderer/zygote:
+    not stabilized
+
+runtime paths:
+    170-179 characters
+
+SingletonSocket:
+    not created
 ```
 
-### Second run — short-lived main
+### Short runtime path
+
+Receipt:
 
 ```text
-receipt:
-    selected-obsidian-phase-b10-explicit-generation-cpu-validation-corrected-20260712-010602
-
-archive SHA-256:
-    01c14177d9ed32bb9de294aef2ccc64dba3e2afbbd1e82ed53eb705526ff3575
-
-captured head:
-    d6be102385140c61f92f1ca41028c90cbc866233
-
-result:
-    FAIL / capture
-
-explicit main observed:
-    YES
-
-stable renderer/zygote:
-    NO
-
-current before/after:
-    ABSENT / ABSENT
+selected-obsidian-phase-b10-short-runtime-cpu-validation-20260712-012415
 ```
 
-Observed runtime artifacts:
+Archive SHA-256:
 
 ```text
-SingletonLock -> localhost-4594
-one Chromium scoped temporary directory
-no SingletonSocket
-no SingletonCookie
+529e42fbc338148f5adf36cbabc1c8a1ebc16e9408e5850dd56f5194ac92f9fe
 ```
 
-Observed path lengths:
+Captured head:
 
 ```text
-XDG config application path:
-    178
-
-Chromium scoped temp path:
-    179
-
-XDG runtime directory:
-    170
+e9a44c7bcd52b35e433d9b9850469c9b1bb7db99
 ```
 
-Stderr contained only inotify sysctl-access and missing system-D-Bus warnings. No fatal loader or missing-library message was present.
-
-The long runtime/socket path is therefore the next highest-value discriminator, not yet a closed root cause.
-
-## Short runtime-path correction
-
-The runner now creates:
+Runtime contract:
 
 ```text
-$PREFIX/tmp/o10.XXXXXXXX
+runtime root length:
+    48
+
+TMPDIR length:
+    52
+
+XDG_CONFIG_HOME length:
+    59
+
+runtime snapshot:
+    MATCH
 ```
 
-and uses the conventional sublayout:
+Topology:
 
 ```text
-fontconfig/
-xdg/config/
-xdg/cache/
-xdg/data/
-xdg/state/
-xdg/runtime/
-tmp/
-bin/
+topology.status:
+    PASS
+
+main:
+    1
+
+zygote:
+    3
+
+utility:
+    1
+
+renderer:
+    1
+
+GPU process:
+    0
+
+renderer --disable-gpu-compositing:
+    present
 ```
 
-Required pre-launch gate:
+The short path produced `SingletonLock`, `SingletonSocket`, `SingletonCookie`, and the Chromium scoped temporary directory. The long-path hypothesis is therefore supported for startup.
+
+Survival:
 
 ```text
-TMPDIR length <= 64
+survival.status:
+    FAIL main process exited
+
+recorded survival samples with complete topology:
+    28
+
+approximate process lifetime:
+    72 seconds
 ```
 
-After capture:
+Fatal chain:
 
 ```text
-short live runtime root
-    -> cp -a to $OUT/runtime-evidence
-    -> diff -qr equality gate
-    -> short live root removal
+hicolor icon theme not found
+    -> GTK fallback image-missing.png
+    -> GdkPixbuf: Unrecognized image file format
+    -> gtkiconhelper assertion
+    -> application bailout
 ```
 
-Receipt files:
+`current` remained absent before and after. Maps acceptance was not reached because survival failed.
+
+## Open architecture boundary
+
+The generation contains:
 
 ```text
-runtime-root-contract.tsv
-runtime-snapshot.tsv
-runtime-evidence/
-runtime-cleanup.status
-capture-exit-status.txt
+libgdk_pixbuf-2.0.so.0
+libpng16.so.16
+libjpeg.so.62
 ```
 
-The real capture return code is now preserved; the prior negation-status bug is removed.
+The accepted data manifest contains:
 
-## Canonical short-path B10 command
+```text
+4 selected fonts
+1 generated GSettings aggregate
+12 protected-world locale files
+```
+
+It does not contain an explicit contract for:
+
+```text
+gdk-pixbuf loader cache
+gdk-pixbuf loader modules
+icon-theme index/data
+shared MIME database
+```
+
+This is a runtime data/plugin capability gap not established by the mapped-object closure.
+
+## Next stage — read-only capability inventory
+
+Recipe:
+
+```text
+recipe/inspect-gtk-pixbuf-runtime-capability.py
+```
+
+It consumes the completed Phase B9 receipt and the short-runtime B10 failure receipt.
+
+It performs:
+
+```text
+B9/B10 receipt verification;
+rootfs gdk-pixbuf loader-cache discovery;
+loader-module discovery;
+cache-reference parsing;
+package/version/SHA-256 ownership capture;
+icon-theme index inventory;
+shared MIME database inventory;
+B9 semantic-manifest gap comparison.
+```
+
+It does not:
+
+```text
+launch Obsidian;
+modify the generation;
+create current;
+change the promoted launcher.
+```
+
+Expected next state:
+
+```text
+READY_FOR_CONTROLLED_PIXBUF_RUNTIME_DIAGNOSTIC
+```
+
+### Canonical command
 
 ```bash
 cd "$HOME/projects/termux-native-desktop"
@@ -303,13 +252,16 @@ git fetch origin
 git merge --ff-only origin/docs/post-graphics-architecture-audit
 
 B9_OUT="$PREFIX/tmp/selected-obsidian-closure/selected-obsidian-phase-b9-generation-publication-corrected-20260712-003136"
-out="selected-obsidian-phase-b10-short-runtime-cpu-validation-$(date +%Y%m%d-%H%M%S)"
+B10_OUT="$PREFIX/tmp/selected-obsidian-closure/selected-obsidian-phase-b10-short-runtime-cpu-validation-20260712-012415"
+
+out="selected-obsidian-gtk-pixbuf-runtime-capability-inventory-$(date +%Y%m%d-%H%M%S)"
 OUT="$PREFIX/tmp/selected-obsidian-closure/$out"
 
 if B9_OUT="$B9_OUT" \
+   B10_OUT="$B10_OUT" \
    OUT="$OUT" \
-   bash \
-     experiments/glibc/selected-obsidian-closure/recipe/run-explicit-generation-cpu-validation.sh
+   python \
+     experiments/glibc/selected-obsidian-closure/recipe/inspect-gtk-pixbuf-runtime-capability.py
 then
   analysis_rc=0
 else
@@ -324,26 +276,13 @@ for f in \
   "$OUT/failure-stage.txt" \
   "$OUT/next-state.txt" \
   "$OUT/summary.tsv" \
-  "$OUT/runtime-root-contract.tsv" \
-  "$OUT/runtime-snapshot.tsv" \
-  "$OUT/runtime-cleanup.status" \
-  "$OUT/capture-exit-status.txt" \
-  "$OUT/runtime-contract.tsv" \
-  "$OUT/launch-script-identity.tsv" \
-  "$OUT/launch-contract/launch-environment.tsv" \
-  "$OUT/launch-contract/argv.txt" \
-  "$OUT/process-contract.tsv" \
-  "$OUT/missing-expected-mapped-paths.tsv" \
-  "$OUT/unexpected-mapped-paths.tsv" \
-  "$OUT/mapped-identity-verification.tsv" \
-  "$OUT/mapped-path-classification.tsv" \
-  "$OUT/current-state-before.tsv" \
-  "$OUT/current-state-after.tsv" \
-  "$OUT/capture/class-counts.tsv" \
-  "$OUT/capture/processes.tsv" \
-  "$OUT/capture/last-processes.tsv" \
-  "$OUT/capture/launch.stdout" \
-  "$OUT/capture/launch.stderr" \
+  "$OUT/input-verification.tsv" \
+  "$OUT/failure-evidence.tsv" \
+  "$OUT/pixbuf-loader-cache.tsv" \
+  "$OUT/pixbuf-cache-references.tsv" \
+  "$OUT/pixbuf-loader-modules.tsv" \
+  "$OUT/gtk-data-capability.tsv" \
+  "$OUT/semantic-coverage-gaps.tsv" \
   "$OUT/claim-boundary.txt"
 do
   [ -e "$f" ] || continue
@@ -354,24 +293,19 @@ done
 tar czf ~/Downloads/$out.tgz $OUT
 ```
 
-## Expected next state after PASS
-
-```text
-READY_FOR_ATOMIC_ACTIVATION_IMPLEMENTATION
-```
-
 ## Stop line
 
 Do not:
 
 ```text
 rerun Phase B1-B9;
-change generation content or loader order in the short-path test;
+rerun B10 blindly;
+modify the immutable generation before inventory;
+copy the whole rootfs icon/MIME tree;
+add rootfs or broad-farm paths to an acceptance run;
 create current;
 change the promoted launcher;
-add broad-farm or rootfs paths;
-include excluded graphics objects in CPU mode;
-interpret the current path-length hypothesis as proven before rerun;
+follow archived SingletonSocket symlinks during extraction;
 garbage-collect the generation or object store;
 start PyMOL by extending the broad farm.
 ```
