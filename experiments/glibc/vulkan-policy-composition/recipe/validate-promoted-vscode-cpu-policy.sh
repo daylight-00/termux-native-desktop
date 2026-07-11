@@ -9,7 +9,7 @@ APP=${APP:-$HOME/gl/apps/vscode}
 DURATION_SECONDS=${DURATION_SECONDS:-20}
 POLL_SLEEP_SECONDS=${POLL_SLEEP_SECONDS:-0.1}
 
-for command in git bash awk grep mkdir date readlink pgrep sort tr sed wc tail; do
+for command in git bash awk grep mkdir date readlink pgrep sort tr sed wc tail sleep; do
     command -v "$command" >/dev/null 2>&1 || {
         printf 'missing required command: %s\n' "$command" >&2
         exit 1
@@ -47,6 +47,11 @@ fi
     printf 'missing VS Code entrypoint: %s\n' "$APP/bin/code" >&2
     exit 1
 }
+
+if [ "${LIBGL_ALWAYS_SOFTWARE+x}" = x ]; then
+    printf 'LIBGL_ALWAYS_SOFTWARE must be unset before the CPU policy gate\n' >&2
+    exit 2
+fi
 
 existing=$(pgrep -af "$APP/" || true)
 if [ -n "$existing" ]; then
@@ -174,7 +179,7 @@ capture_environment() {
             >>"$OUT/process-environment-selected.tsv"
         selected_count=$((selected_count + 1))
     done < <(
-        grep -E '^(GL_GPU|VK_DRIVER_FILES|VK_ICD_FILENAMES|LD_LIBRARY_PATH|LD_PRELOAD|LIBGL_ALWAYS_SOFTWARE|MESA_LOADER_DRIVER_OVERRIDE)=' "$raw" \
+        grep -E '^(GL_GPU|VK_DRIVER_FILES|VK_ICD_FILENAMES|LD_LIBRARY_PATH|LD_PRELOAD|LIBGL_ALWAYS_SOFTWARE|MESA_LOADER_DRIVER_OVERRIDE|GALLIUM_DRIVER)=' "$raw" \
             | sort || true
     )
 
@@ -183,6 +188,12 @@ capture_environment() {
         >>"$OUT/process-environment-summary.tsv"
 }
 
+# Deliberately inject incompatible bionic/provider and bridge policy. The live
+# promoted launcher must sanitize all four values before applying GL_GPU=0.
+VK_DRIVER_FILES=/bionic/freedreno.json \
+VK_ICD_FILENAMES=/bionic/freedreno.json \
+MESA_LOADER_DRIVER_OVERRIDE=llvmpipe \
+GALLIUM_DRIVER=llvmpipe \
 GL_GPU=0 "$LAUNCHER" \
     --user-data-dir "$OUT/user-data" \
     --extensions-dir "$OUT/extensions" \
@@ -246,52 +257,83 @@ record_gate() {
     [ "$state" = PASS ] || failures=$((failures + 1))
 }
 
+process_observed() {
+    local class=$1
+    awk -F $'\t' -v c="$class" \
+        'NR > 1 && $4 == c { found=1 } END { exit found ? 0 : 1 }' \
+        "$OUT/processes.tsv"
+}
+
+environment_read_attempt_succeeded() {
+    local class=$1
+    awk -F $'\t' -v c="$class" \
+        'NR > 1 && $3 == c && $4 == "READ_OK" { found=1 }
+         END { exit found ? 0 : 1 }' \
+        "$OUT/process-environment-summary.tsv"
+}
+
 [ "$MAIN_SEEN" = 1 ] && record_gate main_observed PASS || record_gate main_observed FAIL
 [ "$ZYGOTE_SEEN" = 1 ] && record_gate zygote_observed PASS || record_gate zygote_observed FAIL
 [ "$RENDERER_SEEN" = 1 ] && record_gate renderer_observed PASS || record_gate renderer_observed FAIL
 
-for required_class in main zygote renderer; do
-    if awk -F $'\t' -v c="$required_class" \
-        'NR > 1 && $3 == c && $4 == "READ_OK" { found=1 } END { exit found ? 0 : 1 }' \
-        "$OUT/process-environment-summary.tsv"; then
-        record_gate "${required_class}_environment_readable" PASS
+if environment_read_attempt_succeeded main; then
+    record_gate main_environment_readable PASS
+else
+    record_gate main_environment_readable FAIL
+fi
+
+for child_class in zygote renderer; do
+    if process_observed "$child_class"; then
+        record_gate "${child_class}_process_observed" PASS
     else
-        record_gate "${required_class}_environment_readable" FAIL
+        record_gate "${child_class}_process_observed" FAIL
+    fi
+
+    if environment_read_attempt_succeeded "$child_class"; then
+        record_gate "${child_class}_environment_read_attempt" PASS
+    else
+        record_gate "${child_class}_environment_read_attempt" FAIL
     fi
 done
 
-if awk -F $'\t' 'NR > 1 && $4 == "GL_GPU" && $5 != "0" { bad=1 } END { exit bad ? 0 : 1 }' \
-    "$OUT/process-environment-selected.tsv"; then
-    record_gate gl_gpu_values_are_zero FAIL
+if awk -F $'\t' 'NR > 1 && $4 == "GL_GPU" && $5 != "0" { bad=1 }
+    END { exit bad ? 0 : 1 }' "$OUT/process-environment-selected.tsv"; then
+    record_gate all_observable_gl_gpu_values_zero FAIL
 else
-    record_gate gl_gpu_values_are_zero PASS
+    record_gate all_observable_gl_gpu_values_zero PASS
 fi
 
-if awk -F $'\t' 'NR > 1 && $3 == "main" && $4 == "GL_GPU" && $5 == "0" { found=1 } END { exit found ? 0 : 1 }' \
-    "$OUT/process-environment-selected.tsv"; then
+if awk -F $'\t' 'NR > 1 && $3 == "main" && $4 == "GL_GPU" && $5 == "0" { found=1 }
+    END { exit found ? 0 : 1 }' "$OUT/process-environment-selected.tsv"; then
     record_gate main_gl_gpu_zero_observed PASS
 else
     record_gate main_gl_gpu_zero_observed FAIL
 fi
 
 if grep -Eq $'\t(VK_DRIVER_FILES|VK_ICD_FILENAMES)\t' "$OUT/process-environment-selected.tsv"; then
-    record_gate explicit_vulkan_policy_absent FAIL
+    record_gate observable_explicit_vulkan_policy_absent FAIL
 else
-    record_gate explicit_vulkan_policy_absent PASS
+    record_gate observable_explicit_vulkan_policy_absent PASS
 fi
 
-if grep -Eq $'\t(MESA_LOADER_DRIVER_OVERRIDE|LIBGL_ALWAYS_SOFTWARE|LD_LIBRARY_PATH)\t' \
+if grep -Eq $'\t(MESA_LOADER_DRIVER_OVERRIDE|GALLIUM_DRIVER|LIBGL_ALWAYS_SOFTWARE|LD_LIBRARY_PATH)\t' \
     "$OUT/process-environment-selected.tsv"; then
-    record_gate graphics_and_library_overrides_absent FAIL
+    record_gate observable_graphics_and_library_overrides_absent FAIL
 else
-    record_gate graphics_and_library_overrides_absent PASS
+    record_gate observable_graphics_and_library_overrides_absent PASS
 fi
 
-if awk -F $'\t' 'NR > 1 && $4 == "LD_PRELOAD" && $5 != "" { bad=1 } END { exit bad ? 0 : 1 }' \
-    "$OUT/process-environment-selected.tsv"; then
-    record_gate ld_preload_nonempty_absent FAIL
+if awk -F $'\t' 'NR > 1 && $4 == "LD_PRELOAD" && $5 != "" { bad=1 }
+    END { exit bad ? 0 : 1 }' "$OUT/process-environment-selected.tsv"; then
+    record_gate observable_ld_preload_nonempty_absent FAIL
 else
-    record_gate ld_preload_nonempty_absent PASS
+    record_gate observable_ld_preload_nonempty_absent PASS
+fi
+
+if grep -F '/bionic/' "$OUT/process-environment-selected.tsv" >/dev/null; then
+    record_gate observable_injected_bionic_paths_absent FAIL
+else
+    record_gate observable_injected_bionic_paths_absent PASS
 fi
 
 main_cmdlines="$OUT/main-cmdlines.txt"
@@ -326,6 +368,9 @@ else
     record_gate no_fatal_diagnostic PASS
 fi
 
+zygote_max_entries=$(awk -F $'\t' '$3 == "zygote" && $5 + 0 > max { max=$5 + 0 } END { print max + 0 }' "$OUT/process-environment-summary.tsv")
+renderer_max_entries=$(awk -F $'\t' '$3 == "renderer" && $5 + 0 > max { max=$5 + 0 } END { print max + 0 }' "$OUT/process-environment-summary.tsv")
+
 {
     printf 'field\tvalue\n'
     printf 'branch\t%s\n' "$branch"
@@ -337,6 +382,9 @@ fi
     printf 'zygote_seen\t%s\n' "$ZYGOTE_SEEN"
     printf 'renderer_seen\t%s\n' "$RENDERER_SEEN"
     printf 'gpu_seen_observational\t%s\n' "$GPU_SEEN"
+    printf 'zygote_max_observable_environment_entries\t%s\n' "$zygote_max_entries"
+    printf 'renderer_max_observable_environment_entries\t%s\n' "$renderer_max_entries"
+    printf 'child_environment_value_claim\tNOT_MADE_WHEN_PROC_ENVIRON_EMPTY\n'
     printf 'captured_processes\t%s\n' "$(awk 'NR > 1 { count++ } END { print count + 0 }' "$OUT/processes.tsv")"
     printf 'gate_failures\t%s\n' "$failures"
 } >"$OUT/summary.tsv"
@@ -358,7 +406,11 @@ printf '\n===== gates =====\n'
 cat "$OUT/gates.tsv"
 printf '\n===== process identities =====\n'
 cat "$OUT/processes.tsv"
-printf '\n===== selected environment =====\n'
+printf '\n===== environment observation summary =====\n'
+cat "$OUT/process-environment-summary.tsv"
+printf '\n===== selected observable environment =====\n'
 cat "$OUT/process-environment-selected.tsv"
+printf '\n===== main cmdline =====\n'
+cat "$OUT/main-cmdlines.txt"
 printf '\n===== launch stderr =====\n'
 sed -n '1,200p' "$OUT/launch.stderr" || true
