@@ -140,7 +140,13 @@ while IFS=$'\t' read -r path_class path; do
             ;;
     esac
 
-    if [ -f "$path" ]; then
+    if [[ "$path" == /memfd:allocation* ]]; then
+        package=RUNTIME_MEMORY
+        version=NOT_APPLICABLE
+        state=RUNTIME_ANONYMOUS_MAPPING
+        sha=NOT_APPLICABLE
+        build_id=NOT_APPLICABLE
+    elif [ -f "$path" ]; then
         state=PRESENT
         sha=$(sha256sum "$path" | awk '{print $1}')
         build_id=$(build_id_of "$path")
