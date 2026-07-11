@@ -8,14 +8,15 @@ LAUNCHER=${LAUNCHER:?set LAUNCHER to the promoted application launcher}
 APP_LABEL=${APP_LABEL:-Electron}
 PYTHON=${PYTHON:-$PREFIX/bin/python}
 QUERY_HELPER=${QUERY_HELPER:-$SCRIPT_DIR/query-cdp-system-info.py}
-USER_DATA_DIR=${USER_DATA_DIR:?set USER_DATA_DIR to an isolated application data directory}
+USER_DATA_DIR=${USER_DATA_DIR:?set USER_DATA_DIR to the actual isolated application data directory}
+CONFIG_HOME=${CONFIG_HOME:-$(dirname "$USER_DATA_DIR")}
 OUT=${OUT:-$PREFIX/tmp/tnd-vulkan-policy-composition/electron-cdp-gpu-identity-$(date +%Y%m%d-%H%M%S)}
 DURATION_SECONDS=${DURATION_SECONDS:-30}
 POLL_SLEEP_SECONDS=${POLL_SLEEP_SECONDS:-0.1}
 CONTROL_GL_GPU=${CONTROL_GL_GPU:-1}
 VULKAN_POLICY_MODE=${VULKAN_POLICY_MODE:-explicit-freedreno}
 
-for command in awk date pgrep readlink sort tr sed grep cp mv rm wc sleep; do
+for command in awk date dirname pgrep readlink sort tr sed grep cp mv rm wc sleep; do
     command -v "$command" >/dev/null 2>&1 || {
         printf 'missing required command: %s\n' "$command" >&2
         exit 1
@@ -54,19 +55,27 @@ esac
     exit 2
 }
 
+case "$VULKAN_POLICY_MODE" in
+    explicit-freedreno|implicit-discovery) ;;
+    *)
+        printf 'unsupported VULKAN_POLICY_MODE: %s\n' "$VULKAN_POLICY_MODE" >&2
+        exit 2
+        ;;
+esac
+
 if [ "${LIBGL_ALWAYS_SOFTWARE+x}" = x ]; then
     printf 'LIBGL_ALWAYS_SOFTWARE must be unset for this probe\n' >&2
     exit 2
 fi
 
-existing=$(pgrep -af "$APP/" || true)
+existing=$(pgrep -af "$APP/|$USER_DATA_DIR" || true)
 if [ -n "$existing" ]; then
     printf 'existing %s processes detected; close them before the probe:\n' "$APP_LABEL" >&2
     printf '%s\n' "$existing" >&2
     exit 1
 fi
 
-mkdir -p "$OUT" "$USER_DATA_DIR"
+mkdir -p "$OUT" "$CONFIG_HOME" "$USER_DATA_DIR"
 ACTIVE_PORT_FILE="$USER_DATA_DIR/DevToolsActivePort"
 STALE_ACTIVE_PORT=
 
@@ -78,12 +87,14 @@ fi
 printf 'app: %s\n' "$APP" | tee "$OUT/app-path.txt"
 printf 'entrypoint: %s\n' "$ENTRYPOINT" | tee "$OUT/entrypoint-path.txt"
 printf 'launcher: %s\n' "$LAUNCHER" | tee "$OUT/launcher-path.txt"
+printf 'config home: %s\n' "$CONFIG_HOME" | tee "$OUT/config-home.txt"
 printf 'user data dir: %s\n' "$USER_DATA_DIR" | tee "$OUT/user-data-dir.txt"
 printf 'duration seconds: %s\n' "$DURATION_SECONDS" | tee "$OUT/duration.txt"
 printf 'poll sleep seconds: %s\n' "$POLL_SLEEP_SECONDS" | tee "$OUT/poll-sleep.txt"
 printf 'GL_GPU=%s\n' "$CONTROL_GL_GPU" | tee "$OUT/mode.txt"
 printf 'VULKAN_POLICY_MODE=%s\n' "$VULKAN_POLICY_MODE" | tee -a "$OUT/mode.txt"
 
+XDG_CONFIG_HOME="$CONFIG_HOME" \
 GL_GPU="$CONTROL_GL_GPU" \
 VULKAN_POLICY_MODE="$VULKAN_POLICY_MODE" \
 "$LAUNCHER" \
@@ -184,6 +195,7 @@ done
 
 [ -n "$port" ] || {
     printf 'DevToolsActivePort did not provide a port within %s seconds\n' "$DURATION_SECONDS" >&2
+    printf 'expected path: %s\n' "$ACTIVE_PORT_FILE" >&2
     printf 'partial evidence: %s\n' "$OUT" >&2
     exit 1
 }
@@ -230,7 +242,6 @@ printf 'PASS\n' >"$OUT/probe.status"
 
 printf '\n%s CDP GPU identity probe: PASS\n' "$APP_LABEL"
 printf 'evidence: %s\n' "$OUT"
-
 printf '\n===== GPU devices =====\n'
 cat "$OUT/gpu-devices.tsv"
 printf '\n===== GPU aux attributes =====\n'
