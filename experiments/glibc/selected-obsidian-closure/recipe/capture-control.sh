@@ -2,6 +2,8 @@
 set -euo pipefail
 
 APP=${APP:-$HOME/gl/apps/obsidian}
+APP_ENTRYPOINT=${APP_ENTRYPOINT:-$APP/obsidian}
+CONTROL_NAME=${CONTROL_NAME:-Obsidian}
 LAUNCHER=${LAUNCHER:-$HOME/gl/bin/obsidian-app}
 ROOTFS=${ROOTFS:-$PREFIX/var/lib/proot-distro/containers/debian/rootfs}
 OUT=${OUT:-$PREFIX/tmp/selected-obsidian-control-$(date +%Y%m%d-%H%M%S)}
@@ -19,13 +21,13 @@ for command in readelf sha256sum file dpkg-query proot-distro; do
     }
 done
 
-[ -x "$APP/obsidian" ] || {
-    printf 'missing Obsidian payload entrypoint: %s\n' "$APP/obsidian" >&2
+[ -x "$APP_ENTRYPOINT" ] || {
+    printf 'missing %s payload entrypoint: %s\n' "$CONTROL_NAME" "$APP_ENTRYPOINT" >&2
     exit 1
 }
 
 [ -x "$LAUNCHER" ] || {
-    printf 'missing Obsidian launcher: %s\n' "$LAUNCHER" >&2
+    printf 'missing %s launcher: %s\n' "$CONTROL_NAME" "$LAUNCHER" >&2
     exit 1
 }
 
@@ -39,7 +41,7 @@ esac
 
 existing=$(pgrep -af "$APP/" || true)
 if [ -n "$existing" ]; then
-    printf 'existing Obsidian AppDir processes detected; close them before control capture:\n' >&2
+    printf 'existing %s processes detected; close them before control capture:\n' "$CONTROL_NAME" >&2
     printf '%s\n' "$existing" >&2
     exit 1
 fi
@@ -55,7 +57,7 @@ printf 'mode: GL_GPU=%s\n' "$CONTROL_GL_GPU" | tee "$OUT/mode.txt"
 printf 'startup timeout seconds: %s\n' "$STARTUP_TIMEOUT_SECONDS" | tee "$OUT/startup-contract.txt"
 printf 'survival seconds: %s\n' "$SURVIVAL_SECONDS" | tee "$OUT/survival-contract.txt"
 
-printf '\n===== launch Obsidian control =====\n'
+printf '\n===== launch %s control =====\n' "$CONTROL_NAME"
 printf 'Observe the window during topology and survival gates.\n'
 
 GL_GPU="$CONTROL_GL_GPU" \
