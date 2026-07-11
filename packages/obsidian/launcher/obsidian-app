@@ -7,9 +7,7 @@ source "$HOME/gl/env"
 APP="$HOME/gl/apps/obsidian"
 
 export APPDIR="$APP"
-
 export PATH="$HOME/gl/shims:$APP:$APP/usr/sbin:$PATH"
-
 export XDG_DATA_DIRS="$APP/usr/share:${XDG_DATA_DIRS:-}"
 
 if [ -d "$APP/usr/share/glib-2.0/schemas" ]; then
@@ -17,8 +15,11 @@ if [ -d "$APP/usr/share/glib-2.0/schemas" ]; then
 fi
 
 GPU_FLAGS=(--disable-gpu)
+FREEDRENO_PROFILE="$HOME/gl/policy/vulkan/freedreno.sh"
 
-if [ "${GL_GPU:-1}" = "1" ] && [ -n "${VK_DRIVER_FILES:-}" ]; then
+if [ "${GL_GPU:-1}" = "1" ] && \
+   [ -r "$FREEDRENO_PROFILE" ] && \
+   source "$FREEDRENO_PROFILE"; then
     GPU_FLAGS=(
         --disable-gpu-sandbox
         --ignore-gpu-blocklist
