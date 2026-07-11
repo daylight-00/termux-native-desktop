@@ -170,7 +170,7 @@ while (( SECONDS < deadline )); do
 done
 
 printf '\n===== launch-root state transitions =====\n'
-awk -F '\t' '
+awk -F 
     NR == 1 { next }
     !seen || $3 != previous {
         print
@@ -182,6 +182,49 @@ awk -F '\t' '
 printf '\n===== process identity/parent transitions =====\n'
 printf 'timestamp\tpid\tppid\tclass\tcmdline\n'
 awk -F '\t' '
+    NR == 1 { next }
+    {
+        state = $5 "\t" $6
+        if (!($4 in previous) || previous[$4] != state) {
+            print $2 "\t" $4 "\t" $5 "\t" $6 "\t" $7
+            previous[$4] = state
+        }
+    }
+' "$OUT/process-topology.tsv"
+
+printf '\n===== launch stderr =====\n'
+sed -n '1,160p' "$OUT/launch.stderr" || true
+
+printf '\nprobe complete\n'
+printf 'evidence: %s\n' "$OUT"
+\t' '
+    NR == 1 { next }
+    !seen || $3 != previous {
+        print
+        previous = $3
+        seen = 1
+    }
+' "$OUT/launch-state.tsv"
+
+printf '\n===== process identity/parent transitions =====\n'
+printf 'timestamp\tpid\tppid\tclass\tcmdline\n'
+awk -F 
+    NR == 1 { next }
+    {
+        state = $5 "\t" $6
+        if (!($4 in previous) || previous[$4] != state) {
+            print $2 "\t" $4 "\t" $5 "\t" $6 "\t" $7
+            previous[$4] = state
+        }
+    }
+' "$OUT/process-topology.tsv"
+
+printf '\n===== launch stderr =====\n'
+sed -n '1,160p' "$OUT/launch.stderr" || true
+
+printf '\nprobe complete\n'
+printf 'evidence: %s\n' "$OUT"
+\t' '
     NR == 1 { next }
     {
         state = $5 "\t" $6
