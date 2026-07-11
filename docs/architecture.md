@@ -73,7 +73,8 @@ Every glibc launcher sources `modules/gl/overlay/home/gl/env` through the live `
 
 - uses a separate `$PREFIX/tmp/gl-runtime` runtime directory;
 - removes inherited `VK_ICD_FILENAMES` and `VK_DRIVER_FILES` so a glibc process cannot accidentally consume the bionic session ICD;
-- does not select a glibc Vulkan provider globally;
+- removes inherited `MESA_LOADER_DRIVER_OVERRIDE` and `GALLIUM_DRIVER` so the bionic session's OpenGL bridge/device policy cannot become a glibc default;
+- does not select a glibc Vulkan provider or OpenGL bridge globally;
 - points TLS consumers at the Termux certificate bundle;
 - does not set `LD_LIBRARY_PATH`;
 - leaves the bionic session isolated from glibc library lookup state.
@@ -89,7 +90,7 @@ That source-only profile exports both loader variables to the managed glibc Free
 The architecture therefore keeps these dimensions separate:
 
 ```text
-ABI sanitation
+bionic-session graphics-policy sanitation
 Vulkan provider selection
 OpenGL-to-Vulkan bridge selection
 application GPU feature mode
@@ -135,7 +136,7 @@ glibc app with explicit hardware profile
   -> Adreno 730
 ```
 
-The session-wide bionic policy and glibc provider profiles are deliberately separate. `startxfce-x11` owns the bionic ICD and bionic Zink session policy. `~/gl/env` only removes those variables at the glibc boundary. Individual glibc launch compositions then choose whether to apply explicit Freedreno, another validated provider policy, or no explicit provider selection.
+The session-wide bionic policy and glibc provider profiles are deliberately separate. `startxfce-x11` owns the bionic ICD and bionic Zink session policy. `~/gl/env` removes both the bionic Vulkan-provider pair and the bionic OpenGL bridge/Gallium policy at the glibc boundary. Individual glibc launch compositions then choose whether to apply explicit Freedreno, Zink, another validated provider/bridge policy, or no explicit graphics policy.
 
 For the captured VS Code control, explicit Freedreno selected Turnip/Adreno 730, while implicit discovery selected LVP/llvmpipe with the same ANGLE Vulkan feature mode. This is why the promoted VS Code GPU branch applies the explicit profile instead of relying on loader discovery.
 
