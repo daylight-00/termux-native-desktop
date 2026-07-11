@@ -10,6 +10,9 @@ modules/gl/overlay/home/gl/
 ├── bin/
 │   ├── gl-farm
 │   └── gl-run
+├── policy/
+│   └── vulkan/
+│       └── freedreno.sh
 ├── shims/
 │   └── xdg-open
 └── toolchain/
@@ -24,7 +27,22 @@ modules/gl/overlay/home/gl/
 
 These files map to the same relative paths under `$HOME/gl/`.
 
-`env` defines the glibc application runtime contract. `gl-run` adds the Zink-specific OpenGL execution policy. `gl-farm` regenerates the filtered Debian-rootfs-derived shared-library view and refreshes the glibc loader cache. The toolchain wrappers expose Termux glibc target tools safely from the Bionic host shell.
+`env` defines the provider-neutral glibc application baseline. It removes inherited bionic Vulkan provider variables as ABI sanitation, but does not select a glibc Vulkan provider.
+
+`policy/vulkan/freedreno.sh` is a source-only explicit hardware-provider profile. Consumers source it only when they deliberately require the managed glibc Freedreno/Turnip Vulkan path.
+
+`gl-run` composes that explicit Vulkan provider profile with the Zink-specific OpenGL bridge mode. `gl-farm` regenerates the filtered Debian-rootfs-derived shared-library view and refreshes the glibc loader cache. The toolchain wrappers expose Termux glibc target tools safely from the Bionic host shell.
+
+This separation preserves four distinct responsibilities:
+
+```text
+shared glibc baseline sanitation
+explicit Vulkan provider selection
+OpenGL-to-Vulkan bridge selection
+application feature/argv mode
+```
+
+Do not collapse them back into one shared environment side effect.
 
 ## Explicit non-ownership
 
