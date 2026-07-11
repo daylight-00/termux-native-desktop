@@ -14,8 +14,9 @@
 - **The expanded current-head pre-deploy and live installation receipts passed.** Source syntax, repository policy regression, deploy smoke/dry-run, all managed live targets, the four-variable bionic graphics-policy sanitation set, explicit Freedreno selection, bridge neutrality, and profile-variable privacy all passed with zero failures at `5ed76ec9c7409a141da02a28b5297b8b71965467`.
 - **The corrected current-head `gl-run` path is validated end to end.** At `147c7e2fc9b414a6be5561589293c01820d5f7f6`, with hostile inherited `MESA_LOADER_DRIVER_OVERRIDE=llvmpipe` and `GALLIUM_DRIVER=llvmpipe`, the live promoted launcher still produced a glibc GLX/OpenGL 4.6 context reporting `zink Vulkan 1.4(Turnip Adreno (TM) 730)` with zero gate failures.
 - **The recovered glibc substrate remains 2.42 and held.** The current renderer receipt was captured under the intentionally held `glibc 2.42 aarch64` package state; the hold remains incident containment rather than a permanent lifecycle design.
-- **The first strengthened VS Code GPU run was a validator false negative, not a runtime failure.** The launcher/node/main environment showed `GL_GPU=1`, the exact managed Vulkan pair, no observable bionic/Zink/Gallium leak, and the correct GPU argv; the independent CDP phase selected Turnip/Adreno 730 with managed-provider and KGSL mappings. The six failed gates incorrectly required exact values from zygote/GPU `/proc/<pid>/environ` views that contained zero or effectively zero entries.
-- **The corrected VS Code GPU gate separates environment observability from effective graphics identity.** Exact values are required for the observable launch-wrapper/node-cli/main chain; zygote/GPU require process observation and a successful read attempt, while CDP plus mappings prove the effective selected provider/device. Empty child `/proc/environ` content is not interpreted as either a value mismatch or proof of absence.
+- **The current promoted VS Code GPU gate is closed.** At `bea4062df2e132639ea08c8bb94abc8235fb0a96`, all 44 environment, argv, topology, CDP identity, feature-mode, provider-map, and KGSL correlation gates passed. The observable launcher/node/main chain showed `GL_GPU=1`, the exact managed glibc ICD pair, and no bionic/Zink/Gallium leak; CDP selected Turnip/Adreno 730 under ANGLE Vulkan and GaneshVulkan.
+- **Child `/proc/environ` is treated as an observability boundary.** Empty or near-empty zygote/GPU environment views are not interpreted as either value mismatch or proof of absence. Exact values are required only for meaningful observable process environments; effective GPU identity is proven through CDP and process mappings.
+- **The promoted VS Code CPU gate is strengthened before execution.** It now injects hostile bionic Vulkan and llvmpipe bridge/Gallium policy, requires observable sanitation plus `GL_GPU=0`, exact `--disable-gpu`, absence of GPU-enablement flags, viable main/zygote/renderer topology, and bounded main-process survival. Child exact environment values are not required when `/proc/environ` is empty.
 - **Mutable checkout symlinks are also an activation path.** Pulling source changes immediately updates existing live leaves such as `~/gl/env`; no new leaf or `tools/deploy` run was required for the sanitation correction. The general atomic-activation problem remains open.
 - **The current glibc Mesa 26.1.x build policy uses `-Dfreedreno-kmds=msm,kgsl`.** In the investigated builds, the working/broken split tracked whether the Turnip ICD retained its libdrm dependency. The exact low-level crash mechanism remains open.
 - **The desktop session source is recovered and tracked.** `modules/desktop/overlay/home/.local/bin/startxfce-x11` records the current two-world session contract, clean X-server startup, Unix-socket X11, bionic ICD/Zink policy, optional Picom path, and clean teardown behavior.
@@ -39,11 +40,12 @@
 - `docs/refactor/0083-expanded-graphics-policy-predeploy-and-live-installation-pass.md` — current-head source/live environment closure after the sanitation correction.
 - `docs/refactor/0084-current-head-gl-run-regression-pass-and-strengthened-vscode-gpu-gate.md` — hostile-policy renderer regression PASS and combined VS Code environment/identity gate.
 - `docs/refactor/0085-vscode-child-proc-environ-observability-false-negative.md` — invalid child exact-environment assumption and corrected observability model.
+- `docs/refactor/0086-current-vscode-gpu-environment-and-primary-identity-pass.md` — canonical current-source VS Code GPU environment/argv and selected-device PASS.
 - `docs/refactor/` — full repository migration source of truth.
 
 ## Open questions
 
-- A clean corrected current-head VS Code GPU receipt, the VS Code CPU gate, and Obsidian GPU/CPU gates remain to close the scoped graphics-policy transaction.
+- The promoted VS Code CPU gate and Obsidian GPU/CPU gates remain to close the scoped graphics-policy transaction.
 - The current source-linked deployment model lacks an atomic activation boundary for multi-file transactions that modify existing leaves and introduce new required leaves.
 - Ownership of other inherited Mesa/session variables such as `vblank_mode` has not been changed; each requires separate evidence.
 - Hardware video decoding remains unresolved across the investigated MediaCodec/Vulkan, VA-API/V4L2, FFmpeg/mpv, and Chromium paths.
@@ -56,7 +58,7 @@
 - [x] pass the expanded current-head no-mutation pre-deploy gate
 - [x] pass the expanded live graphics-policy installation receipt
 - [x] rerun the promoted `gl-run` Zink/Turnip renderer gate
-- [ ] pass the corrected promoted VS Code GPU environment/identity gate
+- [x] pass the corrected promoted VS Code GPU environment/identity gate
 - [ ] validate promoted VS Code CPU policy/argv behavior
 - [ ] validate promoted Obsidian GPU and CPU paths
 - [ ] close the scoped graphics-policy promotion transaction
