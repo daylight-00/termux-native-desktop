@@ -82,10 +82,12 @@ export XDG_CONFIG_DIRS="$PREFIX/etc/xdg"
 export XDG_RUNTIME_DIR="$TMPDIR"
 
 # Vulkan ICD (Turnip) — BIONIC build, for bionic GL clients (picom, chromium).
-# WARNING: this is inherited by everything started from the session, including
-# glibc launchers. That is safe ONLY because ~/gl/env re-pins
-# VK_ICD_FILENAMES/VK_DRIVER_FILES to the glibc ICD. A glibc process that
-# loads this bionic .so dies with "libm.so: invalid ELF header".
+# WARNING: this and the session-wide Zink override below are inherited by
+# everything started from the session, including glibc launchers. That is safe
+# only because ~/gl/env clears the bionic VK pair and OpenGL bridge/Gallium
+# policy before a glibc consumer composes its own provider and bridge choices.
+# A glibc process that loads the bionic ICD dies with an ABI error such as
+# "libm.so: invalid ELF header".
 FREEDRENO_ICD="$PREFIX/share/vulkan/icd.d/freedreno_icd.aarch64.json"
 if [ -r "$FREEDRENO_ICD" ]; then
     export VK_ICD_FILENAMES="$FREEDRENO_ICD"   # legacy loader variable
@@ -168,7 +170,7 @@ echo "XFCE session started"
 echo "  DISPLAY=$DISPLAY"
 echo "  GL (bionic): MESA_LOADER_DRIVER_OVERRIDE=$MESA_LOADER_DRIVER_OVERRIDE  (check: $LOGDIR/glxinfo.log)"
 echo "  VK (bionic): ${VK_DRIVER_FILES:-<unset>}"
-echo "  glibc apps get their own env from ~/gl/env"
+echo "  glibc apps sanitize session graphics policy through ~/gl/env"
 echo "  Logs: $LOGDIR   |   stop with: startxfce-x11 stop"
 
 wait
