@@ -1,20 +1,35 @@
 #!/data/data/com.termux/files/usr/bin/bash
 # code — launch VS Code (glibc tar.gz build in ~/gl/apps/vscode).
-# GPU: Turnip Vulkan via ANGLE. Toggle off with GL_GPU=0.
+# GPU: explicit Turnip Vulkan via ANGLE. Toggle off with GL_GPU=0.
 set -u -o pipefail
+
 source "$HOME/gl/env"
 export PATH="$HOME/gl/shims:$PATH"
+
 APP="$HOME/gl/apps/vscode"
 [ -x "$APP/bin/code" ] || { echo "vscode not found: $APP" >&2; exit 1; }
 
-GPU_FLAGS="--disable-gpu"
-if [ "${GL_GPU:-1}" = "1" ] && [ -n "${VK_DRIVER_FILES:-}" ]; then
-  # ICD already pinned by ~/gl/env; just enable the ANGLE-Vulkan path.
-  GPU_FLAGS="--disable-gpu-sandbox --ignore-gpu-blocklist --enable-features=Vulkan --use-gl=angle --use-angle=vulkan --disable-gpu-vsync"
+GPU_FLAGS=(--disable-gpu)
+FREEDRENO_PROFILE="$HOME/gl/policy/vulkan/freedreno.sh"
+
+if [ "${GL_GPU:-1}" = "1" ] && \
+   [ -r "$FREEDRENO_PROFILE" ] && \
+   source "$FREEDRENO_PROFILE"; then
+  GPU_FLAGS=(
+    --disable-gpu-sandbox
+    --ignore-gpu-blocklist
+    --enable-features=Vulkan
+    --use-gl=angle
+    --use-angle=vulkan
+    --disable-gpu-vsync
+  )
 fi
 
 export SHELL="$PREFIX/bin/bash"
 # no cd: relative path args stay relative to the caller's PWD
 # via bin/code (not the ELF): keeps native CLI semantics (window reuse, --wait)
 exec env LD_PRELOAD= bash "$APP/bin/code" \
-  --disable-dev-shm-usage --ozone-platform=x11 $GPU_FLAGS "$@"
+  --disable-dev-shm-usage \
+  --ozone-platform=x11 \
+  "${GPU_FLAGS[@]}" \
+  "$@"
