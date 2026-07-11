@@ -11,11 +11,25 @@ packages/vscode/launcher/code
 
 The launcher:
 
-- sources the `gl` runtime environment;
+- sources the provider-neutral `gl` runtime baseline;
 - uses the live payload under `$HOME/gl/apps/vscode`;
 - preserves caller working-directory semantics through the vendor CLI wrapper;
-- selects the validated ANGLE Vulkan path when glibc GPU support is available;
-- retains CPU fallback through `GL_GPU=0`.
+- when `GL_GPU=1`, sources the explicit glibc Freedreno Vulkan profile and enables the validated ANGLE Vulkan path only if that profile is available;
+- when `GL_GPU=0`, keeps both Vulkan provider variables absent and passes `--disable-gpu`;
+- falls back to `--disable-gpu` if the managed provider manifest is unavailable.
+
+The package owns the application feature decision. The shared `gl` baseline does not select a provider on its behalf.
+
+Validated hardware composition:
+
+```text
+ANGLE Vulkan
+    -> Freedreno / Turnip
+    -> Adreno 730
+    -> /dev/kgsl-3d0
+```
+
+The same-consumer implicit-discovery control selected LVP/llvmpipe, which is why the GPU branch deliberately applies the explicit provider profile.
 
 ## Runtime payload
 
