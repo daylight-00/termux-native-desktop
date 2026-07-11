@@ -9,7 +9,7 @@ APP=${APP:-$HOME/gl/apps/vscode}
 DURATION_SECONDS=${DURATION_SECONDS:-20}
 POLL_SLEEP_SECONDS=${POLL_SLEEP_SECONDS:-0.1}
 
-for command in git bash awk grep mkdir date readlink pgrep sort tr sed wc; do
+for command in git bash awk grep mkdir date readlink pgrep sort tr sed wc tail; do
     command -v "$command" >/dev/null 2>&1 || {
         printf 'missing required command: %s\n' "$command" >&2
         exit 1
@@ -262,9 +262,16 @@ done
 
 if awk -F $'\t' 'NR > 1 && $4 == "GL_GPU" && $5 != "0" { bad=1 } END { exit bad ? 0 : 1 }' \
     "$OUT/process-environment-selected.tsv"; then
-    record_gate gl_gpu_is_zero FAIL
+    record_gate gl_gpu_values_are_zero FAIL
 else
-    record_gate gl_gpu_is_zero PASS
+    record_gate gl_gpu_values_are_zero PASS
+fi
+
+if awk -F $'\t' 'NR > 1 && $3 == "main" && $4 == "GL_GPU" && $5 == "0" { found=1 } END { exit found ? 0 : 1 }' \
+    "$OUT/process-environment-selected.tsv"; then
+    record_gate main_gl_gpu_zero_observed PASS
+else
+    record_gate main_gl_gpu_zero_observed FAIL
 fi
 
 if grep -Eq $'\t(VK_DRIVER_FILES|VK_ICD_FILENAMES)\t' "$OUT/process-environment-selected.tsv"; then
@@ -290,10 +297,10 @@ fi
 main_cmdlines="$OUT/main-cmdlines.txt"
 awk -F $'\t' 'NR > 1 && $4 == "main" { print $6 }' "$OUT/processes.tsv" >"$main_cmdlines"
 
-if grep -F -- '--disable-gpu' "$main_cmdlines" >/dev/null; then
-    record_gate main_has_disable_gpu PASS
+if grep -Eq '(^|[[:space:]])--disable-gpu([[:space:]]|$)' "$main_cmdlines"; then
+    record_gate main_has_exact_disable_gpu PASS
 else
-    record_gate main_has_disable_gpu FAIL
+    record_gate main_has_exact_disable_gpu FAIL
 fi
 
 if grep -E -- '--use-angle=vulkan|--use-gl=angle|--enable-features=Vulkan|--disable-gpu-vsync|--ignore-gpu-blocklist|--disable-gpu-sandbox' \
