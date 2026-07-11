@@ -5,122 +5,186 @@
 ```text
 PHASE_B1_B8_CLOSED
 PHASE_B9_PASS
-PASSIVE_B10_TOPOLOGY_PASS
+PASSIVE_B10_STARTUP_PASS
 PASSIVE_B10_100_SECOND_SURVIVAL_PASS
 PASSIVE_B10_MAPS_CAPTURE_PASS
-PASSIVE_B10_MAPPED_IDENTITY_FAIL
+PASSIVE_MAP_SELECTION_DIAGNOSTIC_PASS
+CPU_MAP_CONTRACT_DECIDED
 INTERACTIVE_VAULT_OPEN_CAPABILITY_OPEN
-CPU_MAP_CONTRACT_DIAGNOSTIC_NEXT
+CONTROLLED_PIXBUF_DIAGNOSTIC_NEXT
 ```
 
-The immutable generation remains published but unactivated.
+The current immutable generation remains published but unactivated.
 
-## Passive B10 receipt
+## Passive map-selection diagnostic
+
+Authoritative receipt:
 
 ```text
-selected-obsidian-phase-b10-passive-short-runtime-cpu-validation-20260712-015859
+selected-obsidian-passive-map-selection-diagnostic-20260712-022611
 ```
 
 ```text
 archive SHA-256:
-    86330e210a0171fd1bf059eec600cc92eac963b0e468538be77b8819214905af
+    78c6cf04963ce02f25924b900d9122bc22abcb22d2c38e0b7ca4b583d68d8bbb
 
 captured head:
-    3b7cc1f4f33852f273bda77d681d035a5c3be668
-
-operator input:
-    NONE
+    7147e42bd204b85080e645498637ca2e8415d852
 
 analysis.status:
-    FAIL
+    PASS
 
-failure stage:
-    mapped_identity
-
-topology / survival / maps:
-    PASS / PASS / PASS
-
-current before / after:
-    ABSENT / ABSENT
+next-state:
+    READY_FOR_CPU_MAP_CONTRACT_REDESIGN
 ```
 
-Stable process topology:
+Input and identity result:
 
 ```text
-main       1
-zygote     3
-utility    1
-renderer   1
-GPU        0
+required inputs:
+    20 / 20 PASS
+
+selected content objects:
+    96 / 96 hash MATCH
+
+mapped source substitutes:
+    2 / 2 hash MATCH
 ```
 
-## Map result
+Passive runtime facts retained:
 
 ```text
+topology:
+    PASS
+
+100-second survival:
+    PASS
+
+maps capture:
+    PASS
+
+main / renderer / zygote / GPU:
+    1 / 1 / 3 / 0
+
 unique mapped regular objects:
     143
-
-selected object-store identities:
-    93 / 96
-
-expected app-local references:
-    11 / 11
-
-expected protected-world references:
-    18 / 18
 ```
 
-Selected content by kind:
+## Selected map states
 
 ```text
-ELF:
-    89 / 91 mapped from selected objects
+MAPPED_SELECTED_OBJECT:
+    93
 
-fonts:
-    3 / 4 mapped
+MAPPED_SOURCE_SUBSTITUTE:
+    2
 
-GSettings aggregate:
-    1 / 1 mapped
+NOT_MAPPED:
+    1
 ```
 
-Missing selected objects:
+By content kind:
 
 ```text
-libXdmcp.so.6.0.0
-DejaVuSansMono-Bold.ttf
-libXau.so.6.0.0
+selected ELF:
+    89 selected-object mappings
+    2 exact source substitutes
+
+selected fonts:
+    3 mapped
+    1 not demanded
+
+selected schema:
+    1 mapped
 ```
 
-The font is demand-unmapped and must not be treated as a loader failure.
+## Xau/Xdmcp decision
 
-The two ELF source paths were mapped from the world prefix instead:
+Substituted paths:
 
 ```text
-$PREFIX/glibc/lib/libXdmcp.so.6.0.0
 $PREFIX/glibc/lib/libXau.so.6.0.0
+$PREFIX/glibc/lib/libXdmcp.so.6.0.0
 ```
 
-Four selected copied consumers retain absolute DT_RPATH:
+Both mapped sources are byte-identical to their selected content objects.
+
+Four selected consumers retain:
 
 ```text
-libxcb-render.so.0.0.0
+DT_RPATH=$PREFIX/glibc/lib
+```
+
+```text
 libXrandr.so.2.2.0
 libXrender.so.1.3.0
+libxcb-render.so.0.0.0
 libxcb-shm.so.0.0.0
-
-DT_RPATH:
-    $PREFIX/glibc/lib
 ```
 
-Additional CPU-map exceptions:
+Six retained direct edges connect the RPATH consumers to Xau/Xdmcp.
+
+Decision:
 
 ```text
-excluded semantic mapping:
-    $PREFIX/glibc/lib/libX11-xcb.so.1.0.0
+Xau/Xdmcp next-generation ownership:
+    PROTECTED_WORLD_SUBSTRATE
 
-unmodelled app-local mapping:
-    $HOME/gl/apps/obsidian/libvk_swiftshader.so
+RPATH patch:
+    NO
+
+existing generation mutation:
+    NO
+
+next-generation duplicate materialization:
+    REMOVE
 ```
+
+The decision follows minimum manipulation: actual loader selection and bytes are already correct; forcing a different path would require transformed ELF identities and a larger validation surface.
+
+## Data map rule
+
+`DejaVuSansMono-Bold.ttf` was present and hash-correct but not used by the passive initial window.
+
+Correct rule:
+
+```text
+selected data presence/hash:
+    REQUIRED
+
+selected data mapping in every scenario:
+    OPTIONAL / DEMAND-LOADED
+
+if mapped:
+    selected identity required
+```
+
+## CPU graphics map correction
+
+Observed exceptions:
+
+```text
+$PREFIX/glibc/lib/libX11-xcb.so.1.0.0
+    new class: PROTECTED_WORLD_CPU_X11_BRIDGE
+
+$HOME/gl/apps/obsidian/libvk_swiftshader.so
+    new class: APP_LOCAL_CPU_AUXILIARY_ALLOWED
+```
+
+Exact CPU process policy still passed:
+
+```text
+main --disable-gpu:
+    exact
+
+renderer --disable-gpu-compositing:
+    present
+
+GPU process:
+    0
+```
+
+A graphics-related mapping is not equivalent to active GPU execution.
 
 Clean negative boundaries:
 
@@ -135,102 +199,106 @@ current:
     0
 ```
 
-## Next stage
-
-Recipe:
+## Corrected map classes
 
 ```text
-recipe/analyze-passive-map-selection-diagnostic.py
+REQUIRED_SELECTED_ELF
+REQUIRED_PROTECTED_WORLD
+REQUIRED_APP_LOCAL
+ALLOWED_APP_LOCAL_AUXILIARY
+DEMAND_LOADED_SELECTED_DATA
+RECEIPT_MUTABLE_STATE
+FORBIDDEN_PROVIDER_MAPPING
 ```
 
-This is read-only. It consumes the retained B1/B2 graph, B9 generation receipt, and passive B10 maps receipt.
+The universal exact-125-mapped-object rule is retired.
 
-It will:
+## Next-generation baseline
+
+Before adding the unresolved interactive GTK capability:
 
 ```text
-rehash all 96 selected objects;
-rehash mapped source substitutes;
-record selected map state by content kind;
-record four absolute-RPATH selected consumers;
-join retained edges to bypassed providers;
-record libX11-xcb and libvk_swiftshader identities;
-separate demand-loaded data from required selected ELF;
-perform no launch and no mutation.
+old selected content:
+    96
+
+remove Xau/Xdmcp duplicates:
+    2
+
+corrected baseline:
+    94
+
+selected ELF:
+    89
+
+selected fonts:
+    4
+
+selected schema:
+    1
 ```
 
-Expected next state:
+Do not materialize this baseline yet. It must be combined with the minimum pixbuf/icon/MIME delta in one new-generation preflight.
+
+## Open interactive capability
+
+The prior vault-open interaction failed in GTK icon/pixbuf handling.
+
+Read-only inventory found:
 
 ```text
-READY_FOR_CPU_MAP_CONTRACT_REDESIGN
+rootfs loaders.cache:
+    1
+
+loader modules:
+    12
+
+icon-theme indexes:
+    2
+
+MIME database files:
+    5
+
+paths absent from B9 semantic manifest:
+    20
 ```
 
-## Canonical command
+The rootfs cache contains unusable native `/usr/...` references and cannot be selected unchanged.
 
-```bash
-cd "$HOME/projects/termux-native-desktop"
+## Next action
 
-rm -rf \
-  experiments/glibc/selected-obsidian-closure/recipe/__pycache__
-
-git fetch origin
-git merge --ff-only origin/docs/post-graphics-architecture-audit
-
-B1_OUT="$PREFIX/tmp/selected-obsidian-closure/selected-obsidian-phase-b1-retained-control-locality-20260711-192919"
-B2_OUT="$PREFIX/tmp/selected-obsidian-closure/selected-obsidian-phase-b2-static-runtime-closure-20260711-195310"
-B9_OUT="$PREFIX/tmp/selected-obsidian-closure/selected-obsidian-phase-b9-generation-publication-corrected-20260712-003136"
-B10_OUT="$PREFIX/tmp/selected-obsidian-closure/selected-obsidian-phase-b10-passive-short-runtime-cpu-validation-20260712-015859"
-
-out="selected-obsidian-passive-map-selection-diagnostic-$(date +%Y%m%d-%H%M%S)"
-OUT="$PREFIX/tmp/selected-obsidian-closure/$out"
-
-if B1_OUT="$B1_OUT" \
-   B2_OUT="$B2_OUT" \
-   B9_OUT="$B9_OUT" \
-   B10_OUT="$B10_OUT" \
-   OUT="$OUT" \
-   python \
-     experiments/glibc/selected-obsidian-closure/recipe/analyze-passive-map-selection-diagnostic.py
-then
-  analysis_rc=0
-else
-  analysis_rc=$?
-fi
-
-printf '\n===== analysis exit status =====\n'
-printf '%s\n' "$analysis_rc"
-
-for f in \
-  "$OUT/analysis.status" \
-  "$OUT/failure-stage.txt" \
-  "$OUT/next-state.txt" \
-  "$OUT/summary.tsv" \
-  "$OUT/input-verification.tsv" \
-  "$OUT/selected-map-state.tsv" \
-  "$OUT/selected-rpath-consumers.tsv" \
-  "$OUT/rpath-provider-edges.tsv" \
-  "$OUT/cpu-map-exceptions.tsv" \
-  "$OUT/mapped-path-classification.tsv" \
-  "$OUT/live-identity-verification.tsv" \
-  "$OUT/claim-boundary.txt"
-do
-  [ -e "$f" ] || continue
-  printf '\n===== %s =====\n' "$f"
-  cat "$f"
-done
-
-tar czf ~/Downloads/$out.tgz $OUT
+```text
+CONTROLLED PIXBUF VAULT-OPEN DIAGNOSTIC
 ```
+
+The diagnostic must:
+
+```text
+use the same explicit immutable generation;
+use short receipt-owned runtime paths;
+create a receipt-local relocated loader cache;
+point only the diagnostic Obsidian exec at that cache;
+allow exact rootfs loader-module paths as diagnostic-only;
+instruct the operator to click Open vault once after topology stabilizes;
+record whether the file chooser appears and whether the process survives;
+record all rootfs module mappings and hashes;
+leave current absent;
+perform no generation mutation.
+```
+
+If the relocated cache alone does not fix the interaction, icon-theme data must be added as a separate discriminator rather than bundled wholesale.
 
 ## Stop line
 
 Do not:
 
 ```text
-claim overall B10 PASS;
-activate current;
-mutate or patch the existing generation;
-change RPATH before the diagnostic;
-classify demand-unmapped fonts as loader failures;
-ignore graphics-related mappings in CPU mode;
-proceed to atomic activation.
+patch RPATH;
+mutate the existing generation;
+materialize Xau/Xdmcp in the next generation;
+require all selected data to map;
+use the rootfs loaders.cache unchanged;
+copy all icon/MIME data wholesale;
+create current;
+create a new generation before the interactive capability closes;
+claim practical usability from passive PASS alone.
 ```
