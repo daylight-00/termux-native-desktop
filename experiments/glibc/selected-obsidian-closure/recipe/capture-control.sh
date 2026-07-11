@@ -5,6 +5,7 @@ APP=${APP:-$HOME/gl/apps/obsidian}
 APP_ENTRYPOINT=${APP_ENTRYPOINT:-$APP/obsidian}
 CONTROL_NAME=${CONTROL_NAME:-Obsidian}
 LAUNCHER=${LAUNCHER:-$HOME/gl/bin/obsidian-app}
+MAIN_PROCESS_EXECUTABLE=${MAIN_PROCESS_EXECUTABLE:-}
 ROOTFS=${ROOTFS:-$PREFIX/var/lib/proot-distro/containers/debian/rootfs}
 OUT=${OUT:-$PREFIX/tmp/selected-obsidian-control-$(date +%Y%m%d-%H%M%S)}
 CONTROL_GL_GPU=${CONTROL_GL_GPU:-0}
@@ -31,6 +32,12 @@ done
     exit 1
 }
 
+if [ -n "$MAIN_PROCESS_EXECUTABLE" ] && [ ! -x "$MAIN_PROCESS_EXECUTABLE" ]; then
+    printf 'missing %s main-process executable: %s\n' \
+        "$CONTROL_NAME" "$MAIN_PROCESS_EXECUTABLE" >&2
+    exit 1
+fi
+
 case "$CONTROL_GL_GPU" in
     0|1) ;;
     *)
@@ -50,9 +57,18 @@ mkdir -p "$OUT/maps"
 printf 'phase\tsample\tpid\tclass\tcmdline\n' >"$OUT/poll-observed.tsv"
 printf 'pid\tclass\tcmdline\n' >"$OUT/last-processes.tsv"
 printf 'pid\n' >"$OUT/observed-pids.tsv"
+printf 'selection\ttimestamp\tphase\tsample\tpid\tppid\tcmdline\n' \
+    >"$OUT/main-process-selection.tsv"
 
 printf 'app: %s\n' "$APP" | tee "$OUT/app-path.txt"
 printf 'launcher: %s\n' "$LAUNCHER" | tee "$OUT/launcher-path.txt"
+if [ -n "$MAIN_PROCESS_EXECUTABLE" ]; then
+    printf 'main process selection: descendant argv0=%s\n' \
+        "$MAIN_PROCESS_EXECUTABLE" | tee "$OUT/main-process-contract.txt"
+else
+    printf 'main process selection: launch pid\n' \
+        | tee "$OUT/main-process-contract.txt"
+fi
 printf 'mode: GL_GPU=%s\n' "$CONTROL_GL_GPU" | tee "$OUT/mode.txt"
 printf 'startup timeout seconds: %s\n' "$STARTUP_TIMEOUT_SECONDS" | tee "$OUT/startup-contract.txt"
 printf 'survival seconds: %s\n' "$SURVIVAL_SECONDS" | tee "$OUT/survival-contract.txt"
@@ -67,6 +83,15 @@ GL_GPU="$CONTROL_GL_GPU" \
 LAUNCH_PID=$!
 printf '%s\n' "$LAUNCH_PID" >"$OUT/launch.pid"
 printf 'launch pid: %s\n' "$LAUNCH_PID"
+
+MAIN_PID=
+if [ -z "$MAIN_PROCESS_EXECUTABLE" ]; then
+    MAIN_PID=$LAUNCH_PID
+    printf '%s\n' "$MAIN_PID" >"$OUT/main.pid"
+    printf 'launch-pid\t%s\tlaunch\t0\t%s\t-\t-\n' \
+        "$(date -u +%Y-%m-%dT%H:%M:%S.%NZ)" "$MAIN_PID" \
+        >>"$OUT/main-process-selection.tsv"
+fi
 
 declare -A OBSERVED_PIDS=()
 OBSERVED_PIDS["$LAUNCH_PID"]=1
@@ -96,10 +121,67 @@ collect_tree_pids() {
     printf '%s\n' "${!member[@]}" | sort -n
 }
 
+
+adopt_main_process() {
+    local phase=$1 sample=$2
+    local pid cmdline argv0 ppid timestamp
+    local candidate_pid= candidate_ppid= candidate_cmdline=
+    local candidate_count=0
+
+    [ -n "$MAIN_PROCESS_EXECUTABLE" ] || return 0
+    [ -z "$MAIN_PID" ] || return 0
+
+    for pid in "${CURRENT_TREE[@]:-}"; do
+        [ -r "/proc/$pid/cmdline" ] || continue
+        cmdline=$(tr '\0' ' ' <"/proc/$pid/cmdline" 2>/dev/null || true)
+        [ -n "$cmdline" ] || continue
+
+        argv0=${cmdline%% *}
+        [ "$argv0" = "$MAIN_PROCESS_EXECUTABLE" ] || continue
+
+        case "$cmdline" in
+            *" --type="*) continue ;;
+        esac
+
+        ppid=$(awk '/^PPid:/ { print $2; exit }' \
+            "/proc/$pid/status" 2>/dev/null || true)
+        [ -n "$ppid" ] || continue
+
+        candidate_pid=$pid
+        candidate_ppid=$ppid
+        candidate_cmdline=$cmdline
+        candidate_count=$((candidate_count + 1))
+    done
+
+    if [ "$candidate_count" -gt 1 ]; then
+        printf 'ambiguous %s main-process descendants for argv0=%s\n' \
+            "$CONTROL_NAME" "$MAIN_PROCESS_EXECUTABLE" >&2
+        return 2
+    fi
+
+    [ "$candidate_count" -eq 1 ] || return 0
+
+    MAIN_PID=$candidate_pid
+    OBSERVED_PIDS["$MAIN_PID"]=1
+    printf '%s\n' "$MAIN_PID" >"$OUT/main.pid"
+    timestamp=$(date -u +%Y-%m-%dT%H:%M:%S.%NZ)
+    printf 'descendant-argv0\t%s\t%s\t%s\t%s\t%s\t%s\n' \
+        "$timestamp" "$phase" "$sample" "$MAIN_PID" \
+        "$candidate_ppid" "$candidate_cmdline" \
+        >>"$OUT/main-process-selection.tsv"
+    printf 'adopted main pid: %s (ppid=%s, argv0=%s)\n' \
+        "$MAIN_PID" "$candidate_ppid" "$MAIN_PROCESS_EXECUTABLE"
+}
+
 classify_cmdline() {
     local pid=$1 cmdline=$2
-    if [ "$pid" = "$LAUNCH_PID" ]; then
+    if [ -n "$MAIN_PID" ] && [ "$pid" = "$MAIN_PID" ]; then
         printf 'main\n'
+        return 0
+    fi
+
+    if [ "$pid" = "$LAUNCH_PID" ]; then
+        printf 'launcher\n'
         return 0
     fi
 
@@ -114,8 +196,11 @@ classify_cmdline() {
 }
 
 observe_tree() {
-    local phase=$1 sample=$2 pid cmdline class
-    mapfile -t CURRENT_TREE < <(collect_tree_pids "$LAUNCH_PID")
+    local phase=$1 sample=$2 pid cmdline class root
+    root=$LAUNCH_PID
+    [ -n "$MAIN_PID" ] && root=$MAIN_PID
+    mapfile -t CURRENT_TREE < <(collect_tree_pids "$root")
+    adopt_main_process "$phase" "$sample"
 
     for pid in "${CURRENT_TREE[@]:-}"; do
         [ -r "/proc/$pid/cmdline" ] || continue
@@ -192,6 +277,7 @@ fi
 
 printf '\ntopology gate: PASS\n'
 printf 'required classes: main renderer zygote\n'
+printf 'main pid: %s\n' "$MAIN_PID"
 printf 'elapsed seconds: %s\n' "$((SECONDS - startup_started))"
 printf 'PASS\n' >"$OUT/topology.status"
 
@@ -206,7 +292,7 @@ next_progress=$((survival_started + PROGRESS_INTERVAL_SECONDS))
 survival_sample=0
 
 while (( SECONDS < survival_deadline )); do
-    if [ ! -d "/proc/$LAUNCH_PID" ]; then
+    if [ ! -d "/proc/$MAIN_PID" ]; then
         printf 'FAIL main process exited\n' >"$OUT/survival.status"
         printf 'survival gate: FAIL (main process exited)\n' >&2
         printf '\n===== stderr =====\n' >&2
@@ -236,7 +322,7 @@ if grep -q 'FATAL:' "$OUT/launch.stderr"; then
     exit 1
 fi
 
-[ -d "/proc/$LAUNCH_PID" ] || {
+[ -d "/proc/$MAIN_PID" ] || {
     printf 'FAIL main process absent at final gate\n' >"$OUT/survival.status"
     printf 'survival gate: FAIL (main process absent at final gate)\n' >&2
     exit 1
@@ -247,7 +333,7 @@ printf 'elapsed seconds: %s\n' "$((SECONDS - survival_started))"
 printf 'PASS\n' >"$OUT/survival.status"
 
 observe_tree final 1
-mapfile -t capture_pids < <(collect_tree_pids "$LAUNCH_PID")
+mapfile -t capture_pids < <(collect_tree_pids "$MAIN_PID")
 
 printf 'pid\tclass\tcmdline\n' >"$OUT/processes.tsv"
 printf 'pid\tclass\tpath_class\tpath\n' >"$OUT/mapped-objects.tsv"
