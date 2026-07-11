@@ -1,6 +1,6 @@
 # Status
 
-> **State:** active selected-Obsidian-closure re-entry after post-graphics architecture audit  
+> **State:** selected-Obsidian-closure Phase B2 static/runtime partition after Phase B1 pass  
 > **Updated:** 2026-07-11
 
 ## Working conclusions
@@ -17,8 +17,13 @@
 - **The ownership refactor remains accepted.** Project capabilities, package lifecycles, experiments, and repository tools have separate source owners. Semantic ownership still requires further decomposition.
 - **`modules/gl` is transitional.** It still combines world baseline, passive data policy, Electron-family/security policy, farm materialization, OpenGL adapter, URL bridge, and target toolchain responsibilities.
 - **The broad farm is still the current compatibility baseline, not an accepted final production provider model.** The D-Bus pilot proves selected materialized provider bytes are viable, but the shared/app-local boundary is not fully decided.
-- **The parent Obsidian selected-closure pilot continues.** Graphics sub-questions are closed, while locality-shadowing, non-graphics static/runtime closure agreement, candidate materialization, actual candidate selection, and control/candidate equivalence remain open.
-- **The first re-entry step is read-only.** Retained Obsidian control evidence is audited for identity stability, locality collisions, ELF dependency facts, and process-class semantic use before any candidate is materialized or any workload is relaunched.
+- **The parent Obsidian selected-closure pilot continues.** Graphics sub-questions are closed, while provider grouping, candidate materialization, actual candidate selection, and control/candidate equivalence remain open.
+- **Phase B1 passed without a workload launch.** All 136 candidate-relevant retained paths matched captured SHA-256 identities; 113 ELF objects and 531 `DT_NEEDED` edges had zero unresolved, ambiguous, duplicate-provider, or app-local/external lookup-name collisions.
+- **No observed app-local shadowing competitor exists.** All five AppDir ELF objects retain `$ORIGIN` first in RUNPATH. This is not permission to remove locality ordering; it makes preservation of `$ORIGIN` and rejection of future colliding providers a candidate invariant.
+- **Static and runtime-selected sets are not identical.** Independent graph reconstruction found 95 ELF objects reachable from the Obsidian entrypoint, 98 reachable from all app-local ELF roots, and 15 mapped-only dynamic/discovery objects.
+- **The 15 mapped-only objects require capability attribution.** They separate into a Vulkan/provider tail, X11/DRI/support tail, and NSS/security-database tail. They are not optional merely because they are outside the static graph.
+- **Data capabilities remain separate from ELF closure.** The retained control contains 12 locale, 4 font, and 1 GSettings schema object; they require deliberate rootfs-backed, selected-materialized, or application-local ownership.
+- **A fresh control recapture is not required for identity drift.** Phase B2 remains read-only and consumes the completed Phase B1 receipt.
 - **The recovered glibc substrate remains 2.42 and held.** The hold is temporary incident containment, not a permanent lifecycle design.
 - **Mutable checkout symlinks remain an activation defect.** Source changes can immediately alter live leaves, so another multi-file promoted migration must not proceed without a minimum activation boundary.
 - **Atomic activation is not the next implementation object by itself.** Its complete managed-leaf set must follow the selected-closure result and semantic owner decision; it is mandatory immediately before the next multi-file promoted migration.
@@ -39,7 +44,10 @@ docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md
     -> post-closure top-down audit and architectural gaps
 
 docs/refactor/0093-post-audit-direction-validator-lifecycle-and-selected-closure-reentry.md
-    -> accepted direction adjustment, gate lifecycle, evidence handoff, and next action
+    -> accepted direction adjustment, gate lifecycle, and selected-closure re-entry
+
+docs/refactor/0094-selected-obsidian-phase-b1-retained-control-locality-pass.md
+    -> authoritative Phase B1 receipt interpretation and Phase B2 boundary
 
 docs/refactor/0091-scoped-graphics-policy-promotion-closure.md
     -> closed graphics transaction and evidence-backed contract
@@ -56,16 +64,18 @@ docs/refactor/README.md
 - `docs/refactor/0091-scoped-graphics-policy-promotion-closure.md` — closed graphics-policy evidence matrix.
 - `docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md` — semantic-vs-adapter distinction and missing architecture work.
 - `docs/refactor/0093-post-audit-direction-validator-lifecycle-and-selected-closure-reentry.md` — revised execution order and selected-closure re-entry.
+- `docs/refactor/0094-selected-obsidian-phase-b1-retained-control-locality-pass.md` — Phase B1 identity/locality result and static/runtime partition.
 - `docs/refactor/` — full transaction and evidence history.
 
 ## Open architecture questions
 
-- How should a real Electron application domain consume selected provider bytes while preserving app-local `$ORIGIN` locality?
+- Which entrypoint-static, auxiliary app-local, and mapped-only dynamic objects form reusable capability groups?
 - Which prefix/rootfs providers are reusable capability groups, and which are application-domain bindings?
+- Which dynamic/discovery objects belong to graphics, X11/DRI, NSS/security, or another capability?
+- Which locale/font/schema providers remain intentionally rootfs-backed, and which should be materialized?
 - Which global `gl/env` policies belong to world base, bridge, provider, Electron family, or individual application?
 - What exact managed object set must the minimum atomic activation mechanism promote and roll back?
 - How should a corrected current/newer glibc substrate be accepted, retained, rolled back, and released from hold?
-- Which passive rootfs data capabilities remain intentionally rootfs-backed, and which should be materialized?
 - How should the cross-version graphics composition be identified and revalidated across independent provider-layer updates?
 - When are VS Code/Obsidian normal-profile long-duration checks required for operational acceptance rather than architecture promotion?
 
@@ -83,9 +93,12 @@ docs/refactor/README.md
 ### Application-domain/provider architecture
 
 - [x] explicitly continue the selected Obsidian closure pilot
-- [ ] run the retained-control locality input audit without launching a workload
-- [ ] interpret identity mismatches, locality collisions, unresolved edges, and ambiguous edges
-- [ ] finish locality-shadowing and non-graphics static/runtime closure agreement
+- [x] run the retained-control locality input audit without launching a workload
+- [x] verify zero identity drift, semantic review, collisions, unresolved edges, and ambiguous edges
+- [x] establish the locality invariant: preserve `$ORIGIN`; no observed current competitor
+- [ ] run Phase B2 read-only static/runtime graph partition
+- [ ] attribute the 15 mapped-only dynamic/discovery objects to capabilities
+- [ ] decide ownership for the 17 non-ELF data objects
 - [ ] decide capability grouping and application-domain bindings
 - [ ] prove selected candidate materialization/equivalence if the pilot remains viable
 
@@ -95,7 +108,6 @@ docs/refactor/README.md
 - [ ] complete remaining world/provider/bridge/toolchain/family ownership split
 - [ ] move high-risk global Electron/security policy out of world baseline when validated
 - [ ] define glibc upgrade/recovery lifecycle beyond the 2.42 hold
-- [ ] decide passive font/locale/schema data-provider ownership
 
 ### Next workload
 
@@ -113,8 +125,10 @@ call current path/command/variable names permanent invariants;
 expand gl-run into lifecycle authority;
 make the broad farm the final production provider by inertia;
 add new global policy to gl/env because it is convenient;
-materialize an Obsidian candidate before retained evidence is interpreted;
-analyze changed current bytes as though they were the captured control identity;
+materialize all 113 ELF objects as one candidate library directory;
+drop the 15 mapped-only objects merely because they are outside DT_NEEDED reachability;
+merge locale/font/schema data into the ELF closure;
+remove $ORIGIN or accept $HOME/gl/lib as target candidate authority;
 start PyMOL by copying an Electron launcher or expanding the farm blindly;
 apply another multi-file promoted migration before activation semantics are defined;
 maintain every experiment script as a permanent active gate;
@@ -124,7 +138,7 @@ use ambiguous evidence archive names such as results.tgz.
 
 ## Evidence policy
 
-A passing screenshot is insufficient. Claims remain at the strongest level supported by correlated evidence. Empty child `/proc/<pid>/environ` is an observability boundary. A mapped provider is not selected-device proof. Isolated application state must follow the application's real authority. A closed transaction validates a semantic contract; it does not automatically make its current helper names or paths permanent architecture. Runtime gates are rerun only when their claim surface changes.
+A passing screenshot is insufficient. Claims remain at the strongest level supported by correlated evidence. Empty child `/proc/<pid>/environ` is an observability boundary. A mapped provider is not selected-device proof. A mapped-only object is not automatically optional. Isolated application state must follow the application's real authority. A closed transaction validates a semantic contract; it does not automatically make its current helper names or paths permanent architecture. Runtime gates are rerun only when their claim surface changes.
 
 Device evidence handoff is stage-specific:
 
