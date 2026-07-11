@@ -1,48 +1,87 @@
 # glibc Application Layer
 
-This guide integrates the recovered `gl` layer README with the current repository structure. Detailed experiment provenance remains under `experiments/glibc/`, `experiments/gpu/`, and `docs/refactor/`.
+This guide describes the current operational glibc application world and the active migration boundary toward explicit world/provider/bridge/application objects.
+
+Detailed provenance remains under:
+
+```text
+experiments/glibc/
+experiments/gpu/
+docs/refactor/
+```
+
+Current architecture audit:
+
+```text
+docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md
+```
 
 ## Goal
 
 Run conventional Linux arm64/glibc application distributions from native Termux without using PRoot as the application runtime.
 
-```text
-application   ~/gl/apps/<name>/
-library farm ~/gl/lib/
-glibc core   $PREFIX/glibc/
-warehouse    $PREFIX/var/lib/proot-distro/containers/debian/rootfs
-```
-
-PRoot is retained for package installation, dependency discovery, and debugging controls. Runtime applications execute outside PRoot.
-
-## Library boundary
-
-The conceptual lookup model is:
+Current operational locations:
 
 ```text
-$ORIGIN
-  -> $PREFIX/glibc/lib
-  -> ~/gl/lib
+application payloads    $HOME/gl/apps/<name>/
+compatibility farm      $HOME/gl/lib/
+glibc substrate         $PREFIX/glibc/
+Debian warehouse        $PREFIX/var/lib/proot-distro/containers/debian/rootfs
+managed providers       $HOME/gl/opt/ and other validated stores
 ```
 
-Important rules:
+PRoot is retained for package installation, dependency discovery, passive artifacts/data, and debugging controls. Runtime applications execute outside PRoot.
+
+## Architecture status
+
+The current farm/env/launcher model is validated operationally.
+
+It is not the final target architecture.
+
+Target semantic objects include:
+
+```text
+world.glibc
+provider capabilities
+bridge contracts
+application domains
+supply adapters
+validation gates
+```
+
+Current `modules/gl`, `~/gl/env`, `gl-run`, and `gl-farm` are transitional realizations and may be split or replaced.
+
+## Current library boundary
+
+Operational lookup model:
+
+```text
+application-local $ORIGIN
+    -> $PREFIX/glibc/lib and protected Termux glibc providers
+    -> $HOME/gl/lib compatibility farm
+```
+
+Load-bearing rules:
 
 - never expose a glibc `LD_LIBRARY_PATH` to the bionic Termux shell;
-- libc-family libraries come from the Termux glibc core, never the Debian farm;
-- glibc-repo X11/xcb libraries must win over Debian variants for local Termux:X11 socket access;
-- application-local libraries must keep `$ORIGIN` in RPATH where required;
-- transitive dependencies are handled through glibc loader configuration and `ldconfig`.
+- libc-family objects come from the package-manager-owned Termux glibc substrate;
+- Android/Termux-sensitive glibc X11/xcb providers must win where local Termux:X11 transport requires them;
+- application-local `$ORIGIN` locality must be preserved where valid;
+- transitive dependencies currently use glibc loader configuration/cache rather than broad `LD_LIBRARY_PATH` injection;
+- package/prefix location is provenance evidence, not automatic semantic ownership.
 
-## Bootstrap outline
+## Current bootstrap baseline
 
-1. Install Termux X11/glibc prerequisites, including glibc-repo X11/xcb packages.
-2. Install a Debian PRoot distribution as the package/library warehouse.
-3. Populate required general libraries inside the rootfs.
-4. Run `gl-farm` to rebuild `~/gl/lib` from allowed rootfs libraries.
-5. Register core then farm in the glibc loader configuration and refresh `ldconfig`.
-6. Deploy module overlays and package-owned launchers through `tools/deploy`.
+The current established environment was built through:
 
-A representative core setup includes:
+1. Termux X11/glibc prerequisites;
+2. package-manager-owned glibc substrate and Termux-aware glibc X11/xcb providers;
+3. Debian PRoot warehouse;
+4. broad compatibility farm generation;
+5. loader configuration/cache;
+6. module/package launcher deployment.
+
+Representative historical commands:
 
 ```sh
 pkg install x11-repo tur-repo termux-x11-nightly patchelf file curl proot-distro
@@ -50,40 +89,91 @@ pkg install glibc-repo glibc libx11-glibc libxcb-glibc
 proot-distro install debian
 ```
 
-The rootfs path may vary across proot-distro generations; the current project contract uses `containers/debian/rootfs`.
+These commands describe the current input lineage. They do not mean every new application should expand the broad farm by default.
 
-## Library farm
+## Broad farm status
 
-`modules/gl/overlay/home/gl/bin/gl-farm`:
+Current `gl-farm`:
 
-- rebuilds `~/gl/lib` as symlinks into selected Debian rootfs library directories;
-- excludes the libc family through a denylist;
-- performs a contamination check;
-- refreshes the glibc loader cache.
+```text
+scans broad Debian rootfs library directories
+excludes protected libc-family names
+materializes symlinks
+checks contamination
+refreshes loader cache
+```
 
-Farm regeneration and `ldconfig` refresh are one operation.
+Architectural status:
 
-## Application onboarding
+```text
+current compatibility/research/control baseline
+    !=
+accepted final production provider model
+```
 
-For a conventional tarball or extracted application tree:
+The D-Bus pilot proved a smaller object class:
 
-1. unpack under `~/gl/apps/<name>/`;
-2. use the Debian rootfs as a dependency oracle when additional libraries are needed;
-3. rebuild the farm if the rootfs library set changes;
-4. patch executable interpreters to the Termux glibc loader;
-5. patch RPATH while preserving `$ORIGIN`;
-6. verify every ELF with the glibc `ldd` path;
-7. create a package-owned launcher that sources `~/gl/env` and clears incompatible preload state at process entry;
-8. if the workload deliberately requires the managed hardware Vulkan provider, source `~/gl/policy/vulkan/freedreno.sh` in that launch branch;
-9. add an OpenGL bridge only in the consumer that owns it, such as `gl-run` for Zink;
-10. validate CPU/basic GUI startup separately from GPU enablement and selected-provider evidence;
-11. make application-owned configuration and user-data paths receipt-local before claiming isolated validation.
+```text
+selected provider-owned bytes
+provenance receipt
+candidate-specific actual selection
+protected substrate boundary
+zero broad-farm/rootfs leakage
+```
 
-AppImage is supported as an input adapter by extracting the embedded SquashFS payload first, then reusing the same onboarding pipeline. See `experiments/glibc/obsidian-appimage/`.
+The real application-domain boundary remains under investigation through the selected Obsidian closure pilot.
+
+## Application onboarding: two tracks
+
+### Current compatibility onboarding
+
+For an existing conventional tarball/AppDir while preserving current runtime behavior:
+
+1. record upstream source identity and license/redistribution boundary;
+2. unpack under an application-owned payload path;
+3. preserve application-local `$ORIGIN` locality;
+4. classify ELF objects and interpreter requirements;
+5. use the Debian warehouse as an oracle/supply source;
+6. use current farm/provider paths only as the established compatibility baseline;
+7. create a package/application-owned launcher;
+8. separate CPU/basic startup, graphics provider selection, and selected-device evidence;
+9. isolate application-owned validation state;
+10. record revalidation triggers.
+
+### Target architecture onboarding
+
+Before a new major workload is promoted, define:
+
+```text
+application domain
+world
+app-local closure
+required capabilities
+provider bindings
+bridges
+mutable-state authority
+validation gates
+supply/provenance
+```
+
+Then decide whether dependencies are:
+
+```text
+world substrate
+intentional shared provider
+selected supplemental provider closure
+application-local payload
+data provider
+runtime-generated state
+```
+
+Do not begin by copying libraries or adding global environment variables.
 
 ## Graphics policy boundary
 
-`~/gl/env` is the shared glibc baseline. It clears four classes of inherited bionic/session graphics policy:
+The scoped graphics-policy transaction is closed.
+
+The glibc baseline removes inherited bionic/session values for:
 
 ```text
 VK_ICD_FILENAMES
@@ -92,167 +182,216 @@ MESA_LOADER_DRIVER_OVERRIDE
 GALLIUM_DRIVER
 ```
 
-The first pair is an ABI-critical Vulkan provider selection. The second pair is OpenGL bridge/Gallium device policy. None is a valid glibc-world global default merely because it is valid for the surrounding bionic desktop session.
+The baseline does not choose a glibc graphics provider or OpenGL bridge.
 
-The baseline does not choose a glibc Vulkan provider or OpenGL bridge.
-
-The source-only profile:
+Current managed hardware profile:
 
 ```text
-~/gl/policy/vulkan/freedreno.sh
+$HOME/gl/policy/vulkan/freedreno.sh
 ```
 
-selects the managed glibc Freedreno ICD by exporting both Vulkan loader variables together. It is applied only by consumers that deliberately require that provider.
+Durable contract:
 
-Current accepted compositions:
+```text
+hardware Vulkan provider selection is explicit and consumer-scoped
+```
+
+Current OpenGL adapter:
 
 ```text
 gl-run
-    -> source gl/env
-    -> inherited bionic provider/bridge policy absent
-    -> source explicit Freedreno profile
-    -> MESA_LOADER_DRIVER_OVERRIDE=zink
-
-VS Code GPU branch
-    -> source gl/env
-    -> inherited bionic provider/bridge policy absent
-    -> source explicit Freedreno profile
-    -> ANGLE Vulkan flags
-    -> no Zink/Gallium override
-
-Obsidian GUI GPU branch
-    -> source gl/env
-    -> inherited bionic provider/bridge policy absent
-    -> source explicit Freedreno profile
-    -> ANGLE Vulkan flags
-    -> no Zink/Gallium override
-
-VS Code / Obsidian CPU branches
-    -> source gl/env
-    -> GL_GPU=0
-    -> no explicit Vulkan provider
-    -> no OpenGL bridge/Gallium override
-    -> exact --disable-gpu
-
-Obsidian CLI
-    -> source gl/env
-    -> no explicit Vulkan provider
-    -> no OpenGL bridge/Gallium override
+    -> managed provider
+    -> Zink bridge
 ```
 
-This separates ABI/session sanitation, provider selection, bridge selection, and application feature mode.
-
-The complete accepted transaction is recorded in:
+Durable contract:
 
 ```text
-docs/refactor/0091-scoped-graphics-policy-promotion-closure.md
+OpenGL consumer composition owns the bridge/provider requirements
 ```
+
+Current Electron application branches own GPU/CPU feature mode.
+
+The paths, helper name, and `GL_GPU` variable are current implementations, not permanent semantic objects.
 
 ## Application-state isolation
 
-Validation must not rely on the user's normal profile state.
+Validation must follow the application's actual state authority.
 
 Accepted patterns:
 
 ```text
-VS Code:
+VS Code
     receipt-local user-data directory
     receipt-local extensions directory
 
-Obsidian:
-    XDG_CONFIG_HOME=<receipt-local config root>
-    actual user data=<receipt-local config root>/obsidian
+Obsidian
+    receipt-local XDG_CONFIG_HOME
+    actual <config>/obsidian directory
 ```
 
-For Obsidian, passing only `--user-data-dir` was insufficient in the first probe because the application retained `$HOME/.config/obsidian` as its effective authority. The corrected model aligns `XDG_CONFIG_HOME`, the application-derived directory, and `DevToolsActivePort` observation.
+Normal profiles are outside promotion evidence.
 
-See:
+Operational daily-workstation acceptance is a separate claim class.
+
+## Non-graphics global policy debt
+
+The current shared baseline still contains policies with different candidate owners:
 
 ```text
-docs/refactor/0088-obsidian-user-data-authority-and-cdp-path-false-negative.md
-docs/refactor/0089-current-obsidian-gpu-environment-and-primary-identity-pass.md
-docs/refactor/0090-current-obsidian-cpu-policy-and-survival-pass.md
+DISPLAY
+runtime-directory policy
+rootfs XDG data
+fontconfig
+locale
+GSettings/accessibility
+Electron sandbox policy
+D-Bus clearing
+TLS trust variables
 ```
+
+The highest-risk over-scope is:
+
+```text
+ELECTRON_DISABLE_SANDBOX=1
+```
+
+It is Electron-family/security policy, not an obvious invariant for every glibc process.
+
+Do not move every variable at once. Use semantic ownership and discriminating evidence.
+
+## Selected application-domain closure
+
+The selected Obsidian pilot remains active and incomplete.
+
+It must answer whether a real Electron AppDir can consume selected external provider bytes while preserving:
+
+```text
+app-local $ORIGIN locality
+protected substrate
+prefix provider roles
+font/locale/schema data capability separation
+candidate-specific selection
+control/candidate workload equivalence
+```
+
+Canonical status:
+
+```text
+experiments/glibc/selected-obsidian-closure/README.md
+```
+
+Graphics closure does not close this parent question.
+
+## glibc substrate state
+
+Current device backend:
+
+```text
+APT/dpkg
+```
+
+Current containment:
+
+```text
+glibc 2.42 installed and held
+exact recovery artifact preserved
+known tested 2.43 compatibility failure
+```
+
+The target lifecycle must manage `world.glibc` substrate independently from provider closure.
+
+Required future contract:
+
+```text
+substrate identity
+candidate acquisition
+core ABI validation
+provider compatibility
+application regression gates
+previous artifact retention
+rollback
+hold release criteria
+```
+
+Do not revive a farm-centric or `gl-run`-centric lifecycle.
+
+## Activation boundary
+
+Current deployed leaves are source-linked symlinks.
+
+This means checkout mutation can alter live behavior before a complete multi-file transaction is validated.
+
+Before the next promoted semantic split, define a minimum activation model with:
+
+```text
+complete candidate leaf set
+pre-activation validation
+single active identity/transition
+post-activation smoke
+previous active identity
+real rollback target
+```
+
+The design should remain smaller than a universal package manager unless evidence requires more.
 
 ## Evidence interpretation
 
-Selected GPU identity is not inferred from one mapped library.
+GPU acceptance requires correlated selected-device evidence.
 
-Promoted Electron GPU acceptance correlates:
+CPU acceptance is effective-mode based.
 
-```text
-observable launch environment and argv
-CDP primary device identity
-ANGLE/Vulkan feature mode
-managed provider mapping
-KGSL device-node mapping
-```
+Empty child environment reads are observability boundaries.
 
-CPU acceptance requires:
+Mapped provider objects do not by themselves prove selection.
+
+Closed gates are rerun only when their claim surface changes.
+
+After experiment closure, scripts must be classified as:
 
 ```text
-GL_GPU=0
-no explicit Vulkan pair
-no Mesa/Gallium bridge/device override
-exact --disable-gpu
-no GPU-enablement flags
-viable renderer/main topology
-bounded main-process survival
+active contract gate
+canonical evidence helper
+historical diagnostic
+superseded false-negative model
 ```
-
-A process named `gpu-process` may or may not exist in CPU mode. VS Code retained one with `--use-gl=disabled`; Obsidian created none in its canonical CPU receipt. The contract is selected policy and effective mode, not a universal process-name rule.
-
-Empty or near-empty child `/proc/<pid>/environ` is an observability boundary. It is not proof that a value is absent and not a mismatch by itself.
 
 ## Common failure signatures
 
-1. **`LD_LIBRARY_PATH` contamination** — bionic processes encounter glibc linker scripts and fail with ELF-header errors.
-2. **Transitive dependency failure** — direct RPATH lookup succeeds, but downstream dependencies fail until loader configuration/cache is correct.
-3. **X display failure** — Debian `libxcb` wins over the Termux-aware glibc-repo build.
-4. **Lost `$ORIGIN`** — bundled application libraries such as Electron-local `.so` files stop resolving after careless RPATH replacement.
-5. **Electron sandbox ordering** — sandbox checks can occur before `argv.json`; the project uses launch environment/CLI policy instead.
-6. **URL intents silently blocked** — Android background-activity policy requires Termux's Display over other apps permission.
-7. **Wrong Vulkan ICD** — a glibc process inherits the bionic ICD or applies the wrong profile; confirm `~/gl/env` sanitizes first and the intended profile sets both loader variables.
-8. **Unexpected Zink in ANGLE/CPU workload** — the bionic session's `MESA_LOADER_DRIVER_OVERRIDE` crossed the boundary; confirm the baseline clears it and `GALLIUM_DRIVER`.
-9. **Unexpected llvmpipe** — explicit provider policy was absent or failed; note that implicit discovery is allowed to select software providers.
-10. **CDP endpoint timeout with a live Electron app** — application-owned user-data authority and the observed `DevToolsActivePort` path disagree.
+1. **ABI contamination** — bionic processes encounter glibc libraries or vice versa.
+2. **Substrate/provider incompatibility** — farm/provider rebuild cannot repair missing substrate symbols.
+3. **Transitive provider failure** — direct object resolves but downstream closure does not.
+4. **X11 provider mismatch** — non-Termux-aware X11/xcb provider wins.
+5. **Lost `$ORIGIN`** — bundled application libraries stop resolving.
+6. **Wrong graphics provider** — bionic policy crosses the boundary or explicit profile is missing.
+7. **Unexpected Zink/Gallium** — bridge/device policy leaked from session or another consumer.
+8. **Implicit software provider** — unset Vulkan variables allow discovery; they do not mean no Vulkan.
+9. **Application-state mismatch** — probe observes a different user-data authority than the app.
+10. **Partial live activation** — source-linked existing leaves change before newly required leaves exist.
 
-## Current promoted owners
+## Current validated workloads
+
+- official VS Code GPU and CPU branches;
+- extracted Obsidian GPU and CPU branches;
+- Miniforge/Conda/Mamba plus compiled NumPy;
+- glibc OpenGL 4.6 through the current Zink/Turnip composition;
+- bounded D-Bus selected-provider candidate;
+- same-consumer explicit Turnip versus implicit LVP/llvmpipe controls.
+
+## Next workload rule
+
+PyMOL may be designed now as an application-domain contract.
+
+Runtime mutation is deferred until the project decides enough reusable objects:
 
 ```text
-modules/gl/overlay/home/gl/env
-modules/gl/overlay/home/gl/bin/gl-farm
-modules/gl/overlay/home/gl/bin/gl-run
-modules/gl/overlay/home/gl/policy/vulkan/freedreno.sh
-modules/gl/overlay/home/gl/shims/xdg-open
-modules/gl/overlay/home/gl/toolchain/*
-
-modules/desktop/overlay/home/.local/bin/startxfce-x11
-
-packages/vscode/launcher/code
-packages/obsidian/launcher/obsidian
-packages/obsidian/launcher/obsidian-app
-packages/mesa-glibc/build.sh
-packages/mesa-glibc/build-env/*
-packages/mesa-glibc/patches/
-
-tools/deploy
+world.glibc
+Python runtime provider
+X11 bridge/provider
+OpenGL provider
+font/locale/data providers
+native-extension ABI contract
+application payload/state ownership
 ```
 
-Runtime state remains outside Git tracking: application trees, the farm, Mesa install prefixes, build worktrees, generated uv environments, and the installed glibc core.
-
-## Validated workloads
-
-- official Microsoft VS Code arm64 tarball;
-- Obsidian arm64 AppImage after extraction/onboarding;
-- Miniforge/Conda/Mamba with environment creation and compiled NumPy workload;
-- promoted glibc OpenGL 4.6 through `gl-run` -> Zink -> Turnip;
-- promoted ANGLE Vulkan -> Turnip/Adreno 730 for official VS Code;
-- promoted VS Code CPU branch with hostile-policy sanitation, exact `--disable-gpu`, and bounded survival;
-- promoted Obsidian GPU branch with isolated application-owned user data, CDP primary Turnip/Adreno 730, WebGL, and WebGL2;
-- promoted Obsidian CPU branch with isolated application-owned user data, exact `--disable-gpu`, renderer `--disable-gpu-compositing`, and bounded survival;
-- same-consumer VS Code policy A/B showing explicit Turnip/Adreno versus implicit LVP/llvmpipe.
-
-The scoped graphics-policy promotion transaction is closed. Previously accepted gates should be rerun only when their claim surface changes; see `docs/refactor/0091-scoped-graphics-policy-promotion-closure.md` for the revalidation triggers.
-
-The next major scientific workload target is PyMOL.
+Do not onboard PyMOL by broadening `gl/env`, blindly extending the farm, or treating `gl-run` as a universal application launcher.
