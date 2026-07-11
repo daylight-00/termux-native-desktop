@@ -28,6 +28,8 @@ done
 
 mkdir -p "$OUT"
 
+is_graphics_path_awk='$4 ~ /\/libvulkan_freedreno\.so$/ || $4 ~ /\/libvulkan_lvp\.so$/ || $4 ~ /\/libvulkan_gfxstream\.so$/ || $4 ~ /\/libvk_swiftshader\.so$/ || $4 ~ /\/libVkLayer_MESA_device_select\.so$/ || $4 ~ /\/libgbm\.so(\.|$)/ || $4 ~ /\/libvulkan\.so\.1$/ || $4 ~ /\/libEGL\.so$/ || $4 ~ /\/libGLESv2\.so$/ || $4 == "/dev/kgsl-3d0"'
+
 class_counts() {
     local input=$1
     awk -F $'\t' '
@@ -43,21 +45,9 @@ semantic_pairs() {
 
 graphics_relations() {
     local input=$1
-    awk -F $'\t' '
-        NR > 1 && (
-            $4 ~ /\/libvulkan_freedreno\.so$/ ||
-            $4 ~ /\/libvulkan_lvp\.so$/ ||
-            $4 ~ /\/libvulkan_gfxstream\.so$/ ||
-            $4 ~ /\/libVkLayer_MESA_device_select\.so$/ ||
-            $4 ~ /\/libgbm\.so(\.|$)/ ||
-            $4 ~ /\/libvulkan\.so\.1$/ ||
-            $4 ~ /\/libEGL\.so$/ ||
-            $4 ~ /\/libGLESv2\.so$/ ||
-            $4 == "/dev/kgsl-3d0"
-        ) {
-            print $2 "\t" $4
-        }
-    ' "$input" | sort -u
+    awk -F $'\t' "NR > 1 && ($is_graphics_path_awk) { print \$2 \"\\t\" \$4 }" \
+        "$input" \
+        | sort -u
 }
 
 class_counts "$EXPLICIT_PROCESSES" >"$OUT/explicit-process-class-counts.tsv"
