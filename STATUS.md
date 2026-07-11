@@ -1,81 +1,116 @@
 # Status
 
-> **State:** active architecture/refactor after graphics-policy closure  
+> **State:** active architecture synthesis after scoped graphics-policy closure  
 > **Updated:** 2026-07-11
 
 ## Working conclusions
 
-- **No PRoot runtime.** PRoot is retained as an install/debug-time tool and library source, not as the normal execution environment.
-- **The glibc layer is viable for real desktop applications.** Official VS Code and an extracted Obsidian AppImage run as glibc processes while the surrounding desktop stays bionic-native.
-- **The core/farm boundary is load-bearing.** Termux glibc and Android-sensitive libraries must remain isolated from the Debian-rootfs-derived library farm; application-local libraries are preserved through `$ORIGIN` where required.
-- **Real GPU acceleration works in both ABI worlds.** Native Chromium/Code OSS and glibc Electron applications can use Turnip/Adreno paths. Official VS Code's minimum demonstrated GPU-specific workaround is `--disable-gpu-vsync`.
-- **Graphics policy is consumer-scoped, not a glibc-world global default.** The bionic desktop owns its Turnip ICD and session-wide Zink bridge. `~/gl/env` clears the inherited Vulkan pair plus `MESA_LOADER_DRIVER_OVERRIDE`/`GALLIUM_DRIVER` before any glibc consumer composes its own policy.
-- **The promoted source separates sanitation, provider selection, bridge selection, application feature mode, and validation-state authority.** Consumers that require hardware Vulkan source `~/gl/policy/vulkan/freedreno.sh`; only `gl-run` adds Zink; VS Code and Obsidian own their `GL_GPU` branches; validation uses receipt-local application state.
-- **The scoped graphics-policy promotion transaction is closed.** Expanded source/live installation, current `gl-run`, VS Code GPU/CPU, and Obsidian GPU/CPU all have authoritative zero-failure receipts. The accepted invariant set and revalidation triggers are recorded in `docs/refactor/0091-scoped-graphics-policy-promotion-closure.md`.
-- **The promoted runtime source remained unchanged during workload closure.** From the expanded source/live receipt at `5ed76ec9c7409a141da02a28b5297b8b71965467` through closure, later changes were confined to `STATUS.md`, `docs/refactor/`, and experiment validators; no `modules/`, `packages/`, `tests/`, or `tools/` runtime source changed.
-- **The expanded pre-deploy and live installation receipts passed.** Source syntax, repository policy regression, deploy smoke/dry-run, all managed live targets, the four-variable bionic graphics-policy sanitation set, explicit Freedreno selection, bridge neutrality, and profile-variable privacy passed with zero failures at `5ed76ec9c7409a141da02a28b5297b8b71965467`.
-- **The current `gl-run` path is validated end to end.** At `147c7e2fc9b414a6be5561589293c01820d5f7f6`, hostile inherited llvmpipe bridge/Gallium policy was removed and the promoted launcher produced a glibc GLX/OpenGL 4.6 context reporting `zink Vulkan 1.4(Turnip Adreno (TM) 730)` with zero failures.
-- **The current promoted VS Code GPU gate is closed.** At `bea4062df2e132639ea08c8bb94abc8235fb0a96`, all 44 environment, argv, topology, CDP identity, feature-mode, provider-map, and KGSL correlation gates passed. CDP selected Turnip/Adreno 730 under ANGLE Vulkan and GaneshVulkan.
-- **The current promoted VS Code CPU gate is closed.** At `0c6a85235ee9b759addc9963a16060c806277fe3`, all 18 sanitation, argv, topology, survival, and diagnostic gates passed. The main process contained exact `--disable-gpu`; the retained internal GPU helper used `--use-gl=disabled`; the renderer used `--disable-gpu-compositing`.
-- **The corrected promoted Obsidian GPU gate is closed.** At `3384bf136f3f35f7ab1d86b2005c2e7559d7e298`, all 48 environment, isolated application-profile, argv, topology, survival, CDP identity, feature-mode, provider-map, and KGSL gates passed. Main, zygote, GPU, utility, and renderer showed the exact managed GPU contract.
-- **The promoted Obsidian CPU gate is closed.** At `5ab13fd6c2af5843abf7bbff3a8a26f46a8e84b5`, all 21 sanitation, isolated profile, argv, topology, survival, and diagnostic gates passed. No GPU process was observed, the renderer used `--disable-gpu-compositing`, and main/zygote/renderer remained viable for 20 seconds.
-- **Application user-data authority is part of the evidence contract.** VS Code uses isolated user-data/extensions paths. Obsidian requires a receipt-local `XDG_CONFIG_HOME` plus the actual derived `<config>/obsidian` directory; `$HOME/.config/obsidian` is excluded from canonical receipts.
-- **A Chromium process named `gpu-process` is not by itself an acceleration claim or CPU failure.** Acceptance is based on selected policy, effective argv/feature mode, renderer viability, and correlated provider/device evidence.
-- **Child `/proc/environ` is an observability boundary.** Empty or near-empty child environment views are not interpreted as proof of absence or as a mismatch. Exact values are required only where meaningfully observable.
-- **The recovered glibc substrate remains 2.42 and held.** The hold remains incident containment rather than a permanent lifecycle design.
-- **Mutable checkout symlinks are also an activation path.** Pulling source changes can immediately update existing live leaves such as `~/gl/env`; the general atomic-activation problem remains open.
-- **The current glibc Mesa 26.1.x build policy uses `-Dfreedreno-kmds=msm,kgsl`.** The working/broken split tracked whether the Turnip ICD retained its libdrm dependency; the exact low-level crash mechanism remains open.
-- **The desktop session source is recovered and tracked.** `modules/desktop/overlay/home/.local/bin/startxfce-x11` records the two-world session contract, clean X-server startup, Unix-socket X11, bionic ICD/Zink policy, optional Picom path, and clean teardown behavior.
-- **A glibc Miniforge/Conda stack is viable.** Conda, Mamba, environment creation, and a compiled NumPy workload were validated.
-- **Repository ownership is being refactored explicitly.** Promoted system capabilities live under `modules/`, external payload lifecycle definitions under `packages/`, experiment-specific harnesses with their experiments, and deployment logic under `tools/`.
+- **No PRoot-mediated normal application runtime.** PRoot remains an install/debug-time tool, package/library warehouse, and behavioral oracle.
+- **The glibc application world is viable for real desktop applications.** Official VS Code and an extracted Obsidian AppImage run as glibc processes while the surrounding desktop remains bionic-native.
+- **The core/provider boundary is load-bearing.** Termux glibc and Android-sensitive libraries must remain protected from Debian-derived provider closure; application-local `$ORIGIN` locality must be preserved where valid.
+- **Real GPU acceleration works in both ABI worlds.** Promoted VS Code and Obsidian GPU branches select Turnip/Adreno 730 through correlated environment, argv, CDP, provider-map, and KGSL evidence.
+- **Graphics policy is consumer-scoped.** The bionic desktop owns its bionic ICD and Zink session policy. The glibc boundary sanitizes inherited provider/bridge policy. Individual consumers deliberately compose provider, bridge, and feature mode.
+- **The scoped graphics-policy promotion transaction is closed.** Expanded source/live installation, current OpenGL/Zink consumer, VS Code GPU/CPU, and Obsidian GPU/CPU have authoritative zero-failure receipts. Revalidation is trigger-based, not periodic.
+- **The closure accepts semantic behavior, not permanent adapter identity.** `~/gl/env`, `gl-run`, `freedreno.sh`, `GL_GPU`, and `modules/gl` are current realizations. They are not architecture invariants merely because the transaction passed.
+- **Application-state authority is part of evidence.** VS Code uses receipt-local user-data/extensions paths. Obsidian requires receipt-local `XDG_CONFIG_HOME` plus the actual derived `<config>/obsidian` directory. Normal user profiles are outside promotion evidence.
+- **A Chromium `gpu-process` name is not an acceleration or CPU-failure claim.** Acceptance is based on selected policy, effective feature/argv mode, renderer viability, and correlated provider/device evidence.
+- **The ownership refactor remains accepted.** Project capabilities, package lifecycles, experiments, and repository tools have separate source owners. Semantic ownership still requires further decomposition.
+- **`modules/gl` is transitional.** It still combines world baseline, passive data policy, Electron-family/security policy, farm materialization, OpenGL adapter, URL bridge, and target toolchain responsibilities.
+- **The broad farm is still the current compatibility baseline, not an accepted final production provider model.** The D-Bus pilot proves selected materialized provider bytes are viable, but the shared/app-local boundary is not fully decided.
+- **The parent Obsidian selected-closure pilot remains incomplete.** Graphics sub-questions are closed, but locality-shadowing, non-graphics static/runtime closure agreement, candidate materialization, actual candidate selection, and control/candidate equivalence remain open unless explicitly terminated.
+- **The recovered glibc substrate remains 2.42 and held.** The hold is temporary incident containment, not a permanent lifecycle design.
+- **Mutable checkout symlinks remain an activation defect.** Source changes can immediately alter live leaves, so another multi-file promoted migration must not proceed without a minimum activation boundary.
+- **Current global non-graphics policy is over-scoped.** `ELECTRON_DISABLE_SANDBOX=1` is the highest-priority example: Electron-family/security policy currently lives in the world baseline.
+- **Documentation and validator lifecycle are architecture concerns.** Canonical indexes/experiment status must match current conclusions, and closed investigation helpers must be classified as active gates, evidence helpers, historical diagnostics, or superseded false-negative models.
+- **The current Mesa graphics composition is cross-version.** Rootfs GLVND/GLX/Gallium-Zink, prefix loader/support, and provider-store Turnip identities form one validated composition; independent changes to any layer require composition-aware revalidation.
+
+## Architecture authority
+
+Read in this order:
+
+```text
+main/docs/system-foundation/11-architecture-reassessment-and-hard-refactor-decision.md
+main/docs/system-foundation/12-document-consistency-audit-and-execution-order.md
+
+docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md
+    -> current post-closure top-down audit and next-phase pressure
+
+docs/refactor/0091-scoped-graphics-policy-promotion-closure.md
+    -> closed graphics transaction and evidence-backed contract
+
+docs/refactor/README.md
+    -> chronological index and current stop lines
+```
 
 ## Integrated guides
 
-- `docs/glibc-layer.md` — bootstrap, library boundary, application onboarding, accepted graphics-policy compositions, evidence interpretation, and traps.
-- `docs/gpu.md` — glibc Turnip/Zink build and runtime contract, Electron GPU/CPU evidence model, and revalidation policy.
-- `docs/desktop-session.md` — bionic/glibc session boundary and troubleshooting.
-- `docs/architecture.md` — current whole-system model, graphics-policy closure, application-state authority, and evidence lifecycle.
-- `docs/refactor/0083-expanded-graphics-policy-predeploy-and-live-installation-pass.md` — current promoted source/live installation receipt.
-- `docs/refactor/0084-current-head-gl-run-regression-pass-and-strengthened-vscode-gpu-gate.md` — hostile-policy `gl-run` renderer PASS.
-- `docs/refactor/0085-vscode-child-proc-environ-observability-false-negative.md` — corrected child environment observability model.
-- `docs/refactor/0086-current-vscode-gpu-environment-and-primary-identity-pass.md` — canonical VS Code GPU receipt.
-- `docs/refactor/0087-current-vscode-cpu-policy-and-survival-pass.md` — canonical VS Code CPU receipt.
-- `docs/refactor/0088-obsidian-user-data-authority-and-cdp-path-false-negative.md` — invalid first Obsidian CDP path model and correction.
-- `docs/refactor/0089-current-obsidian-gpu-environment-and-primary-identity-pass.md` — canonical Obsidian GPU receipt.
-- `docs/refactor/0090-current-obsidian-cpu-policy-and-survival-pass.md` — canonical Obsidian CPU receipt.
-- `docs/refactor/0091-scoped-graphics-policy-promotion-closure.md` — final accepted invariant set, evidence matrix, claim boundaries, and trigger-based revalidation policy.
-- `docs/refactor/` — full repository migration source of truth.
+- `docs/architecture.md` — current integrated runtime model and evidence lifecycle.
+- `docs/glibc-layer.md` — current operational glibc baseline and onboarding model.
+- `docs/gpu.md` — current graphics composition and revalidation contract.
+- `docs/refactor/0091-scoped-graphics-policy-promotion-closure.md` — closed graphics-policy evidence matrix.
+- `docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md` — semantic-vs-adapter distinction, missing architecture work, and revised priority.
+- `docs/refactor/` — full transaction and evidence history.
 
-## Open questions
+## Open architecture questions
 
-- The current source-linked deployment model lacks an atomic activation boundary for multi-file transactions that modify existing leaves and introduce new required leaves.
-- The recovered `glibc 2.42` hold needs a deliberate upgrade/recovery lifecycle rather than indefinite incident containment.
-- Ownership of other inherited Mesa/session variables such as `vblank_mode` has not been changed; each requires separate evidence.
-- Hardware video decoding remains unresolved across the investigated MediaCodec/Vulkan, VA-API/V4L2, FFmpeg/mpv, and Chromium paths.
-- Native Dawn WebGPU exposure remains unresolved: conventional Chromium/Electron GPU acceleration works, but the dedicated WebGPU investigation did not expose Turnip as the desired native WebGPU adapter.
-- Complete end-to-end zero-copy presentation is not proven.
-- Normal-profile long-duration VS Code and Obsidian behavior with user extensions, vaults, and plugins is outside the promotion receipts.
-- PyMOL remains the next major end-to-end scientific workload target.
-- A proper kgsl+Zink+X11 solution that removes the practical need for the `msm` backend remains worth watching upstream; the current `msm,kgsl` build is the validated local policy.
+- How should a real Electron application domain consume selected provider bytes while preserving app-local `$ORIGIN` locality?
+- Which prefix/rootfs providers are reusable capability groups, and which are application-domain bindings?
+- Which global `gl/env` policies belong to world base, bridge, provider, Electron family, or individual application?
+- What is the minimum atomic activation mechanism for project-authored multi-file runtime contracts?
+- How should a corrected current/newer glibc substrate be accepted, retained, rolled back, and released from hold?
+- Which passive rootfs data capabilities remain intentionally rootfs-backed, and which should be materialized?
+- Which graphics validators remain active contract gates after experiment closure?
+- How should the cross-version graphics composition be identified and revalidated across independent provider-layer updates?
+- When are VS Code/Obsidian normal-profile long-duration checks required for operational acceptance rather than architecture promotion?
 
 ## Current focus
 
-- [x] pass the expanded current-head no-mutation pre-deploy gate
-- [x] pass the expanded live graphics-policy installation receipt
-- [x] pass the promoted `gl-run` Zink/Turnip renderer gate
-- [x] pass the promoted VS Code GPU environment/identity gate
-- [x] pass the promoted VS Code CPU policy/survival gate
-- [x] pass the corrected promoted Obsidian GPU environment/identity gate
-- [x] pass the promoted Obsidian CPU policy/survival gate
+### Knowledge/control-plane closure
+
 - [x] close the scoped graphics-policy promotion transaction
-- [ ] evaluate and design an atomic activation model for future multi-file runtime migrations
-- [ ] complete the remaining module/package/experiment ownership refactor and validate live deployment migration
-- [ ] define a deliberate glibc upgrade/recovery lifecycle beyond the current package hold
-- [ ] run the PyMOL pilot against the current glibc/Conda/Zink stack
-- [ ] continue converting session reports into concise canonical experiment records without discarding original reports
-- [ ] add repeatable validation gates where experiments have produced stable runtime contracts
-- [ ] formalize application onboarding helpers (`gl-adopt`, `gl-doctor`) only after the current manual contracts remain stable
+- [x] record the post-closure architecture midpoint audit
+- [ ] synchronize canonical experiment READMEs and migration journal
+- [ ] classify semantic invariants versus current adapters in integrated/module docs
+- [ ] classify graphics validators by active/historical/superseded status
+
+### Application-domain/provider architecture
+
+- [ ] resume or explicitly terminate the selected Obsidian closure pilot
+- [ ] finish locality-shadowing and non-graphics static/runtime closure analysis
+- [ ] decide capability grouping and application-domain bindings
+- [ ] prove selected candidate materialization/equivalence if the pilot continues
+
+### Runtime ownership and lifecycle
+
+- [ ] define atomic activation before another multi-file live migration
+- [ ] complete remaining world/provider/bridge/toolchain/family ownership split
+- [ ] move high-risk global Electron/security policy out of world baseline when validated
+- [ ] define glibc upgrade/recovery lifecycle beyond the 2.42 hold
+- [ ] decide passive font/locale/schema data-provider ownership
+
+### Next workload
+
+- [ ] define PyMOL domain/capability contract now
+- [ ] defer PyMOL runtime mutation until reusable objects above are decided
+- [ ] use PyMOL as proof of the corrected architecture, not as a reason to expand global env/farm policy
+
+## Current stop lines
+
+Do not:
+
+```text
+rerun closed graphics gates without a documented trigger;
+call current path/command/variable names permanent invariants;
+expand gl-run into lifecycle authority;
+make the broad farm the final production provider by inertia;
+add new global policy to gl/env because it is convenient;
+start PyMOL by copying an Electron launcher or expanding the farm blindly;
+apply another multi-file promoted migration before activation semantics are defined;
+forget or silently abandon the selected Obsidian closure parent question;
+maintain every experiment script as a permanent active gate;
+claim isolated promotion receipts prove normal-profile long-duration behavior.
+```
 
 ## Evidence policy
 
-A passing screenshot is not enough by itself. Claims stay at the strongest level directly supported by correlated evidence. Empty or near-empty child `/proc/<pid>/environ` output is an observability boundary, not a graphics-policy value. A mapped provider library is not selected-device proof without primary identity correlation. Application-derived user-data paths must be made receipt-local through the application's actual configuration authority before isolation is claimed. Successful default-WSI presentation and ANGLE-Vulkan rendering do not prove complete end-to-end zero-copy presentation. Closed gates are rerun only when their source/runtime/application/evidence claim surface changes.
+A passing screenshot is insufficient. Claims remain at the strongest level supported by correlated evidence. Empty child `/proc/<pid>/environ` is an observability boundary. A mapped provider is not selected-device proof. Isolated application state must follow the application's real authority. A closed transaction validates a semantic contract; it does not automatically make its current helper names or paths permanent architecture. Runtime gates are rerun only when their claim surface changes.
