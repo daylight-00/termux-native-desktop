@@ -27,36 +27,23 @@ existing Obsidian experiment launcher
 existing capture-control harness
 same GL_GPU=1 feature mode
 same implicit-discovery provider policy
-VK_LOADER_DEBUG=all
+VK_LOADER_DEBUG=all inherited directly by the process tree
 bounded survival window
 ```
 
+No extra launcher wrapper is required.
+
+The capture process exports:
+
+```text
+VK_LOADER_DEBUG=all
+```
+
+before invoking the existing experiment launcher. The launcher then execs the Obsidian payload, and the GPU-process descendants inherit the diagnostic environment.
+
 No promoted runtime policy changes.
 
-## Added helpers
-
-### Loader-debug launcher wrapper
-
-```text
-experiments/glibc/vulkan-policy-composition/recipe/launch-obsidian-loader-debug.sh
-```
-
-Behavior:
-
-```text
-export VK_LOADER_DEBUG=${VK_LOADER_DEBUG:-all}
-exec launch-obsidian-with-policy.sh
-```
-
-The wrapper does not change:
-
-```text
-GL_GPU
-VULKAN_POLICY_MODE
-VK_DRIVER_FILES policy semantics
-application payload
-promoted launcher
-```
+## Added helper
 
 ### Debug summarizer
 
@@ -141,6 +128,12 @@ VULKAN_POLICY_MODE=implicit-discovery
 LIBGL_ALWAYS_SOFTWARE unset
 VK_LOADER_DEBUG=all
 short bounded survival window
+```
+
+The existing experiment launcher remains:
+
+```text
+experiments/glibc/vulkan-policy-composition/recipe/launch-obsidian-with-policy.sh
 ```
 
 Then run the debug summarizer over `launch.stderr`.
