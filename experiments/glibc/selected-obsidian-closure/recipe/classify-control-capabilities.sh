@@ -90,6 +90,7 @@ classify() {
             case "$path" in
                 "$HOME/.cache/fontconfig/"*) printf 'RUNTIME_CACHE_FONTCONFIG\n' ;;
                 "$HOME/.cache/mesa_shader_cache/"*) printf 'RUNTIME_CACHE_MESA\n' ;;
+                "$HOME/.cache/mesa_shader_cache_db/"*) printf 'RUNTIME_CACHE_MESA\n' ;;
                 "$HOME/.config/obsidian/"*) printf 'APP_MUTABLE_STATE\n' ;;
                 "$HOME/gl/opt/mesa-glibc-"*/lib/libvulkan_*.so*) printf 'PROVIDER_GRAPHICS_VULKAN_DRIVER_ELF\n' ;;
                 *)
