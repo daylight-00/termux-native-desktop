@@ -90,28 +90,35 @@ env \
     PREFIX="$PREFIX" \
     VK_DRIVER_FILES=/bionic/freedreno.json \
     VK_ICD_FILENAMES=/bionic/freedreno.json \
+    MESA_LOADER_DRIVER_OVERRIDE=zink \
+    GALLIUM_DRIVER=llvmpipe \
     bash -c '
         set -u
         source "$HOME/gl/env"
         printf "field\tvalue\n"
         printf "VK_DRIVER_FILES\t%s\n" "${VK_DRIVER_FILES-<unset>}"
         printf "VK_ICD_FILENAMES\t%s\n" "${VK_ICD_FILENAMES-<unset>}"
+        printf "MESA_LOADER_DRIVER_OVERRIDE\t%s\n" "${MESA_LOADER_DRIVER_OVERRIDE-<unset>}"
+        printf "GALLIUM_DRIVER\t%s\n" "${GALLIUM_DRIVER-<unset>}"
     ' >"$BASELINE_RECEIPT"
 
 baseline_driver=$(awk -F $'\t' '$1 == "VK_DRIVER_FILES" { print $2; exit }' "$BASELINE_RECEIPT")
 baseline_icd=$(awk -F $'\t' '$1 == "VK_ICD_FILENAMES" { print $2; exit }' "$BASELINE_RECEIPT")
+baseline_mesa=$(awk -F $'\t' '$1 == "MESA_LOADER_DRIVER_OVERRIDE" { print $2; exit }' "$BASELINE_RECEIPT")
+baseline_gallium=$(awk -F $'\t' '$1 == "GALLIUM_DRIVER" { print $2; exit }' "$BASELINE_RECEIPT")
 
-if [ "$baseline_driver" = '<unset>' ]; then
-    record_gate baseline_vk_driver_files_absent PASS
-else
+[ "$baseline_driver" = '<unset>' ] && \
+    record_gate baseline_vk_driver_files_absent PASS || \
     record_gate baseline_vk_driver_files_absent FAIL
-fi
-
-if [ "$baseline_icd" = '<unset>' ]; then
-    record_gate baseline_vk_icd_filenames_absent PASS
-else
+[ "$baseline_icd" = '<unset>' ] && \
+    record_gate baseline_vk_icd_filenames_absent PASS || \
     record_gate baseline_vk_icd_filenames_absent FAIL
-fi
+[ "$baseline_mesa" = '<unset>' ] && \
+    record_gate baseline_mesa_loader_override_absent PASS || \
+    record_gate baseline_mesa_loader_override_absent FAIL
+[ "$baseline_gallium" = '<unset>' ] && \
+    record_gate baseline_gallium_driver_absent PASS || \
+    record_gate baseline_gallium_driver_absent FAIL
 
 PROFILE_RECEIPT="$OUT/freedreno-profile-environment.tsv"
 env \
@@ -119,6 +126,8 @@ env \
     PREFIX="$PREFIX" \
     VK_DRIVER_FILES=/bionic/freedreno.json \
     VK_ICD_FILENAMES=/bionic/freedreno.json \
+    MESA_LOADER_DRIVER_OVERRIDE=zink \
+    GALLIUM_DRIVER=llvmpipe \
     bash -c '
         set -u
         source "$HOME/gl/env"
@@ -126,36 +135,35 @@ env \
         printf "field\tvalue\n"
         printf "VK_DRIVER_FILES\t%s\n" "${VK_DRIVER_FILES-<unset>}"
         printf "VK_ICD_FILENAMES\t%s\n" "${VK_ICD_FILENAMES-<unset>}"
+        printf "MESA_LOADER_DRIVER_OVERRIDE\t%s\n" "${MESA_LOADER_DRIVER_OVERRIDE-<unset>}"
+        printf "GALLIUM_DRIVER\t%s\n" "${GALLIUM_DRIVER-<unset>}"
         printf "profile_internal\t%s\n" "${_TND_GLIBC_FREEDRENO_ICD-<unset>}"
     ' >"$PROFILE_RECEIPT"
 
 profile_driver=$(awk -F $'\t' '$1 == "VK_DRIVER_FILES" { print $2; exit }' "$PROFILE_RECEIPT")
 profile_icd=$(awk -F $'\t' '$1 == "VK_ICD_FILENAMES" { print $2; exit }' "$PROFILE_RECEIPT")
+profile_mesa=$(awk -F $'\t' '$1 == "MESA_LOADER_DRIVER_OVERRIDE" { print $2; exit }' "$PROFILE_RECEIPT")
+profile_gallium=$(awk -F $'\t' '$1 == "GALLIUM_DRIVER" { print $2; exit }' "$PROFILE_RECEIPT")
 profile_internal=$(awk -F $'\t' '$1 == "profile_internal" { print $2; exit }' "$PROFILE_RECEIPT")
 
-if [ "$profile_driver" = "$EXPECTED_ICD" ]; then
-    record_gate profile_vk_driver_files_exact PASS
-else
+[ "$profile_driver" = "$EXPECTED_ICD" ] && \
+    record_gate profile_vk_driver_files_exact PASS || \
     record_gate profile_vk_driver_files_exact FAIL
-fi
-
-if [ "$profile_icd" = "$EXPECTED_ICD" ]; then
-    record_gate profile_vk_icd_filenames_exact PASS
-else
+[ "$profile_icd" = "$EXPECTED_ICD" ] && \
+    record_gate profile_vk_icd_filenames_exact PASS || \
     record_gate profile_vk_icd_filenames_exact FAIL
-fi
-
-if [ "$profile_driver" = "$profile_icd" ]; then
-    record_gate profile_loader_variable_pair_equal PASS
-else
+[ "$profile_driver" = "$profile_icd" ] && \
+    record_gate profile_loader_variable_pair_equal PASS || \
     record_gate profile_loader_variable_pair_equal FAIL
-fi
-
-if [ "$profile_internal" = '<unset>' ]; then
-    record_gate profile_internal_variable_private PASS
-else
+[ "$profile_mesa" = '<unset>' ] && \
+    record_gate profile_mesa_loader_override_absent PASS || \
+    record_gate profile_mesa_loader_override_absent FAIL
+[ "$profile_gallium" = '<unset>' ] && \
+    record_gate profile_gallium_driver_absent PASS || \
+    record_gate profile_gallium_driver_absent FAIL
+[ "$profile_internal" = '<unset>' ] && \
+    record_gate profile_internal_variable_private PASS || \
     record_gate profile_internal_variable_private FAIL
-fi
 
 printf 'path\tstate\ttarget\n' >"$OUT/live-targets.tsv"
 for path in \
@@ -189,14 +197,14 @@ done
 
 if [ "$failures" -ne 0 ]; then
     printf 'FAIL\n' >"$OUT/installation.status"
-    printf 'live Vulkan policy installation receipt: FAIL (%s gates)\n' \
+    printf 'live graphics policy installation receipt: FAIL (%s gates)\n' \
         "$failures" >&2
     printf 'evidence: %s\n' "$OUT" >&2
     exit 1
 fi
 
 printf 'PASS\n' >"$OUT/installation.status"
-printf 'live Vulkan policy installation receipt: PASS\n'
+printf 'live graphics policy installation receipt: PASS\n'
 printf 'repository: %s\n' "$REPO"
 printf 'branch: %s\n' "$branch"
 printf 'head: %s\n' "$head_sha"
