@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import csv
-import errno
 import hashlib
 import os
 import shutil
@@ -86,6 +85,14 @@ def fail(stage_name: str, message: str, rc: int = 1) -> None:
     raise SystemExit(rc)
 
 
+def fsync_file(path: Path) -> None:
+    descriptor = os.open(path, os.O_RDONLY)
+    try:
+        os.fsync(descriptor)
+    finally:
+        os.close(descriptor)
+
+
 def fsync_dir(path: Path) -> None:
     descriptor = os.open(path, os.O_RDONLY | getattr(os, "O_DIRECTORY", 0))
     try:
@@ -94,16 +101,36 @@ def fsync_dir(path: Path) -> None:
         os.close(descriptor)
 
 
-def assert_plain_dir(path: Path, *, create: bool = False, mode: int = 0o700) -> None:
+def sync_tree(root: Path) -> None:
+    files: list[Path] = []
+    directories: list[Path] = [root]
+    for path in root.rglob("*"):
+        if path.is_symlink():
+            continue
+        if path.is_file():
+            files.append(path)
+        elif path.is_dir():
+            directories.append(path)
+    for path in files:
+        fsync_file(path)
+    for path in sorted(directories, key=lambda item: len(item.parts), reverse=True):
+        fsync_dir(path)
+
+
+def ensure_plain_dir(path: Path, mode: int = 0o700) -> None:
     if path.is_symlink():
         fail("filesystem_preflight", f"directory path is a symlink: {path}")
     if path.exists():
         if not path.is_dir():
             fail("filesystem_preflight", f"path is not a directory: {path}")
         return
-    if not create:
-        fail("filesystem_preflight", f"required directory missing: {path}")
+    parent = path.parent
     path.mkdir(parents=True, mode=mode, exist_ok=False)
+    existing_parent = parent
+    while not existing_parent.exists() and existing_parent != existing_parent.parent:
+        existing_parent = existing_parent.parent
+    if parent.exists() and parent.is_dir():
+        fsync_dir(parent)
 
 
 def lexical_resolve(base: Path, relative: str) -> Path:
@@ -129,13 +156,12 @@ def current_state(path: Path) -> dict[str, object]:
         }
     metadata = path.lstat()
     if stat.S_ISLNK(metadata.st_mode):
-        link_target = os.readlink(path)
-        resolved = lexical_resolve(path.parent, link_target)
+        target = os.readlink(path)
         return {
             "state": "SYMLINK",
             "path": str(path),
-            "link_target": link_target,
-            "resolved_target": str(resolved),
+            "link_target": target,
+            "resolved_target": str(lexical_resolve(path.parent, target)),
             "inode": metadata.st_ino,
         }
     return {
@@ -153,14 +179,14 @@ def remove_tree(path: Path) -> None:
     if path.is_symlink() or path.is_file():
         path.unlink()
         return
-    for entry in path.iterdir():
+    try:
+        path.chmod(0o700)
+    except OSError:
+        pass
+    for entry in list(path.iterdir()):
         if entry.is_symlink() or entry.is_file():
             entry.unlink()
         else:
-            try:
-                entry.chmod(0o700)
-            except OSError:
-                pass
             remove_tree(entry)
     path.rmdir()
 
@@ -182,48 +208,39 @@ def install_content_object(
 ) -> tuple[str, int]:
     if target.is_symlink():
         fail("content_materialization", f"object target is a symlink: {target}")
+
+    parent_existed = target.parent.exists()
     target.parent.mkdir(parents=True, exist_ok=True)
+    if not parent_existed:
+        fsync_dir(target.parent.parent)
+
     if target.exists():
-        if not target.is_file():
-            fail("content_materialization", f"object target is not a file: {target}")
-        observed = sha256(target)
-        if observed != expected_sha:
-            fail(
-                "content_materialization",
-                f"existing object hash mismatch: {target}",
-            )
+        if not target.is_file() or target.is_symlink():
+            fail("content_materialization", f"object target is invalid: {target}")
+        if sha256(target) != expected_sha:
+            fail("content_materialization", f"existing object hash mismatch: {target}")
         target.chmod(0o444)
+        fsync_file(target)
         return "REUSED", target.stat().st_size
 
-    temporary = target.parent / (
-        f".{target.name}.tmp-{os.getpid()}-{time.time_ns()}"
-    )
+    temporary = target.parent / f".{target.name}.tmp-{os.getpid()}-{time.time_ns()}"
     try:
         with source.open("rb") as src, temporary.open("xb") as dst:
             shutil.copyfileobj(src, dst, 1024 * 1024)
             dst.flush()
             os.fsync(dst.fileno())
-        observed = sha256(temporary)
-        if observed != expected_sha:
-            fail(
-                "content_materialization",
-                f"temporary object hash mismatch for {source}",
-            )
+        if sha256(temporary) != expected_sha:
+            fail("content_materialization", f"temporary object hash mismatch: {source}")
         temporary.chmod(0o444)
+        fsync_file(temporary)
         try:
             os.link(temporary, target)
             disposition = "CREATED"
         except FileExistsError:
             if target.is_symlink() or not target.is_file():
-                fail(
-                    "content_materialization",
-                    f"raced object target is invalid: {target}",
-                )
+                fail("content_materialization", f"raced object target is invalid: {target}")
             if sha256(target) != expected_sha:
-                fail(
-                    "content_materialization",
-                    f"raced object target hash mismatch: {target}",
-                )
+                fail("content_materialization", f"raced object hash mismatch: {target}")
             disposition = "REUSED_AFTER_RACE"
         fsync_dir(target.parent)
         return disposition, target.stat().st_size
@@ -233,16 +250,16 @@ def install_content_object(
 
 
 def freeze_generation(root: Path) -> None:
-    regular_files: list[Path] = []
+    files: list[Path] = []
     directories: list[Path] = []
     for path in root.rglob("*"):
         if path.is_symlink():
             continue
         if path.is_file():
-            regular_files.append(path)
+            files.append(path)
         elif path.is_dir():
             directories.append(path)
-    for path in regular_files:
+    for path in files:
         path.chmod(0o444)
     for path in sorted(directories, key=lambda item: len(item.parts), reverse=True):
         path.chmod(0o555)
@@ -255,31 +272,34 @@ def validate_generation(
     object_plan: list[dict[str, str]],
     alias_plan: list[dict[str, str]],
     manifest_expectations: dict[str, str],
+    *,
+    require_immutable: bool,
 ) -> list[dict[str, object]]:
     checks: list[dict[str, object]] = []
 
-    def add(check: str, state: bool, detail: str) -> None:
+    def add(check: str, passed: bool, detail: str) -> None:
         checks.append(
             {
                 "check": check,
-                "state": "PASS" if state else "FAIL",
+                "state": "PASS" if passed else "FAIL",
                 "detail": detail,
             }
         )
-        if not state:
+        if not passed:
             fail("generation_validation", f"{check}: {detail}")
 
     add("generation_root_plain_directory", root.is_dir() and not root.is_symlink(), str(root))
 
-    expected_alias_paths = {row["alias_relpath"] for row in alias_plan}
-    observed_alias_paths: set[str] = set()
-    for path in root.rglob("*"):
-        if path.is_symlink():
-            observed_alias_paths.add(str(path.relative_to(root)))
+    expected_aliases = {row["alias_relpath"] for row in alias_plan}
+    observed_aliases = {
+        str(path.relative_to(root))
+        for path in root.rglob("*")
+        if path.is_symlink()
+    }
     add(
         "alias_path_set",
-        observed_alias_paths == expected_alias_paths,
-        f"expected={len(expected_alias_paths)} observed={len(observed_alias_paths)}",
+        observed_aliases == expected_aliases,
+        f"expected={len(expected_aliases)} observed={len(observed_aliases)}",
     )
 
     for row in alias_plan:
@@ -291,11 +311,10 @@ def validate_generation(
             observed_target == row["relative_symlink_target"],
             row["alias_relpath"],
         )
-        resolved = lexical_resolve(alias.parent, observed_target)
         expected_object = generation_base / row["object_relpath"]
         add(
             "alias_resolves_to_object",
-            resolved == expected_object,
+            lexical_resolve(alias.parent, observed_target) == expected_object,
             row["alias_relpath"],
         )
         add(
@@ -330,6 +349,16 @@ def validate_generation(
             and sha256(target) == expected_hash,
             relative,
         )
+
+    if require_immutable:
+        for path in [root, *root.rglob("*")]:
+            if path.is_symlink():
+                continue
+            add(
+                "generation_node_not_owner_writable",
+                not bool(path.stat().st_mode & stat.S_IWUSR),
+                str(path.relative_to(root)) if path != root else ".",
+            )
 
     return checks
 
@@ -387,29 +416,28 @@ try:
     ]
 
     stage = "input_verification"
-    input_rows: list[dict[str, object]] = []
+    verification_rows: list[dict[str, object]] = []
     missing: list[str] = []
     for name in required:
         source = B8_OUT / name
         embedded = OUT / "input" / name.replace("/", "__")
-        state = "PASS" if source.is_file() else "FAIL"
-        input_rows.append(
+        state_value = "PASS" if source.is_file() else "FAIL"
+        verification_rows.append(
             {
                 "file": name,
-                "state": state,
+                "state": state_value,
                 "path": str(source),
-                "embedded_path": str(embedded) if state == "PASS" else "-",
+                "embedded_path": str(embedded) if state_value == "PASS" else "-",
             }
         )
-        if state == "PASS":
-            embedded.parent.mkdir(parents=True, exist_ok=True)
+        if state_value == "PASS":
             shutil.copy2(source, embedded)
         else:
             missing.append(name)
     write_tsv(
         OUT / "input-verification.tsv",
         ["file", "state", "path", "embedded_path"],
-        input_rows,
+        verification_rows,
     )
     if missing:
         fail(stage, "missing Phase B8 inputs: " + ", ".join(missing))
@@ -447,11 +475,7 @@ try:
 
     configured_base = os.environ.get("GENERATION_BASE")
     if configured_base and Path(configured_base) != generation_base:
-        fail(
-            "filesystem_preflight",
-            "GENERATION_BASE differs from the accepted Phase B8 layout",
-        )
-
+        fail("filesystem_preflight", "GENERATION_BASE differs from Phase B8")
     if final_generation.parent != generations_root:
         fail("filesystem_preflight", "generation directory is outside generations root")
     for path in (object_store_root, staging_root, generations_root, final_generation):
@@ -465,20 +489,20 @@ try:
         [current_before],
     )
     if current_before["state"] == "NON_SYMLINK":
-        fail("filesystem_preflight", f"current exists but is not a symlink: {current_link}")
+        fail("filesystem_preflight", f"current is not a symlink: {current_link}")
 
-    assert_plain_dir(generation_base, create=True)
-    assert_plain_dir(object_store_root, create=True)
-    assert_plain_dir(staging_root, create=True)
-    assert_plain_dir(generations_root, create=True)
-
-    device_ids = {
-        generation_base.stat().st_dev,
-        object_store_root.stat().st_dev,
-        staging_root.stat().st_dev,
-        generations_root.stat().st_dev,
-    }
-    if len(device_ids) != 1:
+    ensure_plain_dir(generation_base)
+    ensure_plain_dir(object_store_root)
+    ensure_plain_dir(staging_root)
+    ensure_plain_dir(generations_root)
+    if len(
+        {
+            generation_base.stat().st_dev,
+            object_store_root.stat().st_dev,
+            staging_root.stat().st_dev,
+            generations_root.stat().st_dev,
+        }
+    ) != 1:
         fail("filesystem_preflight", "generation roots are not on one filesystem")
 
     stage = "source_identity_recheck"
@@ -496,8 +520,7 @@ try:
             if not exists
             else "HASH_MISMATCH"
         )
-        if state_value != "MATCH":
-            source_failures += 1
+        source_failures += int(state_value != "MATCH")
         source_recheck.append(
             {
                 "kind": row["kind"],
@@ -519,8 +542,10 @@ try:
     alias_plan = read_tsv(B8_OUT / "generation-alias-plan.tsv")
     schema_sources = read_tsv(B8_OUT / "input/schema-source-manifest.tsv")
     schema_contract_rows = read_tsv(B8_OUT / "input/schema-build-contract.tsv")
-    if len(schema_contract_rows) != 1:
-        fail("schema_generation", "expected one schema build contract")
+    if len(object_plan) != 96 or len(alias_plan) != 175:
+        fail("manifest_shape", "unexpected object or alias plan size")
+    if len(schema_sources) != 37 or len(schema_contract_rows) != 1:
+        fail("manifest_shape", "unexpected schema source/build-contract size")
     schema_contract = schema_contract_rows[0]
 
     transaction_id = f"{generation_id}.stage-{os.getpid()}-{time.time_ns()}"
@@ -529,16 +554,14 @@ try:
     staging_generation.mkdir(mode=0o700)
     schema_dir = schema_build_root / "schemas"
     schema_dir.mkdir(parents=True, mode=0o700)
+    fsync_dir(staging_root)
 
     stage = "schema_generation"
     for row in schema_sources:
-        source = Path(row["source_path"])
-        destination = schema_dir / source.name
-        copy_readonly(source, destination)
+        copy_readonly(Path(row["source_path"]), schema_dir / Path(row["source_path"]).name)
     compiler = Path(schema_contract["compiler_path"])
-    command = [str(compiler), "--strict", str(schema_dir)]
     completed = subprocess.run(
-        command,
+        [str(compiler), "--strict", str(schema_dir)],
         text=True,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -582,31 +605,31 @@ try:
         or completed.stderr
         or generated_sha != schema_contract["aggregate_expected_sha256"]
     ):
-        fail(stage, "schema generation did not reproduce the accepted aggregate cleanly")
+        fail(stage, "schema generation did not reproduce the accepted aggregate")
 
     stage = "content_materialization"
-    source_by_sha: dict[str, Path] = {}
-    for row in object_plan:
-        if row["content_kind"] == "GENERATED_GSETTINGS":
-            source_by_sha[row["sha256"]] = generated_schema
-        else:
-            source_by_sha[row["sha256"]] = Path(row["source_path"])
-
+    source_by_sha = {
+        row["sha256"]: (
+            generated_schema
+            if row["content_kind"] == "GENERATED_GSETTINGS"
+            else Path(row["source_path"])
+        )
+        for row in object_plan
+    }
     materialization_rows: list[dict[str, object]] = []
     for row in object_plan:
-        expected_sha = row["sha256"]
         target = generation_base / row["object_relpath"]
         if not path_is_within(target, object_store_root):
             fail("content_materialization", f"object path escapes store: {target}")
         disposition, size = install_content_object(
-            source_by_sha[expected_sha],
-            expected_sha,
+            source_by_sha[row["sha256"]],
+            row["sha256"],
             target,
         )
         materialization_rows.append(
             {
                 "content_kind": row["content_kind"],
-                "sha256": expected_sha,
+                "sha256": row["sha256"],
                 "source_path": row["source_path"],
                 "object_path": str(target),
                 "disposition": disposition,
@@ -628,17 +651,16 @@ try:
 
     stage = "generation_construction"
     for row in alias_plan:
-        alias_relative = PurePosixPath(row["alias_relpath"])
-        if alias_relative.is_absolute() or ".." in alias_relative.parts:
-            fail("generation_construction", f"unsafe alias path: {alias_relative}")
-        alias = staging_generation / Path(*alias_relative.parts)
-        alias.parent.mkdir(parents=True, exist_ok=True)
+        relative = PurePosixPath(row["alias_relpath"])
+        if relative.is_absolute() or ".." in relative.parts:
+            fail("generation_construction", f"unsafe alias path: {relative}")
         if os.path.isabs(row["relative_symlink_target"]):
-            fail("generation_construction", f"absolute alias target: {alias_relative}")
-        resolved = lexical_resolve(alias.parent, row["relative_symlink_target"])
+            fail("generation_construction", f"absolute alias target: {relative}")
+        alias = staging_generation / Path(*relative.parts)
+        alias.parent.mkdir(parents=True, exist_ok=True)
         expected_object = generation_base / row["object_relpath"]
-        if resolved != expected_object:
-            fail("generation_construction", f"alias target mismatch: {alias_relative}")
+        if lexical_resolve(alias.parent, row["relative_symlink_target"]) != expected_object:
+            fail("generation_construction", f"alias target mismatch: {relative}")
         alias.symlink_to(row["relative_symlink_target"])
 
     manifest_sources = {
@@ -677,7 +699,6 @@ try:
             {"field": "generation_id", "value": generation_id},
             {"field": "generation_digest", "value": layout["generation_digest"]},
             {"field": "phase_b8_head", "value": b8_summary.get("head", "")},
-            {"field": "materializer_head", "value": head},
             {"field": "content_objects", "value": len(object_plan)},
             {"field": "generation_aliases", "value": len(alias_plan)},
             {"field": "activation_state", "value": "NOT_ACTIVATED"},
@@ -692,26 +713,31 @@ try:
         object_plan,
         alias_plan,
         manifest_expectations,
+        require_immutable=False,
     )
+    sync_tree(staging_generation)
 
     stage = "generation_publication"
-    publication_state = ""
     if final_generation.exists() or final_generation.is_symlink():
         if final_generation.is_symlink() or not final_generation.is_dir():
-            fail("generation_publication", f"final generation path is invalid: {final_generation}")
-        existing_checks = validate_generation(
-            final_generation,
-            generation_base,
-            object_plan,
-            alias_plan,
-            manifest_expectations,
+            fail("generation_publication", f"invalid final generation: {final_generation}")
+        validation_rows.extend(
+            validate_generation(
+                final_generation,
+                generation_base,
+                object_plan,
+                alias_plan,
+                manifest_expectations,
+                require_immutable=True,
+            )
         )
-        validation_rows.extend(existing_checks)
         remove_tree(staging_generation)
         staging_generation = None
+        fsync_dir(staging_root)
         publication_state = "REUSED_EXISTING_VALID_GENERATION"
     else:
         freeze_generation(staging_generation)
+        sync_tree(staging_generation)
         os.rename(staging_generation, final_generation)
         staging_generation = None
         fsync_dir(staging_root)
@@ -724,6 +750,7 @@ try:
                 object_plan,
                 alias_plan,
                 manifest_expectations,
+                require_immutable=True,
             )
         )
 
@@ -742,11 +769,8 @@ try:
     if current_after != current_before:
         fail("current_pointer_guard", "current pointer changed during Phase B9")
 
-    object_created = sum(
-        row["disposition"] == "CREATED" for row in materialization_rows
-    )
-    object_reused = len(materialization_rows) - object_created
-    total_bytes = sum(int(row["size_bytes"]) for row in materialization_rows)
+    created = sum(row["disposition"] == "CREATED" for row in materialization_rows)
+    reused = len(materialization_rows) - created
     summary_rows = [
         {"field": "branch", "value": branch},
         {"field": "head", "value": head},
@@ -758,9 +782,12 @@ try:
         {"field": "source_identity_checks", "value": len(source_recheck)},
         {"field": "source_identity_failures", "value": source_failures},
         {"field": "content_objects", "value": len(object_plan)},
-        {"field": "content_objects_created", "value": object_created},
-        {"field": "content_objects_reused", "value": object_reused},
-        {"field": "content_bytes", "value": total_bytes},
+        {"field": "content_objects_created", "value": created},
+        {"field": "content_objects_reused", "value": reused},
+        {
+            "field": "content_bytes",
+            "value": sum(int(row["size_bytes"]) for row in materialization_rows),
+        },
         {"field": "generation_aliases", "value": len(alias_plan)},
         {"field": "generation_validation_failures", "value": 0},
         {"field": "schema_generated_cleanly", "value": "YES"},
@@ -776,13 +803,11 @@ try:
 
     (OUT / "claim-boundary.txt").write_text(
         "This stage materializes hash-addressed candidate content and publishes one immutable generation.\n"
-        "It rebuilds and verifies the selected GSettings aggregate and validates all generation-local aliases and embedded manifests.\n"
-        "It does not launch Obsidian, change the current pointer, modify the promoted launcher, or establish runtime equivalence.\n"
-        "The published generation must be validated through its explicit path before any activation transaction.\n"
+        "It rebuilds and verifies the selected GSettings aggregate and validates aliases, manifests, permissions, and current-pointer non-mutation.\n"
+        "It does not launch Obsidian, change current, modify the promoted launcher, or establish runtime equivalence.\n"
+        "The generation must be validated through its explicit path before any activation transaction.\n"
     )
-    (OUT / "next-state.txt").write_text(
-        "READY_FOR_EXPLICIT_GENERATION_VALIDATION\n"
-    )
+    (OUT / "next-state.txt").write_text("READY_FOR_EXPLICIT_GENERATION_VALIDATION\n")
     write_status("PASS")
     if (OUT / "failure-stage.txt").exists():
         (OUT / "failure-stage.txt").unlink()
