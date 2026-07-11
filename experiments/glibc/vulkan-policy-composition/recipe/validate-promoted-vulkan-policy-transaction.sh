@@ -68,7 +68,8 @@ run_gate shell_syntax shell-syntax.log \
     "$REPO/experiments/glibc/vulkan-policy-composition/recipe/validate-promoted-vscode-cpu-policy.sh" \
     "$REPO/experiments/glibc/vulkan-policy-composition/recipe/probe-electron-cdp-gpu-identity.sh" \
     "$REPO/experiments/glibc/vulkan-policy-composition/recipe/classify-cdp-gpu-identity.sh" \
-    "$REPO/experiments/glibc/vulkan-policy-composition/recipe/validate-promoted-obsidian-gpu-identity.sh"
+    "$REPO/experiments/glibc/vulkan-policy-composition/recipe/validate-promoted-obsidian-gpu-identity.sh" \
+    "$REPO/experiments/glibc/vulkan-policy-composition/recipe/validate-promoted-obsidian-cpu-policy.sh"
 
 run_gate policy_scope_smoke policy-scope-smoke.log \
     bash "$REPO/tests/repository/vulkan-policy-scope-smoke.sh"
