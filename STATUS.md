@@ -12,7 +12,7 @@
 - **Graphics policy is consumer-scoped.** The bionic desktop owns its bionic ICD and Zink session policy. The glibc boundary sanitizes inherited provider/bridge policy. Individual consumers deliberately compose provider, bridge, and feature mode.
 - **The scoped graphics-policy promotion transaction is closed.** Expanded source/live installation, current OpenGL/Zink consumer, VS Code GPU/CPU, and Obsidian GPU/CPU have authoritative zero-failure receipts. Revalidation is trigger-based, not periodic.
 - **The closure accepts semantic behavior, not permanent adapter identity.** `~/gl/env`, `gl-run`, `freedreno.sh`, `GL_GPU`, and `modules/gl` are current realizations. They are not architecture invariants merely because the transaction passed.
-- **Application-state authority is part of evidence.** VS Code uses receipt-local user-data/extensions paths. Obsidian requires receipt-local `XDG_CONFIG_HOME` plus the actual derived `<config>/obsidian` directory. Normal user profiles are outside promotion evidence.
+- **Application-state authority is part of evidence.** VS Code uses receipt-local user-data/extensions paths. Obsidian requires a receipt-local `XDG_CONFIG_HOME` plus the actual derived `<config>/obsidian` directory. Normal user profiles are outside promotion evidence.
 - **A Chromium `gpu-process` name is not an acceleration or CPU-failure claim.** Acceptance is based on selected policy, effective feature/argv mode, renderer viability, and correlated provider/device evidence.
 - **The ownership refactor remains accepted.** Project capabilities, package lifecycles, experiments, and repository tools have separate source owners. Semantic ownership still requires further decomposition.
 - **`modules/gl` is transitional.** It still combines world baseline, passive data policy, Electron-family/security policy, farm materialization, OpenGL adapter, URL bridge, and target toolchain responsibilities.
@@ -44,8 +44,8 @@ docs/refactor/README.md
 
 ## Integrated guides
 
-- `docs/architecture.md` — current integrated runtime model and evidence lifecycle.
-- `docs/glibc-layer.md` — current operational glibc baseline and onboarding model.
+- `docs/architecture.md` — current integrated runtime model and target semantic architecture.
+- `docs/glibc-layer.md` — current compatibility baseline, application-domain target, and lifecycle boundaries.
 - `docs/gpu.md` — current graphics composition and revalidation contract.
 - `docs/refactor/0091-scoped-graphics-policy-promotion-closure.md` — closed graphics-policy evidence matrix.
 - `docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md` — semantic-vs-adapter distinction, missing architecture work, and revised priority.
@@ -69,8 +69,8 @@ docs/refactor/README.md
 
 - [x] close the scoped graphics-policy promotion transaction
 - [x] record the post-closure architecture midpoint audit
-- [ ] synchronize canonical experiment READMEs and migration journal
-- [ ] classify semantic invariants versus current adapters in integrated/module docs
+- [x] synchronize canonical experiment READMEs and migration journal
+- [x] classify semantic invariants versus current adapters in integrated/module/package docs
 - [ ] classify graphics validators by active/historical/superseded status
 
 ### Application-domain/provider architecture
