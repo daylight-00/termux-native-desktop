@@ -4,12 +4,9 @@ set -euo pipefail
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 APP=${APP:-$HOME/gl/apps/vscode}
 LAUNCHER=${LAUNCHER:-$SCRIPT_DIR/launch-vscode-with-policy.sh}
-APP_ENTRYPOINT=${APP_ENTRYPOINT:-$APP/bin/code}
-APPLICATION_NAME=${APPLICATION_NAME:-VS Code}
 PYTHON=${PYTHON:-$PREFIX/bin/python}
 QUERY_HELPER=${QUERY_HELPER:-$SCRIPT_DIR/query-cdp-system-info.py}
 USER_DATA_DIR=${USER_DATA_DIR:-$HOME/.config/Code}
-PASS_USER_DATA_DIR_ARG=${PASS_USER_DATA_DIR_ARG:-0}
 OUT=${OUT:-$PREFIX/tmp/tnd-vulkan-policy-composition/vscode-cdp-gpu-identity-$(date +%Y%m%d-%H%M%S)}
 DURATION_SECONDS=${DURATION_SECONDS:-30}
 POLL_SLEEP_SECONDS=${POLL_SLEEP_SECONDS:-0.1}
@@ -23,13 +20,13 @@ for command in awk date pgrep readlink sort tr sed grep cp mv rm wc; do
     }
 done
 
-[ -x "$APP_ENTRYPOINT" ] || {
-    printf 'missing %s entrypoint: %s\n' "$APPLICATION_NAME" "$APP_ENTRYPOINT" >&2
+[ -x "$APP/bin/code" ] || {
+    printf 'missing VS Code entrypoint: %s\n' "$APP/bin/code" >&2
     exit 1
 }
 
 [ -x "$LAUNCHER" ] || {
-    printf 'missing %s launcher: %s\n' "$APPLICATION_NAME" "$LAUNCHER" >&2
+    printf 'missing experiment launcher: %s\n' "$LAUNCHER" >&2
     exit 1
 }
 
@@ -70,7 +67,7 @@ fi
 
 existing=$(pgrep -af "$APP/" || true)
 if [ -n "$existing" ]; then
-    printf 'existing %s processes detected; close them before the probe:\n' "$APPLICATION_NAME" >&2
+    printf 'existing VS Code processes detected; close them before the probe:\n' >&2
     printf '%s\n' "$existing" >&2
     exit 1
 fi
@@ -84,9 +81,7 @@ if [ -e "$ACTIVE_PORT_FILE" ]; then
     mv "$ACTIVE_PORT_FILE" "$STALE_ACTIVE_PORT"
 fi
 
-printf 'application: %s\n' "$APPLICATION_NAME" | tee "$OUT/application-name.txt"
 printf 'app: %s\n' "$APP" | tee "$OUT/app-path.txt"
-printf 'entrypoint: %s\n' "$APP_ENTRYPOINT" | tee "$OUT/app-entrypoint.txt"
 printf 'launcher: %s\n' "$LAUNCHER" | tee "$OUT/launcher-path.txt"
 printf 'user data dir: %s\n' "$USER_DATA_DIR" | tee "$OUT/user-data-dir.txt"
 printf 'duration seconds: %s\n' "$DURATION_SECONDS" | tee "$OUT/duration.txt"
@@ -94,17 +89,11 @@ printf 'poll sleep seconds: %s\n' "$POLL_SLEEP_SECONDS" | tee "$OUT/poll-sleep.t
 printf 'GL_GPU=%s\n' "$CONTROL_GL_GPU" | tee "$OUT/mode.txt"
 printf 'VULKAN_POLICY_MODE=%s\n' "$VULKAN_POLICY_MODE" | tee -a "$OUT/mode.txt"
 
-LAUNCH_ARGS=(
-    --remote-debugging-address=127.0.0.1
-    --remote-debugging-port=0
-)
-if [ "$PASS_USER_DATA_DIR_ARG" = 1 ]; then
-    LAUNCH_ARGS+=(--user-data-dir "$USER_DATA_DIR")
-fi
-
 GL_GPU="$CONTROL_GL_GPU" \
 VULKAN_POLICY_MODE="$VULKAN_POLICY_MODE" \
-"$LAUNCHER" "${LAUNCH_ARGS[@]}" \
+"$LAUNCHER" \
+    --remote-debugging-address=127.0.0.1 \
+    --remote-debugging-port=0 \
     >"$OUT/launch.stdout" \
     2>"$OUT/launch.stderr" &
 LAUNCH_PID=$!
@@ -126,7 +115,6 @@ pid_still_belongs_to_probe() {
     [ -n "$cmdline" ] || return 1
     case "$cmdline" in
         *"$APP/"*) return 0 ;;
-        *"$USER_DATA_DIR"*) return 0 ;;
         *) return 1 ;;
     esac
 }
@@ -244,7 +232,7 @@ cat "/proc/$GPU_PID/maps" >"$OUT/gpu.maps"
 
 printf 'PASS\n' >"$OUT/probe.status"
 
-printf '\n%s CDP GPU identity probe: PASS\n' "$APPLICATION_NAME"
+printf '\nVS Code CDP GPU identity probe: PASS\n'
 printf 'evidence: %s\n' "$OUT"
 
 printf '\n===== GPU devices =====\n'
