@@ -1,4 +1,4 @@
-# ~/gl/env — shared environment for glibc-world apps. `source` from launchers.
+# ~/gl/env — shared baseline for glibc-world apps. `source` from launchers.
 # English docs: README.md / docs/. Rules distilled from the build-out sessions.
 
 export DISPLAY=${DISPLAY:-:1}
@@ -33,18 +33,16 @@ if [ -r "$PREFIX/etc/tls/cert.pem" ]; then
   export REQUESTS_CA_BUNDLE="$SSL_CERT_FILE"
 fi
 
-# Vulkan ICD — pin to the GLIBC driver stack. This deliberately OVERRIDES the
-# bionic ICD the desktop session exports (shielding; docs/desktop-session.md).
-# Both variables are required: modern loaders prefer VK_DRIVER_FILES, and an
-# unset pair makes the loader default-scan and load the bionic .so
-# ("libm.so: invalid ELF header").
-GL_ICD="$HOME/gl/opt/mesa-glibc/share/vulkan/icd.d/freedreno_icd.aarch64.json"
-if [ -r "$GL_ICD" ]; then
-  export VK_ICD_FILENAMES="$GL_ICD"
-  export VK_DRIVER_FILES="$GL_ICD"
-else
-  unset VK_ICD_FILENAMES VK_DRIVER_FILES
-fi
+# Vulkan policy baseline: sanitize the bionic session's provider selection.
+# This is ABI shielding only. It deliberately does NOT choose a glibc Vulkan
+# provider. Consumers that require hardware Vulkan must source the explicit
+# profile at:
+#
+#   $HOME/gl/policy/vulkan/freedreno.sh
+#
+# Keeping sanitation and selection separate prevents provider policy from
+# leaking into CPU-mode or provider-neutral glibc processes.
+unset VK_ICD_FILENAMES VK_DRIVER_FILES
 
 # NOTE: never set LD_LIBRARY_PATH here (bionic children would load glibc's
 # libc.so linker script and die). Library resolution = $ORIGIN rpath +
