@@ -4,34 +4,18 @@
 
 ```text
 ACTIVE_ARCHITECTURE_DISCRIMINATION
-PARENT_QUESTION_NOT_CLOSED
-PHASE_B1_PASS
-PHASE_B2_PASS
-PHASE_B3_CORRECTED_PASS
-PHASE_B4_PASS
-PHASE_B5_PASS_WITH_REVIEW
-PHASE_B6_CORRECTED_PASS
-PHASE_B7_PASS
-PHASE_B8_PASS
+PHASE_B1_B8_CLOSED
 PHASE_B9_PASS
-PHASE_B10_LAUNCHER_DIAGNOSTIC_CLOSED
 PHASE_B10_SHORT_PATH_TOPOLOGY_PASS
-PHASE_B10_SURVIVAL_GTK_PIXBUF_FAILURE
-PIXBUF_ICON_MIME_SOURCE_INVENTORY_NEXT
+PHASE_B10_PREVIOUS_FAILURE_INTERACTION_TRIGGERED
+PIXBUF_ICON_MIME_INVENTORY_PASS
+PASSIVE_NO_INPUT_B10_NEXT
+INTERACTIVE_VAULT_OPEN_CAPABILITY_OPEN
 ```
 
-The selected CPU generation is materialized and immutable but not activated.
+The immutable generation exists and remains unactivated.
 
-## Authority
-
-```text
-docs/refactor/0106-selected-obsidian-phase-b9-generation-materialization-pass.md
-docs/refactor/0107-selected-obsidian-phase-b10-first-run-launcher-environment-failure.md
-docs/refactor/0108-selected-obsidian-phase-b10-second-run-short-lived-main-diagnostic.md
-docs/refactor/0109-selected-obsidian-phase-b10-short-runtime-topology-pass-gtk-pixbuf-survival-failure.md
-```
-
-## Closed generation boundary
+## Closed generation
 
 ```text
 generation ID:
@@ -53,81 +37,15 @@ current:
     ABSENT
 ```
 
-## Phase B10 diagnostic history
+## Corrected Phase B10 interpretation
 
-### Launcher-shell contamination
-
-```text
-application exec:
-    not reached
-
-cause:
-    candidate LD_LIBRARY_PATH reached a bionic mkdir
-
-correction:
-    launcher shell LD_LIBRARY_PATH unset
-    candidate loader injection final exec only
-```
-
-### Long runtime path
+The short-runtime run displayed the Obsidian initial window and formed the required CPU topology.
 
 ```text
-explicit main:
-    observed
-
-renderer/zygote:
-    not stabilized
-
-runtime paths:
-    170-179 characters
-
-SingletonSocket:
-    not created
-```
-
-### Short runtime path
-
-Receipt:
-
-```text
-selected-obsidian-phase-b10-short-runtime-cpu-validation-20260712-012415
-```
-
-Archive SHA-256:
-
-```text
-529e42fbc338148f5adf36cbabc1c8a1ebc16e9408e5850dd56f5194ac92f9fe
-```
-
-Captured head:
-
-```text
-e9a44c7bcd52b35e433d9b9850469c9b1bb7db99
-```
-
-Runtime contract:
-
-```text
-runtime root length:
-    48
-
-TMPDIR length:
-    52
-
-XDG_CONFIG_HOME length:
-    59
-
-runtime snapshot:
-    MATCH
-```
-
-Topology:
-
-```text
-topology.status:
-    PASS
-
 main:
+    1
+
+renderer:
     1
 
 zygote:
@@ -136,111 +54,121 @@ zygote:
 utility:
     1
 
-renderer:
-    1
-
 GPU process:
     0
-
-renderer --disable-gpu-compositing:
-    present
 ```
 
-The short path produced `SingletonLock`, `SingletonSocket`, `SingletonCookie`, and the Chromium scoped temporary directory. The long-path hypothesis is therefore supported for startup.
+The operator then clicked the vault-open control. The fatal GTK icon/pixbuf chain occurred after that interaction.
 
-Survival:
+Therefore:
 
 ```text
-survival.status:
-    FAIL main process exited
+passive idle initial-window survival:
+    OPEN / previous run was perturbed
 
-recorded survival samples with complete topology:
-    28
-
-approximate process lifetime:
-    72 seconds
+interactive vault-open capability:
+    FAIL / GTK file-chooser path
 ```
 
-Fatal chain:
+The capture scripts do not record mouse input. The click timing is operator evidence and is documented separately from machine evidence.
+
+## Pixbuf/icon/MIME inventory
+
+Authoritative receipt:
 
 ```text
-hicolor icon theme not found
-    -> GTK fallback image-missing.png
-    -> GdkPixbuf: Unrecognized image file format
-    -> gtkiconhelper assertion
-    -> application bailout
+selected-obsidian-gtk-pixbuf-runtime-capability-inventory-20260712-014314
 ```
 
-`current` remained absent before and after. Maps acceptance was not reached because survival failed.
-
-## Open architecture boundary
-
-The generation contains:
+Archive SHA-256:
 
 ```text
-libgdk_pixbuf-2.0.so.0
-libpng16.so.16
-libjpeg.so.62
+e9f5fc256dbbe74e6b060fb8ebfde8745959321d20a58f8d7bd4181d19be3be6
 ```
 
-The accepted data manifest contains:
+Result:
 
 ```text
-4 selected fonts
-1 generated GSettings aggregate
-12 protected-world locale files
+analysis.status:
+    PASS
+
+next-state:
+    READY_FOR_CONTROLLED_PIXBUF_RUNTIME_DIAGNOSTIC
+
+loader caches:
+    1
+
+loader modules:
+    12
+
+cache references:
+    12
+
+written /usr module paths present natively:
+    0
+
+rootfs-prefixed modules present:
+    12
+
+icon-theme indexes:
+    2
+
+MIME database files:
+    5
+
+paths absent from B9 semantic manifest:
+    20
 ```
 
-It does not contain an explicit contract for:
+The rootfs cache is generated and references FHS absolute `/usr/lib/...` paths. It cannot be used unchanged in the native namespace. A later diagnostic must create a receipt-local relocated cache.
+
+The inventory does not prove that all twelve modules, both icon themes, or all five MIME files belong in the final generation.
+
+## Claim split
+
+### Passive explicit-generation B10
 
 ```text
-gdk-pixbuf loader cache
-gdk-pixbuf loader modules
-icon-theme index/data
-shared MIME database
+operator action:
+    observe only
+
+forbidden:
+    click Open vault
+    click Create vault
+    interact with any GUI control
+
+required:
+    topology PASS
+    100-second survival PASS
+    maps capture PASS
+    exact immutable mapped-identity analysis PASS
 ```
 
-This is a runtime data/plugin capability gap not established by the mapped-object closure.
-
-## Next stage — read-only capability inventory
-
-Recipe:
+Wrapper:
 
 ```text
-recipe/inspect-gtk-pixbuf-runtime-capability.py
+recipe/run-passive-explicit-generation-cpu-validation.sh
 ```
 
-It consumes the completed Phase B9 receipt and the short-runtime B10 failure receipt.
-
-It performs:
+### Interactive vault-open capability
 
 ```text
-B9/B10 receipt verification;
-rootfs gdk-pixbuf loader-cache discovery;
-loader-module discovery;
-cache-reference parsing;
-package/version/SHA-256 ownership capture;
-icon-theme index inventory;
-shared MIME database inventory;
-B9 semantic-manifest gap comparison.
+operator action:
+    click the vault-open control once
+
+required capability:
+    GTK file chooser
+    pixbuf loader registry
+    icon-theme data
+    MIME data
+
+current result:
+    FAIL
 ```
 
-It does not:
+This will be tested only after the passive claim is closed.
 
-```text
-launch Obsidian;
-modify the generation;
-create current;
-change the promoted launcher.
-```
-
-Expected next state:
-
-```text
-READY_FOR_CONTROLLED_PIXBUF_RUNTIME_DIAGNOSTIC
-```
-
-### Canonical command
+## Canonical passive command
 
 ```bash
 cd "$HOME/projects/termux-native-desktop"
@@ -252,16 +180,14 @@ git fetch origin
 git merge --ff-only origin/docs/post-graphics-architecture-audit
 
 B9_OUT="$PREFIX/tmp/selected-obsidian-closure/selected-obsidian-phase-b9-generation-publication-corrected-20260712-003136"
-B10_OUT="$PREFIX/tmp/selected-obsidian-closure/selected-obsidian-phase-b10-short-runtime-cpu-validation-20260712-012415"
 
-out="selected-obsidian-gtk-pixbuf-runtime-capability-inventory-$(date +%Y%m%d-%H%M%S)"
+out="selected-obsidian-phase-b10-passive-short-runtime-cpu-validation-$(date +%Y%m%d-%H%M%S)"
 OUT="$PREFIX/tmp/selected-obsidian-closure/$out"
 
 if B9_OUT="$B9_OUT" \
-   B10_OUT="$B10_OUT" \
    OUT="$OUT" \
-   python \
-     experiments/glibc/selected-obsidian-closure/recipe/inspect-gtk-pixbuf-runtime-capability.py
+   bash \
+     experiments/glibc/selected-obsidian-closure/recipe/run-passive-explicit-generation-cpu-validation.sh
 then
   analysis_rc=0
 else
@@ -272,17 +198,26 @@ printf '\n===== analysis exit status =====\n'
 printf '%s\n' "$analysis_rc"
 
 for f in \
+  "$OUT/interaction-contract.tsv" \
   "$OUT/analysis.status" \
   "$OUT/failure-stage.txt" \
   "$OUT/next-state.txt" \
   "$OUT/summary.tsv" \
-  "$OUT/input-verification.tsv" \
-  "$OUT/failure-evidence.tsv" \
-  "$OUT/pixbuf-loader-cache.tsv" \
-  "$OUT/pixbuf-cache-references.tsv" \
-  "$OUT/pixbuf-loader-modules.tsv" \
-  "$OUT/gtk-data-capability.tsv" \
-  "$OUT/semantic-coverage-gaps.tsv" \
+  "$OUT/runtime-root-contract.tsv" \
+  "$OUT/runtime-snapshot.tsv" \
+  "$OUT/runtime-cleanup.status" \
+  "$OUT/capture-exit-status.txt" \
+  "$OUT/process-contract.tsv" \
+  "$OUT/missing-expected-mapped-paths.tsv" \
+  "$OUT/unexpected-mapped-paths.tsv" \
+  "$OUT/mapped-identity-verification.tsv" \
+  "$OUT/mapped-path-classification.tsv" \
+  "$OUT/current-state-before.tsv" \
+  "$OUT/current-state-after.tsv" \
+  "$OUT/capture/class-counts.tsv" \
+  "$OUT/capture/processes.tsv" \
+  "$OUT/capture/launch.stdout" \
+  "$OUT/capture/launch.stderr" \
   "$OUT/claim-boundary.txt"
 do
   [ -e "$f" ] || continue
@@ -293,19 +228,39 @@ done
 tar czf ~/Downloads/$out.tgz $OUT
 ```
 
+## Operator instruction
+
+During this passive run:
+
+```text
+Do not click anything in the Obsidian window.
+Do not open or create a vault.
+Observe only until the terminal reports completion.
+```
+
+## Expected PASS state
+
+```text
+analysis.status:
+    PASS
+
+next-state:
+    READY_FOR_ATOMIC_ACTIVATION_IMPLEMENTATION
+```
+
+That next-state applies only to the passive runtime/identity claim. The interactive vault-open capability must still close before practical promotion.
+
 ## Stop line
 
 Do not:
 
 ```text
 rerun Phase B1-B9;
-rerun B10 blindly;
-modify the immutable generation before inventory;
-copy the whole rootfs icon/MIME tree;
-add rootfs or broad-farm paths to an acceptance run;
+interact with the GUI during the passive run;
+mutate the immutable generation;
+copy all inventory paths wholesale;
+use the rootfs loaders.cache unchanged;
 create current;
 change the promoted launcher;
-follow archived SingletonSocket symlinks during extraction;
-garbage-collect the generation or object store;
-start PyMOL by extending the broad farm.
+claim practical Obsidian usability from passive PASS alone.
 ```
