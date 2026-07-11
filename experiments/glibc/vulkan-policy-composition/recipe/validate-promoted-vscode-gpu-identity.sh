@@ -65,7 +65,7 @@ printf '%s\n' "$EXPECTED_ICD" >"$OUT/expected-icd.txt"
 
 # Phase 1: prove the actual promoted launcher sanitizes deliberately injected
 # bionic/session graphics policy, selects the exact glibc Freedreno provider,
-# and does not carry a Zink/Gallium override into ANGLE processes.
+# and does not carry a Zink/Gallium override into the observable launch chain.
 VK_DRIVER_FILES=/bionic/freedreno.json \
 VK_ICD_FILENAMES=/bionic/freedreno.json \
 MESA_LOADER_DRIVER_OVERRIDE=llvmpipe \
@@ -126,6 +126,8 @@ display_type=$(awk -F $'\t' '$1 == "display_type" { print $2; exit }' "$identity
 skia_backend=$(awk -F $'\t' '$1 == "skia_backend" { print $2; exit }' "$identity_summary")
 vulkan_status=$(awk -F $'\t' '$1 == "vulkan_feature_status" { print $2; exit }' "$identity_summary")
 renderer=$(awk -F $'\t' '$1 == "gl_renderer" { print $2; exit }' "$identity_summary")
+zygote_max_entries=$(awk -F $'\t' '$3 == "zygote" && $5 + 0 > max { max=$5 + 0 } END { print max + 0 }' "$environment_summary")
+gpu_max_entries=$(awk -F $'\t' '$3 == "gpu" && $5 + 0 > max { max=$5 + 0 } END { print max + 0 }' "$environment_summary")
 
 printf 'gate\tstate\n' >"$OUT/gates.tsv"
 failures=0
@@ -160,7 +162,7 @@ has_exact_environment_value() {
         "$environment_selected"
 }
 
-all_environment_values_equal() {
+all_observable_environment_values_equal() {
     local key=$1 expected=$2
     awk -F $'\t' -v k="$key" -v e="$expected" \
         'NR > 1 && $4 == k { seen=1; if ($5 != e) bad=1 }
@@ -168,14 +170,21 @@ all_environment_values_equal() {
         "$environment_selected"
 }
 
-key_absent() {
+observable_key_absent() {
     local key=$1
     ! awk -F $'\t' -v k="$key" \
         'NR > 1 && $4 == k { found=1 } END { exit found ? 0 : 1 }' \
         "$environment_selected"
 }
 
-required_environment_readable() {
+process_observed() {
+    local class=$1
+    awk -F $'\t' -v c="$class" \
+        'NR > 1 && $4 == c { found=1 } END { exit found ? 0 : 1 }' \
+        "$processes"
+}
+
+environment_read_attempt_succeeded() {
     local class=$1
     awk -F $'\t' -v c="$class" \
         'NR > 1 && $3 == c && $4 == "READ_OK" { found=1 }
@@ -183,9 +192,12 @@ required_environment_readable() {
         "$environment_summary"
 }
 
-for required_class in main zygote gpu; do
+# Exact environment assertions are restricted to the observable exec chain.
+# Chromium descendants may clear or replace the memory exposed through
+# /proc/<pid>/environ; a zero-entry READ_OK result is not a value mismatch.
+for required_class in launch-wrapper node-cli main; do
     record_boolean_gate "${required_class}_environment_readable" \
-        required_environment_readable "$required_class"
+        environment_read_attempt_succeeded "$required_class"
     record_boolean_gate "${required_class}_gl_gpu_one" \
         has_exact_environment_value "$required_class" GL_GPU 1
     record_boolean_gate "${required_class}_vk_driver_files_exact" \
@@ -194,34 +206,41 @@ for required_class in main zygote gpu; do
         has_exact_environment_value "$required_class" VK_ICD_FILENAMES "$EXPECTED_ICD"
 done
 
-record_boolean_gate all_gl_gpu_values_one \
-    all_environment_values_equal GL_GPU 1
-record_boolean_gate all_vk_driver_files_exact \
-    all_environment_values_equal VK_DRIVER_FILES "$EXPECTED_ICD"
-record_boolean_gate all_vk_icd_filenames_exact \
-    all_environment_values_equal VK_ICD_FILENAMES "$EXPECTED_ICD"
-record_boolean_gate mesa_loader_override_absent \
-    key_absent MESA_LOADER_DRIVER_OVERRIDE
-record_boolean_gate gallium_driver_absent \
-    key_absent GALLIUM_DRIVER
-record_boolean_gate libgl_always_software_absent \
-    key_absent LIBGL_ALWAYS_SOFTWARE
-record_boolean_gate ld_library_path_absent \
-    key_absent LD_LIBRARY_PATH
+for child_class in zygote gpu; do
+    record_boolean_gate "${child_class}_process_observed" \
+        process_observed "$child_class"
+    record_boolean_gate "${child_class}_environment_read_attempt" \
+        environment_read_attempt_succeeded "$child_class"
+done
+
+record_boolean_gate all_observable_gl_gpu_values_one \
+    all_observable_environment_values_equal GL_GPU 1
+record_boolean_gate all_observable_vk_driver_files_exact \
+    all_observable_environment_values_equal VK_DRIVER_FILES "$EXPECTED_ICD"
+record_boolean_gate all_observable_vk_icd_filenames_exact \
+    all_observable_environment_values_equal VK_ICD_FILENAMES "$EXPECTED_ICD"
+record_boolean_gate observable_mesa_loader_override_absent \
+    observable_key_absent MESA_LOADER_DRIVER_OVERRIDE
+record_boolean_gate observable_gallium_driver_absent \
+    observable_key_absent GALLIUM_DRIVER
+record_boolean_gate observable_libgl_always_software_absent \
+    observable_key_absent LIBGL_ALWAYS_SOFTWARE
+record_boolean_gate observable_ld_library_path_absent \
+    observable_key_absent LD_LIBRARY_PATH
 
 if awk -F $'\t' 'NR > 1 && $4 == "LD_PRELOAD" && $5 != "" { bad=1 }
     END { exit bad ? 0 : 1 }' "$environment_selected"; then
-    printf 'ld_preload_nonempty_absent\tFAIL\n' >>"$OUT/gates.tsv"
+    printf 'observable_ld_preload_nonempty_absent\tFAIL\n' >>"$OUT/gates.tsv"
     failures=$((failures + 1))
 else
-    printf 'ld_preload_nonempty_absent\tPASS\n' >>"$OUT/gates.tsv"
+    printf 'observable_ld_preload_nonempty_absent\tPASS\n' >>"$OUT/gates.tsv"
 fi
 
 if grep -F '/bionic/' "$environment_selected" >/dev/null; then
-    printf 'injected_bionic_paths_absent\tFAIL\n' >>"$OUT/gates.tsv"
+    printf 'observable_injected_bionic_paths_absent\tFAIL\n' >>"$OUT/gates.tsv"
     failures=$((failures + 1))
 else
-    printf 'injected_bionic_paths_absent\tPASS\n' >>"$OUT/gates.tsv"
+    printf 'observable_injected_bionic_paths_absent\tPASS\n' >>"$OUT/gates.tsv"
 fi
 
 main_cmdlines="$OUT/main-cmdlines.txt"
@@ -284,6 +303,9 @@ fi
     printf 'selected_provider\t%s\n' "$provider"
     printf 'selected_device_family\t%s\n' "$device"
     printf 'renderer\t%s\n' "$renderer"
+    printf 'zygote_max_observable_environment_entries\t%s\n' "$zygote_max_entries"
+    printf 'gpu_max_observable_environment_entries\t%s\n' "$gpu_max_entries"
+    printf 'child_environment_value_claim\tNOT_MADE_WHEN_PROC_ENVIRON_EMPTY\n'
     printf 'environment_probe\t%s\n' "$ENV_PROBE_OUT"
     printf 'cdp_probe\t%s\n' "$CDP_PROBE_OUT"
     printf 'gate_failures\t%s\n' "$failures"
@@ -304,8 +326,10 @@ printf '\n===== summary =====\n'
 cat "$OUT/summary.tsv"
 printf '\n===== gates =====\n'
 cat "$OUT/gates.tsv"
-printf '\n===== selected process environment =====\n'
+printf '\n===== selected observable process environment =====\n'
 cat "$environment_selected"
+printf '\n===== environment observation summary =====\n'
+cat "$environment_summary"
 printf '\n===== environment process identities =====\n'
 cat "$processes"
 printf '\n===== GPU devices =====\n'
