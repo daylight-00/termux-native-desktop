@@ -1,6 +1,6 @@
 # Status
 
-> **State:** selected-Obsidian-closure Phase B6 schema reproduction after Phase B5 PASS/REVIEW  
+> **State:** selected-Obsidian-closure corrected Phase B6 source-closure reproduction after first B6 diagnostic  
 > **Updated:** 2026-07-11
 
 ## Working conclusions
@@ -16,14 +16,14 @@
 - **Phase B4 passed.** Twenty-eight external direct roots form an 87-object deduplicated static union with 51 shared objects, 111 overlap pairs, and 144 package dependency edges.
 - **Static ownership is manifest-based.** The target is typed semantic manifests over one deduplicated application-domain generation—not one tree per root and not one untyped blob.
 - **The minimum CPU ELF direction is explicit.** Include the 87 external static objects plus NSS/security dynamic modules/support; leave app-local and world ELF in place; exclude Vulkan-provider dynamic roots; retain static GBM.
-- **Phase B5 completed as `PASS + REVIEW_DATA_PROVENANCE_GAPS`.** This is a valid audit, not a script failure.
-- **All 17 data bytes are stable.** Identity mismatches and missing paths are zero.
-- **Locale ownership is closed.** Twelve glibc 2.42 locale files remain `WORLD_LOCALE_GLIBC` and are referenced from the protected prefix rather than copied.
-- **Font ownership is closed.** All four selected font files match exact package ownership and become `SELECTED_FONT_DATA` with path/version/hash provenance.
-- **Schema source ownership is closed.** The aggregate has 36 owned inputs: 32 from `gsettings-desktop-schemas` and 4 from `libgtk-3-common`; no source is unowned.
-- **Only schema compiler lineage remains open.** The retained rootfs has no `/usr/bin/glib-compile-schemas`, so source-to-aggregate reproducibility is not yet proven.
-- **Phase B6 is read-only.** It discovers explicit compiler candidates, records identity/version/package provenance, recompiles only in receipt-local directories, and compares generated aggregate SHA-256 with the retained byte.
-- **No fresh Obsidian run or graphics rerun is required.** Candidate bytes remain unmaterialized.
+- **Phase B5 completed as `PASS + REVIEW_DATA_PROVENANCE_GAPS`.** All 17 retained data bytes are stable; locale and selected-font ownership are closed.
+- **The 36 Phase B5 schema inputs are stable and package-owned, but the source set was incomplete.** The suffix filter captured schema XML and overrides but omitted enum-definition XML.
+- **The first Phase B6 completed as a valid diagnostic receipt.** It found native Termux `glib-compile-schemas` 2.88.2, but the reported `REVIEW_SCHEMA_COMPILER_VERSION_DIFFERENCE` state is not accepted.
+- **Default compilation was not clean.** It returned zero while ignoring ten complete schema files because enum identifiers were undefined; strict mode failed at the first such error.
+- **The generated hash difference is not yet a compiler-version-only difference.** It compares the retained aggregate with a reduced aggregate produced from incomplete inputs.
+- **Complete schema-source closure remains open.** The corrected Phase B6 discovers every XML and override input from the retained schema directory and records the delta from the 36-file B5 manifest.
+- **Compiler acceptance is hardened.** Return code zero is rejected when stderr reports schema errors or ignored files.
+- **No package installation, Obsidian run, graphics rerun, or promoted mutation is required.** Corrected reproduction uses a receipt-local B5 overlay and temporary compile directories.
 - **Atomic activation remains mandatory before promotion.** Its object is the completed receipt-owned generation, but implementation waits for the complete data/candidate manifest.
 - **The glibc 2.42 hold remains incident containment.** It is not the final lifecycle contract.
 - **Evidence archives remain stage-specific.** Each stage defines `out` and `OUT` and ends with `tar czf ~/Downloads/$out.tgz $OUT`.
@@ -42,6 +42,7 @@ docs/refactor/0096-selected-obsidian-phase-b3-first-run-script-failure.md
 docs/refactor/0097-selected-obsidian-phase-b3-capability-grouping-pass.md
 docs/refactor/0098-selected-obsidian-phase-b4-entrypoint-static-matrix-pass.md
 docs/refactor/0099-selected-obsidian-phase-b5-data-provenance-review.md
+docs/refactor/0100-selected-obsidian-phase-b6-source-manifest-gap.md
 docs/refactor/0091-scoped-graphics-policy-promotion-closure.md
 ```
 
@@ -53,9 +54,10 @@ docs/refactor/0091-scoped-graphics-policy-promotion-closure.md
 - [x] partition static/runtime/data sets
 - [x] group dynamic graphics and NSS/security roots
 - [x] choose typed manifests over one deduplicated static generation
-- [x] close locale, font, and schema-source ownership
-- [ ] run Phase B6 GSettings compiler reproduction
-- [ ] close schema aggregate compiler lineage
+- [x] close locale and selected-font ownership
+- [x] diagnose the first Phase B6 incomplete-source compile
+- [ ] run corrected Phase B6 complete source-closure reproduction
+- [ ] close schema aggregate source/compiler lineage
 - [ ] emit the complete selected CPU candidate manifest
 - [ ] materialize and validate the selected CPU candidate
 
@@ -77,14 +79,16 @@ docs/refactor/0091-scoped-graphics-policy-promotion-closure.md
 Do not:
 
 ```text
-rerun closed graphics gates or Phase B1-B5 without a source trigger;
+rerun closed graphics gates or Phase B1-B5;
+accept default compiler return code zero when stderr reports ignored schema files;
+classify the first B6 hash difference as compiler-version-only;
 install a rootfs schema compiler merely to make the audit pass;
-copy the opaque rootfs gschemas.compiled without compiler/source provenance;
+copy opaque gschemas.compiled without complete source/compiler provenance;
 copy glibc locale data into the application generation;
 expand the selected font set by package or directory inertia;
 make one provider tree per direct root or one untyped candidate blob;
 copy app-local/world ELF or include Vulkan provider roots in the CPU base;
-materialize candidate bytes before schema reproduction is interpreted;
+materialize candidate bytes before corrected schema reproduction is interpreted;
 implement activation before the complete generation manifest;
 start PyMOL by expanding the broad farm;
 use ambiguous evidence archive names.
@@ -92,7 +96,7 @@ use ambiguous evidence archive names.
 
 ## Evidence policy
 
-Identity, ownership, source provenance, compiler reproducibility, manifest membership, materialization, actual selection, and workload equivalence are separate claims. A generated data aggregate is reproducible only for a recorded source set and compiler identity.
+Identity, complete source closure, compiler cleanliness, reproducibility, manifest membership, materialization, actual selection, and workload equivalence are separate claims. A generated aggregate is reproducible only for a recorded complete source set and compiler identity; a zero return code with ignored inputs is not success.
 
 ```bash
 out=<stage-specific-slug>-$(date +%Y%m%d-%H%M%S)
