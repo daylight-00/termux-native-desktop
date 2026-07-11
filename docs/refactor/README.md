@@ -56,7 +56,7 @@ refactor/0015
 refactor/0016
     -> handoff into semantic review
 
-refactor/0017-0055
+refactor/0017-0057
     -> current branch evidence/design records under that direction
 
 refactor/0014
@@ -82,8 +82,6 @@ refactor/0014
 0011-phase-b-runtime-deploy-passed.md
 ```
 
-These records preserve the initial inventory, ownership map, migration procedure, shell/uv-base adoption, preflight corrections, and completed Phase A/B ownership migration.
-
 ### ABI incident and lifecycle reasoning
 
 ```text
@@ -92,16 +90,12 @@ These records preserve the initial inventory, ownership map, migration procedure
 0014-robust-gl-update-and-farm-lifecycle.md
 ```
 
-`0012` and `0013` preserve the ABI incident and confirmed root cause. `0014` is retained for lifecycle principles only where it does not conflict with the later architecture direction.
-
 ### Current architecture direction
 
 ```text
 0015-architecture-reassessment-and-hard-refactor-direction.md
 0016-next-session-handoff.md
 ```
-
-These define the semantic hard-refactor direction, stop line, and evidence-driven handoff.
 
 ### Semantic review, substrate, and selected closure
 
@@ -120,7 +114,7 @@ These define the semantic hard-refactor direction, stop line, and evidence-drive
 0028-selected-dbus-candidate-validation-passed.md
 ```
 
-These establish:
+These records establish:
 
 ```text
 semantic decomposition of the old gl umbrella
@@ -151,7 +145,7 @@ materialized selected-provider candidate validation
 0041-obsidian-fallback-provider-closure-attribution.md
 ```
 
-The Obsidian records establish:
+The CPU-path Obsidian records establish:
 
 ```text
 real multiprocess topology and survival gates
@@ -184,63 +178,13 @@ zero unresolved or ambiguous mapped-universe SONAME edges
 0053-obsidian-capture-feature-mode-parameterization.md
 0054-obsidian-explicit-freedreno-gpu-adapter-validation-passed.md
 0055-obsidian-gpu-policy-control-comparison-harness.md
+0056-obsidian-implicit-gpu-control-and-helper-corrections.md
+0057-obsidian-same-feature-mode-vulkan-policy-substitution-result.md
 ```
 
-The Vulkan records establish a completed bounded Zink/GLX three-state matrix and have moved into real Electron consumer validation.
+## Zink/GLX consumer result
 
-#### Explicit hardware provider + default device intent
-
-```text
-provider policy:
-    explicit-freedreno
-
-renderer:
-    Zink -> Turnip Adreno 730
-
-physical tail:
-    provider-store libvulkan_freedreno.so
-    -> /dev/kgsl-3d0
-
-result:
-    PASS
-```
-
-#### Implicit discovery + default device intent
-
-```text
-manifest discovery:
-    PASS
-
-device-select layer:
-    inserted
-
-sole surviving pdev:
-    llvmpipe CPU
-
-Zink default CPU-device acceptance:
-    FAIL
-
-renderer identity:
-    NOT REACHED
-```
-
-#### Implicit discovery + explicit software device intent
-
-```text
-provider policy:
-    implicit-discovery
-
-device-class intent:
-    LIBGL_ALWAYS_SOFTWARE=1
-
-renderer:
-    zink Vulkan 1.4(llvmpipe ... MESA_LLVMPIPE)
-
-GLX/OpenGL:
-    PASS
-```
-
-The completed Zink causal matrix is:
+The bounded Zink three-state matrix is complete.
 
 ```text
 explicit-freedreno + default intent
@@ -262,13 +206,13 @@ Therefore:
 
 ```text
 provider discovery/selection policy
-    and
+    !=
 consumer device-class intent
 ```
 
-are independent composition dimensions for the tested Zink/GLX consumer.
+for the tested Zink consumer.
 
-The successful hardware graph is:
+The explicit hardware graph is:
 
 ```text
 rootfs GLVND / libGL / libGLX 1.7.0
@@ -280,7 +224,7 @@ rootfs GLVND / libGL / libGLX 1.7.0
     -> KGSL device interface
 ```
 
-The successful software graph shares the application-facing front half and changes the provider tail:
+The passing software graph shares the application-facing front half and changes the selected provider tail:
 
 ```text
 rootfs GLVND / Mesa GLX / Gallium Zink
@@ -289,7 +233,9 @@ rootfs GLVND / Mesa GLX / Gallium Zink
     -> llvmpipe CPU renderer
 ```
 
-The software capture also maps `libvulkan_gfxstream.so`, but loader diagnostics show discovery/loading participation without a surviving physical device. Therefore:
+The software capture also maps Gfxstream, but loader diagnostics show discovery/loading participation without a surviving physical device.
+
+Therefore:
 
 ```text
 mapped ICD object
@@ -297,50 +243,33 @@ mapped ICD object
 selected rendering provider
 ```
 
-The explicit-vs-software comparison reported:
+## Obsidian real Electron same-feature-mode policy A/B
 
-```text
-explicit-only:
-    mesa_shader_cache/index
-    provider-store libvulkan_freedreno.so
-    /dev/kgsl-3d0
-
-software-control-only:
-    rootfs libvulkan_gfxstream.so
-    rootfs libvulkan_lvp.so
-    /memfd:allocation
-```
-
-`0052` corrects enrichment classification for the narrow observed `/memfd:allocation*` pattern. Device-side re-enrichment confirmed:
-
-```text
-RUNTIME_ANON_MEMORY
-RUNTIME_MEMORY
-RUNTIME_ANONYMOUS_MAPPING
-```
-
-with no remaining `OTHER UNKNOWN UNKNOWN 1` package-summary row for that mapping.
-
-`0053` parameterizes the Obsidian capture harness with `CONTROL_GL_GPU=0|1`, defaulting to the original CPU-control behavior, so feature mode and provider policy can be varied independently.
-
-`0054` records the first real Electron GPU-feature adapter control:
+Both GPU-path controls keep:
 
 ```text
 CONTROL_GL_GPU=1
-VULKAN_POLICY_MODE=explicit-freedreno
 LIBGL_ALWAYS_SOFTWARE unset
-
-topology gate: PASS
-100-second survival: PASS
-final gpu process: PRESENT
-identity enrichment: PASS
-semantic classification: PASS
-semantic review objects: 0
-hardware Vulkan driver class: 1
-KGSL device-node class: 1
+same experiment launcher adapter
+same capture harness
+same 100-second survival budget
 ```
 
-The final process topology was:
+and change only:
+
+```text
+VULKAN_POLICY_MODE=explicit-freedreno
+```
+
+versus:
+
+```text
+VULKAN_POLICY_MODE=implicit-discovery
+```
+
+### Process topology
+
+Both controls end with:
 
 ```text
 main      1
@@ -350,32 +279,205 @@ utility   1
 renderer  1
 ```
 
-This proves that the scoped explicit-Freedreno policy is compatible with the tested Obsidian GPU-feature path. Process-class ownership of the hardware driver and KGSL still requires the dedicated graphics relation report.
+Both pass topology and survival gates.
 
-`0055` adds a same-feature-mode policy comparison helper. The next Obsidian A/B keeps:
+Therefore the policy substitution preserves the captured final process-class topology for these controls.
 
-```text
-CONTROL_GL_GPU=1
-LIBGL_ALWAYS_SOFTWARE unset
-same capture harness
-same launcher adapter
-same survival budget
-```
+### Shared captured graphics front half
 
-and changes only:
+Both controls share these `gpu` process relations:
 
 ```text
-explicit-freedreno
-    versus
-implicit-discovery
+gpu -> AppDir libEGL.so
+gpu -> AppDir libGLESv2.so
+gpu -> AppDir libvulkan.so.1
+gpu -> rootfs libVkLayer_MESA_device_select.so
+gpu -> rootfs libgbm.so.1.0.0
 ```
 
-The comparison preserves exact semantic class/path deltas, process-class topology counts, and graphics class/object relations.
+The non-GPU process classes map rootfs GBM in both controls.
 
-### Supporting records
+This supports a stable captured front half:
 
-- `MIGRATION_JOURNAL.md` — chronological commands, commit IDs, validations, incidents, recovery, and deviations.
-- `repo-path-map.tsv` — machine-readable path mapping for moved tracked files.
+```text
+Electron gpu process
+    -> AppDir EGL/GLES/Vulkan-facing stack
+    -> Mesa device-selection layer
+    -> GBM infrastructure
+```
+
+### Explicit-only graphics tail
+
+```text
+gpu -> provider-store libvulkan_freedreno.so
+gpu -> /dev/kgsl-3d0
+```
+
+### Implicit-only graphics tail
+
+```text
+gpu -> rootfs libvulkan_lvp.so
+gpu -> rootfs libvulkan_gfxstream.so
+```
+
+The implicit control preserves topology and survival without the captured Freedreno/KGSL relation.
+
+This proves alternate ICD mapping participation in the real Electron GPU process.
+
+It does not prove which implicit ICD is the selected renderer.
+
+### Semantic substitution
+
+Policy-significant explicit-only objects:
+
+```text
+DEVICE_NODE_GPU
+    /dev/kgsl-3d0
+
+PROVIDER_GRAPHICS_VULKAN_DRIVER_ELF
+    provider-store libvulkan_freedreno.so
+```
+
+Implicit-only graphics roots:
+
+```text
+PROVIDER_GRAPHICS_VULKAN_SOFTWARE_LVP_ELF
+    rootfs libvulkan_lvp.so
+
+PROVIDER_GRAPHICS_VULKAN_VIRTUAL_GFXSTREAM_ELF
+    rootfs libvulkan_gfxstream.so
+```
+
+The implicit side also includes the LVP dependency-side additions:
+
+```text
+prefix:
+    liblzma.so.5.6.4
+
+rootfs:
+    libLLVM.so.19.1
+    libz3.so.4
+    libxml2.so.2.9.14
+    libedit.so.2.0.75
+    libtinfo.so.6.5
+    libbsd.so.0.12.2
+    libmd.so.0.1.0
+```
+
+This reproduces the earlier LVP closure shape inside a same-feature-mode real Electron GPU-path comparison.
+
+## Evidence hygiene corrections
+
+### Runtime anonymous memory
+
+The narrow observed:
+
+```text
+/memfd:allocation*
+```
+
+pattern is classified as:
+
+```text
+RUNTIME_ANON_MEMORY
+RUNTIME_MEMORY
+RUNTIME_ANONYMOUS_MAPPING
+```
+
+### Mesa shader cache database
+
+The Obsidian classifier previously recognized only:
+
+```text
+$HOME/.cache/mesa_shader_cache/
+```
+
+and misclassified:
+
+```text
+$HOME/.cache/mesa_shader_cache_db/index
+```
+
+as review data.
+
+The classifier now recognizes both cache layouts as:
+
+```text
+RUNTIME_CACHE_MESA
+```
+
+Device-side reclassification of the existing implicit evidence root is the immediate cleanup step.
+
+### Full exact delta versus policy-relevant delta
+
+The policy comparison helper preserves:
+
+```text
+full exact semantic delta
+```
+
+and separately emits:
+
+```text
+policy-relevant semantic delta
+```
+
+The filtered view includes:
+
+```text
+device nodes
+app-local graphics providers
+graphics provider classes
+prefix ELF provider differences
+rootfs ELF provider differences
+```
+
+while the full view retains cache/font/data timing differences.
+
+This avoids deleting evidence while preventing volatile runtime data from dominating policy interpretation.
+
+## Architecture conclusion
+
+The current evidence supports:
+
+```text
+stable consumer-facing graphics front half
+    +
+consumer-specific provider-policy composition
+    +
+policy-dependent provider tail
+```
+
+The provider tail is not one immutable global Mesa object.
+
+Cross-consumer behavior differs:
+
+```text
+standalone Zink:
+    implicit/default -> FAIL
+
+Obsidian Electron GPU path:
+    implicit/default -> topology/survival PASS
+    alternate ICDs mapped by gpu process
+```
+
+Therefore graphics provider policy must remain consumer-aware.
+
+Do not generalize one consumer's valid policy to every glibc graphics consumer merely because they share Vulkan-related libraries.
+
+## Current unresolved questions
+
+The current evidence does not establish:
+
+```text
+which implicit ICD is the selected Electron renderer
+whether LVP or Gfxstream submits rendering work
+whether rendered output correctness is equivalent across policies
+whether Electron internally falls back among multiple graphics backends
+whether the implicit provider tail should be one closure or multiple discovery candidates
+```
+
+Map presence alone cannot answer these questions.
 
 ## Refactor branch
 
@@ -391,9 +493,9 @@ Base commit:
 
 The system-foundation documentation was added separately on `main` after this branch diverged. Branch-local absence does not make foundation direction irrelevant; histories must be reconciled deliberately.
 
-## Current device and incident state
+## Current device and ABI incident state
 
-The tested VS Code workload has recovered through CLI and real GUI validation.
+The tested VS Code workload recovered through CLI and real GUI validation.
 
 ```text
 SUBSTRATE_RECOVERED
@@ -447,19 +549,19 @@ selected Obsidian AppDir composition pilot
 scoped Vulkan policy composition experiment
 ```
 
-For Obsidian, the earlier CPU-path controls established baseline semantic composition and alternate fallback-provider sets. The new GPU-feature explicit-Freedreno adapter control now passes topology, 100-second survival, final GPU-process presence, identity enrichment, semantic classification, and zero-review gates.
+The Obsidian same-feature-mode explicit-versus-implicit GPU policy A/B is now complete at topology, survival, semantic-set, and process-class mapping levels.
 
 The immediate next evidence sequence is:
 
 ```text
-1. explicit Obsidian GPU process-class graphics relation report
-2. implicit-discovery Obsidian GPU capture with the same feature mode
-3. implicit identity enrichment and semantic classification
-4. same-feature-mode policy-control comparison
-5. interpret consumer-specific provider requirements
-6. VS Code explicit-freedreno GPU adapter validation
-7. VS Code CPU/software-intent behavior check
-8. define minimum graphics composition contract from evidence
+1. reclassify implicit Obsidian evidence with shader_cache_db correction
+2. rerun refined full/policy-relevant Obsidian comparison
+3. decide whether a bounded Electron actual-selection probe is feasible
+4. VS Code explicit-freedreno GPU adapter validation
+5. VS Code CPU/software-intent behavior check
+6. compare consumer-specific policy requirements
+7. define minimum graphics composition contract from evidence
+8. only then resume locality-shadowing and non-graphics static/runtime closure analysis
 ```
 
 Candidate materialization remains blocked pending these graphics composition gates plus locality-shadowing and non-graphics static/runtime closure analysis.
