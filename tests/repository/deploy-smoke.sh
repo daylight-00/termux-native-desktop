@@ -24,6 +24,7 @@ assert_symlink() {
 mkdir -p \
   "$REPO/modules/desktop/overlay/home/.local/bin" \
   "$REPO/modules/gl/overlay/home/gl/bin" \
+  "$REPO/modules/gl/overlay/home/gl/policy/vulkan" \
   "$REPO/modules/gl/overlay/home/gl/shims" \
   "$REPO/modules/gl/overlay/home/gl/toolchain" \
   "$REPO/packages/vscode/launcher" \
@@ -36,6 +37,7 @@ touch \
   "$REPO/modules/gl/overlay/home/gl/env" \
   "$REPO/modules/gl/overlay/home/gl/bin/gl-run" \
   "$REPO/modules/gl/overlay/home/gl/bin/gl-farm" \
+  "$REPO/modules/gl/overlay/home/gl/policy/vulkan/freedreno.sh" \
   "$REPO/modules/gl/overlay/home/gl/shims/xdg-open" \
   "$REPO/modules/gl/overlay/home/gl/toolchain/glibc-exec" \
   "$REPO/packages/vscode/launcher/code" \
@@ -76,6 +78,7 @@ assert_symlink "$HOME_TEST/gl/bin/gl-run"
 assert_symlink "$HOME_TEST/gl/bin/gl-farm"
 assert_symlink "$HOME_TEST/gl/bin/obsidian"
 assert_symlink "$HOME_TEST/gl/bin/obsidian-app"
+assert_symlink "$HOME_TEST/gl/policy/vulkan/freedreno.sh"
 assert_symlink "$HOME_TEST/.local/bin/code"
 assert_symlink "$HOME_TEST/.local/bin/startxfce-x11"
 assert_symlink "$HOME_TEST/gl/env"
