@@ -14,6 +14,7 @@
 - **Application feature mode is separate from provider policy.** VS Code and Obsidian apply the explicit profile only in their GPU branches; CPU branches and the Obsidian CLI retain a provider-neutral glibc baseline. `gl-run` composes the explicit provider with Zink.
 - **The real-device scoped-policy pre-deploy and installation receipts passed.** Syntax, repository tests, deployment, exact live symlink targets, baseline sanitation, explicit profile selection, and profile-variable privacy all passed.
 - **The promoted `gl-run` path is validated end to end.** A self-contained glibc GLX consumer created a working context through the live launcher and reported `zink Vulkan 1.4(Turnip Adreno (TM) 730)` with OpenGL 4.6.
+- **The promoted VS Code GPU path matches the experiment result.** The actual `$HOME/.local/bin/code` launcher produced `ANGLE_VULKAN`, `GaneshVulkan`, `vulkan=enabled_on`, CDP primary identity `FREEDRENO_TURNIP` / `Adreno`, the managed `libvulkan_freedreno.so`, and `/dev/kgsl-3d0`.
 - **Mutable checkout symlinks are also an activation path.** Existing live leaves exposed new checkout contents immediately after `git pull`, before `tools/deploy` could install the newly introduced profile leaf. The current transaction's temporary gap is closed, but the general atomic-activation problem remains open.
 - **The current glibc Mesa 26.1.x build policy uses `-Dfreedreno-kmds=msm,kgsl`.** In the investigated builds, the working/broken split tracked whether the Turnip ICD retained its libdrm dependency. The exact low-level crash mechanism remains open.
 - **The desktop session source is recovered and tracked.** `modules/desktop/overlay/home/.local/bin/startxfce-x11` records the current two-world session contract, clean X-server startup, Unix-socket X11, bionic ICD policy, optional Picom path, and clean teardown behavior.
@@ -32,11 +33,12 @@
 - `docs/refactor/0078-live-installation-pass-and-promoted-workload-gates.md` — live installation closure and promoted workload sequence.
 - `docs/refactor/0079-promoted-gl-run-validator-prerequisite-and-parser-false-negatives.md` — invalid first renderer invocation and validator correction.
 - `docs/refactor/0080-promoted-gl-run-zink-turnip-renderer-pass.md` — promoted GLX/Zink/Turnip actual-renderer receipt.
+- `docs/refactor/0081-promoted-vscode-turnip-primary-identity-pass-and-cpu-policy-gate.md` — promoted VS Code GPU identity closure and CPU gate contract.
 - `docs/refactor/` — full repository migration source of truth.
 
 ## Open questions
 
-- The promoted VS Code GPU/CPU and Obsidian GPU/CPU workload gates remain to close the scoped Vulkan policy transaction.
+- The promoted VS Code CPU and Obsidian GPU/CPU workload gates remain to close the scoped Vulkan policy transaction.
 - The current source-linked deployment model lacks an atomic activation boundary for multi-file transactions that modify existing leaves and introduce new required leaves.
 - Hardware video decoding remains unresolved across the investigated MediaCodec/Vulkan, VA-API/V4L2, FFmpeg/mpv, and Chromium paths.
 - Native Dawn WebGPU exposure remains unresolved: conventional Chromium/Electron GPU acceleration works, but the dedicated WebGPU investigation did not expose Turnip as the desired native WebGPU adapter.
@@ -48,7 +50,7 @@
 - [x] pass the no-mutation scoped Vulkan policy pre-deploy gate on the real Termux checkout
 - [x] deploy the managed Freedreno profile leaf and pass the live installation receipt
 - [x] validate the promoted `gl-run` Zink/Turnip renderer path
-- [ ] validate promoted VS Code GPU primary identity
+- [x] validate promoted VS Code GPU primary identity
 - [ ] validate promoted VS Code CPU policy/argv behavior
 - [ ] validate promoted Obsidian GPU and CPU paths
 - [ ] close the scoped Vulkan promotion transaction
