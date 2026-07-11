@@ -1,6 +1,6 @@
 # Status
 
-> **State:** active architecture synthesis after scoped graphics-policy closure  
+> **State:** active selected-Obsidian-closure re-entry after post-graphics architecture audit  
 > **Updated:** 2026-07-11
 
 ## Working conclusions
@@ -17,12 +17,15 @@
 - **The ownership refactor remains accepted.** Project capabilities, package lifecycles, experiments, and repository tools have separate source owners. Semantic ownership still requires further decomposition.
 - **`modules/gl` is transitional.** It still combines world baseline, passive data policy, Electron-family/security policy, farm materialization, OpenGL adapter, URL bridge, and target toolchain responsibilities.
 - **The broad farm is still the current compatibility baseline, not an accepted final production provider model.** The D-Bus pilot proves selected materialized provider bytes are viable, but the shared/app-local boundary is not fully decided.
-- **The parent Obsidian selected-closure pilot remains incomplete.** Graphics sub-questions are closed, but locality-shadowing, non-graphics static/runtime closure agreement, candidate materialization, actual candidate selection, and control/candidate equivalence remain open unless explicitly terminated.
+- **The parent Obsidian selected-closure pilot continues.** Graphics sub-questions are closed, while locality-shadowing, non-graphics static/runtime closure agreement, candidate materialization, actual candidate selection, and control/candidate equivalence remain open.
+- **The first re-entry step is read-only.** Retained Obsidian control evidence is audited for identity stability, locality collisions, ELF dependency facts, and process-class semantic use before any candidate is materialized or any workload is relaunched.
 - **The recovered glibc substrate remains 2.42 and held.** The hold is temporary incident containment, not a permanent lifecycle design.
 - **Mutable checkout symlinks remain an activation defect.** Source changes can immediately alter live leaves, so another multi-file promoted migration must not proceed without a minimum activation boundary.
+- **Atomic activation is not the next implementation object by itself.** Its complete managed-leaf set must follow the selected-closure result and semantic owner decision; it is mandatory immediately before the next multi-file promoted migration.
 - **Current global non-graphics policy is over-scoped.** `ELECTRON_DISABLE_SANDBOX=1` is the highest-priority example: Electron-family/security policy currently lives in the world baseline.
-- **Documentation and validator lifecycle are architecture concerns.** Canonical indexes/experiment status must match current conclusions, and closed investigation helpers must be classified as active gates, evidence helpers, historical diagnostics, or superseded false-negative models.
+- **Graphics validator lifecycle is classified.** Seven top-level active contract gates remain trigger-routed; invoked probes/classifiers are active gate dependencies; comparison helpers are evidence helpers; discovery scripts are historical diagnostics; superseded false-negative models remain historical records rather than scheduled tests.
 - **The current Mesa graphics composition is cross-version.** Rootfs GLVND/GLX/Gallium-Zink, prefix loader/support, and provider-store Turnip identities form one validated composition; independent changes to any layer require composition-aware revalidation.
+- **Device evidence handoff uses stage-specific archives.** Each evidence-producing stage defines `out` and `OUT`, then ends with `tar czf ~/Downloads/$out.tgz $OUT`; generic archive names are rejected.
 
 ## Architecture authority
 
@@ -33,7 +36,10 @@ main/docs/system-foundation/11-architecture-reassessment-and-hard-refactor-decis
 main/docs/system-foundation/12-document-consistency-audit-and-execution-order.md
 
 docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md
-    -> current post-closure top-down audit and next-phase pressure
+    -> post-closure top-down audit and architectural gaps
+
+docs/refactor/0093-post-audit-direction-validator-lifecycle-and-selected-closure-reentry.md
+    -> accepted direction adjustment, gate lifecycle, evidence handoff, and next action
 
 docs/refactor/0091-scoped-graphics-policy-promotion-closure.md
     -> closed graphics transaction and evidence-backed contract
@@ -48,7 +54,8 @@ docs/refactor/README.md
 - `docs/glibc-layer.md` — current compatibility baseline, application-domain target, and lifecycle boundaries.
 - `docs/gpu.md` — current graphics composition and revalidation contract.
 - `docs/refactor/0091-scoped-graphics-policy-promotion-closure.md` — closed graphics-policy evidence matrix.
-- `docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md` — semantic-vs-adapter distinction, missing architecture work, and revised priority.
+- `docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md` — semantic-vs-adapter distinction and missing architecture work.
+- `docs/refactor/0093-post-audit-direction-validator-lifecycle-and-selected-closure-reentry.md` — revised execution order and selected-closure re-entry.
 - `docs/refactor/` — full transaction and evidence history.
 
 ## Open architecture questions
@@ -56,10 +63,9 @@ docs/refactor/README.md
 - How should a real Electron application domain consume selected provider bytes while preserving app-local `$ORIGIN` locality?
 - Which prefix/rootfs providers are reusable capability groups, and which are application-domain bindings?
 - Which global `gl/env` policies belong to world base, bridge, provider, Electron family, or individual application?
-- What is the minimum atomic activation mechanism for project-authored multi-file runtime contracts?
+- What exact managed object set must the minimum atomic activation mechanism promote and roll back?
 - How should a corrected current/newer glibc substrate be accepted, retained, rolled back, and released from hold?
 - Which passive rootfs data capabilities remain intentionally rootfs-backed, and which should be materialized?
-- Which graphics validators remain active contract gates after experiment closure?
 - How should the cross-version graphics composition be identified and revalidated across independent provider-layer updates?
 - When are VS Code/Obsidian normal-profile long-duration checks required for operational acceptance rather than architecture promotion?
 
@@ -71,18 +77,21 @@ docs/refactor/README.md
 - [x] record the post-closure architecture midpoint audit
 - [x] synchronize canonical experiment READMEs and migration journal
 - [x] classify semantic invariants versus current adapters in integrated/module/package docs
-- [ ] classify graphics validators by active/historical/superseded status
+- [x] classify graphics validators by active/dependency/evidence/historical/superseded status
+- [x] establish the stage-specific tgz evidence handoff convention
 
 ### Application-domain/provider architecture
 
-- [ ] resume or explicitly terminate the selected Obsidian closure pilot
-- [ ] finish locality-shadowing and non-graphics static/runtime closure analysis
+- [x] explicitly continue the selected Obsidian closure pilot
+- [ ] run the retained-control locality input audit without launching a workload
+- [ ] interpret identity mismatches, locality collisions, unresolved edges, and ambiguous edges
+- [ ] finish locality-shadowing and non-graphics static/runtime closure agreement
 - [ ] decide capability grouping and application-domain bindings
-- [ ] prove selected candidate materialization/equivalence if the pilot continues
+- [ ] prove selected candidate materialization/equivalence if the pilot remains viable
 
 ### Runtime ownership and lifecycle
 
-- [ ] define atomic activation before another multi-file live migration
+- [ ] define atomic activation after the selected object set is known and before another multi-file live migration
 - [ ] complete remaining world/provider/bridge/toolchain/family ownership split
 - [ ] move high-risk global Electron/security policy out of world baseline when validated
 - [ ] define glibc upgrade/recovery lifecycle beyond the 2.42 hold
@@ -104,13 +113,26 @@ call current path/command/variable names permanent invariants;
 expand gl-run into lifecycle authority;
 make the broad farm the final production provider by inertia;
 add new global policy to gl/env because it is convenient;
+materialize an Obsidian candidate before retained evidence is interpreted;
+analyze changed current bytes as though they were the captured control identity;
 start PyMOL by copying an Electron launcher or expanding the farm blindly;
 apply another multi-file promoted migration before activation semantics are defined;
-forget or silently abandon the selected Obsidian closure parent question;
 maintain every experiment script as a permanent active gate;
-claim isolated promotion receipts prove normal-profile long-duration behavior.
+claim isolated promotion receipts prove normal-profile long-duration behavior;
+use ambiguous evidence archive names such as results.tgz.
 ```
 
 ## Evidence policy
 
 A passing screenshot is insufficient. Claims remain at the strongest level supported by correlated evidence. Empty child `/proc/<pid>/environ` is an observability boundary. A mapped provider is not selected-device proof. Isolated application state must follow the application's real authority. A closed transaction validates a semantic contract; it does not automatically make its current helper names or paths permanent architecture. Runtime gates are rerun only when their claim surface changes.
+
+Device evidence handoff is stage-specific:
+
+```bash
+out=<stage-specific-slug>-$(date +%Y%m%d-%H%M%S)
+OUT=<stage output root>/$out
+# run the stage
+tar czf ~/Downloads/$out.tgz $OUT
+```
+
+The tgz is a transport object. The contained receipt and original device evidence root remain the evidence authority.
