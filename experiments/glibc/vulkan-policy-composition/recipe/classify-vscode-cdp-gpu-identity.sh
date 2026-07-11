@@ -32,18 +32,33 @@ probe_status=$(tr -d '\r\n' <"$CONTROL_OUT/probe.status")
 
 mkdir -p "$OUT"
 
-primary_row=$(awk -F $'\t' 'NR > 1 && $2 == "true" { print; exit }' "$CONTROL_OUT/gpu-devices.tsv")
-[ -n "$primary_row" ] || {
+primary_line=$(awk -F $'\t' 'NR > 1 && $2 == "true" { print NR; exit }' \
+    "$CONTROL_OUT/gpu-devices.tsv")
+[ -n "$primary_line" ] || {
     printf 'no primary GPU row found in %s\n' "$CONTROL_OUT/gpu-devices.tsv" >&2
     exit 1
 }
 
-IFS=$'\t' read -r \
-    index primary vendor_id device_id sub_sys_id revision \
-    vendor_string device_string driver_vendor driver_version \
-    <<<"$primary_row"
+column_of_primary() {
+    local column=$1
+    awk -F $'\t' -v line="$primary_line" -v column="$column" \
+        'NR == line { print $column; exit }' "$CONTROL_OUT/gpu-devices.tsv"
+}
 
-gl_renderer=$(awk -F $'\t' '$1 == "glRenderer" { print substr($0, index($0, $2)); exit }' \
+# Extract each field independently. Bash whitespace IFS would collapse the
+# empty subSysId/revision fields present in software-device records.
+index=$(column_of_primary 1)
+primary=$(column_of_primary 2)
+vendor_id=$(column_of_primary 3)
+device_id=$(column_of_primary 4)
+sub_sys_id=$(column_of_primary 5)
+revision=$(column_of_primary 6)
+vendor_string=$(column_of_primary 7)
+device_string=$(column_of_primary 8)
+driver_vendor=$(column_of_primary 9)
+driver_version=$(column_of_primary 10)
+
+gl_renderer=$(awk -F $'\t' '$1 == "glRenderer" { print $2; exit }' \
     "$CONTROL_OUT/gpu-aux-attributes.tsv")
 display_type=$(awk -F $'\t' '$1 == "displayType" { print $2; exit }' \
     "$CONTROL_OUT/gpu-aux-attributes.tsv")
@@ -131,6 +146,8 @@ printf 'primary_index\t%s\n' "$index" >>"$OUT/cdp-gpu-identity-summary.tsv"
 printf 'primary\t%s\n' "$primary" >>"$OUT/cdp-gpu-identity-summary.tsv"
 printf 'vendor_id\t%s\n' "$vendor_id" >>"$OUT/cdp-gpu-identity-summary.tsv"
 printf 'device_id\t%s\n' "$device_id" >>"$OUT/cdp-gpu-identity-summary.tsv"
+printf 'sub_sys_id\t%s\n' "$sub_sys_id" >>"$OUT/cdp-gpu-identity-summary.tsv"
+printf 'revision\t%s\n' "$revision" >>"$OUT/cdp-gpu-identity-summary.tsv"
 printf 'vendor_string\t%s\n' "$vendor_string" >>"$OUT/cdp-gpu-identity-summary.tsv"
 printf 'device_string\t%s\n' "$device_string" >>"$OUT/cdp-gpu-identity-summary.tsv"
 printf 'driver_vendor\t%s\n' "$driver_vendor" >>"$OUT/cdp-gpu-identity-summary.tsv"
