@@ -27,7 +27,7 @@ modules/gl/overlay/home/gl/
 
 These files map to the same relative paths under `$HOME/gl/`.
 
-`env` defines the provider-neutral glibc application baseline. It removes inherited bionic Vulkan provider variables as ABI sanitation, but does not select a glibc Vulkan provider.
+`env` defines the graphics-policy-neutral glibc application baseline. At the bionic/glibc boundary it removes inherited bionic Vulkan provider variables and the bionic session's OpenGL bridge/Gallium variables. It does not select a glibc Vulkan provider or OpenGL bridge.
 
 `policy/vulkan/freedreno.sh` is a source-only explicit hardware-provider profile. Consumers source it only when they deliberately require the managed glibc Freedreno/Turnip Vulkan path.
 
@@ -36,7 +36,7 @@ These files map to the same relative paths under `$HOME/gl/`.
 This separation preserves four distinct responsibilities:
 
 ```text
-shared glibc baseline sanitation
+shared glibc graphics-policy sanitation
 explicit Vulkan provider selection
 OpenGL-to-Vulkan bridge selection
 application feature/argv mode
