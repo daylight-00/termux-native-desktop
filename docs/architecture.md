@@ -94,6 +94,7 @@ bionic-session graphics-policy sanitation
 Vulkan provider selection
 OpenGL-to-Vulkan bridge selection
 application GPU feature mode
+application-state isolation
 ```
 
 ## 4. glibc library model
@@ -138,13 +139,110 @@ glibc app with explicit hardware profile
 
 The session-wide bionic policy and glibc provider profiles are deliberately separate. `startxfce-x11` owns the bionic ICD and bionic Zink session policy. `~/gl/env` removes both the bionic Vulkan-provider pair and the bionic OpenGL bridge/Gallium policy at the glibc boundary. Individual glibc launch compositions then choose whether to apply explicit Freedreno, Zink, another validated provider/bridge policy, or no explicit graphics policy.
 
+Accepted glibc application modes:
+
+```text
+gl-run
+    explicit managed Freedreno
+    + MESA_LOADER_DRIVER_OVERRIDE=zink
+
+VS Code / Obsidian GPU
+    GL_GPU=1
+    explicit managed Freedreno
+    ANGLE Vulkan argv
+    no Zink/Gallium override
+
+VS Code / Obsidian CPU
+    GL_GPU=0
+    no explicit provider
+    no bridge/Gallium override
+    exact --disable-gpu
+```
+
 For the captured VS Code control, explicit Freedreno selected Turnip/Adreno 730, while implicit discovery selected LVP/llvmpipe with the same ANGLE Vulkan feature mode. This is why the promoted VS Code GPU branch applies the explicit profile instead of relying on loader discovery.
+
+The promoted VS Code and Obsidian GPU receipts both correlate:
+
+```text
+observable environment and argv
+CDP primary selected device
+ANGLE_VULKAN
+GaneshVulkan
+managed libvulkan_freedreno.so mapping
+/dev/kgsl-3d0 mapping
+```
+
+Both selected:
+
+```text
+FREEDRENO_TURNIP
+Adreno 730
+```
+
+A mapped provider alone is not treated as selected-device proof.
+
+For CPU mode, process-name presence is not the architecture invariant. VS Code retained an internal GPU helper using `--use-gl=disabled`; Obsidian did not create one in its accepted CPU receipt. Both had a provider-neutral environment, exact `--disable-gpu`, no GPU-enablement flags, renderer viability, and bounded main-process survival.
 
 For the investigated Mesa 26.1.x configuration, the validated build policy uses `-Dfreedreno-kmds=msm,kgsl`. The working/broken split tracked the presence of the libdrm dependency in the tested builds; the exact low-level crash mechanism remains open.
 
-See `docs/gpu.md` and `docs/decisions/0003-mesa-kmds-msm-kgsl.md`.
+See `docs/gpu.md`, `docs/decisions/0003-mesa-kmds-msm-kgsl.md`, and `docs/refactor/0091-scoped-graphics-policy-promotion-closure.md`.
 
-## 6. Build boundary
+## 6. Application-state authority
+
+A clean launch is not automatically an isolated launch. The application may derive its effective configuration directory independently of a generic Chromium argument.
+
+Accepted validation authority:
+
+```text
+VS Code
+    isolated --user-data-dir
+    isolated --extensions-dir
+
+Obsidian
+    receipt-local XDG_CONFIG_HOME
+    actual receipt-local <config>/obsidian directory
+```
+
+The first Obsidian CDP attempt failed because the probe observed the wrong `DevToolsActivePort` path while the application retained `$HOME/.config/obsidian`. The corrected model binds XDG configuration, application-derived user data, process argv, and CDP endpoint observation to the same receipt-local tree.
+
+Normal user configuration, vaults, extensions, and locks are outside promotion evidence.
+
+## 7. Evidence and observability model
+
+The project distinguishes effective behavior from observability artifacts.
+
+```text
+empty or near-empty /proc/<pid>/environ
+    -> observability boundary
+    -> not proof of absence
+    -> not a value mismatch by itself
+
+mapped provider library
+    -> provider presence evidence
+    -> not selected-device proof by itself
+
+Chromium gpu-process name
+    -> internal topology observation
+    -> not hardware acceleration proof by itself
+```
+
+Claims are accepted at the strongest level supported by correlated evidence, not at the strongest plausible interpretation.
+
+The scoped graphics-policy promotion transaction is closed because all required layers have current authoritative receipts:
+
+```text
+source/pre-deploy
+live installation
+gl-run renderer
+VS Code GPU
+VS Code CPU
+Obsidian GPU
+Obsidian CPU
+```
+
+Revalidation is trigger-based rather than periodic or blind. The relevant gate is rerun only when its source, runtime dependency, application version, or evidence interpretation changes materially.
+
+## 8. Build boundary
 
 Mesa builds for the glibc world use bionic-native orchestration tools while targeting the glibc ABI through explicit wrappers:
 
@@ -156,7 +254,7 @@ runtime target:  glibc Mesa + Turnip/KGSL + Zink
 
 This is why the glibc target wrappers live under `modules/gl/overlay/home/gl/toolchain/`, while the Mesa acquisition/build/install lifecycle lives under `packages/mesa-glibc/`.
 
-## 7. Repository lifecycle
+## 9. Repository lifecycle
 
 ```text
 baseline
@@ -165,7 +263,7 @@ baseline
   -> evidence
   -> result
   -> working conclusion (STATUS.md)
-  -> durable decision (docs/decisions/)
+  -> durable decision (docs/decisions/ and closure records)
   -> module / package / test / integrated guide
 ```
 
@@ -174,6 +272,7 @@ The repository mirrors that lifecycle:
 - `experiments/` keeps living investigations and provenance;
 - `STATUS.md` records current conclusions and open questions;
 - `docs/decisions/` preserves durable choices;
+- `docs/refactor/` preserves transaction-level evidence, false-negative corrections, and closure records;
 - focused guides in `docs/` integrate current operational knowledge;
 - `modules/` owns project-authored system capabilities and target-relative overlays;
 - `packages/` owns external payload lifecycle definitions and application-specific launch integration;
