@@ -3,172 +3,168 @@
 ## Status
 
 ```text
-ACTIVE_ARCHITECTURE_DISCRIMINATION
 PHASE_B1_B8_CLOSED
 PHASE_B9_PASS
-PHASE_B10_SHORT_PATH_TOPOLOGY_PASS
-PHASE_B10_PREVIOUS_FAILURE_INTERACTION_TRIGGERED
-PIXBUF_ICON_MIME_INVENTORY_PASS
-PASSIVE_NO_INPUT_B10_NEXT
+PASSIVE_B10_TOPOLOGY_PASS
+PASSIVE_B10_100_SECOND_SURVIVAL_PASS
+PASSIVE_B10_MAPS_CAPTURE_PASS
+PASSIVE_B10_MAPPED_IDENTITY_FAIL
 INTERACTIVE_VAULT_OPEN_CAPABILITY_OPEN
+CPU_MAP_CONTRACT_DIAGNOSTIC_NEXT
 ```
 
-The immutable generation exists and remains unactivated.
+The immutable generation remains published but unactivated.
 
-## Closed generation
+## Passive B10 receipt
 
 ```text
-generation ID:
-    obsidian-cpu-435ac66d15de2e9a3188
+selected-obsidian-phase-b10-passive-short-runtime-cpu-validation-20260712-015859
+```
 
-content objects:
-    96
+```text
+archive SHA-256:
+    86330e210a0171fd1bf059eec600cc92eac963b0e468538be77b8819214905af
 
-content bytes:
-    70,897,301
+captured head:
+    3b7cc1f4f33852f273bda77d681d035a5c3be668
 
-generation aliases:
-    175
+operator input:
+    NONE
 
-staged/final validation:
-    1851 / 1851 PASS
+analysis.status:
+    FAIL
+
+failure stage:
+    mapped_identity
+
+topology / survival / maps:
+    PASS / PASS / PASS
+
+current before / after:
+    ABSENT / ABSENT
+```
+
+Stable process topology:
+
+```text
+main       1
+zygote     3
+utility    1
+renderer   1
+GPU        0
+```
+
+## Map result
+
+```text
+unique mapped regular objects:
+    143
+
+selected object-store identities:
+    93 / 96
+
+expected app-local references:
+    11 / 11
+
+expected protected-world references:
+    18 / 18
+```
+
+Selected content by kind:
+
+```text
+ELF:
+    89 / 91 mapped from selected objects
+
+fonts:
+    3 / 4 mapped
+
+GSettings aggregate:
+    1 / 1 mapped
+```
+
+Missing selected objects:
+
+```text
+libXdmcp.so.6.0.0
+DejaVuSansMono-Bold.ttf
+libXau.so.6.0.0
+```
+
+The font is demand-unmapped and must not be treated as a loader failure.
+
+The two ELF source paths were mapped from the world prefix instead:
+
+```text
+$PREFIX/glibc/lib/libXdmcp.so.6.0.0
+$PREFIX/glibc/lib/libXau.so.6.0.0
+```
+
+Four selected copied consumers retain absolute DT_RPATH:
+
+```text
+libxcb-render.so.0.0.0
+libXrandr.so.2.2.0
+libXrender.so.1.3.0
+libxcb-shm.so.0.0.0
+
+DT_RPATH:
+    $PREFIX/glibc/lib
+```
+
+Additional CPU-map exceptions:
+
+```text
+excluded semantic mapping:
+    $PREFIX/glibc/lib/libX11-xcb.so.1.0.0
+
+unmodelled app-local mapping:
+    $HOME/gl/apps/obsidian/libvk_swiftshader.so
+```
+
+Clean negative boundaries:
+
+```text
+broad farm:
+    0
+
+rootfs provider:
+    0
 
 current:
-    ABSENT
-```
-
-## Corrected Phase B10 interpretation
-
-The short-runtime run displayed the Obsidian initial window and formed the required CPU topology.
-
-```text
-main:
-    1
-
-renderer:
-    1
-
-zygote:
-    3
-
-utility:
-    1
-
-GPU process:
     0
 ```
 
-The operator then clicked the vault-open control. The fatal GTK icon/pixbuf chain occurred after that interaction.
+## Next stage
 
-Therefore:
-
-```text
-passive idle initial-window survival:
-    OPEN / previous run was perturbed
-
-interactive vault-open capability:
-    FAIL / GTK file-chooser path
-```
-
-The capture scripts do not record mouse input. The click timing is operator evidence and is documented separately from machine evidence.
-
-## Pixbuf/icon/MIME inventory
-
-Authoritative receipt:
+Recipe:
 
 ```text
-selected-obsidian-gtk-pixbuf-runtime-capability-inventory-20260712-014314
+recipe/analyze-passive-map-selection-diagnostic.py
 ```
 
-Archive SHA-256:
+This is read-only. It consumes the retained B1/B2 graph, B9 generation receipt, and passive B10 maps receipt.
+
+It will:
 
 ```text
-e9f5fc256dbbe74e6b060fb8ebfde8745959321d20a58f8d7bd4181d19be3be6
+rehash all 96 selected objects;
+rehash mapped source substitutes;
+record selected map state by content kind;
+record four absolute-RPATH selected consumers;
+join retained edges to bypassed providers;
+record libX11-xcb and libvk_swiftshader identities;
+separate demand-loaded data from required selected ELF;
+perform no launch and no mutation.
 ```
 
-Result:
+Expected next state:
 
 ```text
-analysis.status:
-    PASS
-
-next-state:
-    READY_FOR_CONTROLLED_PIXBUF_RUNTIME_DIAGNOSTIC
-
-loader caches:
-    1
-
-loader modules:
-    12
-
-cache references:
-    12
-
-written /usr module paths present natively:
-    0
-
-rootfs-prefixed modules present:
-    12
-
-icon-theme indexes:
-    2
-
-MIME database files:
-    5
-
-paths absent from B9 semantic manifest:
-    20
+READY_FOR_CPU_MAP_CONTRACT_REDESIGN
 ```
 
-The rootfs cache is generated and references FHS absolute `/usr/lib/...` paths. It cannot be used unchanged in the native namespace. A later diagnostic must create a receipt-local relocated cache.
-
-The inventory does not prove that all twelve modules, both icon themes, or all five MIME files belong in the final generation.
-
-## Claim split
-
-### Passive explicit-generation B10
-
-```text
-operator action:
-    observe only
-
-forbidden:
-    click Open vault
-    click Create vault
-    interact with any GUI control
-
-required:
-    topology PASS
-    100-second survival PASS
-    maps capture PASS
-    exact immutable mapped-identity analysis PASS
-```
-
-Wrapper:
-
-```text
-recipe/run-passive-explicit-generation-cpu-validation.sh
-```
-
-### Interactive vault-open capability
-
-```text
-operator action:
-    click the vault-open control once
-
-required capability:
-    GTK file chooser
-    pixbuf loader registry
-    icon-theme data
-    MIME data
-
-current result:
-    FAIL
-```
-
-This will be tested only after the passive claim is closed.
-
-## Canonical passive command
+## Canonical command
 
 ```bash
 cd "$HOME/projects/termux-native-desktop"
@@ -179,15 +175,21 @@ rm -rf \
 git fetch origin
 git merge --ff-only origin/docs/post-graphics-architecture-audit
 
+B1_OUT="$PREFIX/tmp/selected-obsidian-closure/selected-obsidian-phase-b1-retained-control-locality-20260711-192919"
+B2_OUT="$PREFIX/tmp/selected-obsidian-closure/selected-obsidian-phase-b2-static-runtime-closure-20260711-195310"
 B9_OUT="$PREFIX/tmp/selected-obsidian-closure/selected-obsidian-phase-b9-generation-publication-corrected-20260712-003136"
+B10_OUT="$PREFIX/tmp/selected-obsidian-closure/selected-obsidian-phase-b10-passive-short-runtime-cpu-validation-20260712-015859"
 
-out="selected-obsidian-phase-b10-passive-short-runtime-cpu-validation-$(date +%Y%m%d-%H%M%S)"
+out="selected-obsidian-passive-map-selection-diagnostic-$(date +%Y%m%d-%H%M%S)"
 OUT="$PREFIX/tmp/selected-obsidian-closure/$out"
 
-if B9_OUT="$B9_OUT" \
+if B1_OUT="$B1_OUT" \
+   B2_OUT="$B2_OUT" \
+   B9_OUT="$B9_OUT" \
+   B10_OUT="$B10_OUT" \
    OUT="$OUT" \
-   bash \
-     experiments/glibc/selected-obsidian-closure/recipe/run-passive-explicit-generation-cpu-validation.sh
+   python \
+     experiments/glibc/selected-obsidian-closure/recipe/analyze-passive-map-selection-diagnostic.py
 then
   analysis_rc=0
 else
@@ -198,26 +200,17 @@ printf '\n===== analysis exit status =====\n'
 printf '%s\n' "$analysis_rc"
 
 for f in \
-  "$OUT/interaction-contract.tsv" \
   "$OUT/analysis.status" \
   "$OUT/failure-stage.txt" \
   "$OUT/next-state.txt" \
   "$OUT/summary.tsv" \
-  "$OUT/runtime-root-contract.tsv" \
-  "$OUT/runtime-snapshot.tsv" \
-  "$OUT/runtime-cleanup.status" \
-  "$OUT/capture-exit-status.txt" \
-  "$OUT/process-contract.tsv" \
-  "$OUT/missing-expected-mapped-paths.tsv" \
-  "$OUT/unexpected-mapped-paths.tsv" \
-  "$OUT/mapped-identity-verification.tsv" \
+  "$OUT/input-verification.tsv" \
+  "$OUT/selected-map-state.tsv" \
+  "$OUT/selected-rpath-consumers.tsv" \
+  "$OUT/rpath-provider-edges.tsv" \
+  "$OUT/cpu-map-exceptions.tsv" \
   "$OUT/mapped-path-classification.tsv" \
-  "$OUT/current-state-before.tsv" \
-  "$OUT/current-state-after.tsv" \
-  "$OUT/capture/class-counts.tsv" \
-  "$OUT/capture/processes.tsv" \
-  "$OUT/capture/launch.stdout" \
-  "$OUT/capture/launch.stderr" \
+  "$OUT/live-identity-verification.tsv" \
   "$OUT/claim-boundary.txt"
 do
   [ -e "$f" ] || continue
@@ -228,39 +221,16 @@ done
 tar czf ~/Downloads/$out.tgz $OUT
 ```
 
-## Operator instruction
-
-During this passive run:
-
-```text
-Do not click anything in the Obsidian window.
-Do not open or create a vault.
-Observe only until the terminal reports completion.
-```
-
-## Expected PASS state
-
-```text
-analysis.status:
-    PASS
-
-next-state:
-    READY_FOR_ATOMIC_ACTIVATION_IMPLEMENTATION
-```
-
-That next-state applies only to the passive runtime/identity claim. The interactive vault-open capability must still close before practical promotion.
-
 ## Stop line
 
 Do not:
 
 ```text
-rerun Phase B1-B9;
-interact with the GUI during the passive run;
-mutate the immutable generation;
-copy all inventory paths wholesale;
-use the rootfs loaders.cache unchanged;
-create current;
-change the promoted launcher;
-claim practical Obsidian usability from passive PASS alone.
+claim overall B10 PASS;
+activate current;
+mutate or patch the existing generation;
+change RPATH before the diagnostic;
+classify demand-unmapped fonts as loader failures;
+ignore graphics-related mappings in CPU mode;
+proceed to atomic activation.
 ```
