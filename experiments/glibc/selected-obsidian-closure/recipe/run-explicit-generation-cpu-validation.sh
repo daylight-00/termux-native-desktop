@@ -194,6 +194,13 @@ if ! \
     bash \
       "$REPO/experiments/glibc/selected-obsidian-closure/recipe/capture-control.sh"
 then
+    capture_rc=$?
+    stage=current_guard_after_capture_failure
+    write_current_state "$OUT/current-state-after.tsv" "$CURRENT"
+    cmp -s "$OUT/current-state-before.tsv" "$OUT/current-state-after.tsv" \
+        || fail "current changed during failed explicit-generation capture"
+    stage=capture
+    printf '%s\n' "$capture_rc" >"$OUT/capture-exit-status.txt"
     fail "explicit-generation capture failed"
 fi
 
