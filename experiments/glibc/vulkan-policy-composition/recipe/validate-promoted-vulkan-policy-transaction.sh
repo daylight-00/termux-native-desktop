@@ -61,8 +61,14 @@ run_gate shell_syntax shell-syntax.log \
     "$REPO/tests/repository/deploy-smoke.sh" \
     "$REPO/experiments/glibc/vulkan-policy-composition/recipe/validate-live-vulkan-policy-installation.sh" \
     "$REPO/experiments/glibc/vulkan-policy-composition/recipe/validate-promoted-gl-run-renderer.sh" \
+    "$REPO/experiments/glibc/vulkan-policy-composition/recipe/probe-vscode-policy-env-boundary.sh" \
+    "$REPO/experiments/glibc/vulkan-policy-composition/recipe/probe-vscode-cdp-gpu-identity.sh" \
+    "$REPO/experiments/glibc/vulkan-policy-composition/recipe/classify-vscode-cdp-gpu-identity.sh" \
     "$REPO/experiments/glibc/vulkan-policy-composition/recipe/validate-promoted-vscode-gpu-identity.sh" \
-    "$REPO/experiments/glibc/vulkan-policy-composition/recipe/validate-promoted-vscode-cpu-policy.sh"
+    "$REPO/experiments/glibc/vulkan-policy-composition/recipe/validate-promoted-vscode-cpu-policy.sh" \
+    "$REPO/experiments/glibc/vulkan-policy-composition/recipe/probe-electron-cdp-gpu-identity.sh" \
+    "$REPO/experiments/glibc/vulkan-policy-composition/recipe/classify-cdp-gpu-identity.sh" \
+    "$REPO/experiments/glibc/vulkan-policy-composition/recipe/validate-promoted-obsidian-gpu-identity.sh"
 
 run_gate policy_scope_smoke policy-scope-smoke.log \
     bash "$REPO/tests/repository/vulkan-policy-scope-smoke.sh"
