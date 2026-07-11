@@ -74,9 +74,47 @@ For a conventional tarball or extracted application tree:
 5. patch RPATH while preserving `$ORIGIN`;
 6. verify every ELF with the glibc `ldd` path;
 7. create a package-owned launcher that sources `~/gl/env` and clears incompatible preload state at process entry;
-8. validate CPU/basic GUI startup before treating GPU enablement as a separate milestone.
+8. if the workload deliberately requires the managed hardware Vulkan provider, source `~/gl/policy/vulkan/freedreno.sh` in that launch branch;
+9. validate CPU/basic GUI startup separately from GPU enablement and selected-provider evidence.
 
 AppImage is supported as an input adapter by extracting the embedded SquashFS payload first, then reusing the same onboarding pipeline. See `experiments/glibc/obsidian-appimage/`.
+
+## Vulkan policy boundary
+
+`~/gl/env` is the shared glibc baseline. It clears inherited `VK_ICD_FILENAMES` and `VK_DRIVER_FILES` from the bionic desktop session, but does not globally choose a glibc Vulkan provider.
+
+The source-only profile:
+
+```text
+~/gl/policy/vulkan/freedreno.sh
+```
+
+selects the managed glibc Freedreno ICD by exporting both loader variables together. It is applied only by consumers that deliberately require that provider.
+
+Current compositions:
+
+```text
+gl-run
+    -> source gl/env
+    -> source explicit Freedreno profile
+    -> MESA_LOADER_DRIVER_OVERRIDE=zink
+
+VS Code GPU branch
+    -> source gl/env
+    -> source explicit Freedreno profile
+    -> ANGLE Vulkan flags
+
+Obsidian GUI GPU branch
+    -> source gl/env
+    -> source explicit Freedreno profile
+    -> ANGLE Vulkan flags
+
+CPU branches and Obsidian CLI
+    -> source gl/env
+    -> no explicit Vulkan provider selection
+```
+
+This separates ABI sanitation, provider selection, bridge selection, and application feature mode.
 
 ## Common failure signatures
 
@@ -86,7 +124,8 @@ AppImage is supported as an input adapter by extracting the embedded SquashFS pa
 4. **Lost `$ORIGIN`** — bundled application libraries such as Electron-local `.so` files stop resolving after careless RPATH replacement.
 5. **Electron sandbox ordering** — sandbox checks can occur before `argv.json`; the project uses launch environment/CLI policy instead.
 6. **URL intents silently blocked** — Android background-activity policy requires Termux's Display over other apps permission.
-7. **Wrong Vulkan ICD** — a glibc process inherits or default-scans the bionic ICD; always pin both Vulkan ICD variables in the glibc environment.
+7. **Wrong Vulkan ICD** — a glibc process inherits the bionic ICD or applies the wrong profile; confirm `~/gl/env` sanitizes first and the intended profile sets both loader variables.
+8. **Unexpected llvmpipe** — explicit provider policy was absent or failed; note that implicit discovery is allowed to select software providers.
 
 ## Current promoted owners
 
@@ -94,6 +133,7 @@ AppImage is supported as an input adapter by extracting the embedded SquashFS pa
 modules/gl/overlay/home/gl/env
 modules/gl/overlay/home/gl/bin/gl-farm
 modules/gl/overlay/home/gl/bin/gl-run
+modules/gl/overlay/home/gl/policy/vulkan/freedreno.sh
 modules/gl/overlay/home/gl/shims/xdg-open
 modules/gl/overlay/home/gl/toolchain/*
 
@@ -117,6 +157,7 @@ Runtime state remains outside Git tracking: application trees, the farm, Mesa in
 - Obsidian arm64 AppImage after extraction/onboarding;
 - Miniforge/Conda/Mamba with environment creation and compiled NumPy workload;
 - glibc OpenGL 4.6 through Zink -> Turnip;
-- ANGLE Vulkan -> Turnip for official VS Code.
+- ANGLE Vulkan -> Turnip for official VS Code;
+- same-consumer VS Code policy A/B showing explicit Turnip/Adreno versus implicit LVP/llvmpipe.
 
 The next major scientific workload target is PyMOL.
