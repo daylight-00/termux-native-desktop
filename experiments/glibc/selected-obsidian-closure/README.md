@@ -12,7 +12,8 @@ PHASE_B4_PASS
 PHASE_B5_PASS_WITH_REVIEW
 PHASE_B6_FIRST_RUN_DIAGNOSTIC_ONLY
 PHASE_B6_CORRECTED_PASS
-PHASE_B7_COMPLETE_CPU_MANIFEST_NEXT
+PHASE_B7_PASS
+PHASE_B8_GENERATION_LAYOUT_PREFLIGHT_NEXT
 ```
 
 The selected CPU application-domain candidate has not yet been materialized or validated.
@@ -30,6 +31,7 @@ docs/refactor/0098-selected-obsidian-phase-b4-entrypoint-static-matrix-pass.md
 docs/refactor/0099-selected-obsidian-phase-b5-data-provenance-review.md
 docs/refactor/0100-selected-obsidian-phase-b6-source-manifest-gap.md
 docs/refactor/0101-selected-obsidian-phase-b6-corrected-schema-reproduction-pass.md
+docs/refactor/0102-selected-obsidian-phase-b7-complete-cpu-manifest-pass.md
 ```
 
 ## Current architecture decision
@@ -117,200 +119,223 @@ direct-root overlap pairs                111
 external package dependency edges        144
 ```
 
-Physical direction:
+### Phase B5 and corrected Phase B6
 
 ```text
-one receipt-owned application-domain generation
-    -> one deduplicated selected object set
-    -> typed capability manifests
-    -> separate data manifests/build contracts
-    -> later one-pointer atomic activation
-```
+locale:
+    12 world-owned glibc files
 
-### Phase B5
+fonts:
+    4 exact package-owned selected files
 
-```text
-analysis.status:
-    PASS
-
-next-state:
-    REVIEW_DATA_PROVENANCE_GAPS
-
-identity mismatches:
-    0
-
-missing paths:
-    0
-
-locale objects:
-    12
-
-font objects:
-    4 / 4 package-owned
-
-captured schema sources:
-    36
-```
-
-Phase B5 closed locale and selected-font ownership. Its schema suffix filter omitted one enum-definition XML.
-
-### First Phase B6 diagnostic
-
-```text
-receipt:
-    selected-obsidian-phase-b6-gsettings-schema-reproduction-20260711-220355
-
-analysis.status:
-    PASS
-
-accepted interpretation:
-    REVIEW_SCHEMA_SOURCE_MANIFEST_GAP
-```
-
-The default compiler ignored ten schema files because enum definitions were absent; strict mode failed. That hash difference was not a clean compiler-version comparison.
-
-### Corrected Phase B6
-
-Receipt:
-
-```text
-selected-obsidian-phase-b6-gsettings-schema-reproduction-corrected-20260711-222459
-```
-
-Archive SHA-256:
-
-```text
-4b86b884f31a87c38636b7c96b4a45de7588b89fd9b5073d02a8db4c52edf699
-```
-
-Captured head:
-
-```text
-b772acb5f6895622e73eda1a6133094885304627
-```
-
-```text
-analysis.status:
-    PASS
-
-next-state:
-    READY_FOR_COMPLETE_DATA_MANIFEST
-
-B5 source files:
-    36
-
-corrected source files:
-    37
-
-added source:
-    org.gnome.desktop.enums.xml
-
-source identity:
-    37 / 37 MATCH
-
-unowned sources:
-    0
-
-undefined enum/flags references:
-    0
+GSettings sources:
+    37 package-owned files
 
 compiler:
     $PREFIX/bin/glib-compile-schemas
     glib 2.88.2
 
-clean successful compiles:
-    2
+clean byte-identical aggregate reproductions:
+    default
+    strict
+```
 
-compilation error attempts:
+The first B6 run remains a diagnostic receipt for the incomplete 36-file suffix-filtered source set.
+
+## Phase B7 — complete CPU manifest
+
+Receipt:
+
+```text
+selected-obsidian-phase-b7-complete-cpu-candidate-manifest-20260711-225234
+```
+
+Archive SHA-256:
+
+```text
+6afcbf799f1c73bbc1a058176f30eada84502d29e5507c9ed6b1c7bdb9d495b8
+```
+
+Captured head:
+
+```text
+ef8eaaaf7af467a7732bb7a00383585cb43d654d
+```
+
+```text
+analysis.status:
+    PASS
+
+next-state:
+    READY_FOR_CANDIDATE_MATERIALIZATION_DESIGN
+
+semantic objects:
+    161 / 161 disposed
+
+ELF objects:
+    113 / 113 accounted
+
+selected static ELF:
+    87
+
+required NSS dynamic ELF:
+    4
+
+selected ELF total:
+    91
+
+excluded graphics feature ELF:
+    11
+
+app-local ELF reference:
+    5
+
+world ELF reference:
+    6
+
+selected ELF lookup collisions:
     0
 
-byte-identical outputs:
-    2
+unclassified objects:
+    0
 ```
 
-Both default and strict modes produced:
+The 48 non-ELF semantic objects are also completely disposed:
 
 ```text
-457f7461585b4caf6e11de65f707077bcb2208f9916c0c588080262f43ecb938
+app-local data reference                  6
+world locale reference                   12
+selected fonts materialize                4
+GSettings aggregate generate              1
+mutable state isolate                     19
+fontconfig cache regenerate               4
+Mesa cache regenerate                      1
+optional GPU device reference              1
 ```
 
-which exactly matches the retained aggregate.
-
-Data ownership and schema compiler lineage are closed for manifest synthesis.
-
-## Phase B7 — complete CPU candidate manifest
-
-Recipe:
+Candidate input files:
 
 ```text
-recipe/synthesize-selected-cpu-candidate-manifest.py
-```
-
-It consumes completed B1, corrected B3, B4, B5, and corrected B6 receipts.
-
-It performs no materialization, process launch, package installation, or promoted mutation.
-
-It emits:
-
-```text
-semantic-object-disposition.tsv
 candidate-elf-manifest.tsv
 candidate-data-manifest.tsv
 capability-membership.tsv
 reference-runtime-owned-manifest.tsv
 schema-source-manifest.tsv
 schema-build-contract.tsv
-summary.tsv
-claim-boundary.txt
-next-state.txt
-analysis.status
+semantic-object-disposition.tsv
 ```
 
-Primary lifecycle dispositions account for all retained semantic classes:
+The copied-byte input boundary is:
 
 ```text
-MATERIALIZE_SELECTED_STATIC_ELF
-MATERIALIZE_REQUIRED_DYNAMIC_ELF
-EXCLUDE_CPU_BASE_GRAPHICS_FEATURE
-REFERENCE_APP_LOCAL
-REFERENCE_WORLD_SUBSTRATE
-REFERENCE_WORLD_LOCALE
-MATERIALIZE_SELECTED_FONT
-GENERATE_GSETTINGS_SCHEMA
-ISOLATED_MUTABLE_STATE
-REGENERATE_RUNTIME_CACHE
-REFERENCE_OPTIONAL_GPU_DEVICE
+91 ELF + 4 fonts = 95 unique source hashes
 ```
 
-Expected structural counts:
+The generated schema aggregate adds one immutable content identity.
+
+## Physical generation direction
+
+The next design uses:
 
 ```text
-semantic_objects                         161
-semantic_disposition_coverage            161
-elf_objects                              113
-external_static_elf_materialize           87
-nss_dynamic_elf_materialize                4
-total_elf_materialize                     91
-graphics_dynamic_elf_excluded             11
-app_local_elf_reference                     5
-world_elf_reference                         6
-app_local_data_reference                    6
-world_locale_reference                     12
-selected_font_materialize                   4
-gsettings_aggregate_generate                1
-schema_source_files                        37
-mutable_state_objects                      19
-fontconfig_cache_objects                    4
-mesa_cache_objects                          1
-gpu_device_objects                          1
-selected_elf_lookup_collisions              0
-unclassified_objects                        0
+$HOME/gl/selected/obsidian/
+    objects/sha256/<prefix>/<sha256>
+    staging/<transaction>
+    generations/<generation-id>/
+        lib/
+        share/fonts/selected/
+        share/glib-2.0/schemas/
+        manifests/
+        receipts/
+    current -> generations/<generation-id>
+```
+
+This is a design direction, not an existing promoted layout.
+
+Required invariants:
+
+```text
+content objects are immutable and hash-addressed;
+generation aliases are relative and receipt-owned;
+staging, generations, and current are on one filesystem;
+a generation is complete before publication;
+candidate validation uses an explicit generation path before activation;
+current changes with one temporary-symlink atomic rename;
+rollback points current at a previous immutable generation;
+referenced generations are never garbage-collected.
+```
+
+## Phase B8 — generation-layout preflight
+
+Recipe:
+
+```text
+recipe/design-selected-cpu-generation-layout.py
+```
+
+It consumes only the completed Phase B7 receipt and performs no materialization or workload launch.
+
+It:
+
+```text
+embeds the B7 manifests;
+rechecks current identity for 91 ELF, 4 fonts, 37 schema sources, and the schema compiler;
+derives content-addressed object paths;
+derives one generation ID from the accepted content/build contract;
+builds the combined ELF lookup/SONAME/source-basename alias namespace;
+adds selected-font and generated-schema aliases;
+rejects alias collisions;
+records relative symlink targets;
+records staging, activation, rollback, and explicit-launch contracts.
+```
+
+Expected structural values for the retained receipt:
+
+```text
+source identity checks:
+    133
+
+source identity failures:
+    0
+
+copied ELF content objects:
+    91
+
+copied font content objects:
+    4
+
+generated schema content objects:
+    1
+
+content plan rows:
+    96
+
+unique content hashes:
+    96
+
+duplicate content hashes:
+    0
+
+ELF aliases:
+    170
+
+font aliases:
+    4
+
+schema aliases:
+    1
+
+total generation aliases:
+    175
+
+generation alias collisions:
+    0
 ```
 
 Expected next state:
 
 ```text
-READY_FOR_CANDIDATE_MATERIALIZATION_DESIGN
+READY_FOR_STAGING_MATERIALIZER_IMPLEMENTATION
 ```
 
 ### Canonical command
@@ -321,25 +346,32 @@ cd "$HOME/projects/termux-native-desktop"
 git fetch origin
 git merge --ff-only origin/docs/post-graphics-architecture-audit
 
-B1_OUT="$PREFIX/tmp/selected-obsidian-closure/selected-obsidian-phase-b1-retained-control-locality-20260711-192919"
-B3_OUT="$PREFIX/tmp/selected-obsidian-closure/selected-obsidian-phase-b3-capability-grouping-corrected-20260711-204914"
-B4_OUT="$PREFIX/tmp/selected-obsidian-closure/selected-obsidian-phase-b4-entrypoint-static-capability-matrix-20260711-211933"
-B5_OUT="$PREFIX/tmp/selected-obsidian-closure/selected-obsidian-phase-b5-data-capability-provenance-20260711-214050"
-B6_OUT="$PREFIX/tmp/selected-obsidian-closure/selected-obsidian-phase-b6-gsettings-schema-reproduction-corrected-20260711-222459"
-
-out="selected-obsidian-phase-b7-complete-cpu-candidate-manifest-$(date +%Y%m%d-%H%M%S)"
+B7_OUT="$PREFIX/tmp/selected-obsidian-closure/selected-obsidian-phase-b7-complete-cpu-candidate-manifest-20260711-225234"
+out="selected-obsidian-phase-b8-generation-layout-preflight-$(date +%Y%m%d-%H%M%S)"
 OUT="$PREFIX/tmp/selected-obsidian-closure/$out"
 
-B1_OUT="$B1_OUT" \
-B3_OUT="$B3_OUT" \
-B4_OUT="$B4_OUT" \
-B5_OUT="$B5_OUT" \
-B6_OUT="$B6_OUT" \
+B7_OUT="$B7_OUT" \
 OUT="$OUT" \
 python \
-  experiments/glibc/selected-obsidian-closure/recipe/synthesize-selected-cpu-candidate-manifest.py
+  experiments/glibc/selected-obsidian-closure/recipe/design-selected-cpu-generation-layout.py
 
 tar czf ~/Downloads/$out.tgz $OUT
+```
+
+Optional non-default design base:
+
+```bash
+GENERATION_BASE="/absolute/same-filesystem/base" \
+B7_OUT="$B7_OUT" \
+OUT="$OUT" \
+python \
+  experiments/glibc/selected-obsidian-closure/recipe/design-selected-cpu-generation-layout.py
+```
+
+The default remains:
+
+```text
+$HOME/gl/selected/obsidian
 ```
 
 ## Candidate flow
@@ -352,10 +384,11 @@ B1 identity/locality
     -> B5 data identity/ownership
     -> corrected B6 schema reproduction
     -> B7 complete semantic/candidate manifest
-    -> immutable object-store and atomic activation design
-    -> candidate materialization
-    -> candidate-specific launch/maps proof
-    -> boundary/leakage/equivalence acceptance
+    -> B8 source/alias/generation-layout preflight
+    -> staging-only materializer and immutable-generation validator
+    -> explicit-generation launch/maps proof
+    -> atomic current activation and rollback
+    -> promoted candidate equivalence acceptance
 ```
 
 ## Evidence handoff
@@ -372,14 +405,13 @@ tar czf ~/Downloads/$out.tgz $OUT
 Do not:
 
 ```text
-rerun Phase B1-B6 without a source trigger;
-copy opaque rootfs gschemas.compiled;
-copy glibc locale into the application generation;
-expand the selected font set by directory inertia;
-make one provider tree per direct root or one untyped candidate blob;
-copy app-local/world ELF or include Vulkan provider roots in the CPU base;
-materialize candidate bytes before Phase B7 interpretation;
-implement activation before object-store and rollback semantics are documented;
+rerun Phase B1-B7 without a source trigger;
+copy selected bytes directly into a live farm;
+activate a partial or unvalidated generation;
+use lookup, SONAME, basename, font, or schema aliases without collision analysis;
+copy app-local/world objects or excluded graphics feature objects into the CPU base;
+change the promoted launcher before explicit-generation validation;
+implement garbage collection before rollback/reference semantics;
 rerun closed graphics gates;
 start PyMOL by extending the broad farm.
 ```
