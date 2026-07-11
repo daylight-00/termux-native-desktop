@@ -1,6 +1,6 @@
 # Status
 
-> **State:** selected-Obsidian-closure Phase B10 short-runtime-path discriminator after two diagnostic failures  
+> **State:** selected-Obsidian-closure GTK pixbuf/data inventory after Phase B10 topology PASS and survival FAIL  
 > **Updated:** 2026-07-12
 
 ## Working conclusions
@@ -8,21 +8,24 @@
 - **No PRoot-mediated normal application runtime.** PRoot remains an install/debug-time tool, package/library warehouse, and behavioral oracle.
 - **The glibc application world is viable.** Official VS Code and extracted Obsidian run as glibc applications while the desktop remains bionic-native.
 - **The core/provider boundary is load-bearing.** App-local `$ORIGIN` remains first; protected world glibc remains separate; rootfs/prefix location is provenance rather than final ownership.
-- **Phase B1-B8 are closed.** Identity, closure, capability ownership, data provenance, semantic disposition, and physical generation design are explicit.
+- **Phase B1-B8 are closed.** Identity, static closure, capability ownership, selected data provenance, semantic disposition, and generation design are explicit.
 - **Phase B9 passed.** Ninety-six content objects totaling 70,897,301 bytes are hash-correct; the 175-alias immutable generation is published; staged/final validation is 1851/1851 PASS; `current` remains absent.
-- **The first B10 failure was launcher-shell loader contamination.** Candidate `LD_LIBRARY_PATH` reached a bionic `mkdir`; the launcher was corrected to inject the generation path only in the final Obsidian `exec env`.
-- **The second B10 run verifies that correction.** Launch receipt records `launcher_shell_ld_library_path=UNSET` and `candidate_loader_injection=EXEC_ENV_ONLY`; the explicit Obsidian main process was observed.
-- **The second B10 main was short-lived.** One main row was observed, then no stable main/renderer/zygote process remained; maps capture was not reached.
-- **No fatal loader or missing-library message was emitted.** Stderr contains only inotify sysctl access and missing system-D-Bus warnings.
-- **The strongest remaining discriminator is runtime/socket path length.** The failed run used 170-179 character XDG/TMP paths, created `SingletonLock` and one Chromium scoped temp directory, but no `SingletonSocket`, renderer, or zygote.
-- **Path length is not yet a closed root cause.** The next run changes only the receipt-owned runtime path length; generation contents, loader order, CPU flags, schema, fonts, and `current` boundary remain unchanged.
-- **The corrected B10 runner allocates `$PREFIX/tmp/o10.XXXXXXXX`.** It requires `TMPDIR` length <= 64, snapshots the short live runtime tree byte-for-byte into `$OUT/runtime-evidence`, verifies the copy with `diff -qr`, then removes the live root.
-- **The capture exit-code receipt bug is fixed.** The previous `if ! command; capture_rc=$?` recorded the negation status; the runner now preserves the real capture return code.
-- **`current` remained absent before and after the second B10 run.**
-- **Phase B10 still requires exact CPU topology, survival, and mapped identity.** Expected immutable mappings remain 96 selected object-store identities, 11 app-local identities, and 18 protected-world identities.
-- **Broad-farm, rootfs-provider, excluded-graphics, GPU-process/device, unexpected external mapping, and `current` selection remain forbidden.**
+- **The first B10 failure was launcher-shell loader contamination.** It was corrected by injecting candidate `LD_LIBRARY_PATH` only in the final Obsidian exec.
+- **The second B10 failure exposed long runtime/socket paths.** It observed only a short-lived main and no renderer/zygote.
+- **The short-runtime discriminator passed topology.** With a 48-character runtime root and 52-character TMPDIR, main, three zygotes, one utility process, and one renderer formed; no GPU process appeared.
+- **The long-path hypothesis is supported for startup.** `SingletonSocket` and `SingletonCookie` were created only in the short-path run.
+- **Phase B10 still failed survival.** The topology remained present through 28 survival samples, then the main aborted approximately 72 seconds after startup.
+- **The fatal boundary is GTK icon/pixbuf handling.** `hicolor` was absent; GTK fallback `image-missing.png` failed with `Unrecognized image file format`; `gtkiconhelper.c` asserted and the application bailed out.
+- **Inotify, missing system D-Bus, and missing `xdg-settings` remain non-fatal warnings in this receipt.**
+- **The generation already contains libgdk-pixbuf, libpng, and libjpeg.** The open boundary is runtime data/plugin discovery rather than the direct DT_NEEDED ELF closure.
+- **The B9 data manifest has no explicit gdk-pixbuf loader cache/modules, icon-theme data, or shared MIME database.** Maps-derived closure did not establish later file-open/plugin capabilities.
+- **The next stage is read-only inventory, not blind generation mutation.** It will identify loader caches/modules and icon/MIME data by path, package, version, hash, and semantic-manifest coverage.
+- **No accepted rootfs-provider leakage is permitted.** A later controlled rootfs pixbuf diagnostic may intentionally allow and record it, but that run cannot be acceptance.
+- **`current` remained absent before and after the short-runtime run.**
+- **Phase B10 mapped-identity acceptance was not reached.** Survival must pass before exact 125-identity analysis.
 - **Atomic activation and rollback remain unimplemented.** They may begin only after B10 passes.
 - **Garbage collection remains forbidden.**
+- **Archive symlink handling is explicit.** The short-runtime receipt contains an application-created absolute `SingletonSocket` target; analysis must not follow archived symlinks.
 - **Evidence archives remain stage-specific.** Each stage defines `out` and `OUT` and ends with `tar czf ~/Downloads/$out.tgz $OUT`.
 
 ## Architecture authority
@@ -48,6 +51,7 @@ docs/refactor/0105-selected-obsidian-phase-b9-generation-directory-publication-f
 docs/refactor/0106-selected-obsidian-phase-b9-generation-materialization-pass.md
 docs/refactor/0107-selected-obsidian-phase-b10-first-run-launcher-environment-failure.md
 docs/refactor/0108-selected-obsidian-phase-b10-second-run-short-lived-main-diagnostic.md
+docs/refactor/0109-selected-obsidian-phase-b10-short-runtime-topology-pass-gtk-pixbuf-survival-failure.md
 docs/refactor/0091-scoped-graphics-policy-promotion-closure.md
 ```
 
@@ -55,14 +59,16 @@ docs/refactor/0091-scoped-graphics-policy-promotion-closure.md
 
 ### Application-domain/provider architecture
 
-- [x] close retained identity, ownership, data provenance, and schema reproduction
-- [x] synthesize the complete candidate manifest and generation layout
-- [x] materialize and publish the immutable CPU generation
-- [x] diagnose B10 launcher-shell loader contamination
-- [x] diagnose B10 short-lived main under long runtime paths
-- [ ] rerun B10 with short receipt-owned runtime/socket paths
+- [x] close retained identity, ownership, selected data provenance, and schema reproduction
+- [x] synthesize and materialize the immutable CPU generation
+- [x] close B10 launcher-shell loader contamination
+- [x] prove short runtime paths form the required CPU topology
+- [x] isolate the survival fatal boundary to GTK icon/pixbuf handling
+- [ ] run read-only gdk-pixbuf/icon/MIME source and package inventory
+- [ ] run a controlled pixbuf runtime diagnostic
+- [ ] correct and rematerialize data capability only after evidence
+- [ ] pass Phase B10 survival and exact mapped identity
 - [ ] implement and test atomic activation and rollback
-- [ ] validate activated-candidate equivalence
 
 ### Runtime ownership and lifecycle
 
@@ -82,13 +88,15 @@ docs/refactor/0091-scoped-graphics-policy-promotion-closure.md
 Do not:
 
 ```text
-rerun Phase B1-B9 without a source or validation trigger;
-change generation content or loader order during the short-path discriminator;
-export candidate LD_LIBRARY_PATH in a bionic launcher shell;
+rerun Phase B1-B9 without a source trigger;
+rerun B10 blindly without addressing the GTK pixbuf capability;
+modify the immutable generation before source/provenance inventory;
+copy all rootfs icon or MIME data wholesale;
+add broad-farm or rootfs paths to an acceptance run;
 create current before B10 passes;
 change the promoted launcher;
 include Vulkan provider/layer objects in CPU mode;
-interpret inotify or missing system-D-Bus warnings as the fatal cause;
+follow archived SingletonSocket symlinks during extraction;
 implement garbage collection;
 start PyMOL by extending the broad farm;
 use ambiguous evidence archive names.
@@ -96,7 +104,7 @@ use ambiguous evidence archive names.
 
 ## Evidence policy
 
-Materialization, explicit loader selection, runtime-path viability, exact mapped identity, process survival, atomic activation, rollback, and promoted equivalence are separate claims. The short-path run is a single-variable discriminator, not a new generation build.
+Materialization, explicit loader selection, runtime-path viability, GTK data/plugin capability, survival, exact mapped identity, atomic activation, rollback, and promoted equivalence are separate claims. Topology PASS does not imply B10 PASS.
 
 ```bash
 out=<stage-specific-slug>-$(date +%Y%m%d-%H%M%S)
