@@ -2,11 +2,17 @@
 # gl-run — run a glibc GL (OpenGL) application on Zink -> Turnip.
 #   gl-run glxinfo -B
 #   gl-run <patchelf'd GL app> [args...]
-# Vulkan-native apps don't need this; ~/gl/env alone is enough for them.
+# Vulkan-native apps do not need Zink, but they still need an explicit provider
+# profile when they require a specific Vulkan implementation.
 set -u
+
 source "$HOME/gl/env"
-[ -n "${VK_DRIVER_FILES:-}" ] || {
-  echo "gl-run: no glibc mesa found (~/gl/opt/mesa-glibc). Build it first (build/build-mesa.sh)." >&2
+
+FREEDRENO_PROFILE="$HOME/gl/policy/vulkan/freedreno.sh"
+if [ ! -r "$FREEDRENO_PROFILE" ] || ! source "$FREEDRENO_PROFILE"; then
+  echo "gl-run: glibc Freedreno profile unavailable: $FREEDRENO_PROFILE" >&2
+  echo "gl-run: build/install the managed Mesa glibc provider first." >&2
   exit 1
-}
+fi
+
 exec env LD_PRELOAD= MESA_LOADER_DRIVER_OVERRIDE=zink "$@"
