@@ -1,6 +1,6 @@
 # Status
 
-> **State:** selected-Obsidian-closure Phase B9 staging-only materialization after Phase B8 PASS  
+> **State:** selected-Obsidian-closure corrected Phase B9 after first-run hard-link publication failure  
 > **Updated:** 2026-07-11
 
 ## Working conclusions
@@ -19,12 +19,15 @@
 - **Phase B8 passed read-only.** All 133 materialization inputs still matched; 96 immutable content identities and 175 generation aliases had zero duplicate hashes or alias collisions.
 - **The accepted generation ID is deterministic.** `obsidian-cpu-435ac66d15de2e9a3188` derives from the accepted content/build/base contract.
 - **The physical model is one hash-addressed object store plus immutable generations containing only relative aliases, manifests, and receipts.**
-- **The untracked recipe `__pycache__/` did not affect Phase B8.** The tracked-tree gate intentionally ignored untracked files; remove the directory before the next run for a visually clean status.
-- **Phase B9 is the first candidate-byte mutation.** It may create/reuse 96 hash-addressed objects and publish one immutable generation, but it must not create or change `current`.
-- **Phase B9 rechecks all 133 source identities at copy time.** It regenerates the GSettings aggregate in strict mode and requires empty stdout/stderr plus the accepted SHA-256.
-- **Content publication is crash-conscious and idempotent.** New objects use fsynced temporary files plus no-overwrite hard-link publication; existing objects are reused only after hash verification.
+- **The first Phase B9 run is a valid failed diagnostic receipt.** All 19 inputs passed, all 133 source identities matched, strict schema generation was clean and byte-identical, and `current` was absent before the transaction.
+- **The first B9 failure was isolated to the first object-publication syscall.** `os.link()` returned `EACCES` for a same-directory temporary file and destination; no object-materialization table or final generation was produced.
+- **Hard-link publication is not a portable primitive for this Android/Termux deployment.** The exact kernel/LSM/filesystem cause is not claimed from the receipt.
+- **Corrected Phase B9 substitutes only the no-overwrite publication primitive.** It verifies the exact reviewed Git blob of the base materializer and runs it with `renameat2(..., RENAME_NOREPLACE)` in place of `os.link()`.
+- **No unsafe overwrite-capable rename fallback exists.** `EEXIST` is returned to the base verifier; unsupported syscall or any other errno is a hard failure.
+- **Phase B9 remains the first candidate-byte mutation.** It may create/reuse 96 hash-addressed objects and publish one immutable generation, but it must not create or change `current`.
+- **Content publication remains crash-conscious and idempotent.** The corrected primitive atomically moves a fully written, fsynced, hash-verified, owner-read-only temporary byte into a previously absent object path.
 - **Generation publication remains staging-only.** A complete staged tree is fsynced, frozen read-only, and renamed once into `generations/<generation-id>`.
-- **The immutable generation must validate all 175 aliases, 96 object hashes, embedded manifest hashes, and non-writable modes before Phase B9 passes.**
+- **The immutable generation must validate all 175 aliases, 96 object hashes, embedded manifest hashes, and non-writable modes before corrected Phase B9 passes.**
 - **`current` remains guarded before and after the transaction.** Any concurrent or accidental pointer change is a failure.
 - **No workload launch or promoted launcher change occurs in Phase B9.** Explicit-generation loader/workload validation remains the next claim.
 - **Atomic activation and rollback remain mandatory but unimplemented.** They may begin only after explicit-generation validation passes.
@@ -50,6 +53,7 @@ docs/refactor/0100-selected-obsidian-phase-b6-source-manifest-gap.md
 docs/refactor/0101-selected-obsidian-phase-b6-corrected-schema-reproduction-pass.md
 docs/refactor/0102-selected-obsidian-phase-b7-complete-cpu-manifest-pass.md
 docs/refactor/0103-selected-obsidian-phase-b8-generation-layout-preflight-pass.md
+docs/refactor/0104-selected-obsidian-phase-b9-first-run-hardlink-publication-failure.md
 docs/refactor/0091-scoped-graphics-policy-promotion-closure.md
 ```
 
@@ -63,7 +67,8 @@ docs/refactor/0091-scoped-graphics-policy-promotion-closure.md
 - [x] close static/data ownership and corrected schema reproduction
 - [x] pass complete semantic/candidate manifest synthesis
 - [x] pass source/content/alias/generation-layout preflight
-- [ ] run Phase B9 staging-only content and immutable-generation materialization
+- [x] diagnose the first Phase B9 hard-link publication failure
+- [ ] run corrected Phase B9 with `renameat2 RENAME_NOREPLACE`
 - [ ] validate the explicit generation before activation
 - [ ] implement and test atomic activation and rollback
 - [ ] validate promoted candidate equivalence
@@ -87,10 +92,12 @@ Do not:
 
 ```text
 rerun closed graphics gates or Phase B1-B8 without a source trigger;
+retry the uncorrected hard-link B9 entry point;
+replace no-overwrite publication with ordinary overwrite-capable rename;
+blindly delete object-store or generation paths after the failed run;
 write selected objects into the broad live farm;
 create or replace current during Phase B9;
 activate a partial or unvalidated generation;
-copy app-local/world ELF, glibc locale, or Vulkan feature roots into the CPU generation;
 change the promoted launcher before explicit-generation validation;
 make immutable generations owner-writable;
 implement garbage collection before current/previous/active references exist;
@@ -100,7 +107,7 @@ use ambiguous evidence archive names.
 
 ## Evidence policy
 
-Identity, source-at-copy verification, content publication, immutable-generation validation, explicit-generation selection, atomic activation, rollback, and workload equivalence are separate claims. Phase B9 is candidate materialization, not promotion.
+Identity, source-at-copy verification, publication primitive, content publication, immutable-generation validation, explicit-generation selection, atomic activation, rollback, and workload equivalence are separate claims. Corrected Phase B9 is candidate materialization, not promotion.
 
 ```bash
 out=<stage-specific-slug>-$(date +%Y%m%d-%H%M%S)
