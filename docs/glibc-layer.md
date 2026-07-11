@@ -75,13 +75,25 @@ For a conventional tarball or extracted application tree:
 6. verify every ELF with the glibc `ldd` path;
 7. create a package-owned launcher that sources `~/gl/env` and clears incompatible preload state at process entry;
 8. if the workload deliberately requires the managed hardware Vulkan provider, source `~/gl/policy/vulkan/freedreno.sh` in that launch branch;
-9. validate CPU/basic GUI startup separately from GPU enablement and selected-provider evidence.
+9. add an OpenGL bridge only in the consumer that owns it, such as `gl-run` for Zink;
+10. validate CPU/basic GUI startup separately from GPU enablement and selected-provider evidence.
 
 AppImage is supported as an input adapter by extracting the embedded SquashFS payload first, then reusing the same onboarding pipeline. See `experiments/glibc/obsidian-appimage/`.
 
-## Vulkan policy boundary
+## Graphics policy boundary
 
-`~/gl/env` is the shared glibc baseline. It clears inherited `VK_ICD_FILENAMES` and `VK_DRIVER_FILES` from the bionic desktop session, but does not globally choose a glibc Vulkan provider.
+`~/gl/env` is the shared glibc baseline. It clears four classes of inherited bionic/session graphics policy:
+
+```text
+VK_ICD_FILENAMES
+VK_DRIVER_FILES
+MESA_LOADER_DRIVER_OVERRIDE
+GALLIUM_DRIVER
+```
+
+The first pair is an ABI-critical Vulkan provider selection. The second pair is OpenGL bridge/Gallium device policy. None is a valid glibc-world global default merely because it is valid for the surrounding bionic desktop session.
+
+The baseline does not choose a glibc Vulkan provider or OpenGL bridge.
 
 The source-only profile:
 
@@ -89,32 +101,38 @@ The source-only profile:
 ~/gl/policy/vulkan/freedreno.sh
 ```
 
-selects the managed glibc Freedreno ICD by exporting both loader variables together. It is applied only by consumers that deliberately require that provider.
+selects the managed glibc Freedreno ICD by exporting both Vulkan loader variables together. It is applied only by consumers that deliberately require that provider.
 
 Current compositions:
 
 ```text
 gl-run
     -> source gl/env
+    -> inherited bionic provider/bridge policy absent
     -> source explicit Freedreno profile
     -> MESA_LOADER_DRIVER_OVERRIDE=zink
 
 VS Code GPU branch
     -> source gl/env
+    -> inherited bionic provider/bridge policy absent
     -> source explicit Freedreno profile
     -> ANGLE Vulkan flags
+    -> no Zink/Gallium override
 
 Obsidian GUI GPU branch
     -> source gl/env
+    -> inherited bionic provider/bridge policy absent
     -> source explicit Freedreno profile
     -> ANGLE Vulkan flags
+    -> no Zink/Gallium override
 
 CPU branches and Obsidian CLI
     -> source gl/env
-    -> no explicit Vulkan provider selection
+    -> no explicit Vulkan provider
+    -> no OpenGL bridge/Gallium override
 ```
 
-This separates ABI sanitation, provider selection, bridge selection, and application feature mode.
+This separates ABI/session sanitation, provider selection, bridge selection, and application feature mode.
 
 ## Common failure signatures
 
@@ -125,7 +143,8 @@ This separates ABI sanitation, provider selection, bridge selection, and applica
 5. **Electron sandbox ordering** — sandbox checks can occur before `argv.json`; the project uses launch environment/CLI policy instead.
 6. **URL intents silently blocked** — Android background-activity policy requires Termux's Display over other apps permission.
 7. **Wrong Vulkan ICD** — a glibc process inherits the bionic ICD or applies the wrong profile; confirm `~/gl/env` sanitizes first and the intended profile sets both loader variables.
-8. **Unexpected llvmpipe** — explicit provider policy was absent or failed; note that implicit discovery is allowed to select software providers.
+8. **Unexpected Zink in ANGLE/CPU workload** — the bionic session's `MESA_LOADER_DRIVER_OVERRIDE` crossed the boundary; confirm the baseline clears it and `GALLIUM_DRIVER`.
+9. **Unexpected llvmpipe** — explicit provider policy was absent or failed; note that implicit discovery is allowed to select software providers.
 
 ## Current promoted owners
 
@@ -156,8 +175,10 @@ Runtime state remains outside Git tracking: application trees, the farm, Mesa in
 - official Microsoft VS Code arm64 tarball;
 - Obsidian arm64 AppImage after extraction/onboarding;
 - Miniforge/Conda/Mamba with environment creation and compiled NumPy workload;
-- glibc OpenGL 4.6 through Zink -> Turnip;
-- ANGLE Vulkan -> Turnip for official VS Code;
+- promoted glibc OpenGL 4.6 through `gl-run` -> Zink -> Turnip;
+- promoted ANGLE Vulkan -> Turnip/Adreno 730 for official VS Code;
 - same-consumer VS Code policy A/B showing explicit Turnip/Adreno versus implicit LVP/llvmpipe.
+
+Because the baseline sanitation contract was expanded after the first promoted workload receipts, current-HEAD regression reruns are required before final promotion closure.
 
 The next major scientific workload target is PyMOL.
