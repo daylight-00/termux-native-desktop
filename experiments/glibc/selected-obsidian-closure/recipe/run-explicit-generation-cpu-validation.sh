@@ -65,6 +65,14 @@ summary_value() {
     ' "$B9_OUT/summary.tsv"
 }
 
+launch_value() {
+    local key=$1
+    awk -F $'\t' -v key="$key" '
+        NR > 1 && $1 == key { print $2; found=1; exit }
+        END { if (!found) exit 1 }
+    ' "$LAUNCH_RECEIPT_DIR/launch-environment.tsv"
+}
+
 write_current_state() {
     local output=$1
     local current=$2
@@ -141,16 +149,16 @@ else
         || fail "provided VALIDATION_ROOT is not a plain directory"
 fi
 
-FONTCONFIG_ROOT="$VALIDATION_ROOT/f"
+FONTCONFIG_ROOT="$VALIDATION_ROOT/fontconfig"
 FONTCONFIG_FILE="$FONTCONFIG_ROOT/fonts.conf"
-XDG_CONFIG_HOME="$VALIDATION_ROOT/c"
-XDG_CACHE_HOME="$VALIDATION_ROOT/k"
-XDG_DATA_HOME="$VALIDATION_ROOT/d"
-XDG_STATE_HOME="$VALIDATION_ROOT/s"
-XDG_RUNTIME_DIR="$VALIDATION_ROOT/x"
-TMPDIR="$VALIDATION_ROOT/t"
+XDG_CONFIG_HOME="$VALIDATION_ROOT/xdg/config"
+XDG_CACHE_HOME="$VALIDATION_ROOT/xdg/cache"
+XDG_DATA_HOME="$VALIDATION_ROOT/xdg/data"
+XDG_STATE_HOME="$VALIDATION_ROOT/xdg/state"
+XDG_RUNTIME_DIR="$VALIDATION_ROOT/xdg/runtime"
+TMPDIR="$VALIDATION_ROOT/tmp"
 LAUNCHER_SOURCE="$REPO/experiments/glibc/selected-obsidian-closure/recipe/launch-obsidian-explicit-generation-cpu.sh"
-LAUNCHER_RUNTIME="$VALIDATION_ROOT/b/launch.sh"
+LAUNCHER_RUNTIME="$VALIDATION_ROOT/bin/launch-obsidian-explicit-generation-cpu.sh"
 
 validation_root_length=${#VALIDATION_ROOT}
 tmpdir_length=${#TMPDIR}
@@ -273,6 +281,14 @@ else
     fail "explicit-generation capture failed"
 fi
 printf '%s\n' "$capture_rc" >"$OUT/capture-exit-status.txt"
+
+stage=launch_contract
+[ "$(launch_value launcher_shell_ld_library_path)" = UNSET ] \
+    || fail "launcher shell inherited candidate LD_LIBRARY_PATH"
+[ "$(launch_value candidate_loader_injection)" = EXEC_ENV_ONLY ] \
+    || fail "candidate loader path was not scoped to final exec"
+[ "$(launch_value current_reference)" = NO ] \
+    || fail "launch contract references current"
 
 stage=current_guard
 write_current_state "$OUT/current-state-after.tsv" "$CURRENT"
