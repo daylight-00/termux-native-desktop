@@ -1,7 +1,7 @@
 # Status
 
-> **State:** selected-Obsidian-closure corrected Phase B9 after first-run hard-link publication failure  
-> **Updated:** 2026-07-11
+> **State:** selected-Obsidian-closure corrected Phase B9 after generation-directory publication failure  
+> **Updated:** 2026-07-12
 
 ## Working conclusions
 
@@ -18,17 +18,16 @@
 - **Phase B7 passed.** All 161 retained semantic objects have one primary lifecycle disposition; all 113 ELF objects are fully and disjointly accounted.
 - **Phase B8 passed read-only.** All 133 materialization inputs still matched; 96 immutable content identities and 175 generation aliases had zero duplicate hashes or alias collisions.
 - **The accepted generation ID is deterministic.** `obsidian-cpu-435ac66d15de2e9a3188` derives from the accepted content/build/base contract.
-- **The physical model is one hash-addressed object store plus immutable generations containing only relative aliases, manifests, and receipts.**
-- **The first Phase B9 run is a valid failed diagnostic receipt.** All 19 inputs passed, all 133 source identities matched, strict schema generation was clean and byte-identical, and `current` was absent before the transaction.
-- **The first B9 failure was isolated to the first object-publication syscall.** `os.link()` returned `EACCES` for a same-directory temporary file and destination; no object-materialization table or final generation was produced.
-- **Hard-link publication is not a portable primitive for this Android/Termux deployment.** The exact kernel/LSM/filesystem cause is not claimed from the receipt.
-- **Corrected Phase B9 substitutes only the no-overwrite publication primitive.** It verifies the exact reviewed Git blob of the base materializer and runs it with `renameat2(..., RENAME_NOREPLACE)` in place of `os.link()`.
-- **No unsafe overwrite-capable rename fallback exists.** `EEXIST` is returned to the base verifier; unsupported syscall or any other errno is a hard failure.
-- **Phase B9 remains the first candidate-byte mutation.** It may create/reuse 96 hash-addressed objects and publish one immutable generation, but it must not create or change `current`.
-- **Content publication remains crash-conscious and idempotent.** The corrected primitive atomically moves a fully written, fsynced, hash-verified, owner-read-only temporary byte into a previously absent object path.
-- **Generation publication remains staging-only.** A complete staged tree is fsynced, frozen read-only, and renamed once into `generations/<generation-id>`.
-- **The immutable generation must validate all 175 aliases, 96 object hashes, embedded manifest hashes, and non-writable modes before corrected Phase B9 passes.**
-- **`current` remains guarded before and after the transaction.** Any concurrent or accidental pointer change is a failure.
+- **The first Phase B9 run failed only at hard-link object publication.** It published no object and no generation.
+- **The second Phase B9 run closed content publication.** All 133 source identities matched, strict schema generation was clean, and all 96 content objects—70,897,301 bytes—were published with `renameat2(..., RENAME_NOREPLACE)`.
+- **The 96 content-addressed objects are valid reusable state.** They must not be deleted merely because final-generation publication failed.
+- **The second B9 failure was isolated to the frozen staged-generation directory rename.** `os.rename()` returned `EACCES` after staged construction, validation, fsync, and owner-read-only freeze.
+- **The failure receipt does not isolate the exact Android rule.** Source-root mode, Python/libc syscall path, directory contents, or another filesystem/security rule remain possible until the same-boundary probe runs.
+- **The corrected entry point now probes generation publication before touching the real staged generation.** It tests `0555` and, only after `EACCES/EPERM`, `0700` using `renameat2 RENAME_NOREPLACE` across the same staging-to-generations boundary.
+- **Frozen-root direct publication remains preferred.** If the device rejects it but accepts a writable root, only the complete staged root is temporarily changed to `0700`; all child nodes remain immutable, publication is no-overwrite, and the final root is restored to `0555` and fsynced before return.
+- **No ordinary overwrite-capable rename fallback exists.** Unsupported behavior or any unexpected errno is a hard failure.
+- **Phase B9 still must not create or change `current`.** The final generation is not activated merely by publication.
+- **The immutable generation must validate all 175 aliases, 96 object hashes, embedded manifest hashes, and non-writable modes before Phase B9 passes.**
 - **No workload launch or promoted launcher change occurs in Phase B9.** Explicit-generation loader/workload validation remains the next claim.
 - **Atomic activation and rollback remain mandatory but unimplemented.** They may begin only after explicit-generation validation passes.
 - **Garbage collection remains forbidden until current, previous-generation, and active-validation references are defined.**
@@ -54,6 +53,7 @@ docs/refactor/0101-selected-obsidian-phase-b6-corrected-schema-reproduction-pass
 docs/refactor/0102-selected-obsidian-phase-b7-complete-cpu-manifest-pass.md
 docs/refactor/0103-selected-obsidian-phase-b8-generation-layout-preflight-pass.md
 docs/refactor/0104-selected-obsidian-phase-b9-first-run-hardlink-publication-failure.md
+docs/refactor/0105-selected-obsidian-phase-b9-generation-directory-publication-failure.md
 docs/refactor/0091-scoped-graphics-policy-promotion-closure.md
 ```
 
@@ -67,8 +67,9 @@ docs/refactor/0091-scoped-graphics-policy-promotion-closure.md
 - [x] close static/data ownership and corrected schema reproduction
 - [x] pass complete semantic/candidate manifest synthesis
 - [x] pass source/content/alias/generation-layout preflight
-- [x] diagnose the first Phase B9 hard-link publication failure
-- [ ] run corrected Phase B9 with `renameat2 RENAME_NOREPLACE`
+- [x] publish and verify all 96 content-addressed objects
+- [x] diagnose frozen generation-directory publication failure
+- [ ] rerun corrected Phase B9 with same-boundary generation publication probe
 - [ ] validate the explicit generation before activation
 - [ ] implement and test atomic activation and rollback
 - [ ] validate promoted candidate equivalence
@@ -92,14 +93,14 @@ Do not:
 
 ```text
 rerun closed graphics gates or Phase B1-B8 without a source trigger;
-retry the uncorrected hard-link B9 entry point;
-replace no-overwrite publication with ordinary overwrite-capable rename;
-blindly delete object-store or generation paths after the failed run;
-write selected objects into the broad live farm;
+delete the 96 valid content-addressed objects;
+retry the corrected entry point at d44de24;
+use ordinary overwrite-capable rename;
+blindly delete staging or final-generation paths before inventory;
 create or replace current during Phase B9;
 activate a partial or unvalidated generation;
 change the promoted launcher before explicit-generation validation;
-make immutable generations owner-writable;
+make final immutable generations owner-writable;
 implement garbage collection before current/previous/active references exist;
 start PyMOL by extending the broad farm;
 use ambiguous evidence archive names.
@@ -107,7 +108,7 @@ use ambiguous evidence archive names.
 
 ## Evidence policy
 
-Identity, source-at-copy verification, publication primitive, content publication, immutable-generation validation, explicit-generation selection, atomic activation, rollback, and workload equivalence are separate claims. Corrected Phase B9 is candidate materialization, not promotion.
+Identity, source-at-copy verification, content publication, generation publication mode, immutable-generation validation, explicit-generation selection, atomic activation, rollback, and workload equivalence are separate claims. The 96 object-store entries may be closed while generation publication remains open.
 
 ```bash
 out=<stage-specific-slug>-$(date +%Y%m%d-%H%M%S)
