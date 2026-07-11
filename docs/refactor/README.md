@@ -1,135 +1,147 @@
 # Repository Refactor Work Log
 
-This directory is the transaction-level source of truth for the repository refactor from the legacy `setup/` layout to explicit ownership, semantic decomposition, selected-provider experiments, validated runtime promotion, and post-promotion architecture correction.
+This directory is the transaction-level source of truth for the migration from the legacy `setup/` layout toward explicit ownership, semantic composition, immutable selected providers, controlled activation, and clean-state reconstruction.
 
 ## Working rule
 
-Every structural or architectural change must be recorded here before or at the same time as the repository change.
+Every structural or architectural change is recorded here before or with the repository change.
 
 ```text
-session context
+session narrative
     != authority
 
-repository evidence and current index
+repository evidence + current canonical index
     = authority
 ```
 
-Historical records are preserved even when their implementation direction is later superseded.
+Historical records remain intact when later evidence supersedes their interpretation or implementation.
 
 ## Current checkout root
-
-Canonical live-device checkout:
 
 ```text
 $HOME/projects/termux-native-desktop
 ```
 
-The legacy root:
+The historical `$HOME/termux-native-desktop` path is evidence only and must not return as a compatibility identity.
 
-```text
-$HOME/termux-native-desktop
-```
+## Current authority and precedence
 
-is only a historical migration identity and must not be reintroduced as a compatibility symlink.
-
-## Current direction and precedence
-
-Top-down authority on `main`:
+Top-down foundation on `main`:
 
 ```text
 docs/system-foundation/11-architecture-reassessment-and-hard-refactor-decision.md
 docs/system-foundation/12-document-consistency-audit-and-execution-order.md
 ```
 
-Current branch-local direction:
+Current branch-local authority:
 
 ```text
-0092-post-graphics-closure-architecture-midpoint-audit.md
-    -> audits the closed graphics transaction against the system-foundation model
+0113-clean-state-minimum-condition-and-supply-authority-audit.md
+    -> clean-state definition, minimum sufficient conditions, supply authority,
+       font/rootfs cleanup order, identity separation, and next-phase gates
 
+0112-selected-obsidian-passive-map-selection-diagnostic-pass-and-contract-decision.md
+    -> passive runtime/map facts, no-patch decision, corrected map classes,
+       and provisional successor-generation baseline
+
+0110-selected-obsidian-pixbuf-inventory-pass-and-interaction-boundary-correction.md
+    -> passive versus interactive claim split and GTK capability inventory
+
+0106-selected-obsidian-phase-b9-generation-materialization-pass.md
+    -> first immutable selected CPU generation and publication receipt
+
+0092-post-graphics-closure-architecture-midpoint-audit.md
 0093-post-audit-direction-validator-lifecycle-and-selected-closure-reentry.md
-    -> accepts the audit, classifies validator lifecycle, continues the selected
-       Obsidian parent pilot, and defines the next read-only evidence stage
+    -> top-down direction, validator lifecycle, and parent-pilot continuation
 
 0091-scoped-graphics-policy-promotion-closure.md
-    -> closed graphics transaction and evidence-backed contract
+    -> closed graphics-policy transaction
 
 0015-0019
-    -> branch semantic direction, substrate authority, and selected-closure criteria
+    -> semantic hard-refactor, substrate authority, and selected-closure criteria
 ```
 
-Current precedence:
+Precedence:
 
 ```text
 system-foundation/11 and /12
-    -> project essence, invariants, object model, execution-order authority
+    -> project essence and invariant authority
 
-refactor/0092
-    -> post-graphics architecture audit
+0113
+    -> current clean-state and supply-layer pressure
 
-refactor/0093
-    -> accepted post-audit execution direction and next action
+0112 / 0110 / 0106
+    -> current selected-Obsidian evidence and accepted bounded decisions
 
-refactor/0091
-    -> closed graphics contract and receipt matrix
+0092 / 0093
+    -> post-graphics architecture direction
 
-refactor/0015-0019
-    -> branch semantic foundations
+0091
+    -> closed graphics contract
+
+0015-0019
+    -> semantic foundations
 
 other numbered records
-    -> evidence and transaction history
+    -> chronological evidence and transaction history
 
-refactor/0014
-    -> retained candidate/validation/promotion insights only;
-       concrete broad-farm/pacman/gl-run lifecycle sequence superseded
+0014
+    -> retained candidate/validation/rollback principles only;
+       concrete broad-farm/pacman/gl-run lifecycle sequence is superseded
 ```
 
 ## Current state
 
 ```text
 ownership migration:
-    accepted and deployed
-
-glibc 2.42/2.43 ABI incident:
-    recovered for tested workload
-    2.42 hold remains temporary containment
-
-bounded D-Bus selected-provider pilot:
-    PASS
-
-selected Obsidian application-domain closure pilot:
-    ACTIVE / INCOMPLETE
-    parent question explicitly continued
-    next stage is retained control locality input audit
+    DEPLOYED
 
 scoped graphics-policy promotion:
     CLOSED
-    trigger-based active gates only
 
-graphics recipe lifecycle:
-    CLASSIFIED
+selected D-Bus provider pilot:
+    PASS
 
-atomic activation:
+selected Obsidian parent pilot:
+    ACTIVE / INCOMPLETE
+
+selected Obsidian phases B1-B8:
+    CLOSED
+
+first immutable selected CPU generation:
+    PUBLISHED / UNACTIVATED
+
+passive explicit-generation startup/topology/100-second survival/maps:
+    PASS
+
+passive map-selection diagnosis:
+    PASS
+
+CPU map contract:
+    DECIDED, with Xau/Xdmcp semantic class name still provisional
+
+interactive vault-open GTK capability:
     OPEN
-    mandatory before next multi-file promoted migration
-    implementation deferred until managed semantic object set is known
 
-remaining gl semantic ownership split:
+clean-state supply authority:
+    OPEN / IMMEDIATE AUDIT GATE
+
+rootfs font/package cleanup:
+    BLOCKED until supply inventory and locked inputs exist
+
+atomic current activation:
+    NOT STARTED
+
+glibc corrected/newer substrate lifecycle:
     OPEN
-
-corrected/newer glibc substrate lifecycle:
-    OPEN
-
-PyMOL contract design:
-    ALLOWED
 
 PyMOL runtime implementation:
-    DEFERRED pending reusable-object decisions
+    DEFERRED
 ```
 
 ## Document index
 
-### 0001–0011 — baseline and ownership migration
+### 0001–0011 — source ownership migration
 
 ```text
 0001-current-state-inventory.md
@@ -145,9 +157,7 @@ PyMOL runtime implementation:
 0011-phase-b-runtime-deploy-passed.md
 ```
 
-These establish the move from the legacy `setup/` tree into explicit module, package, experiment, and tool ownership.
-
-### 0012–0014 — ABI incident and first lifecycle proposal
+### 0012–0014 — ABI incident and superseded lifecycle proposal
 
 ```text
 0012-post-refactor-vscode-libdbus-abi-regression.md
@@ -155,9 +165,9 @@ These establish the move from the legacy `setup/` tree into explicit module, pac
 0014-robust-gl-update-and-farm-lifecycle.md
 ```
 
-The incident proves substrate/provider incompatibility can exist independently of application code and farm generation. The transaction principles survive; the concrete lifecycle sequence is superseded.
+The incident proves substrate/provider incompatibility is independent of application and farm regeneration.
 
-### 0015–0019 — architecture reassessment and semantic direction
+### 0015–0019 — semantic architecture reassessment
 
 ```text
 0015-architecture-reassessment-and-hard-refactor-direction.md
@@ -167,9 +177,7 @@ The incident proves substrate/provider incompatibility can exist independently o
 0019-selected-closure-pilot-decision-criteria.md
 ```
 
-These reject accidental preservation of `modules/gl`, `gl-run`, the broad farm, or one package-manager integration as architecture.
-
-### 0020–0025 — substrate recovery and repository relocation
+### 0020–0025 — glibc recovery and checkout relocation
 
 ```text
 0020-glibc-242-243-binary-abi-regression.md
@@ -180,9 +188,7 @@ These reject accidental preservation of `modules/gl`, `gl-run`, the broad farm, 
 0025-repository-checkout-relocation-to-projects.md
 ```
 
-These establish APT/dpkg substrate authority, the glibc binary regression, package-managed recovery, corrected gates, and the canonical checkout path.
-
-### 0026–0028 — first bounded selected-provider closure
+### 0026–0028 — selected D-Bus provider candidate
 
 ```text
 0026-dbus-pilot-control-static-selection-mismatch.md
@@ -190,11 +196,9 @@ These establish APT/dpkg substrate authority, the glibc binary regression, packa
 0028-selected-dbus-candidate-validation-passed.md
 ```
 
-The D-Bus pilot proves a selected materialized provider object with actual bytes, provenance, candidate-specific selection proof, protected substrate boundary, and no broad-farm/rootfs provider leakage.
+This proves materialized selected provider bytes, provenance, candidate-specific selection, protected-world separation, and zero broad-farm leakage for a bounded probe.
 
-It does not prove one world-global shared-provider boundary.
-
-### 0029–0041 — Obsidian application-domain control and semantic decomposition
+### 0029–0041 — Obsidian control and semantic decomposition
 
 ```text
 0029-second-selected-closure-pilot-target.md
@@ -212,11 +216,7 @@ It does not prove one world-global shared-provider boundary.
 0041-obsidian-fallback-provider-closure-attribution.md
 ```
 
-This chain establishes a real multiprocess application-domain composition containing app-local ELF/data, world substrate, prefix providers, rootfs ELF providers, font/locale/schema data, mutable state/cache, and graphics provider/device relations.
-
-The parent pilot remains incomplete until locality-shadowing, non-graphics closure agreement, candidate materialization, actual candidate selection, and control/candidate equivalence are closed or intentionally terminated.
-
-### 0042–0060 — graphics-policy architecture discrimination
+### 0042–0060 — graphics policy discrimination
 
 ```text
 0042-vulkan-policy-producer-consumer-inventory.md
@@ -241,9 +241,7 @@ The parent pilot remains incomplete until locality-shadowing, non-graphics closu
 0060-obsidian-implicit-loader-selected-lvp-llvmpipe.md
 ```
 
-This chain separates application feature mode, provider discovery/selection, device intent, consumer suitability, mapped provider participation, and selected-device evidence.
-
-### 0061–0075 — VS Code causality and selected-device evidence
+### 0061–0075 — VS Code causality and selected-device proof
 
 ```text
 0061-vscode-explicit-gpu-policy-consumer-validation-plan.md
@@ -263,9 +261,7 @@ This chain separates application feature mode, provider discovery/selection, dev
 0075-vscode-primary-device-receipt-pass-and-policy-ownership-audit.md
 ```
 
-This chain proves the difference between policy propagation, mapped providers, and primary selected GPU identity for a real Electron consumer.
-
-### 0076–0091 — scoped graphics-policy promotion and closure
+### 0076–0091 — scoped graphics promotion and closure
 
 ```text
 0076-scoped-vulkan-policy-promotion-candidate.md
@@ -286,104 +282,162 @@ This chain proves the difference between policy propagation, mapped providers, a
 0091-scoped-graphics-policy-promotion-closure.md
 ```
 
-The transaction is closed around semantic behavior, not permanent helper/path identity.
-
-### 0092–0093 — post-closure audit and direction adjustment
+### 0092–0093 — post-closure audit and re-entry
 
 ```text
 0092-post-graphics-closure-architecture-midpoint-audit.md
 0093-post-audit-direction-validator-lifecycle-and-selected-closure-reentry.md
 ```
 
-These records:
+### 0094–0103 — selected-Obsidian semantic closure and generation design
 
 ```text
-audit the graphics closure against top-down architecture;
-identify unfinished selected-closure, ownership, activation, and substrate work;
-classify graphics recipe lifecycle;
-continue the selected Obsidian parent pilot;
-make retained-control analysis the next device step;
-define stage-specific tgz evidence handoff.
+0094-selected-obsidian-phase-b1-retained-control-locality-pass.md
+0095-selected-obsidian-phase-b2-static-runtime-closure-pass.md
+0096-selected-obsidian-phase-b3-first-run-script-failure.md
+0097-selected-obsidian-phase-b3-capability-grouping-pass.md
+0098-selected-obsidian-phase-b4-entrypoint-static-matrix-pass.md
+0099-selected-obsidian-phase-b5-data-provenance-review.md
+0100-selected-obsidian-phase-b6-source-manifest-gap.md
+0101-selected-obsidian-phase-b6-corrected-schema-reproduction-pass.md
+0102-selected-obsidian-phase-b7-complete-cpu-manifest-pass.md
+0103-selected-obsidian-phase-b8-generation-layout-preflight-pass.md
 ```
 
-## Active experiment entrypoint
-
-Selected Obsidian Phase B1 recipe:
+This chain establishes:
 
 ```text
-experiments/glibc/selected-obsidian-closure/recipe/
-    audit-retained-control-locality.sh
+app-local locality preservation
+complete static/dynamic/data accounting
+four provisional selected font identities
+37-source reproducible GSettings aggregate
+complete CPU semantic manifest
+content-addressed immutable generation design
+explicit validation-before-activation contract
 ```
 
-It performs a read-only identity/locality audit over the retained enriched control evidence.
+### 0104–0106 — generation materialization failures and pass
 
-It does not launch Obsidian, materialize candidate bytes, mutate the broad farm, or touch the promoted runtime.
+```text
+0104-selected-obsidian-phase-b9-first-run-hardlink-publication-failure.md
+0105-selected-obsidian-phase-b9-generation-directory-publication-failure.md
+0106-selected-obsidian-phase-b9-generation-materialization-pass.md
+```
+
+The final result is one published but unactivated immutable generation with 96 content identities and 175 aliases.
+
+### 0107–0112 — explicit runtime validation and map-contract correction
+
+```text
+0107-selected-obsidian-phase-b10-first-run-launcher-environment-failure.md
+0108-selected-obsidian-phase-b10-second-run-short-lived-main-diagnostic.md
+0109-selected-obsidian-phase-b10-short-runtime-topology-pass-gtk-pixbuf-survival-failure.md
+0110-selected-obsidian-pixbuf-inventory-pass-and-interaction-boundary-correction.md
+0111-selected-obsidian-passive-b10-survival-pass-map-selection-failure.md
+0112-selected-obsidian-passive-map-selection-diagnostic-pass-and-contract-decision.md
+```
+
+This chain establishes:
+
+```text
+exec-only candidate loader injection
+short receipt-owned Chromium socket/runtime path
+passive topology and 100-second survival
+zero broad-farm/rootfs/current mappings
+class-based map acceptance
+Xau/Xdmcp exact RPATH-driven world substitution
+interactive GTK pixbuf/icon/MIME gap
+```
+
+### 0113 — clean-state and supply-layer audit
+
+```text
+0113-clean-state-minimum-condition-and-supply-authority-audit.md
+```
+
+This audit adds the missing final-system criterion:
+
+```text
+minimum sufficient clean conditions
+    >
+minimum change to accumulated live state
+```
+
+It identifies:
+
+```text
+installed rootfs path dependence in materialization
+unknown rootfs base/manual package delta
+provisional rather than proven-minimum font set
+conflated generation identity axes
+generation-scoped rather than domain-wide rollback
+Xau/Xdmcp ownership-name overclaim
+coarse-versus-final pixbuf capability distinction
+experiment-tool versus final-tool boundary
+```
+
+## Immediate execution order
+
+```text
+C0. read-only rootfs supply/package mutation inventory;
+C1. controlled relocated-cache vault-open diagnostic, no installs;
+C2. minimum pixbuf/icon/MIME and font capability derivation;
+C3. lock supply artifacts and separate causal identities;
+C4. build one unified immutable successor generation;
+C5. passive + interactive + warehouse-independence acceptance;
+C6. atomic activation and generation-scoped rollback;
+C7. remove/recreate accidental rootfs delta and repeat acceptance;
+C8. preserve bootstrap inputs for the later full Termux reset rehearsal.
+```
 
 ## Current stop lines
 
 Do not:
 
 ```text
-rerun closed graphics gates without a documented trigger;
+rerun closed graphics gates without a trigger;
+purge rootfs font packages before the supply/mutation inventory;
+install another package to make the pixbuf path pass;
 expand gl-run into lifecycle authority;
-make the broad farm the production target by inertia;
-add package-manager hooks before substrate lifecycle ownership is settled;
-add more global policy to gl/env because it is convenient;
-materialize an Obsidian candidate before retained evidence is interpreted;
-analyze changed current bytes as if they were captured control bytes;
-start PyMOL by copying Electron launcher patterns;
-apply another multi-file runtime migration before activation semantics are defined;
-keep every experiment helper as a permanent active gate.
+make the broad farm the production target;
+mutate the existing immutable generation;
+patch RPATH for Xau/Xdmcp;
+call prefix selection proof of semantic substrate ownership;
+copy all pixbuf/icon/MIME inventory paths wholesale;
+retain or remove fonts solely from one observed map set;
+activate current before clean supply and composition identities close;
+use phase-specific counts or wrappers as final operational architecture;
+reset Termux before all external inputs and clean bootstrap contracts are preserved;
+implement garbage collection.
 ```
 
-## Current next-phase order
+## Evidence handoff
 
-```text
-1. knowledge/control-plane synchronization and validator classification: CLOSED;
-2. retained Obsidian control locality input audit: NEXT;
-3. locality-shadowing and non-graphics static/runtime closure decision;
-4. selected candidate materialization/equivalence or explicit pilot termination;
-5. semantic provider/bridge/family/application ownership decision;
-6. minimum atomic activation boundary for the decided managed object set;
-7. bounded ownership moves, beginning with high-risk global policies;
-8. corrected/newer glibc substrate acceptance and rollback;
-9. PyMOL as proof of the resulting architecture.
-```
-
-## Device evidence handoff
-
-Every evidence-producing stage defines a stage-specific `out` and `OUT` and ends with:
+Every evidence-producing stage uses a unique stage-specific output root and archive name.
 
 ```bash
 tar czf ~/Downloads/$out.tgz $OUT
 ```
 
-Generic archive names such as `results.tgz` are rejected because they erase stage identity.
+Generic archive names are rejected because they erase stage identity.
 
 ## Refactor lineage
 
-Original refactor branch:
-
 ```text
-refactor/module-package-layout
+original refactor branch:
+    refactor/module-package-layout
+
+base:
+    3cf41d6fc47050b06e18e956a23cefe25e4fb82a
+
+post-graphics audit base:
+    07b2f9a6f8f985fb3f152abd77c0ad3f04237cc9
+
+selected-Obsidian state audited by 0113:
+    6c00ac7f9ca46bc2159c51689904e154146f0d2a
+
+clean-state audit branch:
+    docs/clean-state-minimum-condition-audit
 ```
 
-Base commit:
-
-```text
-3cf41d6fc47050b06e18e956a23cefe25e4fb82a
-```
-
-Audited post-graphics-closure commit:
-
-```text
-07b2f9a6f8f985fb3f152abd77c0ad3f04237cc9
-```
-
-Post-audit working branch:
-
-```text
-docs/post-graphics-architecture-audit
-```
-
-The system-foundation documentation was added on `main` after the refactor branch diverged. Branch-local absence never makes foundation direction irrelevant; histories must be reconciled deliberately before final integration.
+The foundation documents exist on `main`; branch-local absence never makes them irrelevant. Histories must be reconciled deliberately before final integration.
