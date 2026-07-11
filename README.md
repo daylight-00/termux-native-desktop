@@ -2,7 +2,7 @@
 
 An active systems-engineering project for turning a single non-root Android phone into a practical research and development workstation.
 
-> **Goal:** run a high-performance native Termux desktop environment without a PRoot runtime, while retaining access to mainstream glibc applications and real Adreno GPU acceleration.
+> **Goal:** run a high-performance native Termux desktop environment without a PRoot-mediated normal application runtime, while retaining access to mainstream glibc applications and real Adreno GPU acceleration.
 
 This repository is both the working laboratory and the curated technical record. It is not an installer framework, package manager, or black-box setup script.
 
@@ -10,47 +10,96 @@ This repository is both the working laboratory and the curated technical record.
 
 Can a stock, non-root Android phone provide a desktop environment suitable for real technical work—coding, remote development, project navigation, scientific visualization, data inspection, Git review, and manuscript writing—without accepting a containerized runtime as the normal execution path?
 
-The project currently answers that question through tightly coupled system capabilities:
+## Current architecture direction
+
+The project is best understood as a heterogeneous userspace composition system.
+
+```text
+Android/Termux native host
+    +
+coherent glibc application world
+    +
+explicit bridges
+    +
+capability providers
+    +
+application domains
+    +
+evidence-driven promotion
+```
+
+Current operational realization:
 
 ```text
 native desktop/session
         |
-        +-- bionic-native applications and services
+        +-- bionic applications and services
+        +-- native uv-base environment
+        +-- Termux:X11 display bridge
         |
-        +-- native disposable uv-base environment
+        +-- glibc application processes
+        |      +-- package-manager-owned glibc substrate
+        |      +-- current prefix/rootfs/farm providers
+        |      +-- application-local payloads
+        |      +-- VS Code / Obsidian / Conda
         |
-        +-- glibc application layer
-        |      +-- Termux glibc core
-        |      +-- Debian rootfs as a passive library pool
-        |      +-- application-local libraries
-        |
-        +-- GPU acceleration
+        +-- graphics providers
                +-- bionic Mesa/Turnip
                +-- glibc Mesa/Turnip
                +-- ANGLE Vulkan and Zink consumers
 ```
 
-PRoot remains useful as an install-time dependency resolver, library source, and debugging control environment. It is intentionally excluded from the normal application runtime.
+PRoot remains useful as a dependency solver, artifact/library/data warehouse, behavioral oracle, and debugging control. It is excluded from normal application process execution.
+
+Current paths such as `modules/gl`, `~/gl/env`, `gl-run`, and the broad farm are not automatically final architecture. The project preserves validated semantics and evidence rather than object identity by inertia.
+
+## Current milestone
+
+```text
+scoped graphics-policy promotion:
+    CLOSED
+
+selected D-Bus provider pilot:
+    PASS
+
+selected Obsidian application-domain closure:
+    ACTIVE / INCOMPLETE
+
+atomic activation:
+    OPEN
+
+glibc corrected/newer substrate lifecycle:
+    OPEN
+
+PyMOL runtime pilot:
+    DEFERRED pending reusable-object decisions
+```
+
+Current post-closure audit:
+
+```text
+docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md
+```
 
 ## Repository checkout
 
-The canonical live-device checkout location is:
+Canonical live-device checkout:
 
 ```text
 $HOME/projects/termux-native-desktop
 ```
 
-Repository operator tools must derive the source root from their own location rather than treating the checkout pathname as architectural identity. Historical evidence keeps the path that was real when the evidence was captured.
+Repository tools must derive source root from their own location rather than treating the checkout pathname as architectural identity.
 
 ## Repository map
 
-- `modules/` — project-owned system capabilities and target-relative overlays.
-- `packages/` — lifecycle definitions and launch integration for external software payloads.
-- `experiments/` — the living workbench. Each experiment keeps a concise canonical `README.md`; session-derived full reports live beside it as `report.md`; raw captures go in `evidence/` when useful.
+- `modules/` — current project-authored physical integrations and overlays; not necessarily one-to-one with final semantic objects.
+- `packages/` — lifecycle definitions and launch integration for external payloads.
+- `experiments/` — architecture discrimination, evidence, provenance, and historical diagnostics.
 - `tests/` — cross-cutting repository and integration validation.
-- `tools/` — repository/deployment operator commands.
-- `docs/` — project context, architecture, integrated operational guides, refactor records, timeline, and durable decisions.
-- `STATUS.md` — current conclusions, unresolved questions, and immediate work.
+- `tools/` — repository/deployment operator workflows.
+- `docs/` — context, architecture, operational guides, refactor records, audits, timeline, and durable decisions.
+- `STATUS.md` — current conclusions, architecture authority, stop lines, and next focus.
 
 The intended information flow is:
 
@@ -58,20 +107,43 @@ The intended information flow is:
 question
   -> experiment
   -> evidence
-  -> working conclusion (STATUS.md)
-  -> durable decision (docs/decisions/)
-  -> module / package / test / integrated guide
+  -> interpretation correction
+  -> working conclusion
+  -> semantic contract / decision
+  -> active gate
+  -> promoted implementation
+  -> trigger-based revalidation
 ```
+
+Not every experiment helper becomes a permanent active test.
 
 ## Documentation guide
 
 - [`docs/PROJECT_CONTEXT.md`](docs/PROJECT_CONTEXT.md) — motivation and scope.
-- [`docs/architecture.md`](docs/architecture.md) — current system model.
-- [`docs/glibc-layer.md`](docs/glibc-layer.md) — glibc layer bootstrap, boundaries, onboarding, traps, maintenance.
-- [`docs/gpu.md`](docs/gpu.md) — Turnip/Zink build and runtime contract plus diagnostic history.
+- [`docs/architecture.md`](docs/architecture.md) — current operational realization and target semantic model.
+- [`docs/glibc-layer.md`](docs/glibc-layer.md) — current compatibility baseline, application-domain target, and lifecycle boundaries.
+- [`docs/gpu.md`](docs/gpu.md) — current graphics composition and evidence contract.
 - [`docs/desktop-session.md`](docs/desktop-session.md) — Termux:X11/XFCE two-world session contract.
-- [`docs/refactor/`](docs/refactor/) — low-level repository refactor source of truth and migration journal.
-- [`experiments/README.md`](experiments/README.md) — experiment index and provenance contract.
+- [`docs/refactor/README.md`](docs/refactor/README.md) — chronological refactor/evidence index and precedence.
+- [`docs/refactor/0091-scoped-graphics-policy-promotion-closure.md`](docs/refactor/0091-scoped-graphics-policy-promotion-closure.md) — closed graphics transaction.
+- [`docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md`](docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md) — current top-down audit, missing work, and revised priority.
+- [`experiments/README.md`](experiments/README.md) — experiment status and provenance contract.
+
+Top-down foundation documents live on `main` under `docs/system-foundation/`; branch-local absence does not make them irrelevant.
+
+## Immediate architecture order
+
+```text
+1. synchronize documentation and gate lifecycle;
+2. resume or terminate selected Obsidian closure;
+3. decide semantic world/provider/bridge/family/application ownership;
+4. define atomic activation before another multi-file migration;
+5. move high-risk over-scoped policies with evidence;
+6. define glibc substrate upgrade/recovery lifecycle;
+7. use PyMOL as proof of the resulting architecture.
+```
+
+Do not begin PyMOL by copying an Electron launcher, expanding `gl/env`, or blindly broadening the farm.
 
 ## Companion project
 
@@ -79,4 +151,4 @@ question
 
 ## Status
 
-This is an active experiment, not a finished distribution. Working paths are kept alongside failed and abandoned investigations when those failures define useful boundaries. See [`STATUS.md`](STATUS.md).
+This is an active experiment and architecture-refactoring project, not a finished distribution. Failed and superseded paths remain when they define useful boundaries. See [`STATUS.md`](STATUS.md).
