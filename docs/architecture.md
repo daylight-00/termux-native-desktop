@@ -1,10 +1,35 @@
 # Architecture
 
-This document describes the current integrated system model. Detailed historical paths and failed alternatives remain in `experiments/`; operational contracts live in the focused guides under `docs/`.
+This document describes both:
 
-## 1. System boundary
+```text
+current validated operational realization
+    and
+active target semantic architecture
+```
 
-The project keeps Android and Termux native. A glibc application world is added beside the normal bionic world instead of turning the whole environment into a conventional Linux distribution.
+They are related but not identical.
+
+Current paths, launch helpers, environment variables, and the broad farm may remain useful during migration. They are not permanent architecture merely because they are validated.
+
+Top-down authority:
+
+```text
+main: docs/system-foundation/11-architecture-reassessment-and-hard-refactor-decision.md
+main: docs/system-foundation/12-document-consistency-audit-and-execution-order.md
+```
+
+Current post-closure audit:
+
+```text
+docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md
+```
+
+## 1. Project system boundary
+
+The project keeps Android and Termux native.
+
+A glibc application world is composed beside the normal bionic world rather than turning the host into a conventional Linux distribution or using PRoot as the normal application runtime.
 
 ```text
 Android kernel + device hardware
@@ -12,269 +37,475 @@ Android kernel + device hardware
         +-- KGSL / Adreno 730
         |
         +-- Termux native user space (bionic)
+        |       |
+        |       +-- Termux:X11 + XFCE session
+        |       +-- native applications
+        |       +-- native uv-base environment
+        |       +-- bionic Mesa / Turnip
+        |
+        +-- glibc application processes
                 |
-                +-- Termux:X11 + XFCE session
-                +-- native Chromium / Code OSS
-                +-- native uv-base personal environment
-                +-- bionic Mesa / Turnip
-                |
-                +-- glibc application world
-                        |
-                        +-- Termux glibc core
-                        +-- filtered Debian rootfs library farm
-                        +-- application-local libraries
-                        +-- glibc Mesa / Turnip
-                        +-- VS Code, Obsidian, Conda, ...
+                +-- package-manager-owned glibc substrate
+                +-- current prefix/rootfs/farm providers
+                +-- application-local payloads
+                +-- managed graphics providers
+                +-- VS Code, Obsidian, Conda, future workloads
 ```
 
-The system is mixed by design, but each process stays inside one ABI world.
+The system is heterogeneous by design, but each process must remain inside one coherent ABI world.
 
-## 2. Two execution worlds, one display
+## 2. Target semantic objects
 
-The recovered session launcher and session guide make the boundary explicit:
+The architecture is modeled through:
 
 ```text
-                    Termux:X11 app (Android surface)
+World
+Application Domain
+Capability
+Provider
+Bridge
+Artifact Source / Supply Adapter
+Validation Gate
+```
+
+Examples:
+
+```text
+world.bionic
+world.glibc
+
+app.vscode
+app.obsidian
+app.pymol
+
+provider.graphics.vulkan.glibc
+provider.graphics.opengl.glibc
+provider.fonts.glibc
+provider.locale.glibc
+provider.tls.glibc
+
+bridge.x11
+bridge.url-open
+
+toolchain.glibc-target
+```
+
+Current repository directories do not map one-to-one to these objects.
+
+In particular:
+
+```text
+modules/gl
+    = transitional physical deployment grouping
+    != one final semantic owner
+```
+
+## 3. Two execution worlds, one display bridge
+
+```text
+                    Termux:X11 Android surface
                               ^
                        termux-x11 :1
                               ^
               +---------------+---------------+
               |                               |
          bionic world                    glibc world
-         XFCE / native apps              patched glibc apps
-         bionic Mesa/Turnip              glibc Mesa/Turnip
+         XFCE / native apps              foreign applications
+         bionic Mesa/Turnip              glibc providers
 ```
 
-Both worlds render to the same X display and physical GPU through their own userspace driver stacks. They must not load each other's libraries.
+Both worlds reach the same display service and physical GPU through ABI-appropriate client/provider stacks.
 
-See `docs/desktop-session.md`.
+They must not load each other's low-level runtime libraries.
 
-## 3. Environment contract
+The display relation is a bridge contract, not evidence that both worlds should share one environment or library set.
+
+## 4. Current world baseline
 
 ### Bionic/session world
 
-The desktop session:
+The current desktop session:
 
 - uses `DISPLAY=:1` over the local Unix socket;
-- uses `$TMPDIR` as its session `XDG_RUNTIME_DIR`;
+- uses the session runtime directory policy;
 - exports the bionic Turnip ICD for bionic clients;
-- exports `MESA_LOADER_DRIVER_OVERRIDE=zink` for bionic OpenGL clients in the current recovered launcher;
-- starts the X server itself under a cleaned environment with client GPU overrides removed.
+- exports a bionic Zink bridge policy for native OpenGL consumers;
+- starts the X server under a cleaned environment without client GPU overrides.
 
-The X server therefore stays clean even though bionic GL clients inherit the session GPU contract.
+### glibc application baseline
 
-### Native personal environment
-
-The native `uv-base` environment is separate from both the system Python and the glibc Conda ecosystem. Its durable definition is intended to be tracked while `.venv` remains disposable generated state. It provides the default personal Python environment and selected PyPI-distributed tools without mutating the infrastructure Python installation.
-
-### glibc application world
-
-Every glibc launcher sources `modules/gl/overlay/home/gl/env` through the live `~/gl/env` link. That baseline:
-
-- uses a separate `$PREFIX/tmp/gl-runtime` runtime directory;
-- removes inherited `VK_ICD_FILENAMES` and `VK_DRIVER_FILES` so a glibc process cannot accidentally consume the bionic session ICD;
-- removes inherited `MESA_LOADER_DRIVER_OVERRIDE` and `GALLIUM_DRIVER` so the bionic session's OpenGL bridge/device policy cannot become a glibc default;
-- does not select a glibc Vulkan provider or OpenGL bridge globally;
-- points TLS consumers at the Termux certificate bundle;
-- does not set `LD_LIBRARY_PATH`;
-- leaves the bionic session isolated from glibc library lookup state.
-
-Consumers that deliberately require the managed hardware Vulkan provider source:
+Current glibc launchers source the live realization of:
 
 ```text
-$HOME/gl/policy/vulkan/freedreno.sh
+modules/gl/overlay/home/gl/env
+    -> ~/gl/env
 ```
 
-That source-only profile exports both loader variables to the managed glibc Freedreno ICD. VS Code and Obsidian apply it only in their GPU branches. `gl-run` requires it and then adds `MESA_LOADER_DRIVER_OVERRIDE=zink` for OpenGL consumers.
-
-The architecture therefore keeps these dimensions separate:
+The file currently combines several responsibilities:
 
 ```text
-bionic-session graphics-policy sanitation
+runtime-directory policy
+X11 default
+passive rootfs data paths
+font/locale policy
+GSettings/accessibility policy
+Electron-family sandbox policy
+D-Bus clearing
+TLS trust policy
+graphics boundary sanitation
+```
+
+Only the following graphics behavior has been promoted as a durable semantic contract:
+
+```text
+remove inherited bionic Vulkan provider policy
+remove inherited bionic Zink/Gallium policy
+select no glibc graphics provider
+select no OpenGL bridge
+```
+
+The file path and its remaining accumulated policies are not final architecture.
+
+The highest-priority ownership concern is:
+
+```text
+ELECTRON_DISABLE_SANDBOX=1
+```
+
+which is Electron-family/security policy currently applied at world scope.
+
+## 5. Current graphics composition
+
+The scoped graphics-policy transaction is closed.
+
+Accepted semantic decomposition:
+
+```text
+world-boundary sanitation
 Vulkan provider selection
 OpenGL-to-Vulkan bridge selection
-application GPU feature mode
-application-state isolation
+application GPU/CPU feature mode
+application-state authority
+selected-device evidence
 ```
 
-## 4. glibc library model
+### Managed glibc hardware Vulkan provider
 
-The conceptual resolution order is:
+Current realization:
 
 ```text
-application-local libraries ($ORIGIN)
-            +
-Termux glibc core / Android-sensitive libraries
-            +
-filtered Debian rootfs library farm
+~/gl/policy/vulkan/freedreno.sh
 ```
 
-The exact lookup behavior is load-bearing:
+It exports a coherent pair of Vulkan loader variables selecting the managed glibc Freedreno/Turnip ICD.
 
-- the Termux glibc core must win for the libc family;
-- glibc-repo X11/xcb libraries must win over Debian variants because the local Termux:X11 socket path is Android/Termux-specific;
-- the Debian rootfs is a passive library/package source at runtime;
-- transitive dependencies are handled through glibc loader configuration and `ldconfig`, not by broad `LD_LIBRARY_PATH` injection.
-
-See `docs/glibc-layer.md` and `docs/decisions/0002-glibc-core-from-termux-glibc-repo.md`.
-
-## 5. GPU model
-
-There are two userspace GPU stacks because there are two ABI worlds.
+Durable contract:
 
 ```text
-bionic app
-  -> ANGLE Vulkan / Vulkan / Zink consumer
-  -> bionic Vulkan loader + Mesa Turnip
-  -> KGSL
-  -> Adreno 730
-
-
-glibc app with explicit hardware profile
-  -> ANGLE Vulkan / Vulkan / Zink consumer
-  -> glibc Vulkan loader + glibc Mesa Turnip
-  -> KGSL
-  -> Adreno 730
+hardware provider selection is explicit and consumer-scoped
 ```
 
-The session-wide bionic policy and glibc provider profiles are deliberately separate. `startxfce-x11` owns the bionic ICD and bionic Zink session policy. `~/gl/env` removes both the bionic Vulkan-provider pair and the bionic OpenGL bridge/Gallium policy at the glibc boundary. Individual glibc launch compositions then choose whether to apply explicit Freedreno, Zink, another validated provider/bridge policy, or no explicit graphics policy.
+The profile path and environment implementation are replaceable.
 
-Accepted glibc application modes:
+### OpenGL/Zink consumer
+
+Current realization:
 
 ```text
 gl-run
-    explicit managed Freedreno
-    + MESA_LOADER_DRIVER_OVERRIDE=zink
-
-VS Code / Obsidian GPU
-    GL_GPU=1
-    explicit managed Freedreno
-    ANGLE Vulkan argv
-    no Zink/Gallium override
-
-VS Code / Obsidian CPU
-    GL_GPU=0
-    no explicit provider
-    no bridge/Gallium override
-    exact --disable-gpu
+    -> explicit provider
+    -> MESA_LOADER_DRIVER_OVERRIDE=zink
+    -> target program
 ```
 
-For the captured VS Code control, explicit Freedreno selected Turnip/Adreno 730, while implicit discovery selected LVP/llvmpipe with the same ANGLE Vulkan feature mode. This is why the promoted VS Code GPU branch applies the explicit profile instead of relying on loader discovery.
-
-The promoted VS Code and Obsidian GPU receipts both correlate:
+Durable contract:
 
 ```text
-observable environment and argv
-CDP primary selected device
-ANGLE_VULKAN
-GaneshVulkan
-managed libvulkan_freedreno.so mapping
-/dev/kgsl-3d0 mapping
+an OpenGL consumer composition owns its Zink bridge and provider requirements
 ```
 
-Both selected:
+`gl-run` is not a lifecycle manager or permanent universal launcher.
+
+### Electron GPU mode
+
+Current VS Code and Obsidian GPU branches own:
+
+```text
+application feature mode
+explicit managed Vulkan provider
+ANGLE Vulkan argv
+no Zink/Gallium override
+```
+
+Canonical GPU acceptance correlates:
+
+```text
+observable environment/argv
+CDP primary selected device
+ANGLE/Vulkan feature identity
+managed provider mapping
+KGSL device mapping
+```
+
+Both validated GPU branches selected:
 
 ```text
 FREEDRENO_TURNIP
 Adreno 730
+ANGLE_VULKAN
+GaneshVulkan
+managed libvulkan_freedreno.so
+/dev/kgsl-3d0
 ```
 
-A mapped provider alone is not treated as selected-device proof.
+### Electron CPU mode
 
-For CPU mode, process-name presence is not the architecture invariant. VS Code retained an internal GPU helper using `--use-gl=disabled`; Obsidian did not create one in its accepted CPU receipt. Both had a provider-neutral environment, exact `--disable-gpu`, no GPU-enablement flags, renderer viability, and bounded main-process survival.
+Accepted CPU semantics:
 
-For the investigated Mesa 26.1.x configuration, the validated build policy uses `-Dfreedreno-kmds=msm,kgsl`. The working/broken split tracked the presence of the libdrm dependency in the tested builds; the exact low-level crash mechanism remains open.
+```text
+provider-neutral sanitized baseline
+exact --disable-gpu
+no GPU-enablement flags
+effective disabled/compositing behavior
+viable renderer/main topology
+bounded survival
+```
 
-See `docs/gpu.md`, `docs/decisions/0003-mesa-kmds-msm-kgsl.md`, and `docs/refactor/0091-scoped-graphics-policy-promotion-closure.md`.
+A process named `gpu-process` may or may not exist. Process naming is not the invariant.
 
-## 6. Application-state authority
+## 6. Current graphics provider graph
 
-A clean launch is not automatically an isolated launch. The application may derive its effective configuration directory independently of a generic Chromium argument.
+The validated OpenGL/Zink composition is cross-version:
 
-Accepted validation authority:
+```text
+rootfs GLVND / GLX / Gallium-Zink frontend 25.0.7
+    -> prefix Vulkan loader/support
+    -> provider-store Turnip/Freedreno 26.1.4 lineage
+    -> KGSL
+    -> Adreno 730
+```
+
+The tested composition works.
+
+It must be identified as a composition of independently changing layers rather than one generic `Mesa version`.
+
+Changes to any participating layer can trigger revalidation.
+
+The investigated Mesa build policy currently uses:
+
+```text
+-Dfreedreno-kmds=msm,kgsl
+```
+
+The practical working/broken split tracked the retained libdrm dependency. The exact low-level present-SIGBUS mechanism remains open.
+
+## 7. Application-state authority
+
+A clean launch is not automatically an isolated launch.
+
+Canonical validation authority:
 
 ```text
 VS Code
-    isolated --user-data-dir
-    isolated --extensions-dir
+    receipt-local user-data
+    receipt-local extensions
 
 Obsidian
     receipt-local XDG_CONFIG_HOME
     actual receipt-local <config>/obsidian directory
 ```
 
-The first Obsidian CDP attempt failed because the probe observed the wrong `DevToolsActivePort` path while the application retained `$HOME/.config/obsidian`. The corrected model binds XDG configuration, application-derived user data, process argv, and CDP endpoint observation to the same receipt-local tree.
+The first Obsidian CDP attempt failed because the probe observed the wrong application-owned endpoint path while normal state remained authoritative.
 
-Normal user configuration, vaults, extensions, and locks are outside promotion evidence.
+Normal settings, extensions, vaults, plugins, locks, and long-duration behavior are outside architecture-promotion receipts.
 
-## 7. Evidence and observability model
+Operational user acceptance is a separate claim class.
 
-The project distinguishes effective behavior from observability artifacts.
+## 8. Current library/provider realization
 
-```text
-empty or near-empty /proc/<pid>/environ
-    -> observability boundary
-    -> not proof of absence
-    -> not a value mismatch by itself
-
-mapped provider library
-    -> provider presence evidence
-    -> not selected-device proof by itself
-
-Chromium gpu-process name
-    -> internal topology observation
-    -> not hardware acceleration proof by itself
-```
-
-Claims are accepted at the strongest level supported by correlated evidence, not at the strongest plausible interpretation.
-
-The scoped graphics-policy promotion transaction is closed because all required layers have current authoritative receipts:
+The current operational lookup model remains:
 
 ```text
-source/pre-deploy
-live installation
-gl-run renderer
-VS Code GPU
-VS Code CPU
-Obsidian GPU
-Obsidian CPU
+application-local $ORIGIN
+    -> protected Termux glibc core / Android-sensitive providers
+    -> filtered Debian-rootfs-derived farm
 ```
 
-Revalidation is trigger-based rather than periodic or blind. The relevant gate is rerun only when its source, runtime dependency, application version, or evidence interpretation changes materially.
+Load-bearing rules:
 
-## 8. Build boundary
+- libc-family objects come from the package-manager-owned glibc substrate;
+- Termux-aware glibc X11/xcb providers win where Android/Termux transport behavior requires them;
+- valid application-local `$ORIGIN` locality must be preserved;
+- broad `LD_LIBRARY_PATH` injection is rejected;
+- the current farm/cache model resolves many transitive providers.
 
-Mesa builds for the glibc world use bionic-native orchestration tools while targeting the glibc ABI through explicit wrappers:
+This is the current compatibility baseline, not the accepted final production provider architecture.
+
+The D-Bus pilot proved that a selected materialized provider closure can own:
 
 ```text
-host tools:      bionic Python / uv / Meson / Ninja / shell
-compiler target: Termux glibc
-runtime target:  glibc Mesa + Turnip/KGSL + Zink
+actual provider bytes
+provenance
+candidate-specific selection proof
+protected substrate boundary
+zero broad-farm/rootfs leakage
 ```
 
-This is why the glibc target wrappers live under `modules/gl/overlay/home/gl/toolchain/`, while the Mesa acquisition/build/install lifecycle lives under `packages/mesa-glibc/`.
+The selected Obsidian pilot is still incomplete. It must resume or be terminated explicitly before the project claims a reusable real application-domain closure model.
 
-## 9. Repository lifecycle
+## 9. Data-provider realization
+
+Current glibc applications can read broad rootfs-backed:
 
 ```text
-baseline
-  -> hypothesis
-  -> experiment
-  -> evidence
-  -> result
-  -> working conclusion (STATUS.md)
-  -> durable decision (docs/decisions/ and closure records)
-  -> module / package / test / integrated guide
+fonts
+fontconfig configuration
+locale data
+GSettings schemas
+other XDG shared data
 ```
 
-The repository mirrors that lifecycle:
+These are passive data-provider dependencies, not PRoot process execution.
 
-- `experiments/` keeps living investigations and provenance;
-- `STATUS.md` records current conclusions and open questions;
-- `docs/decisions/` preserves durable choices;
-- `docs/refactor/` preserves transaction-level evidence, false-negative corrections, and closure records;
-- focused guides in `docs/` integrate current operational knowledge;
-- `modules/` owns project-authored system capabilities and target-relative overlays;
-- `packages/` owns external payload lifecycle definitions and application-specific launch integration;
-- `tools/` owns repository operator and deployment commands;
-- `tests/` holds cross-cutting repository and integration validation.
+Their final ownership remains open per capability:
+
+```text
+intentional rootfs-backed provider
+selected materialized data closure
+application-local provider
+```
+
+## 10. Supply and substrate
+
+The real device currently uses APT/dpkg as the glibc substrate backend.
+
+Architecture remains backend-neutral.
+
+Current containment:
+
+```text
+glibc 2.42 installed and held
+exact recovery artifact retained
+known tested 2.43 state incompatible with current provider requirement
+```
+
+The hold is not a lifecycle design.
+
+A future substrate contract must define:
+
+```text
+identity
+candidate acquisition
+core ABI gates
+provider compatibility
+application regression gates
+previous artifact retention
+rollback
+hold release criteria
+```
+
+Do not solve this by making the farm or `gl-run` the lifecycle owner.
+
+## 11. Deployment and activation
+
+Current deployment uses source-linked leaves.
+
+Therefore:
+
+```text
+checkout mutation
+    can equal
+live activation
+```
+
+A partial multi-file activation window was observed during graphics-policy migration.
+
+Before another promoted multi-file semantic split, define a minimum activation boundary with:
+
+```text
+complete candidate leaf set
+pre-activation validation
+one active identity/atomic transition where practical
+post-activation smoke
+known previous active identity
+real rollback target
+```
+
+This must remain smaller than a universal package manager unless evidence requires more.
+
+## 12. Evidence lifecycle
+
+The repository lifecycle is:
+
+```text
+question
+    -> experiment
+    -> evidence
+    -> interpretation correction
+    -> contract
+    -> canonical gate
+    -> promotion
+    -> trigger-based revalidation
+```
+
+Closed investigations should classify tools as:
+
+```text
+ACTIVE_CONTRACT_GATE
+CANONICAL_EVIDENCE_HELPER
+HISTORICAL_DIAGNOSTIC
+SUPERSEDED_FALSE_NEGATIVE_MODEL
+```
+
+Not every experiment helper is a permanent active test.
+
+Current graphics closure:
+
+```text
+docs/refactor/0091-scoped-graphics-policy-promotion-closure.md
+```
+
+Current architecture audit:
+
+```text
+docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md
+```
+
+## 13. Next architecture order
+
+```text
+1. synchronize knowledge/control-plane documents;
+2. resume or terminate selected Obsidian closure;
+3. decide semantic world/provider/bridge/family/application ownership;
+4. define atomic activation;
+5. apply bounded ownership moves, beginning with high-risk over-scoped policy;
+6. define corrected/newer glibc substrate lifecycle;
+7. use PyMOL as proof of the resulting reusable objects.
+```
+
+Do not start PyMOL by expanding the broad farm or global environment.
+
+## 14. Repository ownership map
+
+Current source ownership:
+
+```text
+modules/
+    project-authored physical integration and overlays
+
+packages/
+    external payload lifecycle and application launch integration
+
+experiments/
+    architecture discrimination, evidence, and provenance
+
+tools/
+    repository/operator workflows
+
+tests/
+    cross-cutting repository/integration gates
+```
+
+This is a source ownership taxonomy.
+
+Runtime semantic ownership remains the World/Provider/Bridge/Application/Toolchain model above.
