@@ -69,15 +69,31 @@ The native `uv-base` environment is separate from both the system Python and the
 
 ### glibc application world
 
-Every glibc launcher sources `modules/gl/overlay/home/gl/env` through the live `~/gl/env` link. That environment:
+Every glibc launcher sources `modules/gl/overlay/home/gl/env` through the live `~/gl/env` link. That baseline:
 
 - uses a separate `$PREFIX/tmp/gl-runtime` runtime directory;
-- pins both `VK_ICD_FILENAMES` and `VK_DRIVER_FILES` to the glibc Mesa ICD;
+- removes inherited `VK_ICD_FILENAMES` and `VK_DRIVER_FILES` so a glibc process cannot accidentally consume the bionic session ICD;
+- does not select a glibc Vulkan provider globally;
 - points TLS consumers at the Termux certificate bundle;
 - does not set `LD_LIBRARY_PATH`;
 - leaves the bionic session isolated from glibc library lookup state.
 
-OpenGL consumers add `MESA_LOADER_DRIVER_OVERRIDE=zink` through `gl-run`; Vulkan-native and ANGLE-Vulkan consumers do not need that override.
+Consumers that deliberately require the managed hardware Vulkan provider source:
+
+```text
+$HOME/gl/policy/vulkan/freedreno.sh
+```
+
+That source-only profile exports both loader variables to the managed glibc Freedreno ICD. VS Code and Obsidian apply it only in their GPU branches. `gl-run` requires it and then adds `MESA_LOADER_DRIVER_OVERRIDE=zink` for OpenGL consumers.
+
+The architecture therefore keeps these dimensions separate:
+
+```text
+ABI sanitation
+Vulkan provider selection
+OpenGL-to-Vulkan bridge selection
+application GPU feature mode
+```
 
 ## 4. glibc library model
 
@@ -112,14 +128,16 @@ bionic app
   -> Adreno 730
 
 
-glibc app
+glibc app with explicit hardware profile
   -> ANGLE Vulkan / Vulkan / Zink consumer
   -> glibc Vulkan loader + glibc Mesa Turnip
   -> KGSL
   -> Adreno 730
 ```
 
-The current session-wide bionic GL policy and the glibc application policy are deliberately separate. The session's bionic ICD and Zink override do not define the glibc runtime; `~/gl/env` re-pins the glibc ICD, and `gl-run` adds Zink only for glibc OpenGL consumers.
+The session-wide bionic policy and glibc provider profiles are deliberately separate. `startxfce-x11` owns the bionic ICD and bionic Zink session policy. `~/gl/env` only removes those variables at the glibc boundary. Individual glibc launch compositions then choose whether to apply explicit Freedreno, another validated provider policy, or no explicit provider selection.
+
+For the captured VS Code control, explicit Freedreno selected Turnip/Adreno 730, while implicit discovery selected LVP/llvmpipe with the same ANGLE Vulkan feature mode. This is why the promoted VS Code GPU branch applies the explicit profile instead of relying on loader discovery.
 
 For the investigated Mesa 26.1.x configuration, the validated build policy uses `-Dfreedreno-kmds=msm,kgsl`. The working/broken split tracked the presence of the libdrm dependency in the tested builds; the exact low-level crash mechanism remains open.
 
