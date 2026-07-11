@@ -8,8 +8,8 @@ This guide integrates the current GPU runtime contract and the reusable conclusi
 
 | Consumer | Path | Validation |
 |---|---|---|
-| VS Code / Electron | ANGLE -> Vulkan -> Turnip -> KGSL | CDP primary GPU = Turnip Adreno 730; provider and KGSL mappings |
-| glibc OpenGL apps | OpenGL -> Zink -> Turnip -> KGSL | `glxinfo -B`, OpenGL 4.6 |
+| VS Code / Electron | ANGLE -> Vulkan -> Turnip -> KGSL | promoted-launcher CDP primary GPU = Turnip Adreno 730; provider and KGSL mappings |
+| glibc OpenGL apps | OpenGL -> Zink -> Turnip -> KGSL | promoted `gl-run` self-contained GLX context, OpenGL 4.6 |
 | native Chromium / Code OSS | ANGLE Vulkan -> bionic Turnip | hardware-accelerated Chromium/Electron path |
 
 Default Mesa WSI presentation works in the validated glibc stack without forcing `MESA_VK_WSI_DEBUG=sw`. That does **not** by itself prove complete end-to-end zero-copy presentation.
@@ -34,7 +34,7 @@ Host orchestration remains bionic-native; artifacts target Termux glibc through 
 
 ## Runtime contract
 
-`modules/gl/overlay/home/gl/env` is the provider-neutral glibc baseline. It clears inherited bionic Vulkan provider variables but does not select a glibc provider.
+`modules/gl/overlay/home/gl/env` is the graphics-policy-neutral glibc baseline. It clears inherited bionic Vulkan provider variables and inherited `MESA_LOADER_DRIVER_OVERRIDE`/`GALLIUM_DRIVER`. It does not select a glibc provider or OpenGL bridge.
 
 Consumers that deliberately require the managed hardware provider source:
 
@@ -55,17 +55,21 @@ For glibc OpenGL consumers:
 gl-run <program> [args...]
 ```
 
-`gl-run` requires the explicit Freedreno profile and adds `MESA_LOADER_DRIVER_OVERRIDE=zink`. Vulkan-native or ANGLE-Vulkan consumers apply the provider profile directly and do not use the Zink override.
+`gl-run` requires the explicit Freedreno profile and then adds `MESA_LOADER_DRIVER_OVERRIDE=zink`. Vulkan-native or ANGLE-Vulkan consumers apply the provider profile directly and do not inherit or add the Zink bridge override.
 
-VS Code and Obsidian separate application feature mode from provider selection:
+VS Code and Obsidian separate application feature mode from provider and bridge selection:
 
 ```text
 GL_GPU=1
+    -> start from sanitized baseline
     -> source explicit Freedreno profile
     -> enable ANGLE Vulkan flags if the profile is available
+    -> no MESA_LOADER_DRIVER_OVERRIDE or GALLIUM_DRIVER
 
 GL_GPU=0
+    -> start from sanitized baseline
     -> keep VK_DRIVER_FILES and VK_ICD_FILENAMES absent
+    -> keep OpenGL bridge/Gallium overrides absent
     -> pass --disable-gpu
 ```
 
@@ -103,8 +107,9 @@ The two `git bisect` judge scripts are preserved with that experiment under its 
 4. Do not cargo-cult distant-version patchsets; select changes by mechanism.
 5. Keep the X server clean of client GPU overrides.
 6. When a policy selects an ICD explicitly, set both Vulkan loader variables together.
-7. Clear inherited bionic Vulkan variables at the glibc boundary before applying any glibc provider profile.
+7. Clear inherited bionic Vulkan provider **and OpenGL bridge/Gallium** variables at the glibc boundary before applying any glibc graphics composition.
 8. `unset VK_*` means implicit discovery, not proof of no Vulkan participation.
+9. A session-wide bionic `MESA_LOADER_DRIVER_OVERRIDE=zink` must not be mistaken for a valid glibc-world default; only `gl-run` owns that bridge selection.
 
 ## Current boundaries
 
