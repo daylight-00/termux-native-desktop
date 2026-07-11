@@ -58,7 +58,11 @@ run_gate shell_syntax shell-syntax.log \
     "$REPO/packages/obsidian/launcher/obsidian" \
     "$REPO/packages/obsidian/launcher/obsidian-app" \
     "$REPO/tests/repository/vulkan-policy-scope-smoke.sh" \
-    "$REPO/tests/repository/deploy-smoke.sh"
+    "$REPO/tests/repository/deploy-smoke.sh" \
+    "$REPO/experiments/glibc/vulkan-policy-composition/recipe/validate-live-vulkan-policy-installation.sh" \
+    "$REPO/experiments/glibc/vulkan-policy-composition/recipe/validate-promoted-gl-run-renderer.sh" \
+    "$REPO/experiments/glibc/vulkan-policy-composition/recipe/validate-promoted-vscode-gpu-identity.sh" \
+    "$REPO/experiments/glibc/vulkan-policy-composition/recipe/validate-promoted-vscode-cpu-policy.sh"
 
 run_gate policy_scope_smoke policy-scope-smoke.log \
     bash "$REPO/tests/repository/vulkan-policy-scope-smoke.sh"
@@ -97,10 +101,16 @@ OBSIDIAN_APP_FILE="$REPO/packages/obsidian/launcher/obsidian-app"
 
 check_contains baseline_clears_vk_driver_files "$ENV_FILE" \
     'unset[[:space:]]+VK_ICD_FILENAMES[[:space:]]+VK_DRIVER_FILES'
+check_contains baseline_clears_bionic_opengl_bridge "$ENV_FILE" \
+    'unset[[:space:]]+MESA_LOADER_DRIVER_OVERRIDE[[:space:]]+GALLIUM_DRIVER'
 check_absent baseline_does_not_export_vk_driver_files "$ENV_FILE" \
     'export[[:space:]]+VK_DRIVER_FILES='
 check_absent baseline_does_not_export_vk_icd_filenames "$ENV_FILE" \
     'export[[:space:]]+VK_ICD_FILENAMES='
+check_absent baseline_does_not_export_mesa_loader_override "$ENV_FILE" \
+    'export[[:space:]]+MESA_LOADER_DRIVER_OVERRIDE='
+check_absent baseline_does_not_export_gallium_driver "$ENV_FILE" \
+    'export[[:space:]]+GALLIUM_DRIVER='
 
 check_contains profile_exports_vk_driver_files "$PROFILE_FILE" \
     'export[[:space:]]+VK_DRIVER_FILES='
@@ -109,6 +119,8 @@ check_contains profile_exports_vk_icd_filenames "$PROFILE_FILE" \
 
 check_contains gl_run_sources_profile "$GL_RUN_FILE" \
     'policy/vulkan/freedreno\.sh'
+check_contains gl_run_adds_zink_explicitly "$GL_RUN_FILE" \
+    'MESA_LOADER_DRIVER_OVERRIDE=zink'
 check_contains vscode_sources_profile "$VSCODE_FILE" \
     'policy/vulkan/freedreno\.sh'
 check_contains obsidian_app_sources_profile "$OBSIDIAN_APP_FILE" \
@@ -154,14 +166,14 @@ done
 
 if [ "$failures" -ne 0 ]; then
     printf 'FAIL\n' >"$OUT/predeploy.status"
-    printf 'promoted Vulkan policy pre-deploy gate: FAIL (%s gates)\n' \
+    printf 'promoted graphics policy pre-deploy gate: FAIL (%s gates)\n' \
         "$failures" >&2
     printf 'evidence: %s\n' "$OUT" >&2
     exit 1
 fi
 
 printf 'PASS\n' >"$OUT/predeploy.status"
-printf 'promoted Vulkan policy pre-deploy gate: PASS\n'
+printf 'promoted graphics policy pre-deploy gate: PASS\n'
 printf 'repository: %s\n' "$REPO"
 printf 'branch: %s\n' "$branch"
 printf 'head: %s\n' "$head_sha"
