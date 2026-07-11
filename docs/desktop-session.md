@@ -27,13 +27,14 @@ Both worlds render to the same Adreno 730, but through separate userspace librar
 | `DISPLAY` | `:1` | inherited `:1` |
 | `XDG_RUNTIME_DIR` | `$TMPDIR` | `$PREFIX/tmp/gl-runtime` (0700) |
 | Vulkan ICD | bionic Turnip ICD exported to session clients | inherited bionic variables cleared by `~/gl/env`; explicit consumers source `~/gl/policy/vulkan/freedreno.sh` |
-| `MESA_LOADER_DRIVER_OVERRIDE` | `zink` for bionic GL clients | added by `gl-run` for glibc GL apps |
+| `MESA_LOADER_DRIVER_OVERRIDE` | `zink` for bionic GL clients | inherited value cleared by `~/gl/env`; added only by `gl-run` for glibc GL apps |
+| `GALLIUM_DRIVER` | not selected by the session | cleared at the glibc boundary so an external/session override cannot leak |
 | `LD_LIBRARY_PATH` | unset | never set |
 | `LD_PRELOAD` | untouched globally | cleared at glibc process entry |
 
-The bionic session must set both `VK_ICD_FILENAMES` and `VK_DRIVER_FILES` when selecting its ICD. At the glibc boundary, `~/gl/env` clears both variables together. A glibc consumer that deliberately selects the managed hardware provider then sources the explicit profile, which sets both variables to the glibc ICD together.
+The bionic session must set both `VK_ICD_FILENAMES` and `VK_DRIVER_FILES` when selecting its ICD. At the glibc boundary, `~/gl/env` clears both variables together. It also clears the session's `MESA_LOADER_DRIVER_OVERRIDE` and any `GALLIUM_DRIVER` selection. A glibc consumer then composes only the graphics policy it actually owns: explicit Freedreno for hardware Vulkan, Zink through `gl-run` for OpenGL, or no explicit provider/bridge policy.
 
-Do not leave a partial pair. Do not treat `unset VK_*` as proof of no Vulkan participation: loader discovery can select software or virtual providers. The absence of an explicit pin only means that no provider was selected by policy.
+Do not leave a partial Vulkan pair. Do not treat `unset VK_*` as proof of no Vulkan participation: loader discovery can select software or virtual providers. The absence of an explicit pin only means that no provider was selected by policy.
 
 The dual `XDG_RUNTIME_DIR` values are intentional. Do not unify them: the bionic session uses the Termux runtime convention, while glibc applications use a separate protected runtime directory.
 
@@ -73,7 +74,8 @@ Android-side prerequisites:
 | script exits immediately | unset `TMPDIR` under `set -u` | current launcher includes guard |
 | glibc app cannot open display | Debian `libxcb` wins | glibc-repo X11/xcb must precede farm |
 | `invalid ELF header` | bionic/glibc library or ICD mixing | no `LD_LIBRARY_PATH`; confirm `~/gl/env` cleared bionic `VK_*` before any provider profile |
-| GL renderer is llvmpipe | explicit Freedreno profile or Zink override missing, or initialization failed | check the profile, both VK variables, and `MESA_LOADER_DRIVER_OVERRIDE=zink` |
+| ANGLE/CPU app unexpectedly inherits Zink | bionic session bridge policy crossed the boundary | confirm `~/gl/env` clears `MESA_LOADER_DRIVER_OVERRIDE` and `GALLIUM_DRIVER` |
+| GL renderer is llvmpipe | explicit Freedreno profile or Zink override missing, or initialization failed | check the profile, both VK variables, and `MESA_LOADER_DRIVER_OVERRIDE=zink` inside `gl-run` |
 | `VK_ERROR_INCOMPATIBLE_DRIVER` in Zink | wrong or missing explicit ICD selection | source the glibc Freedreno profile; verify both VK variables |
 | URLs do not open | Android BAL policy | grant Display over other apps |
 
