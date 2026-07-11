@@ -4,9 +4,9 @@
 
 ```text
 SCOPED_TRANSACTION_CLOSED
+VALIDATOR_LIFECYCLE_CLASSIFIED
+TRIGGER_BASED_REVALIDATION_ONLY
 ```
-
-The architecture-discrimination experiment is complete for the accepted scoped graphics-policy contract.
 
 Canonical closure:
 
@@ -14,11 +14,14 @@ Canonical closure:
 docs/refactor/0091-scoped-graphics-policy-promotion-closure.md
 ```
 
-Post-closure architecture interpretation:
+Post-closure audit and direction:
 
 ```text
 docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md
+docs/refactor/0093-post-audit-direction-validator-lifecycle-and-selected-closure-reentry.md
 ```
+
+The architecture-discrimination experiment is complete for the accepted scoped graphics-policy contract.
 
 Do not treat the closed experiment as a reason to preserve every current helper/path as permanent architecture.
 
@@ -107,7 +110,7 @@ Obsidian CPU:
     provider-neutral effective CPU mode
 ```
 
-Detailed evidence roots, commit identities, gate counts, and claim boundaries are in `docs/refactor/0083` through `0091`.
+Detailed evidence roots, commit identities, gate counts, false-negative corrections, and claim boundaries are in `docs/refactor/0083` through `0091`.
 
 ## Consumer results
 
@@ -141,7 +144,7 @@ device-class intent
 
 Same-feature-mode comparisons established that explicit Freedreno and implicit discovery can preserve Electron topology/survival while changing the provider tail.
 
-Primary selected-device probes later established:
+Primary selected-device probes established:
 
 ```text
 explicit profile
@@ -152,7 +155,7 @@ implicit discovery control
     -> LVP / llvmpipe primary device
 ```
 
-Therefore map presence alone is not selected-device proof.
+Map presence alone is not selected-device proof.
 
 ## Accepted evidence model
 
@@ -218,20 +221,104 @@ selected-device evidence
 
 Current path and command names remain replaceable.
 
+## Active contract gates
+
+These are the only top-level promoted graphics contract receipts.
+
+```text
+validate-promoted-vulkan-policy-transaction.sh
+validate-live-vulkan-policy-installation.sh
+validate-promoted-gl-run-renderer.sh
+validate-promoted-vscode-gpu-identity.sh
+validate-promoted-vscode-cpu-policy.sh
+validate-promoted-obsidian-gpu-identity.sh
+validate-promoted-obsidian-cpu-policy.sh
+```
+
+Run an active gate only when its documented claim surface changes.
+
+## Active gate implementation dependencies
+
+These are invoked by an active gate and are maintained with that owner gate. They are not independently scheduled.
+
+```text
+build-glx-renderer-probe.sh
+glx-renderer-probe.c
+probe-vscode-policy-env-boundary.sh
+probe-vscode-cdp-gpu-identity.sh
+classify-vscode-cdp-gpu-identity.sh
+probe-electron-cdp-gpu-identity.sh
+classify-cdp-gpu-identity.sh
+query-cdp-system-info.py
+```
+
+## Canonical evidence helpers
+
+These interpret or compare retained evidence. They do not independently prove the current promoted runtime.
+
+```text
+audit-promoted-vulkan-policy-ownership-v2.sh
+capture-glx-probe-maps.sh
+enrich-glx-probe-maps.sh
+compare-glx-provider-graphs.sh
+compare-obsidian-policy-controls.sh
+compare-vscode-cdp-gpu-identities.sh
+compare-vscode-vulkan-policy-controls.sh
+summarize-obsidian-loader-debug.sh
+```
+
+## Historical diagnostics
+
+These remain for provenance and targeted future debugging. They are not routine gates.
+
+```text
+capture-implicit-loader-debug.sh
+launch-obsidian-with-policy.sh
+launch-vscode-with-policy.sh
+policy-env.sh
+probe-driver-isolation-matrix.sh
+probe-vscode-app-local-vulkan-loader.sh
+probe-vscode-gpu-observer-contract.sh
+probe-vscode-process-handoff.sh
+run-zink-with-policy.sh
+```
+
+## Superseded false-negative models
+
+The important superseded models are historical commits/receipts, not current runnable files.
+
+```text
+old VS Code child-environment exact-value assumption
+    -> docs/refactor/0085
+
+first Obsidian user-data/CDP path assumption
+    -> docs/refactor/0088
+
+first unsuffixed promoted ownership audit helper
+    -> superseded by audit-promoted-vulkan-policy-ownership-v2.sh before use
+```
+
+Do not classify the corrected current file as superseded merely because an older commit of the same path was wrong.
+
 ## Revalidation policy
 
 Do not blind-rerun this experiment.
 
-Run only the affected canonical gate when its claim surface changes.
-
 ### Source/live transaction trigger
 
 ```text
-gl world-boundary sanitation changes
+glibc world-boundary sanitation changes
 provider profile changes
 current OpenGL adapter changes
 public launcher path/target changes
 deployment managed-leaf set changes
+```
+
+Run:
+
+```text
+validate-promoted-vulkan-policy-transaction.sh
+validate-live-vulkan-policy-installation.sh after deliberate activation
 ```
 
 ### OpenGL renderer trigger
@@ -244,6 +331,12 @@ glibc substrate changes
 X11/GLX dependency changes
 ```
 
+Run:
+
+```text
+validate-promoted-gl-run-renderer.sh
+```
+
 ### Electron GPU trigger
 
 ```text
@@ -252,6 +345,8 @@ provider profile changes
 Mesa/Vulkan/ANGLE composition changes
 selected-device classifier/correlation changes materially
 ```
+
+Run only the affected application GPU gate.
 
 ### Electron CPU trigger
 
@@ -262,22 +357,21 @@ user-data authority changes
 CPU feature/argv policy changes
 ```
 
-Documentation-only changes do not require a runtime rerun unless they invalidate evidence interpretation.
+Run only the affected application CPU gate.
 
-## Recipe lifecycle classification
+### Dependency/helper trigger
 
-The recipe directory contains a mixture of:
+A change to an active gate dependency triggers its owning gate, not every graphics gate.
+
+### Documentation/evidence trigger
 
 ```text
-ACTIVE_CONTRACT_GATE
-CANONICAL_EVIDENCE_HELPER
-HISTORICAL_DIAGNOSTIC
-SUPERSEDED_FALSE_NEGATIVE_MODEL
+documentation only
+    -> no runtime gate unless evidence interpretation is invalidated
+
+evidence comparison policy only
+    -> relevant canonical evidence helper over retained evidence
 ```
-
-The project must classify individual tools before treating the whole recipe directory as a permanent test suite.
-
-Until that classification is completed, the active contract gates are the final promoted validators referenced by `0091`; older probes and correction helpers are retained for provenance and interpretation.
 
 ## Claim boundaries
 
@@ -303,20 +397,21 @@ rerun closed gates without a documented trigger;
 add more global graphics policy to gl/env;
 expand gl-run into lifecycle authority;
 interpret mapped providers as selected devices;
-treat current adapters as final semantic objects.
+treat current adapters as final semantic objects;
+maintain every recipe file as an active gate.
 ```
 
 ## Next architecture work
 
 Graphics experiment expansion stops here.
 
-The next relevant work is:
+The next active work is:
 
 ```text
-post-closure contract synthesis
-selected Obsidian closure resumption or explicit termination
-semantic ownership split
-atomic activation
+selected Obsidian closure retained-evidence audit
+locality-shadowing and non-graphics static/runtime closure analysis
+semantic provider/application ownership decision
+minimum activation design before the next promoted migration
 substrate lifecycle
-PyMOL contract proof after reusable objects are decided
+PyMOL proof after reusable objects are decided
 ```
