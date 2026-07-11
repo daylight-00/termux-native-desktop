@@ -15,7 +15,9 @@ PHASE_B6_CORRECTED_PASS
 PHASE_B7_PASS
 PHASE_B8_PASS
 PHASE_B9_PASS
-PHASE_B10_EXPLICIT_GENERATION_CPU_VALIDATION_NEXT
+PHASE_B10_FIRST_RUN_LAUNCHER_DIAGNOSTIC
+PHASE_B10_SECOND_RUN_SHORT_LIVED_MAIN_DIAGNOSTIC
+PHASE_B10_SHORT_RUNTIME_PATH_DISCRIMINATOR_NEXT
 ```
 
 The selected CPU generation is materialized and published but not activated.
@@ -38,127 +40,15 @@ docs/refactor/0103-selected-obsidian-phase-b8-generation-layout-preflight-pass.m
 docs/refactor/0104-selected-obsidian-phase-b9-first-run-hardlink-publication-failure.md
 docs/refactor/0105-selected-obsidian-phase-b9-generation-directory-publication-failure.md
 docs/refactor/0106-selected-obsidian-phase-b9-generation-materialization-pass.md
+docs/refactor/0107-selected-obsidian-phase-b10-first-run-launcher-environment-failure.md
+docs/refactor/0108-selected-obsidian-phase-b10-second-run-short-lived-main-diagnostic.md
 ```
 
-## Closed architecture
+## Closed generation boundary
 
 ```text
-application-local ELF/data:
-    reference AppDir
-    preserve $ORIGIN locality
-
-protected world ELF/locale:
-    reference $PREFIX/glibc
-    do not copy
-
-selected CPU ELF:
-    87 external static objects
-    4 required NSS/security dynamic objects
-
-excluded GPU feature:
-    11 Vulkan provider/layer/support objects
-
-selected fonts:
-    4 exact content identities
-
-GSettings:
-    37 owned sources
-    native glib 2.88.2 compiler
-    one byte-identical generated aggregate
-
-mutable state and caches:
-    receipt/runtime owned
-    excluded from immutable generation
-```
-
-## Phase B7 manifest closure
-
-```text
-semantic objects:
-    161 / 161 disposed
-
-ELF objects:
-    113 / 113 accounted
-
-selected ELF:
-    91
-
-selected fonts:
-    4
-
-generated schema:
-    1
-
-selected lookup collisions:
-    0
-
-unclassified objects:
-    0
-```
-
-## Phase B8 physical plan
-
-```text
-source identity checks:
-    133 / 133 MATCH
-
-immutable content identities:
-    96
-
-generation aliases:
-    175
-
-alias collisions:
-    0
-
 generation ID:
     obsidian-cpu-435ac66d15de2e9a3188
-```
-
-Accepted layout:
-
-```text
-$HOME/gl/selected/obsidian/
-    objects/sha256/<prefix>/<sha256>
-    staging/
-    generations/obsidian-cpu-435ac66d15de2e9a3188/
-        lib/
-        share/fonts/selected/
-        share/glib-2.0/schemas/
-        manifests/
-        receipts/
-    current
-```
-
-## Phase B9 materialization
-
-Authoritative receipt:
-
-```text
-selected-obsidian-phase-b9-generation-publication-corrected-20260712-003136
-```
-
-Archive SHA-256:
-
-```text
-ad351651e82d958c1805eed421dc9991ee573b1f79794c34aea6f079df84ec53
-```
-
-Captured head:
-
-```text
-57aa19febd6df33435afd074eb3b47c150768998
-```
-
-```text
-analysis.status:
-    PASS
-
-next-state:
-    READY_FOR_EXPLICIT_GENERATION_VALIDATION
-
-publication_state:
-    PUBLISHED_NEW_GENERATION
 
 content objects:
     96
@@ -166,40 +56,43 @@ content objects:
 content bytes:
     70,897,301
 
-objects reused after hash verification:
-    96
-
 generation aliases:
     175
 
-generation validation:
+staged/final validation:
     1851 / 1851 PASS
 
-current before:
-    ABSENT
-
-current after:
+current:
     ABSENT
 ```
 
-Device publication behavior:
+Immutable content:
 
 ```text
-0555 generation-root probe:
-    EACCES
-
-0700 generation-root probe:
-    PUBLISHED
-
-real generation publication:
-    renameat2 RENAME_NOREPLACE
-    root 0700 during publication
-    root restored to 0555 before validation return
+selected external static ELF              87
+required NSS/security dynamic ELF          4
+selected fonts                              4
+generated GSettings aggregate               1
 ```
 
-The generation is complete and immutable but not selected by `current` or the promoted launcher.
+Referenced outside the generation:
 
-## Phase B10 — explicit-generation CPU validation
+```text
+app-local ELF/data                         11
+protected-world ELF/locale                 18
+```
+
+Excluded from CPU mode:
+
+```text
+Vulkan feature/provider ELF                11
+mutable application state                  19
+fontconfig cache                            4
+Mesa cache                                  1
+optional GPU device                         1
+```
+
+## Phase B10 validation target
 
 Files:
 
@@ -209,57 +102,38 @@ recipe/run-explicit-generation-cpu-validation.sh
 recipe/analyze-explicit-generation-cpu.py
 ```
 
-B10 must use the absolute final-generation path from the B9 receipt.
-
-Launcher contract:
+Loader and data contract:
 
 ```text
+candidate loader injection:
+    final Obsidian exec only
+
 LD_LIBRARY_PATH:
     <generation>/lib:$PREFIX/glibc/lib
 
 GSETTINGS_SCHEMA_DIR:
     <generation>/share/glib-2.0/schemas
 
-selected fonts:
-    receipt-owned fontconfig input
-    <generation>/share/fonts/selected only
+font source:
+    <generation>/share/fonts/selected
 
-CPU mode:
+CPU flag:
     exact --disable-gpu
-    Vulkan/Mesa override variables cleared
 
-runtime state:
-    XDG config/cache/data/state/runtime under the B10 receipt
-    TMPDIR under the B10 receipt
+Vulkan/Mesa overrides:
+    cleared
 
-forbidden:
-    current
-    $HOME/gl/lib broad farm
-    rootfs provider paths
+current:
+    forbidden
+
+broad farm:
+    forbidden
+
+rootfs providers:
+    forbidden
 ```
 
-Expected immutable mapped identities:
-
-```text
-selected object-store identities:
-    96
-    ├─ ELF       91
-    ├─ fonts      4
-    └─ schema     1
-
-app-local identities:
-    11
-
-protected-world identities:
-    18
-
-expected immutable mapped total:
-    125
-```
-
-Receipt-local runtime mappings and non-GPU device mappings are recorded separately. Every other external path is a failure.
-
-Process gates:
+Expected stable process topology:
 
 ```text
 main:
@@ -279,13 +153,145 @@ survival:
     100 seconds
 ```
 
-Expected next state:
+Expected immutable mapped identities:
 
 ```text
-READY_FOR_ATOMIC_ACTIVATION_IMPLEMENTATION
+selected object-store identities           96
+app-local identities                       11
+protected-world identities                 18
+                                          ---
+total                                      125
 ```
 
-### Canonical command
+## Phase B10 diagnostic history
+
+### First run — launcher shell contamination
+
+```text
+receipt:
+    selected-obsidian-phase-b10-explicit-generation-cpu-validation-20260712-005240
+
+result:
+    FAIL / capture
+
+application exec:
+    not reached
+
+cause:
+    candidate LD_LIBRARY_PATH exported in bionic launcher shell
+    Termux mkdir attempted to resolve glibc libc.so
+```
+
+Correction:
+
+```text
+launcher shell LD_LIBRARY_PATH:
+    UNSET
+
+candidate loader injection:
+    EXEC_ENV_ONLY
+```
+
+### Second run — short-lived main
+
+```text
+receipt:
+    selected-obsidian-phase-b10-explicit-generation-cpu-validation-corrected-20260712-010602
+
+archive SHA-256:
+    01c14177d9ed32bb9de294aef2ccc64dba3e2afbbd1e82ed53eb705526ff3575
+
+captured head:
+    d6be102385140c61f92f1ca41028c90cbc866233
+
+result:
+    FAIL / capture
+
+explicit main observed:
+    YES
+
+stable renderer/zygote:
+    NO
+
+current before/after:
+    ABSENT / ABSENT
+```
+
+Observed runtime artifacts:
+
+```text
+SingletonLock -> localhost-4594
+one Chromium scoped temporary directory
+no SingletonSocket
+no SingletonCookie
+```
+
+Observed path lengths:
+
+```text
+XDG config application path:
+    178
+
+Chromium scoped temp path:
+    179
+
+XDG runtime directory:
+    170
+```
+
+Stderr contained only inotify sysctl-access and missing system-D-Bus warnings. No fatal loader or missing-library message was present.
+
+The long runtime/socket path is therefore the next highest-value discriminator, not yet a closed root cause.
+
+## Short runtime-path correction
+
+The runner now creates:
+
+```text
+$PREFIX/tmp/o10.XXXXXXXX
+```
+
+and uses the conventional sublayout:
+
+```text
+fontconfig/
+xdg/config/
+xdg/cache/
+xdg/data/
+xdg/state/
+xdg/runtime/
+tmp/
+bin/
+```
+
+Required pre-launch gate:
+
+```text
+TMPDIR length <= 64
+```
+
+After capture:
+
+```text
+short live runtime root
+    -> cp -a to $OUT/runtime-evidence
+    -> diff -qr equality gate
+    -> short live root removal
+```
+
+Receipt files:
+
+```text
+runtime-root-contract.tsv
+runtime-snapshot.tsv
+runtime-evidence/
+runtime-cleanup.status
+capture-exit-status.txt
+```
+
+The real capture return code is now preserved; the prior negation-status bug is removed.
+
+## Canonical short-path B10 command
 
 ```bash
 cd "$HOME/projects/termux-native-desktop"
@@ -297,7 +303,7 @@ git fetch origin
 git merge --ff-only origin/docs/post-graphics-architecture-audit
 
 B9_OUT="$PREFIX/tmp/selected-obsidian-closure/selected-obsidian-phase-b9-generation-publication-corrected-20260712-003136"
-out="selected-obsidian-phase-b10-explicit-generation-cpu-validation-$(date +%Y%m%d-%H%M%S)"
+out="selected-obsidian-phase-b10-short-runtime-cpu-validation-$(date +%Y%m%d-%H%M%S)"
 OUT="$PREFIX/tmp/selected-obsidian-closure/$out"
 
 if B9_OUT="$B9_OUT" \
@@ -318,6 +324,14 @@ for f in \
   "$OUT/failure-stage.txt" \
   "$OUT/next-state.txt" \
   "$OUT/summary.tsv" \
+  "$OUT/runtime-root-contract.tsv" \
+  "$OUT/runtime-snapshot.tsv" \
+  "$OUT/runtime-cleanup.status" \
+  "$OUT/capture-exit-status.txt" \
+  "$OUT/runtime-contract.tsv" \
+  "$OUT/launch-script-identity.tsv" \
+  "$OUT/launch-contract/launch-environment.tsv" \
+  "$OUT/launch-contract/argv.txt" \
   "$OUT/process-contract.tsv" \
   "$OUT/missing-expected-mapped-paths.tsv" \
   "$OUT/unexpected-mapped-paths.tsv" \
@@ -325,10 +339,10 @@ for f in \
   "$OUT/mapped-path-classification.tsv" \
   "$OUT/current-state-before.tsv" \
   "$OUT/current-state-after.tsv" \
-  "$OUT/launch-contract/launch-environment.tsv" \
-  "$OUT/launch-contract/argv.txt" \
   "$OUT/capture/class-counts.tsv" \
   "$OUT/capture/processes.tsv" \
+  "$OUT/capture/last-processes.tsv" \
+  "$OUT/capture/launch.stdout" \
   "$OUT/capture/launch.stderr" \
   "$OUT/claim-boundary.txt"
 do
@@ -340,58 +354,10 @@ done
 tar czf ~/Downloads/$out.tgz $OUT
 ```
 
-### Syntax-only preflight
-
-This avoids Python bytecode creation:
-
-```bash
-python - <<'PY'
-import ast
-from pathlib import Path
-
-root = Path(
-    "experiments/glibc/selected-obsidian-closure/recipe"
-)
-
-for name in (
-    "analyze-explicit-generation-cpu.py",
-):
-    path = root / name
-    ast.parse(path.read_text(), filename=str(path))
-    print(f"{name}: syntax PASS")
-PY
-
-bash -n \
-  experiments/glibc/selected-obsidian-closure/recipe/launch-obsidian-explicit-generation-cpu.sh
-
-bash -n \
-  experiments/glibc/selected-obsidian-closure/recipe/run-explicit-generation-cpu-validation.sh
-```
-
-## Candidate flow
+## Expected next state after PASS
 
 ```text
-B1 identity/locality
-    -> B2 static/runtime partition
-    -> B3 dynamic capability grouping
-    -> B4 static ownership model
-    -> B5 data ownership
-    -> corrected B6 schema reproduction
-    -> B7 complete candidate manifest
-    -> B8 content/alias/layout preflight
-    -> B9 immutable generation materialization
-    -> B10 explicit-generation CPU validation
-    -> atomic current activation and rollback
-    -> activated-candidate equivalence acceptance
-```
-
-## Evidence handoff
-
-```bash
-out=<stage-specific-slug>-$(date +%Y%m%d-%H%M%S)
-OUT=<stage output root>/$out
-# run stage
-tar czf ~/Downloads/$out.tgz $OUT
+READY_FOR_ATOMIC_ACTIVATION_IMPLEMENTATION
 ```
 
 ## Stop line
@@ -399,13 +365,13 @@ tar czf ~/Downloads/$out.tgz $OUT
 Do not:
 
 ```text
-rerun Phase B1-B9 without a source or validation trigger;
-create current before B10 passes;
-use the broad farm in the B10 loader path;
-allow rootfs provider leakage;
-include the excluded graphics feature in CPU mode;
-mutate the published generation;
+rerun Phase B1-B9;
+change generation content or loader order in the short-path test;
+create current;
 change the promoted launcher;
+add broad-farm or rootfs paths;
+include excluded graphics objects in CPU mode;
+interpret the current path-length hypothesis as proven before rerun;
 garbage-collect the generation or object store;
 start PyMOL by extending the broad farm.
 ```
