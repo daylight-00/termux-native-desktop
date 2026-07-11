@@ -18,9 +18,11 @@
 - **The current promoted VS Code CPU gate is closed.** At `0c6a85235ee9b759addc9963a16060c806277fe3`, all 18 CPU environment, argv, topology, survival, and diagnostic gates passed. Hostile Vulkan/Zink/Gallium inputs were absent from the observable launch chain, the main process contained exact `--disable-gpu` with no GPU-enablement flags, and main/zygote/renderer survived the bounded run.
 - **A Chromium process named `gpu-process` may still exist in CPU mode.** In the validated CPU receipt it used `--use-gl=disabled`, while the renderer used `--disable-gpu-compositing`. The architecture contract is selected policy and effective mode, not the absolute absence of an internal helper process name.
 - **Child `/proc/environ` is treated as an observability boundary.** Empty or near-empty zygote/GPU/renderer environment views are not interpreted as either value mismatch or proof of absence. Exact values are required only for meaningful observable process environments; effective GPU identity is proven through CDP and process mappings.
-- **The first promoted Obsidian GPU attempt is incomplete and invalid for promotion.** Its environment phase directly observed `GL_GPU=1`, the exact managed Freedreno pair, the intended ANGLE/Vulkan argv, renderer creation, and bounded main-process survival, but Obsidian retained `$HOME/.config/obsidian` as the effective user-data path. The CDP probe consequently waited for `DevToolsActivePort` in the wrong receipt-local directory and timed out before identity classification.
-- **Obsidian user-data authority is now modeled explicitly.** The corrected validator gives the environment and CDP phases separate receipt-local `XDG_CONFIG_HOME` roots and uses the actual application-derived `<config>/obsidian` directories. It gates main/renderer isolated-user-data argv, absence of `$HOME/.config/obsidian`, exact CDP config/user-data paths, and the original provider/device identity claims.
-- **The Obsidian CDP timeout was a probe false negative, not a GPU-policy failure.** The incomplete receipt has no final `summary.tsv`, `gates.tsv`, or PASS status and must not be combined with a later CDP-only run. A fresh two-phase rerun is required.
+- **The first promoted Obsidian GPU attempt remains incomplete and invalid for promotion.** Its environment phase reached the intended GPU branch, but Obsidian retained `$HOME/.config/obsidian` and the CDP probe waited for `DevToolsActivePort` in the wrong receipt-local directory. That timeout is preserved as a probe-path false negative, not a graphics-policy failure.
+- **The corrected promoted Obsidian GPU gate is closed.** At `3384bf136f3f35f7ab1d86b2005c2e7559d7e298`, all 48 environment, application-profile isolation, argv, topology, survival, CDP identity, feature-mode, provider-map, and KGSL gates passed. The environment and CDP phases used separate receipt-local XDG roots and actual `<config>/obsidian` directories; no captured process used `$HOME/.config/obsidian`.
+- **Obsidian's full observable application tree received the exact GPU contract.** Main, zygote, GPU, utility, and renderer environments showed `GL_GPU=1`, the exact managed glibc Freedreno pair, and the exact receipt-local `XDG_CONFIG_HOME`, with no observable bionic/Zink/Gallium leak.
+- **Obsidian CDP selected the intended primary hardware provider/device.** The primary identity was `FREEDRENO_TURNIP` / Adreno 730 under `ANGLE_VULKAN` and `GaneshVulkan`, with `hardwareSupportsVulkan=true`, `vulkan=enabled_on`, managed `libvulkan_freedreno.so`, and `/dev/kgsl-3d0` mappings. WebGPU and hardware video decode were not enabled and are outside this gate.
+- **A dedicated promoted Obsidian CPU validator now exists.** It uses a receipt-local `XDG_CONFIG_HOME` and actual `<config>/obsidian` directory, injects hostile bionic Vulkan plus llvmpipe Mesa/Gallium policy, requires `GL_GPU=0`, no explicit provider or bridge/device override, exact `--disable-gpu`, no GPU-enablement flags, isolated main/renderer argv, bounded main/zygote/renderer viability, and no normal-profile path.
 - **Mutable checkout symlinks are also an activation path.** Pulling source changes immediately updates existing live leaves such as `~/gl/env`; no new leaf or `tools/deploy` run was required for the sanitation correction. The general atomic-activation problem remains open.
 - **The current glibc Mesa 26.1.x build policy uses `-Dfreedreno-kmds=msm,kgsl`.** In the investigated builds, the working/broken split tracked whether the Turnip ICD retained its libdrm dependency. The exact low-level crash mechanism remains open.
 - **The desktop session source is recovered and tracked.** `modules/desktop/overlay/home/.local/bin/startxfce-x11` records the current two-world session contract, clean X-server startup, Unix-socket X11, bionic ICD/Zink policy, optional Picom path, and clean teardown behavior.
@@ -47,11 +49,12 @@
 - `docs/refactor/0086-current-vscode-gpu-environment-and-primary-identity-pass.md` — canonical current-source VS Code GPU environment/argv and selected-device PASS.
 - `docs/refactor/0087-current-vscode-cpu-policy-and-survival-pass.md` — current-source VS Code CPU sanitation, argv, topology, and survival PASS.
 - `docs/refactor/0088-obsidian-user-data-authority-and-cdp-path-false-negative.md` — incomplete Obsidian receipt, application-owned user-data path, and corrected isolated CDP model.
+- `docs/refactor/0089-current-obsidian-gpu-environment-and-primary-identity-pass.md` — canonical corrected Obsidian GPU isolation, environment/argv, and selected-device PASS.
 - `docs/refactor/` — full repository migration source of truth.
 
 ## Open questions
 
-- The corrected promoted Obsidian GPU gate and the subsequent CPU gate remain to close the scoped graphics-policy transaction.
+- The promoted Obsidian CPU gate remains to close the scoped graphics-policy transaction.
 - The current source-linked deployment model lacks an atomic activation boundary for multi-file transactions that modify existing leaves and introduce new required leaves.
 - Ownership of other inherited Mesa/session variables such as `vblank_mode` has not been changed; each requires separate evidence.
 - Hardware video decoding remains unresolved across the investigated MediaCodec/Vulkan, VA-API/V4L2, FFmpeg/mpv, and Chromium paths.
@@ -66,7 +69,7 @@
 - [x] rerun the promoted `gl-run` Zink/Turnip renderer gate
 - [x] pass the corrected promoted VS Code GPU environment/identity gate
 - [x] validate promoted VS Code CPU policy/argv behavior
-- [ ] rerun the corrected promoted Obsidian GPU path with isolated application-owned user-data roots
+- [x] pass the corrected promoted Obsidian GPU environment/identity gate with isolated application-owned user-data roots
 - [ ] validate promoted Obsidian CPU path
 - [ ] close the scoped graphics-policy promotion transaction
 - [ ] evaluate an atomic activation model for future multi-file runtime migrations
