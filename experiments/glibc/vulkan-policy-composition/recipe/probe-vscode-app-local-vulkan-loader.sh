@@ -36,7 +36,10 @@ soname_of() {
 bool_string() {
     local path=$1
     local needle=$2
-    if strings -a "$path" 2>/dev/null | grep -Fq -- "$needle"; then
+
+    # Do not use grep -q here under pipefail. Early grep exit can SIGPIPE
+    # strings(1) and turn a real match into a false-negative pipeline status.
+    if strings -a "$path" 2>/dev/null | grep -F -- "$needle" >/dev/null; then
         printf 'YES\n'
     else
         printf 'NO\n'
@@ -120,18 +123,20 @@ readelf -Ws "$TARGET" >"$OUT/app-local-dynamic-symbols.txt" 2>&1 || true
         || true
 } >"$OUT/app-local-loader-entrypoints.txt"
 
-printf 'observer_signal_source\tline\n' >"$OUT/control-observer-signal-lines.tsv"
-if [ -n "$CONTROL_OUT" ]; then
-    for stream in stdout stderr; do
-        log="$CONTROL_OUT/launch.$stream"
-        [ -f "$log" ] || continue
-        grep -nE 'Vulkan Loader Version|Found ICD manifest file|Searching for ICD drivers named|Insert instance layer|terminator_CreateInstance|linux_read_sorted_physical_devices|Original order:|Sorted order:|Copying old device|Removing driver|Using ".*" with driver:|llvmpipe|Turnip|Adreno|gfxstream|freedreno|libvulkan_lvp|libvulkan_gfxstream' "$log" \
-            | while IFS= read -r line; do
-                printf '%s\t%s\n' "$stream" "$line"
-            done \
-            || true
-    done
-fi
+{
+    printf 'observer_signal_source\tline\n'
+    if [ -n "$CONTROL_OUT" ]; then
+        for stream in stdout stderr; do
+            log="$CONTROL_OUT/launch.$stream"
+            [ -f "$log" ] || continue
+            grep -nE 'Vulkan Loader Version|Found ICD manifest file|Searching for ICD drivers named|Insert instance layer|terminator_CreateInstance|linux_read_sorted_physical_devices|Original order:|Sorted order:|Copying old device|Removing driver|Using ".*" with driver:|llvmpipe|Turnip|Adreno|gfxstream|freedreno|libvulkan_lvp|libvulkan_gfxstream' "$log" \
+                | while IFS= read -r line; do
+                    printf '%s\t%s\n' "$stream" "$line"
+                done \
+                || true
+        done
+    fi
+} >"$OUT/control-observer-signal-lines.tsv"
 
 printf 'VS Code app-local Vulkan loader identity probe: PASS\n'
 printf 'target: %s\n' "$TARGET"
