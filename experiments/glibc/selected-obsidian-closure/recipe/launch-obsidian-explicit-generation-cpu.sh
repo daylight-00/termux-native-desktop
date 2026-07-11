@@ -15,6 +15,8 @@ TMPDIR=${TMPDIR:?set TMPDIR}
 APP=${APP:-$HOME/gl/apps/obsidian}
 APP_ENTRYPOINT=${APP_ENTRYPOINT:-$APP/obsidian}
 WORLD_LIB=${WORLD_LIB:-$PREFIX/glibc/lib}
+FONTCONFIG_PATH=${FONTCONFIG_FILE%/*}
+CANDIDATE_LD_LIBRARY_PATH="$GENERATION_DIR/lib:$WORLD_LIB"
 
 [ -d "$GENERATION_DIR" ] && [ ! -L "$GENERATION_DIR" ] || {
     printf 'explicit generation is not a plain directory: %s\n' "$GENERATION_DIR" >&2
@@ -40,17 +42,23 @@ WORLD_LIB=${WORLD_LIB:-$PREFIX/glibc/lib}
     printf 'missing receipt-owned fontconfig file: %s\n' "$FONTCONFIG_FILE" >&2
     exit 1
 }
+[ -d "$LAUNCH_RECEIPT_DIR" ] || {
+    printf 'missing launch receipt directory: %s\n' "$LAUNCH_RECEIPT_DIR" >&2
+    exit 1
+}
 
 requested_generation_dir=$GENERATION_DIR
 requested_validation_root=$VALIDATION_ROOT
 requested_launch_receipt_dir=$LAUNCH_RECEIPT_DIR
 requested_fontconfig_file=$FONTCONFIG_FILE
+requested_fontconfig_path=$FONTCONFIG_PATH
 requested_xdg_config_home=$XDG_CONFIG_HOME
 requested_xdg_cache_home=$XDG_CACHE_HOME
 requested_xdg_data_home=$XDG_DATA_HOME
 requested_xdg_state_home=$XDG_STATE_HOME
 requested_xdg_runtime_dir=$XDG_RUNTIME_DIR
 requested_tmpdir=$TMPDIR
+requested_candidate_ld_library_path=$CANDIDATE_LD_LIBRARY_PATH
 
 source "$HOME/gl/env"
 
@@ -58,14 +66,17 @@ GENERATION_DIR=$requested_generation_dir
 VALIDATION_ROOT=$requested_validation_root
 LAUNCH_RECEIPT_DIR=$requested_launch_receipt_dir
 FONTCONFIG_FILE=$requested_fontconfig_file
+FONTCONFIG_PATH=$requested_fontconfig_path
 XDG_CONFIG_HOME=$requested_xdg_config_home
 XDG_CACHE_HOME=$requested_xdg_cache_home
 XDG_DATA_HOME=$requested_xdg_data_home
 XDG_STATE_HOME=$requested_xdg_state_home
 XDG_RUNTIME_DIR=$requested_xdg_runtime_dir
 TMPDIR=$requested_tmpdir
+CANDIDATE_LD_LIBRARY_PATH=$requested_candidate_ld_library_path
 
 unset \
+    LD_LIBRARY_PATH \
     VK_ICD_FILENAMES \
     VK_DRIVER_FILES \
     VK_ADD_DRIVER_FILES \
@@ -90,19 +101,15 @@ export APPDIR="$APP"
 export PATH="$HOME/gl/shims:$APP:$APP/usr/sbin:$PATH"
 export XDG_DATA_DIRS="$APP/usr/share:$GENERATION_DIR/share"
 export GSETTINGS_SCHEMA_DIR="$GENERATION_DIR/share/glib-2.0/schemas"
-FONTCONFIG_PATH=$(dirname "$FONTCONFIG_FILE")
 export FONTCONFIG_PATH
 export XDG_CONFIG_HOME XDG_CACHE_HOME XDG_DATA_HOME XDG_STATE_HOME XDG_RUNTIME_DIR
 export TMPDIR
 export TMP="$TMPDIR"
 export TEMP="$TMPDIR"
-export LD_LIBRARY_PATH="$GENERATION_DIR/lib:$WORLD_LIB"
 export GL_GPU=0
 
-mkdir -p "$LAUNCH_RECEIPT_DIR"
-
 current_reference=NO
-case "$LD_LIBRARY_PATH:$GSETTINGS_SCHEMA_DIR:$FONTCONFIG_FILE" in
+case "$CANDIDATE_LD_LIBRARY_PATH:$GSETTINGS_SCHEMA_DIR:$FONTCONFIG_FILE" in
     *"/current"*) current_reference=YES ;;
 esac
 
@@ -113,7 +120,9 @@ esac
     printf 'generation_schema_dir\t%s\n' "$GSETTINGS_SCHEMA_DIR"
     printf 'generation_font_dir\t%s\n' "$GENERATION_DIR/share/fonts/selected"
     printf 'world_lib\t%s\n' "$WORLD_LIB"
-    printf 'ld_library_path\t%s\n' "$LD_LIBRARY_PATH"
+    printf 'ld_library_path\t%s\n' "$CANDIDATE_LD_LIBRARY_PATH"
+    printf 'launcher_shell_ld_library_path\tUNSET\n'
+    printf 'candidate_loader_injection\tEXEC_ENV_ONLY\n'
     printf 'fontconfig_file\t%s\n' "$FONTCONFIG_FILE"
     printf 'fontconfig_path\t%s\n' "$FONTCONFIG_PATH"
     printf 'xdg_config_home\t%s\n' "$XDG_CONFIG_HOME"
@@ -138,7 +147,9 @@ esac
     printf '%s\n' "$@"
 } >"$LAUNCH_RECEIPT_DIR/argv.txt"
 
-exec env LD_PRELOAD= \
+exec env \
+    LD_PRELOAD= \
+    LD_LIBRARY_PATH="$CANDIDATE_LD_LIBRARY_PATH" \
     "$APP_ENTRYPOINT" \
     --disable-dev-shm-usage \
     --ozone-platform=x11 \
