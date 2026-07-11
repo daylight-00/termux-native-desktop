@@ -1,10 +1,20 @@
 # Repository Refactor Work Log
 
-This directory is the low-level source of truth for the repository refactor from the legacy `setup/` layout to explicit ownership, validated migration, and the current semantic hard-refactor direction.
+This directory is the transaction-level source of truth for the repository refactor from the legacy `setup/` layout to explicit ownership, semantic decomposition, selected-provider experiments, and validated runtime promotion.
 
 ## Working rule
 
-Every structural change must be recorded here before or at the same time as the repository change. Session context is not authoritative.
+Every structural or architectural change must be recorded here before or at the same time as the repository change.
+
+```text
+session context
+    != authority
+
+repository evidence and current index
+    = authority
+```
+
+Historical records are preserved even when their implementation direction is later superseded.
 
 ## Current checkout root
 
@@ -14,13 +24,13 @@ Canonical live-device checkout:
 $HOME/projects/termux-native-desktop
 ```
 
-Legacy checkout root:
+The legacy root:
 
 ```text
 $HOME/termux-native-desktop
 ```
 
-The legacy root is only a migration source identity and must not remain as a compatibility symlink after relocation.
+is only a historical migration identity and must not be reintroduced as a compatibility symlink.
 
 ## Current direction and precedence
 
@@ -28,45 +38,85 @@ The ownership migration in `0001` through `0011` remains accepted.
 
 The ABI incident analysis in `0012` and `0013` remains evidence.
 
-`0014` retains useful transaction, validation, candidate, and rollback principles, but its concrete implementation sequence is partially superseded.
+`0014` retains useful candidate, validation, receipt, promotion, and rollback reasoning, but its concrete pacman-hook/broad-farm/gl-run lifecycle sequence is superseded.
 
-Branch-local architecture direction:
-
-```text
-0015-architecture-reassessment-and-hard-refactor-direction.md
-0016-next-session-handoff.md
-```
-
-Full top-down rationale on `main`:
+Top-down authority on `main`:
 
 ```text
 docs/system-foundation/11-architecture-reassessment-and-hard-refactor-decision.md
 docs/system-foundation/12-document-consistency-audit-and-execution-order.md
 ```
 
-Precedence:
+Branch-local architecture direction:
+
+```text
+0015-architecture-reassessment-and-hard-refactor-direction.md
+0016-next-session-handoff.md
+0017-gl-umbrella-semantic-inventory.md
+0018-real-device-glibc-substrate-authority.md
+0019-selected-closure-pilot-decision-criteria.md
+0092-post-graphics-closure-architecture-midpoint-audit.md
+```
+
+Current precedence:
 
 ```text
 system-foundation/11 and /12
-    -> architecture rationale, consistency, execution order
+    -> project essence, invariants, object model, execution-order authority
 
-refactor/0015
-    -> branch implementation direction
+refactor/0092
+    -> post-graphics-closure architecture audit and next-phase pressure
 
-refactor/0016
-    -> handoff into semantic review
+refactor/0091
+    -> closed graphics-policy transaction and evidence-backed contract
 
-refactor/0017-0057
-    -> current branch evidence/design records under that direction
+refactor/0015-0019
+    -> branch semantic direction, substrate authority, and pilot criteria
+
+other numbered records
+    -> evidence and transaction history in chronological order
 
 refactor/0014
-    -> retained transaction/validation insights,
-       not the current implementation order
+    -> retained transaction insights only
+```
+
+## Current state
+
+```text
+ownership migration:
+    accepted and deployed
+
+glibc 2.42/2.43 ABI incident:
+    recovered for tested workload
+    2.42 hold remains temporary containment
+
+bounded D-Bus selected-provider pilot:
+    PASS
+
+selected Obsidian application-domain closure pilot:
+    ACTIVE / INCOMPLETE
+    control and semantic/graphics decomposition advanced
+    candidate materialization and locality-preserving equivalence not closed
+
+scoped graphics-policy promotion:
+    CLOSED
+
+atomic activation:
+    OPEN
+
+remaining gl semantic ownership split:
+    OPEN
+
+corrected/newer glibc substrate lifecycle:
+    OPEN
+
+PyMOL implementation:
+    DEFERRED pending reusable-object decisions
 ```
 
 ## Document index
 
-### Baseline and ownership migration
+### 0001–0011 — baseline and ownership migration
 
 ```text
 0001-current-state-inventory.md
@@ -82,7 +132,9 @@ refactor/0014
 0011-phase-b-runtime-deploy-passed.md
 ```
 
-### ABI incident and lifecycle reasoning
+These establish the move from the legacy `setup/` tree into explicit module, package, experiment, and tool ownership.
+
+### 0012–0014 — ABI incident and first lifecycle proposal
 
 ```text
 0012-post-refactor-vscode-libdbus-abi-regression.md
@@ -90,44 +142,46 @@ refactor/0014
 0014-robust-gl-update-and-farm-lifecycle.md
 ```
 
-### Current architecture direction
+The incident proves substrate/provider incompatibility can exist independently of application code and farm generation.
+
+### 0015–0019 — architecture reassessment and semantic direction
 
 ```text
 0015-architecture-reassessment-and-hard-refactor-direction.md
 0016-next-session-handoff.md
-```
-
-### Semantic review, substrate, and selected closure
-
-```text
 0017-gl-umbrella-semantic-inventory.md
 0018-real-device-glibc-substrate-authority.md
 0019-selected-closure-pilot-decision-criteria.md
+```
+
+These reject accidental preservation of `modules/gl`, `gl-run`, the broad farm, or one package-manager integration as architecture.
+
+### 0020–0025 — substrate recovery and repository relocation
+
+```text
 0020-glibc-242-243-binary-abi-regression.md
 0021-glibc-242-downgrade-simulation-passed.md
 0022-glibc-242-recovery-and-core-gate-false-negative.md
 0023-cli-level-abi-incident-recovery-closed.md
 0024-vscode-gui-recovery-validation-passed.md
 0025-repository-checkout-relocation-to-projects.md
+```
+
+These establish the real APT/dpkg substrate authority, glibc 2.42/2.43 binary regression, package-managed recovery, corrected gates, and canonical checkout path.
+
+### 0026–0028 — first bounded selected-provider closure
+
+```text
 0026-dbus-pilot-control-static-selection-mismatch.md
 0027-dbus-static-runtime-closure-agreement.md
 0028-selected-dbus-candidate-validation-passed.md
 ```
 
-These records establish:
+The D-Bus pilot proves a selected materialized provider object with actual bytes, provenance, candidate-specific selection proof, protected substrate boundary, and no broad-farm/rootfs provider leakage.
 
-```text
-semantic decomposition of the old gl umbrella
-real APT/dpkg substrate authority
-glibc 2.42 -> 2.43 binary ABI regression evidence
-package-managed recovery and corrected gates
-VS Code CLI/GUI recovery closure
-canonical checkout relocation
-ownership-aware D-Bus closure selection
-materialized selected-provider candidate validation
-```
+It does not prove one world-global shared-provider boundary.
 
-### Obsidian application-domain composition pilot
+### 0029–0041 — Obsidian application-domain closure control and semantic decomposition
 
 ```text
 0029-second-selected-closure-pilot-target.md
@@ -145,23 +199,21 @@ materialized selected-provider candidate validation
 0041-obsidian-fallback-provider-closure-attribution.md
 ```
 
-The CPU-path Obsidian records establish:
+This chain establishes a real multiprocess application-domain composition with:
 
 ```text
-real multiprocess topology and survival gates
-wall-clock-bounded capture semantics
-161-path baseline semantic decomposition with zero review objects
-process-class-specific graphics mappings
-baseline explicit Freedreno/KGSL participation
-strict policy-isolation topology/survival pass
-strict alternate provider set:
-    SwiftShader root 1
-    Lavapipe root + strict-only closure 9
-    Gfxstream root 1
-zero unresolved or ambiguous mapped-universe SONAME edges
+app-local ELF/data
+world substrate
+prefix providers
+rootfs ELF providers
+font/locale/schema data
+mutable state/cache
+graphics provider/device relations
 ```
 
-### Vulkan policy ownership and scoped composition
+The parent selected-closure pilot remains incomplete until locality-shadowing, non-graphics closure agreement, candidate materialization, actual candidate selection, and control/candidate equivalence are closed or intentionally terminated.
+
+### 0042–0060 — graphics-policy architecture discrimination
 
 ```text
 0042-vulkan-policy-producer-consumer-inventory.md
@@ -172,6 +224,7 @@ zero unresolved or ambiguous mapped-universe SONAME edges
 0047-explicit-zink-turnip-physical-provider-graph.md
 0048-zink-frontend-and-cross-version-graphics-composition-confirmed.md
 0049-implicit-discovery-zink-consumer-failure.md
+0050-implicit-loader-discovery-diagnostics.md
 0050-implicit-loader-discovery-and-zink-cpu-device-gate.md
 0051-implicit-software-intent-zink-llvmpipe-validation-passed.md
 0052-glx-map-runtime-anonymous-memory-classification.md
@@ -180,306 +233,135 @@ zero unresolved or ambiguous mapped-universe SONAME edges
 0055-obsidian-gpu-policy-control-comparison-harness.md
 0056-obsidian-implicit-gpu-control-and-helper-corrections.md
 0057-obsidian-same-feature-mode-vulkan-policy-substitution-result.md
+0058-obsidian-policy-ab-evidence-hygiene-closed.md
+0059-bounded-obsidian-implicit-loader-selection-debug-plan.md
+0060-obsidian-implicit-loader-selected-lvp-llvmpipe.md
 ```
 
-## Zink/GLX consumer result
-
-The bounded Zink three-state matrix is complete.
+This chain separates:
 
 ```text
-explicit-freedreno + default intent
-    -> Turnip/KGSL
-    -> PASS
-
-implicit-discovery + default intent
-    -> llvmpipe discovered
-    -> CPU pdev rejected
-    -> FAIL
-
-implicit-discovery + software intent
-    -> llvmpipe selected
-    -> Zink/GLX/OpenGL 4.6
-    -> PASS
+application feature mode
+provider discovery/selection
+device-class intent
+consumer suitability
+mapped provider participation
+actual selected device/provider
 ```
 
-Therefore:
+It also establishes that graphics policy must remain consumer-aware.
+
+### 0061–0075 — VS Code consumer causality and selected-device evidence
 
 ```text
-provider discovery/selection policy
-    !=
-consumer device-class intent
+0061-vscode-explicit-gpu-policy-consumer-validation-plan.md
+0062-next-session-handoff-vscode-control-and-collaboration-workflow.md
+0063-vscode-cli-wrapper-process-handoff-diagnosis.md
+0064-vscode-process-handoff-proven-and-causal-main-adoption.md
+0065-vscode-explicit-freedreno-repaired-control-workload-gates-passed.md
+0066-vscode-explicit-gpu-mapping-pass-and-loader-observer-stream-fix.md
+0067-vscode-explicit-loader-log-absence-and-app-local-loader-identity-probe.md
+0068-vscode-vendor-loader-identity-and-gpu-observer-contract-gate.md
+0069-vscode-gpu-env-and-stdio-boundary-observed.md
+0070-vscode-policy-environment-child-launch-boundary-proven.md
+0071-vscode-provider-policy-behavioral-causality-proven.md
+0072-vscode-policy-comparison-receipt-pass-and-cdp-gpu-identity-plan.md
+0073-vscode-implicit-primary-gpu-lvp-selected.md
+0074-vscode-explicit-turnip-and-implicit-llvmpipe-primary-device-ab.md
+0075-vscode-primary-device-receipt-pass-and-policy-ownership-audit.md
 ```
 
-for the tested Zink consumer.
+This chain proves the difference between policy propagation, mapped providers, and primary selected GPU identity for a real Electron consumer.
 
-The explicit hardware graph is:
+### 0076–0091 — scoped policy promotion and closure
 
 ```text
-rootfs GLVND / libGL / libGLX 1.7.0
-    -> rootfs Mesa GLX vendor 25.0.7-2
-    -> rootfs Gallium/Zink frontend 25.0.7-2
-    -> rootfs Mesa device-selection layer 25.0.7-2
-    -> prefix Vulkan loader 1.3.301 and support plane
-    -> provider-store Turnip/Freedreno 26.1.4 lineage
-    -> KGSL device interface
+0076-scoped-vulkan-policy-promotion-candidate.md
+0077-predeploy-pass-and-symlink-activation-gap.md
+0078-live-installation-pass-and-promoted-workload-gates.md
+0079-promoted-gl-run-validator-prerequisite-and-parser-false-negatives.md
+0080-promoted-gl-run-zink-turnip-renderer-pass.md
+0081-promoted-vscode-turnip-primary-identity-pass-and-cpu-policy-gate.md
+0082-bionic-zink-policy-leak-and-glibc-boundary-correction.md
+0083-expanded-graphics-policy-predeploy-and-live-installation-pass.md
+0084-current-head-gl-run-regression-pass-and-strengthened-vscode-gpu-gate.md
+0085-vscode-child-proc-environ-observability-false-negative.md
+0086-current-vscode-gpu-environment-and-primary-identity-pass.md
+0087-current-vscode-cpu-policy-and-survival-pass.md
+0088-obsidian-user-data-authority-and-cdp-path-false-negative.md
+0089-current-obsidian-gpu-environment-and-primary-identity-pass.md
+0090-current-obsidian-cpu-policy-and-survival-pass.md
+0091-scoped-graphics-policy-promotion-closure.md
 ```
 
-The passing software graph shares the application-facing front half and changes the selected provider tail:
+The transaction is closed.
+
+Accepted semantic contract:
 
 ```text
-rootfs GLVND / Mesa GLX / Gallium Zink
-    -> prefix Vulkan loader/support
-    -> rootfs Lavapipe
-    -> llvmpipe CPU renderer
+world-boundary graphics sanitation
+consumer-scoped provider selection
+consumer-owned bridge selection
+application-owned GPU/CPU feature mode
+isolated application-state authority
+selected-device correlation
+claim-triggered revalidation
 ```
 
-The software capture also maps Gfxstream, but loader diagnostics show discovery/loading participation without a surviving physical device.
+Current paths and command names are implementations, not permanent invariants.
 
-Therefore:
+### 0092 — post-closure architecture audit
 
 ```text
-mapped ICD object
-    !=
-selected rendering provider
+0092-post-graphics-closure-architecture-midpoint-audit.md
 ```
 
-## Obsidian real Electron same-feature-mode policy A/B
-
-Both GPU-path controls keep:
+This audit identifies the next top-down pressure:
 
 ```text
-CONTROL_GL_GPU=1
-LIBGL_ALWAYS_SOFTWARE unset
-same experiment launcher adapter
-same capture harness
-same 100-second survival budget
+resume or terminate the parent Obsidian selected-closure pilot
+separate semantic invariants from current adapters
+complete gl umbrella ownership split
+define atomic activation before another multi-file migration
+scope Electron/security and other global policies
+establish glibc upgrade/recovery lifecycle
+synchronize canonical documentation
+use PyMOL only after reusable objects are decided
 ```
 
-and change only:
+## Current stop lines
+
+Do not:
 
 ```text
-VULKAN_POLICY_MODE=explicit-freedreno
+rerun closed graphics gates without a documented trigger;
+expand gl-run into lifecycle authority;
+make the broad farm the production target by inertia;
+add package-manager hooks before substrate lifecycle ownership is settled;
+add more global policy to gl/env because it is convenient;
+start PyMOL by copying Electron launcher patterns;
+skip the unfinished Obsidian selected-closure question;
+apply another multi-file runtime migration before activation semantics are defined;
+keep every experiment helper as a permanent active gate.
 ```
 
-versus:
+## Current next-phase order
 
 ```text
-VULKAN_POLICY_MODE=implicit-discovery
+1. synchronize documentation/control-plane state;
+2. classify semantic invariants versus current adapters;
+3. classify active contract gates versus historical diagnostics;
+4. resume or explicitly terminate selected-obsidian-closure;
+5. decide semantic provider/bridge/family/application ownership;
+6. define minimum atomic activation boundary;
+7. apply bounded ownership moves, beginning with high-risk global policies;
+8. define corrected/newer glibc substrate acceptance and rollback;
+9. use PyMOL as a proof of the resulting architecture.
 ```
 
-### Process topology
+## Refactor lineage
 
-Both controls end with:
-
-```text
-main      1
-zygote    2
-gpu       1
-utility   1
-renderer  1
-```
-
-Both pass topology and survival gates.
-
-Therefore the policy substitution preserves the captured final process-class topology for these controls.
-
-### Shared captured graphics front half
-
-Both controls share these `gpu` process relations:
-
-```text
-gpu -> AppDir libEGL.so
-gpu -> AppDir libGLESv2.so
-gpu -> AppDir libvulkan.so.1
-gpu -> rootfs libVkLayer_MESA_device_select.so
-gpu -> rootfs libgbm.so.1.0.0
-```
-
-The non-GPU process classes map rootfs GBM in both controls.
-
-This supports a stable captured front half:
-
-```text
-Electron gpu process
-    -> AppDir EGL/GLES/Vulkan-facing stack
-    -> Mesa device-selection layer
-    -> GBM infrastructure
-```
-
-### Explicit-only graphics tail
-
-```text
-gpu -> provider-store libvulkan_freedreno.so
-gpu -> /dev/kgsl-3d0
-```
-
-### Implicit-only graphics tail
-
-```text
-gpu -> rootfs libvulkan_lvp.so
-gpu -> rootfs libvulkan_gfxstream.so
-```
-
-The implicit control preserves topology and survival without the captured Freedreno/KGSL relation.
-
-This proves alternate ICD mapping participation in the real Electron GPU process.
-
-It does not prove which implicit ICD is the selected renderer.
-
-### Semantic substitution
-
-Policy-significant explicit-only objects:
-
-```text
-DEVICE_NODE_GPU
-    /dev/kgsl-3d0
-
-PROVIDER_GRAPHICS_VULKAN_DRIVER_ELF
-    provider-store libvulkan_freedreno.so
-```
-
-Implicit-only graphics roots:
-
-```text
-PROVIDER_GRAPHICS_VULKAN_SOFTWARE_LVP_ELF
-    rootfs libvulkan_lvp.so
-
-PROVIDER_GRAPHICS_VULKAN_VIRTUAL_GFXSTREAM_ELF
-    rootfs libvulkan_gfxstream.so
-```
-
-The implicit side also includes the LVP dependency-side additions:
-
-```text
-prefix:
-    liblzma.so.5.6.4
-
-rootfs:
-    libLLVM.so.19.1
-    libz3.so.4
-    libxml2.so.2.9.14
-    libedit.so.2.0.75
-    libtinfo.so.6.5
-    libbsd.so.0.12.2
-    libmd.so.0.1.0
-```
-
-This reproduces the earlier LVP closure shape inside a same-feature-mode real Electron GPU-path comparison.
-
-## Evidence hygiene corrections
-
-### Runtime anonymous memory
-
-The narrow observed:
-
-```text
-/memfd:allocation*
-```
-
-pattern is classified as:
-
-```text
-RUNTIME_ANON_MEMORY
-RUNTIME_MEMORY
-RUNTIME_ANONYMOUS_MAPPING
-```
-
-### Mesa shader cache database
-
-The Obsidian classifier previously recognized only:
-
-```text
-$HOME/.cache/mesa_shader_cache/
-```
-
-and misclassified:
-
-```text
-$HOME/.cache/mesa_shader_cache_db/index
-```
-
-as review data.
-
-The classifier now recognizes both cache layouts as:
-
-```text
-RUNTIME_CACHE_MESA
-```
-
-Device-side reclassification of the existing implicit evidence root is the immediate cleanup step.
-
-### Full exact delta versus policy-relevant delta
-
-The policy comparison helper preserves:
-
-```text
-full exact semantic delta
-```
-
-and separately emits:
-
-```text
-policy-relevant semantic delta
-```
-
-The filtered view includes:
-
-```text
-device nodes
-app-local graphics providers
-graphics provider classes
-prefix ELF provider differences
-rootfs ELF provider differences
-```
-
-while the full view retains cache/font/data timing differences.
-
-This avoids deleting evidence while preventing volatile runtime data from dominating policy interpretation.
-
-## Architecture conclusion
-
-The current evidence supports:
-
-```text
-stable consumer-facing graphics front half
-    +
-consumer-specific provider-policy composition
-    +
-policy-dependent provider tail
-```
-
-The provider tail is not one immutable global Mesa object.
-
-Cross-consumer behavior differs:
-
-```text
-standalone Zink:
-    implicit/default -> FAIL
-
-Obsidian Electron GPU path:
-    implicit/default -> topology/survival PASS
-    alternate ICDs mapped by gpu process
-```
-
-Therefore graphics provider policy must remain consumer-aware.
-
-Do not generalize one consumer's valid policy to every glibc graphics consumer merely because they share Vulkan-related libraries.
-
-## Current unresolved questions
-
-The current evidence does not establish:
-
-```text
-which implicit ICD is the selected Electron renderer
-whether LVP or Gfxstream submits rendering work
-whether rendered output correctness is equivalent across policies
-whether Electron internally falls back among multiple graphics backends
-whether the implicit provider tail should be one closure or multiple discovery candidates
-```
-
-Map presence alone cannot answer these questions.
-
-## Refactor branch
+Original refactor branch:
 
 ```text
 refactor/module-package-layout
@@ -491,109 +373,10 @@ Base commit:
 3cf41d6fc47050b06e18e956a23cefe25e4fb82a
 ```
 
-The system-foundation documentation was added separately on `main` after this branch diverged. Branch-local absence does not make foundation direction irrelevant; histories must be reconciled deliberately.
-
-## Current device and ABI incident state
-
-The tested VS Code workload recovered through CLI and real GUI validation.
+Audited post-graphics-closure commit:
 
 ```text
-SUBSTRATE_RECOVERED
-PROVIDER_RELOCATION_VALID
-VS_CODE_GPU_CLI_VALID
-VS_CODE_CPU_CLI_VALID
-VS_CODE_GUI_WORKLOAD_VALID
-ABI_INCIDENT_RECOVERY_COMPLETE_FOR_TESTED_VSCODE_WORKLOAD
+07b2f9a6f8f985fb3f152abd77c0ad3f04237cc9
 ```
 
-Containment:
-
-```text
-glibc 2.42 installed
-exact 2.42 recovery artifact preserved
-glibc temporarily held from upgrading to known-broken 2.43
-```
-
-The hold is temporary containment only. The long-term latest-first direction remains a corrected current/newer substrate validated by the same gates.
-
-## Current selected-closure and composition state
-
-The bounded D-Bus selected-provider pilot is passed for the captured probe.
-
-```text
-static/runtime provider-set agreement: PASS
-candidate byte materialization: PASS
-provenance receipt: PASS
-candidate actual-selection proof: PASS
-candidate receipt/map equality: PASS
-broad-farm provider leakage: ZERO
-rootfs provider leakage: ZERO
-protected substrate boundary: PASS
-```
-
-Proven D-Bus selected provider set:
-
-```text
-libdbus
-libsystemd
-libcap
-```
-
-This validates a materialized selected-provider closure as a real object class, but does not prove a world-global shared-provider boundary.
-
-The active architecture-discrimination work is:
-
-```text
-selected Obsidian AppDir composition pilot
-    +
-scoped Vulkan policy composition experiment
-```
-
-The Obsidian same-feature-mode explicit-versus-implicit GPU policy A/B is now complete at topology, survival, semantic-set, and process-class mapping levels.
-
-The immediate next evidence sequence is:
-
-```text
-1. reclassify implicit Obsidian evidence with shader_cache_db correction
-2. rerun refined full/policy-relevant Obsidian comparison
-3. decide whether a bounded Electron actual-selection probe is feasible
-4. VS Code explicit-freedreno GPU adapter validation
-5. VS Code CPU/software-intent behavior check
-6. compare consumer-specific policy requirements
-7. define minimum graphics composition contract from evidence
-8. only then resume locality-shadowing and non-graphics static/runtime closure analysis
-```
-
-Candidate materialization remains blocked pending these graphics composition gates plus locality-shadowing and non-graphics static/runtime closure analysis.
-
-## Current implementation stop line
-
-Do not implement by inertia:
-
-```text
-gl-sync
-gl-status
-gl-run auto-sync
-pacman hooks as lifecycle authority
-single global compatibility fingerprint
-generational broad-farm activation
-new global gl environment policy
-```
-
-Allowed work includes:
-
-```text
-graphics-provider actual-selection evidence
-read-only inspection
-identity capture
-regression gates
-semantic inventory
-contract design
-small discriminating experiments
-bounded selected-closure pilots
-minimum lifecycle work only after the owning semantic object is proven
-```
-
-## Environment limitation
-
-The execution container cannot resolve `github.com`, so normal network cloning is not available inside this runtime. Repository reads and writes are performed through the authenticated GitHub connector. Local mirrors under `/mnt/data/` hold design material and generated evidence used to construct connector-backed commits.
+The system-foundation documentation was added on `main` after the refactor branch diverged. Branch-local absence never makes foundation direction irrelevant; histories must be reconciled deliberately before final integration.
