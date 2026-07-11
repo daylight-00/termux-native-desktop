@@ -17,6 +17,14 @@ printf 'semantic_class\tpath_class\tpath\tpackage\tversion\tsha256\tbuild_id\tst
 classify() {
     local path_class=$1 path=$2 package=$3 build_id=$4 state=$5
 
+    if [ "$state" = RUNTIME_ANONYMOUS_MAPPING ]; then
+        case "$path" in
+            /memfd:allocation*) printf 'RUNTIME_ANON_MEMORY\n' ;;
+            *) printf 'RUNTIME_ANON_MEMORY_REVIEW\n' ;;
+        esac
+        return 0
+    fi
+
     if [ "$state" = DEVICE_NODE ]; then
         case "$path" in
             /dev/kgsl-3d0) printf 'DEVICE_NODE_GPU\n' ;;
