@@ -1,8 +1,25 @@
 # gl module
 
-The `gl` module owns project-authored integration for the managed glibc application layer.
+The `gl` module is the current **physical deployment grouping** for project-authored integration used by the managed glibc application world.
 
-## Owned capability
+It is not one final semantic owner.
+
+The active system-foundation model distinguishes responsibilities such as:
+
+```text
+world.glibc base
+provider.shared/data capabilities
+provider.graphics.vulkan.glibc
+provider.graphics.opengl.glibc
+bridge.url-open
+family.electron policy
+toolchain.glibc-target
+application-domain bindings
+```
+
+The current directory groups several of those responsibilities for transitional deployment compatibility. Future refactoring may split, delete, or re-home files without preserving the `modules/gl` object identity, provided validated semantics and evidence are preserved.
+
+## Current physical contents
 
 ```text
 modules/gl/overlay/home/gl/
@@ -25,38 +42,150 @@ modules/gl/overlay/home/gl/
     └── glibc-strip
 ```
 
-These files map to the same relative paths under `$HOME/gl/`.
+These files currently map to the same relative paths under `$HOME/gl/`.
 
-`env` defines the graphics-policy-neutral glibc application baseline. At the bionic/glibc boundary it removes inherited bionic Vulkan provider variables and the bionic session's OpenGL bridge/Gallium variables. It does not select a glibc Vulkan provider or OpenGL bridge.
+## Current realization versus durable contract
 
-`policy/vulkan/freedreno.sh` is a source-only explicit hardware-provider profile. Consumers source it only when they deliberately require the managed glibc Freedreno/Turnip Vulkan path.
+### `env`
 
-`gl-run` composes that explicit Vulkan provider profile with the Zink-specific OpenGL bridge mode. `gl-farm` regenerates the filtered Debian-rootfs-derived shared-library view and refreshes the glibc loader cache. The toolchain wrappers expose Termux glibc target tools safely from the Bionic host shell.
-
-This separation preserves four distinct responsibilities:
+Current realization:
 
 ```text
-shared glibc graphics-policy sanitation
+shared glibc launch baseline
+world-boundary graphics sanitation
+runtime/data/TLS/desktop/family policy accumulation
+```
+
+Durable graphics contract:
+
+```text
+foreign bionic provider/bridge policy is removed at the glibc boundary;
+the baseline does not choose a glibc graphics provider or bridge.
+```
+
+The file still contains non-graphics responsibilities with different candidate owners. In particular, `ELECTRON_DISABLE_SANDBOX=1` is Electron-family/security policy and must not be interpreted as a proven world-wide invariant.
+
+### `policy/vulkan/freedreno.sh`
+
+Current realization:
+
+```text
+source-only explicit managed Freedreno/Turnip provider profile
+```
+
+Durable contract:
+
+```text
+hardware Vulkan provider selection is explicit, coherent, and consumer-scoped.
+```
+
+The profile path and environment-variable implementation are replaceable.
+
+### `gl-run`
+
+Current realization:
+
+```text
+explicit managed Vulkan provider
+    +
+Zink OpenGL bridge
+    +
+exec target
+```
+
+Durable contract:
+
+```text
+an OpenGL consumer composition owns its Zink bridge and provider requirements.
+```
+
+`gl-run` is a transitional capability adapter, not a world lifecycle gateway or permanent command API. Do not extend it with synchronization, package management, provider generation, readiness, or universal application-launch responsibilities.
+
+### `gl-farm`
+
+Current realization:
+
+```text
+broad rootfs scan
+libc-family denylist
+symlink materialization
+loader-cache refresh
+```
+
+Architectural status:
+
+```text
+research/control/compatibility mechanism
+    !=
+accepted final production provider architecture
+```
+
+The selected D-Bus pilot proves provenance-aware materialized provider bytes are viable. The final shared/app-local/provider boundary remains open.
+
+### `shims/xdg-open`
+
+Semantic owner candidate:
+
+```text
+bridge.url-open
+```
+
+### `toolchain/*`
+
+Semantic owner candidate:
+
+```text
+toolchain.glibc-target
+```
+
+## Current responsibility separation
+
+The validated graphics transaction preserves:
+
+```text
+world-boundary sanitation
 explicit Vulkan provider selection
 OpenGL-to-Vulkan bridge selection
 application feature/argv mode
+application-state validation authority
 ```
 
-Do not collapse them back into one shared environment side effect.
+Do not collapse these into one global environment side effect.
+
+Do not infer from this that all contents belong to one permanent module.
 
 ## Explicit non-ownership
 
-The module does not Git-own:
+The current module does not Git-own:
 
 ```text
 $HOME/gl/apps/       external application payloads
 $HOME/gl/lib/        generated compatibility farm
 $HOME/gl/opt/        installed/versioned runtime prefixes
 $HOME/gl/build/      source checkouts and generated build work
-$PREFIX/glibc/       Termux package-manager-owned core runtime
-Debian rootfs        supply backend and package/library warehouse
+$PREFIX/glibc/       package-manager-owned world substrate
+Debian rootfs        supply backend and package/library/data warehouse
 ```
 
-Application-specific launchers belong to their packages, not to `gl/bin` source ownership.
+Application-specific launchers belong to their package/application owners, not to generic `gl/bin` ownership.
 
-See `docs/glibc-layer.md` and `docs/refactor/0002-ownership-map.md`.
+## Next ownership pressure
+
+Before another multi-file runtime migration:
+
+```text
+1. complete or terminate the selected Obsidian closure pilot;
+2. define the semantic provider/bridge/family/application split;
+3. define an atomic activation boundary;
+4. move high-risk over-scoped policies only with evidence;
+5. preserve current adapters only when they remain the simplest valid implementation.
+```
+
+See:
+
+```text
+docs/refactor/0017-gl-umbrella-semantic-inventory.md
+docs/refactor/0091-scoped-graphics-policy-promotion-closure.md
+docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md
+main:docs/system-foundation/11-architecture-reassessment-and-hard-refactor-decision.md
+```
