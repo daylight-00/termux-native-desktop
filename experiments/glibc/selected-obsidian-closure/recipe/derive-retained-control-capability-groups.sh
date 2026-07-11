@@ -35,12 +35,25 @@ REQUIRED_FILES=(
 )
 
 mkdir -p "$OUT/input"
+failure_stage=initialization
+on_error() {
+    local rc=$?
+    printf 'FAIL\n' >"$OUT/analysis.status"
+    printf '%s\n' "$failure_stage" >"$OUT/failure-stage.txt"
+    printf 'selected Obsidian Phase B3 capability grouping input: FAIL at %s (rc=%s)\n' \
+        "$failure_stage" "$rc" >&2
+    printf 'evidence: %s\n' "$OUT" >&2
+    exit "$rc"
+}
+trap on_error ERR
+
 printf '%s\n' "$REPO" >"$OUT/repository-root.txt"
 printf '%s\n' "$branch" >"$OUT/branch.txt"
 printf '%s\n' "$head_sha" >"$OUT/head.txt"
 printf '%s\n' "$B2_OUT" >"$OUT/phase-b2-root.txt"
 printf 'file\tstate\tpath\tembedded_path\n' >"$OUT/input-verification.tsv"
 failures=0
+failure_stage=input_verification
 for name in "${REQUIRED_FILES[@]}"; do
     path="$B2_OUT/$name"
     embedded="$OUT/input/$(printf '%s' "$name" | tr '/' '_')"
@@ -57,21 +70,25 @@ done
 
 if [ "$failures" -ne 0 ]; then
     printf 'FAIL\n' >"$OUT/analysis.status"
+    printf 'input_verification\n' >"$OUT/failure-stage.txt"
     printf 'missing Phase B2 inputs: %s\n' "$failures" >&2
     printf 'evidence: %s\n' "$OUT" >&2
     exit 1
 fi
 
+failure_stage=phase_b2_status
 b2_status=$(tr -d '\r\n' <"$B2_OUT/analysis.status")
 b2_head=$(awk -F $'\t' '$1 == "head" { print $2; exit }' "$B2_OUT/summary.tsv")
 entrypoint=$(awk -F $'\t' '$1 == "entrypoint" { print $2; exit }' "$B2_OUT/summary.tsv")
 [ "$b2_status" = PASS ] || {
     printf 'FAIL\n' >"$OUT/analysis.status"
+    printf 'phase_b2_status\n' >"$OUT/failure-stage.txt"
     printf 'Phase B2 status is not PASS: %s\n' "$b2_status" >&2
     exit 1
 }
 [ -n "$entrypoint" ] || {
     printf 'FAIL\n' >"$OUT/analysis.status"
+    printf 'phase_b2_summary\n' >"$OUT/failure-stage.txt"
     printf 'Phase B2 summary has no entrypoint\n' >&2
     exit 1
 }
@@ -88,8 +105,8 @@ declare -A VERSION_BY_PATH=()
 declare -A DYNAMIC=()
 declare -A PROCESS_CLASSES=()
 declare -A INCOMING_DYNAMIC=()
-declare -A ROOT_FAMILY=()
 
+failure_stage=partition_index
 while IFS=$'\t' read -r partition semantic package version path; do
     [ "$partition" = partition ] && continue
     [ -n "$path" ] || continue
@@ -102,16 +119,17 @@ while IFS=$'\t' read -r partition semantic package version path; do
     fi
 done <"$PARTITION"
 
+failure_stage=process_usage_index
 while IFS=$'\t' read -r pid process_class semantic path; do
     [ "$pid" = pid ] && continue
     [ -n "$path" ] || continue
-    key="$path|$process_class"
     case ",${PROCESS_CLASSES[$path]:-}," in
         *",$process_class,"*) : ;;
         *) PROCESS_CLASSES["$path"]="${PROCESS_CLASSES[$path]:+${PROCESS_CLASSES[$path]},}$process_class" ;;
     esac
 done <"$USAGE"
 
+failure_stage=dynamic_incoming_edges
 while IFS=$'\t' read -r consumer provider needed; do
     [ "$consumer" = consumer_path ] && continue
     if [ -n "${DYNAMIC[$consumer]:-}" ] && [ -n "${DYNAMIC[$provider]:-}" ]; then
@@ -120,7 +138,11 @@ while IFS=$'\t' read -r consumer provider needed; do
 done <"$EDGES"
 
 suggest_family() {
-    local path=$1 semantic=${SEMANTIC_BY_PATH[$path]} package=${PACKAGE_BY_PATH[$path]}
+    local object_path semantic package
+    object_path=$1
+    semantic=${SEMANTIC_BY_PATH[$object_path]:-}
+    package=${PACKAGE_BY_PATH[$object_path]:-}
+
     case "$semantic" in
         PROVIDER_GRAPHICS_VULKAN_DRIVER_ELF|PROVIDER_GRAPHICS_VULKAN_LAYER_ELF)
             printf 'GRAPHICS_VULKAN\n'
@@ -145,6 +167,7 @@ printf 'root_path\tmember_path\n' >"$OUT/dynamic-root-members.tsv"
 
 root_count=0
 review_root_count=0
+failure_stage=dynamic_root_derivation
 for root in "${!DYNAMIC[@]}"; do
     if [ "${INCOMING_DYNAMIC[$root]:-0}" -ne 0 ]; then
         continue
@@ -152,7 +175,6 @@ for root in "${!DYNAMIC[@]}"; do
 
     root_count=$((root_count + 1))
     family=$(suggest_family "$root")
-    ROOT_FAMILY["$root"]=$family
     [ "$family" != REVIEW ] || review_root_count=$((review_root_count + 1))
 
     declare -A seen=()
@@ -221,6 +243,7 @@ mv "$OUT/dynamic-root-candidates.sorted.tsv" "$OUT/dynamic-root-candidates.tsv"
 } >"$OUT/dynamic-root-closure.sorted.tsv"
 mv "$OUT/dynamic-root-closure.sorted.tsv" "$OUT/dynamic-root-closure.tsv"
 
+failure_stage=shared_dynamic_support
 printf 'member_path\tmember_basename\troot_count\troots\n' >"$OUT/shared-dynamic-support.tsv"
 awk -F $'\t' '
     NR == 1 { next }
@@ -243,6 +266,7 @@ awk -F $'\t' '
     }
 ' "$OUT/dynamic-root-members.tsv" | sort >>"$OUT/shared-dynamic-support.tsv"
 
+failure_stage=entrypoint_direct_providers
 printf 'needed\tsemantic_class\tpackage\tversion\tprovider_path\n' >"$OUT/entrypoint-direct-providers.tsv"
 while IFS=$'\t' read -r consumer provider needed; do
     [ "$consumer" = consumer_path ] && continue
@@ -258,6 +282,7 @@ done <"$EDGES"
 } >"$OUT/entrypoint-direct-providers.sorted.tsv"
 mv "$OUT/entrypoint-direct-providers.sorted.tsv" "$OUT/entrypoint-direct-providers.tsv"
 
+failure_stage=package_summaries
 {
     printf 'partition\tsemantic_class\tpackage\tversion\tobject_count\n'
     awk -F $'\t' 'NR > 1 {
@@ -310,6 +335,7 @@ shared_dynamic_count=$(( $(wc -l <"$OUT/shared-dynamic-support.tsv") - 1 ))
 entrypoint_direct_count=$(( $(wc -l <"$OUT/entrypoint-direct-providers.tsv") - 1 ))
 data_count=$(( $(wc -l <"$DATA") - 1 ))
 
+failure_stage=final_receipt
 {
     printf 'field\tvalue\n'
     printf 'branch\t%s\n' "$branch"
@@ -339,6 +365,7 @@ data_count=$(( $(wc -l <"$DATA") - 1 ))
 if [ "$root_count" -eq 0 ]; then
     printf 'NO_DYNAMIC_ROOTS_FOUND\n' >"$OUT/next-state.txt"
     printf 'FAIL\n' >"$OUT/analysis.status"
+    printf 'final_root_count\n' >"$OUT/failure-stage.txt"
     printf 'no dynamic discovery root found\n' >&2
     exit 1
 fi
@@ -349,6 +376,8 @@ else
     printf 'READY_FOR_CAPABILITY_OWNERSHIP_DECISION\n' >"$OUT/next-state.txt"
 fi
 printf 'PASS\n' >"$OUT/analysis.status"
+rm -f "$OUT/failure-stage.txt"
+trap - ERR
 printf 'selected Obsidian Phase B3 capability grouping input: PASS\n'
 printf 'evidence: %s\n' "$OUT"
 printf '\n===== summary =====\n'
