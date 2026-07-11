@@ -43,6 +43,21 @@ semantic_pairs() {
     awk -F $'\t' 'NR > 1 { print $1 "\t" $3 }' "$input" | sort -u
 }
 
+policy_semantic_pairs() {
+    local input=$1
+    awk -F $'\t' '
+        NR > 1 && (
+            $1 == "DEVICE_NODE_GPU" ||
+            $1 ~ /^APP_LOCAL_GRAPHICS_/ ||
+            $1 ~ /^PROVIDER_GRAPHICS_/ ||
+            $1 == "PROVIDER_PREFIX_ELF" ||
+            $1 == "PROVIDER_ROOTFS_ELF"
+        ) {
+            print $1 "\t" $3
+        }
+    ' "$input" | sort -u
+}
+
 graphics_relations() {
     local input=$1
     awk -F $'\t' "NR > 1 && ($is_graphics_path_awk) { print \$2 \"\\t\" \$4 }" \
@@ -65,6 +80,19 @@ comm -13 \
     "$OUT/explicit-semantic-class-path.tsv" \
     "$OUT/implicit-semantic-class-path.tsv" \
     >"$OUT/implicit-only-semantic-class-path.tsv"
+
+policy_semantic_pairs "$EXPLICIT_SEMANTIC" >"$OUT/explicit-policy-semantic-class-path.tsv"
+policy_semantic_pairs "$IMPLICIT_SEMANTIC" >"$OUT/implicit-policy-semantic-class-path.tsv"
+
+comm -23 \
+    "$OUT/explicit-policy-semantic-class-path.tsv" \
+    "$OUT/implicit-policy-semantic-class-path.tsv" \
+    >"$OUT/explicit-only-policy-semantic-class-path.tsv"
+
+comm -13 \
+    "$OUT/explicit-policy-semantic-class-path.tsv" \
+    "$OUT/implicit-policy-semantic-class-path.tsv" \
+    >"$OUT/implicit-only-policy-semantic-class-path.tsv"
 
 graphics_relations "$EXPLICIT_MAPPED" >"$OUT/explicit-graphics-relations.tsv"
 graphics_relations "$IMPLICIT_MAPPED" >"$OUT/implicit-graphics-relations.tsv"
@@ -93,6 +121,12 @@ cat "$OUT/explicit-only-semantic-class-path.tsv"
 
 printf '\n===== implicit-only semantic class/path =====\n'
 cat "$OUT/implicit-only-semantic-class-path.tsv"
+
+printf '\n===== explicit-only policy-relevant semantic class/path =====\n'
+cat "$OUT/explicit-only-policy-semantic-class-path.tsv"
+
+printf '\n===== implicit-only policy-relevant semantic class/path =====\n'
+cat "$OUT/implicit-only-policy-semantic-class-path.tsv"
 
 printf '\n===== explicit graphics relations =====\n'
 cat "$OUT/explicit-graphics-relations.tsv"
