@@ -19,6 +19,8 @@ XDG_DATA_HOME="$VALIDATION_ROOT/xdg/data"
 XDG_STATE_HOME="$VALIDATION_ROOT/xdg/state"
 XDG_RUNTIME_DIR="$VALIDATION_ROOT/xdg/runtime"
 TMPDIR="$VALIDATION_ROOT/tmp"
+LAUNCHER_SOURCE="$REPO/experiments/glibc/selected-obsidian-closure/recipe/launch-obsidian-explicit-generation-cpu.sh"
+LAUNCHER_RUNTIME="$VALIDATION_ROOT/bin/launch-obsidian-explicit-generation-cpu.sh"
 
 stage=initialization
 
@@ -115,7 +117,21 @@ mkdir -p \
     "$XDG_DATA_HOME" \
     "$XDG_STATE_HOME" \
     "$XDG_RUNTIME_DIR" \
-    "$TMPDIR"
+    "$TMPDIR" \
+    "$(dirname "$LAUNCHER_RUNTIME")"
+
+cp "$LAUNCHER_SOURCE" "$LAUNCHER_RUNTIME"
+chmod 500 "$LAUNCHER_RUNTIME"
+{
+    printf 'field\tvalue\n'
+    printf 'source\t%s\n' "$LAUNCHER_SOURCE"
+    printf 'runtime_copy\t%s\n' "$LAUNCHER_RUNTIME"
+    printf 'source_sha256\t%s\n' "$(sha256sum "$LAUNCHER_SOURCE" | awk '{ print $1 }')"
+    printf 'runtime_sha256\t%s\n' "$(sha256sum "$LAUNCHER_RUNTIME" | awk '{ print $1 }')"
+} >"$OUT/launch-script-identity.tsv"
+
+cmp -s "$LAUNCHER_SOURCE" "$LAUNCHER_RUNTIME" \
+    || fail "receipt-local launcher copy differs from repository source"
 
 chmod 700 \
     "$VALIDATION_ROOT" \
@@ -168,7 +184,7 @@ if ! \
     ROOTFS="$ROOTFS" \
     OUT="$CAPTURE_OUT" \
     CONTROL_NAME="Obsidian explicit generation CPU" \
-    LAUNCHER="$REPO/experiments/glibc/selected-obsidian-closure/recipe/launch-obsidian-explicit-generation-cpu.sh" \
+    LAUNCHER="$LAUNCHER_RUNTIME" \
     CONTROL_GL_GPU=0 \
     STARTUP_TIMEOUT_SECONDS=45 \
     TOPOLOGY_SETTLE_SECONDS=5 \
