@@ -5,6 +5,7 @@
 ```text
 ACTIVE_ARCHITECTURE_DISCRIMINATION
 PARENT_QUESTION_NOT_CLOSED
+PHASE_B1_RETAINED_CONTROL_AUDIT_NEXT
 ```
 
 The control capture, semantic decomposition, and graphics-policy sub-investigation have advanced substantially.
@@ -32,6 +33,9 @@ graphics provider/device boundary:
 scoped graphics-policy transaction:
     CLOSED SEPARATELY
 
+graphics validator lifecycle:
+    CLASSIFIED
+
 app-local locality-shadowing decision:
     OPEN
 
@@ -48,10 +52,11 @@ control/candidate application equivalence:
     NOT COMPLETED
 ```
 
-The post-graphics architecture audit is:
+Architecture authority:
 
 ```text
 docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md
+docs/refactor/0093-post-audit-direction-validator-lifecycle-and-selected-closure-reentry.md
 ```
 
 ## Parent question
@@ -59,6 +64,24 @@ docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md
 Can a real Electron AppDir application consume selected external provider closures while preserving valid application-local `$ORIGIN` locality and keeping external capability classes semantically separate?
 
 This is a stronger question than whether Obsidian launches or whether its GPU policy works.
+
+## Decision after the post-graphics audit
+
+The pilot continues.
+
+It is not silently terminated and it is not skipped in favor of PyMOL.
+
+Reason:
+
+```text
+D-Bus proved that a bounded selected provider object can exist.
+
+Obsidian must now test whether a real multiprocess AppDir can consume selected
+external providers without flattening application-local, world, provider, data,
+and mutable-state ownership into one broad farm or one global environment.
+```
+
+Atomic activation remains mandatory before the next multi-file promoted migration, but activation implementation is not started around the unresolved current umbrella. The selected object set and semantic owners must be decided first.
 
 ## Why this pilot still matters
 
@@ -85,7 +108,7 @@ real multiprocess workload equivalence
 
 Obsidian was deliberately selected to test those properties.
 
-The graphics-policy work was a required sub-question because graphics mappings contaminated the closure interpretation. Closing graphics does not close this parent selected-closure pilot.
+The graphics-policy work was a required sub-question because graphics mappings contaminated closure interpretation. Closing graphics does not close this parent selected-closure pilot.
 
 ## Current semantic decomposition
 
@@ -140,6 +163,12 @@ The pilot must detect and reject external provider material that shadows a valid
 
 ## Control evidence already established
 
+Canonical retained control root:
+
+```text
+$PREFIX/tmp/selected-obsidian-control-survival-20260710-220652
+```
+
 The control evidence includes:
 
 ```text
@@ -156,9 +185,15 @@ package provenance
 SHA-256 / Build ID identity where available
 ```
 
-The control also established that the rootfs provider set is heterogeneous and must not be copied blindly into one flat `lib/` directory.
+The control established that the rootfs provider set is heterogeneous and must not be copied blindly into one flat `lib/` directory.
 
 ## Graphics sub-question closure
+
+Canonical closure:
+
+```text
+docs/refactor/0091-scoped-graphics-policy-promotion-closure.md
+```
 
 The graphics investigation established:
 
@@ -172,29 +207,95 @@ application GPU/CPU feature mode
 application-state validation authority
 ```
 
-Canonical closure:
+Graphics provider/bridge decisions are now independent capability inputs to the application domain. They must not dominate non-graphics closure selection.
+
+Closed graphics gates are rerun only when their own claim surface changes.
+
+## Phase B1 — retained control locality input audit
+
+The next action is a read-only audit of the retained control evidence.
+
+Recipe:
 
 ```text
-docs/refactor/0091-scoped-graphics-policy-promotion-closure.md
+recipe/audit-retained-control-locality.sh
 ```
 
-Graphics provider/bridge decisions should now be treated as independent capability inputs to the application domain rather than allowed to dominate non-graphics closure selection.
+It launches no process and mutates no promoted runtime state.
+
+It verifies and emits:
+
+```text
+required retained input availability
+candidate-relevant captured/current SHA-256 agreement
+ELF SONAME, DT_NEEDED, RPATH, and RUNPATH facts
+APP_LOCAL versus external provider name collisions
+zero/one/multiple captured candidates for each DT_NEEDED name
+process-class semantic object use
+provider package/capability counts
+explicit claim boundary and next-state decision
+```
+
+A `PASS` means the retained evidence is still identity-reproducible enough for the next locality/static-runtime decision step.
+
+It does not mean the candidate is ready.
+
+### Canonical command
+
+```bash
+cd "$HOME/projects/termux-native-desktop"
+
+git fetch origin
+git merge --ff-only origin/docs/post-graphics-architecture-audit
+
+CONTROL_OUT="$PREFIX/tmp/selected-obsidian-control-survival-20260710-220652"
+out="selected-obsidian-phase-b1-retained-control-locality-$(date +%Y%m%d-%H%M%S)"
+OUT="$PREFIX/tmp/selected-obsidian-closure/$out"
+
+CONTROL_OUT="$CONTROL_OUT" \
+OUT="$OUT" \
+bash \
+  experiments/glibc/selected-obsidian-closure/recipe/audit-retained-control-locality.sh
+
+tar czf ~/Downloads/$out.tgz $OUT
+```
+
+Do not replace the final archive name with `results.tgz` or another generic name.
+
+## Phase B1 decision branches
+
+```text
+PASS with stable identities
+    -> inspect locality-collisions.tsv
+    -> inspect unresolved-needed.tsv
+    -> inspect ambiguous-needed.tsv
+    -> classify whether retained maps are sufficient for edge attribution
+    -> define the next bounded non-graphics closure analysis
+
+FAIL with hash mismatch or missing candidate input
+    -> do not treat current bytes as captured bytes
+    -> check for exact retained artifacts
+    -> otherwise justify one fresh CPU control capture
+
+FAIL with semantic review rows
+    -> resolve semantic classification before materialization
+```
+
+No selected provider bytes are materialized in this phase.
 
 ## Remaining required analysis
 
-Before candidate materialization:
+After Phase B1:
 
 ```text
-1. update canonical classification outputs from retained evidence;
-2. resolve all review/missing identity classes relevant to candidate bytes;
-3. identify APP_LOCAL versus prefix/rootfs SONAME collisions;
-4. perform explicit locality-shadowing analysis;
-5. derive non-graphics static ELF closure;
-6. compare static closure with runtime-selected multiprocess provider set;
-7. separate required provider capabilities from discovery-only/mapped-only objects;
-8. separate ELF providers from font/locale/schema data capabilities;
-9. define candidate composition as multiple capability inputs;
-10. define candidate-specific loader/search context proving actual selection.
+1. resolve APP_LOCAL versus prefix/rootfs SONAME collisions;
+2. make the locality-shadowing decision explicit;
+3. derive the bounded non-graphics static ELF closure;
+4. compare static closure with runtime-selected multiprocess provider use;
+5. separate required providers from discovery-only/mapped-only objects;
+6. separate ELF providers from font/locale/schema data capabilities;
+7. define candidate composition as multiple capability inputs;
+8. define candidate-specific loader/search context proving actual selection.
 ```
 
 Do not rerun graphics-policy workloads merely to complete these analyses unless a graphics claim surface changes.
@@ -203,6 +304,7 @@ Do not rerun graphics-policy workloads merely to complete these analyses unless 
 
 ```text
 retained control evidence
+    -> identity/locality audit
     -> final semantic/locality analysis
     -> selected external provider bytes materialization
     -> provenance receipt
@@ -230,26 +332,15 @@ no unresolved relocation error
 normal user profile is not used as validation authority
 ```
 
-## Decision point
+## Evidence handoff rule
 
-The project must choose explicitly:
+Every evidence-producing stage defines a stage-specific `out` and `OUT` and ends with:
 
-### Continue
-
-Complete candidate materialization and workload equivalence to decide the reusable application-domain/provider model.
-
-### Terminate intentionally
-
-Record:
-
-```text
-why the discriminating value no longer justifies the work;
-which object-boundary questions remain unanswered;
-which assumptions PyMOL or another workload must not inherit;
-which evidence remains reusable.
+```bash
+tar czf ~/Downloads/$out.tgz $OUT
 ```
 
-Silently abandoning the pilot is not acceptable because PyMOL is otherwise likely to repeat broad-farm/global-environment assumptions.
+The tgz is a transport object. The contained receipt and original device evidence root remain authoritative.
 
 ## Stop line
 
@@ -262,11 +353,12 @@ rewrite AppDir RPATH globally;
 copy every rootfs path into candidate/lib;
 merge app-local and external provider bytes;
 introduce a universal provider-store framework;
+materialize a candidate before Phase B1 interpretation;
 start PyMOL by extending the same unresolved broad closure;
 interpret graphics closure as selected application closure completion.
 ```
 
-## Relation to next architecture phase
+## Relation to the next architecture phase
 
 The result of this pilot should inform:
 
@@ -277,6 +369,6 @@ application-local closure rules
 selected data-provider ownership
 application-domain bindings
 candidate materialization format
-atomic activation requirements
+atomic activation managed-leaf set
 PyMOL onboarding architecture
 ```
