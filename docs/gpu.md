@@ -8,7 +8,7 @@ This guide integrates the current GPU runtime contract and the reusable conclusi
 
 | Consumer | Path | Validation |
 |---|---|---|
-| VS Code / Electron | ANGLE -> Vulkan -> Turnip -> KGSL | real Adreno renderer, stable GPU process |
+| VS Code / Electron | ANGLE -> Vulkan -> Turnip -> KGSL | CDP primary GPU = Turnip Adreno 730; provider and KGSL mappings |
 | glibc OpenGL apps | OpenGL -> Zink -> Turnip -> KGSL | `glxinfo -B`, OpenGL 4.6 |
 | native Chromium / Code OSS | ANGLE Vulkan -> bionic Turnip | hardware-accelerated Chromium/Electron path |
 
@@ -34,7 +34,15 @@ Host orchestration remains bionic-native; artifacts target Termux glibc through 
 
 ## Runtime contract
 
-`modules/gl/overlay/home/gl/env` pins both Vulkan variables to the glibc ICD:
+`modules/gl/overlay/home/gl/env` is the provider-neutral glibc baseline. It clears inherited bionic Vulkan provider variables but does not select a glibc provider.
+
+Consumers that deliberately require the managed hardware provider source:
+
+```sh
+source "$HOME/gl/policy/vulkan/freedreno.sh"
+```
+
+That profile sets both:
 
 ```sh
 VK_ICD_FILENAMES=$ICD
@@ -47,7 +55,21 @@ For glibc OpenGL consumers:
 gl-run <program> [args...]
 ```
 
-`gl-run` adds `MESA_LOADER_DRIVER_OVERRIDE=zink` after sourcing the glibc environment. Vulkan-native and ANGLE-Vulkan consumers use the ICD pin without the Zink override.
+`gl-run` requires the explicit Freedreno profile and adds `MESA_LOADER_DRIVER_OVERRIDE=zink`. Vulkan-native or ANGLE-Vulkan consumers apply the provider profile directly and do not use the Zink override.
+
+VS Code and Obsidian separate application feature mode from provider selection:
+
+```text
+GL_GPU=1
+    -> source explicit Freedreno profile
+    -> enable ANGLE Vulkan flags if the profile is available
+
+GL_GPU=0
+    -> keep VK_DRIVER_FILES and VK_ICD_FILENAMES absent
+    -> pass --disable-gpu
+```
+
+For the captured VS Code A/B, explicit Freedreno selected Turnip Adreno 730, while implicit discovery selected LVP/llvmpipe under the same `ANGLE_VULKAN`, `GaneshVulkan`, and `vulkan=enabled_on` feature state.
 
 For official VS Code, the minimum experimentally demonstrated GPU-specific workaround was:
 
@@ -55,7 +77,7 @@ For official VS Code, the minimum experimentally demonstrated GPU-specific worka
 --disable-gpu-vsync
 ```
 
-See `experiments/gpu/vscode-angle-vulkan/`.
+See `experiments/gpu/vscode-angle-vulkan/` and `docs/refactor/0075-vscode-primary-device-receipt-pass-and-policy-ownership-audit.md`.
 
 ## Mesa 26.1.x present-SIGBUS investigation
 
@@ -80,7 +102,9 @@ The two `git bisect` judge scripts are preserved with that experiment under its 
 3. Compare ELF `NEEDED` entries before assuming a source regression.
 4. Do not cargo-cult distant-version patchsets; select changes by mechanism.
 5. Keep the X server clean of client GPU overrides.
-6. Set both Vulkan ICD environment variables to avoid cross-ABI loader default scanning.
+6. When a policy selects an ICD explicitly, set both Vulkan loader variables together.
+7. Clear inherited bionic Vulkan variables at the glibc boundary before applying any glibc provider profile.
+8. `unset VK_*` means implicit discovery, not proof of no Vulkan participation.
 
 ## Current boundaries
 
