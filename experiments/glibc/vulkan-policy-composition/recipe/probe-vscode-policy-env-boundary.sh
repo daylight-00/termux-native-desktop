@@ -194,7 +194,7 @@ capture_environment() {
             >>"$OUT/process-environment-selected.tsv"
         selected_count=$((selected_count + 1))
     done < <(
-        grep -E '^(VK_LOADER_DEBUG|VK_DRIVER_FILES|VK_ICD_FILENAMES|TND_EXPERIMENT_VULKAN_POLICY|LD_LIBRARY_PATH|LD_PRELOAD|LIBGL_ALWAYS_SOFTWARE|MESA_LOADER_DRIVER_OVERRIDE)=' "$raw" \
+        grep -E '^(GL_GPU|VK_LOADER_DEBUG|VK_DRIVER_FILES|VK_ICD_FILENAMES|TND_EXPERIMENT_VULKAN_POLICY|LD_LIBRARY_PATH|LD_PRELOAD|LIBGL_ALWAYS_SOFTWARE|MESA_LOADER_DRIVER_OVERRIDE|GALLIUM_DRIVER)=' "$raw" \
             | sort \
             || true
     )
