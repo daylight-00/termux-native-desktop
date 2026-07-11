@@ -29,6 +29,7 @@ done
 mkdir -p "$OUT"
 
 is_graphics_path_awk='$4 ~ /\/libvulkan_freedreno\.so$/ || $4 ~ /\/libvulkan_lvp\.so$/ || $4 ~ /\/libvulkan_gfxstream\.so$/ || $4 ~ /\/libvk_swiftshader\.so$/ || $4 ~ /\/libVkLayer_MESA_device_select\.so$/ || $4 ~ /\/libgbm\.so(\.|$)/ || $4 ~ /\/libvulkan\.so\.1$/ || $4 ~ /\/libEGL\.so$/ || $4 ~ /\/libGLESv2\.so$/ || $4 == "/dev/kgsl-3d0"'
+is_policy_semantic_awk='$1 == "DEVICE_NODE_GPU" || $1 ~ /^APP_LOCAL_GRAPHICS_/ || $1 ~ /^PROVIDER_GRAPHICS_/ || $1 == "PROVIDER_PREFIX_ELF" || $1 == "PROVIDER_ROOTFS_ELF"'
 
 class_counts() {
     local input=$1
@@ -45,17 +46,9 @@ semantic_pairs() {
 
 policy_semantic_pairs() {
     local input=$1
-    awk -F $'\t' '
-        NR > 1 && (
-            $1 == "DEVICE_NODE_GPU" ||
-            $1 ~ /^APP_LOCAL_GRAPHICS_/ ||
-            $1 ~ /^PROVIDER_GRAPHICS_/ ||
-            $1 == "PROVIDER_PREFIX_ELF" ||
-            $1 == "PROVIDER_ROOTFS_ELF"
-        ) {
-            print $1 "\t" $3
-        }
-    ' "$input" | sort -u
+    awk -F $'\t' "NR > 1 && ($is_policy_semantic_awk) { print \$1 \"\\t\" \$3 }" \
+        "$input" \
+        | sort -u
 }
 
 graphics_relations() {
