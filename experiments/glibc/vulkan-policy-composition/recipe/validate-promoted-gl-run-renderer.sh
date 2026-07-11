@@ -5,6 +5,7 @@ SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 REPO=$(git -C "$SCRIPT_DIR" rev-parse --show-toplevel)
 OUT=${OUT:-$PREFIX/tmp/tnd-vulkan-policy-composition/promoted-gl-run-renderer-$(date +%Y%m%d-%H%M%S)}
 BUILD_HELPER="$SCRIPT_DIR/build-glx-renderer-probe.sh"
+SOURCE="$SCRIPT_DIR/glx-renderer-probe.c"
 BINARY="$OUT/glx-renderer-probe"
 GL_RUN=${GL_RUN:-$HOME/gl/bin/gl-run}
 
@@ -22,27 +23,53 @@ if [ -n "$tracked_dirty" ]; then
     exit 2
 fi
 
-[ -x "$GL_RUN" ] || {
-    printf 'missing promoted gl-run: %s\n' "$GL_RUN" >&2
-    exit 1
-}
-
-[ -x "$BUILD_HELPER" ] || {
-    printf 'missing GLX probe build helper: %s\n' "$BUILD_HELPER" >&2
-    exit 1
-}
-
-if [ "${LIBGL_ALWAYS_SOFTWARE+x}" = x ]; then
-    printf 'LIBGL_ALWAYS_SOFTWARE must be unset\n' >&2
-    exit 2
-fi
-
 mkdir -p "$OUT"
 branch=$(git -C "$REPO" branch --show-current)
 head_sha=$(git -C "$REPO" rev-parse HEAD)
 printf '%s\n' "$branch" >"$OUT/branch.txt"
 printf '%s\n' "$head_sha" >"$OUT/head.txt"
 printf '%s\n' "$GL_RUN" >"$OUT/gl-run-path.txt"
+
+printf 'prerequisite\tstate\tpath\n' >"$OUT/prerequisites.tsv"
+prerequisite_failures=0
+
+check_executable() {
+    local name=$1 path=$2
+    if [ -x "$path" ]; then
+        printf '%s\tPASS\t%s\n' "$name" "$path" >>"$OUT/prerequisites.tsv"
+    else
+        printf '%s\tFAIL\t%s\n' "$name" "$path" >>"$OUT/prerequisites.tsv"
+        prerequisite_failures=$((prerequisite_failures + 1))
+    fi
+}
+
+check_file() {
+    local name=$1 path=$2
+    if [ -f "$path" ]; then
+        printf '%s\tPASS\t%s\n' "$name" "$path" >>"$OUT/prerequisites.tsv"
+    else
+        printf '%s\tFAIL\t%s\n' "$name" "$path" >>"$OUT/prerequisites.tsv"
+        prerequisite_failures=$((prerequisite_failures + 1))
+    fi
+}
+
+check_executable promoted_gl_run "$GL_RUN"
+check_file glx_probe_build_helper "$BUILD_HELPER"
+check_file glx_probe_source "$SOURCE"
+
+if [ "$prerequisite_failures" -ne 0 ]; then
+    printf 'FAIL\n' >"$OUT/validation.status"
+    printf 'promoted gl-run renderer prerequisites: FAIL (%s)\n' \
+        "$prerequisite_failures" >&2
+    cat "$OUT/prerequisites.tsv" >&2
+    exit 1
+fi
+
+if [ "${LIBGL_ALWAYS_SOFTWARE+x}" = x ]; then
+    printf 'FAIL\n' >"$OUT/validation.status"
+    printf 'LIBGL_ALWAYS_SOFTWARE must be unset\n' >&2
+    exit 2
+fi
 
 OUT_DIR="$OUT" BINARY="$BINARY" \
     bash "$BUILD_HELPER" >"$OUT/build.log" 2>&1
@@ -52,9 +79,9 @@ readelf -d "$BINARY" >"$OUT/readelf-dynamic.txt"
 
 "$GL_RUN" "$BINARY" >"$OUT/renderer.stdout" 2>"$OUT/renderer.stderr"
 
-vendor=$(awk -F ': ' '$1 == "GL_VENDOR" { print $2; exit }' "$OUT/renderer.stdout")
-renderer=$(awk -F ': ' '$1 == "GL_RENDERER" { print $2; exit }' "$OUT/renderer.stdout")
-version=$(awk -F ': ' '$1 == "GL_VERSION" { print $2; exit }' "$OUT/renderer.stdout")
+vendor=$(awk -F '=' '$1 == "GL_VENDOR" { sub(/^[^=]*=/, ""); print; exit }' "$OUT/renderer.stdout")
+renderer=$(awk -F '=' '$1 == "GL_RENDERER" { sub(/^[^=]*=/, ""); print; exit }' "$OUT/renderer.stdout")
+version=$(awk -F '=' '$1 == "GL_VERSION" { sub(/^[^=]*=/, ""); print; exit }' "$OUT/renderer.stdout")
 
 printf 'gate\tstate\n' >"$OUT/gates.tsv"
 failures=0
@@ -110,6 +137,8 @@ fi
 printf 'PASS\n' >"$OUT/validation.status"
 printf 'promoted gl-run renderer validation: PASS\n'
 printf 'evidence: %s\n' "$OUT"
+printf '\n===== prerequisites =====\n'
+cat "$OUT/prerequisites.tsv"
 printf '\n===== summary =====\n'
 cat "$OUT/summary.tsv"
 printf '\n===== gates =====\n'
