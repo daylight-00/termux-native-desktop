@@ -10,7 +10,8 @@ PHASE_B2_PASS
 PHASE_B3_CORRECTED_PASS
 PHASE_B4_PASS
 PHASE_B5_PASS_WITH_REVIEW
-PHASE_B6_SCHEMA_REPRODUCTION_NEXT
+PHASE_B6_FIRST_RUN_DIAGNOSTIC_ONLY
+PHASE_B6_CORRECTED_SOURCE_CLOSURE_NEXT
 ```
 
 The selected CPU application-domain candidate has not yet been materialized or validated.
@@ -26,6 +27,7 @@ docs/refactor/0096-selected-obsidian-phase-b3-first-run-script-failure.md
 docs/refactor/0097-selected-obsidian-phase-b3-capability-grouping-pass.md
 docs/refactor/0098-selected-obsidian-phase-b4-entrypoint-static-matrix-pass.md
 docs/refactor/0099-selected-obsidian-phase-b5-data-provenance-review.md
+docs/refactor/0100-selected-obsidian-phase-b6-source-manifest-gap.md
 ```
 
 ## Current architecture decision
@@ -60,11 +62,12 @@ fonts:
 
 GSettings:
     SELECTED_GSETTINGS_SCHEMA_DATA
-    owned source manifest
-    compiler reproduction still open
+    complete source/compiler reproduction still open
 ```
 
-## Phase B1 — retained identity/locality
+## Closed read-only phases
+
+### Phase B1
 
 ```text
 candidate identity matches              136 / 136
@@ -78,7 +81,7 @@ unresolved dependency                      0
 ambiguous dependency                       0
 ```
 
-## Phase B2 — static/runtime partition
+### Phase B2
 
 ```text
 entrypoint-static closure                 95
@@ -87,7 +90,7 @@ mapped-only dynamic/discovery             15
 non-ELF data capability                   17
 ```
 
-## Phase B3 — dynamic grouping
+### Corrected Phase B3
 
 ```text
 GRAPHICS_VULKAN roots:
@@ -101,9 +104,7 @@ NSS_SECURITY roots:
         -> libsqlite3.so.0
 ```
 
-The first failed B3 archive remains invalid and preserved. The corrected B3 receipt passed.
-
-## Phase B4 — static ownership model
+### Phase B4
 
 ```text
 entrypoint direct providers               34
@@ -113,8 +114,6 @@ shared external support                   51
 direct-root overlap pairs                111
 external package dependency edges        144
 ```
-
-GTK is the dominant 60-object external closure. CUPS, NSS/NSPR, ALSA, udev, GBM, and compiler support remain residual typed directions.
 
 Physical target:
 
@@ -126,24 +125,12 @@ one receipt-owned application-domain generation
     -> later one-pointer atomic activation
 ```
 
-## Phase B5 — data provenance
+### Phase B5
 
 Receipt:
 
 ```text
 selected-obsidian-phase-b5-data-capability-provenance-20260711-214050
-```
-
-Archive SHA-256:
-
-```text
-bea406cd8bc69a7b12e418668f16cca46ee1777430bca43f24414be68980da9f
-```
-
-Captured head:
-
-```text
-4e2fc5352d384c50bbf8370fa24fb7a377e8bab0
 ```
 
 ```text
@@ -165,67 +152,119 @@ locale objects:
 font objects:
     4 / 4 package-owned
 
-schema aggregate:
-    1 generated/unowned byte
-
-schema source files:
+captured schema source files:
     36
 
-schema unowned source files:
+captured schema unowned source files:
     0
-
-schema compiler present in rootfs:
-    NO
 ```
 
-Schema sources:
+Phase B5 closes locale and selected-font ownership. It proves ownership of the 36 captured schema inputs, but not complete schema-source closure.
+
+## First Phase B6 diagnostic
+
+Receipt:
 
 ```text
-gsettings-desktop-schemas:
-    32
-
-libgtk-3-common:
-    4
+selected-obsidian-phase-b6-gsettings-schema-reproduction-20260711-220355
 ```
 
-The audit closes locale ownership, font ownership, and schema source ownership. Only compiler lineage and aggregate reproduction remain open.
+Archive SHA-256:
 
-## Phase B6 — GSettings schema reproduction
+```text
+553e52f917a6cc72e805ac8b94bb5fd7d8ecc36809d6c6b5e2e6b226a901b30a
+```
+
+Captured head:
+
+```text
+68f3de93413dddb861e34d899bc06c49c3363c49
+```
+
+```text
+analysis.status:
+    PASS
+
+reported next-state:
+    REVIEW_SCHEMA_COMPILER_VERSION_DIFFERENCE
+
+accepted interpretation:
+    REVIEW_SCHEMA_SOURCE_MANIFEST_GAP
+
+compiler:
+    $PREFIX/bin/glib-compile-schemas
+
+compiler package/version:
+    glib 2.88.2
+
+compiler SHA-256:
+    5f8cfe28f5eed9e5b9400260ec0127cae5c3f881437915df3fcdca33cbe5d165
+```
+
+Default mode returned zero and generated a non-identical aggregate, but stderr reported ten undefined-enum errors and stated that ten complete schema files were ignored.
+
+Strict mode returned one and stopped at the first undefined enum.
+
+Therefore:
+
+```text
+default compile:
+    not clean
+
+generated hash difference:
+    not a compiler-version-only comparison
+
+complete source closure:
+    still open
+```
+
+The Phase B5 filter used only:
+
+```text
+*.gschema.xml
+*.gschema.override
+```
+
+and omitted definition XML whose names do not use the `.gschema.xml` suffix.
+
+## Corrected Phase B6
 
 Recipe:
 
 ```text
-recipe/reproduce-retained-control-gsettings-schema.py
+recipe/reproduce-retained-control-gsettings-schema-corrected.sh
 ```
 
-The recipe:
+It does not rerun Phase B5. It creates a receipt-local overlay of the completed B5 receipt, replaces only the schema source manifest with complete directory discovery, and invokes the existing reproduction recipe.
+
+Corrected behavior:
 
 ```text
-consumes the completed B5 receipt;
-rechecks all 36 source hashes;
-discovers explicit/known glib-compile-schemas candidates;
-records compiler path, realpath, SHA-256, package owner, and version output;
-copies sources into receipt-local temporary directories;
-tries default and --strict compilation modes;
-records command, stdout, stderr, return code, and generated SHA-256;
-compares every generated aggregate with the retained aggregate;
-installs no package and mutates no promoted state.
+discover all *.xml and *.gschema.override inputs;
+record the delta from the 36-file B5 manifest;
+record hash and dpkg owner for newly discovered inputs;
+compile only in receipt-local directories;
+run default and --strict modes;
+reject return code zero when stderr reports schema errors;
+compare only clean outputs with the retained aggregate;
+install no package and mutate no promoted runtime.
 ```
 
 Possible next states:
 
 ```text
 READY_FOR_COMPLETE_DATA_MANIFEST
-    at least one generated aggregate is byte-identical
+    clean byte-identical output
 
 REVIEW_SCHEMA_COMPILER_VERSION_DIFFERENCE
-    compilation succeeds but generated bytes differ
+    clean compile succeeds but output differs
+
+REVIEW_SCHEMA_COMPILATION_ERRORS
+    compiler is runnable but no clean compile succeeds
 
 ACQUIRE_SCHEMA_COMPILER_ORACLE
-    no runnable compiler produces an aggregate
+    no runnable compiler candidate
 ```
-
-A `PASS` with either review/acquire state is a valid completed audit, not a script failure.
 
 ### Canonical command
 
@@ -236,28 +275,30 @@ git fetch origin
 git merge --ff-only origin/docs/post-graphics-architecture-audit
 
 B5_OUT="$PREFIX/tmp/selected-obsidian-closure/selected-obsidian-phase-b5-data-capability-provenance-20260711-214050"
-out="selected-obsidian-phase-b6-gsettings-schema-reproduction-$(date +%Y%m%d-%H%M%S)"
+out="selected-obsidian-phase-b6-gsettings-schema-reproduction-corrected-$(date +%Y%m%d-%H%M%S)"
 OUT="$PREFIX/tmp/selected-obsidian-closure/$out"
 
 B5_OUT="$B5_OUT" \
 OUT="$OUT" \
-python \
-  experiments/glibc/selected-obsidian-closure/recipe/reproduce-retained-control-gsettings-schema.py
+bash \
+  experiments/glibc/selected-obsidian-closure/recipe/reproduce-retained-control-gsettings-schema-corrected.sh
 
 tar czf ~/Downloads/$out.tgz $OUT
 ```
 
-Optional explicit compiler candidates may be supplied without changing the script:
+Inspect at minimum:
 
-```bash
-SCHEMA_COMPILERS="/absolute/compiler/a:/absolute/compiler/b" \
-B5_OUT="$B5_OUT" \
-OUT="$OUT" \
-python \
-  experiments/glibc/selected-obsidian-closure/recipe/reproduce-retained-control-gsettings-schema.py
+```text
+analysis.status
+next-state.txt
+summary.tsv
+schema-source-manifest-delta.tsv
+schema-source-verification.tsv
+schema-compiler-candidates.tsv
+schema-reproduction-attempts.tsv
+attempts/*/stderr.txt
+claim-boundary.txt
 ```
-
-Do not install or recover a compiler before inspecting the default Phase B6 result.
 
 ## Candidate flow
 
@@ -266,8 +307,8 @@ B1 identity/locality
     -> B2 static/runtime partition
     -> B3 dynamic capability grouping
     -> B4 static ownership model
-    -> B5 data ownership/source provenance
-    -> B6 schema compiler reproduction
+    -> B5 data identity/partial source ownership
+    -> corrected B6 complete source/compiler reproduction
     -> complete CPU candidate manifest
     -> candidate materialization
     -> candidate-specific launch/maps proof
@@ -288,12 +329,13 @@ tar czf ~/Downloads/$out.tgz $OUT
 Do not:
 
 ```text
-rerun Phase B1-B5 without a source trigger;
-install a schema compiler into the rootfs merely to pass Phase B6;
-copy opaque gschemas.compiled without source/compiler provenance;
-copy glibc locale into the application generation;
-expand the selected font set by directory inertia;
-materialize candidate bytes before Phase B6 interpretation;
+rerun Phase B1-B5;
+accept the first B6 default aggregate;
+interpret return code zero as clean success without stderr inspection;
+classify the first B6 hash difference as compiler-version-only;
+install another schema compiler before corrected source discovery;
+copy opaque gschemas.compiled without complete source/compiler provenance;
+materialize candidate bytes before corrected Phase B6 interpretation;
 implement activation before the complete generation manifest;
 rerun closed graphics gates;
 start PyMOL by extending the broad farm.
