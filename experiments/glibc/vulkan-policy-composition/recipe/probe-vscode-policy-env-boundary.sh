@@ -3,12 +3,26 @@ set -euo pipefail
 
 APP=${APP:-$HOME/gl/apps/vscode}
 LAUNCHER=${LAUNCHER:-$HOME/projects/termux-native-desktop/experiments/glibc/vulkan-policy-composition/recipe/launch-vscode-with-policy.sh}
+APP_ENTRYPOINT=${APP_ENTRYPOINT:-$APP/bin/code}
+MAIN_EXECUTABLE=${MAIN_EXECUTABLE:-$APP/code}
+APPLICATION_NAME=${APPLICATION_NAME:-VS Code}
 OUT=${OUT:-$PREFIX/tmp/tnd-vulkan-policy-composition/vscode-policy-env-boundary-$(date +%Y%m%d-%H%M%S)}
 DURATION_SECONDS=${DURATION_SECONDS:-15}
 POLL_SLEEP_SECONDS=${POLL_SLEEP_SECONDS:-0.1}
 CONTROL_GL_GPU=${CONTROL_GL_GPU:-1}
 VULKAN_POLICY_MODE=${VULKAN_POLICY_MODE:-explicit-freedreno}
 VK_LOADER_DEBUG_VALUE=${VK_LOADER_DEBUG_VALUE:-all}
+USER_DATA_DIR=${USER_DATA_DIR:-}
+EXTENSIONS_DIR=${EXTENSIONS_DIR:-}
+PASS_USER_DATA_DIR_ARG=${PASS_USER_DATA_DIR_ARG:-0}
+PASS_EXTENSIONS_DIR_ARG=${PASS_EXTENSIONS_DIR_ARG:-0}
+DISABLE_EXTENSIONS=${DISABLE_EXTENSIONS:-0}
+NEW_WINDOW=${NEW_WINDOW:-0}
+REQUIRE_MAIN=${REQUIRE_MAIN:-1}
+REQUIRE_ZYGOTE=${REQUIRE_ZYGOTE:-1}
+REQUIRE_RENDERER=${REQUIRE_RENDERER:-0}
+REQUIRE_GPU_PROCESS=${REQUIRE_GPU_PROCESS:-1}
+EXIT_WHEN_REQUIRED_SEEN=${EXIT_WHEN_REQUIRED_SEEN:-1}
 
 for command in awk date pgrep readlink sort tr grep sed wc; do
     command -v "$command" >/dev/null 2>&1 || {
@@ -17,13 +31,13 @@ for command in awk date pgrep readlink sort tr grep sed wc; do
     }
 done
 
-[ -x "$APP/bin/code" ] || {
-    printf 'missing VS Code entrypoint: %s\n' "$APP/bin/code" >&2
+[ -x "$APP_ENTRYPOINT" ] || {
+    printf 'missing %s entrypoint: %s\n' "$APPLICATION_NAME" "$APP_ENTRYPOINT" >&2
     exit 1
 }
 
 [ -x "$LAUNCHER" ] || {
-    printf 'missing experiment launcher: %s\n' "$LAUNCHER" >&2
+    printf 'missing %s launcher: %s\n' "$APPLICATION_NAME" "$LAUNCHER" >&2
     exit 1
 }
 
@@ -34,15 +48,18 @@ case "$DURATION_SECONDS" in
         ;;
 esac
 
-[ "$CONTROL_GL_GPU" = 1 ] || {
-    printf 'this probe requires CONTROL_GL_GPU=1\n' >&2
-    exit 2
-}
+case "$CONTROL_GL_GPU" in
+    0|1) ;;
+    *)
+        printf 'CONTROL_GL_GPU must be 0 or 1: %s\n' "$CONTROL_GL_GPU" >&2
+        exit 2
+        ;;
+esac
 
-[ "$VULKAN_POLICY_MODE" = explicit-freedreno ] || {
-    printf 'this probe requires VULKAN_POLICY_MODE=explicit-freedreno\n' >&2
+if [ "$CONTROL_GL_GPU" = 1 ] && [ "$VULKAN_POLICY_MODE" != explicit-freedreno ]; then
+    printf 'GPU environment probe requires VULKAN_POLICY_MODE=explicit-freedreno\n' >&2
     exit 2
-}
+fi
 
 if [ "${LIBGL_ALWAYS_SOFTWARE+x}" = x ]; then
     printf 'LIBGL_ALWAYS_SOFTWARE must be unset for this control\n' >&2
@@ -51,19 +68,37 @@ fi
 
 existing=$(pgrep -af "$APP/" || true)
 if [ -n "$existing" ]; then
-    printf 'existing VS Code processes detected; close them before the probe:\n' >&2
+    printf 'existing %s processes detected; close them before the probe:\n' "$APPLICATION_NAME" >&2
     printf '%s\n' "$existing" >&2
     exit 1
 fi
 
 mkdir -p "$OUT"
+if [ "$PASS_USER_DATA_DIR_ARG" = 1 ]; then
+    [ -n "$USER_DATA_DIR" ] || {
+        printf 'PASS_USER_DATA_DIR_ARG=1 requires USER_DATA_DIR\n' >&2
+        exit 2
+    }
+    mkdir -p "$USER_DATA_DIR"
+fi
+if [ "$PASS_EXTENSIONS_DIR_ARG" = 1 ]; then
+    [ -n "$EXTENSIONS_DIR" ] || {
+        printf 'PASS_EXTENSIONS_DIR_ARG=1 requires EXTENSIONS_DIR\n' >&2
+        exit 2
+    }
+    mkdir -p "$EXTENSIONS_DIR"
+fi
+
 printf 'timestamp\tpid\tppid\tclass\targv0\tcmdline\n' >"$OUT/processes.tsv"
 printf 'timestamp\tpid\tclass\tstate\tentry_count\tselected_key_count\n' >"$OUT/process-environment-summary.tsv"
 printf 'timestamp\tpid\tclass\tkey\tvalue\n' >"$OUT/process-environment-selected.tsv"
 printf 'timestamp\tpid\tclass\tfd\ttarget\n' >"$OUT/process-stdio-fds.tsv"
-printf 'sample\ttimestamp\tmain_seen\tzygote_seen\tgpu_seen\n' >"$OUT/observation-state.tsv"
+printf 'sample\ttimestamp\tmain_seen\tzygote_seen\trenderer_seen\tgpu_seen\n' >"$OUT/observation-state.tsv"
 
+printf 'application: %s\n' "$APPLICATION_NAME" | tee "$OUT/application-name.txt"
 printf 'app: %s\n' "$APP" | tee "$OUT/app-path.txt"
+printf 'entrypoint: %s\n' "$APP_ENTRYPOINT" | tee "$OUT/app-entrypoint.txt"
+printf 'main executable: %s\n' "$MAIN_EXECUTABLE" | tee "$OUT/main-executable.txt"
 printf 'launcher: %s\n' "$LAUNCHER" | tee "$OUT/launcher-path.txt"
 printf 'duration seconds: %s\n' "$DURATION_SECONDS" | tee "$OUT/duration.txt"
 printf 'poll sleep seconds: %s\n' "$POLL_SLEEP_SECONDS" | tee "$OUT/poll-sleep.txt"
@@ -71,10 +106,24 @@ printf 'GL_GPU=%s\n' "$CONTROL_GL_GPU" | tee "$OUT/mode.txt"
 printf 'VULKAN_POLICY_MODE=%s\n' "$VULKAN_POLICY_MODE" | tee -a "$OUT/mode.txt"
 printf 'VK_LOADER_DEBUG=%s\n' "$VK_LOADER_DEBUG_VALUE" | tee -a "$OUT/mode.txt"
 
+LAUNCH_ARGS=()
+if [ "$PASS_USER_DATA_DIR_ARG" = 1 ]; then
+    LAUNCH_ARGS+=(--user-data-dir "$USER_DATA_DIR")
+fi
+if [ "$PASS_EXTENSIONS_DIR_ARG" = 1 ]; then
+    LAUNCH_ARGS+=(--extensions-dir "$EXTENSIONS_DIR")
+fi
+if [ "$DISABLE_EXTENSIONS" = 1 ]; then
+    LAUNCH_ARGS+=(--disable-extensions)
+fi
+if [ "$NEW_WINDOW" = 1 ]; then
+    LAUNCH_ARGS+=(--new-window)
+fi
+
 GL_GPU="$CONTROL_GL_GPU" \
 VULKAN_POLICY_MODE="$VULKAN_POLICY_MODE" \
 VK_LOADER_DEBUG="$VK_LOADER_DEBUG_VALUE" \
-"$LAUNCHER" \
+"$LAUNCHER" "${LAUNCH_ARGS[@]}" \
     >"$OUT/launch.stdout" \
     2>"$OUT/launch.stderr" &
 LAUNCH_PID=$!
@@ -85,6 +134,7 @@ OBSERVED_PIDS=("$LAUNCH_PID")
 declare -A CAPTURED=()
 MAIN_SEEN=0
 ZYGOTE_SEEN=0
+RENDERER_SEEN=0
 GPU_SEEN=0
 
 read_cmdline() {
@@ -102,7 +152,7 @@ read_argv0() {
 classify_cmdline() {
     local pid=$1 cmdline=$2 argv0=$3
 
-    if [ "$pid" = "$LAUNCH_PID" ]; then
+    if [ "$pid" = "$LAUNCH_PID" ] && [ "$argv0" != "$MAIN_EXECUTABLE" ]; then
         printf 'launch-wrapper\n'
         return 0
     fi
@@ -115,9 +165,9 @@ classify_cmdline() {
         *--type=zygote*) printf 'zygote\n' ;;
         *chrome_crashpad_handler*) printf 'crashpad\n' ;;
         *)
-            if [ "$argv0" = "$APP/code" ] && [[ "$cmdline" != *" --type="* ]]; then
+            if [ "$argv0" = "$MAIN_EXECUTABLE" ] && [[ "$cmdline" != *" --type="* ]]; then
                 printf 'main\n'
-            elif [[ "$cmdline" == *"$APP/bin/code"* ]]; then
+            elif [[ "$cmdline" == *"$APP_ENTRYPOINT"* ]]; then
                 printf 'cli-wrapper\n'
             else
                 printf 'helper\n'
@@ -132,8 +182,9 @@ pid_still_belongs_to_probe() {
     [ -n "$cmdline" ] || return 1
     case "$cmdline" in
         *"$APP/"*) return 0 ;;
-        *) return 1 ;;
+        *"$USER_DATA_DIR"*) [ -n "$USER_DATA_DIR" ] && return 0 ;;
     esac
+    return 1
 }
 
 cleanup() {
@@ -220,6 +271,14 @@ capture_stdio() {
     done
 }
 
+required_topology_seen() {
+    [ "$REQUIRE_MAIN" != 1 ] || [ "$MAIN_SEEN" = 1 ] || return 1
+    [ "$REQUIRE_ZYGOTE" != 1 ] || [ "$ZYGOTE_SEEN" = 1 ] || return 1
+    [ "$REQUIRE_RENDERER" != 1 ] || [ "$RENDERER_SEEN" = 1 ] || return 1
+    [ "$REQUIRE_GPU_PROCESS" != 1 ] || [ "$GPU_SEEN" = 1 ] || return 1
+    return 0
+}
+
 started=$SECONDS
 deadline=$((started + DURATION_SECONDS))
 sample=0
@@ -243,6 +302,7 @@ while (( SECONDS < deadline )); do
         case "$class" in
             main) MAIN_SEEN=1 ;;
             zygote) ZYGOTE_SEEN=1 ;;
+            renderer) RENDERER_SEEN=1 ;;
             gpu) GPU_SEEN=1 ;;
         esac
 
@@ -256,43 +316,64 @@ while (( SECONDS < deadline )); do
         fi
     done
 
-    printf '%s\t%s\t%s\t%s\t%s\n' \
-        "$sample" "$timestamp" "$MAIN_SEEN" "$ZYGOTE_SEEN" "$GPU_SEEN" \
+    printf '%s\t%s\t%s\t%s\t%s\t%s\n' \
+        "$sample" "$timestamp" "$MAIN_SEEN" "$ZYGOTE_SEEN" "$RENDERER_SEEN" "$GPU_SEEN" \
         >>"$OUT/observation-state.tsv"
 
-    if [ "$MAIN_SEEN" = 1 ] && [ "$ZYGOTE_SEEN" = 1 ] && [ "$GPU_SEEN" = 1 ]; then
+    if [ "$EXIT_WHEN_REQUIRED_SEEN" = 1 ] && required_topology_seen; then
         break
     fi
 
     sleep "$POLL_SLEEP_SECONDS"
 done
 
-[ "$MAIN_SEEN" = 1 ] || {
+if [ "$REQUIRE_MAIN" = 1 ] && [ "$MAIN_SEEN" != 1 ]; then
     printf 'main process was not observed\n' >&2
     exit 1
-}
-
-[ "$ZYGOTE_SEEN" = 1 ] || {
+fi
+if [ "$REQUIRE_ZYGOTE" = 1 ] && [ "$ZYGOTE_SEEN" != 1 ]; then
     printf 'zygote process was not observed\n' >&2
     exit 1
-}
-
-[ "$GPU_SEEN" = 1 ] || {
+fi
+if [ "$REQUIRE_RENDERER" = 1 ] && [ "$RENDERER_SEEN" != 1 ]; then
+    printf 'renderer process was not observed\n' >&2
+    exit 1
+fi
+if [ "$REQUIRE_GPU_PROCESS" = 1 ] && [ "$GPU_SEEN" != 1 ]; then
     printf 'gpu process was not observed\n' >&2
     exit 1
-}
+fi
 
-for required_class in main zygote gpu; do
+for required_class in main zygote renderer gpu; do
+    required=0
+    case "$required_class" in
+        main) required=$REQUIRE_MAIN ;;
+        zygote) required=$REQUIRE_ZYGOTE ;;
+        renderer) required=$REQUIRE_RENDERER ;;
+        gpu) required=$REQUIRE_GPU_PROCESS ;;
+    esac
+    [ "$required" = 1 ] || continue
+
     if ! awk -F $'\t' -v c="$required_class" 'NR > 1 && $3 == c && $4 == "READ_OK" { found=1 } END { exit found ? 0 : 1 }' \
         "$OUT/process-environment-summary.tsv"; then
-        printf 'no successful environment read for required class: %s\n' "$required_class" >&2
+        printf 'no successful environment read attempt for required class: %s\n' "$required_class" >&2
         exit 1
     fi
 done
 
+main_alive_at_end=0
+while IFS=$'\t' read -r _ pid _ class _; do
+    [ "$class" = main ] || continue
+    if pid_still_belongs_to_probe "$pid"; then
+        main_alive_at_end=1
+        break
+    fi
+done < <(tail -n +2 "$OUT/processes.tsv")
+printf '%s\n' "$main_alive_at_end" >"$OUT/main-alive-at-end.txt"
+
 printf 'PASS\n' >"$OUT/probe.status"
 
-printf '\nVS Code policy environment boundary probe: PASS\n'
+printf '\n%s policy environment boundary probe: PASS\n' "$APPLICATION_NAME"
 printf 'evidence: %s\n' "$OUT"
 
 printf '\n===== process environment summary =====\n'
