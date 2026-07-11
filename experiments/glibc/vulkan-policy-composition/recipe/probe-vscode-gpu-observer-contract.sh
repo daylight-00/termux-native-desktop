@@ -58,6 +58,7 @@ fi
 
 mkdir -p "$OUT"
 printf 'key\tvalue\n' >"$OUT/gpu-environment.tsv"
+printf 'state\tentry_count\tselected_key_count\n' >"$OUT/gpu-environment-read-state.tsv"
 printf 'fd\ttarget\n' >"$OUT/gpu-stdio-fds.tsv"
 printf 'timestamp\tpid\tppid\tcmdline\n' >"$OUT/gpu-process-selection.tsv"
 printf 'sample\ttimestamp\tgpu_pid\tenvironment_captured\tstdio_captured\n' >"$OUT/observation-state.tsv"
@@ -85,11 +86,17 @@ GPU_PID=
 ENV_CAPTURED=0
 STDIO_CAPTURED=0
 
+read_cmdline() {
+    local pid=$1
+    [ -r "/proc/$pid/cmdline" ] || return 1
+    { tr '\0' ' ' <"/proc/$pid/cmdline"; } 2>/dev/null
+}
+
 pid_still_belongs_to_probe() {
     local pid=$1 cmdline
 
-    [ -r "/proc/$pid/cmdline" ] || return 1
-    cmdline=$(tr '\0' ' ' <"/proc/$pid/cmdline" 2>/dev/null || true)
+    cmdline=$(read_cmdline "$pid" || true)
+    [ -n "$cmdline" ] || return 1
 
     case "$cmdline" in
         *"$APP/"*) return 0 ;;
@@ -125,17 +132,29 @@ cleanup() {
 trap cleanup EXIT
 
 capture_environment() {
-    local pid=$1
+    local pid=$1 tmp entry_count selected_count
+    tmp="$OUT/.gpu-environment.raw"
+
     [ -r "/proc/$pid/environ" ] || return 1
+
+    if ! { tr '\0' '\n' <"/proc/$pid/environ" >"$tmp"; } 2>"$OUT/gpu-environment-read.stderr"; then
+        printf 'READ_FAILED\t0\t0\n' >>"$OUT/gpu-environment-read-state.tsv"
+        return 1
+    fi
+
+    entry_count=$(awk 'NF { count++ } END { print count + 0 }' "$tmp")
 
     {
         printf 'key\tvalue\n'
-        tr '\0' '\n' <"/proc/$pid/environ" \
-            | grep -E '^(VK_LOADER_DEBUG|VK_DRIVER_FILES|VK_ICD_FILENAMES|TND_EXPERIMENT_VULKAN_POLICY|LD_LIBRARY_PATH|LD_PRELOAD|LIBGL_ALWAYS_SOFTWARE|MESA_LOADER_DRIVER_OVERRIDE)=' \
+        grep -E '^(VK_LOADER_DEBUG|VK_DRIVER_FILES|VK_ICD_FILENAMES|TND_EXPERIMENT_VULKAN_POLICY|LD_LIBRARY_PATH|LD_PRELOAD|LIBGL_ALWAYS_SOFTWARE|MESA_LOADER_DRIVER_OVERRIDE)=' "$tmp" \
             | sort \
             | awk -F '=' '{ key=$1; sub(/^[^=]*=/, "", $0); print key "\t" $0 }' \
             || true
     } >"$OUT/gpu-environment.tsv"
+
+    selected_count=$(( $(wc -l <"$OUT/gpu-environment.tsv") - 1 ))
+    printf 'READ_OK\t%s\t%s\n' "$entry_count" "$selected_count" >>"$OUT/gpu-environment-read-state.tsv"
+    return 0
 }
 
 capture_stdio() {
@@ -162,8 +181,7 @@ while (( SECONDS < deadline )); do
 
     mapfile -t app_pids < <(pgrep -f "$APP/" 2>/dev/null | sort -n || true)
     for pid in "${app_pids[@]:-}"; do
-        [ -r "/proc/$pid/cmdline" ] || continue
-        cmdline=$(tr '\0' ' ' <"/proc/$pid/cmdline" 2>/dev/null || true)
+        cmdline=$(read_cmdline "$pid" || true)
         [ -n "$cmdline" ] || continue
         OBSERVED_PIDS+=("$pid")
 
@@ -221,6 +239,9 @@ printf 'PASS\n' >"$OUT/probe.status"
 
 printf '\nVS Code GPU observer contract probe: PASS\n'
 printf 'evidence: %s\n' "$OUT"
+
+printf '\n===== gpu environment read state =====\n'
+cat "$OUT/gpu-environment-read-state.tsv"
 
 printf '\n===== gpu environment =====\n'
 cat "$OUT/gpu-environment.tsv"
