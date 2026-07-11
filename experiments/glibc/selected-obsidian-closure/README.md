@@ -5,20 +5,16 @@
 ```text
 ACTIVE_ARCHITECTURE_DISCRIMINATION
 PARENT_QUESTION_NOT_CLOSED
-PHASE_B1_RETAINED_CONTROL_AUDIT_NEXT
+PHASE_B1_PASS
+PHASE_B2_STATIC_RUNTIME_PARTITION_NEXT
 ```
 
-The control capture, semantic decomposition, and graphics-policy sub-investigation have advanced substantially.
-
-The selected application-domain candidate has **not** yet been materialized and validated.
+The selected application-domain candidate has **not** yet been materialized or validated.
 
 Current state:
 
 ```text
-control topology/survival capture:
-    PASS
-
-multiprocess maps and unique object set:
+control topology/survival/maps:
     CAPTURED
 
 provenance enrichment:
@@ -36,19 +32,22 @@ scoped graphics-policy transaction:
 graphics validator lifecycle:
     CLASSIFIED
 
-app-local locality-shadowing decision:
-    OPEN
+retained-control identity/locality audit:
+    PASS
 
-non-graphics static/runtime closure agreement:
+app-local lookup collision:
+    NONE OBSERVED
+
+static/runtime graph partition:
+    NEXT
+
+capability grouping:
     OPEN
 
 selected candidate materialization:
-    NOT COMPLETED
+    NOT STARTED
 
-candidate-specific actual-selection proof:
-    NOT COMPLETED
-
-control/candidate application equivalence:
+candidate-specific selection/equivalence:
     NOT COMPLETED
 ```
 
@@ -57,111 +56,37 @@ Architecture authority:
 ```text
 docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md
 docs/refactor/0093-post-audit-direction-validator-lifecycle-and-selected-closure-reentry.md
+docs/refactor/0094-selected-obsidian-phase-b1-retained-control-locality-pass.md
 ```
 
 ## Parent question
 
-Can a real Electron AppDir application consume selected external provider closures while preserving valid application-local `$ORIGIN` locality and keeping external capability classes semantically separate?
+Can a real Electron AppDir consume selected external provider closures while preserving valid application-local `$ORIGIN` locality and keeping world, provider, data, graphics, and mutable-state responsibilities separate?
 
-This is a stronger question than whether Obsidian launches or whether its GPU policy works.
+This is stronger than proving that Obsidian launches or that its GPU branch works.
 
-## Decision after the post-graphics audit
+## Decision
 
 The pilot continues.
 
-It is not silently terminated and it is not skipped in favor of PyMOL.
-
-Reason:
-
 ```text
-D-Bus proved that a bounded selected provider object can exist.
+selected Obsidian closure:
+    CONTINUE
 
-Obsidian must now test whether a real multiprocess AppDir can consume selected
-external providers without flattening application-local, world, provider, data,
-and mutable-state ownership into one broad farm or one global environment.
+fresh control capture:
+    NOT REQUIRED FOR IDENTITY DRIFT
+
+candidate materialization:
+    BLOCKED UNTIL CAPABILITY PARTITION
+
+atomic activation implementation:
+    DEFER UNTIL MANAGED OBJECT SET IS DECIDED
+
+PyMOL runtime mutation:
+    DEFER
 ```
 
-Atomic activation remains mandatory before the next multi-file promoted migration, but activation implementation is not started around the unresolved current umbrella. The selected object set and semantic owners must be decided first.
-
-## Why this pilot still matters
-
-The first D-Bus pilot proved that a selected materialized provider object can exist with:
-
-```text
-actual provider bytes
-provenance receipt
-candidate-specific selection proof
-protected substrate boundary
-zero broad-farm/rootfs provider leakage
-```
-
-It did not prove that a real application domain can preserve:
-
-```text
-application-local ELF/data locality
-world substrate boundaries
-prefix provider roles
-rootfs provider capability groups
-application state
-real multiprocess workload equivalence
-```
-
-Obsidian was deliberately selected to test those properties.
-
-The graphics-policy work was a required sub-question because graphics mappings contaminated closure interpretation. Closing graphics does not close this parent selected-closure pilot.
-
-## Current semantic decomposition
-
-The observed application domain composes at least:
-
-```text
-app.obsidian local payload
-    APP_LOCAL_ELF
-    APP_LOCAL_DATA
-
-world.glibc substrate
-    WORLD_SUBSTRATE_ELF
-
-provider.locale.glibc
-    PROVIDER_LOCALE_DATA
-
-prefix provider capabilities
-    PROVIDER_PREFIX_ELF
-
-selected rootfs ELF provider candidates
-    PROVIDER_ROOTFS_ELF
-
-provider.fonts.glibc
-    PROVIDER_FONT_DATA
-
-provider shared-data / GSettings
-    PROVIDER_SCHEMA_DATA
-
-graphics provider/bridge tail
-    consumer-scoped policy and selected-device relations
-
-mutable application/runtime state
-    APP_MUTABLE_STATE
-    RUNTIME_CACHE_*
-```
-
-Physical prefix/rootfs location is provenance input, not semantic ownership.
-
-## App-local locality invariant
-
-Candidate composition must preserve:
-
-```text
-valid APP_LOCAL selection
-    before
-external selected provider closure
-```
-
-for application-supplied libraries and data intentionally selected through `$ORIGIN` or AppDir-relative behavior.
-
-The pilot must detect and reject external provider material that shadows a valid app-local object unless an explicit application contract requires replacement and the replacement is validated.
-
-## Control evidence already established
+## Retained control authority
 
 Canonical retained control root:
 
@@ -169,76 +94,247 @@ Canonical retained control root:
 $PREFIX/tmp/selected-obsidian-control-survival-20260710-220652
 ```
 
-The control evidence includes:
+Phase B1 receipt:
 
 ```text
-real Electron multiprocess topology
-bounded survival
-process-class maps
-AppDir-local Electron/media/graphics objects
-protected glibc substrate objects
-prefix provider objects
-broad rootfs provider objects
-font/locale/schema data
-mutable state/cache categories
-package provenance
-SHA-256 / Build ID identity where available
+$PREFIX/tmp/selected-obsidian-closure/
+    selected-obsidian-phase-b1-retained-control-locality-20260711-192919
 ```
 
-The control established that the rootfs provider set is heterogeneous and must not be copied blindly into one flat `lib/` directory.
-
-## Graphics sub-question closure
-
-Canonical closure:
+Archive SHA-256:
 
 ```text
-docs/refactor/0091-scoped-graphics-policy-promotion-closure.md
+aa5081f3b5ec8d7fee5e33db631abe0fd695d1291eeddcb54d3777ca72f3e383
 ```
 
-The graphics investigation established:
+## Phase B1 result
 
 ```text
-world-boundary sanitation
-provider selection
-device-class intent
-consumer-specific suitability
-selected-device evidence
-application GPU/CPU feature mode
-application-state validation authority
+semantic objects:
+    161
+
+captured processes:
+    6
+
+candidate-relevant identity matches:
+    136 / 136
+
+ELF objects:
+    113
+
+DT_NEEDED edges:
+    531
+
+semantic review objects:
+    0
+
+hash mismatches:
+    0
+
+missing candidate paths:
+    0
+
+APP_LOCAL/external lookup collisions:
+    0
+
+unresolved dependency names:
+    0
+
+ambiguous dependency names:
+    0
 ```
 
-Graphics provider/bridge decisions are now independent capability inputs to the application domain. They must not dominate non-graphics closure selection.
+Phase B1 launched no workload and mutated no promoted runtime state.
 
-Closed graphics gates are rerun only when their own claim surface changes.
+## Locality conclusion
 
-## Phase B1 — retained control locality input audit
+The app-local ELF set is:
 
-The next action is a read-only audit of the retained control evidence.
+```text
+obsidian
+libEGL.so
+libGLESv2.so
+libffmpeg.so
+libvulkan.so.1
+```
+
+All five retain:
+
+```text
+RUNPATH:
+    $ORIGIN
+    -> $PREFIX/glibc/lib
+    -> $HOME/gl/lib
+```
+
+No mapped external ELF has a colliding lookup name with the mapped app-local set.
+
+Therefore:
+
+```text
+no current mapped collision is observed;
+$ORIGIN-first locality remains a candidate invariant;
+future selected providers with colliding names must be rejected unless an
+explicit replacement contract is separately validated.
+```
+
+This does not accept `$HOME/gl/lib` as the target candidate authority.
+
+## Current semantic decomposition
+
+```text
+app.obsidian payload
+    APP_LOCAL_ELF
+    APP_LOCAL_DATA
+
+world.glibc
+    WORLD_SUBSTRATE_ELF
+
+prefix providers
+    PROVIDER_PREFIX_ELF
+
+rootfs ELF providers
+    PROVIDER_ROOTFS_ELF
+
+graphics providers/layers
+    PROVIDER_GRAPHICS_*
+
+locale/font/schema providers
+    PROVIDER_*_DATA
+
+mutable state/cache
+    APP_MUTABLE_STATE
+    RUNTIME_CACHE_*
+```
+
+Physical prefix/rootfs location is provenance, not final ownership.
+
+## Independent graph result
+
+The Phase B1 receipt supports the following read-only graph partition:
+
+```text
+total ELF objects:
+    113
+
+Obsidian entrypoint DT_NEEDED closure:
+    95
+
+union of all app-local ELF DT_NEEDED closures:
+    98
+
+mapped-only dynamic/discovery objects:
+    15
+
+non-ELF provider data objects:
+    17
+```
+
+Entrypoint static closure composition:
+
+```text
+APP_LOCAL_ELF                 2
+WORLD_SUBSTRATE_ELF           6
+PROVIDER_PREFIX_ELF          32
+PROVIDER_ROOTFS_ELF          54
+PROVIDER_GRAPHICS_GBM_ELF     1
+```
+
+Auxiliary app-local static roots:
+
+```text
+libEGL.so
+libGLESv2.so
+libvulkan.so.1
+```
+
+## Mapped-only dynamic/discovery set
+
+The 15 objects outside every app-local `DT_NEEDED` graph are not automatically optional.
+
+Observed directions:
+
+```text
+Vulkan/provider tail:
+    libvulkan_freedreno.so
+    libVkLayer_MESA_device_select.so
+
+X11/DRI/support tail:
+    libX11-xcb.so.1
+    libstdc++.so.6
+    libxcb-dri3.so.0
+    libxcb-present.so.0
+    libxcb-randr.so.0
+    libxcb-sync.so.1
+    libxcb-xfixes.so.0
+    libxshmfence.so.1
+    libzstd.so.1
+
+NSS/security database tail:
+    libfreeblpriv3.so
+    libnssckbi.so
+    libsoftokn3.so
+    libsqlite3.so.0
+```
+
+The next analysis reports these separately so capability ownership can be decided without flattening them into the entrypoint static closure.
+
+## Data capabilities
+
+The retained control contains:
+
+```text
+locale data:
+    12
+
+font data:
+    4
+
+GSettings schema data:
+    1
+```
+
+These are not ELF closure members.
+
+Each capability must be deliberately:
+
+```text
+kept rootfs-backed;
+materialized as selected data;
+or owned by the application domain.
+```
+
+## Phase B2
 
 Recipe:
 
 ```text
-recipe/audit-retained-control-locality.sh
+recipe/analyze-retained-control-static-runtime-closure.sh
+```
+
+It consumes the completed Phase B1 directory and emits:
+
+```text
+resolved-edges.tsv
+entrypoint-static-closure.tsv
+all-app-local-static-closure.tsv
+candidate-elf-partition.tsv
+mapped-only-dynamic.tsv
+data-capabilities.tsv
+closure-class-counts.tsv
+summary.tsv
+claim-boundary.txt
+next-state.txt
+analysis.status
 ```
 
 It launches no process and mutates no promoted runtime state.
 
-It verifies and emits:
+Successful next state:
 
 ```text
-required retained input availability
-candidate-relevant captured/current SHA-256 agreement
-ELF SONAME, DT_NEEDED, RPATH, and RUNPATH facts
-APP_LOCAL versus external provider name collisions
-zero/one/multiple captured candidates for each DT_NEEDED name
-process-class semantic object use
-provider package/capability counts
-explicit claim boundary and next-state decision
+READY_FOR_CAPABILITY_GROUPING_DECISION
 ```
-
-A `PASS` means the retained evidence is still identity-reproducible enough for the next locality/static-runtime decision step.
-
-It does not mean the candidate is ready.
 
 ### Canonical command
 
@@ -248,127 +344,81 @@ cd "$HOME/projects/termux-native-desktop"
 git fetch origin
 git merge --ff-only origin/docs/post-graphics-architecture-audit
 
-CONTROL_OUT="$PREFIX/tmp/selected-obsidian-control-survival-20260710-220652"
-out="selected-obsidian-phase-b1-retained-control-locality-$(date +%Y%m%d-%H%M%S)"
+B1_OUT="$PREFIX/tmp/selected-obsidian-closure/selected-obsidian-phase-b1-retained-control-locality-20260711-192919"
+out="selected-obsidian-phase-b2-static-runtime-closure-$(date +%Y%m%d-%H%M%S)"
 OUT="$PREFIX/tmp/selected-obsidian-closure/$out"
 
-CONTROL_OUT="$CONTROL_OUT" \
+B1_OUT="$B1_OUT" \
 OUT="$OUT" \
 bash \
-  experiments/glibc/selected-obsidian-closure/recipe/audit-retained-control-locality.sh
+  experiments/glibc/selected-obsidian-closure/recipe/analyze-retained-control-static-runtime-closure.sh
 
 tar czf ~/Downloads/$out.tgz $OUT
 ```
 
-Do not replace the final archive name with `results.tgz` or another generic name.
+## Phase B2 interpretation boundary
 
-## Phase B1 decision branches
-
-```text
-PASS with stable identities
-    -> inspect locality-collisions.tsv
-    -> inspect unresolved-needed.tsv
-    -> inspect ambiguous-needed.tsv
-    -> classify whether retained maps are sufficient for edge attribution
-    -> define the next bounded non-graphics closure analysis
-
-FAIL with hash mismatch or missing candidate input
-    -> do not treat current bytes as captured bytes
-    -> check for exact retained artifacts
-    -> otherwise justify one fresh CPU control capture
-
-FAIL with semantic review rows
-    -> resolve semantic classification before materialization
-```
-
-No selected provider bytes are materialized in this phase.
-
-## Remaining required analysis
-
-After Phase B1:
+A PASS means:
 
 ```text
-1. resolve APP_LOCAL versus prefix/rootfs SONAME collisions;
-2. make the locality-shadowing decision explicit;
-3. derive the bounded non-graphics static ELF closure;
-4. compare static closure with runtime-selected multiprocess provider use;
-5. separate required providers from discovery-only/mapped-only objects;
-6. separate ELF providers from font/locale/schema data capabilities;
-7. define candidate composition as multiple capability inputs;
-8. define candidate-specific loader/search context proving actual selection.
+captured DT_NEEDED graph was reproducibly partitioned;
+entrypoint-static, auxiliary app-local, mapped-only, and data sets are explicit;
+capability grouping analysis can proceed.
 ```
 
-Do not rerun graphics-policy workloads merely to complete these analyses unless a graphics claim surface changes.
+It does not mean:
 
-## Candidate flow if the pilot continues
+```text
+exact dlopen callers are proven;
+dynamic providers are optional;
+capability ownership is decided;
+candidate bytes may be materialized;
+search-path selection or workload equivalence is proven.
+```
+
+## Candidate flow after capability grouping
 
 ```text
 retained control evidence
-    -> identity/locality audit
-    -> final semantic/locality analysis
-    -> selected external provider bytes materialization
+    -> Phase B1 identity/locality audit
+    -> Phase B2 static/runtime partition
+    -> capability grouping and data ownership decision
+    -> selected provider bytes materialization
     -> provenance receipt
     -> candidate-specific CPU launch
-    -> actual process maps proof
-    -> app-local set preservation proof
+    -> actual selection/maps proof
+    -> app-local preservation proof
     -> protected substrate proof
     -> zero broad-farm/rootfs provider leakage
-    -> control/candidate workload equivalence
+    -> control/candidate equivalence
 ```
 
-CPU mode remains the preferred first candidate because it separates runtime-closure architecture from hardware graphics provider selection.
+CPU mode remains the preferred first candidate because it separates runtime-closure architecture from hardware graphics selection.
 
-## Minimum candidate success
+## Evidence handoff
 
-```text
-Obsidian visible window opens
-main/renderer/utility or accepted equivalent topology survives
-validated app-local mapped set is preserved
-external selected providers map from candidate-owned bytes
-protected substrate maps only from allowed substrate
-no broad-farm/rootfs provider leakage
-font/locale/schema ownership is explicit
-no unresolved relocation error
-normal user profile is not used as validation authority
-```
-
-## Evidence handoff rule
-
-Every evidence-producing stage defines a stage-specific `out` and `OUT` and ends with:
+Every evidence-producing stage defines stage-specific `out` and `OUT` and ends with:
 
 ```bash
 tar czf ~/Downloads/$out.tgz $OUT
 ```
 
-The tgz is a transport object. The contained receipt and original device evidence root remain authoritative.
+The archive is a transport object. The contained receipt and original device evidence root remain authoritative.
 
 ## Stop line
 
-Do not yet:
+Do not:
 
 ```text
 replace the broad farm globally;
 change the promoted Obsidian launcher for candidate testing;
 rewrite AppDir RPATH globally;
-copy every rootfs path into candidate/lib;
-merge app-local and external provider bytes;
+copy all 113 ELF objects into one candidate/lib;
+drop the 15 mapped-only objects because they are outside static reachability;
+merge locale/font/schema data into the ELF closure;
+remove $ORIGIN or accept $HOME/gl/lib as final candidate authority;
 introduce a universal provider-store framework;
-materialize a candidate before Phase B1 interpretation;
-start PyMOL by extending the same unresolved broad closure;
-interpret graphics closure as selected application closure completion.
-```
-
-## Relation to the next architecture phase
-
-The result of this pilot should inform:
-
-```text
-world.glibc substrate boundary
-shared provider capability grouping
-application-local closure rules
-selected data-provider ownership
-application-domain bindings
-candidate materialization format
-atomic activation managed-leaf set
-PyMOL onboarding architecture
+materialize a candidate before Phase B2 interpretation;
+rerun closed graphics gates;
+start PyMOL by extending the unresolved broad closure.
 ```
