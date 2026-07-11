@@ -8,16 +8,11 @@ PARENT_QUESTION_NOT_CLOSED
 PHASE_B1_PASS
 PHASE_B2_PASS
 PHASE_B3_CORRECTED_PASS
-PHASE_B4_ENTRYPOINT_STATIC_MATRIX_NEXT
+PHASE_B4_PASS
+PHASE_B5_DATA_PROVENANCE_NEXT
 ```
 
-The selected application-domain candidate has **not** yet been materialized or validated.
-
-## Parent question
-
-Can a real Electron AppDir consume selected external provider closures while preserving valid application-local `$ORIGIN` locality and keeping world, provider, data, graphics, security, and mutable-state responsibilities separate?
-
-Graphics startup is already closed separately. This pilot tests the broader application/provider architecture.
+The selected CPU application-domain candidate has not yet been materialized or validated.
 
 ## Authority
 
@@ -28,34 +23,33 @@ docs/refactor/0094-selected-obsidian-phase-b1-retained-control-locality-pass.md
 docs/refactor/0095-selected-obsidian-phase-b2-static-runtime-closure-pass.md
 docs/refactor/0096-selected-obsidian-phase-b3-first-run-script-failure.md
 docs/refactor/0097-selected-obsidian-phase-b3-capability-grouping-pass.md
+docs/refactor/0098-selected-obsidian-phase-b4-entrypoint-static-matrix-pass.md
 ```
 
 ## Current decision
 
 ```text
-selected Obsidian closure:
-    CONTINUE
-
 fresh control capture:
-    NOT REQUIRED FOR IDENTITY DRIFT
+    NOT REQUIRED
+
+static ELF ownership model:
+    TYPED CAPABILITY MANIFESTS
+    OVER ONE DEDUPLICATED APPLICATION-DOMAIN GENERATION
+
+candidate ELF manifest design:
+    READY
 
 candidate materialization:
-    BLOCKED UNTIL STATIC/DATA CAPABILITY OWNERSHIP
+    BLOCKED ON DATA CAPABILITY PROVENANCE
 
 atomic activation:
-    DEFER UNTIL MANAGED OBJECT SET IS DECIDED
+    DEFER UNTIL COMPLETE GENERATION MANIFEST
 
 PyMOL runtime mutation:
     DEFER
 ```
 
-## Phase B1 — retained identity/locality
-
-Receipt:
-
-```text
-selected-obsidian-phase-b1-retained-control-locality-20260711-192919
-```
+## Phase B1 — identity and locality
 
 ```text
 candidate identity matches              136 / 136
@@ -69,63 +63,32 @@ unresolved dependency                      0
 ambiguous dependency                       0
 ```
 
-Locality invariant:
+Candidate invariant:
 
 ```text
 preserve $ORIGIN first;
-reject future selected-provider lookup collisions unless replacement is an
-explicit and separately validated application contract;
+leave application-local ELF in the AppDir;
+reject future external lookup collisions unless replacement is separately validated;
 do not accept $HOME/gl/lib as final candidate authority.
 ```
 
 ## Phase B2 — static/runtime partition
 
-Receipt:
-
 ```text
-selected-obsidian-phase-b2-static-runtime-closure-20260711-195310
-```
-
-```text
-ELF objects                              113
-resolved DT_NEEDED edges                 531
 entrypoint-static closure                 95
 all-app-local static closure              98
 mapped-only dynamic/discovery             15
 non-ELF data capability                   17
-unresolved edge                            0
-ambiguous edge                             0
-duplicate provider lookup                  0
 ```
 
-The B2 archive omitted the nested source copy of `semantic-objects.tsv`; the separately retained B1+B2 archive chain supports full verification. No runtime rerun is justified for that packaging-only boundary.
+The B2 tgz omitted the nested source copy of `semantic-objects.tsv`. The retained B1+B2 archive chain is sufficient for complete verification. No runtime rerun is justified.
 
-## Phase B3 — corrected capability grouping
-
-Failed first receipt:
-
-```text
-selected-obsidian-phase-b3-capability-grouping-20260711-203153
-    INVALID
-    recipe aborted during family lookup
-```
+## Phase B3 — dynamic capability grouping
 
 Corrected receipt:
 
 ```text
 selected-obsidian-phase-b3-capability-grouping-corrected-20260711-204914
-```
-
-Archive SHA-256:
-
-```text
-9700e71be0795a8a2634deb1c369d1aa0d5c0878cbd7b244091318702521ab7c
-```
-
-Captured head:
-
-```text
-2fe66ebca11104fa946848ede18df1ef57ad2d58
 ```
 
 ```text
@@ -135,11 +98,9 @@ unclassified dynamic roots                 0
 shared mapped-only support                  1
 entrypoint direct providers                34
 data capability objects                    17
-runtime launch                             NO
-promoted runtime mutation                  NO
 ```
 
-### Dynamic roots
+Dynamic families:
 
 ```text
 GRAPHICS_VULKAN
@@ -150,35 +111,51 @@ NSS_SECURITY
     libfreeblpriv3.so
     libnssckbi.so
     libsoftokn3.so
+        -> libsqlite3.so.0
 ```
 
-The remaining mapped-only objects are root support dependencies.
-
-### Graphics decision
+Decision:
 
 ```text
 minimum provider-neutral CPU candidate:
-    excludes GRAPHICS_VULKAN dynamic roots
+    exclude GRAPHICS_VULKAN dynamic roots
 
-GPU feature composition:
-    uses the separately closed graphics provider/feature contract
+required CPU application capability:
+    preserve NSS/NSPR static support, dynamic NSS modules, and SQLite support
 ```
 
-The retained old control mapping does not override the current accepted CPU policy receipt.
+The first failed B3 archive remains invalid and preserved separately.
 
-### NSS/security decision direction
+## Phase B4 — entrypoint-static matrix
 
-The first CPU selected candidate must preserve a distinct NSS/security capability containing:
+Receipt:
 
 ```text
-libnss3 direct/static members
-libnspr4 support
-freebl / trust / softokn dynamic modules
-libsqlite3 support required by softokn
-world substrate supplied separately
+selected-obsidian-phase-b4-entrypoint-static-capability-matrix-20260711-211933
 ```
 
-### Entrypoint direct-provider boundary
+Archive SHA-256:
+
+```text
+3829cf756dc2a6526ca59073d245a1696b60fcaada0116ad386b9c941911258a
+```
+
+Captured head:
+
+```text
+3fbe8ce5026b02f6de1e4e9e55c16dbf41beb5aa
+```
+
+```text
+entrypoint direct providers               34
+external direct roots                     28
+external static union                     87
+shared external support                   51
+direct-root overlap pairs                111
+external package dependency edges        144
+```
+
+Direct semantic distribution:
 
 ```text
 APP_LOCAL_ELF                    1
@@ -186,71 +163,131 @@ WORLD_SUBSTRATE_ELF              5
 PROVIDER_PREFIX_ELF              6
 PROVIDER_ROOTFS_ELF             21
 PROVIDER_GRAPHICS_GBM_ELF        1
-----------------------------------
-total                           34
 ```
 
-The 28 external direct roots are heterogeneous. They must not become one permanent Electron provider object merely because the entrypoint names them directly.
+### Dominant GUI closure
 
-## Data capabilities
+The GTK root has:
 
 ```text
-locale:
-    glibc 2.42
-    12 objects
-
-fonts:
-    DejaVu / Noto packages
-    4 objects
-
-GSettings schema:
-    generated rootfs aggregate
-    1 object
-    package=UNOWNED
-    version=UNKNOWN
+60 external objects
+63 full objects
+51 external packages
 ```
 
-Data remains outside ELF closure. Schema provenance remains unresolved.
+Eighteen other external direct roots are fully contained in that closure.
 
-## Phase B4 — entrypoint-static capability matrix
+### Residual static directions
+
+```text
+GBM static ABI support
+compiler support
+ALSA audio
+CUPS printing
+NSS/NSPR security
+udev device observation
+```
+
+Static GBM remains in the CPU candidate because the executable directly requires it. It is separate from Vulkan provider selection and application GPU feature mode.
+
+### Physical candidate direction
+
+Do not create one copied provider tree per direct root. Do not create one untyped flat blob.
+
+Use:
+
+```text
+one receipt-owned application-domain generation
+    -> one deduplicated selected external ELF set
+    -> typed capability manifests
+    -> app-local payload referenced in place
+    -> world substrate referenced but not copied
+    -> graphics provider feature composed separately
+    -> data capabilities stored separately from ELF
+```
+
+## Minimum CPU ELF direction
+
+```text
+include:
+    87 selected external static ELF objects
+    required NSS/security dynamic roots and support
+
+exclude:
+    APP_LOCAL ELF copies
+    WORLD_SUBSTRATE copies
+    Turnip dynamic provider root
+    Mesa Vulkan device-selection layer root
+    GPU-feature-only dynamic support
+```
+
+## Data blocker
+
+Retained data set:
+
+```text
+PROVIDER_LOCALE_DATA:
+    12
+
+PROVIDER_FONT_DATA:
+    4
+
+PROVIDER_SCHEMA_DATA:
+    1
+```
+
+`gschemas.compiled` has stable identity but `UNOWNED/UNKNOWN` aggregate provenance.
+
+## Phase B5 — data capability provenance
 
 Recipe:
 
 ```text
-recipe/derive-retained-control-entrypoint-static-groups.py
+recipe/audit-retained-control-data-capabilities.py
 ```
 
-It consumes the corrected Phase B3 output and derives:
+It consumes the Phase B2 data receipt and performs no workload launch or promoted mutation.
+
+It verifies:
 
 ```text
-28 external direct-root closures;
-root-specific external/full closure counts;
-root package sets;
-shared external support objects;
-pairwise direct-root overlap;
-external package dependency edges;
-entrypoint direct semantic summary;
-root-package union summaries.
+current/captured SHA-256 identity for all 17 data objects;
+rootfs file ownership from dpkg .list files;
+font package ownership;
+GSettings XML and override source manifest;
+GSettings source package ownership;
+glib-compile-schemas binary identity and ownership;
+proposed locale/font/schema ownership directions.
 ```
 
 Outputs:
 
 ```text
-external-direct-root-candidates.tsv
-external-direct-root-closure.tsv
-external-direct-root-packages.tsv
-shared-external-support.tsv
-direct-root-overlap.tsv
-external-package-dependency-edges.tsv
-entrypoint-direct-semantic-summary.tsv
-root-package-group-summary.tsv
+data-object-verification.tsv
+schema-source-manifest.tsv
+schema-compiler-verification.tsv
+data-ownership-decision-input.tsv
 summary.tsv
 claim-boundary.txt
 next-state.txt
 analysis.status
 ```
 
-It launches no process and mutates no promoted state.
+Proposed directions, subject to the receipt:
+
+```text
+PROVIDER_LOCALE_DATA
+    -> WORLD_LOCALE_GLIBC
+    -> reference prefix-managed data
+
+PROVIDER_FONT_DATA
+    -> SELECTED_FONT_DATA
+    -> materialize exact package-owned files
+
+PROVIDER_SCHEMA_DATA
+    -> SELECTED_GSETTINGS_SCHEMA_DATA
+    -> rebuild from owned source manifest and compiler provenance
+```
 
 ### Canonical command
 
@@ -260,73 +297,39 @@ cd "$HOME/projects/termux-native-desktop"
 git fetch origin
 git merge --ff-only origin/docs/post-graphics-architecture-audit
 
-B3_OUT="$PREFIX/tmp/selected-obsidian-closure/selected-obsidian-phase-b3-capability-grouping-corrected-20260711-204914"
-out="selected-obsidian-phase-b4-entrypoint-static-capability-matrix-$(date +%Y%m%d-%H%M%S)"
+B2_OUT="$PREFIX/tmp/selected-obsidian-closure/selected-obsidian-phase-b2-static-runtime-closure-20260711-195310"
+out="selected-obsidian-phase-b5-data-capability-provenance-$(date +%Y%m%d-%H%M%S)"
 OUT="$PREFIX/tmp/selected-obsidian-closure/$out"
 
-B3_OUT="$B3_OUT" \
+B2_OUT="$B2_OUT" \
 OUT="$OUT" \
 python \
-  experiments/glibc/selected-obsidian-closure/recipe/derive-retained-control-entrypoint-static-groups.py
+  experiments/glibc/selected-obsidian-closure/recipe/audit-retained-control-data-capabilities.py
 
 tar czf ~/Downloads/$out.tgz $OUT
 ```
 
-Expected structural values:
+Possible next states:
 
 ```text
-entrypoint_direct_providers             34
-external_direct_roots                   28
-app_local_direct_roots                   1
-world_direct_roots                       5
-prefix_direct_roots                      6
-rootfs_direct_roots                     21
-graphics_gbm_direct_roots                1
+READY_FOR_DATA_OWNERSHIP_DECISION
+REVIEW_DATA_PROVENANCE_GAPS
 ```
 
-The numbers of shared support objects, overlap pairs, and package dependency edges are computed from the authoritative device receipt and must be inspected rather than hard-gated as architecture invariants.
-
-Expected next state:
-
-```text
-READY_FOR_STATIC_CAPABILITY_OWNERSHIP_DECISION
-```
-
-## Claim boundary
-
-Phase B4 may prove:
-
-```text
-external direct-root closure identities;
-root/package dependency overlap;
-shared external support;
-entrypoint direct semantic distribution;
-static grouping inputs.
-```
-
-It does not prove:
-
-```text
-final capability ownership;
-that package boundaries are activation boundaries;
-dynamic-root caller/search paths;
-candidate materialization or actual selection;
-control/candidate equivalence.
-```
+A PASS with `REVIEW_DATA_PROVENANCE_GAPS` is a valid completed audit containing unresolved provenance rows; it is not a script failure.
 
 ## Candidate flow
 
 ```text
-retained control
-    -> Phase B1 identity/locality
+Phase B1 identity/locality
     -> Phase B2 static/runtime partition
-    -> Phase B3 dynamic capability grouping
-    -> Phase B4 entrypoint-static overlap matrix
-    -> static/data ownership decision
-    -> selected CPU candidate manifest/materialization
-    -> candidate-specific launch and maps proof
-    -> app-local preservation
-    -> protected substrate proof
+    -> Phase B3 dynamic grouping
+    -> Phase B4 static overlap and ownership model
+    -> Phase B5 data provenance
+    -> complete CPU candidate manifest
+    -> candidate materialization
+    -> candidate-specific launch/maps proof
+    -> app-local and world-substrate boundary proof
     -> zero broad-farm/rootfs ELF-provider leakage
     -> control/candidate equivalence
 ```
@@ -344,16 +347,14 @@ tar czf ~/Downloads/$out.tgz $OUT
 Do not:
 
 ```text
-replace the broad farm globally;
-change the promoted Obsidian launcher;
-rewrite AppDir RPATH;
-rerun Phase B1/B2/B3 without a source trigger;
-include graphics dynamic roots in the minimum CPU candidate;
-drop NSS dynamic roots or sqlite support;
-copy all 113 ELF objects into one candidate/lib;
-treat all 95 static objects or all 34 direct providers as one semantic provider;
+rerun Phase B1-B4 without a source trigger;
+make one copied provider tree per direct root;
+make one untyped 87-object blob;
+copy app-local or world substrate ELF into the candidate;
+include Vulkan provider dynamic roots in the minimum CPU candidate;
+drop NSS dynamic modules, SQLite support, or static GBM;
 merge locale/font/schema data into ELF closure;
-materialize candidate bytes before static/data ownership is decided;
-rerun closed graphics gates;
-start PyMOL by expanding the unresolved broad closure.
+materialize candidate bytes before Phase B5 interpretation;
+implement activation before the complete generation manifest;
+start PyMOL by expanding the broad farm.
 ```
