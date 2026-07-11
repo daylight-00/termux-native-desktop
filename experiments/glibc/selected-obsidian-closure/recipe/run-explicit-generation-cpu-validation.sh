@@ -7,27 +7,51 @@ REPO=$(git -C "$(dirname "$0")" rev-parse --show-toplevel)
 APP=${APP:-$HOME/gl/apps/obsidian}
 APP_ENTRYPOINT=${APP_ENTRYPOINT:-$APP/obsidian}
 ROOTFS=${ROOTFS:-$PREFIX/var/lib/proot-distro/containers/debian/rootfs}
+VALIDATION_ROOT=${VALIDATION_ROOT:-}
 
 CAPTURE_OUT="$OUT/capture"
-VALIDATION_ROOT="$OUT/runtime"
 LAUNCH_RECEIPT_DIR="$OUT/launch-contract"
-FONTCONFIG_ROOT="$VALIDATION_ROOT/fontconfig"
-FONTCONFIG_FILE="$FONTCONFIG_ROOT/fonts.conf"
-XDG_CONFIG_HOME="$VALIDATION_ROOT/xdg/config"
-XDG_CACHE_HOME="$VALIDATION_ROOT/xdg/cache"
-XDG_DATA_HOME="$VALIDATION_ROOT/xdg/data"
-XDG_STATE_HOME="$VALIDATION_ROOT/xdg/state"
-XDG_RUNTIME_DIR="$VALIDATION_ROOT/xdg/runtime"
-TMPDIR="$VALIDATION_ROOT/tmp"
-LAUNCHER_SOURCE="$REPO/experiments/glibc/selected-obsidian-closure/recipe/launch-obsidian-explicit-generation-cpu.sh"
-LAUNCHER_RUNTIME="$VALIDATION_ROOT/bin/launch-obsidian-explicit-generation-cpu.sh"
-
+RUNTIME_EVIDENCE_DIR="$OUT/runtime-evidence"
+RUNTIME_ROOT_OWNED=NO
 stage=initialization
+
+snapshot_runtime_evidence() {
+    [ -n "${VALIDATION_ROOT:-}" ] || return 0
+    [ -d "$VALIDATION_ROOT" ] || return 0
+
+    rm -rf "$RUNTIME_EVIDENCE_DIR"
+    cp -a "$VALIDATION_ROOT" "$RUNTIME_EVIDENCE_DIR"
+    diff -qr "$VALIDATION_ROOT" "$RUNTIME_EVIDENCE_DIR" >/dev/null
+
+    {
+        printf 'field\tvalue\n'
+        printf 'live_runtime_root\t%s\n' "$VALIDATION_ROOT"
+        printf 'archived_runtime_copy\t%s\n' "$RUNTIME_EVIDENCE_DIR"
+        printf 'snapshot_state\tMATCH\n'
+    } >"$OUT/runtime-snapshot.tsv"
+}
+
+cleanup_runtime_root() {
+    [ "${RUNTIME_ROOT_OWNED:-NO}" = YES ] || return 0
+    case "${VALIDATION_ROOT:-}" in
+        "$PREFIX"/tmp/o10.*)
+            rm -rf "$VALIDATION_ROOT"
+            ;;
+        *)
+            printf 'refusing to remove unexpected runtime root: %s\n' \
+                "${VALIDATION_ROOT:-UNSET}" >&2
+            return 1
+            ;;
+    esac
+}
 
 fail() {
     local message=$1
+    mkdir -p "$OUT"
     printf 'FAIL\n' >"$OUT/analysis.status"
     printf '%s\n' "$stage" >"$OUT/failure-stage.txt"
+    snapshot_runtime_evidence >/dev/null 2>&1 || true
+    cleanup_runtime_root >/dev/null 2>&1 || true
     printf '%s\n' "$message" >&2
     printf 'evidence: %s\n' "$OUT" >&2
     exit 1
@@ -107,6 +131,46 @@ write_current_state "$OUT/current-state-before.tsv" "$CURRENT"
 before_state=$(awk -F $'\t' 'NR == 2 { print $1 }' "$OUT/current-state-before.tsv")
 [ "$before_state" = ABSENT ] || fail "initial explicit validation requires current to be absent"
 
+stage=runtime_root
+if [ -z "$VALIDATION_ROOT" ]; then
+    VALIDATION_ROOT=$(mktemp -d "$PREFIX/tmp/o10.XXXXXXXX") \
+        || fail "failed to allocate short receipt-owned runtime root"
+    RUNTIME_ROOT_OWNED=YES
+else
+    [ -d "$VALIDATION_ROOT" ] && [ ! -L "$VALIDATION_ROOT" ] \
+        || fail "provided VALIDATION_ROOT is not a plain directory"
+fi
+
+FONTCONFIG_ROOT="$VALIDATION_ROOT/f"
+FONTCONFIG_FILE="$FONTCONFIG_ROOT/fonts.conf"
+XDG_CONFIG_HOME="$VALIDATION_ROOT/c"
+XDG_CACHE_HOME="$VALIDATION_ROOT/k"
+XDG_DATA_HOME="$VALIDATION_ROOT/d"
+XDG_STATE_HOME="$VALIDATION_ROOT/s"
+XDG_RUNTIME_DIR="$VALIDATION_ROOT/x"
+TMPDIR="$VALIDATION_ROOT/t"
+LAUNCHER_SOURCE="$REPO/experiments/glibc/selected-obsidian-closure/recipe/launch-obsidian-explicit-generation-cpu.sh"
+LAUNCHER_RUNTIME="$VALIDATION_ROOT/b/launch.sh"
+
+validation_root_length=${#VALIDATION_ROOT}
+tmpdir_length=${#TMPDIR}
+config_home_length=${#XDG_CONFIG_HOME}
+
+{
+    printf 'field\tvalue\n'
+    printf 'validation_root\t%s\n' "$VALIDATION_ROOT"
+    printf 'validation_root_length\t%s\n' "$validation_root_length"
+    printf 'tmpdir\t%s\n' "$TMPDIR"
+    printf 'tmpdir_length\t%s\n' "$tmpdir_length"
+    printf 'xdg_config_home\t%s\n' "$XDG_CONFIG_HOME"
+    printf 'xdg_config_home_length\t%s\n' "$config_home_length"
+    printf 'runtime_root_ownership\t%s\n' "$RUNTIME_ROOT_OWNED"
+    printf 'unix_socket_path_headroom_contract\tTMPDIR_LE_64\n'
+} >"$OUT/runtime-root-contract.tsv"
+
+[ "$tmpdir_length" -le 64 ] \
+    || fail "receipt-owned TMPDIR is too long for the socket-path headroom contract"
+
 stage=runtime_setup
 mkdir -p \
     "$CAPTURE_OUT" \
@@ -168,7 +232,7 @@ printf 'xdg_runtime_dir\t%s\n' "$XDG_RUNTIME_DIR" >>"$OUT/runtime-contract.tsv"
 printf 'tmpdir\t%s\n' "$TMPDIR" >>"$OUT/runtime-contract.tsv"
 
 stage=capture
-if ! \
+if \
     GENERATION_DIR="$GENERATION_DIR" \
     VALIDATION_ROOT="$VALIDATION_ROOT" \
     LAUNCH_RECEIPT_DIR="$LAUNCH_RECEIPT_DIR" \
@@ -194,23 +258,32 @@ if ! \
     bash \
       "$REPO/experiments/glibc/selected-obsidian-closure/recipe/capture-control.sh"
 then
+    capture_rc=0
+else
     capture_rc=$?
     stage=current_guard_after_capture_failure
     write_current_state "$OUT/current-state-after.tsv" "$CURRENT"
     cmp -s "$OUT/current-state-before.tsv" "$OUT/current-state-after.tsv" \
         || fail "current changed during failed explicit-generation capture"
-    stage=capture
     printf '%s\n' "$capture_rc" >"$OUT/capture-exit-status.txt"
+    stage=runtime_evidence_snapshot
+    snapshot_runtime_evidence || fail "failed to snapshot short runtime root"
+    cleanup_runtime_root || fail "failed to remove short runtime root after snapshot"
+    stage=capture
     fail "explicit-generation capture failed"
 fi
+printf '%s\n' "$capture_rc" >"$OUT/capture-exit-status.txt"
 
 stage=current_guard
 write_current_state "$OUT/current-state-after.tsv" "$CURRENT"
 cmp -s "$OUT/current-state-before.tsv" "$OUT/current-state-after.tsv" \
     || fail "current changed during explicit-generation capture"
 
+stage=runtime_evidence_snapshot
+snapshot_runtime_evidence || fail "failed to snapshot short runtime root"
+
 stage=analysis
-if ! \
+if \
     B9_OUT="$B9_OUT" \
     CAPTURE_OUT="$CAPTURE_OUT" \
     OUT="$OUT" \
@@ -221,10 +294,18 @@ if ! \
     python \
       "$REPO/experiments/glibc/selected-obsidian-closure/recipe/analyze-explicit-generation-cpu.py"
 then
+    analysis_rc=0
+else
+    analysis_rc=$?
+    cleanup_runtime_root >/dev/null 2>&1 || true
     [ -f "$OUT/analysis.status" ] || printf 'FAIL\n' >"$OUT/analysis.status"
     [ -f "$OUT/failure-stage.txt" ] || printf '%s\n' "$stage" >"$OUT/failure-stage.txt"
-    exit 1
+    exit "$analysis_rc"
 fi
+
+stage=runtime_root_cleanup
+cleanup_runtime_root || fail "failed to remove short runtime root after successful analysis"
+printf 'PASS\n' >"$OUT/runtime-cleanup.status"
 
 printf '\nselected Obsidian Phase B10 explicit generation validation: PASS\n'
 printf 'evidence: %s\n' "$OUT"
