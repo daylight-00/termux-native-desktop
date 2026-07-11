@@ -1,6 +1,6 @@
 # Status
 
-> **State:** selected-Obsidian-closure corrected Phase B9 after generation-directory publication failure  
+> **State:** selected-Obsidian-closure Phase B10 explicit-generation CPU validation after Phase B9 PASS  
 > **Updated:** 2026-07-12
 
 ## Working conclusions
@@ -17,19 +17,18 @@
 - **Corrected Phase B6 closed schema provenance.** The complete source set is 37 files, and native Termux `glib-compile-schemas` 2.88.2 reproduces the retained aggregate byte-for-byte in default and strict modes.
 - **Phase B7 passed.** All 161 retained semantic objects have one primary lifecycle disposition; all 113 ELF objects are fully and disjointly accounted.
 - **Phase B8 passed read-only.** All 133 materialization inputs still matched; 96 immutable content identities and 175 generation aliases had zero duplicate hashes or alias collisions.
-- **The accepted generation ID is deterministic.** `obsidian-cpu-435ac66d15de2e9a3188` derives from the accepted content/build/base contract.
-- **The first Phase B9 run failed only at hard-link object publication.** It published no object and no generation.
-- **The second Phase B9 run closed content publication.** All 133 source identities matched, strict schema generation was clean, and all 96 content objects—70,897,301 bytes—were published with `renameat2(..., RENAME_NOREPLACE)`.
-- **The 96 content-addressed objects are valid reusable state.** They must not be deleted merely because final-generation publication failed.
-- **The second B9 failure was isolated to the frozen staged-generation directory rename.** `os.rename()` returned `EACCES` after staged construction, validation, fsync, and owner-read-only freeze.
-- **The failure receipt does not isolate the exact Android rule.** Source-root mode, Python/libc syscall path, directory contents, or another filesystem/security rule remain possible until the same-boundary probe runs.
-- **The corrected entry point now probes generation publication before touching the real staged generation.** It tests `0555` and, only after `EACCES/EPERM`, `0700` using `renameat2 RENAME_NOREPLACE` across the same staging-to-generations boundary.
-- **Frozen-root direct publication remains preferred.** If the device rejects it but accepts a writable root, only the complete staged root is temporarily changed to `0700`; all child nodes remain immutable, publication is no-overwrite, and the final root is restored to `0555` and fsynced before return.
-- **No ordinary overwrite-capable rename fallback exists.** Unsupported behavior or any unexpected errno is a hard failure.
-- **Phase B9 still must not create or change `current`.** The final generation is not activated merely by publication.
-- **The immutable generation must validate all 175 aliases, 96 object hashes, embedded manifest hashes, and non-writable modes before Phase B9 passes.**
-- **No workload launch or promoted launcher change occurs in Phase B9.** Explicit-generation loader/workload validation remains the next claim.
-- **Atomic activation and rollback remain mandatory but unimplemented.** They may begin only after explicit-generation validation passes.
+- **Phase B9 passed after two implementation diagnostics.** Hard-link object publication was rejected; frozen-root generation rename was also rejected. Both failures were documented rather than hidden.
+- **All 96 content objects are present and hash-correct.** The final immutable payload is 70,897,301 bytes in the content-addressed store.
+- **The immutable generation is published.** `obsidian-cpu-435ac66d15de2e9a3188` contains 175 aliases plus manifests and receipts.
+- **Android generation publication behavior is explicit.** A `0555` same-boundary probe returns `EACCES`; a `0700` probe and generation publication succeed with `renameat2 RENAME_NOREPLACE`; the final root is restored to `0555` and fsynced.
+- **Generation validation closed with 1851/1851 PASS rows.** Both staged and final trees passed alias, object, manifest, path-set, and immutable-mode checks.
+- **`current` remained absent.** Phase B9 materialized and published candidate bytes but did not activate them, launch a workload, or modify the promoted launcher.
+- **Phase B10 uses only the explicit final generation path.** It must not use `current` or the broad farm.
+- **The Phase B10 CPU launcher overwrites inherited loader policy with `generation/lib:$PREFIX/glibc/lib`, sets exact `--disable-gpu`, clears Vulkan/Mesa overrides, and isolates XDG, temporary, and fontconfig state under the validation receipt.**
+- **The Phase B10 map gate is exact for immutable identities.** It expects 96 selected object-store mappings, 11 app-local mappings, and 18 protected-world mappings—125 identities total.
+- **Receipt-local runtime files and non-GPU device mappings are recorded separately.** Any other external path is a failure.
+- **Rootfs provider, broad-farm, excluded graphics, GPU process/device, and `current` selection are forbidden.**
+- **Atomic activation and rollback remain unimplemented.** They may begin only after Phase B10 passes.
 - **Garbage collection remains forbidden until current, previous-generation, and active-validation references are defined.**
 - **The glibc 2.42 hold remains incident containment.** It is not the final lifecycle contract.
 - **Evidence archives remain stage-specific.** Each stage defines `out` and `OUT` and ends with `tar czf ~/Downloads/$out.tgz $OUT`.
@@ -54,6 +53,7 @@ docs/refactor/0102-selected-obsidian-phase-b7-complete-cpu-manifest-pass.md
 docs/refactor/0103-selected-obsidian-phase-b8-generation-layout-preflight-pass.md
 docs/refactor/0104-selected-obsidian-phase-b9-first-run-hardlink-publication-failure.md
 docs/refactor/0105-selected-obsidian-phase-b9-generation-directory-publication-failure.md
+docs/refactor/0106-selected-obsidian-phase-b9-generation-materialization-pass.md
 docs/refactor/0091-scoped-graphics-policy-promotion-closure.md
 ```
 
@@ -62,21 +62,18 @@ docs/refactor/0091-scoped-graphics-policy-promotion-closure.md
 ### Application-domain/provider architecture
 
 - [x] close retained identity/locality
-- [x] partition static/runtime/data sets
-- [x] group dynamic graphics and NSS/security roots
-- [x] close static/data ownership and corrected schema reproduction
-- [x] pass complete semantic/candidate manifest synthesis
-- [x] pass source/content/alias/generation-layout preflight
-- [x] publish and verify all 96 content-addressed objects
-- [x] diagnose frozen generation-directory publication failure
-- [ ] rerun corrected Phase B9 with same-boundary generation publication probe
-- [ ] validate the explicit generation before activation
+- [x] close static/runtime/data ownership and schema reproduction
+- [x] synthesize the complete candidate manifest
+- [x] close content/alias/generation-layout preflight
+- [x] materialize 96 content objects and publish the immutable generation
+- [x] preserve `current` as absent through materialization
+- [ ] run Phase B10 explicit-generation CPU topology/survival/maps validation
 - [ ] implement and test atomic activation and rollback
-- [ ] validate promoted candidate equivalence
+- [ ] validate the activated candidate and promotion equivalence
 
 ### Runtime ownership and lifecycle
 
-- [ ] define one-generation atomic activation and rollback implementation
+- [ ] implement one-generation atomic activation and rollback
 - [ ] complete world/provider/bridge/toolchain/family ownership split
 - [ ] move over-scoped Electron/security policy out of the world baseline
 - [ ] define glibc upgrade/recovery lifecycle beyond the 2.42 hold
@@ -92,15 +89,13 @@ docs/refactor/0091-scoped-graphics-policy-promotion-closure.md
 Do not:
 
 ```text
-rerun closed graphics gates or Phase B1-B8 without a source trigger;
-delete the 96 valid content-addressed objects;
-retry the corrected entry point at d44de24;
-use ordinary overwrite-capable rename;
-blindly delete staging or final-generation paths before inventory;
-create or replace current during Phase B9;
-activate a partial or unvalidated generation;
-change the promoted launcher before explicit-generation validation;
-make final immutable generations owner-writable;
+rerun Phase B1-B9 without a source or validation trigger;
+create current before Phase B10 passes;
+change the promoted launcher;
+run Phase B10 through the broad farm;
+include Vulkan provider/layer objects in CPU mode;
+mutate the published generation or its content objects;
+allow runtime state outside the receipt-owned validation root;
 implement garbage collection before current/previous/active references exist;
 start PyMOL by extending the broad farm;
 use ambiguous evidence archive names.
@@ -108,7 +103,7 @@ use ambiguous evidence archive names.
 
 ## Evidence policy
 
-Identity, source-at-copy verification, content publication, generation publication mode, immutable-generation validation, explicit-generation selection, atomic activation, rollback, and workload equivalence are separate claims. The 96 object-store entries may be closed while generation publication remains open.
+Materialization, explicit loader selection, exact mapped identity, process survival, atomic activation, rollback, and promoted equivalence are separate claims. Phase B9 closes the physical generation only; Phase B10 must prove actual use of that generation.
 
 ```bash
 out=<stage-specific-slug>-$(date +%Y%m%d-%H%M%S)
