@@ -1,6 +1,6 @@
 # glibc Application Layer
 
-This guide integrates the recovered `gl` layer README with the current repository structure. Detailed experiment provenance remains under `experiments/glibc/` and `experiments/gpu/`.
+This guide integrates the recovered `gl` layer README with the current repository structure. Detailed experiment provenance remains under `experiments/glibc/`, `experiments/gpu/`, and `docs/refactor/`.
 
 ## Goal
 
@@ -76,7 +76,8 @@ For a conventional tarball or extracted application tree:
 7. create a package-owned launcher that sources `~/gl/env` and clears incompatible preload state at process entry;
 8. if the workload deliberately requires the managed hardware Vulkan provider, source `~/gl/policy/vulkan/freedreno.sh` in that launch branch;
 9. add an OpenGL bridge only in the consumer that owns it, such as `gl-run` for Zink;
-10. validate CPU/basic GUI startup separately from GPU enablement and selected-provider evidence.
+10. validate CPU/basic GUI startup separately from GPU enablement and selected-provider evidence;
+11. make application-owned configuration and user-data paths receipt-local before claiming isolated validation.
 
 AppImage is supported as an input adapter by extracting the embedded SquashFS payload first, then reusing the same onboarding pipeline. See `experiments/glibc/obsidian-appimage/`.
 
@@ -103,7 +104,7 @@ The source-only profile:
 
 selects the managed glibc Freedreno ICD by exporting both Vulkan loader variables together. It is applied only by consumers that deliberately require that provider.
 
-Current compositions:
+Current accepted compositions:
 
 ```text
 gl-run
@@ -126,13 +127,82 @@ Obsidian GUI GPU branch
     -> ANGLE Vulkan flags
     -> no Zink/Gallium override
 
-CPU branches and Obsidian CLI
+VS Code / Obsidian CPU branches
+    -> source gl/env
+    -> GL_GPU=0
+    -> no explicit Vulkan provider
+    -> no OpenGL bridge/Gallium override
+    -> exact --disable-gpu
+
+Obsidian CLI
     -> source gl/env
     -> no explicit Vulkan provider
     -> no OpenGL bridge/Gallium override
 ```
 
 This separates ABI/session sanitation, provider selection, bridge selection, and application feature mode.
+
+The complete accepted transaction is recorded in:
+
+```text
+docs/refactor/0091-scoped-graphics-policy-promotion-closure.md
+```
+
+## Application-state isolation
+
+Validation must not rely on the user's normal profile state.
+
+Accepted patterns:
+
+```text
+VS Code:
+    receipt-local user-data directory
+    receipt-local extensions directory
+
+Obsidian:
+    XDG_CONFIG_HOME=<receipt-local config root>
+    actual user data=<receipt-local config root>/obsidian
+```
+
+For Obsidian, passing only `--user-data-dir` was insufficient in the first probe because the application retained `$HOME/.config/obsidian` as its effective authority. The corrected model aligns `XDG_CONFIG_HOME`, the application-derived directory, and `DevToolsActivePort` observation.
+
+See:
+
+```text
+docs/refactor/0088-obsidian-user-data-authority-and-cdp-path-false-negative.md
+docs/refactor/0089-current-obsidian-gpu-environment-and-primary-identity-pass.md
+docs/refactor/0090-current-obsidian-cpu-policy-and-survival-pass.md
+```
+
+## Evidence interpretation
+
+Selected GPU identity is not inferred from one mapped library.
+
+Promoted Electron GPU acceptance correlates:
+
+```text
+observable launch environment and argv
+CDP primary device identity
+ANGLE/Vulkan feature mode
+managed provider mapping
+KGSL device-node mapping
+```
+
+CPU acceptance requires:
+
+```text
+GL_GPU=0
+no explicit Vulkan pair
+no Mesa/Gallium bridge/device override
+exact --disable-gpu
+no GPU-enablement flags
+viable renderer/main topology
+bounded main-process survival
+```
+
+A process named `gpu-process` may or may not exist in CPU mode. VS Code retained one with `--use-gl=disabled`; Obsidian created none in its canonical CPU receipt. The contract is selected policy and effective mode, not a universal process-name rule.
+
+Empty or near-empty child `/proc/<pid>/environ` is an observability boundary. It is not proof that a value is absent and not a mismatch by itself.
 
 ## Common failure signatures
 
@@ -145,6 +215,7 @@ This separates ABI/session sanitation, provider selection, bridge selection, and
 7. **Wrong Vulkan ICD** — a glibc process inherits the bionic ICD or applies the wrong profile; confirm `~/gl/env` sanitizes first and the intended profile sets both loader variables.
 8. **Unexpected Zink in ANGLE/CPU workload** — the bionic session's `MESA_LOADER_DRIVER_OVERRIDE` crossed the boundary; confirm the baseline clears it and `GALLIUM_DRIVER`.
 9. **Unexpected llvmpipe** — explicit provider policy was absent or failed; note that implicit discovery is allowed to select software providers.
+10. **CDP endpoint timeout with a live Electron app** — application-owned user-data authority and the observed `DevToolsActivePort` path disagree.
 
 ## Current promoted owners
 
@@ -177,8 +248,11 @@ Runtime state remains outside Git tracking: application trees, the farm, Mesa in
 - Miniforge/Conda/Mamba with environment creation and compiled NumPy workload;
 - promoted glibc OpenGL 4.6 through `gl-run` -> Zink -> Turnip;
 - promoted ANGLE Vulkan -> Turnip/Adreno 730 for official VS Code;
+- promoted VS Code CPU branch with hostile-policy sanitation, exact `--disable-gpu`, and bounded survival;
+- promoted Obsidian GPU branch with isolated application-owned user data, CDP primary Turnip/Adreno 730, WebGL, and WebGL2;
+- promoted Obsidian CPU branch with isolated application-owned user data, exact `--disable-gpu`, renderer `--disable-gpu-compositing`, and bounded survival;
 - same-consumer VS Code policy A/B showing explicit Turnip/Adreno versus implicit LVP/llvmpipe.
 
-Because the baseline sanitation contract was expanded after the first promoted workload receipts, current-HEAD regression reruns are required before final promotion closure.
+The scoped graphics-policy promotion transaction is closed. Previously accepted gates should be rerun only when their claim surface changes; see `docs/refactor/0091-scoped-graphics-policy-promotion-closure.md` for the revalidation triggers.
 
 The next major scientific workload target is PyMOL.
