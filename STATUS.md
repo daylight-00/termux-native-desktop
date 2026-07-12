@@ -1,34 +1,26 @@
 # Status
 
-> **State:** selected-Obsidian N2 provider evidence PASS; normalized N3 authority classification is next; successor generation and activation remain blocked  
+> **State:** corrected selected-Obsidian N3 normalization, source-recipe evidence, and exact binary-artifact comparison PASS; priority provider-authority review is active; successor generation and activation remain blocked  
 > **Updated:** 2026-07-12
 
 ## Working conclusions
 
 - **The project remains architecturally on track.** The prototype, ownership refactor, ABI recovery, selected D-Bus pilot, scoped graphics closure, and first selected-Obsidian generation each answered valid questions without becoming automatic final architecture.
-- **Phase B1-B8 are closed.** Retained identity, locality, static/runtime partition, capability grouping, data provenance, semantic disposition, and first-generation design are explicit.
-- **Phase B9 passed.** Ninety-six content objects totaling 70,897,301 bytes are hash-correct; the 175-alias immutable generation is published; staged/final validation is 1851/1851 PASS.
-- **The existing generation remains immutable and unactivated.** `current` is absent and the promoted launcher is unchanged.
-- **Passive B10 startup, topology, 100-second survival, maps capture, and map-selection diagnosis passed.** Broad-farm, rootfs-provider, and `current` mappings are zero.
-- **The no-RPATH-patch decision remains accepted.** Xau/Xdmcp world selection is understood; duplicate materialization is removed only in a successor generation. Their semantic owner name remains provisional because prefix selection is not proof of substrate ownership.
-- **PRoot is a reproducible oracle/supply mechanism, not a workstation baseline.** `debian:trixie-slim → apt upgrade → VS Code` is a valid historical oracle scenario, not the promoted runtime baseline.
-- **The later Debian font installation may be valid diagnostic control evidence, but it is not accepted font-provider authority.** The final target remains an explicit native-space font provider.
-- **Minimality means minimum persistent authority, hidden accumulated state, promoted dependency surface, and policy scope.** It does not require the smallest package count inside every disposable oracle scenario.
-- **The selected generation is a strong architecture-discrimination result, not yet an approved final provider composition.** Its 91 ELF objects span 71 package provenance labels and were selected from the historical control graph.
-- **N2 read-only provider evidence passed and is closed.** The accepted receipt preserved 161 selected/reference rows, 20 pixbuf/icon/MIME diagnostic rows, all 96 generation identities, and an exhaustive current `$PREFIX/glibc` inventory without changing `current`, the generation, or dpkg state.
-- **The current prefix surface contains 27,279 paths from 86 package identities, including 958 ELF files.** Only 26 packages have selected/reference paths or retained direct-consumer edges in this Obsidian graph; the other 60 are not automatically removable or runtime-worthy.
-- **The current device receipt observes glibc package version 2.42.** Older records describing other versions remain valid for their historical transactions.
-- **Two unowned loader-state files require explicit lifecycle ownership:** `$PREFIX/glibc/etc/ld.so.conf` and `$PREFIX/glibc/etc/ld.so.cache`. Missing dpkg ownership is not itself a semantic class.
-- **The raw census is exhaustive but not the N3 decision surface.** It contains 26,419 OPEN/UNRESOLVED rows, including 26,213 `unassigned.prefix-surface` rows. N3 must normalize package surface before provisional judgment.
-- **Provider-source authority remains the immediate missing layer.** The project has not yet decided, across the complete selected/reference set, whether each object belongs to world core, a Termux/Android integration provider, a generic shared capability, application-local ownership, an application supplement, a data provider, toolchain-only state, or oracle-only state.
-- **Physical source is not semantic authority.** `$PREFIX/glibc` does not automatically mean world substrate; Debian mapping does not automatically mean final provider; repository availability does not automatically mean clean-runtime membership.
-- **The current `gcc-glibc` plus explicit-loader wrappers are a proven build/supply toolchain implementation.** They are not automatically part of the minimum workstation runtime profile. Debian GCC is primarily an oracle/reference build tool unless a specific build requires it.
-- **`glibc-runner` necessity is unproven.** Do not include it in the clean baseline by availability alone; it remains a bootstrap/world-entry candidate until a unique responsibility is demonstrated.
-- **Runtime selection is ahead of supply reproducibility.** Materialization still depends on installed absolute source paths rather than locked package/artifact/source receipts.
-- **Generation identity still needs causal separation.** Content, provenance, runtime composition, installation, and validation identities are currently mixed or incomplete.
-- **Generation rollback is scoped.** A `current` pointer cannot roll back world substrate, external world providers, application payload, launcher, oracle state, or user state.
-- **The controlled pixbuf diagnostic remains permitted only as a non-promoting discriminator.** It must not authorize all discovered modules/data, successor materialization, or `current` activation.
-- **Evidence archives default to `$HOME/Downloads`; unpacked receipt roots remain under stage-specific `$PREFIX/tmp` paths.**
+- **Phase B1-B10 evidence remains valid.** The existing selected generation is immutable and unactivated; `current` is absent and the promoted launcher is unchanged.
+- **The selected generation is architecture-discrimination evidence, not yet an approved final provider composition.** Its runtime success does not choose source authority.
+- **N2 read-only provider evidence is closed.** It preserved 27,279 current glibc-prefix paths, 86 package identities, 958 prefix ELF objects, 161 selected/reference rows, 20 supplemental rows, and two unowned loader-state paths.
+- **Corrected N3 normalization is closed.** The 26,419 raw census rows were reduced to a 1,551-row normalized decision surface without accepting provider authority.
+- **Source-recipe evidence is closed.** All 28 priority packages map to historical installed-version recipes. Twenty-seven have one matching recipe tree; `libwayland-glibc 1.23.1` has two historical trees.
+- **Exact binary supply identity is established for the 28 priority packages.** Twenty-eight indexed `.deb` artifacts totaling 42,864,296 bytes were verified by repository path, size, SHA-256, Package, Version, and Architecture.
+- **Every artifact data member matches the installed filesystem.** All 6,016 regular files, 226 symlinks, and 645 directories match; all 462 ELF members are byte-identical to their live counterparts. There are zero missing paths or content, target, or type mismatches.
+- **This closes mutable installed-path supply ambiguity for the 28 priority package identities.** It does not prove that all 28 packages belong in the minimum workstation runtime.
+- **`libwayland-glibc` older-tree pressure is strong but not cryptographically closed.** The accepted artifact has uniform 2024-11-13 timestamps shortly after the older recipe commit and before the newer tree existed; absence of direct `libm` NEEDED alone does not prove which tree built it.
+- **`glibc 2.42` is the observed installed substrate artifact.** The current source repository HEAD contains glibc 2.43 and is not treated as installed provenance.
+- **`glibc-runner` remains unproven runtime authority.** Exact artifact identity does not create a minimum-runtime claim.
+- **Package boundaries remain distinct from semantic provider boundaries.** Packages can mix runtime libraries, utilities, headers, data, documentation, and maintenance surfaces.
+- **Storage follows subsystem ownership.** Source, cache, unpacked receipts, and scratch state use Termux-private or ignored repository `work/` paths. `$HOME/Downloads` is reserved for final files that must cross the Termux/Android-user handoff boundary.
+- **Provider authority is now the immediate layer.** Review must combine normalized semantic responsibility, source recipes and patches, exact binary identity, application-local alternatives, minimum profile, and update ownership.
+- **Successor composition remains blocked.** No provider choice, runtime profile, update contract, activation, or rollback scope is accepted merely because exact artifacts are reproducible.
 
 ## Architecture authority
 
@@ -49,88 +41,115 @@ docs/refactor/0117-provider-authority-intervention-adoption-and-execution-order.
 docs/refactor/0118-selected-obsidian-provider-authority-census-schema-and-evidence-plan.md
 docs/refactor/0119-selected-obsidian-provider-authority-n2-read-only-evidence-collector.md
 docs/refactor/0120-selected-obsidian-provider-authority-n2-device-receipt-review.md
+docs/refactor/0122-selected-obsidian-provider-authority-n3-receipt-review-and-normalization-correction.md
+docs/refactor/0123-selected-obsidian-provider-authority-corrected-n3-receipt-pass-and-source-comparison-entry.md
+docs/refactor/0124-selected-obsidian-provider-authority-source-recipe-evidence-collector.md
+docs/refactor/0128-selected-obsidian-provider-authority-source-recipe-receipt-pass.md
+docs/refactor/0129-selected-obsidian-provider-authority-bounded-binary-artifact-comparison-collector.md
+docs/refactor/0131-selected-obsidian-provider-authority-binary-artifact-receipt-pass.md
+docs/refactor/0132-evidence-storage-and-android-downloads-handoff-boundary.md
 ```
 
-`0116` remains the end-to-end intervention authority. `0117`–`0120` define and close the N0–N2 execution transaction and the normalization-first N3 entry.
+`0116` remains the end-to-end intervention authority. `0123`, `0128`, and `0131` close the normalized, source-recipe, and binary-artifact evidence transactions. They do not close semantic provider authority.
+
+## Accepted receipt identities
+
+### Corrected N3 normalization
+
+```text
+archive:
+    selected-obsidian-provider-authority-n3-normalized-classification-results-20260712-165805.tgz
+
+SHA-256:
+    4dd86c4af956b447ed1829d6b5d604f43d10a17e5b3dcb3ddff3e9b48c377a9c
+```
+
+### Source-recipe evidence
+
+```text
+archive:
+    selected-obsidian-provider-authority-n3-source-recipe-evidence-results-20260712-185001.tgz
+
+SHA-256:
+    c8160016267f3ff83b348146240f74f808ffbc93374a6f75988231ef22408cdb
+```
+
+### Binary-artifact comparison
+
+```text
+archive:
+    selected-obsidian-provider-authority-n3-binary-artifact-comparison-results-20260712-194542.tgz
+
+SHA-256:
+    da16d49acf54cbc8b6824e3974f08fea9ad0d6daf91687f4666d6c48d0b7567f
+```
 
 ## Current audit pressure
 
-### P0 — preserve bounded evidence work
+### P0 — preserve accepted state
 
-The pixbuf Vault-open diagnostic may continue only as:
-
-```text
-named diagnostic/oracle capability experiment
-same immutable unactivated generation
-no package install
-no generation mutation
-no current activation
-no promoted launcher change
-rootfs inputs treated as diagnostic-only
-```
-
-### P1 — normalized provider-authority census
-
-N2 raw evidence is closed. N3 must retain the 27,279-path inventory unchanged and form a smaller decision surface from:
+Do not mutate:
 
 ```text
-selected/reference rows: 161
-pixbuf/icon/MIME rows: 20
-prefix ELF rows: 958
-unowned loader-state rows: 2
-package aggregate rows: 86
-non-runtime files aggregated by package and semantic path class
+existing selected generation
+current pointer
+promoted launcher
+dpkg package state
+ld.so.conf or ld.so.cache
+closed graphics decisions
 ```
 
-For every normalized authority row, demand:
+### P1 — priority provider-authority review
+
+For each of the 28 priority package identities, decide at object/capability scope:
 
 ```text
-semantic role
-minimum scope
-current path and provenance
-candidate provider sources
-Termux/Android adaptation rationale
-app-local relation
-ABI/version relation
-dependent domains
-runtime or research profile
-update owner/trigger
-provisional authority decision
+semantic responsibility
+minimum valid scope
+relevant source authority
+Termux/Android adaptation necessity
+application-local alternative
+runtime versus research profile
+update owner and trigger
+locked artifact identity
+remaining discriminating evidence
 ```
 
-Required classes:
+Review order:
 
 ```text
-WORLD_CORE_SUBSTRATE
-PLATFORM_INTEGRATION_PROVIDER
-GENERIC_SHARED_CAPABILITY_PROVIDER
-APPLICATION_LOCAL
-APPLICATION_DOMAIN_SUPPLEMENT
-DATA_CAPABILITY_PROVIDER
-TOOLCHAIN_ONLY
-ORACLE_ONLY
-MUTABLE_OR_CACHE
+world and platform boundary:
+    glibc
+    termux-exec-glibc
+    glibc-runner
+    X11/XCB packages
+
+generic shared capabilities:
+    compression, identity, XML, FFI, numeric, regex, DRM, Wayland, Kerberos
+
+tool and maintenance pressure:
+    e2fsprogs-glibc
+    gcc-libs-glibc package split
 ```
 
-### P2 — source/reference choice
+### P2 — separate package and object dispositions
 
-Demand this order:
+A package-level exact artifact receipt may contain:
 
 ```text
-semantic role
-    -> relevant reference authority
-    -> candidate comparison
-    -> provider choice
-    -> locked supply artifact
-    -> update/revalidation scope
-    -> successor composition
+runtime ELF providers
+tools and executables
+headers and static files
+data and configuration
+documentation
+maintenance-only surfaces
 ```
 
-Reject path-first selection.
+Do not promote the entire package surface when only a bounded capability is required.
 
 ### P3 — runtime and research profiles
 
-Demand separate declarations for:
+Maintain separate declarations for:
 
 ```text
 minimum workstation runtime profile
@@ -138,21 +157,18 @@ research/build/maintenance profile
 oracle seed and named scenarios
 ```
 
-Compiler/toolchain packages and oracle packages do not enter the runtime profile without a runtime claim.
-
 ### P4 — update domains
 
 Demand distinct contracts for:
 
 ```text
 world substrate update
-platform/generic provider update
+platform integration update
+generic provider update
 application payload update
 toolchain update
 oracle scenario update
 ```
-
-Candidate acquisition may be latest-first; active runtime promotion remains gate-controlled.
 
 ### P5 — successor generation
 
@@ -161,33 +177,44 @@ Lift the block only after:
 ```text
 provider authority decisions are complete enough for the selected set
 fonts and pixbuf/icon/MIME capabilities are bounded
-locked supply receipts replace mutable source-path authority
+locked artifact receipts are incorporated into supply contracts
 content/provenance/composition/install/validation identities are separated
 activation and rollback scopes are honest
 ```
+
+## Storage and handoff policy
+
+```text
+repository ignored work tree:
+    source checkouts
+    raw artifacts and caches
+    unpacked receipts
+    temporary transaction state
+
+$HOME/Downloads:
+    final handoff archives and explicitly requested exports only
+```
+
+The archive destination does not define the workspace destination.
 
 ## Current stop lines
 
 Do not:
 
 ```text
-materialize or activate the unified successor generation before the provider-authority audit
-classify 26,213 unassigned raw prefix paths one by one without normalization
-treat every `$PREFIX/glibc` object as world substrate
-treat every selected Debian object as a final provider
-treat all 86 installed packages as runtime
-install or retain glibc-runner, GCC, fonts, pixbuf, or other packages in the clean runtime profile by availability alone
-use Debian slim defaults as promoted runtime defaults
-use glibc-repo membership as automatic semantic ownership
+materialize or activate a successor before provider-authority review closes
+treat every $PREFIX/glibc object as world substrate
+treat package or repository membership as semantic authority
+treat all 86 installed packages or all 28 priority packages as runtime
+promote glibc-runner by availability
+merge toolchain or maintenance utilities into the minimum runtime profile
 replace valid application-local providers without evidence
-merge toolchain packages into the minimum runtime profile
-let oracle updates mutate promoted runtime automatically
-turn the pixbuf diagnostic into final provider selection
-mutate ld.so.conf, ld.so.cache, or the existing generation during classification
+reopen closed graphics gates
 patch RPATH
-create `current` before provider, supply, composition, activation, and rollback contracts close
+mutate loader state
+create current
 ```
 
 ## Evidence policy
 
-Prototype validity, oracle validity, package-source provenance, semantic provider authority, runtime composition, interactive capability, update compatibility, activation, rollback, and clean reconstruction are separate claims. A working, mapped, installed, or package-owned object is not automatically the correct final provider.
+Prototype validity, oracle validity, package-source provenance, exact binary supply identity, semantic provider authority, runtime composition, interactive capability, update compatibility, activation, rollback, and clean reconstruction are separate claims.
