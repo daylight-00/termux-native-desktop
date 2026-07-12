@@ -1,0 +1,4 @@
+partition_id	partition_path	row_count	sha256	identity_column
+soname-runtime	runtime-alias-authority/soname-runtime.tsv	40	45f101ceb64855cde0ca2574ac4969ac25f3be5b138950b5cd6336d2fcecbf16	alias_id
+linker-development	runtime-alias-authority/linker-development.tsv	41	e24d2d90d191ad46e7a9fcbb571dbab99ae250ae7f855edafdbbed6527886501	alias_id
+loader-and-internal	runtime-alias-authority/loader-and-internal.tsv	3	ec91f32a5d275d9fef9cd7bb5e2680d797d68a8d03920c2a098c5c7f2d679ed8	alias_id
