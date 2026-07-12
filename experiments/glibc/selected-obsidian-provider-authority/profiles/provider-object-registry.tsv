@@ -1,0 +1,5 @@
+partition_id	partition_path	row_count	sha256	identity_column
+world-and-data	provider-object-registry/world-and-data.tsv	18	f575a66d9d67d4714489582eef686b4e80ae35eb34e9bb44c4f374b39d08c9f0	object_id
+x11-and-platform	provider-object-registry/x11-and-platform.tsv	17	d0908b8ad0a0fc9e80c3c651110eef2670f81179e6e482c5e0ba9792756f5108	object_id
+generic-a-l	provider-object-registry/generic-a-l.tsv	22	35daf856d42b58b7eaad9e2a47190ac985e4d16845e759f2afe9017739ea2e91	object_id
+generic-m-z	provider-object-registry/generic-m-z.tsv	3	7e3d922409eb03287c21d73d66206a44ebf6f869437777de580b93a839060bd6	object_id
