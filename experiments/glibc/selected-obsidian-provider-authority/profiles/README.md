@@ -1,31 +1,40 @@
-# Selected Obsidian Provider Profiles and Locked Members
+# Selected Obsidian Provider Fragments and Locked Members
 
 ## Status
 
 ```text
-priority provider-authority review:
-    PARTIAL PASS
+priority provider evidence:
+    PASS / BOUNDED 59-OBJECT SUBSET
 
-reviewed selected/reference objects:
-    59 / 59
+exact artifact/member supply locks:
+    PASS
 
-profile content memberships:
-    63
+package-wide runtime rejection:
+    PASS
 
-required alias rows:
-    93
+provider semantic authority:
+    PARTIAL / CORRECTION REQUIRED
 
-locked member rows:
-    156
+provider fragment draft:
+    PASS / NON-MATERIALIZING
 
-profile/package artifact locks:
-    35
+global authority coverage:
+    OPEN
 
-materialization authorized:
-    NO
+target-layout schema:
+    ALLOWED TO DESIGN
+
+target-layout population and materialization:
+    BLOCKED
 ```
 
-These files convert the accepted object-scoped authority decisions into profile-shaped, exact artifact-member locks. They are not a complete runtime manifest, installation plan, successor generation, or activation authorization.
+These files lock exact supply members and describe provider-fragment pressure. They are not complete runtime profiles, an installation plan, a successor generation, or activation authorization.
+
+Current audit authority:
+
+```text
+docs/refactor/0135-selected-obsidian-provider-profile-lock-draft-architecture-audit.md
+```
 
 ## Files
 
@@ -42,159 +51,245 @@ member-locks/
     optional-termux-exec-provider.tsv
 ```
 
-## Profile definitions
+Structured audit findings:
 
 ```text
-world-substrate-selected
-    selected glibc world objects and locale data only
-
-base-obsidian-x11-provider
-    reviewed non-world providers required by the base Obsidian X11 graph
-
-graphics-freedreno-provider
-    incremental conditional provider objects for the accepted Freedreno path
-
-gtk-font-device-compat-provider
-    conditional GTK/font/device/Wayland compatibility objects
-
-printing-provider
-    conditional printing dependency objects
-
-optional-termux-exec-provider
-    optional Termux exec interposer object
+../review/post-0134-architecture-audit-findings.tsv
 ```
-
-Parent profiles express logical composition pressure. They do not authorize copying, merging, installation, activation, or mutation.
 
 ## Cardinality
 
 ```text
-profile                              content  aliases  artifact locks
-world-substrate-selected                  18        3               1
-base-obsidian-x11-provider                11       20               9
-graphics-freedreno-provider               11       22               7
-gtk-font-device-compat-provider           12       25               9
-printing-provider                         11       22               8
-optional-termux-exec-provider              1        0               1
+unique reviewed objects:
+    59
 
-unique reviewed objects                   59
-profile content memberships               63
-alias memberships                         93
-total member-lock rows                   156
+provider-fragment content memberships:
+    63
+
+artifact alias rows:
+    93
+
+locked member rows:
+    156
+
+profile/package artifact edges:
+    35
+
+provider fragments:
+    6
 ```
 
-The content-membership total exceeds 59 because shared objects such as `libcap.so.2`, `libffi.so.8`, and `libz.so.1` belong to more than one conditional capability profile.
+The 59-object denominator is the bounded priority subset, not the complete selected/reference/application-domain authority set.
+
+Shared objects such as `libcap.so.2`, `libffi.so.8`, and `libz.so.1` can have multiple fragment memberships while retaining one canonical content and supply authority identity.
+
+## Provider fragments
+
+The existing identifiers are retained for continuity, but they are provider fragments rather than deployable profiles.
+
+```text
+world-substrate-selected
+    reviewed glibc world-core objects plus glibc-coupled locale data
+
+base-obsidian-x11-provider
+    reviewed non-world members with passive/base X11 pressure
+
+graphics-freedreno-provider
+    reviewed conditional Freedreno provider members
+
+gtk-font-device-compat-provider
+    reviewed conditional compatibility members; not a final GTK/font/device provider
+
+printing-provider
+    reviewed conditional printing dependency members; not a complete printing provider
+
+optional-termux-exec-provider
+    exact optional interposer member; not inherited by default
+```
+
+`parent_profiles` expresses logical pressure only. It does not establish installation inheritance, complete dependencies, target layout, activation scope, or rollback scope.
 
 ## Member-lock semantics
 
 ### `CONTENT`
 
-A `CONTENT` row locks one exact regular-file member from an accepted indexed `.deb` artifact.
+A `CONTENT` row proves one exact regular-file member in an accepted exact `.deb` artifact.
 
-Required identity:
+It locks:
 
 ```text
-package + version
-artifact SHA-256
-artifact member path
-member mode and size
-member content SHA-256
-selected evidence row
-semantic/provider authority state
-source recipe state
-update domain
+package and version;
+artifact SHA-256;
+artifact member path;
+artifact member mode and size;
+member content SHA-256;
+selected evidence identity;
+current semantic/provider decision state;
+source-recipe evidence state;
+update domain.
+```
+
+It does not define:
+
+```text
+future target path;
+target mode or ownership;
+final semantic source choice;
+runtime necessity outside the named fragment;
+materialization authorization.
 ```
 
 ### `ALIAS`
 
-An `ALIAS` row records a package-provided symlink that resolves to a reviewed content member.
+An `ALIAS` row records an exact package-provided symlink member and literal target.
 
-Aliases are not inferred from SONAME alone. They are copied from the exact accepted artifact inventory and retain their literal link target.
+It is artifact supply evidence, not automatic runtime inclusion.
 
-## Path boundary
+Current alias rows include both SONAME aliases and unversioned names such as:
+
+```text
+libX11.so
+libexpat.so
+libstdc++.so
+libdrm.so
+```
+
+Before target population every alias must be classified as:
+
+```text
+SONAME_RUNTIME_ALIAS
+PROVEN_DLOPEN_RUNTIME_ALIAS
+LOADER_OR_ENTRYPOINT_ALIAS
+LINKER_DEVELOPMENT_ALIAS
+PACKAGE_INTERNAL_RELATIVE_ALIAS
+UNRESOLVED_ALIAS
+```
+
+Only runtime-authorized aliases may enter a runtime target. Until classification, use the term `artifact alias rows`, not `required aliases`.
+
+## Path and mode boundary
 
 ```text
 artifact_member_path:
-    authoritative path inside the exact .deb data archive
+    immutable supply identity inside the exact .deb archive
 
 installed_source_path:
-    historical live evidence path used to establish byte equivalence
+    historical evidence path used for live equivalence
 
-future target path:
-    not yet defined
+artifact member mode:
+    exact supply metadata
+
+future target path/mode/owner:
+    unresolved and independently owned
 ```
 
-`installed_source_path` must never become successor target authority by path copying. A future extraction/target contract must map accepted artifact members into explicitly owned world/provider/application domains.
+Neither installed paths nor artifact modes become target policy by copying them into a manifest.
 
-## Artifact locks
-
-`provider-profile-artifact-locks.tsv` records the exact indexed artifact required to supply each profile's members.
-
-An artifact lock means:
+A target-layout schema must define:
 
 ```text
-this exact package artifact can supply accepted members
+target_domain;
+target_relative_path;
+target_node_type;
+target_mode_policy;
+target_owner_policy;
+target_mutability;
+target_alias_class;
+target_collision_policy.
 ```
 
-It does not mean:
+## Supply authority boundary
+
+`provider-profile-artifact-locks.tsv` proves that one exact artifact can supply accepted members.
+
+It does not prove:
 
 ```text
-the entire package is runtime content
-the package may be installed
-maintainer scripts may run
-all data members may be copied
-the artifact owns the target layout
+the entire package is runtime content;
+the package may be installed;
+maintainer scripts may run;
+the artifact is the final source for every generic capability;
+the artifact is cryptographically bound to one source recipe tree;
+the artifact owns target layout.
 ```
 
-## Profile status
+Future clean reconstruction also needs an acquisition/retention and trust contract for the exact artifact.
 
-All profile rows use:
+## Required normalized registries
+
+The next repository-side normalization should create:
 
 ```text
-materialization_state:
-    DRAFT_LOCK_ONLY_BLOCKED
+supply-artifact-registry.tsv
+    one row per exact artifact identity
+
+provider-object-registry.tsv
+    one row per canonical content/provider object identity
+
+provider-fragment-memberships.tsv
+    many-to-many object-to-fragment pressure edges
+
+runtime-alias-authority.tsv
+    alias class and runtime evidence
+
+authority-coverage-ledger.tsv
+    complete denominator and issue mapping
+
+target-layout-schema.tsv
+    schema/invariants only; no populated target rows yet
 ```
 
-All profile definitions use:
-
-```text
-materialization_authorized:
-    NO
-```
-
-The draft can be reviewed, hashed, diffed, and used to design a future transaction. It cannot be consumed by a materializer yet.
+Do not extract the current per-fragment rows directly.
 
 ## Known incompleteness
 
+### Global coverage
+
+The current locks cover 59 priority selected/reference objects only. They do not complete the authority matrix for:
+
+```text
+all 96 first-generation content identities;
+11 app-local reference identities;
+application payload and launcher supply identity;
+D-Bus and other non-priority generic providers;
+font, pixbuf, icon and MIME data;
+complete world internals and loader state.
+```
+
+The 96 first-generation content identities are not application-local identities.
+
 ### World
 
-`world-substrate-selected` is a selected-object lock, not the complete glibc world reconstruction contract. It does not yet close:
+`world-substrate-selected` is not a full world reconstruction contract. It omits or leaves open:
 
 ```text
-required NSS/gconv/runtime-internal modules
-C.UTF-8 versus en_US.UTF-8 policy
-ld.so.conf and ld.so.cache lifecycle ownership
-clean world installation/update/rollback
-2.42 -> 2.43 revalidation
+required NSS/gconv/runtime-internal modules;
+C.UTF-8 versus en_US.UTF-8 policy;
+ld.so.conf and ld.so.cache ownership;
+clean world installation/update/rollback;
+2.42 -> 2.43 revalidation.
 ```
 
-### Base Obsidian X11
+World-core ELF and glibc-coupled locale data share an artifact but remain separate semantic/target domains.
 
-`base-obsidian-x11-provider` does not yet include:
+### Platform versus generic classification
+
+Exact Termux artifact supply is accepted for reviewed objects. Final `PLATFORM_INTEGRATION_PROVIDER` classification requires explicit adaptation or host-integration evidence.
+
+X11/XCB and `libcap.so.2` classifications remain subject to the `0135` audit corrections where such evidence is not yet recorded.
+
+### Application and capabilities
+
+Still open:
 
 ```text
-96 application-local generation identities
-application payload and launcher identity
-fonts
-pixbuf modules and cache
-icons and MIME data
-D-Bus and other declared external capabilities
-final graphics overlay choice
+application payload/$ORIGIN composition;
+D-Bus, GTK/GLib/GIO/Pango/ATK and other generic provider authority;
+fonts and fontconfig/cache authority;
+pixbuf modules/cache and icon/MIME authority;
+final graphics overlay choice;
+GTK/Wayland, printing and optional exec policy.
 ```
-
-### Conditional profiles
-
-GTK/font/device, printing, Wayland, and optional exec remain policy choices. Their exact members are locked so the choices can be made without reverting to package-wide inference.
 
 ## Blocking authority issues
 
@@ -205,20 +300,47 @@ AUTH-003 GTK/font/device/Wayland provider composition
 AUTH-004 printing capability/provider requirement
 AUTH-005 graphics provider/update contract
 AUTH-006 libwayland source-tree binding
-AUTH-007 extraction and target-layout contract
-AUTH-008 fonts, pixbuf/icons/MIME and loader-state authority
+AUTH-007 supply split, alias and target-layout schema
+AUTH-008 non-priority data and loader-state authority
+AUTH-009 non-priority generic capability authority
 ```
 
-See:
+## Revised next valid state
 
 ```text
-../review/unresolved-authority-ledger.tsv
+NORMALIZE_PROVIDER_AUTHORITY_COVERAGE_AND_LOCK_SEMANTICS
 ```
 
-## Next valid work
+Order:
 
 ```text
-CLOSE_BASE_PROVIDER_PROFILE_GAPS_AND_DEFINE_EXTRACTION_TARGET_CONTRACT
+1. correct global coverage and terminology;
+2. split supply, adaptation, semantic authority, necessity and final-source states;
+3. classify aliases;
+4. deduplicate canonical artifact/object registries;
+5. resolve base-fragment narrative ambiguity;
+6. define target-layout schema/invariants only;
+7. close world, application, generic and data authority;
+8. populate target rows only after ownership decisions;
+9. perform intervention-lift audit before a materializer.
 ```
 
-The next work is repository-side design and analysis. It must define target ownership independently from installed absolute paths and close the missing world, application-local, data-capability, and conditional-profile decisions before any materialization transaction is authored.
+## Stop line
+
+Do not:
+
+```text
+consume these fragments as extraction manifests;
+treat 59/59 as complete global authority coverage;
+call artifact aliases runtime-required without classification;
+preserve package modes as target modes automatically;
+treat Termux package origin as automatic platform semantic authority;
+call the 96 first-generation contents application-local;
+duplicate shared objects or artifacts per fragment;
+populate target paths before authority ownership closes;
+install packages or run maintainer scripts;
+materialize a successor;
+create or change current;
+mutate loader state or patch RPATH;
+reopen closed graphics gates.
+```
