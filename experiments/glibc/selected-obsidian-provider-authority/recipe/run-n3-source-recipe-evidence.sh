@@ -4,6 +4,7 @@ set -euo pipefail
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 REPO=$(git -C "$SCRIPT_DIR" rev-parse --show-toplevel)
 WORK_ROOT=${PROVIDER_AUTHORITY_WORK_ROOT:-$(cd "$SCRIPT_DIR/.." && pwd)/work}
+HANDOFF_DIR=${HANDOFF_DIR:-$HOME/Downloads}
 
 for command in git python3 tar sha256sum find grep awk date dirname basename mkdir rm; do
     command -v "$command" >/dev/null 2>&1 || {
@@ -25,7 +26,7 @@ SOURCE_REPO_INPUT=${SOURCE_REPO:-$WORK_ROOT/source/termux-pacman-glibc-packages}
 SOURCE_REPO_EXPECTED_HEAD=${SOURCE_REPO_EXPECTED_HEAD:-fd2ae25e04f3ea26d6c7b4678020814889331d86}
 SOURCE_REPO_APPROVED_ORIGIN=${SOURCE_REPO_APPROVED_ORIGIN:-https://github.com/termux-pacman/glibc-packages.git}
 OUT=${OUT:-$WORK_ROOT/receipts/unpacked/selected-obsidian-provider-authority-n3-source-recipe-evidence-$STAMP}
-ARCHIVE=${ARCHIVE:-$WORK_ROOT/receipts/selected-obsidian-provider-authority-n3-source-recipe-evidence-results-$STAMP.tgz}
+ARCHIVE=${ARCHIVE:-$HANDOFF_DIR/selected-obsidian-provider-authority-n3-source-recipe-evidence-results-$STAMP.tgz}
 TEMP_SOURCE_REPO=$WORK_ROOT/tmp/source-repository-normalized-view-$STAMP
 TEMP_SOURCE_BUNDLE=$WORK_ROOT/tmp/source-repository-normalized-view-$STAMP.bundle
 
@@ -54,7 +55,7 @@ case "$SOURCE_REPO_INPUT" in
         ;;
     *) ;;
 esac
-for path in "$OUT" "$ARCHIVE" "$TEMP_SOURCE_REPO" "$TEMP_SOURCE_BUNDLE"; do
+for path in "$OUT" "$TEMP_SOURCE_REPO" "$TEMP_SOURCE_BUNDLE"; do
     case "$path" in
         "$WORK_ROOT"/*) ;;
         *)
@@ -63,6 +64,13 @@ for path in "$OUT" "$ARCHIVE" "$TEMP_SOURCE_REPO" "$TEMP_SOURCE_BUNDLE"; do
             ;;
     esac
 done
+case "$ARCHIVE" in
+    "$HANDOFF_DIR"/*) ;;
+    *)
+        printf 'ARCHIVE must remain under HANDOFF_DIR: %s\n' "$ARCHIVE" >&2
+        exit 2
+        ;;
+esac
 
 if [ ! -d "$N3_OUT" ] || [ -L "$N3_OUT" ]; then
     printf 'missing or unsafe corrected N3 output root: %s\n' "$N3_OUT" >&2
@@ -125,7 +133,7 @@ case "$SOURCE_REPO_PERSISTENT_ORIGIN" in
         ;;
 esac
 
-mkdir -p "$WORK_ROOT/source" "$WORK_ROOT/tmp" "$(dirname "$OUT")" "$(dirname "$ARCHIVE")"
+mkdir -p "$WORK_ROOT/source" "$WORK_ROOT/tmp" "$(dirname "$OUT")" "$HANDOFF_DIR"
 
 # Use a bundle for a deterministic all-ref transfer. The command-scoped
 # safe.directory option also keeps an explicitly overridden shared-storage
@@ -209,6 +217,7 @@ ARCHIVE_SHA256=$(sha256sum "$ARCHIVE" | awk '{print $1}')
 
 printf '\nN3_SOURCE_RECIPE_EVIDENCE=PASS\n'
 printf 'WORK_ROOT=%s\n' "$WORK_ROOT"
+printf 'HANDOFF_DIR=%s\n' "$HANDOFF_DIR"
 printf 'OUT=%s\n' "$OUT"
 printf 'SOURCE_REPO_INPUT=%s\n' "$SOURCE_REPO_INPUT"
 printf 'SOURCE_REPO_INPUT_PHYSICAL=%s\n' "$SOURCE_REPO_CANONICAL"
