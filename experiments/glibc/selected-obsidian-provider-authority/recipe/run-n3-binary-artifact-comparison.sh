@@ -4,6 +4,7 @@ set -euo pipefail
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 REPO=$(git -C "$SCRIPT_DIR" rev-parse --show-toplevel)
 WORK_ROOT=${PROVIDER_AUTHORITY_WORK_ROOT:-$(cd "$SCRIPT_DIR/.." && pwd)/work}
+HANDOFF_DIR=${HANDOFF_DIR:-$HOME/Downloads}
 
 for command in git python3 tar sha256sum find grep awk date dirname basename mkdir rm dpkg-deb readelf; do
     command -v "$command" >/dev/null 2>&1 || {
@@ -23,7 +24,7 @@ STAMP=${STAMP:-$(date +%Y%m%d-%H%M%S)}
 SOURCE_EVIDENCE_OUT=${SOURCE_EVIDENCE_OUT:-$BASE/selected-obsidian-provider-authority-n3-source-recipe-evidence-20260712-185001}
 ARTIFACT_DIR=${ARTIFACT_DIR:-$WORK_ROOT/artifacts/n3-exact-debs}
 OUT=${OUT:-$WORK_ROOT/receipts/unpacked/selected-obsidian-provider-authority-n3-binary-artifact-comparison-$STAMP}
-ARCHIVE=${ARCHIVE:-$WORK_ROOT/receipts/selected-obsidian-provider-authority-n3-binary-artifact-comparison-results-$STAMP.tgz}
+ARCHIVE=${ARCHIVE:-$HANDOFF_DIR/selected-obsidian-provider-authority-n3-binary-artifact-comparison-results-$STAMP.tgz}
 SSL_CERT_FILE=${SSL_CERT_FILE:-$PREFIX/etc/tls/cert.pem}
 
 case "$WORK_ROOT" in
@@ -48,9 +49,9 @@ case "$OUT" in
         ;;
 esac
 case "$ARCHIVE" in
-    "$WORK_ROOT"/*) ;;
+    "$HANDOFF_DIR"/*) ;;
     *)
-        printf 'ARCHIVE must remain under WORK_ROOT: %s\n' "$ARCHIVE" >&2
+        printf 'ARCHIVE must remain under HANDOFF_DIR: %s\n' "$ARCHIVE" >&2
         exit 2
         ;;
 esac
@@ -76,7 +77,7 @@ if [ -L "$ARTIFACT_DIR" ]; then
     exit 2
 fi
 
-mkdir -p "$ARTIFACT_DIR" "$(dirname "$OUT")" "$(dirname "$ARCHIVE")"
+mkdir -p "$ARTIFACT_DIR" "$(dirname "$OUT")" "$HANDOFF_DIR"
 
 export SOURCE_EVIDENCE_OUT ARTIFACT_DIR OUT PREFIX SSL_CERT_FILE
 python3 "$SCRIPT_DIR/collect-n3-binary-artifact-comparison.py"
@@ -101,6 +102,7 @@ ARCHIVE_SHA256=$(sha256sum "$ARCHIVE" | awk '{print $1}')
 
 printf '\nN3_BINARY_ARTIFACT_COMPARISON=PASS\n'
 printf 'WORK_ROOT=%s\n' "$WORK_ROOT"
+printf 'HANDOFF_DIR=%s\n' "$HANDOFF_DIR"
 printf 'OUT=%s\n' "$OUT"
 printf 'SOURCE_EVIDENCE_OUT=%s\n' "$SOURCE_EVIDENCE_OUT"
 printf 'ARTIFACT_DIR=%s\n' "$ARTIFACT_DIR"
