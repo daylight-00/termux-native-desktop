@@ -1,7 +1,7 @@
 ordinal	field	layer	required	allowed_values	source_seed	decision_rule
 1	row_id	BOTH	YES	stable repository-local identifier	NEW	Must not be derived only from a mutable absolute path
-2	row_type	BOTH	YES	CAPABILITY|ELF_OBJECT|APP_LOCAL_OBJECT|DATA_OBJECT|GENERATED_DATA|MUTABLE_STATE|CACHE_CLASS|TOOLCHAIN_COMPONENT|ORACLE_STATE|PACKAGE_SURFACE	NEW	Choose the concrete responsibility represented by the row
-3	capability_group	BOTH	YES	group_id from capability-groups.tsv	B7 capability membership plus 0117 grouping	Capability-first grouping; may not be package-name-only
+2	row_type	BOTH	YES	CAPABILITY|ELF_OBJECT|APP_LOCAL_OBJECT|DATA_OBJECT|GENERATED_DATA|MUTABLE_STATE|CACHE_CLASS|DEVICE_RELATION|TOOLCHAIN_COMPONENT|ORACLE_STATE|PACKAGE_SURFACE	NEW	Choose the concrete responsibility represented by the row
+3	capability_group	BOTH	YES	one or more semicolon-separated group_id values from capability-groups.tsv	B7 capability membership plus 0117 grouping	Capability-first grouping; may overlap but may not be package-name-only
 4	object_or_capability	BOTH	YES	free text	B7/B1 or new capability label	Human-readable exact object or semantic capability
 5	current_selected_or_reference_path	MEMBER	CONDITIONAL	absolute observed path or NOT_APPLICABLE	B1/B7/B9/B10	Observed path is evidence, not semantic authority
 6	current_package_or_source_provenance	BOTH	YES	package/version/artifact/source description	B1/B7/0018/N2 package inventory	Separate package ownership from final provider authority
