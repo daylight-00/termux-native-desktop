@@ -18,6 +18,9 @@ canonical object and fragment semantics:
 artifact alias classification:
     PASS
 
+world/locale/loader lifecycle boundary:
+    PASS / CLEAN RECONSTRUCTION OPEN
+
 final semantic provider authority:
     OPEN
 
@@ -39,6 +42,7 @@ Current authority:
 ```text
 docs/refactor/0135-selected-obsidian-provider-profile-lock-draft-architecture-audit.md
 docs/refactor/0136-selected-obsidian-provider-authority-coverage-and-lock-semantics-normalization.md
+docs/refactor/0137-selected-obsidian-world-internals-locale-and-loader-lifecycle-boundary.md
 ```
 
 The historical member locks remain exact bounded supply evidence. They are not complete profiles, target manifests, extraction inputs, or materialization authorization.
@@ -309,13 +313,35 @@ population_state:
 
 No target rows, extraction paths, mode decisions, ownership decisions, collision resolutions, or materializer steps may be added in the current state.
 
+## World, locale and loader lifecycle boundary
+
+`../review/world-lifecycle-authority-boundary.tsv` defines the accepted non-materializing boundary:
+
+```text
+exact glibc artifact supply:
+    current world reconstruction input, not a package-wide runtime manifest
+
+world internals:
+    NSS/gconv/runtime modules are demand-gated; no named module occurs in the 161-row selected/reference denominator
+
+locale:
+    twelve glibc-coupled members remain referenced world data, not application payload
+
+ld.so.conf:
+    composition-derived policy input; current live hash is evidence only
+
+ld.so.cache:
+    derived mutable state; never copied as authority
+```
+
+The boundary defines future update/rollback gates without authorizing loader mutation, composition, target population or clean reconstruction.
+
 ## Global incompleteness
 
 Provider fragments do not close:
 
 ```text
-world NSS/gconv/runtime internals;
-locale policy and loader-state lifecycle;
+complete clean-world reconstruction, acquisition/retention and exact internals if named demand appears;
 Obsidian/Electron payload identity;
 launcher supply identity;
 application supplement identities;
@@ -332,6 +358,12 @@ See the living issue ledger `../review/unresolved-authority-ledger.tsv` (`AUTH-0
 
 ```text
 CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
+```
+
+Active repository task:
+
+```text
+ESTABLISH_OBSIDIAN_ELECTRON_PAYLOAD_LAUNCHER_AND_SUPPLEMENT_AUTHORITY
 ```
 
 Only after authority closure may the repository define an `ApplicationRuntimeComposition`. Only after composition acceptance may target rows be populated. An intervention-lift audit is required before extraction or materializer implementation.

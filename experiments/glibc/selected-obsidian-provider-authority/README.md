@@ -16,6 +16,7 @@ POST_0134_ARCHITECTURE_AUDIT_ADOPTED
 PROVIDER_AUTHORITY_COVERAGE_NORMALIZATION_PASS
 LOCK_SEMANTICS_NORMALIZATION_PASS
 TARGET_LAYOUT_SCHEMA_ONLY_PASS
+WORLD_LOCALE_LOADER_LIFECYCLE_BOUNDARY_PASS
 SEMANTIC_FINAL_PROVIDER_AUTHORITY_OPEN
 APPLICATION_RUNTIME_COMPOSITION_NOT_REACHED
 TARGET_LAYOUT_POPULATION_BLOCKED
@@ -31,6 +32,7 @@ Current correction and normalization authority:
 ```text
 docs/refactor/0135-selected-obsidian-provider-profile-lock-draft-architecture-audit.md
 docs/refactor/0136-selected-obsidian-provider-authority-coverage-and-lock-semantics-normalization.md
+docs/refactor/0137-selected-obsidian-world-internals-locale-and-loader-lifecycle-boundary.md
 ```
 
 ## Preserved evidence
@@ -259,6 +261,7 @@ review/
     unresolved-authority-ledger.tsv
     post-0134-architecture-audit-findings.tsv
     normalization-codebook.tsv
+    world-lifecycle-authority-boundary.tsv
 
     authority-coverage-ledger.tsv
     authority-coverage-ledger/*.tsv
@@ -322,14 +325,14 @@ future target path/mode/owner:
 ## Open authority issues
 
 ```text
-AUTH-001 world reconstruction and lifecycle
+AUTH-001 world clean reconstruction, acquisition, named internals and successor validation
 AUTH-002 optional Termux exec necessity
 AUTH-003 GTK/GLib/font/device/Wayland composition
 AUTH-004 printing capability/provider
 AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
-AUTH-008 data capabilities and loader state
+AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
 AUTH-009 non-priority generic capabilities
 AUTH-010 application payload/launcher/supplement authority
 ```
@@ -354,6 +357,12 @@ working runtime != final provider composition
 
 ```text
 CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
+```
+
+Active repository task:
+
+```text
+ESTABLISH_OBSIDIAN_ELECTRON_PAYLOAD_LAUNCHER_AND_SUPPLEMENT_AUTHORITY
 ```
 
 The next work remains repository-side authority analysis. A device transaction is needed only if a specific unresolved authority choice cannot be discriminated from existing repository/oracle evidence.

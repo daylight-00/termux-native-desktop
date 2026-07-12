@@ -52,6 +52,7 @@ Current branch-local chain:
 0134 exact non-materializing member-lock draft
 0135 post-0134 architecture audit and corrections
 0136 provider-authority coverage and lock-semantics normalization
+0137 world internals, locale and loader lifecycle boundary
 ```
 
 Precedence:
@@ -74,6 +75,9 @@ system-foundation
 
 0136
     -> current normalized coverage/registry/alias/schema state
+
+0137
+    -> current world-internal demand, locale and loader lifecycle boundary
 ```
 
 ## Current state
@@ -114,6 +118,9 @@ canonical supply/object/fragment registries:
 
 artifact alias classification:
     PASS
+
+world/locale/loader lifecycle boundary:
+    PASS / CLEAN RECONSTRUCTION OPEN
 
 semantic final-provider authority:
     OPEN
@@ -212,6 +219,7 @@ experiments/glibc/selected-obsidian-provider-authority/review/
     non-priority-generic-authority-ledger.tsv
     non-priority-generic-authority-ledger/*.tsv
     normalization-codebook.tsv
+    world-lifecycle-authority-boundary.tsv
     unresolved-authority-ledger.tsv
 
 experiments/glibc/selected-obsidian-provider-authority/profiles/
@@ -258,7 +266,10 @@ Specific decisions:
 
 ```text
 glibc reviewed world set:
-    current Termux/Android-adapted world authority; reconstruction lifecycle open
+    current Termux/Android-adapted world authority; six reviewed core objects are bounded, internals are demand-gated and clean reconstruction remains open
+
+locale and loader state:
+    twelve glibc-coupled locale members are referenced world data; ld.so.conf is composition-derived policy input; ld.so.cache is derived mutable state
 
 libxcb:
     explicit socket-prefix adaptation proven; final platform source provisional
@@ -285,14 +296,14 @@ termux-exec-glibc:
 ## Living authority issues
 
 ```text
-AUTH-001 world reconstruction and lifecycle
+AUTH-001 world clean reconstruction, acquisition, named internals and successor validation
 AUTH-002 optional Termux exec necessity
 AUTH-003 GTK/GLib/font/device/Wayland provider composition
 AUTH-004 printing capability/provider
 AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
-AUTH-008 data capabilities and loader state
+AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
 AUTH-009 non-priority generic capabilities
 AUTH-010 application payload/launcher/supplement authority
 ```
@@ -303,11 +314,17 @@ AUTH-010 application payload/launcher/supplement authority
 CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 ```
 
+Active task:
+
+```text
+ESTABLISH_OBSIDIAN_ELECTRON_PAYLOAD_LAUNCHER_AND_SUPPLEMENT_AUTHORITY
+```
+
 Required order:
 
 ```text
-1. close or explicitly bound world internals, locale and loader-state lifecycle;
-2. establish application payload, launcher and supplement authority;
+1. world internals, locale and loader-state lifecycle boundary: PASS / remaining evidence explicit;
+2. establish application payload, launcher and supplement authority: ACTIVE;
 3. compare candidate sources for non-priority generic capabilities;
 4. decide conditional graphics, GTK/Wayland, printing and optional-exec policy;
 5. close fonts, pixbuf/icon/MIME and generated-schema authority;

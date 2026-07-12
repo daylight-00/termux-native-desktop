@@ -1,7 +1,7 @@
 # Status
 
-> **State:** provider-authority coverage and lock-semantics normalization PASS; global world/application/generic/data authority closure is next; target population, extraction, materialization and activation remain blocked  
-> **Updated:** 2026-07-12
+> **State:** world-internals/locale/loader lifecycle boundary PASS; application payload/launcher/supplement authority is next; target population, extraction, materialization and activation remain blocked
+> **Updated:** 2026-07-13
 
 ## Current conclusions
 
@@ -26,6 +26,10 @@
 - World-core ELF and glibc-coupled locale data remain separate semantic/lifecycle fragments despite sharing the same exact artifact.
 - Exact artifact recognition does not close clean acquisition. Repository trust, key/signature policy, immutable retention/snapshot, future availability, source archive identity, and build attestation remain open.
 - A twenty-field target-layout schema and invariants exist, but every target row remains unpopulated.
+- The world/locale/loader lifecycle boundary is accepted without clean-reconstruction or composition claims.
+- No named glibc NSS/gconv module occurs in the normalized 161-row selected/reference denominator; world internals remain demand-gated.
+- The twelve accepted locale members remain glibc-coupled world data; `ld.so.conf` is composition-derived policy input and `ld.so.cache` is derived mutable state.
+- The next active repository task is Obsidian/Electron payload, launcher, and supplement authority.
 - No device transaction is currently required.
 
 ## Current authority
@@ -45,9 +49,10 @@ docs/refactor/0133-selected-obsidian-priority-provider-authority-review.md
 docs/refactor/0134-selected-obsidian-provider-profile-locked-member-draft.md
 docs/refactor/0135-selected-obsidian-provider-profile-lock-draft-architecture-audit.md
 docs/refactor/0136-selected-obsidian-provider-authority-coverage-and-lock-semantics-normalization.md
+docs/refactor/0137-selected-obsidian-world-internals-locale-and-loader-lifecycle-boundary.md
 ```
 
-`0116` remains the controlling intervention. `0135` supplies the correction requirements. `0136` records that P0-P6 normalization is complete without lifting any population or materialization block.
+`0116` remains the controlling intervention. `0135` supplies the correction requirements. `0136` records P0-P6 normalization. `0137` accepts the non-materializing world/locale/loader lifecycle boundary without lifting any population or materialization block.
 
 ## Accepted states
 
@@ -59,6 +64,7 @@ GLOBAL_IDENTITY_COVERAGE_NORMALIZATION_PASS
 CANONICAL_SUPPLY_OBJECT_FRAGMENT_REGISTRY_PASS
 ARTIFACT_ALIAS_CLASSIFICATION_PASS
 TARGET_LAYOUT_SCHEMA_ONLY_PASS
+WORLD_LOCALE_LOADER_LIFECYCLE_BOUNDARY_PASS
 SEMANTIC_FINAL_PROVIDER_AUTHORITY_OPEN
 APPLICATION_RUNTIME_COMPOSITION_NOT_REACHED
 TARGET_LAYOUT_POPULATION_BLOCKED
@@ -76,6 +82,7 @@ experiments/glibc/selected-obsidian-provider-authority/review/
     non-priority-generic-authority-ledger.tsv
     non-priority-generic-authority-ledger/*.tsv
     normalization-codebook.tsv
+    world-lifecycle-authority-boundary.tsv
     unresolved-authority-ledger.tsv
 
 experiments/glibc/selected-obsidian-provider-authority/profiles/
@@ -96,14 +103,14 @@ Large registries use hash-locked root indexes and partitions. The historical `pr
 ## Open authority groups
 
 ```text
-AUTH-001 world reconstruction and lifecycle
+AUTH-001 world clean reconstruction, acquisition, named internals and successor validation
 AUTH-002 optional Termux exec necessity
 AUTH-003 GTK/GLib/font/device/Wayland provider composition
 AUTH-004 printing capability/provider
 AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
-AUTH-008 data capabilities and loader state
+AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
 AUTH-009 non-priority generic capabilities
 AUTH-010 application payload/launcher/supplement authority
 ```
@@ -114,11 +121,17 @@ AUTH-010 application payload/launcher/supplement authority
 CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 ```
 
+Active repository task:
+
+```text
+ESTABLISH_OBSIDIAN_ELECTRON_PAYLOAD_LAUNCHER_AND_SUPPLEMENT_AUTHORITY
+```
+
 Repository-side order:
 
 ```text
-1. close or explicitly bound world runtime internals, locale and loader-state lifecycle;
-2. establish Obsidian/Electron payload, launcher and supplement supply/authority identity;
+1. world runtime internals, locale and loader-state lifecycle boundary: PASS / remaining evidence explicit;
+2. establish Obsidian/Electron payload, launcher and supplement supply/authority identity: ACTIVE;
 3. compare candidate sources for non-priority generic capability groups;
 4. decide graphics, GTK/Wayland, printing and optional-exec composition policy;
 5. close font, pixbuf, icon, MIME and generated-schema authority;
