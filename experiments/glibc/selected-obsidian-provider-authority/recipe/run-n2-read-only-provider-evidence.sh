@@ -18,9 +18,10 @@ if [ -n "$tracked_dirty" ]; then
 fi
 
 BASE=${EVIDENCE_BASE:-$PREFIX/tmp/selected-obsidian-provider-authority}
+DOWNLOADS=${DOWNLOADS_DIR:-$HOME/Downloads}
 STAMP=${STAMP:-$(date +%Y%m%d-%H%M%S)}
 OUT=${OUT:-$BASE/selected-obsidian-provider-authority-n2-read-only-evidence-$STAMP}
-ARCHIVE=${ARCHIVE:-$BASE/selected-obsidian-provider-authority-n2-read-only-evidence-results-$STAMP.tgz}
+ARCHIVE=${ARCHIVE:-$DOWNLOADS/selected-obsidian-provider-authority-n2-read-only-evidence-results-$STAMP.tgz}
 
 B1_OUT=${B1_OUT:-$PREFIX/tmp/selected-obsidian-closure/selected-obsidian-phase-b1-retained-control-locality-20260711-192919}
 B2_OUT=${B2_OUT:-$PREFIX/tmp/selected-obsidian-closure/selected-obsidian-phase-b2-static-runtime-closure-20260711-195310}
@@ -36,9 +37,9 @@ case "$OUT" in
         ;;
 esac
 case "$ARCHIVE" in
-    "$BASE"/*) ;;
+    "$DOWNLOADS"/*) ;;
     *)
-        printf 'ARCHIVE must remain under EVIDENCE_BASE: %s\n' "$ARCHIVE" >&2
+        printf 'ARCHIVE must remain under DOWNLOADS_DIR: %s\n' "$ARCHIVE" >&2
         exit 2
         ;;
 esac
@@ -52,7 +53,7 @@ if [ -e "$ARCHIVE" ] || [ -L "$ARCHIVE" ]; then
     exit 2
 fi
 
-mkdir -p "$BASE"
+mkdir -p "$BASE" "$DOWNLOADS"
 
 export B1_OUT B2_OUT B9_OUT MAP_OUT PIXBUF_OUT OUT
 python3 "$SCRIPT_DIR/collect-read-only-provider-evidence.py"
