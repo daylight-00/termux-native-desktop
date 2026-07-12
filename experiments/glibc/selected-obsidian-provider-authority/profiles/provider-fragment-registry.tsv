@@ -1,0 +1,8 @@
+fragment_id	fragment_type	bounded_purpose	authority_issue_ids	composition_semantics	deployable_profile_state	target_population_state
+world-core-provider-fragment	WORLD_PROVIDER_FRAGMENT	6 reviewed world-core ELF objects	AUTH-001	PRESSURE_EDGE_NOT_INSTALLATION_INHERITANCE	NOT_REACHED	BLOCKED
+glibc-locale-data-fragment	DATA_PROVIDER_FRAGMENT	12 glibc-coupled en_US locale members; separate lifecycle from world core	AUTH-001;AUTH-008	PRESSURE_EDGE_NOT_INSTALLATION_INHERITANCE	NOT_REACHED	BLOCKED
+base-obsidian-x11-provider-fragment	BASE_PROVIDER_FRAGMENT	11 reviewed non-world passive-base provider objects; includes libxcb-render and libxcb-shm due mapped/direct-consumer evidence	AUTH-005;AUTH-009	PRESSURE_EDGE_NOT_INSTALLATION_INHERITANCE	NOT_REACHED	BLOCKED
+graphics-freedreno-provider-fragment	CONDITIONAL_PROVIDER_FRAGMENT	11 incremental Freedreno-facing provider objects	AUTH-005	PRESSURE_EDGE_NOT_INSTALLATION_INHERITANCE	NOT_REACHED	BLOCKED
+gtk-font-device-compat-provider-fragment	CONDITIONAL_PROVIDER_FRAGMENT	12 GTK/font/device/Wayland pressure memberships	AUTH-003;AUTH-006;AUTH-009	PRESSURE_EDGE_NOT_INSTALLATION_INHERITANCE	NOT_REACHED	BLOCKED
+printing-provider-fragment	CONDITIONAL_PROVIDER_FRAGMENT	11 printing pressure memberships	AUTH-004;AUTH-009	PRESSURE_EDGE_NOT_INSTALLATION_INHERITANCE	NOT_REACHED	BLOCKED
+optional-termux-exec-provider-fragment	OPTIONAL_PLATFORM_FRAGMENT	one non-denominator optional libtermux-exec object	AUTH-002	PRESSURE_EDGE_NOT_INSTALLATION_INHERITANCE	NOT_REACHED	BLOCKED
