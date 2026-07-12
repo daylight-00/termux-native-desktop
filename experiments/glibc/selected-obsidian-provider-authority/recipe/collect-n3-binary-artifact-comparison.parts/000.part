@@ -1,0 +1,177 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import csv
+import hashlib
+import os
+import re
+import shutil
+import ssl
+import stat
+import subprocess
+import sys
+import tarfile
+import tempfile
+import time
+import traceback
+import urllib.parse
+import urllib.request
+from collections import Counter
+from pathlib import Path, PurePosixPath
+from typing import BinaryIO, Iterable
+
+EXPECTED_SOURCE_SUMMARY = {
+    "branch": "docs/post-graphics-architecture-audit",
+    "head": "5c11ec95f6e6529bbf03459a0515a88b5c685d18",
+    "n3_head": "2d76d5b5253d10c415191b43f1427b64978695fb",
+    "source_repo_head": "fd2ae25e04f3ea26d6c7b4678020814889331d86",
+    "installed_packages": "86",
+    "selected_related_packages": "26",
+    "priority_packages": "28",
+    "recipe_mappings_found": "28",
+    "unique_recipe_tree_matches": "27",
+    "multiple_recipe_tree_matches": "1",
+    "recipe_versions_not_found": "0",
+    "recipe_mappings_not_found": "0",
+    "exact_repository_package_records": "86",
+    "cached_deb_artifacts": "0",
+    "authority_decisions_accepted": "0",
+    "package_operation_performed": "NO",
+    "package_download_performed": "NO",
+    "runtime_launch_performed": "NO",
+    "generation_operation_performed": "NO",
+    "current_operation_performed": "NO",
+    "source_repo_fetch_performed": "NO",
+}
+EXPECTED_DPKG_STATUS_SHA256 = "aba4d9e78f68bd0fe5d841b5d1422255ecca162621c85630137651122bcc8ee2"
+EXPECTED_DPKG_INFO_MANIFEST = "f1a32ecdf5cbe1999fbf4b2aeae28196e8a1ca215b17a4e2f4153578dce414e4"
+EXPECTED_SOURCE_NEXT_STATE = "READY_FOR_BOUNDED_BINARY_ARTIFACT_ACQUISITION_AND_RECIPE_REVIEW"
+EXPECTED_SOURCE_ORIGIN_MODE = "ISOLATED_SHARED_STORAGE_SAFE_DIRECTORY_BUNDLE_CLONE"
+APPROVED_ARTIFACT_HOSTS = {"packages-cf.termux.dev", "packages.termux.dev"}
+REQUIRED_SOURCE_INPUTS = [
+    "analysis.status",
+    "next-state.txt",
+    "claim-boundary.txt",
+    "summary.tsv",
+    "input-verification.tsv",
+    "source-repository-state.tsv",
+    "source-repository-origin-guard.tsv",
+    "priority-package-set.tsv",
+    "repository-package-records.tsv",
+    "priority-recipe-lineage.tsv",
+    "recipe-candidate-commits.tsv",
+    "recipe-file-manifest.tsv",
+    "source-comparison-ledger.tsv",
+    "apt-source-lines.tsv",
+    "apt-index-files.tsv",
+    "apt-release-metadata.tsv",
+]
+
+
+def run(args: list[str], *, check: bool = True, text: bool = True, stdout=None) -> subprocess.CompletedProcess:
+    return subprocess.run(args, check=check, text=text, stdout=stdout or subprocess.PIPE, stderr=subprocess.PIPE)
+
+
+def read_tsv(path: Path) -> list[dict[str, str]]:
+    with path.open(newline="", errors="replace") as handle:
+        return list(csv.DictReader(handle, delimiter="\t"))
+
+
+def write_tsv(path: Path, fields: list[str], rows: Iterable[dict[str, object]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fields, delimiter="\t", lineterminator="\n", extrasaction="ignore")
+        writer.writeheader()
+        for row in rows:
+            writer.writerow({field: row.get(field, "") for field in fields})
+
+
+def sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def hash_stream(stream: BinaryIO, *, copy_to: BinaryIO | None = None) -> tuple[str, int, bytes]:
+    digest = hashlib.sha256()
+    size = 0
+    prefix = b""
+    while True:
+        chunk = stream.read(1024 * 1024)
+        if not chunk:
+            break
+        if len(prefix) < 4:
+            prefix += chunk[: 4 - len(prefix)]
+        digest.update(chunk)
+        size += len(chunk)
+        if copy_to is not None:
+            copy_to.write(chunk)
+    return digest.hexdigest(), size, prefix
+
+
+
+
+def hash_member_stream(stream: BinaryIO, work_dir: Path) -> tuple[str, int, bytes, Path | None]:
+    digest = hashlib.sha256()
+    size = 0
+    first = stream.read(1024 * 1024)
+    digest.update(first)
+    size += len(first)
+    prefix = first[:4]
+    elf_temp: Path | None = None
+    output: BinaryIO | None = None
+    if prefix.startswith(b"\x7fELF"):
+        fd, temp_name = tempfile.mkstemp(prefix="elf-member-", dir=work_dir)
+        os.close(fd)
+        elf_temp = Path(temp_name)
+        output = elf_temp.open("wb")
+        output.write(first)
+    try:
+        while True:
+            chunk = stream.read(1024 * 1024)
+            if not chunk:
+                break
+            digest.update(chunk)
+            size += len(chunk)
+            if output is not None:
+                output.write(chunk)
+    finally:
+        if output is not None:
+            output.close()
+    return digest.hexdigest(), size, prefix, elf_temp
+
+def metadata_manifest(root: Path) -> str:
+    digest = hashlib.sha256()
+    if not root.is_dir():
+        return "MISSING"
+    for path in sorted(root.iterdir(), key=lambda item: item.name):
+        try:
+            metadata = path.lstat()
+            line = f"{path.name}\0{metadata.st_mode:o}\0{metadata.st_size}\0{metadata.st_mtime_ns}\0"
+        except OSError as exc:
+            line = f"{path.name}\0ERROR\0{type(exc).__name__}\0"
+        digest.update(line.encode(errors="surrogateescape"))
+    return digest.hexdigest()
+
+
+def tree_content_manifest(root: Path) -> str:
+    digest = hashlib.sha256()
+    if not root.is_dir():
+        return "MISSING"
+    for path in sorted(root.rglob("*"), key=lambda item: str(item.relative_to(root))):
+        rel = str(path.relative_to(root))
+        metadata = path.lstat()
+        if stat.S_ISREG(metadata.st_mode):
+            payload = sha256(path)
+            kind = "FILE"
+        elif stat.S_ISDIR(metadata.st_mode):
+            payload = "-"
+            kind = "DIR"
+        elif stat.S_ISLNK(metadata.st_mode):
+            payload = os.readlink(path)
+            kind = "SYMLINK"
+        else:
+            payload = f"MODE_{metadata.st_mode:o}"
+            kind =

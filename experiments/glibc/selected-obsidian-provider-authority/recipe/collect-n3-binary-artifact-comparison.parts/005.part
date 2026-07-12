@@ -1,0 +1,93 @@
+member_type",
+            "mode", "uid", "gid", "size", "mtime", "link_target", "content_sha256", "is_elf",
+            "live_state", "live_type", "live_size", "live_sha256", "live_link_target",
+        ]
+        write_tsv(out / "artifact-control-manifest.tsv", manifest_fields, control_manifest_rows)
+        write_tsv(out / "artifact-data-manifest.tsv", manifest_fields, data_manifest_rows)
+        elf_fields = list(elf_rows[0].keys()) if elf_rows else ["package"]
+        write_tsv(out / "artifact-elf-metadata.tsv", elf_fields, elf_rows)
+
+        stage = "comparison_summary"
+        package_summary_rows: list[dict[str, object]] = []
+        artifact_recipe_rows: list[dict[str, object]] = []
+        source_ledger = {row["package"]: row for row in comparison_rows}
+        for plan in plan_rows:
+            package = str(plan["package"])
+            rows = [row for row in data_manifest_rows if row["package"] == package]
+            state_counts = Counter(str(row["live_state"]) for row in rows)
+            type_counts = Counter(str(row["member_type"]) for row in rows)
+            package_elf_rows = [row for row in elf_rows if row["package"] == package]
+            divergent = sum(
+                count for state, count in state_counts.items()
+                if state not in {"CONTENT_MATCH", "SYMLINK_MATCH", "DIRECTORY_MATCH"}
+            )
+            equivalence = "ALL_ARCHIVE_MEMBERS_MATCH_LIVE" if divergent == 0 else "LIVE_DIVERGENCE_RECORDED"
+            package_summary_rows.append({
+                "package": package,
+                "artifact_sha256": plan["expected_sha256"],
+                "data_members": len(rows),
+                "regular_members": type_counts["REGULAR"] + type_counts["HARDLINK"],
+                "symlink_members": type_counts["SYMLINK"],
+                "directory_members": type_counts["DIRECTORY"],
+                "elf_members": len(package_elf_rows),
+                "content_matches": state_counts["CONTENT_MATCH"],
+                "symlink_matches": state_counts["SYMLINK_MATCH"],
+                "directory_matches": state_counts["DIRECTORY_MATCH"],
+                "missing_live_paths": state_counts["MISSING"],
+                "content_mismatches": state_counts["CONTENT_MISMATCH"],
+                "symlink_target_mismatches": state_counts["SYMLINK_TARGET_MISMATCH"],
+                "type_mismatches": state_counts["TYPE_MISMATCH"],
+                "other_live_states": sum(count for state, count in state_counts.items() if state not in {
+                    "CONTENT_MATCH", "SYMLINK_MATCH", "DIRECTORY_MATCH", "MISSING", "CONTENT_MISMATCH",
+                    "SYMLINK_TARGET_MISMATCH", "TYPE_MISMATCH"
+                }),
+                "installed_artifact_equivalence": equivalence,
+            })
+            discriminator = "NOT_APPLICABLE"
+            if package == "libwayland-glibc":
+                scanner = [row for row in package_elf_rows if str(row["normalized_path"]).endswith("/bin/wayland-scanner")]
+                if len(scanner) == 1:
+                    needed = str(scanner[0].get("artifact_needed", "-" )).split(",")
+                    discriminator = "ARTIFACT_SCANNER_NEEDS_LIBM" if "libm.so.6" in needed else "ARTIFACT_SCANNER_DOES_NOT_NEED_LIBM"
+                else:
+                    discriminator = f"SCANNER_ELF_ROWS_{len(scanner)}"
+            source_row = source_ledger[package]
+            artifact_recipe_rows.append({
+                "package": package,
+                "installed_version": plan["version"],
+                "artifact_identity_state": "EXACT_INDEX_HASH_AND_CONTROL_MATCH",
+                "installed_artifact_equivalence": equivalence,
+                "recipe_lineage_state": source_row["recipe_lineage_state"],
+                "candidate_recipe_trees": source_row["candidate_recipe_trees"],
+                "binary_recipe_discriminator": discriminator,
+                "authority_decision_state": "OPEN",
+                "next_permitted_action": "REVIEW_BINARY_DIVERGENCE_AND_RECIPE_SEMANTICS",
+            })
+        write_tsv(out / "package-artifact-comparison-summary.tsv", list(package_summary_rows[0].keys()), package_summary_rows)
+        write_tsv(out / "artifact-recipe-comparison-ledger.tsv", list(artifact_recipe_rows[0].keys()), artifact_recipe_rows)
+
+        stage = "final_guards"
+        status_after = sha256(dpkg_status)
+        info_after = metadata_manifest(dpkg_info)
+        source_manifest_after = tree_content_manifest(source_evidence)
+        if status_after != status_before or info_after != info_before:
+            raise ValueError("live dpkg state changed during artifact transaction")
+        if source_manifest_after != source_manifest_before:
+            raise ValueError("source evidence root changed during artifact transaction")
+        all_downloaded = len(download_rows)
+        total_bytes = sum(int(row["actual_size"]) for row in download_rows)
+        data_state_counts = Counter(str(row["live_state"]) for row in data_manifest_rows)
+        artifact_state_counts = Counter(str(row["acquisition_state"]) for row in download_rows)
+        package_equivalence_counts = Counter(str(row["installed_artifact_equivalence"]) for row in package_summary_rows)
+        libwayland_discriminator = next(
+            (row["binary_recipe_discriminator"] for row in artifact_recipe_rows if row["package"] == "libwayland-glibc"),
+            "PACKAGE_NOT_PRESENT",
+        )
+        repo_head = run(["git", "-C", str(repo), "rev-parse", "HEAD"]).stdout.strip()
+        branch = run(["git", "-C", str(repo), "symbolic-ref", "--quiet", "--short", "HEAD"], check=False).stdout.strip() or "DETACHED"
+        summary_rows = [
+            {"field": "branch", "value": branch},
+            {"field": "head", "value": repo_head},
+            {"field": "source_evidence_root", "value": str(source_evidence)},
+            {"field": "source_evidence_head", "value": source_summary["head"]},
+            {"field": "source_repo_head", "value": source_summary["source_r

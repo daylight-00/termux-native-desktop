@@ -1,0 +1,123 @@
+ = "DIRECTORY"
+            elif member.issym():
+                member_type = "SYMLINK"
+            elif member.islnk():
+                member_type = "HARDLINK"
+                normalize_tar_path(member.linkname)
+            else:
+                raise ValueError(f"unsupported {kind} tar member type for {package}: {member.name}")
+            content_sha = "-"
+            actual_size = member.size
+            is_elf = False
+            elf_temp: Path | None = None
+            if member_type in {"REGULAR", "HARDLINK"}:
+                source = archive.extractfile(member)
+                if source is None:
+                    raise ValueError(f"unable to read {kind} tar member: {member.name}")
+                try:
+                    content_sha, actual_size, prefix, elf_temp = hash_member_stream(source, work_dir)
+                    is_elf = prefix.startswith(b"\x7fELF")
+                finally:
+                    source.close()
+            installed_path = installed_path_for_member(normalized, live_root) if kind == "DATA" else Path("-")
+            comparison = {
+                "live_state": "NOT_APPLICABLE",
+                "live_type": "-",
+                "live_size": "-",
+                "live_sha256": "-",
+                "live_link_target": "-",
+            }
+            if kind == "DATA":
+                comparison = live_comparison(member_type, content_sha, member.linkname or "-", installed_path)
+            row = {
+                "package": package,
+                "artifact_sha256": artifact_sha,
+                "member_path": member.name,
+                "normalized_path": normalized,
+                "installed_path": str(installed_path),
+                "member_type": member_type,
+                "mode": f"{member.mode:o}",
+                "uid": member.uid,
+                "gid": member.gid,
+                "size": actual_size,
+                "mtime": member.mtime,
+                "link_target": member.linkname or "-",
+                "content_sha256": content_sha,
+                "is_elf": "YES" if is_elf else "NO",
+                **comparison,
+            }
+            manifest_rows.append(row)
+            if is_elf and elf_temp is not None:
+                artifact_meta = parse_readelf(elf_temp)
+                live_meta = {key: "-" for key in artifact_meta}
+                live_path = installed_path
+                if kind == "DATA" and comparison["live_type"] == "REGULAR":
+                    try:
+                        with live_path.open("rb") as handle:
+                            if handle.read(4) == b"\x7fELF":
+                                live_meta = parse_readelf(live_path)
+                    except OSError:
+                        pass
+                elf_rows.append({
+                    "package": package,
+                    "artifact_sha256": artifact_sha,
+                    "normalized_path": normalized,
+                    "installed_path": str(installed_path),
+                    "content_state": comparison["live_state"],
+                    **{f"artifact_{key}": value for key, value in artifact_meta.items()},
+                    **{f"live_{key}": value for key, value in live_meta.items()},
+                })
+                elf_temp.unlink(missing_ok=True)
+    return manifest_rows, elf_rows
+
+
+def make_ssl_context() -> ssl.SSLContext:
+    cafile = os.environ.get("SSL_CERT_FILE")
+    if cafile and Path(cafile).is_file():
+        return ssl.create_default_context(cafile=cafile)
+    return ssl.create_default_context()
+
+
+def download_verified(url: str, destination: Path, expected_size: int, expected_sha: str, work_dir: Path) -> tuple[str, str, int, str]:
+    if destination.exists() or destination.is_symlink():
+        if not destination.is_file() or destination.is_symlink():
+            raise ValueError(f"unsafe existing artifact path: {destination}")
+        actual_size = destination.stat().st_size
+        actual_sha = sha256(destination)
+        if actual_size != expected_size or actual_sha != expected_sha:
+            raise ValueError(f"existing artifact identity mismatch: {destination}")
+        return "REUSED_VERIFIED", url, actual_size, actual_sha
+    parsed = urllib.parse.urlparse(url)
+    if parsed.scheme != "https" or parsed.hostname not in APPROVED_ARTIFACT_HOSTS:
+        raise ValueError(f"unapproved artifact URL: {url}")
+    last_error: Exception | None = None
+    for attempt in range(1, 4):
+        part = destination.with_name(f".{destination.name}.attempt-{attempt}.part")
+        part.unlink(missing_ok=True)
+        try:
+            request = urllib.request.Request(url, headers={"User-Agent": "termux-native-desktop-provider-authority-evidence/1"})
+            with urllib.request.urlopen(request, context=make_ssl_context(), timeout=90) as response, part.open("wb") as output:
+                final_url = response.geturl()
+                final = urllib.parse.urlparse(final_url)
+                if final.scheme != "https" or final.hostname not in APPROVED_ARTIFACT_HOSTS:
+                    raise ValueError(f"unapproved artifact redirect: {final_url}")
+                digest = hashlib.sha256()
+                total = 0
+                while True:
+                    chunk = response.read(1024 * 1024)
+                    if not chunk:
+                        break
+                    total += len(chunk)
+                    if total > expected_size:
+                        raise ValueError(f"artifact exceeds expected size: {url}")
+                    digest.update(chunk)
+                    output.write(chunk)
+            actual_sha = digest.hexdigest()
+            if total != expected_size or actual_sha != expected_sha:
+                raise ValueError(f"downloaded artifact identity mismatch: {url}")
+            os.replace(part, destination)
+            return "DOWNLOADED_VERIFIED", final_url, total, actual_sha
+        except Exception as exc:
+            last_error = exc
+            part.unlink(missing_ok=True)
+            if attempt < 3:

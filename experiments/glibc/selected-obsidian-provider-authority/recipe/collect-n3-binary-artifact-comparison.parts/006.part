@@ -1,0 +1,61 @@
+epo_head"]},
+            {"field": "artifact_directory", "value": str(artifact_dir)},
+            {"field": "artifacts_planned", "value": len(plan_rows)},
+            {"field": "artifacts_verified", "value": all_downloaded},
+            {"field": "artifacts_downloaded", "value": artifact_state_counts["DOWNLOADED_VERIFIED"]},
+            {"field": "artifacts_reused", "value": artifact_state_counts["REUSED_VERIFIED"]},
+            {"field": "artifact_bytes_verified", "value": total_bytes},
+            {"field": "control_manifest_rows", "value": len(control_manifest_rows)},
+            {"field": "data_manifest_rows", "value": len(data_manifest_rows)},
+            {"field": "artifact_elf_rows", "value": len(elf_rows)},
+            {"field": "content_matches", "value": data_state_counts["CONTENT_MATCH"]},
+            {"field": "symlink_matches", "value": data_state_counts["SYMLINK_MATCH"]},
+            {"field": "directory_matches", "value": data_state_counts["DIRECTORY_MATCH"]},
+            {"field": "missing_live_paths", "value": data_state_counts["MISSING"]},
+            {"field": "content_mismatches", "value": data_state_counts["CONTENT_MISMATCH"]},
+            {"field": "symlink_target_mismatches", "value": data_state_counts["SYMLINK_TARGET_MISMATCH"]},
+            {"field": "type_mismatches", "value": data_state_counts["TYPE_MISMATCH"]},
+            {"field": "packages_all_members_match_live", "value": package_equivalence_counts["ALL_ARCHIVE_MEMBERS_MATCH_LIVE"]},
+            {"field": "packages_with_live_divergence", "value": package_equivalence_counts["LIVE_DIVERGENCE_RECORDED"]},
+            {"field": "libwayland_binary_recipe_discriminator", "value": libwayland_discriminator},
+            {"field": "dpkg_status_sha256_before", "value": status_before},
+            {"field": "dpkg_status_sha256_after", "value": status_after},
+            {"field": "dpkg_info_manifest_before", "value": info_before},
+            {"field": "dpkg_info_manifest_after", "value": info_after},
+            {"field": "source_evidence_manifest_before", "value": source_manifest_before},
+            {"field": "source_evidence_manifest_after", "value": source_manifest_after},
+            {"field": "apt_update_performed", "value": "NO"},
+            {"field": "package_install_performed", "value": "NO"},
+            {"field": "package_upgrade_performed", "value": "NO"},
+            {"field": "package_remove_performed", "value": "NO"},
+            {"field": "maintainer_script_execution_performed", "value": "NO"},
+            {"field": "binary_artifact_download_performed", "value": "YES" if artifact_state_counts["DOWNLOADED_VERIFIED"] else "NO_REUSED_ONLY"},
+            {"field": "runtime_launch_performed", "value": "NO"},
+            {"field": "generation_operation_performed", "value": "NO"},
+            {"field": "current_operation_performed", "value": "NO"},
+            {"field": "authority_decisions_accepted", "value": "0"},
+        ]
+        write_tsv(out / "summary.tsv", ["field", "value"], summary_rows)
+        (out / "claim-boundary.txt").write_text(
+            "This transaction downloads only the 28 exact installed-version artifacts already identified by the accepted source-recipe receipt.\n"
+            "Each artifact is verified against indexed size/SHA-256 and its internal Package/Version/Architecture fields.\n"
+            "Control and data tar members are hashed without executing maintainer scripts; data members are compared with the live installed filesystem using lstat and content hashes.\n"
+            "ELF identity, NEEDED, SONAME, RPATH/RUNPATH, and Build ID are recorded for review.\n"
+            "This transaction performs no apt update, package install/upgrade/remove, maintainer-script execution, runtime launch, generation operation, current operation, provider selection, or successor composition.\n"
+        )
+        (out / "next-state.txt").write_text("READY_FOR_BINARY_ARTIFACT_AND_RECIPE_AUTHORITY_REVIEW\n")
+        (out / "analysis.status").write_text("PASS\n")
+        shutil.rmtree(work_dir)
+        return 0
+    except Exception as exc:
+        out.mkdir(parents=True, exist_ok=True)
+        (out / "analysis.status").write_text("FAIL\n")
+        (out / "failure-stage.txt").write_text(stage + "\n")
+        (out / "exception.txt").write_text("".join(traceback.format_exception(exc)))
+        print(f"binary artifact collector failed during {stage}: {exc}", file=sys.stderr)
+        print(f"evidence: {out}", file=sys.stderr)
+        return 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

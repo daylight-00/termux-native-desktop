@@ -1,0 +1,109 @@
+                time.sleep(attempt)
+    assert last_error is not None
+    raise last_error
+
+
+def extract_control_fields(artifact: Path) -> dict[str, str]:
+    format_string = "${Package}\t${Version}\t${Architecture}\n"
+    proc = run(["dpkg-deb", "-W", f"--showformat={format_string}", str(artifact)], check=False)
+    if proc.returncode:
+        raise ValueError(f"dpkg-deb control query failed for {artifact}: {proc.stderr.strip()}")
+    fields = proc.stdout.rstrip("\n").split("\t")
+    if len(fields) != 3:
+        raise ValueError(f"unexpected dpkg-deb control output for {artifact}: {proc.stdout!r}")
+    return {"package": fields[0], "version": fields[1], "architecture": fields[2]}
+
+
+def materialize_tar(artifact: Path, option: str, destination: Path) -> None:
+    with destination.open("wb") as output:
+        proc = run(["dpkg-deb", option, str(artifact)], check=False, text=False, stdout=output)
+    if proc.returncode:
+        raise ValueError(f"dpkg-deb {option} failed for {artifact}: {proc.stderr.decode(errors='replace').strip()}")
+
+
+def main() -> int:
+    source_evidence = Path(os.environ["SOURCE_EVIDENCE_OUT"])
+    out = Path(os.environ["OUT"])
+    prefix = Path(os.environ["PREFIX"])
+    artifact_dir = Path(os.environ["ARTIFACT_DIR"])
+    live_root = Path(os.environ.get("LIVE_ROOT", "/"))
+    repo = Path(run(["git", "-C", str(Path(__file__).resolve().parent), "rev-parse", "--show-toplevel"]).stdout.strip())
+    dpkg_status = prefix / "var/lib/dpkg/status"
+    dpkg_info = prefix / "var/lib/dpkg/info"
+    out.mkdir(parents=True, exist_ok=False)
+    work_dir = out / ".work"
+    work_dir.mkdir()
+    stage = "initialization"
+    try:
+        stage = "source_receipt_guard"
+        if not source_evidence.is_dir() or source_evidence.is_symlink():
+            raise ValueError(f"missing or unsafe source evidence root: {source_evidence}")
+        if (source_evidence / "analysis.status").read_text().strip() != "PASS":
+            raise ValueError("source evidence analysis.status is not PASS")
+        if (source_evidence / "next-state.txt").read_text().strip() != EXPECTED_SOURCE_NEXT_STATE:
+            raise ValueError("unexpected source evidence next state")
+        source_summary = parse_summary(source_evidence / "summary.tsv")
+        for field, expected in EXPECTED_SOURCE_SUMMARY.items():
+            if source_summary.get(field) != expected:
+                raise ValueError(f"source evidence summary mismatch for {field}: {source_summary.get(field)!r} != {expected!r}")
+        origin_guard = parse_summary(source_evidence / "source-repository-origin-guard.tsv")
+        expected_origin = {
+            "expected_head": EXPECTED_SOURCE_SUMMARY["source_repo_head"],
+            "observed_head": EXPECTED_SOURCE_SUMMARY["source_repo_head"],
+            "origin_mode": EXPECTED_SOURCE_ORIGIN_MODE,
+            "safe_directory_scope": "COMMAND_ONLY",
+            "transfer_mode": "LOCAL_GIT_BUNDLE_ALL_REFS",
+            "input_git_config_mutation": "NO",
+            "input_metadata_mutation": "NO",
+            "network_fetch_performed": "NO",
+        }
+        for field, expected in expected_origin.items():
+            if origin_guard.get(field) != expected:
+                raise ValueError(f"source origin guard mismatch for {field}")
+        if origin_guard.get("input_refs_sha256_before") != origin_guard.get("input_refs_sha256_after"):
+            raise ValueError("source input refs changed in source receipt")
+        source_manifest_before = tree_content_manifest(source_evidence)
+        input_rows: list[dict[str, object]] = []
+        for name in REQUIRED_SOURCE_INPUTS:
+            source = source_evidence / name
+            if not source.is_file() or source.is_symlink():
+                raise ValueError(f"missing required source receipt input: {source}")
+            destination = out / "input" / name
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(source, destination)
+            source_sha = sha256(source)
+            embedded_sha = sha256(destination)
+            if source_sha != embedded_sha:
+                raise ValueError(f"source receipt input embedding mismatch: {name}")
+            input_rows.append({
+                "file": name,
+                "source_path": str(source),
+                "sha256": source_sha,
+                "embedded_path": str(destination),
+                "state": "PASS",
+            })
+        write_tsv(out / "input-verification.tsv", ["file", "source_path", "sha256", "embedded_path", "state"], input_rows)
+
+        stage = "live_package_guard"
+        status_before = sha256(dpkg_status)
+        info_before = metadata_manifest(dpkg_info)
+        if status_before != EXPECTED_DPKG_STATUS_SHA256 or info_before != EXPECTED_DPKG_INFO_MANIFEST:
+            raise ValueError("live dpkg state drifted from accepted N2/N3 guard")
+
+        stage = "download_plan"
+        priority_rows = read_tsv(source_evidence / "priority-package-set.tsv")
+        repository_rows = read_tsv(source_evidence / "repository-package-records.tsv")
+        lineage_rows = read_tsv(source_evidence / "priority-recipe-lineage.tsv")
+        comparison_rows = read_tsv(source_evidence / "source-comparison-ledger.tsv")
+        if len(priority_rows) != 28 or len(lineage_rows) != 28 or len(comparison_rows) != 28:
+            raise ValueError("priority/source comparison cardinality mismatch")
+        if any(row.get("authority_decision_state") != "OPEN" for row in comparison_rows):
+            raise ValueError("source receipt unexpectedly accepted an authority decision")
+        priority_names = [row["package"] for row in priority_rows]
+        record_by_package = {row["package"]: row for row in repository_rows}
+        lineage_by_package = {row["package"]: row for row in lineage_rows}
+        source_lines = read_tsv(source_evidence / "apt-source-lines.tsv")
+        bases = [
+            row["uri"] for row in source_lines
+            if row.get("line_state") == "PARSED"
+   

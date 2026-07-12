@@ -1,0 +1,111 @@
+         and row.get("source_type") == "deb"
+            and row.get("suite") == "glibc"
+            and "stable" in row.get("components", "").split()
+        ]
+        if len(set(bases)) != 1:
+            raise ValueError(f"unable to identify unique glibc artifact base URI: {bases}")
+        base_uri = bases[0].rstrip("/") + "/"
+        parsed_base = urllib.parse.urlparse(base_uri)
+        if parsed_base.scheme != "https" or parsed_base.hostname not in APPROVED_ARTIFACT_HOSTS:
+            raise ValueError(f"unapproved glibc artifact base URI: {base_uri}")
+        artifact_dir.mkdir(parents=True, exist_ok=True)
+        if artifact_dir.is_symlink() or not artifact_dir.is_dir():
+            raise ValueError(f"unsafe artifact directory: {artifact_dir}")
+        plan_rows: list[dict[str, object]] = []
+        for priority in priority_rows:
+            package = priority["package"]
+            record = record_by_package.get(package)
+            lineage = lineage_by_package.get(package)
+            if record is None or lineage is None:
+                raise ValueError(f"missing binary or recipe record for priority package: {package}")
+            if record.get("match_state") != "EXACT_VERSION_INDEXED" or record.get("installed_version") != priority["version"]:
+                raise ValueError(f"non-exact indexed artifact for priority package: {package}")
+            if not re.fullmatch(r"[0-9a-f]{64}", record.get("sha256", "")):
+                raise ValueError(f"invalid indexed artifact SHA-256 for {package}")
+            expected_size = int(record["size"])
+            url = urllib.parse.urljoin(base_uri, record["filename"])
+            parsed = urllib.parse.urlparse(url)
+            if parsed.scheme != "https" or parsed.hostname not in APPROVED_ARTIFACT_HOSTS:
+                raise ValueError(f"unapproved artifact URL for {package}: {url}")
+            local_name = f"{safe_component(package)}__{safe_component(priority['version'])}__{priority['architecture']}__{record['sha256'][:16]}.deb"
+            local_path = artifact_dir / local_name
+            plan_rows.append({
+                "package": package,
+                "version": priority["version"],
+                "architecture": priority["architecture"],
+                "priority_tier": priority["priority_tier"],
+                "recipe": lineage["recipe"],
+                "recipe_lineage_state": lineage["lineage_state"],
+                "candidate_recipe_trees": lineage["candidate_recipe_trees"],
+                "repository_filename": record["filename"],
+                "artifact_url": url,
+                "expected_size": expected_size,
+                "expected_sha256": record["sha256"],
+                "local_path": str(local_path),
+            })
+        if len(plan_rows) != 28 or len({row["package"] for row in plan_rows}) != 28:
+            raise ValueError("bounded download plan is not exactly 28 unique priority packages")
+        write_tsv(out / "download-plan.tsv", list(plan_rows[0].keys()), plan_rows)
+
+        stage = "bounded_artifact_acquisition"
+        download_rows: list[dict[str, object]] = []
+        control_field_rows: list[dict[str, object]] = []
+        control_manifest_rows: list[dict[str, object]] = []
+        data_manifest_rows: list[dict[str, object]] = []
+        elf_rows: list[dict[str, object]] = []
+        for plan in plan_rows:
+            package = str(plan["package"])
+            artifact = Path(str(plan["local_path"]))
+            acquisition_state, final_url, actual_size, actual_sha = download_verified(
+                str(plan["artifact_url"]), artifact, int(plan["expected_size"]), str(plan["expected_sha256"]), work_dir
+            )
+            control = extract_control_fields(artifact)
+            if control["package"] != package or control["version"] != plan["version"] or control["architecture"] != plan["architecture"]:
+                raise ValueError(f"artifact control identity mismatch for {package}: {control}")
+            download_rows.append({
+                **plan,
+                "acquisition_state": acquisition_state,
+                "final_url": final_url,
+                "actual_size": actual_size,
+                "actual_sha256": actual_sha,
+                "identity_state": "PASS",
+            })
+            control_field_rows.append({
+                "package": package,
+                "artifact_sha256": actual_sha,
+                "control_package": control["package"],
+                "control_version": control["version"],
+                "control_architecture": control["architecture"],
+                "identity_state": "PASS",
+            })
+            package_work = work_dir / safe_component(package)
+            package_work.mkdir()
+            control_tar = package_work / "control.tar"
+            data_tar = package_work / "data.tar"
+            materialize_tar(artifact, "--ctrl-tarfile", control_tar)
+            materialize_tar(artifact, "--fsys-tarfile", data_tar)
+            controls, _ = inspect_tar(
+                control_tar,
+                package=package,
+                artifact_sha=actual_sha,
+                kind="CONTROL",
+                live_root=live_root,
+                work_dir=package_work,
+            )
+            data, package_elf = inspect_tar(
+                data_tar,
+                package=package,
+                artifact_sha=actual_sha,
+                kind="DATA",
+                live_root=live_root,
+                work_dir=package_work,
+            )
+            control_manifest_rows.extend(controls)
+            data_manifest_rows.extend(data)
+            elf_rows.extend(package_elf)
+            shutil.rmtree(package_work)
+
+        write_tsv(out / "downloaded-artifacts.tsv", list(download_rows[0].keys()), download_rows)
+        write_tsv(out / "artifact-control-fields.tsv", list(control_field_rows[0].keys()), control_field_rows)
+        manifest_fields = [
+            "package", "artifact_sha256", "member_path", "normalized_path", "installed_path", "

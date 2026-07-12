@@ -1,0 +1,169 @@
+ "SPECIAL"
+        digest.update(f"{rel}\0{kind}\0{metadata.st_mode:o}\0{metadata.st_size}\0{payload}\0".encode(errors="surrogateescape"))
+    return digest.hexdigest()
+
+
+def parse_summary(path: Path) -> dict[str, str]:
+    return {row["field"]: row["value"] for row in read_tsv(path)}
+
+
+def safe_component(value: str) -> str:
+    cleaned = re.sub(r"[^A-Za-z0-9._+-]+", "_", value)
+    return cleaned[:120] or "unnamed"
+
+
+def normalize_tar_path(name: str) -> str:
+    if "\x00" in name:
+        raise ValueError("NUL in tar member path")
+    while name.startswith("./"):
+        name = name[2:]
+    if name in {"", "."}:
+        return ""
+    posix = PurePosixPath(name)
+    if posix.is_absolute() or any(part in {"", ".."} for part in posix.parts):
+        raise ValueError(f"unsafe tar member path: {name}")
+    return str(posix)
+
+
+def installed_path_for_member(normalized: str, live_root: Path) -> Path:
+    relative = Path(*PurePosixPath(normalized).parts)
+    if live_root == Path("/"):
+        return Path("/") / relative
+    return live_root / relative
+
+
+def file_kind_from_mode(mode: int) -> str:
+    if stat.S_ISREG(mode):
+        return "REGULAR"
+    if stat.S_ISDIR(mode):
+        return "DIRECTORY"
+    if stat.S_ISLNK(mode):
+        return "SYMLINK"
+    if stat.S_ISCHR(mode):
+        return "CHAR_DEVICE"
+    if stat.S_ISBLK(mode):
+        return "BLOCK_DEVICE"
+    if stat.S_ISFIFO(mode):
+        return "FIFO"
+    if stat.S_ISSOCK(mode):
+        return "SOCKET"
+    return "OTHER"
+
+
+def parse_readelf(path: Path) -> dict[str, str]:
+    result = {
+        "readelf_state": "PASS",
+        "elf_class": "-",
+        "elf_type": "-",
+        "machine": "-",
+        "soname": "-",
+        "needed": "-",
+        "rpath": "-",
+        "runpath": "-",
+        "build_id": "-",
+    }
+    header = run(["readelf", "-hW", str(path)], check=False)
+    dynamic = run(["readelf", "-dW", str(path)], check=False)
+    notes = run(["readelf", "-nW", str(path)], check=False)
+    if header.returncode or dynamic.returncode not in {0, 1} or notes.returncode not in {0, 1}:
+        result["readelf_state"] = f"FAIL_H{header.returncode}_D{dynamic.returncode}_N{notes.returncode}"
+    for line in header.stdout.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("Class:"):
+            result["elf_class"] = stripped.split(":", 1)[1].strip()
+        elif stripped.startswith("Type:"):
+            result["elf_type"] = stripped.split(":", 1)[1].strip()
+        elif stripped.startswith("Machine:"):
+            result["machine"] = stripped.split(":", 1)[1].strip()
+    needed: list[str] = []
+    for line in dynamic.stdout.splitlines():
+        if "(NEEDED)" in line:
+            match = re.search(r"\[(.*?)\]", line)
+            if match:
+                needed.append(match.group(1))
+        elif "(SONAME)" in line:
+            match = re.search(r"\[(.*?)\]", line)
+            if match:
+                result["soname"] = match.group(1)
+        elif "(RPATH)" in line:
+            match = re.search(r"\[(.*?)\]", line)
+            if match:
+                result["rpath"] = match.group(1)
+        elif "(RUNPATH)" in line:
+            match = re.search(r"\[(.*?)\]", line)
+            if match:
+                result["runpath"] = match.group(1)
+    if needed:
+        result["needed"] = ",".join(needed)
+    for line in notes.stdout.splitlines():
+        match = re.search(r"Build ID:\s*([0-9a-fA-F]+)", line)
+        if match:
+            result["build_id"] = match.group(1).lower()
+            break
+    return result
+
+
+def live_comparison(expected_type: str, expected_sha: str, expected_link: str, live_path: Path) -> dict[str, str]:
+    result = {
+        "live_state": "MISSING",
+        "live_type": "MISSING",
+        "live_size": "-",
+        "live_sha256": "-",
+        "live_link_target": "-",
+    }
+    try:
+        metadata = live_path.lstat()
+    except FileNotFoundError:
+        return result
+    except OSError as exc:
+        result["live_state"] = f"LSTAT_ERROR_{type(exc).__name__}"
+        return result
+    result["live_type"] = file_kind_from_mode(metadata.st_mode)
+    result["live_size"] = str(metadata.st_size)
+    if expected_type in {"REGULAR", "HARDLINK"}:
+        if not stat.S_ISREG(metadata.st_mode):
+            result["live_state"] = "TYPE_MISMATCH"
+            return result
+        try:
+            result["live_sha256"] = sha256(live_path)
+        except OSError as exc:
+            result["live_state"] = f"HASH_ERROR_{type(exc).__name__}"
+            return result
+        result["live_state"] = "CONTENT_MATCH" if result["live_sha256"] == expected_sha else "CONTENT_MISMATCH"
+    elif expected_type == "SYMLINK":
+        if not stat.S_ISLNK(metadata.st_mode):
+            result["live_state"] = "TYPE_MISMATCH"
+            return result
+        try:
+            result["live_link_target"] = os.readlink(live_path)
+        except OSError as exc:
+            result["live_state"] = f"READLINK_ERROR_{type(exc).__name__}"
+            return result
+        result["live_state"] = "SYMLINK_MATCH" if result["live_link_target"] == expected_link else "SYMLINK_TARGET_MISMATCH"
+    elif expected_type == "DIRECTORY":
+        result["live_state"] = "DIRECTORY_MATCH" if stat.S_ISDIR(metadata.st_mode) else "TYPE_MISMATCH"
+    else:
+        result["live_state"] = "UNSUPPORTED_EXPECTED_TYPE"
+    return result
+
+
+def inspect_tar(
+    tar_path: Path,
+    *,
+    package: str,
+    artifact_sha: str,
+    kind: str,
+    live_root: Path,
+    work_dir: Path,
+) -> tuple[list[dict[str, object]], list[dict[str, object]]]:
+    manifest_rows: list[dict[str, object]] = []
+    elf_rows: list[dict[str, object]] = []
+    with tarfile.open(tar_path, "r:") as archive:
+        for member in archive.getmembers():
+            normalized = normalize_tar_path(member.name)
+            if not normalized:
+                continue
+            if member.isreg():
+                member_type = "REGULAR"
+            elif member.isdir():
+                member_type
