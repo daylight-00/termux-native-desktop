@@ -10,37 +10,45 @@ PASSIVE_B10_100_SECOND_SURVIVAL_PASS
 PASSIVE_B10_MAPS_CAPTURE_PASS
 PASSIVE_MAP_SELECTION_DIAGNOSTIC_PASS
 CPU_MAP_CONTRACT_DECIDED
-CLEAN_STATE_SUPPLY_INVENTORY_NEXT
 INTERACTIVE_VAULT_OPEN_CAPABILITY_OPEN
-CONTROLLED_PIXBUF_DIAGNOSTIC_AFTER_SUPPLY_INVENTORY
+CONTROLLED_PIXBUF_DIAGNOSTIC_PERMITTED
+PROVIDER_AUTHORITY_AUDIT_REQUIRED
+UNIFIED_SUCCESSOR_GENERATION_BLOCKED
+CURRENT_ACTIVATION_BLOCKED
 ```
 
-The current immutable generation remains published but unactivated.
+The first immutable generation remains published, preserved, and unactivated.
 
-Canonical clean-state audit:
+Current authority:
 
 ```text
+docs/refactor/0112-selected-obsidian-passive-map-selection-diagnostic-pass-and-contract-decision.md
 docs/refactor/0113-clean-state-minimum-condition-and-supply-authority-audit.md
+docs/refactor/0115-proot-oracle-supply-and-baseline-model.md
+docs/refactor/0116-end-to-end-architecture-audit-and-provider-authority-intervention.md
 ```
 
 ## Parent question
 
-Can a real Electron AppDir consume selected external provider/data capabilities while preserving:
+Can a real Electron AppDir consume explicit external provider/data capabilities while preserving:
 
 ```text
 valid AppDir/$ORIGIN locality
-protected world references
-selected immutable provider bytes
+minimal coherent world substrate
+reference-quality provider selection
 application-owned state
 passive and interactive workload behavior
-clean-state reproducibility
+locked supply provenance
+clean reconstruction
 ```
 
-The last condition is now explicit. Runtime independence from the rootfs is insufficient when generation construction still depends on undeclared installed rootfs source paths.
+The pilot has proven the materialization and passive-runtime mechanism.
+
+It has not yet proven that every currently selected source is the final provider authority.
 
 ## Accepted cumulative results
 
-### Semantic and supply-input analysis
+### Semantic analysis
 
 ```text
 semantic objects:
@@ -68,11 +76,14 @@ unresolved/ambiguous captured DT_NEEDED edges:
     0 / 0
 ```
 
-### Selected CPU manifest and generation
+### First selected generation
 
 ```text
 selected ELF:
-    91 in the first generation
+    91
+
+package provenance labels across selected ELF:
+    71
 
 selected fonts:
     4
@@ -96,7 +107,9 @@ current:
     ABSENT
 ```
 
-The generation is immutable evidence. It is not the final clean-state generation.
+The generation is valid immutable experiment evidence.
+
+It is not yet the final clean provider composition.
 
 ### Passive explicit-generation runtime
 
@@ -123,7 +136,7 @@ current mappings:
     0
 ```
 
-## Map-contract decision
+## Accepted map decisions
 
 ### Xau/Xdmcp
 
@@ -145,235 +158,189 @@ RPATH patch:
 existing generation mutation:
     NO
 
-next-generation duplicate materialization:
-    REMOVE
+successor duplicate materialization:
+    NO
 
 world reference:
-    REQUIRED BY EXACT HASH/EDGE CONTRACT
+    exact hash/edge contract
 ```
 
-Semantic owner name remains provisional. The successor manifest should prefer:
+Semantic owner remains provisional. Prefix location does not prove glibc-substrate ownership.
+
+### Demand-loaded data
+
+`DejaVuSansMono-Bold.ttf` was present and hash-correct but not mapped by the passive initial window.
 
 ```text
-PROTECTED_WORLD_X11_SUPPORT
-```
-
-or another world-prefix-provider name rather than inferring glibc substrate ownership from physical location.
-
-### Demand-loaded selected data
-
-`DejaVuSansMono-Bold.ttf` remained present and hash-correct but was not mapped by the passive initial window.
-
-```text
-selected data presence/hash:
+selected-data presence/hash:
     REQUIRED
 
 mapping in every scenario:
     NOT REQUIRED
 
 if mapped:
-    selected identity required
+    accepted provider identity required
 ```
 
 ### CPU graphics-adjacent mappings
 
 ```text
 libX11-xcb.so.1.0.0
-    required protected world CPU/X11 support
+    CPU/X11 world-support relation; exact final class still audited
 
 app-local libvk_swiftshader.so
     allowed auxiliary mapping
     not GPU-enable evidence
 ```
 
-The CPU process contract remained exact `--disable-gpu`, renderer `--disable-gpu-compositing`, and zero GPU process.
+## Why the successor is blocked
 
-## Provisional successor baseline
+The first generation preserved the observed control composition.
 
-Before resolving the open GTK capability:
+That was necessary to prove:
 
 ```text
-first-generation content:
-    96
-
-remove duplicate Xau/Xdmcp selected objects:
-    -2
-
-provisional baseline:
-    94
-
-selected ELF:
-    89
-
-selected fonts:
-    4
-
-selected schema:
-    1
+selected byte ownership
+immutable publication
+explicit loader selection
+workload viability
+rootfs/farm runtime exclusion
 ```
 
-This baseline must not be materialized yet.
-
-The four-font set is an observed, provenance-backed provider set. It is not yet proven as the minimum clean-state contract for Latin UI, monospace/code, bold, Korean/CJK, math, and fallback requirements.
-
-## Clean-state supply gap
-
-The first generation runs without broad-farm/rootfs mappings, but its source preflight and materializer depend on the currently installed source tree.
+The next generation must answer a stronger question:
 
 ```text
-selected rootfs ELF paths
-selected rootfs font paths
-rootfs schema source paths
-native schema compiler path
+Is each selected/reference object supplied by the correct final authority?
 ```
 
-are rehashed as live absolute source paths.
-
-Therefore:
+Unresolved alternatives include:
 
 ```text
-existing generation after source deletion:
-    remains byte-complete
-
-successor materialization after source deletion:
-    can fail before exact package artifacts or retained source objects exist
-
-fresh Termux reconstruction from repository alone:
-    not yet proven
+Termux-adapted glibc package provider
+Debian exact package artifact
+upstream/application-local provider
+project-built provider
+native host/data provider
 ```
 
-The Debian rootfs is currently an evidence/supply oracle, not a declared clean-state package specification.
+A working path or mapped path is not a final source decision.
 
-## Immediate next stage — clean-state rootfs supply inventory
+## Required provider-authority audit
 
-Before a package purge or the controlled pixbuf launch, capture read-only:
+For every selected/reference runtime object and relevant current glibc-prefix package, record:
 
 ```text
-full dpkg package/version/status state
-apt manual and automatic marks
-apt and dpkg histories
-relevant package policies/origins
-installed reverse dependencies
-font/config/cache filesystem inventory
-selected font/schema/pixbuf source ownership and identities
+object/capability
+current path and provenance
+semantic class
+minimum valid scope
+candidate provider sources
+Termux/Android adaptation rationale
+app-local relation
+ABI/version relation
+dependent domains
+runtime profile or research profile
+update owner/trigger
+provisional final authority
 ```
 
-This stage performs no install, removal, generation mutation, or application launch.
-
-It must answer:
+Required classes:
 
 ```text
-which packages were added beyond the intended minimal baseline;
-which font packages were deliberate/manual versus dependencies;
-which exact artifacts must be retained for clean reconstruction;
-which current runtime paths still depend on the expanded rootfs.
+WORLD_CORE_SUBSTRATE
+PLATFORM_INTEGRATION_PROVIDER
+GENERIC_SHARED_CAPABILITY_PROVIDER
+APPLICATION_LOCAL
+APPLICATION_DOMAIN_SUPPLEMENT
+DATA_CAPABILITY_PROVIDER
+TOOLCHAIN_ONLY
+ORACLE_ONLY
+MUTABLE_OR_CACHE
 ```
 
-## Open interactive capability
-
-The vault-open path currently fails in GTK icon/pixbuf handling.
-
-Inventory found:
+Source-choice order:
 
 ```text
-one generated rootfs loaders.cache
-12 loader modules
-2 icon-theme indexes
-5 MIME database files
-20 paths absent from the first-generation manifest
+semantic role
+    -> relevant reference
+    -> candidate comparison
+    -> provider choice
+    -> locked supply artifact
+    -> update/revalidation contract
+    -> successor composition
 ```
 
-The rootfs cache contains invalid native `/usr/...` references and cannot be used unchanged.
-
-After the supply inventory, the next runtime discriminator may:
+## PRoot and supply model
 
 ```text
-use the same explicit immutable generation;
-use short receipt-owned runtime paths;
-generate one receipt-local relocated pixbuf loader cache;
-reference exact existing rootfs modules as diagnostic-only inputs;
-perform one declared Open-vault interaction;
-record the file chooser result, survival, file opens/maps, and hashes;
-leave current absent;
-perform no package install or generation mutation.
+PRoot/rootfs:
+    oracle and supply scenario mechanism
+
+not:
+    workstation baseline
+    permanent runtime provider
+    automatic final source authority
 ```
 
-A pass with all twelve modules proves only that the coarse loader capability helps. It does not authorize all modules, icon files, or MIME files in the final generation.
+The first generation currently depends on live absolute source paths during materialization.
 
-## Minimum-capability derivation after diagnosis
+The successor must consume locked package/artifact/source receipts rather than relying permanently on one accumulated rootfs instance.
 
-The successor design must determine:
+## Font status
+
+Current selected Debian-derived fonts:
 
 ```text
-which pixbuf modules were actually used;
-whether a relocated generated cache is required;
-whether embedded PNG support is independent;
-which icon-theme data is required;
-which MIME database products are required;
-which generated data can be reproduced from locked sources/tools;
-the minimum required font coverage and exact files.
+NotoSansCJK-Regular.ttc
+DejaVuMathTeXGyre.ttf
+DejaVuSansMono.ttf
+DejaVuSansMono-Bold.ttf
 ```
 
-## Identity correction before activation
-
-The current generation digest mixes:
+Status:
 
 ```text
-content identities
-absolute source paths
-package provenance
-repository head
-compiler path
-absolute generation base
+first-generation transition evidence:
+    VALID
+
+final native-font contract:
+    NOT ACCEPTED
 ```
 
-while not completely identifying:
+The final provider must be selected against declared effects and explicit fontconfig/cache ownership without Debian-rootfs font authority.
+
+## Controlled pixbuf diagnostic permission
+
+One interactive vault-open diagnostic may continue because it answers a still-open capability question.
+
+Required boundaries:
 
 ```text
-application payload
-protected world objects
-launcher/policy
-validation scenarios
+named diagnostic/oracle capability experiment
+same immutable unactivated generation
+short receipt-owned runtime paths
+no package install
+no generation mutation
+no current activation
+no promoted launcher change
+rootfs loader modules/cache treated as diagnostic inputs only
+separate cache/module/icon/MIME effects
 ```
 
-Before activation, split:
+A pass with the broad diagnostic inventory does not authorize all modules or data in the successor.
+
+## Successor pass conditions
+
+The successor block can be lifted only when:
 
 ```text
-content generation identity
-supply/provenance identity
-runtime composition identity
-installation/activation identity
-validation-policy identity
-```
-
-Do not rename or rewrite the existing B9 generation. Apply the correction to the unified successor.
-
-## Font-package cleanup boundary
-
-Do not remove the rootfs font packages yet.
-
-Reasons:
-
-```text
-package/manual history is not captured;
-exact package artifacts are not retained as locked supply objects;
-the successor materializer still depends on live source paths;
-the current promoted compatibility runtime may still use rootfs font/data policy;
-the pixbuf/source diagnostic remains open.
-```
-
-Preferred cleanup sequence:
-
-```text
-supply inventory
-    -> retain exact artifacts/source objects
-    -> controlled pixbuf diagnosis
-    -> minimum font/GTK capability
-    -> unified successor generation
-    -> passive + interactive + warehouse-independence acceptance
-    -> clean reconstruction proof
-    -> purge or recreate rootfs
-    -> repeat acceptance
+provider authority is explicit for the selected/reference set;
+world core is distinguished from platform/generic prefix providers;
+fonts and pixbuf/icon/MIME capabilities are bounded;
+runtime and research/toolchain profiles are declared;
+locked supply inputs replace mutable rootfs source authority;
+content/provenance/composition/install/validation identities are separated;
+update and rollback scopes are explicit.
 ```
 
 ## Stop line
@@ -381,20 +348,19 @@ supply inventory
 Do not:
 
 ```text
-purge rootfs font packages before supply inventory;
-install packages for the pixbuf test;
+materialize or activate the unified successor before provider-authority review;
+treat all prefix objects as world substrate;
+treat all Debian-selected objects as final providers;
 patch RPATH;
-mutate or delete the existing generation;
-materialize Xau/Xdmcp again;
-call Xau/Xdmcp substrate solely because prefix paths were selected;
+mutate or delete the first generation;
+materialize Xau/Xdmcp duplicates again;
 require every selected data object to map;
 copy all pixbuf/icon/MIME inventory paths;
-retain or remove fonts solely from one map observation;
+retain the Debian font set by inertia;
 use the rootfs loaders.cache unchanged;
 add broad-farm/rootfs paths to an acceptance run;
+install packages for the pixbuf test;
 create current;
-create the successor generation before the interactive and supply deltas close;
-claim clean reproducibility from the current installed rootfs;
-carry phase-specific experiment wrappers into final deployed tooling;
-reset Termux before locked inputs and bootstrap contracts are preserved.
+claim clean reconstruction from the current rootfs;
+carry phase-specific wrappers or receipt counts into final deployed tooling.
 ```
