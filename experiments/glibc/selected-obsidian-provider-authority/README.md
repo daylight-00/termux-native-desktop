@@ -9,28 +9,31 @@ N2_READ_ONLY_PROVIDER_EVIDENCE_PASS
 N3_CORRECTED_NORMALIZED_CLASSIFICATION_PASS
 N3_SOURCE_RECIPE_EVIDENCE_PASS
 N3_BINARY_ARTIFACT_COMPARISON_PASS
-PRIORITY_PROVIDER_EVIDENCE_PASS
-EXACT_MEMBER_SUPPLY_LOCK_PASS
+PRIORITY_PROVIDER_EVIDENCE_PASS_BOUNDED
+EXACT_ARTIFACT_MEMBER_SUPPLY_STRONG_PASS
 PACKAGE_WIDE_RUNTIME_REJECTION_PASS
-PROVIDER_SEMANTIC_AUTHORITY_PARTIAL
-PROVIDER_FRAGMENT_DRAFT_PASS
-POST_0134_ARCHITECTURE_AUDIT_INTERVENTION
-GLOBAL_AUTHORITY_COVERAGE_OPEN
-TARGET_LAYOUT_SCHEMA_ALLOWED
+POST_0134_ARCHITECTURE_AUDIT_ADOPTED
+PROVIDER_AUTHORITY_COVERAGE_NORMALIZATION_PASS
+LOCK_SEMANTICS_NORMALIZATION_PASS
+TARGET_LAYOUT_SCHEMA_ONLY_PASS
+SEMANTIC_FINAL_PROVIDER_AUTHORITY_OPEN
+APPLICATION_RUNTIME_COMPOSITION_NOT_REACHED
 TARGET_LAYOUT_POPULATION_BLOCKED
+EXTRACTION_MATERIALIZER_BLOCKED
 SUCCESSOR_MATERIALIZATION_BLOCKED
 CURRENT_ACTIVATION_BLOCKED
 ```
 
-This workstream implements the provider-authority intervention required by `0116`.
+This workstream implements the provider-authority intervention controlled by `docs/refactor/0116-end-to-end-architecture-audit-and-provider-authority-intervention.md`.
 
-Current audit authority:
+Current correction and normalization authority:
 
 ```text
 docs/refactor/0135-selected-obsidian-provider-profile-lock-draft-architecture-audit.md
+docs/refactor/0136-selected-obsidian-provider-authority-coverage-and-lock-semantics-normalization.md
 ```
 
-## Accepted evidence transactions
+## Preserved evidence
 
 ```text
 N2 read-only evidence:
@@ -46,7 +49,7 @@ exact binary-artifact comparison:
     da16d49acf54cbc8b6824e3974f08fea9ad0d6daf91687f4666d6c48d0b7567f
 ```
 
-The exact binary receipt established:
+Exact binary result:
 
 ```text
 priority package artifacts:
@@ -55,73 +58,193 @@ priority package artifacts:
 artifact data members compared:
     6,887
 
-artifact ELF objects inventoried:
+artifact ELF members:
     462
 
-live member mismatches:
+member mismatches:
     0
 ```
 
-This is exact supply evidence, not package-wide runtime or final source authority.
+This proves exact bounded supply recognition and installed equivalence. It does not prove final semantic provider authority or future clean acquisition.
 
-## Priority review and lock draft
+## Global coverage normalization
 
 ```text
-priority package dispositions:
-    28 / 28
+semantic-object denominator:
+    161
 
-bounded priority selected/reference object dispositions:
-    59 / 59
+ELF semantic objects:
+    113
 
-base-labeled reviewed objects:
-    29
+FIRST_GENERATION_CONTENT_IDENTITIES:
+    96 = 91 external selected ELF + 4 fonts + 1 generated schema aggregate
 
-conditional reviewed objects:
-    30
+APPLICATION_LOCAL_REFERENCE_IDENTITIES:
+    11
 
-unique reviewed object identities:
+protected-world references:
+    18
+
+bounded priority reviewed objects:
     59
 
-provider-fragment content memberships:
+non-priority generic provider identities:
+    61
+```
+
+The 59 priority objects are a subset of the 161-row denominator. The 96 first-generation contents are not the application-local payload.
+
+Additional application identities remain required:
+
+```text
+APPLICATION_PAYLOAD_IDENTITY
+APPLICATION_LAUNCHER_SUPPLY_IDENTITY
+APPLICATION_DOMAIN_SUPPLEMENT_IDENTITIES
+```
+
+## Canonical normalized layers
+
+```text
+SupplyArtifact
+    exact repository metadata, artifact identity, retention and binding state
+
+ProviderObjectAuthority
+    canonical content identity with separated semantic/adaptation/source/supply/necessity/final states
+
+ProviderFragmentMembership
+    capability and composition-pressure edges only
+
+ApplicationRuntimeComposition
+    not yet reached
+
+TargetLayout
+    schema and invariants only; no populated rows
+```
+
+### Supply registry
+
+```text
+repository metadata records:
+    1
+
+exact priority artifacts:
+    28
+```
+
+Clean acquisition remains open because signature-key policy, immutable retention/snapshot, future availability, source archive binding, and build attestation are not complete.
+
+### Provider-object registry
+
+```text
+priority denominator objects:
+    59
+
+optional non-denominator objects:
+    1 (libtermux-exec.so)
+
+canonical object rows:
+    60
+```
+
+Each object has independent fields for:
+
+```text
+semantic_role_state
+termux_android_adaptation_state
+candidate_source_comparison_state
+exact_supply_artifact_state
+artifact_to_recipe_binding_state
+profile_necessity_state
+provisional_final_provider_state
+```
+
+Exact supply is retained while final generic/platform source choice is conservative.
+
+### Adaptation correction
+
+```text
+glibc:
+    explicit Termux/Android adaptation proven for the reviewed world set
+
+libxcb:
+    Termux X11 socket-prefix patch proven
+    final platform source still provisional
+
+libxshmfence:
+    Termux shared-memory directory policy proven
+    final provider still provisional
+
+libX11/libXau/libXdmcp/libXext/libXrandr/libXrender:
+    generic Termux repository builds
+    object-specific platform adaptation not recorded
+
+libcap.so.2:
+    PLATFORM_OR_GENERIC provisional
+    selected-object adaptation effect unresolved
+```
+
+## Provider fragments
+
+Normalized fragments:
+
+```text
+world-core-provider-fragment
+glibc-locale-data-fragment
+base-obsidian-x11-provider-fragment
+graphics-freedreno-provider-fragment
+gtk-font-device-compat-provider-fragment
+printing-provider-fragment
+optional-termux-exec-provider-fragment
+```
+
+Cardinality:
+
+```text
+reviewed priority fragment memberships:
     63
 
-artifact alias rows:
-    93
+optional non-denominator memberships:
+    1
 
-locked member rows:
-    156
-
-profile/package artifact edges:
-    35
-
-provider fragments:
-    6
+total content edges:
+    64
 ```
 
-Accepted without qualification:
+These are pressure edges, not deployable profiles, installation inheritance, complete dependency closures, or extraction instructions.
+
+`libxcb-render.so.0` and `libxcb-shm.so.0` remain in the base fragment because passive evidence records mapped/direct base consumers. They are not duplicated in the graphics fragment.
+
+## Alias authority
 
 ```text
-exact artifact and member identities;
-package-wide runtime rejection;
-glibc-runner research-only exclusion;
-termux-exec optional status;
-non-materialization boundaries;
-installed path versus target path separation.
+canonical artifact aliases:
+    84
+
+SONAME runtime candidates:
+    40
+
+linker/development aliases:
+    41
+
+loader/entrypoint aliases:
+    2
+
+package-internal unresolved aliases:
+    1
+
+historical fragment alias edges:
+    92
 ```
 
-Qualified by the `0135` audit:
+The historical lock files therefore contain:
 
 ```text
-59/59 is the bounded priority subset, not global completion;
-exact Termux supply is not automatically final generic-provider authority;
-platform integration class requires explicit adaptation evidence;
-93 aliases are artifact alias rows, not automatically runtime-required;
-provider profiles are non-deployable fragments;
-artifact member modes are not target modes;
-96 first-generation contents are not application-local identities.
+64 content edges + 92 alias edges = 156 rows
 ```
 
-## Current files
+“93 required aliases” is withdrawn. No alias is automatically included in a runtime target. Linker/development aliases are excluded from runtime composition unless a separate research/build profile is declared.
+
+## Files
 
 ```text
 schema/
@@ -135,210 +258,122 @@ review/
     selected-object-authority-conditional.tsv
     unresolved-authority-ledger.tsv
     post-0134-architecture-audit-findings.tsv
+    normalization-codebook.tsv
+
+    authority-coverage-ledger.tsv
+    authority-coverage-ledger/*.tsv
+
+    non-priority-generic-authority-ledger.tsv
+    non-priority-generic-authority-ledger/*.tsv
 
 profiles/
-    README.md
-    provider-profile-definitions.tsv
-    provider-profile-artifact-locks.tsv
-    member-locks/*.tsv
+    supply-repository-metadata-registry.tsv
+    supply-artifact-registry.tsv
 
-work/                       # ignored by Git
+    provider-object-registry.tsv
+    provider-object-registry/*.tsv
+
+    provider-fragment-registry.tsv
+    provider-fragment-memberships.tsv
+
+    runtime-alias-authority.tsv
+    runtime-alias-authority/*.tsv
+
+    target-layout-schema.tsv
+    target-layout-invariants.md
+
+    provider-profile-definitions.tsv          # historical pre-normalization fragment draft
+    provider-profile-artifact-locks.tsv       # historical bounded artifact edges
+    member-locks/*.tsv                        # historical bounded supply locks
+
+work/                                        # ignored by Git
     source/
     artifacts/
     receipts/unpacked/
     tmp/
 ```
 
-## Claim boundaries
+Large canonical registries use a root index plus SHA-256-locked partitions. The authoritative set is the union of indexed partitions.
+
+## Target-layout boundary
+
+The target schema defines twenty fields for authority/composition references, supply references, target domain/path/node policy, mode/owner/mutability, alias/collision policy, update/rollback, validation, authority issues, and population state.
+
+Current permitted state:
 
 ```text
-path identity != content identity
+population_state:
+    UNPOPULATED_SCHEMA_ONLY
+```
+
+No target path, mode, owner, alias, collision result, extraction command, staging tree, or generation is defined.
+
+```text
+artifact member path/mode:
+    supply recognition metadata
+
+installed source path:
+    historical evidence
+
+future target path/mode/owner:
+    independently governed and currently unpopulated
+```
+
+## Open authority issues
+
+```text
+AUTH-001 world reconstruction and lifecycle
+AUTH-002 optional Termux exec necessity
+AUTH-003 GTK/GLib/font/device/Wayland composition
+AUTH-004 printing capability/provider
+AUTH-005 graphics/X11/XCB provider composition
+AUTH-006 libwayland artifact-to-recipe binding
+AUTH-007 supply/alias/target population contract
+AUTH-008 data capabilities and loader state
+AUTH-009 non-priority generic capabilities
+AUTH-010 application payload/launcher/supplement authority
+```
+
+## Claim discipline
+
+```text
+bounded 59-object review != global 161-row authority closure
+96 first-generation contents != application-local payload
 package ownership != semantic authority
-recipe candidate != exact artifact build attestation
-exact artifact identity != final source choice
-artifact alias identity != runtime alias requirement
-artifact mode != target mode
-provider fragment membership != deployable profile inclusion
-installed source path != future target authority
+Termux supply origin != automatic platform authority
+exact artifact identity != final generic source choice
+recipe candidate != build attestation
+artifact alias != runtime alias requirement
+artifact mode/path != target policy
+fragment membership != runtime composition
+schema definition != target population
 working runtime != final provider composition
 ```
 
-## Global coverage correction
-
-The bounded priority review does not yet account for the complete application domain.
-
-The next coverage ledger must reconcile at least:
+## Next valid state
 
 ```text
-161 semantic objects;
-113 ELF objects;
-96 first-generation content identities;
-91 first-generation selected ELF identities;
-11 app-local reference identities;
-18 protected-world reference identities;
-17 non-ELF data identities;
-application payload and launcher supply identity;
-non-priority generic and data capabilities.
+CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 ```
 
-Every identity must map to an accepted authority row, an explicit exclusion, or one unresolved authority issue.
-
-## Required authority-state split
-
-Future normalized rows must separate:
-
-```text
-semantic_role_state;
-termux_android_adaptation_state;
-candidate_source_comparison_state;
-exact_supply_artifact_state;
-artifact_to_recipe_binding_state;
-profile_necessity_state;
-provisional_final_provider_state.
-```
-
-Do not compress these into one accepted authority state.
-
-## Provider-fragment normalization
-
-Current fragment identifiers remain historical keys:
-
-```text
-world-substrate-selected
-base-obsidian-x11-provider
-graphics-freedreno-provider
-gtk-font-device-compat-provider
-printing-provider
-optional-termux-exec-provider
-```
-
-They are not materializer inputs.
-
-The next normalized model requires:
-
-```text
-supply-artifact-registry.tsv
-provider-object-registry.tsv
-provider-fragment-memberships.tsv
-runtime-alias-authority.tsv
-authority-coverage-ledger.tsv
-target-layout-schema.tsv
-target-layout-invariants.md
-```
-
-Shared object and artifact identities must be canonical and referenced by many fragment memberships rather than duplicated in extraction semantics.
-
-## Alias correction
-
-Current member locks record exact package symlinks, including unversioned names.
-
-Before target inclusion classify every alias:
-
-```text
-SONAME_RUNTIME_ALIAS
-PROVEN_DLOPEN_RUNTIME_ALIAS
-LOADER_OR_ENTRYPOINT_ALIAS
-LINKER_DEVELOPMENT_ALIAS
-PACKAGE_INTERNAL_RELATIVE_ALIAS
-UNRESOLVED_ALIAS
-```
-
-Only runtime-authorized aliases enter runtime composition.
-
-## Platform versus generic correction
-
-A Termux-built artifact is an accepted supply candidate when locked. It is not automatically a platform-integration semantic provider.
-
-Required adaptation evidence includes one or more of:
-
-```text
-Termux/Android patch or auxiliary source;
-path, IPC, identity, security or device adaptation;
-consumer behavior that distinguishes the adapted object;
-explicit evidence that no adaptation exists and the role is generic.
-```
-
-X11/XCB and `libcap.so.2` rows without direct adaptation evidence remain provisional at the semantic-class layer while retaining exact supply locks.
-
-## Application identity correction
-
-Use:
-
-```text
-96 FIRST_GENERATION_CONTENT_IDENTITIES
-11 APPLICATION_LOCAL_REFERENCE_IDENTITIES
-APPLICATION_PAYLOAD_IDENTITY
-APPLICATION_LAUNCHER_SUPPLY_IDENTITY
-APPLICATION_DOMAIN_SUPPLEMENT_IDENTITIES
-```
-
-Do not call the 96 generation contents application-local.
-
-## Open authority groups
-
-```text
-AUTH-001 world reconstruction/update/rollback
-AUTH-002 termux-exec minimum-profile necessity
-AUTH-003 GTK/font/device/Wayland provider composition
-AUTH-004 printing capability/provider requirement
-AUTH-005 graphics provider/update contract
-AUTH-006 libwayland source-tree binding
-AUTH-007 supply split, alias and target-layout schema
-AUTH-008 non-priority data and loader-state authority
-AUTH-009 non-priority generic capability authority
-```
-
-## Revised next valid state
-
-```text
-NORMALIZE_PROVIDER_AUTHORITY_COVERAGE_AND_LOCK_SEMANTICS
-```
-
-Required repository-side order:
-
-```text
-P0 correct terminology and global denominator;
-P1 split supply/adaptation/semantic/necessity/final states;
-P2 classify aliases and target-independent modes;
-P3 create canonical artifact/object registries and fragment edges;
-P4 map every unreviewed capability to an authority issue;
-P5 resolve base XCB narrative ambiguity;
-P6 define target-layout schema and invariants only;
-P7 close world, application, generic and data authority gaps;
-P8 populate target paths only after ownership is accepted;
-P9 perform intervention-lift audit before a materializer.
-```
-
-A new device transaction is not required for the immediate normalization work.
-
-## Storage boundary
-
-```text
-work/ and Termux-private paths:
-    source repositories, raw artifacts, caches, unpacked receipts and temporary state
-
-$HOME/Downloads:
-    final handoff archives and explicitly requested exports only
-```
+The next work remains repository-side authority analysis. A device transaction is needed only if a specific unresolved authority choice cannot be discriminated from existing repository/oracle evidence.
 
 ## Stop line
 
 Do not:
 
 ```text
-treat the 59-object review as global completion;
-consume current provider fragments as extraction manifests;
-copy all artifact aliases into a target;
-copy package modes into target policy;
-treat Termux package origin as automatic platform authority;
-call the 96 first-generation contents application-local;
-populate target paths before authority ownership closes;
-install/remove/update packages or run maintainer scripts;
-extract/copy profile members into a target;
+consume historical member locks or fragments as extraction manifests;
+populate target rows;
+write an extraction/materializer script;
+treat exact Termux supply as final generic/platform authority;
+copy linker/development aliases into a runtime target;
+copy artifact paths/modes/ownership into target policy;
+install, remove, upgrade or downgrade packages;
+run maintainer scripts;
 materialize a successor;
-create or change current;
-change promoted launchers;
-mutate loader state or patch RPATH;
-promote conditional fragments by availability;
+create or modify current;
+change the promoted launcher or loader state;
+patch RPATH;
 reopen closed graphics gates.
 ```
