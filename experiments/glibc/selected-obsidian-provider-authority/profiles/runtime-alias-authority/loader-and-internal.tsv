@@ -1,0 +1,4 @@
+alias_id	object_id	supply_artifact_id	artifact_alias_relative_path	literal_link_target	alias_class	classification_evidence	dependent_fragment_ids	target_alias_inclusion_state	target_population_state
+alias:9c1231708c8dd9ed875637a6	object:8eb7373d62cd66d8ddeb473a	artifact:59e47a50b77ba9c0c1cc7cd0	bin/ld.so	../lib/ld-linux-aarch64.so.1	LOADER_OR_ENTRYPOINT_ALIAS	loader alias	world-core-provider-fragment	POLICY_OPEN_WORLD_ENTRYPOINT_ONLY	BLOCKED
+alias:fcf9ac7c3e84b495b8a5fb54	object:8eb7373d62cd66d8ddeb473a	artifact:59e47a50b77ba9c0c1cc7cd0	lib/ld.so	ld-linux-aarch64.so.1	LOADER_OR_ENTRYPOINT_ALIAS	loader alias	world-core-provider-fragment	POLICY_OPEN_WORLD_ENTRYPOINT_ONLY	BLOCKED
+alias:94d2481075d019ae613260af	object:93de8c4bb245b253dfc35734	artifact:984f6f80b4cd115d8adf99ae	lib/libbz2.so.1	libbz2.so.1.0.8	PACKAGE_INTERNAL_RELATIVE_ALIAS	version-family alias not equal DT_SONAME	gtk-font-device-compat-provider-fragment	UNRESOLVED_RUNTIME_NECESSITY	BLOCKED
