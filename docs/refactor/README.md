@@ -1,6 +1,6 @@
 # Repository Refactor and Architecture Work Log
 
-This directory is the transaction-level source of truth for the migration from the original prototype toward explicit ownership, semantic composition, selected immutable providers, clean supply contracts, and controlled activation.
+This directory is the transaction-level source of truth for the migration from the original prototype toward explicit ownership, semantic provider authority, locked supply identities, clean runtime composition, and controlled activation.
 
 ## Working rule
 
@@ -12,15 +12,19 @@ repository evidence + current canonical index
     = authority
 ```
 
-Historical records remain intact when later evidence supersedes their interpretation or implementation.
+Historical numbered records remain intact when later audits narrow or supersede their interpretation.
 
-## Current checkout root
+## Current checkout and branch
 
 ```text
-$HOME/projects/termux-native-desktop
+checkout:
+    $HOME/projects/termux-native-desktop
+
+active architecture branch:
+    docs/post-graphics-architecture-audit
 ```
 
-The historical `$HOME/termux-native-desktop` path is evidence only and must not return as a compatibility identity.
+The historical `$HOME/termux-native-desktop` path is evidence only.
 
 ## Current authority and precedence
 
@@ -39,68 +43,66 @@ Current branch-local authority:
 
 ```text
 0116-end-to-end-architecture-audit-and-provider-authority-intervention.md
-    -> full-project judgment, provider-source authority gap,
-       toolchain/runtime separation, update domains, and immediate intervention
+    full-project intervention and provider-source authority requirements
 
 0115-proot-oracle-supply-and-baseline-model.md
-    -> PRoot as reproducible oracle/supply mechanism rather than workstation baseline
-
-0114-debian-baseline-correction-native-font-pressure-and-auditor-boundary.md
-    -> native-font pressure and auditor-role boundary
-
-0113-clean-state-minimum-condition-and-supply-authority-audit.md
-    -> clean-product minimum conditions, supply identity, and cleanup ordering
+    PRoot/rootfs as reproducible oracle and supply mechanism
 
 0112-selected-obsidian-passive-map-selection-diagnostic-pass-and-contract-decision.md
-    -> passive runtime/map facts and corrected map contract
+    accepted passive runtime and map facts
 
-0110-selected-obsidian-pixbuf-inventory-pass-and-interaction-boundary-correction.md
-    -> passive/interactive split and GTK capability inventory
+0117-provider-authority-intervention-adoption-and-execution-order.md
+    provider-authority workstream order
 
-0106-selected-obsidian-phase-b9-generation-materialization-pass.md
-    -> first immutable selected CPU generation
+0118-selected-obsidian-provider-authority-census-schema-and-evidence-plan.md
+    census schema and evidence plan
 
-0092-post-graphics-closure-architecture-midpoint-audit.md
-0093-post-audit-direction-validator-lifecycle-and-selected-closure-reentry.md
-    -> post-graphics synthesis, validator lifecycle, and parent-pilot continuation
+0119-selected-obsidian-provider-authority-n2-read-only-evidence-collector.md
+0120-selected-obsidian-provider-authority-n2-device-receipt-review.md
+    read-only provider evidence
 
-0091-scoped-graphics-policy-promotion-closure.md
-    -> closed graphics-policy transaction
+0123-selected-obsidian-provider-authority-corrected-n3-receipt-pass-and-source-comparison-entry.md
+0128-selected-obsidian-provider-authority-source-recipe-receipt-pass.md
+0131-selected-obsidian-provider-authority-binary-artifact-receipt-pass.md
+    normalized classification, source recipe and exact binary supply evidence
 
-0015-0019
-    -> semantic hard-refactor, substrate authority, and selected-closure criteria
+0132-evidence-storage-and-android-downloads-handoff-boundary.md
+    Termux-private work state versus explicit Downloads handoff
+
+0133-selected-obsidian-priority-provider-authority-review.md
+    bounded priority package/object review
+
+0134-selected-obsidian-provider-profile-locked-member-draft.md
+    exact non-materializing provider-fragment member locks
+
+0135-selected-obsidian-provider-profile-lock-draft-architecture-audit.md
+    current correction authority for global coverage, semantic-state separation,
+    alias authority, provider-fragment semantics, and target-layout ordering
 ```
 
 Precedence:
 
 ```text
 system-foundation
-    -> project essence and constitutional invariants
+    -> constitutional intent and invariants
 
 0116
-    -> current full-history audit and intervention authority
+    -> controlling provider-authority intervention
 
-0115 / 0114 / 0113
-    -> oracle, native-font, clean-state, and supply pressure
+0115
+    -> oracle/supply/baseline lifecycle
 
-0112 / 0110 / 0106
-    -> accepted bounded selected-generation evidence
+0112
+    -> accepted bounded runtime facts
 
-0092 / 0093
-    -> post-graphics direction
+0117-0134
+    -> evidence transactions and bounded draft decisions
 
-0091
-    -> closed graphics contract
-
-0015-0019
-    -> semantic foundations
+0135
+    -> current audit corrections and next-state authority
 
 other numbered records
     -> chronological evidence and transaction history
-
-0014
-    -> retained candidate/validation/rollback principles only;
-       concrete broad-farm/pacman/gl-run lifecycle sequence is superseded
 ```
 
 ## Current state
@@ -111,40 +113,51 @@ repository ownership migration:
 
 ABI incident recovery:
     CLOSED FOR TESTED WORKLOAD
-    newer substrate lifecycle still open
 
-selected D-Bus provider pilot:
+selected D-Bus pilot:
     PASS
 
-scoped graphics-policy promotion:
+scoped graphics-policy transaction:
     CLOSED
 
-selected Obsidian phases B1-B8:
+selected Obsidian B1-B8:
     CLOSED
 
-first immutable selected CPU generation:
+first immutable selected generation:
     PUBLISHED / UNACTIVATED
 
 passive startup/topology/100-second survival/maps:
     PASS
 
-passive map-selection diagnosis:
+provider-authority evidence collection:
+    PASS FOR BOUNDED PRIORITY SET
+
+exact priority artifact/member supply locks:
     PASS
 
-interactive vault-open GTK capability:
+package-wide runtime inference:
+    REJECTED
+
+provider semantic authority:
+    PARTIAL / CORRECTION REQUIRED
+
+provider fragments:
+    NON-MATERIALIZING DRAFT PASS
+
+global authority coverage:
     OPEN
 
-PRoot oracle/supply model:
-    CORRECTED
+target-layout schema:
+    ALLOWED TO DESIGN
 
-provider-source authority:
-    OPEN / IMMEDIATE INTERVENTION
-
-unified successor generation:
+target-layout population:
     BLOCKED
 
-atomic current activation:
-    NOT STARTED
+successor materialization:
+    BLOCKED
+
+current activation:
+    BLOCKED
 
 clean reconstruction:
     NOT PROVEN
@@ -153,219 +166,216 @@ PyMOL runtime implementation:
     DEFERRED
 ```
 
+## Current provider-authority evidence
+
+```text
+priority package dispositions:
+    28 / 28
+
+bounded priority selected/reference objects:
+    59 / 59
+
+exact artifacts:
+    28
+
+artifact data members compared:
+    6,887
+
+artifact member mismatches:
+    0
+
+unique reviewed object identities:
+    59
+
+provider-fragment memberships:
+    63
+
+artifact alias rows:
+    93
+
+locked member rows:
+    156
+
+profile/artifact edges:
+    35
+```
+
+These are bounded supply and review counts. They are not the complete application-domain authority denominator.
+
+## Current correction summary
+
+The post-`0134` audit requires:
+
+```text
+59/59 priority coverage
+    != complete selected/reference authority coverage
+
+exact Termux artifact supply
+    != automatic final provider-source authority
+
+Termux package origin
+    != automatic platform-integration semantic role
+
+package-provided symlink
+    != required runtime alias
+
+artifact mode/path
+    != target mode/path
+
+provider fragment membership
+    != deployable runtime profile
+
+96 first-generation content identities
+    != application-local identities
+```
+
+The current member locks remain valid exact supply evidence.
+
+## Required normalized model
+
+```text
+SupplyArtifact
+    exact artifact identity, acquisition/trust and recipe-binding state
+
+ProviderObjectAuthority
+    canonical content identity and semantic/provider decision states
+
+ProviderFragmentMembership
+    many-to-many capability/profile pressure edges
+
+RuntimeAliasAuthority
+    SONAME, proven dlopen, loader, development, internal or unresolved alias
+
+ApplicationRuntimeComposition
+    accepted include/reference decisions, target domains and validation gates
+
+TargetLayout
+    target paths/modes/owners populated only after authority acceptance
+```
+
+Required authority-state separation:
+
+```text
+semantic_role_state
+termux_android_adaptation_state
+candidate_source_comparison_state
+exact_supply_artifact_state
+artifact_to_recipe_binding_state
+profile_necessity_state
+provisional_final_provider_state
+```
+
+## Current unresolved authority groups
+
+```text
+AUTH-001 world reconstruction/update/rollback
+AUTH-002 termux-exec minimum-profile necessity
+AUTH-003 GTK/font/device/Wayland provider composition
+AUTH-004 printing capability/provider requirement
+AUTH-005 graphics provider/update contract
+AUTH-006 libwayland source-tree binding
+AUTH-007 supply split, alias and target-layout schema
+AUTH-008 non-priority data and loader-state authority
+AUTH-009 non-priority generic capability authority
+```
+
+## Revised next valid state
+
+```text
+NORMALIZE_PROVIDER_AUTHORITY_COVERAGE_AND_LOCK_SEMANTICS
+```
+
+Execution order:
+
+```text
+P0 correct terminology and complete authority denominator;
+P1 split semantic/adaptation/source/supply/necessity/final states;
+P2 classify artifact aliases and define target-independent mode policy;
+P3 create canonical artifact/object registries and fragment edges;
+P4 map every unreviewed capability/object to an authority issue;
+P5 resolve base XCB narrative and membership ambiguity;
+P6 define target-layout schema and invariants only;
+P7 close world, application, generic and data authority;
+P8 populate target paths only after ownership acceptance;
+P9 perform intervention-lift audit before materializer design.
+```
+
 ## End-to-end chronological index
 
-### 0001–0011 — source ownership migration
-
-The initial refactor inventoried the legacy tree, separated modules/packages/experiments/tools, moved application launchers to package owners, preserved external/generated state, and deployed the source-ownership change with validation.
-
-Decision:
-
 ```text
-KEEP
-```
+0001-0011
+    repository ownership migration
 
-Limitation:
+0012-0025
+    ABI incident, substrate authority and package-managed recovery
 
-```text
-modules/gl remained a transitional physical umbrella
-```
+0026-0028
+    selected D-Bus provider pilot
 
-### 0012–0014 — ABI incident and first lifecycle proposal
+0029-0091
+    Obsidian control, semantic decomposition and closed graphics transaction
 
-The libdbus/glibc incident proved that provider compatibility depends on world-substrate ABI and that farm regeneration cannot repair a broken substrate.
+0092-0093
+    post-graphics synthesis and selected-pilot re-entry
 
-`0014` contains useful transaction principles but its broad-farm/pacman/gl-run lifecycle is superseded.
+0094-0103
+    selected-Obsidian semantic closure and generation design
 
-### 0015–0019 — architecture reassessment
+0104-0106
+    immutable generation publication
 
-The project established:
+0107-0112
+    explicit-generation runtime, passive survival/maps and map-contract correction
 
-```text
-world/provider/bridge/application/toolchain/supply ownership
-modules/gl as transitional
-broad farm as research/control
-backend-neutral substrate adapter
-selected-closure pilot criteria
-```
+0113-0116
+    clean-state, PRoot/oracle and provider-authority intervention
 
-### 0020–0025 — package-managed glibc recovery
+0117-0123
+    census schema, N2 evidence and corrected N3 normalization
 
-Exact artifact inspection, downgrade simulation, package-managed recovery, corrected core/provider gates, and real VS Code recovery closed the tested incident.
+0124-0128
+    source-recipe evidence and bounded source review
 
-The active device backend was identified as Termux APT/dpkg without making architecture APT-specific.
+0129-0132
+    exact binary artifact comparison and storage boundary
 
-### 0026–0028 — selected D-Bus provider pilot
+0133-0134
+    bounded priority authority review and exact member-lock fragments
 
-A bounded selected provider candidate proved:
-
-```text
-immutable provider bytes
-provenance
-candidate-specific actual selection
-protected-world exclusion
-zero broad-farm/rootfs leakage
-control equivalence
-```
-
-### 0029–0041 — Obsidian control and semantic decomposition
-
-The project captured a real Electron multiprocess application domain and separated app-local, world, prefix, rootfs, data, state, and graphics relations.
-
-### 0042–0075 — graphics architecture discrimination
-
-The project separated provider discovery, provider selection, device intent, consumer suitability, mapped participation, and actual selected-device identity across standalone Zink, Obsidian, and VS Code controls.
-
-### 0076–0091 — scoped graphics promotion
-
-World-boundary sanitation, consumer-scoped provider/bridge composition, application GPU/CPU mode, isolated application state, and selected-device correlation were promoted and closed.
-
-Current helper/path names were not accepted as permanent architecture.
-
-### 0092–0093 — post-closure synthesis
-
-Graphics experiment expansion stopped. Validators were classified by lifecycle, and the selected Obsidian parent pilot resumed.
-
-### 0094–0103 — selected-Obsidian semantic closure and generation design
-
-The project established locality, static/runtime partition, capability grouping, selected data provenance, reproducible GSettings output, complete disposition, and content-addressed generation design.
-
-### 0104–0106 — generation materialization
-
-Publication failures were isolated and corrected without unsafe fallback. One immutable generation with 96 content identities and 175 aliases was published but not activated.
-
-### 0107–0112 — explicit-generation runtime validation
-
-The project corrected launcher contamination and socket-path assumptions, proved passive topology/survival/maps, isolated the GTK interactive gap, and replaced an exact mapped-object count with class-based acceptance.
-
-### 0113–0115 — clean-state and PRoot model correction
-
-The project distinguished clean-product minimality from current-state minimality and redefined PRoot/rootfs as oracle/supply scenarios rather than workstation baselines.
-
-The current Debian-derived font set remains transition evidence, not final font authority.
-
-### 0116 — end-to-end provider-authority intervention
-
-The project is on track, but the next unified generation is blocked because the complete selected/reference set has not yet been resolved against the final provider authority hierarchy.
-
-Key correction:
-
-```text
-working selected path
-    !=
-final reference-quality provider decision
-```
-
-## Current semantic authority model
-
-```text
-native host authority
-    Android/Termux bionic and native integration
-
-world core substrate
-    glibc loader/libc/tightly coupled runtime only
-
-platform-integration provider
-    Termux/Android-sensitive glibc providers and explicit bridges
-
-generic capability provider
-    D-Bus, GTK, fontconfig, pixbuf, TLS, NSS, audio, printing, etc.
-
-application-local
-    valid upstream AppDir/$ORIGIN payload
-
-application-domain supplement
-    bounded app/family-specific selected closure
-
-data capability provider
-    fonts, locale, schemas, icons, MIME, trust data
-
-toolchain-only
-    compiler/binutils/sysroot/build tools
-
-oracle-only
-    Debian scenario packages and controls not promoted into runtime
-```
-
-Repository or filesystem location is not sufficient to assign one of these classes.
-
-## Immediate intervention
-
-### Allowed bounded work
-
-The current pixbuf vault-open diagnostic may continue only as:
-
-```text
-named diagnostic/oracle capability experiment
-same immutable unactivated generation
-no package install
-no generation mutation
-no current activation
-no promoted launcher change
-rootfs inputs treated as diagnostic-only
-```
-
-### Blocked work
-
-```text
-unified successor manifest finalization
-successor generation materialization
-current activation
-clean runtime package-list declaration
-provider cleanup based only on prefix/rootfs path
-```
-
-### Required provider-authority audit
-
-For every selected/reference runtime object and relevant current glibc-prefix package, record:
-
-```text
-semantic class
-minimum scope
-current provenance
-candidate sources
-Termux/Android adaptation rationale
-app-local relation
-ABI/version relation
-dependent domains
-runtime or research profile
-update owner/trigger
-provisional final authority
-```
-
-### Required source-choice order
-
-```text
-semantic role
-    -> relevant reference
-    -> candidate comparison
-    -> provider choice
-    -> locked supply artifact
-    -> update/revalidation contract
-    -> successor composition
+0135
+    architecture audit of coverage, authority states, aliases and target ordering
 ```
 
 ## Runtime and research profiles
 
 ### Minimum workstation runtime profile
 
-Contains only promoted runtime objects and required status/validation surface.
+Contains only accepted promoted runtime objects, application domains, data providers, validation/status surface, rollback surface and user state.
 
-It does not automatically contain PRoot, GCC, `glibc-runner`, broad oracle package state, or build dependencies.
+It does not automatically contain:
+
+```text
+PRoot or a Debian rootfs;
+GCC/compiler packages;
+binutils/sysroots/headers;
+glibc-runner;
+build dependencies;
+oracle-only packages;
+package-wide provider surfaces.
+```
 
 ### Research/build/maintenance profile
 
 May contain:
 
 ```text
-PRoot tooling and pinned oracle scenarios
-APT/dpkg metadata/acquisition tools
-gcc-glibc and explicit target wrappers
-build Python/Meson/Ninja
-artifact inspection and validators
+PRoot tooling and pinned oracle scenarios;
+APT/dpkg acquisition and metadata tools;
+gcc-glibc and explicit target wrappers;
+build Python/Meson/Ninja;
+artifact inspection and validators;
+historical evidence receipts.
 ```
-
-The existing glibc target wrapper toolchain remains a valid build/supply implementation. It is not a runtime-base decision.
 
 ## Update domains
 
@@ -377,32 +387,38 @@ toolchain update
 oracle scenario update
 ```
 
-Each has independent identity, gates, dependents, promotion, and rollback scope.
+Each has independent identity, gates, dependents, promotion and rollback scope.
 
-The project may remain latest-first in candidate acquisition while keeping active runtime evidence-gated.
+## Evidence handoff
+
+Every evidence-producing stage uses a unique stage-specific output root and archive identity. Generic archive names are rejected.
+
+```bash
+out="<specific-stage-name>-$(date +%Y%m%d-%H%M%S)"
+OUT="<stage-output-root>/$out"
+tar czf ~/Downloads/$out.tgz $OUT
+```
 
 ## Current stop lines
 
 Do not:
 
 ```text
-materialize or activate the successor before provider authority is classified;
-treat all `$PREFIX/glibc` objects as world substrate;
-treat all selected Debian objects as final providers;
-use glibc-repo membership as automatic semantic ownership;
-use Debian slim defaults as promoted runtime defaults;
-retain or install glibc-runner/GCC/fonts/pixbuf in the runtime profile by availability alone;
-replace valid app-local objects without evidence;
-turn the pixbuf diagnostic into final provider selection;
+treat 59/59 as global authority completion;
+treat all `$PREFIX/glibc` objects as world or platform authority;
+treat exact artifact supply as final generic-provider choice;
+copy all package aliases or artifact modes into a target;
+consume provider fragments as extraction manifests;
+call the 96 first-generation contents application-local;
+populate target paths before ownership closes;
+materialize or activate a successor;
+create or change current;
+install/remove/update packages or run maintainer scripts;
+mutate loader state or patch RPATH;
+promote conditional fragments by availability;
 reopen closed graphics work;
-mutate the existing generation;
-create current before provider/supply/composition/activation/rollback contracts close;
-turn audit findings into implementation without an explicit role change.
+turn audit findings into runtime implementation without explicit authorization.
 ```
-
-## Evidence handoff
-
-Every evidence-producing stage uses a unique stage-specific output root and archive identity. Generic archive names are rejected.
 
 ## Refactor lineage
 
@@ -413,11 +429,12 @@ original refactor branch:
 base:
     3cf41d6fc47050b06e18e956a23cefe25e4fb82a
 
-selected-Obsidian state audited:
+selected-Obsidian state audited by 0116:
     6c00ac7f9ca46bc2159c51689904e154146f0d2a
 
-current architecture-audit branch:
-    docs/clean-state-minimum-condition-audit
-```
+provider-profile draft audited by 0135:
+    9bc7e9ffb92cf5d7b1095508e8a21438026656cd
 
-The foundation documents exist on `main`; branch-local absence never makes them irrelevant. Histories must be reconciled deliberately before final integration.
+current architecture branch:
+    docs/post-graphics-architecture-audit
+```
