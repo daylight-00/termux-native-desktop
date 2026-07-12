@@ -137,6 +137,45 @@ def group_semantic(group_ids: str) -> str:
     return "UNRESOLVED"
 
 
+def selected_pressure(seed_row: dict[str, str]) -> tuple[str, str]:
+    groups = {group for group in seed_row["capability_group_seed"].split(";") if group}
+    package_key = seed_row["package"].split(":", 1)[0]
+    mapped_group = PACKAGE_GROUPS.get(package_key)
+    if mapped_group and mapped_group != "unassigned.prefix-surface":
+        groups.add(mapped_group)
+
+    action = seed_row["historical_action"]
+    path_name = Path(seed_row["path"]).name
+
+    if action == "EXCLUDE_CPU_BASE_GRAPHICS_FEATURE":
+        semantic = "GENERIC_SHARED_CAPABILITY_PROVIDER"
+    elif action == "REFERENCE_APP_LOCAL":
+        semantic = "APPLICATION_LOCAL"
+    elif action in {"ISOLATED_MUTABLE_STATE", "REGENERATE_RUNTIME_CACHE"}:
+        semantic = "MUTABLE_OR_CACHE"
+    elif action in {"MATERIALIZE_SELECTED_FONT", "GENERATE_GSETTINGS_SCHEMA", "REFERENCE_WORLD_LOCALE"}:
+        semantic = "DATA_CAPABILITY_PROVIDER"
+    elif action == "REFERENCE_WORLD_SUBSTRATE":
+        semantic = "WORLD_CORE_SUBSTRATE"
+    elif package_key in PLATFORM_X11_PACKAGES:
+        groups.add("platform.x11-xcb.termux")
+        semantic = "PLATFORM_INTEGRATION_PROVIDER"
+    elif package_key == "termux-exec-glibc":
+        groups.add("platform.glibc-adaptation.termux")
+        semantic = "PLATFORM_INTEGRATION_PROVIDER"
+    elif package_key in {"libudev", "libudev1"} or path_name.startswith("libudev.so"):
+        groups.add("platform.device-udev.termux")
+        semantic = "PLATFORM_INTEGRATION_PROVIDER"
+    else:
+        # Historical capability membership records consumer responsibility, not
+        # automatic source authority. Ignore platform membership unless the
+        # concrete object itself carries platform-specific pressure above.
+        non_platform = {group for group in groups if not group.startswith("platform.")}
+        semantic = group_semantic(";".join(sorted(non_platform)))
+
+    return semicolon(groups), semantic
+
+
 TOOLCHAIN_PACKAGES = {
     "gcc-glibc", "binutils-glibc", "binutils-libs-glibc", "linux-api-headers-glibc",
     "xorgproto-glibc", "xcb-proto-glibc", "xorg-util-macros-glibc", "vulkan-headers-glibc",
@@ -169,7 +208,7 @@ PACKAGE_GROUPS = {
     "libxxf86vm-glibc": "platform.x11-xcb.termux", "libdrm-glibc": "shared.graphics-frontend",
     "libpciaccess-glibc": "shared.graphics-frontend", "libwayland-glibc": "shared.graphics-frontend",
     "vulkan-icd-loader-glibc": "shared.graphics-frontend", "glibc": "world.glibc.core",
-    "termux-exec-glibc": "platform.device-udev.termux", "glibc-runner": "unassigned.prefix-surface",
+    "termux-exec-glibc": "platform.glibc-adaptation.termux", "glibc-runner": "unassigned.prefix-surface",
 }
 
 
@@ -339,8 +378,6 @@ def surface_class(row: dict[str, str], glibc_root: Path) -> str:
     parts = rel.parts
     lower = str(rel).lower()
     name = path.name.lower()
-    if row["file_type"] == "SYMLINK":
-        return "SYMLINK_ALIAS"
     if parts and parts[0] == "include":
         return "HEADER"
     if name.endswith(".a") or name.endswith(".o") or name.startswith("crt"):
@@ -359,6 +396,8 @@ def surface_class(row: dict[str, str], glibc_root: Path) -> str:
         return "SHARED_DATA"
     if any(token in lower for token in ("/perl", "/python", "/bash-completion")):
         return "SCRIPT_OR_LANGUAGE_MODULE"
+    if row["file_type"] == "SYMLINK":
+        return "SYMLINK_ALIAS"
     return "OTHER_NON_ELF"
 
 
@@ -517,9 +556,7 @@ try:
     # Selected/reference rows.
     for s in seed:
         base=n2_by_id[s["evidence_row_id"]].copy()
-        semantic=group_semantic(s["capability_group_seed"])
-        if s["historical_action"]=="EXCLUDE_CPU_BASE_GRAPHICS_FEATURE":
-            semantic="GENERIC_SHARED_CAPABILITY_PROVIDER"
+        capability_groups,semantic=selected_pressure(s)
         candidates=candidate_fields(s["path"],s["package"],s["version"],semantic)
         authority="UNRESOLVED_CANDIDATE_COMPARISON_REQUIRED"
         if semantic=="APPLICATION_LOCAL":
@@ -527,6 +564,7 @@ try:
         elif semantic=="WORLD_CORE_SUBSTRATE":
             authority="ACTIVE_TERMUX_GLIBC_WORLD_PROVISIONAL"
         base.update({
+            "capability_group":capability_groups,
             "semantic_class":semantic,
             "minimum_valid_scope":scope_for_semantic(semantic),
             "profile_runtime_or_research":profile_for_semantic(semantic),
@@ -765,6 +803,32 @@ try:
         })
         aggregate_rows.append(row)
         normalized.append(row)
+
+    selected_x11_rows = [
+        normalized_row
+        for selected_row in seed
+        if selected_row["package"].split(":", 1)[0] in PLATFORM_X11_PACKAGES
+        for normalized_row in [next(row for row in normalized if row["row_id"] == selected_row["evidence_row_id"])]
+    ]
+    if any("platform.x11-xcb.termux" not in row["capability_group"].split(";") for row in selected_x11_rows):
+        fail("selected_platform_pressure", "selected X11/XCB rows lost platform capability pressure")
+    if any(
+        row["semantic_class"] != "PLATFORM_INTEGRATION_PROVIDER"
+        for row in selected_x11_rows
+        if row["authority_decision_state"] != "BLOCKED"
+    ):
+        fail("selected_platform_pressure", "active selected X11/XCB rows are not platform-integration pressure")
+
+    termux_exec_rows = [
+        row for row in normalized
+        if row["row_id"].startswith("n3-package:termux-exec-glibc")
+        or (
+            row["row_id"].startswith("n3-prefix-elf:")
+            and "termux-exec-glibc" in row["current_package_or_source_provenance"]
+        )
+    ]
+    if any("platform.glibc-adaptation.termux" not in row["capability_group"].split(";") for row in termux_exec_rows):
+        fail("termux_exec_pressure", "termux-exec rows are not assigned to glibc adaptation pressure")
 
     ids=[r["row_id"] for r in normalized]
     if len(ids)!=len(set(ids)):
