@@ -27,10 +27,14 @@ SOURCE_REPO_APPROVED_ORIGIN=${SOURCE_REPO_APPROVED_ORIGIN:-https://github.com/te
 OUT=${OUT:-$BASE/selected-obsidian-provider-authority-n3-source-recipe-evidence-$STAMP}
 ARCHIVE=${ARCHIVE:-$DOWNLOADS/selected-obsidian-provider-authority-n3-source-recipe-evidence-results-$STAMP.tgz}
 TEMP_SOURCE_REPO=$BASE/source-repository-normalized-view-$STAMP
+TEMP_SOURCE_BUNDLE=$BASE/source-repository-normalized-view-$STAMP.bundle
 
 cleanup() {
     if [ -e "$TEMP_SOURCE_REPO" ] || [ -L "$TEMP_SOURCE_REPO" ]; then
         rm -rf "$TEMP_SOURCE_REPO"
+    fi
+    if [ -e "$TEMP_SOURCE_BUNDLE" ] || [ -L "$TEMP_SOURCE_BUNDLE" ]; then
+        rm -f "$TEMP_SOURCE_BUNDLE"
     fi
 }
 trap cleanup EXIT
@@ -68,18 +72,12 @@ if [ ! -e "$SOURCE_REPO_INPUT/.git" ]; then
     printf 'missing source repository Git marker: %s/.git\n' "$SOURCE_REPO_INPUT" >&2
     exit 2
 fi
-if [ -e "$TEMP_SOURCE_REPO" ] || [ -L "$TEMP_SOURCE_REPO" ]; then
-    printf 'refusing existing temporary source view: %s\n' "$TEMP_SOURCE_REPO" >&2
-    exit 2
-fi
-if [ -e "$OUT" ] || [ -L "$OUT" ]; then
-    printf 'refusing existing OUT: %s\n' "$OUT" >&2
-    exit 2
-fi
-if [ -e "$ARCHIVE" ] || [ -L "$ARCHIVE" ]; then
-    printf 'refusing existing ARCHIVE: %s\n' "$ARCHIVE" >&2
-    exit 2
-fi
+for path in "$TEMP_SOURCE_REPO" "$TEMP_SOURCE_BUNDLE" "$OUT" "$ARCHIVE"; do
+    if [ -e "$path" ] || [ -L "$path" ]; then
+        printf 'refusing existing transaction path: %s\n' "$path" >&2
+        exit 2
+    fi
+done
 
 SOURCE_REPO_CANONICAL=$(cd "$SOURCE_REPO_INPUT" && pwd -P)
 source_git() {
@@ -125,10 +123,11 @@ esac
 mkdir -p "$BASE" "$DOWNLOADS"
 
 # Android shared storage can legitimately trip Git's dubious-ownership guard.
-# Trust is scoped to these commands only; no global/local config is changed.
-git -c safe.directory="$SOURCE_REPO_CANONICAL" \
-    clone --no-hardlinks "$SOURCE_REPO_CANONICAL" "$TEMP_SOURCE_REPO" >/dev/null
+# The exception is command-scoped. A bundle avoids a local-clone upload-pack
+# subprocess that would otherwise lose the scoped safe.directory setting.
+source_git bundle create "$TEMP_SOURCE_BUNDLE" --all
 
+git clone "$TEMP_SOURCE_BUNDLE" "$TEMP_SOURCE_REPO" >/dev/null
 git -C "$TEMP_SOURCE_REPO" remote set-url origin "$SOURCE_REPO_APPROVED_ORIGIN"
 if [ "$(git -C "$TEMP_SOURCE_REPO" rev-parse --verify HEAD)" != "$SOURCE_REPO_EXPECTED_HEAD" ]; then
     printf 'temporary source view lost the pinned HEAD\n' >&2
@@ -143,6 +142,7 @@ if [ -n "$(git -C "$TEMP_SOURCE_REPO" status --porcelain --untracked-files=all)"
     exit 2
 fi
 git -C "$TEMP_SOURCE_REPO" fsck --connectivity-only --no-dangling >/dev/null
+rm -f "$TEMP_SOURCE_BUNDLE"
 
 SOURCE_REPO=$TEMP_SOURCE_REPO
 export N3_OUT SOURCE_REPO OUT PREFIX
@@ -164,12 +164,13 @@ printf 'input_physical_path\t%s\n' "$SOURCE_REPO_CANONICAL" >> "$OUT/source-repo
 printf 'effective_path\t%s\n' "$TEMP_SOURCE_REPO" >> "$OUT/source-repository-origin-guard.tsv"
 printf 'expected_head\t%s\n' "$SOURCE_REPO_EXPECTED_HEAD" >> "$OUT/source-repository-origin-guard.tsv"
 printf 'observed_head\t%s\n' "$SOURCE_REPO_INPUT_HEAD" >> "$OUT/source-repository-origin-guard.tsv"
-printf 'origin_mode\tISOLATED_SHARED_STORAGE_SAFE_DIRECTORY_CLONE\n' >> "$OUT/source-repository-origin-guard.tsv"
+printf 'origin_mode\tISOLATED_SHARED_STORAGE_SAFE_DIRECTORY_BUNDLE_CLONE\n' >> "$OUT/source-repository-origin-guard.tsv"
 printf 'persistent_origin_before\t%s\n' "${SOURCE_REPO_PERSISTENT_ORIGIN:--}" >> "$OUT/source-repository-origin-guard.tsv"
 printf 'effective_origin\t%s\n' "$SOURCE_REPO_APPROVED_ORIGIN" >> "$OUT/source-repository-origin-guard.tsv"
 printf 'input_refs_sha256_before\t%s\n' "$SOURCE_REPO_INPUT_REFS_BEFORE" >> "$OUT/source-repository-origin-guard.tsv"
 printf 'input_refs_sha256_after\t%s\n' "$SOURCE_REPO_INPUT_REFS_AFTER" >> "$OUT/source-repository-origin-guard.tsv"
 printf 'safe_directory_scope\tCOMMAND_ONLY\n' >> "$OUT/source-repository-origin-guard.tsv"
+printf 'transfer_mode\tLOCAL_GIT_BUNDLE_ALL_REFS\n' >> "$OUT/source-repository-origin-guard.tsv"
 printf 'input_git_config_mutation\tNO\n' >> "$OUT/source-repository-origin-guard.tsv"
 printf 'input_metadata_mutation\tNO\n' >> "$OUT/source-repository-origin-guard.tsv"
 printf 'network_fetch_performed\tNO\n' >> "$OUT/source-repository-origin-guard.tsv"
@@ -197,6 +198,6 @@ printf 'OUT=%s\n' "$OUT"
 printf 'SOURCE_REPO_INPUT=%s\n' "$SOURCE_REPO_INPUT"
 printf 'SOURCE_REPO_INPUT_PHYSICAL=%s\n' "$SOURCE_REPO_CANONICAL"
 printf 'SOURCE_REPO_EXPECTED_HEAD=%s\n' "$SOURCE_REPO_EXPECTED_HEAD"
-printf 'SOURCE_REPO_ORIGIN_MODE=ISOLATED_SHARED_STORAGE_SAFE_DIRECTORY_CLONE\n'
+printf 'SOURCE_REPO_ORIGIN_MODE=ISOLATED_SHARED_STORAGE_SAFE_DIRECTORY_BUNDLE_CLONE\n'
 printf 'ARCHIVE=%s\n' "$ARCHIVE"
 printf 'ARCHIVE_SHA256=%s\n' "$ARCHIVE_SHA256"
