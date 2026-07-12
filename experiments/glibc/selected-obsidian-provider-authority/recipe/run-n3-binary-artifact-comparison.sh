@@ -55,8 +55,8 @@ case "$ARCHIVE" in
         ;;
 esac
 
-if [ ! -f "$SSL_CERT_FILE" ] || [ -L "$SSL_CERT_FILE" ]; then
-    printf 'missing or unsafe Termux CA bundle: %s\n' "$SSL_CERT_FILE" >&2
+if [ ! -f "$SSL_CERT_FILE" ]; then
+    printf 'missing Termux CA bundle: %s\n' "$SSL_CERT_FILE" >&2
     exit 2
 fi
 if [ ! -d "$SOURCE_EVIDENCE_OUT" ] || [ -L "$SOURCE_EVIDENCE_OUT" ]; then
