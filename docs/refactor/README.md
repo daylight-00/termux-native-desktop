@@ -1,20 +1,17 @@
 # Repository Refactor and Architecture Work Log
 
-This directory is the transaction-level source of truth for the migration from the original prototype toward explicit ownership, semantic provider authority, locked supply identities, clean runtime composition, and controlled activation.
+This directory is the transaction-level source of truth for migration from the original prototype toward explicit ownership, semantic provider authority, locked supply identity, clean runtime composition, controlled materialization, and activation.
 
 ## Working rule
 
 ```text
-session narrative
-    != authority
-
-repository evidence + current canonical index
-    = authority
+session narrative != authority
+repository evidence + current canonical index = authority
 ```
 
 Historical numbered records remain intact when later audits narrow or supersede their interpretation.
 
-## Current checkout and branch
+## Current checkout
 
 ```text
 checkout:
@@ -26,9 +23,9 @@ active architecture branch:
 
 The historical `$HOME/termux-native-desktop` path is evidence only.
 
-## Current authority and precedence
+## Authority and precedence
 
-Top-down foundation on `main`:
+Foundation on `main`:
 
 ```text
 docs/system-foundation/01-essence.md
@@ -39,45 +36,22 @@ docs/system-foundation/11-architecture-reassessment-and-hard-refactor-decision.m
 docs/system-foundation/12-document-consistency-audit-and-execution-order.md
 ```
 
-Current branch-local authority:
+Current branch-local chain:
 
 ```text
-0116-end-to-end-architecture-audit-and-provider-authority-intervention.md
-    full-project intervention and provider-source authority requirements
-
-0115-proot-oracle-supply-and-baseline-model.md
-    PRoot/rootfs as reproducible oracle and supply mechanism
-
-0112-selected-obsidian-passive-map-selection-diagnostic-pass-and-contract-decision.md
-    accepted passive runtime and map facts
-
-0117-provider-authority-intervention-adoption-and-execution-order.md
-    provider-authority workstream order
-
-0118-selected-obsidian-provider-authority-census-schema-and-evidence-plan.md
-    census schema and evidence plan
-
-0119-selected-obsidian-provider-authority-n2-read-only-evidence-collector.md
-0120-selected-obsidian-provider-authority-n2-device-receipt-review.md
-    read-only provider evidence
-
-0123-selected-obsidian-provider-authority-corrected-n3-receipt-pass-and-source-comparison-entry.md
-0128-selected-obsidian-provider-authority-source-recipe-receipt-pass.md
-0131-selected-obsidian-provider-authority-binary-artifact-receipt-pass.md
-    normalized classification, source recipe and exact binary supply evidence
-
-0132-evidence-storage-and-android-downloads-handoff-boundary.md
-    Termux-private work state versus explicit Downloads handoff
-
-0133-selected-obsidian-priority-provider-authority-review.md
-    bounded priority package/object review
-
-0134-selected-obsidian-provider-profile-locked-member-draft.md
-    exact non-materializing provider-fragment member locks
-
-0135-selected-obsidian-provider-profile-lock-draft-architecture-audit.md
-    current correction authority for global coverage, semantic-state separation,
-    alias authority, provider-fragment semantics, and target-layout ordering
+0112 selected passive runtime/map facts
+0115 PRoot oracle, supply and baseline lifecycle
+0116 controlling provider-authority intervention
+0117 intervention execution order
+0118-0120 N1/N2 census and read-only receipt
+0123 corrected N3 normalization acceptance
+0128 source-recipe receipt acceptance
+0131 exact binary-artifact receipt acceptance
+0132 Termux-private work versus Downloads handoff boundary
+0133 bounded priority provider review
+0134 exact non-materializing member-lock draft
+0135 post-0134 architecture audit and corrections
+0136 provider-authority coverage and lock-semantics normalization
 ```
 
 Precedence:
@@ -89,20 +63,17 @@ system-foundation
 0116
     -> controlling provider-authority intervention
 
-0115
-    -> oracle/supply/baseline lifecycle
-
-0112
-    -> accepted bounded runtime facts
+0115 and 0112
+    -> oracle/supply lifecycle and accepted bounded runtime facts
 
 0117-0134
-    -> evidence transactions and bounded draft decisions
+    -> evidence transactions and bounded historical decisions
 
 0135
-    -> current audit corrections and next-state authority
+    -> audit correction requirements
 
-other numbered records
-    -> chronological evidence and transaction history
+0136
+    -> current normalized coverage/registry/alias/schema state
 ```
 
 ## Current state
@@ -120,37 +91,43 @@ selected D-Bus pilot:
 scoped graphics-policy transaction:
     CLOSED
 
-selected Obsidian B1-B8:
-    CLOSED
-
 first immutable selected generation:
     PUBLISHED / UNACTIVATED
 
-passive startup/topology/100-second survival/maps:
+passive startup/topology/survival/maps:
     PASS
 
-provider-authority evidence collection:
-    PASS FOR BOUNDED PRIORITY SET
+priority provider evidence:
+    PASS / BOUNDED
 
-exact priority artifact/member supply locks:
-    PASS
+exact artifact/member supply:
+    STRONG PASS
 
 package-wide runtime inference:
     REJECTED
 
-provider semantic authority:
-    PARTIAL / CORRECTION REQUIRED
+global identity coverage normalization:
+    PASS
 
-provider fragments:
-    NON-MATERIALIZING DRAFT PASS
+canonical supply/object/fragment registries:
+    PASS
 
-global authority coverage:
+artifact alias classification:
+    PASS
+
+semantic final-provider authority:
     OPEN
 
+application runtime composition:
+    NOT REACHED
+
 target-layout schema:
-    ALLOWED TO DESIGN
+    PASS / SCHEMA ONLY
 
 target-layout population:
+    BLOCKED
+
+extraction/materializer:
     BLOCKED
 
 successor materialization:
@@ -161,18 +138,30 @@ current activation:
 
 clean reconstruction:
     NOT PROVEN
-
-PyMOL runtime implementation:
-    DEFERRED
 ```
 
-## Current provider-authority evidence
+## Evidence cardinality
 
 ```text
+semantic-object denominator:
+    161
+
+ELF semantic objects:
+    113
+
+first-generation content identities:
+    96 = 91 selected external ELF + 4 fonts + 1 generated schema
+
+application-local references:
+    11
+
+protected-world references:
+    18
+
 priority package dispositions:
     28 / 28
 
-bounded priority selected/reference objects:
+bounded priority reviewed objects:
     59 / 59
 
 exact artifacts:
@@ -181,260 +170,168 @@ exact artifacts:
 artifact data members compared:
     6,887
 
-artifact member mismatches:
+member mismatches:
     0
 
-unique reviewed object identities:
-    59
+canonical provider objects:
+    60 = 59 reviewed + 1 optional exec
 
-provider-fragment memberships:
+reviewed fragment memberships:
     63
 
-artifact alias rows:
-    93
+optional fragment memberships:
+    1
 
-locked member rows:
+canonical artifact aliases:
+    84
+
+legacy fragment alias edges:
+    92
+
+legacy lock rows:
     156
 
-profile/artifact edges:
-    35
+non-priority generic provider identities:
+    61
+
+target schema fields:
+    20
+
+populated target rows:
+    0
 ```
 
-These are bounded supply and review counts. They are not the complete application-domain authority denominator.
+These counts are not interchangeable. The 59-object review is a bounded subset of the 161-row denominator. The 96 first-generation contents are not application-local payload.
 
-## Current correction summary
-
-The post-`0134` audit requires:
+## Normalized work products
 
 ```text
-59/59 priority coverage
-    != complete selected/reference authority coverage
+experiments/glibc/selected-obsidian-provider-authority/review/
+    authority-coverage-ledger.tsv
+    authority-coverage-ledger/*.tsv
+    non-priority-generic-authority-ledger.tsv
+    non-priority-generic-authority-ledger/*.tsv
+    normalization-codebook.tsv
+    unresolved-authority-ledger.tsv
 
+experiments/glibc/selected-obsidian-provider-authority/profiles/
+    supply-repository-metadata-registry.tsv
+    supply-artifact-registry.tsv
+    provider-object-registry.tsv
+    provider-object-registry/*.tsv
+    provider-fragment-registry.tsv
+    provider-fragment-memberships.tsv
+    runtime-alias-authority.tsv
+    runtime-alias-authority/*.tsv
+    target-layout-schema.tsv
+    target-layout-invariants.md
+```
+
+Large registries use root indexes plus SHA-256-locked partitions. Historical `provider-profile-*` and `member-locks/*.tsv` files remain bounded supply evidence, not materializer input.
+
+## Current semantic corrections
+
+```text
 exact Termux artifact supply
-    != automatic final provider-source authority
+    != automatic final generic/platform authority
 
-Termux package origin
-    != automatic platform-integration semantic role
+Termux repository build
+    != automatic Termux/Android adaptation
 
-package-provided symlink
-    != required runtime alias
+artifact-to-live byte equivalence
+    != artifact-to-recipe build binding
 
-artifact mode/path
-    != target mode/path
+fragment membership
+    != application composition inclusion
 
-provider fragment membership
-    != deployable runtime profile
+package-provided alias
+    != runtime-required alias
 
-96 first-generation content identities
-    != application-local identities
+artifact mode/path/uid/gid
+    != target policy
+
+schema definition
+    != target population
 ```
 
-The current member locks remain valid exact supply evidence.
-
-## Required normalized model
+Specific decisions:
 
 ```text
-SupplyArtifact
-    exact artifact identity, acquisition/trust and recipe-binding state
+glibc reviewed world set:
+    current Termux/Android-adapted world authority; reconstruction lifecycle open
 
-ProviderObjectAuthority
-    canonical content identity and semantic/provider decision states
+libxcb:
+    explicit socket-prefix adaptation proven; final platform source provisional
 
-ProviderFragmentMembership
-    many-to-many capability/profile pressure edges
+libxshmfence:
+    explicit Termux shm-directory policy proven; final provider provisional
 
-RuntimeAliasAuthority
-    SONAME, proven dlopen, loader, development, internal or unresolved alias
+other reviewed X11 objects:
+    generic Termux supply; platform-versus-generic provisional
 
-ApplicationRuntimeComposition
-    accepted include/reference decisions, target domains and validation gates
+libcap.so.2:
+    platform-or-generic provisional; exact supply accepted
 
-TargetLayout
-    target paths/modes/owners populated only after authority acceptance
+libxcb-render.so.0 and libxcb-shm.so.0:
+    remain base-fragment pressure due passive mapped/direct consumers
+
+glibc-runner:
+    research/build/maintenance only
+
+termux-exec-glibc:
+    optional; minimum-runtime necessity unproven
 ```
 
-Required authority-state separation:
+## Living authority issues
 
 ```text
-semantic_role_state
-termux_android_adaptation_state
-candidate_source_comparison_state
-exact_supply_artifact_state
-artifact_to_recipe_binding_state
-profile_necessity_state
-provisional_final_provider_state
+AUTH-001 world reconstruction and lifecycle
+AUTH-002 optional Termux exec necessity
+AUTH-003 GTK/GLib/font/device/Wayland provider composition
+AUTH-004 printing capability/provider
+AUTH-005 graphics/X11/XCB provider composition
+AUTH-006 libwayland artifact-to-recipe binding
+AUTH-007 supply/alias/target population contract
+AUTH-008 data capabilities and loader state
+AUTH-009 non-priority generic capabilities
+AUTH-010 application payload/launcher/supplement authority
 ```
 
-## Current unresolved authority groups
+## Current next state
 
 ```text
-AUTH-001 world reconstruction/update/rollback
-AUTH-002 termux-exec minimum-profile necessity
-AUTH-003 GTK/font/device/Wayland provider composition
-AUTH-004 printing capability/provider requirement
-AUTH-005 graphics provider/update contract
-AUTH-006 libwayland source-tree binding
-AUTH-007 supply split, alias and target-layout schema
-AUTH-008 non-priority data and loader-state authority
-AUTH-009 non-priority generic capability authority
+CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 ```
 
-## Revised next valid state
+Required order:
 
 ```text
-NORMALIZE_PROVIDER_AUTHORITY_COVERAGE_AND_LOCK_SEMANTICS
+1. close or explicitly bound world internals, locale and loader-state lifecycle;
+2. establish application payload, launcher and supplement authority;
+3. compare candidate sources for non-priority generic capabilities;
+4. decide conditional graphics, GTK/Wayland, printing and optional-exec policy;
+5. close fonts, pixbuf/icon/MIME and generated-schema authority;
+6. define ApplicationRuntimeComposition only after owning authorities are accepted;
+7. populate target rows only after composition acceptance;
+8. perform intervention-lift audit before extraction/materializer implementation.
 ```
 
-Execution order:
-
-```text
-P0 correct terminology and complete authority denominator;
-P1 split semantic/adaptation/source/supply/necessity/final states;
-P2 classify artifact aliases and define target-independent mode policy;
-P3 create canonical artifact/object registries and fragment edges;
-P4 map every unreviewed capability/object to an authority issue;
-P5 resolve base XCB narrative and membership ambiguity;
-P6 define target-layout schema and invariants only;
-P7 close world, application, generic and data authority;
-P8 populate target paths only after ownership acceptance;
-P9 perform intervention-lift audit before materializer design.
-```
-
-## End-to-end chronological index
-
-```text
-0001-0011
-    repository ownership migration
-
-0012-0025
-    ABI incident, substrate authority and package-managed recovery
-
-0026-0028
-    selected D-Bus provider pilot
-
-0029-0091
-    Obsidian control, semantic decomposition and closed graphics transaction
-
-0092-0093
-    post-graphics synthesis and selected-pilot re-entry
-
-0094-0103
-    selected-Obsidian semantic closure and generation design
-
-0104-0106
-    immutable generation publication
-
-0107-0112
-    explicit-generation runtime, passive survival/maps and map-contract correction
-
-0113-0116
-    clean-state, PRoot/oracle and provider-authority intervention
-
-0117-0123
-    census schema, N2 evidence and corrected N3 normalization
-
-0124-0128
-    source-recipe evidence and bounded source review
-
-0129-0132
-    exact binary artifact comparison and storage boundary
-
-0133-0134
-    bounded priority authority review and exact member-lock fragments
-
-0135
-    architecture audit of coverage, authority states, aliases and target ordering
-```
-
-## Runtime and research profiles
-
-### Minimum workstation runtime profile
-
-Contains only accepted promoted runtime objects, application domains, data providers, validation/status surface, rollback surface and user state.
-
-It does not automatically contain:
-
-```text
-PRoot or a Debian rootfs;
-GCC/compiler packages;
-binutils/sysroots/headers;
-glibc-runner;
-build dependencies;
-oracle-only packages;
-package-wide provider surfaces.
-```
-
-### Research/build/maintenance profile
-
-May contain:
-
-```text
-PRoot tooling and pinned oracle scenarios;
-APT/dpkg acquisition and metadata tools;
-gcc-glibc and explicit target wrappers;
-build Python/Meson/Ninja;
-artifact inspection and validators;
-historical evidence receipts.
-```
-
-## Update domains
-
-```text
-world substrate update
-provider update
-application update
-toolchain update
-oracle scenario update
-```
-
-Each has independent identity, gates, dependents, promotion and rollback scope.
-
-## Evidence handoff
-
-Every evidence-producing stage uses a unique stage-specific output root and archive identity. Generic archive names are rejected.
-
-```bash
-out="<specific-stage-name>-$(date +%Y%m%d-%H%M%S)"
-OUT="<stage-output-root>/$out"
-tar czf ~/Downloads/$out.tgz $OUT
-```
-
-## Current stop lines
+## Stop line
 
 Do not:
 
 ```text
-treat 59/59 as global authority completion;
-treat all `$PREFIX/glibc` objects as world or platform authority;
-treat exact artifact supply as final generic-provider choice;
-copy all package aliases or artifact modes into a target;
-consume provider fragments as extraction manifests;
-call the 96 first-generation contents application-local;
-populate target paths before ownership closes;
+treat 59/59 as global completion;
+call first-generation contents application-local payload;
+consume provider fragments or historical lock files as deployable profiles;
+treat exact Termux supply as final provider authority;
+copy artifact aliases, paths or modes into a runtime target;
+populate target rows;
+write extraction/materializer code;
+install/remove/upgrade/downgrade packages;
+run maintainer scripts;
 materialize or activate a successor;
 create or change current;
-install/remove/update packages or run maintainer scripts;
-mutate loader state or patch RPATH;
-promote conditional fragments by availability;
-reopen closed graphics work;
-turn audit findings into runtime implementation without explicit authorization.
-```
-
-## Refactor lineage
-
-```text
-original refactor branch:
-    refactor/module-package-layout
-
-base:
-    3cf41d6fc47050b06e18e956a23cefe25e4fb82a
-
-selected-Obsidian state audited by 0116:
-    6c00ac7f9ca46bc2159c51689904e154146f0d2a
-
-provider-profile draft audited by 0135:
-    9bc7e9ffb92cf5d7b1095508e8a21438026656cd
-
-current architecture branch:
-    docs/post-graphics-architecture-audit
+mutate launcher, loader state or RPATH;
+reopen closed graphics gates.
 ```
