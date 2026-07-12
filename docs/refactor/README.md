@@ -1,10 +1,8 @@
-# Repository Refactor Work Log
+# Repository Refactor and Architecture Work Log
 
-This directory is the transaction-level source of truth for the migration from the legacy `setup/` layout toward explicit ownership, semantic composition, immutable selected providers, controlled activation, and clean-state reconstruction.
+This directory is the transaction-level source of truth for the migration from the original prototype toward explicit ownership, semantic composition, selected immutable providers, clean supply contracts, and controlled activation.
 
 ## Working rule
-
-Every structural or architectural change is recorded here before or with the repository change.
 
 ```text
 session narrative
@@ -29,6 +27,10 @@ The historical `$HOME/termux-native-desktop` path is evidence only and must not 
 Top-down foundation on `main`:
 
 ```text
+docs/system-foundation/01-essence.md
+docs/system-foundation/02-principles-and-invariants.md
+docs/system-foundation/03-system-model-v2.md
+docs/system-foundation/05-ideal-target-architecture.md
 docs/system-foundation/11-architecture-reassessment-and-hard-refactor-decision.md
 docs/system-foundation/12-document-consistency-audit-and-execution-order.md
 ```
@@ -36,23 +38,31 @@ docs/system-foundation/12-document-consistency-audit-and-execution-order.md
 Current branch-local authority:
 
 ```text
+0116-end-to-end-architecture-audit-and-provider-authority-intervention.md
+    -> full-project judgment, provider-source authority gap,
+       toolchain/runtime separation, update domains, and immediate intervention
+
+0115-proot-oracle-supply-and-baseline-model.md
+    -> PRoot as reproducible oracle/supply mechanism rather than workstation baseline
+
+0114-debian-baseline-correction-native-font-pressure-and-auditor-boundary.md
+    -> native-font pressure and auditor-role boundary
+
 0113-clean-state-minimum-condition-and-supply-authority-audit.md
-    -> clean-state definition, minimum sufficient conditions, supply authority,
-       font/rootfs cleanup order, identity separation, and next-phase gates
+    -> clean-product minimum conditions, supply identity, and cleanup ordering
 
 0112-selected-obsidian-passive-map-selection-diagnostic-pass-and-contract-decision.md
-    -> passive runtime/map facts, no-patch decision, corrected map classes,
-       and provisional successor-generation baseline
+    -> passive runtime/map facts and corrected map contract
 
 0110-selected-obsidian-pixbuf-inventory-pass-and-interaction-boundary-correction.md
-    -> passive versus interactive claim split and GTK capability inventory
+    -> passive/interactive split and GTK capability inventory
 
 0106-selected-obsidian-phase-b9-generation-materialization-pass.md
-    -> first immutable selected CPU generation and publication receipt
+    -> first immutable selected CPU generation
 
 0092-post-graphics-closure-architecture-midpoint-audit.md
 0093-post-audit-direction-validator-lifecycle-and-selected-closure-reentry.md
-    -> top-down direction, validator lifecycle, and parent-pilot continuation
+    -> post-graphics synthesis, validator lifecycle, and parent-pilot continuation
 
 0091-scoped-graphics-policy-promotion-closure.md
     -> closed graphics-policy transaction
@@ -64,17 +74,20 @@ Current branch-local authority:
 Precedence:
 
 ```text
-system-foundation/11 and /12
-    -> project essence and invariant authority
+system-foundation
+    -> project essence and constitutional invariants
 
-0113
-    -> current clean-state and supply-layer pressure
+0116
+    -> current full-history audit and intervention authority
+
+0115 / 0114 / 0113
+    -> oracle, native-font, clean-state, and supply pressure
 
 0112 / 0110 / 0106
-    -> current selected-Obsidian evidence and accepted bounded decisions
+    -> accepted bounded selected-generation evidence
 
 0092 / 0093
-    -> post-graphics architecture direction
+    -> post-graphics direction
 
 0091
     -> closed graphics contract
@@ -93,17 +106,18 @@ other numbered records
 ## Current state
 
 ```text
-ownership migration:
-    DEPLOYED
+repository ownership migration:
+    DEPLOYED / RETAINED
 
-scoped graphics-policy promotion:
-    CLOSED
+ABI incident recovery:
+    CLOSED FOR TESTED WORKLOAD
+    newer substrate lifecycle still open
 
 selected D-Bus provider pilot:
     PASS
 
-selected Obsidian parent pilot:
-    ACTIVE / INCOMPLETE
+scoped graphics-policy promotion:
+    CLOSED
 
 selected Obsidian phases B1-B8:
     CLOSED
@@ -111,315 +125,284 @@ selected Obsidian phases B1-B8:
 first immutable selected CPU generation:
     PUBLISHED / UNACTIVATED
 
-passive explicit-generation startup/topology/100-second survival/maps:
+passive startup/topology/100-second survival/maps:
     PASS
 
 passive map-selection diagnosis:
     PASS
 
-CPU map contract:
-    DECIDED, with Xau/Xdmcp semantic class name still provisional
-
 interactive vault-open GTK capability:
     OPEN
 
-clean-state supply authority:
-    OPEN / IMMEDIATE AUDIT GATE
+PRoot oracle/supply model:
+    CORRECTED
 
-rootfs font/package cleanup:
-    BLOCKED until supply inventory and locked inputs exist
+provider-source authority:
+    OPEN / IMMEDIATE INTERVENTION
+
+unified successor generation:
+    BLOCKED
 
 atomic current activation:
     NOT STARTED
 
-glibc corrected/newer substrate lifecycle:
-    OPEN
+clean reconstruction:
+    NOT PROVEN
 
 PyMOL runtime implementation:
     DEFERRED
 ```
 
-## Document index
+## End-to-end chronological index
 
 ### 0001–0011 — source ownership migration
 
-```text
-0001-current-state-inventory.md
-0002-ownership-map.md
-0003-migration-plan.md
-0004-shell-uv-base-adoption.md
-0005-device-preflight-test-failures.md
-0006-second-device-preflight-findings.md
-0007-third-device-preflight-deploy-return-status.md
-0008-pre-apply-gate-passed.md
-0009-phase-a-user-env-adoption-passed.md
-0010-phase-b-runtime-deploy-plan.md
-0011-phase-b-runtime-deploy-passed.md
-```
+The initial refactor inventoried the legacy tree, separated modules/packages/experiments/tools, moved application launchers to package owners, preserved external/generated state, and deployed the source-ownership change with validation.
 
-### 0012–0014 — ABI incident and superseded lifecycle proposal
+Decision:
 
 ```text
-0012-post-refactor-vscode-libdbus-abi-regression.md
-0013-vscode-libdbus-root-cause-confirmed.md
-0014-robust-gl-update-and-farm-lifecycle.md
+KEEP
 ```
 
-The incident proves substrate/provider incompatibility is independent of application and farm regeneration.
-
-### 0015–0019 — semantic architecture reassessment
+Limitation:
 
 ```text
-0015-architecture-reassessment-and-hard-refactor-direction.md
-0016-next-session-handoff.md
-0017-gl-umbrella-semantic-inventory.md
-0018-real-device-glibc-substrate-authority.md
-0019-selected-closure-pilot-decision-criteria.md
+modules/gl remained a transitional physical umbrella
 ```
 
-### 0020–0025 — glibc recovery and checkout relocation
+### 0012–0014 — ABI incident and first lifecycle proposal
+
+The libdbus/glibc incident proved that provider compatibility depends on world-substrate ABI and that farm regeneration cannot repair a broken substrate.
+
+`0014` contains useful transaction principles but its broad-farm/pacman/gl-run lifecycle is superseded.
+
+### 0015–0019 — architecture reassessment
+
+The project established:
 
 ```text
-0020-glibc-242-243-binary-abi-regression.md
-0021-glibc-242-downgrade-simulation-passed.md
-0022-glibc-242-recovery-and-core-gate-false-negative.md
-0023-cli-level-abi-incident-recovery-closed.md
-0024-vscode-gui-recovery-validation-passed.md
-0025-repository-checkout-relocation-to-projects.md
+world/provider/bridge/application/toolchain/supply ownership
+modules/gl as transitional
+broad farm as research/control
+backend-neutral substrate adapter
+selected-closure pilot criteria
 ```
 
-### 0026–0028 — selected D-Bus provider candidate
+### 0020–0025 — package-managed glibc recovery
+
+Exact artifact inspection, downgrade simulation, package-managed recovery, corrected core/provider gates, and real VS Code recovery closed the tested incident.
+
+The active device backend was identified as Termux APT/dpkg without making architecture APT-specific.
+
+### 0026–0028 — selected D-Bus provider pilot
+
+A bounded selected provider candidate proved:
 
 ```text
-0026-dbus-pilot-control-static-selection-mismatch.md
-0027-dbus-static-runtime-closure-agreement.md
-0028-selected-dbus-candidate-validation-passed.md
+immutable provider bytes
+provenance
+candidate-specific actual selection
+protected-world exclusion
+zero broad-farm/rootfs leakage
+control equivalence
 ```
-
-This proves materialized selected provider bytes, provenance, candidate-specific selection, protected-world separation, and zero broad-farm leakage for a bounded probe.
 
 ### 0029–0041 — Obsidian control and semantic decomposition
 
-```text
-0029-second-selected-closure-pilot-target.md
-0030-obsidian-control-capture-first-timeout.md
-0031-obsidian-cpu-topology-and-survival-gate.md
-0032-obsidian-control-wall-clock-gate-timing.md
-0033-obsidian-control-maps-captured-provenance-split.md
-0034-obsidian-control-semantic-decomposition.md
-0035-obsidian-semantic-classifier-awk-portability-fix.md
-0036-obsidian-graphics-provider-and-device-node-boundary.md
-0037-obsidian-graphics-process-class-mapping.md
-0038-obsidian-cpu-control-vulkan-policy-leak-hypothesis.md
-0039-obsidian-strict-cpu-vulkan-policy-ab-result.md
-0040-obsidian-explicit-freedreno-vs-implicit-fallback-provider-set.md
-0041-obsidian-fallback-provider-closure-attribution.md
-```
+The project captured a real Electron multiprocess application domain and separated app-local, world, prefix, rootfs, data, state, and graphics relations.
 
-### 0042–0060 — graphics policy discrimination
+### 0042–0075 — graphics architecture discrimination
 
-```text
-0042-vulkan-policy-producer-consumer-inventory.md
-0043-scoped-vulkan-policy-composition-experiment.md
-0044-self-contained-glx-consumer-probe.md
-0045-explicit-freedreno-zink-consumer-validation-passed.md
-0046-zink-turnip-mixed-provider-version-signal.md
-0047-explicit-zink-turnip-physical-provider-graph.md
-0048-zink-frontend-and-cross-version-graphics-composition-confirmed.md
-0049-implicit-discovery-zink-consumer-failure.md
-0050-implicit-loader-discovery-diagnostics.md
-0050-implicit-loader-discovery-and-zink-cpu-device-gate.md
-0051-implicit-software-intent-zink-llvmpipe-validation-passed.md
-0052-glx-map-runtime-anonymous-memory-classification.md
-0053-obsidian-capture-feature-mode-parameterization.md
-0054-obsidian-explicit-freedreno-gpu-adapter-validation-passed.md
-0055-obsidian-gpu-policy-control-comparison-harness.md
-0056-obsidian-implicit-gpu-control-and-helper-corrections.md
-0057-obsidian-same-feature-mode-vulkan-policy-substitution-result.md
-0058-obsidian-policy-ab-evidence-hygiene-closed.md
-0059-bounded-obsidian-implicit-loader-selection-debug-plan.md
-0060-obsidian-implicit-loader-selected-lvp-llvmpipe.md
-```
+The project separated provider discovery, provider selection, device intent, consumer suitability, mapped participation, and actual selected-device identity across standalone Zink, Obsidian, and VS Code controls.
 
-### 0061–0075 — VS Code causality and selected-device proof
+### 0076–0091 — scoped graphics promotion
 
-```text
-0061-vscode-explicit-gpu-policy-consumer-validation-plan.md
-0062-next-session-handoff-vscode-control-and-collaboration-workflow.md
-0063-vscode-cli-wrapper-process-handoff-diagnosis.md
-0064-vscode-process-handoff-proven-and-causal-main-adoption.md
-0065-vscode-explicit-freedreno-repaired-control-workload-gates-passed.md
-0066-vscode-explicit-gpu-mapping-pass-and-loader-observer-stream-fix.md
-0067-vscode-explicit-loader-log-absence-and-app-local-loader-identity-probe.md
-0068-vscode-vendor-loader-identity-and-gpu-observer-contract-gate.md
-0069-vscode-gpu-env-and-stdio-boundary-observed.md
-0070-vscode-policy-environment-child-launch-boundary-proven.md
-0071-vscode-provider-policy-behavioral-causality-proven.md
-0072-vscode-policy-comparison-receipt-pass-and-cdp-gpu-identity-plan.md
-0073-vscode-implicit-primary-gpu-lvp-selected.md
-0074-vscode-explicit-turnip-and-implicit-llvmpipe-primary-device-ab.md
-0075-vscode-primary-device-receipt-pass-and-policy-ownership-audit.md
-```
+World-boundary sanitation, consumer-scoped provider/bridge composition, application GPU/CPU mode, isolated application state, and selected-device correlation were promoted and closed.
 
-### 0076–0091 — scoped graphics promotion and closure
+Current helper/path names were not accepted as permanent architecture.
 
-```text
-0076-scoped-vulkan-policy-promotion-candidate.md
-0077-predeploy-pass-and-symlink-activation-gap.md
-0078-live-installation-pass-and-promoted-workload-gates.md
-0079-promoted-gl-run-validator-prerequisite-and-parser-false-negatives.md
-0080-promoted-gl-run-zink-turnip-renderer-pass.md
-0081-promoted-vscode-turnip-primary-identity-pass-and-cpu-policy-gate.md
-0082-bionic-zink-policy-leak-and-glibc-boundary-correction.md
-0083-expanded-graphics-policy-predeploy-and-live-installation-pass.md
-0084-current-head-gl-run-regression-pass-and-strengthened-vscode-gpu-gate.md
-0085-vscode-child-proc-environ-observability-false-negative.md
-0086-current-vscode-gpu-environment-and-primary-identity-pass.md
-0087-current-vscode-cpu-policy-and-survival-pass.md
-0088-obsidian-user-data-authority-and-cdp-path-false-negative.md
-0089-current-obsidian-gpu-environment-and-primary-identity-pass.md
-0090-current-obsidian-cpu-policy-and-survival-pass.md
-0091-scoped-graphics-policy-promotion-closure.md
-```
+### 0092–0093 — post-closure synthesis
 
-### 0092–0093 — post-closure audit and re-entry
-
-```text
-0092-post-graphics-closure-architecture-midpoint-audit.md
-0093-post-audit-direction-validator-lifecycle-and-selected-closure-reentry.md
-```
+Graphics experiment expansion stopped. Validators were classified by lifecycle, and the selected Obsidian parent pilot resumed.
 
 ### 0094–0103 — selected-Obsidian semantic closure and generation design
 
-```text
-0094-selected-obsidian-phase-b1-retained-control-locality-pass.md
-0095-selected-obsidian-phase-b2-static-runtime-closure-pass.md
-0096-selected-obsidian-phase-b3-first-run-script-failure.md
-0097-selected-obsidian-phase-b3-capability-grouping-pass.md
-0098-selected-obsidian-phase-b4-entrypoint-static-matrix-pass.md
-0099-selected-obsidian-phase-b5-data-provenance-review.md
-0100-selected-obsidian-phase-b6-source-manifest-gap.md
-0101-selected-obsidian-phase-b6-corrected-schema-reproduction-pass.md
-0102-selected-obsidian-phase-b7-complete-cpu-manifest-pass.md
-0103-selected-obsidian-phase-b8-generation-layout-preflight-pass.md
-```
+The project established locality, static/runtime partition, capability grouping, selected data provenance, reproducible GSettings output, complete disposition, and content-addressed generation design.
 
-This chain establishes:
+### 0104–0106 — generation materialization
 
-```text
-app-local locality preservation
-complete static/dynamic/data accounting
-four provisional selected font identities
-37-source reproducible GSettings aggregate
-complete CPU semantic manifest
-content-addressed immutable generation design
-explicit validation-before-activation contract
-```
+Publication failures were isolated and corrected without unsafe fallback. One immutable generation with 96 content identities and 175 aliases was published but not activated.
 
-### 0104–0106 — generation materialization failures and pass
+### 0107–0112 — explicit-generation runtime validation
+
+The project corrected launcher contamination and socket-path assumptions, proved passive topology/survival/maps, isolated the GTK interactive gap, and replaced an exact mapped-object count with class-based acceptance.
+
+### 0113–0115 — clean-state and PRoot model correction
+
+The project distinguished clean-product minimality from current-state minimality and redefined PRoot/rootfs as oracle/supply scenarios rather than workstation baselines.
+
+The current Debian-derived font set remains transition evidence, not final font authority.
+
+### 0116 — end-to-end provider-authority intervention
+
+The project is on track, but the next unified generation is blocked because the complete selected/reference set has not yet been resolved against the final provider authority hierarchy.
+
+Key correction:
 
 ```text
-0104-selected-obsidian-phase-b9-first-run-hardlink-publication-failure.md
-0105-selected-obsidian-phase-b9-generation-directory-publication-failure.md
-0106-selected-obsidian-phase-b9-generation-materialization-pass.md
+working selected path
+    !=
+final reference-quality provider decision
 ```
 
-The final result is one published but unactivated immutable generation with 96 content identities and 175 aliases.
-
-### 0107–0112 — explicit runtime validation and map-contract correction
+## Current semantic authority model
 
 ```text
-0107-selected-obsidian-phase-b10-first-run-launcher-environment-failure.md
-0108-selected-obsidian-phase-b10-second-run-short-lived-main-diagnostic.md
-0109-selected-obsidian-phase-b10-short-runtime-topology-pass-gtk-pixbuf-survival-failure.md
-0110-selected-obsidian-pixbuf-inventory-pass-and-interaction-boundary-correction.md
-0111-selected-obsidian-passive-b10-survival-pass-map-selection-failure.md
-0112-selected-obsidian-passive-map-selection-diagnostic-pass-and-contract-decision.md
+native host authority
+    Android/Termux bionic and native integration
+
+world core substrate
+    glibc loader/libc/tightly coupled runtime only
+
+platform-integration provider
+    Termux/Android-sensitive glibc providers and explicit bridges
+
+generic capability provider
+    D-Bus, GTK, fontconfig, pixbuf, TLS, NSS, audio, printing, etc.
+
+application-local
+    valid upstream AppDir/$ORIGIN payload
+
+application-domain supplement
+    bounded app/family-specific selected closure
+
+data capability provider
+    fonts, locale, schemas, icons, MIME, trust data
+
+toolchain-only
+    compiler/binutils/sysroot/build tools
+
+oracle-only
+    Debian scenario packages and controls not promoted into runtime
 ```
 
-This chain establishes:
+Repository or filesystem location is not sufficient to assign one of these classes.
+
+## Immediate intervention
+
+### Allowed bounded work
+
+The current pixbuf vault-open diagnostic may continue only as:
 
 ```text
-exec-only candidate loader injection
-short receipt-owned Chromium socket/runtime path
-passive topology and 100-second survival
-zero broad-farm/rootfs/current mappings
-class-based map acceptance
-Xau/Xdmcp exact RPATH-driven world substitution
-interactive GTK pixbuf/icon/MIME gap
+named diagnostic/oracle capability experiment
+same immutable unactivated generation
+no package install
+no generation mutation
+no current activation
+no promoted launcher change
+rootfs inputs treated as diagnostic-only
 ```
 
-### 0113 — clean-state and supply-layer audit
+### Blocked work
 
 ```text
-0113-clean-state-minimum-condition-and-supply-authority-audit.md
+unified successor manifest finalization
+successor generation materialization
+current activation
+clean runtime package-list declaration
+provider cleanup based only on prefix/rootfs path
 ```
 
-This audit adds the missing final-system criterion:
+### Required provider-authority audit
+
+For every selected/reference runtime object and relevant current glibc-prefix package, record:
 
 ```text
-minimum sufficient clean conditions
-    >
-minimum change to accumulated live state
+semantic class
+minimum scope
+current provenance
+candidate sources
+Termux/Android adaptation rationale
+app-local relation
+ABI/version relation
+dependent domains
+runtime or research profile
+update owner/trigger
+provisional final authority
 ```
 
-It identifies:
+### Required source-choice order
 
 ```text
-installed rootfs path dependence in materialization
-unknown rootfs base/manual package delta
-provisional rather than proven-minimum font set
-conflated generation identity axes
-generation-scoped rather than domain-wide rollback
-Xau/Xdmcp ownership-name overclaim
-coarse-versus-final pixbuf capability distinction
-experiment-tool versus final-tool boundary
+semantic role
+    -> relevant reference
+    -> candidate comparison
+    -> provider choice
+    -> locked supply artifact
+    -> update/revalidation contract
+    -> successor composition
 ```
 
-## Immediate execution order
+## Runtime and research profiles
+
+### Minimum workstation runtime profile
+
+Contains only promoted runtime objects and required status/validation surface.
+
+It does not automatically contain PRoot, GCC, `glibc-runner`, broad oracle package state, or build dependencies.
+
+### Research/build/maintenance profile
+
+May contain:
 
 ```text
-C0. read-only rootfs supply/package mutation inventory;
-C1. controlled relocated-cache vault-open diagnostic, no installs;
-C2. minimum pixbuf/icon/MIME and font capability derivation;
-C3. lock supply artifacts and separate causal identities;
-C4. build one unified immutable successor generation;
-C5. passive + interactive + warehouse-independence acceptance;
-C6. atomic activation and generation-scoped rollback;
-C7. remove/recreate accidental rootfs delta and repeat acceptance;
-C8. preserve bootstrap inputs for the later full Termux reset rehearsal.
+PRoot tooling and pinned oracle scenarios
+APT/dpkg metadata/acquisition tools
+gcc-glibc and explicit target wrappers
+build Python/Meson/Ninja
+artifact inspection and validators
 ```
+
+The existing glibc target wrapper toolchain remains a valid build/supply implementation. It is not a runtime-base decision.
+
+## Update domains
+
+```text
+world substrate update
+provider update
+application update
+toolchain update
+oracle scenario update
+```
+
+Each has independent identity, gates, dependents, promotion, and rollback scope.
+
+The project may remain latest-first in candidate acquisition while keeping active runtime evidence-gated.
 
 ## Current stop lines
 
 Do not:
 
 ```text
-rerun closed graphics gates without a trigger;
-purge rootfs font packages before the supply/mutation inventory;
-install another package to make the pixbuf path pass;
-expand gl-run into lifecycle authority;
-make the broad farm the production target;
-mutate the existing immutable generation;
-patch RPATH for Xau/Xdmcp;
-call prefix selection proof of semantic substrate ownership;
-copy all pixbuf/icon/MIME inventory paths wholesale;
-retain or remove fonts solely from one observed map set;
-activate current before clean supply and composition identities close;
-use phase-specific counts or wrappers as final operational architecture;
-reset Termux before all external inputs and clean bootstrap contracts are preserved;
-implement garbage collection.
+materialize or activate the successor before provider authority is classified;
+treat all `$PREFIX/glibc` objects as world substrate;
+treat all selected Debian objects as final providers;
+use glibc-repo membership as automatic semantic ownership;
+use Debian slim defaults as promoted runtime defaults;
+retain or install glibc-runner/GCC/fonts/pixbuf in the runtime profile by availability alone;
+replace valid app-local objects without evidence;
+turn the pixbuf diagnostic into final provider selection;
+reopen closed graphics work;
+mutate the existing generation;
+create current before provider/supply/composition/activation/rollback contracts close;
+turn audit findings into implementation without an explicit role change.
 ```
 
 ## Evidence handoff
 
-Every evidence-producing stage uses a unique stage-specific output root and archive name.
-
-```bash
-tar czf ~/Downloads/$out.tgz $OUT
-```
-
-Generic archive names are rejected because they erase stage identity.
+Every evidence-producing stage uses a unique stage-specific output root and archive identity. Generic archive names are rejected.
 
 ## Refactor lineage
 
@@ -430,13 +413,10 @@ original refactor branch:
 base:
     3cf41d6fc47050b06e18e956a23cefe25e4fb82a
 
-post-graphics audit base:
-    07b2f9a6f8f985fb3f152abd77c0ad3f04237cc9
-
-selected-Obsidian state audited by 0113:
+selected-Obsidian state audited:
     6c00ac7f9ca46bc2159c51689904e154146f0d2a
 
-clean-state audit branch:
+current architecture-audit branch:
     docs/clean-state-minimum-condition-audit
 ```
 
