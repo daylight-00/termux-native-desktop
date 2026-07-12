@@ -21,9 +21,19 @@ BASE=${EVIDENCE_BASE:-$PREFIX/tmp/selected-obsidian-provider-authority}
 DOWNLOADS=${DOWNLOADS_DIR:-$HOME/Downloads}
 STAMP=${STAMP:-$(date +%Y%m%d-%H%M%S)}
 N3_OUT=${N3_OUT:-$BASE/selected-obsidian-provider-authority-n3-normalized-classification-20260712-165805}
-SOURCE_REPO=${SOURCE_REPO:-$DOWNLOADS/termux-pacman-glibc-packages-source}
+SOURCE_REPO_INPUT=${SOURCE_REPO:-$DOWNLOADS/termux-pacman-glibc-packages-source}
+SOURCE_REPO_EXPECTED_HEAD=${SOURCE_REPO_EXPECTED_HEAD:-fd2ae25e04f3ea26d6c7b4678020814889331d86}
+SOURCE_REPO_APPROVED_ORIGIN=${SOURCE_REPO_APPROVED_ORIGIN:-https://github.com/termux-pacman/glibc-packages.git}
 OUT=${OUT:-$BASE/selected-obsidian-provider-authority-n3-source-recipe-evidence-$STAMP}
 ARCHIVE=${ARCHIVE:-$DOWNLOADS/selected-obsidian-provider-authority-n3-source-recipe-evidence-results-$STAMP.tgz}
+TEMP_SOURCE_REPO=
+
+cleanup() {
+    if [ -n "$TEMP_SOURCE_REPO" ] && [ -e "$TEMP_SOURCE_REPO" ]; then
+        rm -rf "$TEMP_SOURCE_REPO"
+    fi
+}
+trap cleanup EXIT
 
 case "$OUT" in
     "$BASE"/*) ;;
@@ -39,9 +49,9 @@ case "$ARCHIVE" in
         exit 2
         ;;
 esac
-case "$SOURCE_REPO" in
+case "$SOURCE_REPO_INPUT" in
     "$REPO"|"$REPO"/*)
-        printf 'SOURCE_REPO must remain outside the project checkout: %s\n' "$SOURCE_REPO" >&2
+        printf 'SOURCE_REPO must remain outside the project checkout: %s\n' "$SOURCE_REPO_INPUT" >&2
         exit 2
         ;;
 esac
@@ -50,11 +60,61 @@ if [ ! -d "$N3_OUT" ] || [ -L "$N3_OUT" ]; then
     printf 'missing or unsafe corrected N3 output root: %s\n' "$N3_OUT" >&2
     exit 2
 fi
-if [ ! -d "$SOURCE_REPO/.git" ]; then
-    printf 'missing full source repository clone: %s\n' "$SOURCE_REPO" >&2
-    printf 'clone https://github.com/termux-pacman/glibc-packages.git there first\n' >&2
+if [ ! -e "$SOURCE_REPO_INPUT/.git" ]; then
+    printf 'missing full source repository checkout: %s\n' "$SOURCE_REPO_INPUT" >&2
     exit 2
 fi
+
+SOURCE_REPO_INPUT_HEAD=$(git -C "$SOURCE_REPO_INPUT" rev-parse HEAD 2>/dev/null) || {
+    printf 'unable to resolve SOURCE_REPO HEAD: %s\n' "$SOURCE_REPO_INPUT" >&2
+    exit 2
+}
+if [ "$SOURCE_REPO_INPUT_HEAD" != "$SOURCE_REPO_EXPECTED_HEAD" ]; then
+    printf 'source repository HEAD mismatch:\n' >&2
+    printf '  observed: %s\n' "$SOURCE_REPO_INPUT_HEAD" >&2
+    printf '  expected: %s\n' "$SOURCE_REPO_EXPECTED_HEAD" >&2
+    exit 2
+fi
+if [ "$(git -C "$SOURCE_REPO_INPUT" rev-parse --is-shallow-repository)" != false ]; then
+    printf 'SOURCE_REPO must be a full non-shallow checkout\n' >&2
+    exit 2
+fi
+SOURCE_REPO_INPUT_DIRTY=$(git -C "$SOURCE_REPO_INPUT" status --porcelain --untracked-files=all)
+if [ -n "$SOURCE_REPO_INPUT_DIRTY" ]; then
+    printf 'SOURCE_REPO input must be clean, including untracked files:\n%s\n' "$SOURCE_REPO_INPUT_DIRTY" >&2
+    exit 2
+fi
+git -C "$SOURCE_REPO_INPUT" fsck --connectivity-only --no-dangling >/dev/null
+SOURCE_REPO_INPUT_REFS_BEFORE=$(git -C "$SOURCE_REPO_INPUT" for-each-ref --format='%(refname)%00%(objectname)%00%(objecttype)%00' | sha256sum | awk '{print $1}')
+SOURCE_REPO_PERSISTENT_ORIGIN=$(git -C "$SOURCE_REPO_INPUT" remote get-url origin 2>/dev/null || true)
+
+case "$SOURCE_REPO_PERSISTENT_ORIGIN" in
+    "$SOURCE_REPO_APPROVED_ORIGIN"|git@github.com:termux-pacman/glibc-packages.git|ssh://git@github.com/termux-pacman/glibc-packages.git)
+        SOURCE_REPO_ORIGIN_MODE=PERSISTENT_APPROVED
+        SOURCE_REPO_EFFECTIVE=$SOURCE_REPO_INPUT
+        ;;
+    "")
+        TEMP_SOURCE_REPO=$BASE/source-repository-normalized-view-$STAMP
+        if [ -e "$TEMP_SOURCE_REPO" ] || [ -L "$TEMP_SOURCE_REPO" ]; then
+            printf 'refusing existing temporary source view: %s\n' "$TEMP_SOURCE_REPO" >&2
+            exit 2
+        fi
+        mkdir -p "$BASE"
+        git clone --no-hardlinks "$SOURCE_REPO_INPUT" "$TEMP_SOURCE_REPO" >/dev/null
+        git -C "$TEMP_SOURCE_REPO" remote set-url origin "$SOURCE_REPO_APPROVED_ORIGIN"
+        if [ "$(git -C "$TEMP_SOURCE_REPO" rev-parse HEAD)" != "$SOURCE_REPO_EXPECTED_HEAD" ]; then
+            printf 'temporary source view lost the pinned HEAD\n' >&2
+            exit 2
+        fi
+        SOURCE_REPO_ORIGIN_MODE=ISOLATED_LOCAL_CLONE_APPROVED_ORIGIN
+        SOURCE_REPO_EFFECTIVE=$TEMP_SOURCE_REPO
+        ;;
+    *)
+        printf 'unexpected persistent SOURCE_REPO origin: %s\n' "$SOURCE_REPO_PERSISTENT_ORIGIN" >&2
+        exit 2
+        ;;
+esac
+
 if [ -e "$OUT" ] || [ -L "$OUT" ]; then
     printf 'refusing existing OUT: %s\n' "$OUT" >&2
     exit 2
@@ -66,8 +126,32 @@ fi
 
 mkdir -p "$BASE" "$DOWNLOADS"
 
+SOURCE_REPO=$SOURCE_REPO_EFFECTIVE
 export N3_OUT SOURCE_REPO OUT PREFIX
 python3 "$SCRIPT_DIR/collect-n3-source-recipe-evidence.py"
+
+SOURCE_REPO_INPUT_HEAD_AFTER=$(git -C "$SOURCE_REPO_INPUT" rev-parse HEAD)
+SOURCE_REPO_INPUT_REFS_AFTER=$(git -C "$SOURCE_REPO_INPUT" for-each-ref --format='%(refname)%00%(objectname)%00%(objecttype)%00' | sha256sum | awk '{print $1}')
+SOURCE_REPO_INPUT_DIRTY_AFTER=$(git -C "$SOURCE_REPO_INPUT" status --porcelain --untracked-files=all)
+if [ "$SOURCE_REPO_INPUT_HEAD_AFTER" != "$SOURCE_REPO_INPUT_HEAD" ] || \
+   [ "$SOURCE_REPO_INPUT_REFS_AFTER" != "$SOURCE_REPO_INPUT_REFS_BEFORE" ] || \
+   [ -n "$SOURCE_REPO_INPUT_DIRTY_AFTER" ]; then
+    printf 'SOURCE_REPO input changed during collection\n' >&2
+    exit 1
+fi
+
+printf 'field\tvalue\n' > "$OUT/source-repository-origin-guard.tsv"
+printf 'input_path\t%s\n' "$SOURCE_REPO_INPUT" >> "$OUT/source-repository-origin-guard.tsv"
+printf 'effective_path\t%s\n' "$SOURCE_REPO_EFFECTIVE" >> "$OUT/source-repository-origin-guard.tsv"
+printf 'expected_head\t%s\n' "$SOURCE_REPO_EXPECTED_HEAD" >> "$OUT/source-repository-origin-guard.tsv"
+printf 'observed_head\t%s\n' "$SOURCE_REPO_INPUT_HEAD" >> "$OUT/source-repository-origin-guard.tsv"
+printf 'origin_mode\t%s\n' "$SOURCE_REPO_ORIGIN_MODE" >> "$OUT/source-repository-origin-guard.tsv"
+printf 'persistent_origin_before\t%s\n' "${SOURCE_REPO_PERSISTENT_ORIGIN:--}" >> "$OUT/source-repository-origin-guard.tsv"
+printf 'effective_origin\t%s\n' "$SOURCE_REPO_APPROVED_ORIGIN" >> "$OUT/source-repository-origin-guard.tsv"
+printf 'input_refs_sha256_before\t%s\n' "$SOURCE_REPO_INPUT_REFS_BEFORE" >> "$OUT/source-repository-origin-guard.tsv"
+printf 'input_refs_sha256_after\t%s\n' "$SOURCE_REPO_INPUT_REFS_AFTER" >> "$OUT/source-repository-origin-guard.tsv"
+printf 'input_metadata_mutation\tNO\n' >> "$OUT/source-repository-origin-guard.tsv"
+printf 'network_fetch_performed\tNO\n' >> "$OUT/source-repository-origin-guard.tsv"
 
 special=$(find "$OUT" \( -type l -o \( ! -type f ! -type d \) \) -print -quit)
 if [ -n "$special" ]; then
@@ -89,6 +173,8 @@ ARCHIVE_SHA256=$(sha256sum "$ARCHIVE" | awk '{print $1}')
 
 printf '\nN3_SOURCE_RECIPE_EVIDENCE=PASS\n'
 printf 'OUT=%s\n' "$OUT"
-printf 'SOURCE_REPO=%s\n' "$SOURCE_REPO"
+printf 'SOURCE_REPO_INPUT=%s\n' "$SOURCE_REPO_INPUT"
+printf 'SOURCE_REPO_EXPECTED_HEAD=%s\n' "$SOURCE_REPO_EXPECTED_HEAD"
+printf 'SOURCE_REPO_ORIGIN_MODE=%s\n' "$SOURCE_REPO_ORIGIN_MODE"
 printf 'ARCHIVE=%s\n' "$ARCHIVE"
 printf 'ARCHIVE_SHA256=%s\n' "$ARCHIVE_SHA256"
