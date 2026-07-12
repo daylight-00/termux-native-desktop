@@ -3,6 +3,7 @@ set -euo pipefail
 
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 REPO=$(git -C "$SCRIPT_DIR" rev-parse --show-toplevel)
+WORK_ROOT=${PROVIDER_AUTHORITY_WORK_ROOT:-$(cd "$SCRIPT_DIR/.." && pwd)/work}
 
 for command in git python3 tar sha256sum find grep awk date dirname basename mkdir rm dpkg-deb readelf; do
     command -v "$command" >/dev/null 2>&1 || {
@@ -18,35 +19,46 @@ if [ -n "$tracked_dirty" ]; then
 fi
 
 BASE=${EVIDENCE_BASE:-$PREFIX/tmp/selected-obsidian-provider-authority}
-DOWNLOADS=${DOWNLOADS_DIR:-$HOME/Downloads}
 STAMP=${STAMP:-$(date +%Y%m%d-%H%M%S)}
 SOURCE_EVIDENCE_OUT=${SOURCE_EVIDENCE_OUT:-$BASE/selected-obsidian-provider-authority-n3-source-recipe-evidence-20260712-185001}
-ARTIFACT_DIR=${ARTIFACT_DIR:-$DOWNLOADS/selected-obsidian-provider-authority-n3-exact-artifacts}
-OUT=${OUT:-$BASE/selected-obsidian-provider-authority-n3-binary-artifact-comparison-$STAMP}
-ARCHIVE=${ARCHIVE:-$DOWNLOADS/selected-obsidian-provider-authority-n3-binary-artifact-comparison-results-$STAMP.tgz}
+ARTIFACT_DIR=${ARTIFACT_DIR:-$WORK_ROOT/artifacts/n3-exact-debs}
+OUT=${OUT:-$WORK_ROOT/receipts/unpacked/selected-obsidian-provider-authority-n3-binary-artifact-comparison-$STAMP}
+ARCHIVE=${ARCHIVE:-$WORK_ROOT/receipts/selected-obsidian-provider-authority-n3-binary-artifact-comparison-results-$STAMP.tgz}
+SSL_CERT_FILE=${SSL_CERT_FILE:-$PREFIX/etc/tls/cert.pem}
 
-case "$OUT" in
-    "$BASE"/*) ;;
+case "$WORK_ROOT" in
+    "$REPO"/experiments/*/work) ;;
     *)
-        printf 'OUT must remain under EVIDENCE_BASE: %s\n' "$OUT" >&2
-        exit 2
-        ;;
-esac
-case "$ARCHIVE" in
-    "$DOWNLOADS"/*) ;;
-    *)
-        printf 'ARCHIVE must remain under DOWNLOADS_DIR: %s\n' "$ARCHIVE" >&2
+        printf 'WORK_ROOT must use the repository experiment work convention: %s\n' "$WORK_ROOT" >&2
         exit 2
         ;;
 esac
 case "$ARTIFACT_DIR" in
-    "$DOWNLOADS"/*) ;;
+    "$WORK_ROOT"/*) ;;
     *)
-        printf 'ARTIFACT_DIR must remain under DOWNLOADS_DIR: %s\n' "$ARTIFACT_DIR" >&2
+        printf 'ARTIFACT_DIR must remain under WORK_ROOT: %s\n' "$ARTIFACT_DIR" >&2
+        exit 2
+        ;;
+esac
+case "$OUT" in
+    "$WORK_ROOT"/*) ;;
+    *)
+        printf 'OUT must remain under WORK_ROOT: %s\n' "$OUT" >&2
+        exit 2
+        ;;
+esac
+case "$ARCHIVE" in
+    "$WORK_ROOT"/*) ;;
+    *)
+        printf 'ARCHIVE must remain under WORK_ROOT: %s\n' "$ARCHIVE" >&2
         exit 2
         ;;
 esac
 
+if [ ! -f "$SSL_CERT_FILE" ] || [ -L "$SSL_CERT_FILE" ]; then
+    printf 'missing or unsafe Termux CA bundle: %s\n' "$SSL_CERT_FILE" >&2
+    exit 2
+fi
 if [ ! -d "$SOURCE_EVIDENCE_OUT" ] || [ -L "$SOURCE_EVIDENCE_OUT" ]; then
     printf 'missing or unsafe accepted source evidence root: %s\n' "$SOURCE_EVIDENCE_OUT" >&2
     exit 2
@@ -64,9 +76,9 @@ if [ -L "$ARTIFACT_DIR" ]; then
     exit 2
 fi
 
-mkdir -p "$BASE" "$DOWNLOADS" "$ARTIFACT_DIR"
+mkdir -p "$ARTIFACT_DIR" "$(dirname "$OUT")" "$(dirname "$ARCHIVE")"
 
-export SOURCE_EVIDENCE_OUT ARTIFACT_DIR OUT PREFIX
+export SOURCE_EVIDENCE_OUT ARTIFACT_DIR OUT PREFIX SSL_CERT_FILE
 python3 "$SCRIPT_DIR/collect-n3-binary-artifact-comparison.py"
 
 special=$(find "$OUT" \( -type l -o \( ! -type f ! -type d \) \) -print -quit)
@@ -88,8 +100,10 @@ fi
 ARCHIVE_SHA256=$(sha256sum "$ARCHIVE" | awk '{print $1}')
 
 printf '\nN3_BINARY_ARTIFACT_COMPARISON=PASS\n'
+printf 'WORK_ROOT=%s\n' "$WORK_ROOT"
 printf 'OUT=%s\n' "$OUT"
 printf 'SOURCE_EVIDENCE_OUT=%s\n' "$SOURCE_EVIDENCE_OUT"
 printf 'ARTIFACT_DIR=%s\n' "$ARTIFACT_DIR"
+printf 'SSL_CERT_FILE=%s\n' "$SSL_CERT_FILE"
 printf 'ARCHIVE=%s\n' "$ARCHIVE"
 printf 'ARCHIVE_SHA256=%s\n' "$ARCHIVE_SHA256"
