@@ -1,0 +1,18 @@
+code_domain	code	meaning
+coverage.disposition	EXCLUDED_CPU_BASE_CONDITIONAL	Explicit CPU-base exclusion; retained only as conditional capability pressure.
+coverage.disposition	UNREVIEWED_GENERIC	Selected/reference generic provider outside bounded priority review; maps to AUTH-009 or a specific capability issue.
+coverage.disposition	CANONICAL_PROVIDER_OBJECT	Covered by provider-object-registry.tsv.
+coverage.disposition	WORLD_REFERENCE	Protected world identity; maps to world reconstruction.
+coverage.disposition	APP_LOCAL_REFERENCE	Application-local reference identity; not first-generation copied provider content.
+coverage.disposition	DATA_CAPABILITY	Data identity requiring data-capability authority.
+coverage.disposition	MUTABLE_CACHE	Mutable or generated cache identity; excluded from immutable content.
+coverage.disposition	EXCLUDED	Explicitly excluded identity.
+coverage.disposition	UNRESOLVED	Authority disposition remains unresolved.
+adaptation.evidence	GLIBC_ANDROID_PATCH_SET	Reviewed glibc recipe contains Android/Termux identity, syscall, path, logging and shared-memory adaptations.
+adaptation.evidence	LIBXCB_TERMUX_X11_SOCKET_PATCH	libxcb recipe patch rewrites the X11 socket base into the Termux prefix.
+adaptation.evidence	LIBXSHMFENCE_TERMUX_SHM_DIR	libxshmfence configure policy selects the Termux shared-memory directory.
+adaptation.evidence	TERMUX_EXEC_INTERPOSER_PATCH	Termux-specific exec interposer source/patch.
+adaptation.evidence	NO_OBJECT_SPECIFIC_ADAPTATION_RECORDED	Termux supply build exists, but no selected-object-specific adaptation evidence is recorded.
+adaptation.evidence	LIBCAP_SELECTED_OBJECT_EFFECT_UNRESOLVED	Recipe patches exist but do not prove selected libcap.so.2 platform-integration semantics.
+adaptation.evidence	LIBWAYLAND_LINEAGE_EFFECT_UNRESOLVED	Two source-tree candidates remain and selected-object adaptation/source binding is unresolved.
+adaptation.evidence	MIXED_RECIPE_EFFECT_UNRESOLVED	Recipe contains build/path/toolchain changes whose selected runtime-object effect is unresolved.
