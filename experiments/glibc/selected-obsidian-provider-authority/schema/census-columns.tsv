@@ -1,0 +1,35 @@
+ordinal	field	layer	required	allowed_values	source_seed	decision_rule
+1	row_id	BOTH	YES	stable repository-local identifier	NEW	Must not be derived only from a mutable absolute path
+2	row_type	BOTH	YES	CAPABILITY|ELF_OBJECT|APP_LOCAL_OBJECT|DATA_OBJECT|GENERATED_DATA|MUTABLE_STATE|CACHE_CLASS|TOOLCHAIN_COMPONENT|ORACLE_STATE|PACKAGE_SURFACE	NEW	Choose the concrete responsibility represented by the row
+3	capability_group	BOTH	YES	group_id from capability-groups.tsv	B7 capability membership plus 0117 grouping	Capability-first grouping; may not be package-name-only
+4	object_or_capability	BOTH	YES	free text	B7/B1 or new capability label	Human-readable exact object or semantic capability
+5	current_selected_or_reference_path	MEMBER	CONDITIONAL	absolute observed path or NOT_APPLICABLE	B1/B7/B9/B10	Observed path is evidence, not semantic authority
+6	current_package_or_source_provenance	BOTH	YES	package/version/artifact/source description	B1/B7/0018/N2 package inventory	Separate package ownership from final provider authority
+7	historical_semantic_class	MEMBER	CONDITIONAL	retained historical class or NOT_APPLICABLE	B1/B7	Preserve historical evidence without rewriting it
+8	historical_action	MEMBER	CONDITIONAL	retained B7 action or NOT_APPLICABLE	B7	Never promote historical materialization action automatically
+9	semantic_class	BOTH	YES	WORLD_CORE_SUBSTRATE|PLATFORM_INTEGRATION_PROVIDER|GENERIC_SHARED_CAPABILITY_PROVIDER|APPLICATION_LOCAL|APPLICATION_DOMAIN_SUPPLEMENT|DATA_CAPABILITY_PROVIDER|TOOLCHAIN_ONLY|ORACLE_ONLY|MUTABLE_OR_CACHE|UNRESOLVED	NEW AUTHORITY JUDGMENT	UNRESOLVED is preferred over path-first inference
+10	minimum_valid_scope	BOTH	YES	WORLD|PLATFORM_INTEGRATION|SHARED_CAPABILITY|APPLICATION_FAMILY|APPLICATION_DOMAIN|APPLICATION_LOCAL|DATA_CAPABILITY|BUILD_SUPPLY|ORACLE_SCENARIO|MUTABLE_CACHE|UNRESOLVED	0117 plus evidence	Use the narrowest scope that owns the responsibility
+11	application_domains	BOTH	YES	semicolon-separated domain ids or NONE	B1/B2/B7/B10	Record actual or explicitly proposed consumers
+12	app_local_origin_relation	BOTH	YES	PRESERVE_ORIGIN|NO_ORIGIN_RELATION|REPLACEMENT_REQUIRES_EVIDENCE|UNRESOLVED plus evidence	B1 ELF metadata and AppDir evidence	Valid upstream locality is preserved by default
+13	content_sha256	MEMBER	CONDITIONAL	SHA-256 or NOT_APPLICABLE	B1/B7/B9/B10/N2	Content identity is independent of path and authority
+14	elf_build_id	MEMBER	CONDITIONAL	Build ID|ABSENT|NOT_APPLICABLE|UNKNOWN	N2 ELF inventory	Retain separately from package version and SHA-256
+15	lookup_name	MEMBER	CONDITIONAL	ELF lookup name|NOT_APPLICABLE|UNKNOWN	B3/B7/N2	Use for collision and consumer resolution, not authority
+16	soname	MEMBER	CONDITIONAL	SONAME|ABSENT|NOT_APPLICABLE|UNKNOWN	B3/B7/N2	Record ABI-facing identity when present
+17	candidate_source_termux_glibc_package	BOTH	YES	UNASSESSED|NO_KNOWN_CANDIDATE|CANDIDATE_IDENTIFIED|ARTIFACT_IDENTIFIED|BYTE_IDENTITY_PROVEN|BEHAVIOR_PROVEN|REQUIRES_DISCRIMINATOR|REJECTED_WITH_REASON plus evidence	0018/N2	Repository or prefix presence alone is insufficient
+18	candidate_source_exact_debian_artifact	BOTH	YES	UNASSESSED|NO_KNOWN_CANDIDATE|CANDIDATE_IDENTIFIED|ARTIFACT_IDENTIFIED|BYTE_IDENTITY_PROVEN|BEHAVIOR_PROVEN|REQUIRES_DISCRIMINATOR|REJECTED_WITH_REASON plus evidence	B1/B7/0115/N2	Must identify an exact artifact independent of mutable rootfs paths
+19	candidate_source_upstream_or_app_local	BOTH	YES	UNASSESSED|NO_KNOWN_CANDIDATE|CANDIDATE_IDENTIFIED|ARTIFACT_IDENTIFIED|BYTE_IDENTITY_PROVEN|BEHAVIOR_PROVEN|REQUIRES_DISCRIMINATOR|REJECTED_WITH_REASON plus evidence	AppDir/upstream evidence	Preserve app-local topology where valid
+20	candidate_source_project_build	BOTH	YES	UNASSESSED|NO_KNOWN_CANDIDATE|CANDIDATE_IDENTIFIED|ARTIFACT_IDENTIFIED|BYTE_IDENTITY_PROVEN|BEHAVIOR_PROVEN|REQUIRES_DISCRIMINATOR|REJECTED_WITH_REASON plus evidence	project build receipts	Do not assume project ownership without maintenance rationale
+21	candidate_source_native_termux_or_android	BOTH	YES	UNASSESSED|NO_KNOWN_CANDIDATE|CANDIDATE_IDENTIFIED|ARTIFACT_IDENTIFIED|BYTE_IDENTITY_PROVEN|BEHAVIOR_PROVEN|REQUIRES_DISCRIMINATOR|REJECTED_WITH_REASON plus evidence	native host/provider evidence	Cross-world use must remain ABI-safe and explicit
+22	termux_android_adaptation_required	BOTH	YES	YES|NO|POSSIBLE|UNKNOWN plus rationale	N2 package/source comparison	Decide from behavior/patch relevance, not source label
+23	abi_version_coupling	BOTH	YES	free text with evidence state	B1/B2/B7/N2	Record substrate, provider-family, data, plugin, or application coupling
+24	profile_runtime_or_research	BOTH	YES	RUNTIME|RESEARCH_BUILD_MAINTENANCE|BOTH_WITH_SEPARATE_ARTIFACTS|NEITHER|UNRESOLVED	0115/0117	Availability alone cannot place an item in runtime
+25	update_owner	BOTH	YES	WORLD_SUBSTRATE|PROVIDER|APPLICATION|TOOLCHAIN|ORACLE_SCENARIO|MUTABLE_STATE|UNRESOLVED	0116/0117	Use the lifecycle domain that can change independently
+26	revalidation_trigger	BOTH	YES	free text	0116/0117 plus dependency evidence	Name exact identities or contracts whose change requires gates
+27	provisional_final_authority	BOTH	YES	free text or UNRESOLVED	NEW AUTHORITY JUDGMENT	Must name authority and exact supply direction, not only a path
+28	unresolved_discriminating_evidence	BOTH	YES	free text or NONE	NEW	Ask one or more questions that can change the decision
+29	evidence_state	BOTH	YES	OBSERVED|DERIVED|INFERRED|PROVISIONAL|CONFLICTED|MISSING	ALL	Match strength of claim to evidence
+30	evidence_refs	BOTH	YES	semicolon-separated receipt/document/file references	ALL	References must identify exact accepted evidence
+31	evidence_claim_scope	BOTH	YES	free text	ALL	State workload, process class, ABI world, version, and observation boundary
+32	evidence_conflict	BOTH	YES	NONE or explicit conflict	ALL	Do not silently overwrite conflicting historical/current interpretations
+33	authority_decision_state	BOTH	YES	OPEN|PROVISIONAL|ACCEPTED_FOR_INTERVENTION_REVIEW|REJECTED|BLOCKED	NEW	Only explicit audit can lift intervention status
+34	notes	BOTH	NO	free text	NEW	Non-authoritative explanation only
