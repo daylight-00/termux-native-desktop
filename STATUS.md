@@ -1,36 +1,36 @@
 # Status
 
-> **State:** selected-Obsidian passive runtime PASS; PRoot oracle/supply and clean runtime baselines under architecture audit  
+> **State:** selected-Obsidian passive runtime PASS; provider authority audit blocks successor generation and activation  
 > **Updated:** 2026-07-12
 
 ## Working conclusions
 
-- **Phase B1-B8 are closed.** Retained identity, locality, static/runtime partition, capability grouping, selected data provenance, semantic disposition, and first-generation design are explicit.
+- **The project remains architecturally on track.** The prototype, ownership refactor, ABI recovery, selected D-Bus pilot, scoped graphics closure, and first selected-Obsidian generation each answered valid questions without becoming automatic final architecture.
+- **Phase B1-B8 are closed.** Retained identity, locality, static/runtime partition, capability grouping, data provenance, semantic disposition, and first-generation design are explicit.
 - **Phase B9 passed.** Ninety-six content objects totaling 70,897,301 bytes are hash-correct; the 175-alias immutable generation is published; staged/final validation is 1851/1851 PASS.
 - **The existing generation remains immutable and unactivated.** `current` is absent and the promoted launcher is unchanged.
-- **Passive B10 startup, topology, 100-second survival, and maps capture passed.** Main, renderer, three zygotes, and one utility process survived with zero GPU process.
-- **The passive mapped-selection diagnostic passed.** All selected objects remain hash-correct; the two mapped world-source substitutes match their selected hashes.
-- **The no-RPATH-patch decision is accepted.** `libXau` and `libXdmcp` are selected from exact world paths through retained absolute RPATH edges; duplicate materialization will be removed only in the next generation.
-- **The semantic class name for Xau/Xdmcp remains provisional.** Prefix/world selection does not by itself prove glibc-substrate ownership.
-- **The passive missing Bold font was demand-unmapped.** Selected data requires immutable presence/hash and scenario-correct identity, not universal mapping in every run.
-- **The exact mapped-count contract is retired.** Runtime acceptance is class/set based.
-- **The GTK vault-open capability remains open.** Pixbuf loader/cache, icon-theme, and MIME behavior remain separate claims from the earlier VS Code terminal-font problem.
-- **PRoot is a supply/oracle mechanism, not a workstation baseline.** It belongs to the Build and Supply Plane and ends before runtime promotion.
-- **The historical `debian:trixie-slim → apt upgrade → VS Code install` state is a valid VS Code oracle scenario, not the final clean-system baseline.** Its legitimacy comes from answering known-good behavior/dependency questions, not from being retained forever.
-- **The later Debian font installation may be valid diagnostic oracle evidence, but it is not accepted font-provider authority.** The target remains an explicit native-space font provider for glibc/Electron consumers.
-- **The project must distinguish host baseline, oracle seed, oracle scenario, supply transaction, behavioral control, and promoted runtime composition.** Unqualified `Debian baseline` language is rejected.
-- **The clean runtime profile should not require PRoot or a long-lived Debian rootfs once selected providers are proven.** A separate research/maintenance profile may recreate disposable oracle scenarios on demand.
-- **Minimality means minimum persistent authority and promoted dependency surface, not the smallest package count in every oracle scenario.** A large disposable control can be valid; a tiny accidental permanent rootfs dependency can be invalid.
-- **The current four Debian-derived selected fonts are historical transition evidence, not the final native-font contract.** The successor design must compare native-source candidates against declared glyph/rendering effects.
-- **Runtime selection is ahead of supply reproducibility.** The generation avoids rootfs runtime mappings, but materialization still depends on installed absolute source paths rather than locked supply receipts.
-- **Generation identity still needs causal separation before activation.** Content, supply/provenance, runtime composition, installation, and validation identities are currently mixed or incomplete.
-- **Generation rollback is scoped.** A `current` pointer can roll back the selected generation, not the glibc substrate, world providers, application payload, launcher, oracle state, or user state.
-- **The assistant role is auditor/pressure source only.** It inspects evidence, identifies hidden assumptions, sets stop lines, and requires proof; it does not implement or operate oracle/font/runtime mechanisms without an explicit role change.
+- **Passive B10 startup, topology, 100-second survival, maps capture, and map-selection diagnosis passed.** Broad-farm, rootfs-provider, and `current` mappings are zero.
+- **The no-RPATH-patch decision remains accepted.** Xau/Xdmcp world selection is understood; duplicate materialization is removed only in a successor generation. Their semantic owner name remains provisional because prefix selection is not proof of substrate ownership.
+- **PRoot is a reproducible oracle/supply mechanism, not a workstation baseline.** `debian:trixie-slim → apt upgrade → VS Code` is a valid historical oracle scenario, not the promoted runtime baseline.
+- **The later Debian font installation may be valid diagnostic control evidence, but it is not accepted font-provider authority.** The final target remains an explicit native-space font provider.
+- **Minimality means minimum persistent authority, hidden accumulated state, promoted dependency surface, and policy scope.** It does not require the smallest package count inside every disposable oracle scenario.
+- **The selected generation is a strong architecture-discrimination result, not yet an approved final provider composition.** Its 91 ELF objects span 71 package provenance labels and were selected from the historical control graph.
+- **Provider-source authority is the immediate missing layer.** The project has not yet decided, across the complete selected/reference set, whether each object belongs to world core, a Termux/Android integration provider, a generic shared capability, application-local ownership, an application supplement, a data provider, toolchain-only state, or oracle-only state.
+- **Physical source is not semantic authority.** `$PREFIX/glibc` does not automatically mean world substrate; Debian mapping does not automatically mean final provider; repository availability does not automatically mean clean-runtime membership.
+- **The current Termux glibc package surface must be partitioned.** Loader/libc core, platform-integration providers, generic providers, runtime-support libraries, and compiler/toolchain packages require different lifecycles.
+- **The current `gcc-glibc` plus explicit-loader wrappers are a proven build/supply toolchain implementation.** They are not automatically part of the minimum workstation runtime profile. Debian GCC is primarily an oracle/reference build tool unless a specific build requires it.
+- **`glibc-runner` necessity is unproven.** Do not include it in the clean baseline by availability alone; it remains a bootstrap/world-entry candidate until a unique responsibility is demonstrated.
+- **Runtime selection is ahead of supply reproducibility.** Materialization still depends on installed absolute source paths rather than locked package/artifact/source receipts.
+- **Generation identity still needs causal separation.** Content, provenance, runtime composition, installation, and validation identities are currently mixed or incomplete.
+- **Generation rollback is scoped.** A `current` pointer cannot roll back world substrate, external world providers, application payload, launcher, oracle state, or user state.
+- **The controlled pixbuf diagnostic remains permitted only as a non-promoting discriminator.** It must not authorize all discovered modules/data, successor materialization, or `current` activation.
+- **The assistant role remains auditor/pressure source only.** It inspects evidence, identifies hidden authority and path dependence, sets stop lines, and requires proof; it does not implement or operate runtime changes without an explicit role change.
 
 ## Architecture authority
 
 ```text
 main/docs/system-foundation/01-essence.md
+main/docs/system-foundation/02-principles-and-invariants.md
 main/docs/system-foundation/03-system-model-v2.md
 main/docs/system-foundation/05-ideal-target-architecture.md
 main/docs/system-foundation/11-architecture-reassessment-and-hard-refactor-decision.md
@@ -40,94 +40,111 @@ docs/refactor/0112-selected-obsidian-passive-map-selection-diagnostic-pass-and-c
 docs/refactor/0113-clean-state-minimum-condition-and-supply-authority-audit.md
 docs/refactor/0114-debian-baseline-correction-native-font-pressure-and-auditor-boundary.md
 docs/refactor/0115-proot-oracle-supply-and-baseline-model.md
+docs/refactor/0116-end-to-end-architecture-audit-and-provider-authority-intervention.md
 ```
 
-`0115` supersedes the statement in `0114` that `trixie-slim + upgrade + VS Code` is the final clean reference baseline. It remains a valid historical oracle/control scenario.
+`0116` is the current end-to-end audit and immediate intervention authority.
 
 ## Current audit pressure
 
-### P0 — baseline vocabulary and lineage
+### P0 — preserve bounded evidence work
 
-Demand separate identities for:
+The current pixbuf vault-open diagnostic may continue only as:
 
 ```text
-native host baseline
-oracle seed
-VS Code oracle scenario
-font oracle scenario
-pixbuf oracle scenario
-supply transactions
-promoted runtime composition
-runtime profile
-research/maintenance profile
+named diagnostic/oracle capability experiment
+same immutable unactivated generation
+no package install
+no generation mutation
+no current activation
+no promoted launcher change
+rootfs inputs treated as diagnostic-only
 ```
 
-### P1 — oracle reproducibility
+### P1 — provider-authority census
 
-Demand eventual evidence for:
+For every selected/reference runtime object and every relevant package in the current glibc prefix, demand:
 
 ```text
-exact trixie-slim seed/archive identity
-architecture
-initial package manifest
-repository/snapshot context
-scenario parent identity
-requested and resolved package sets
-transaction logs
-scenario outputs and disposal/recreation policy
+semantic role
+minimum scope
+current path and provenance
+candidate provider sources
+Termux/Android adaptation rationale
+app-local relation
+ABI/version relation
+dependent domains
+runtime or research profile
+update owner/trigger
+provisional authority decision
 ```
 
-A floating `apt upgrade` is historical evidence unless its result or repository snapshot is locked.
-
-### P2 — native font provider
-
-Demand a bounded contract proving:
+Required classes:
 
 ```text
-explicit fontconfig selection
-exact native-source font identities
-required Latin/mono/bold/Korean-CJK coverage
-cache ownership
-no Debian-rootfs font path/file/cache authority
+WORLD_CORE_SUBSTRATE
+PLATFORM_INTEGRATION_PROVIDER
+GENERIC_SHARED_CAPABILITY_PROVIDER
+APPLICATION_LOCAL
+APPLICATION_DOMAIN_SUPPLEMENT
+DATA_CAPABILITY_PROVIDER
+TOOLCHAIN_ONLY
+ORACLE_ONLY
+MUTABLE_OR_CACHE
 ```
 
-The auditor does not choose the provider implementation.
+### P2 — source/reference choice
 
-### P3 — selected-generation supply authority
-
-Demand movement from:
+Demand this order:
 
 ```text
-mutable installed rootfs absolute paths
+semantic role
+    -> relevant reference authority
+    -> candidate comparison
+    -> provider choice
+    -> supply artifact
+    -> update/revalidation scope
+    -> successor composition
 ```
 
-to:
+Reject path-first selection.
+
+### P3 — runtime and research profiles
+
+Demand separate declarations for:
 
 ```text
-locked package/artifact/source receipts
-    -> staged selection
-    -> immutable generation
+minimum workstation runtime profile
+research/build/maintenance profile
+oracle seed and named scenarios
 ```
 
-Debian may remain the artifact source; its accumulated installed tree must not remain permanent authority.
+Compiler/toolchain packages and oracle packages do not enter the runtime profile without a runtime claim.
 
-### P4 — cleanup interpretation
+### P4 — update domains
 
-Cleanup should target accumulated obsolete oracle scenario state, not restore one long-lived rootfs as the workstation baseline.
-
-Manual package-by-package rollback is not automatically better than preserving evidence and recreating named oracle scenarios from a pinned seed.
-
-### P5 — independent capability tracks
-
-Keep these separate unless evidence joins them:
+Demand distinct contracts for:
 
 ```text
-VS Code terminal-font control
-native font provider
-selected-generation font data
-GTK pixbuf loader/cache
-icon-theme data
-MIME database
+world substrate update
+platform/generic provider update
+application payload update
+toolchain update
+oracle scenario update
+```
+
+Candidate acquisition may be latest-first; active runtime promotion remains gate-controlled.
+
+### P5 — successor generation
+
+Lift the block only after:
+
+```text
+provider authority decisions are complete enough for the selected set;
+fonts and pixbuf/icon/MIME capabilities are bounded;
+locked supply receipts replace mutable source-path authority;
+content/provenance/composition/install/validation identities are separated;
+activation and rollback scopes are honest.
 ```
 
 ## Current stop lines
@@ -135,21 +152,21 @@ MIME database
 Do not:
 
 ```text
-call trixie-slim + upgrade + VS Code the final clean-system baseline;
-call installing VS Code in an oracle inherently wrong;
-confuse a valid control scenario with runtime promotion;
-use one indefinitely mutated rootfs for every experiment without scenario attribution;
-make package-count minimalism the oracle goal;
-retain Debian font authority because it already exists;
-retain the four Debian-derived fonts by generation inertia;
-conflate GTK pixbuf/icon/MIME with the VS Code terminal-font workaround;
-remove useful oracle evidence before scenario lineage and artifacts are preserved;
-require the workstation runtime profile to retain PRoot without a proven capability need;
+materialize or activate the unified successor generation before the provider-authority audit;
+treat every `$PREFIX/glibc` object as world substrate;
+treat every selected Debian object as a final provider;
+install or retain glibc-runner, GCC, fonts, pixbuf, or other packages in the clean runtime profile by availability alone;
+use Debian slim defaults as promoted runtime defaults;
+use glibc-repo membership as automatic semantic ownership;
+replace valid application-local providers without evidence;
+merge toolchain packages into the minimum runtime profile;
+let oracle updates mutate promoted runtime automatically;
+turn the pixbuf diagnostic into final provider selection;
 patch RPATH or mutate the existing generation;
-create `current` before clean supply and composition identities close;
-turn the audit into an implementation choice or operational procedure.
+create `current` before provider, supply, composition, activation, and rollback contracts close;
+turn the audit into an implementation or device-operation role.
 ```
 
 ## Evidence policy
 
-Oracle validity, supply provenance, promoted runtime validity, terminal-font selection, GTK interactive capability, runtime object selection, clean reconstruction, activation, rollback, and cleanup are separate claims. A package installed in an oracle can be valid evidence without becoming a promoted dependency.
+Prototype validity, oracle validity, package-source provenance, semantic provider authority, runtime composition, interactive capability, update compatibility, activation, rollback, and clean reconstruction are separate claims. A working or mapped object is not automatically the correct final provider.
