@@ -1,0 +1,21 @@
+ordinal	field	layer	required	allowed_values	default_value	invariant
+1	target_record_id	IDENTITY	YES	unique stable row identity	-	Must be content-addressed or manifest-stable.
+2	application_composition_id	COMPOSITION	YES	accepted ApplicationRuntimeComposition identifier	-	Fragment ids are not compositions.
+3	provider_object_id	AUTHORITY_REFERENCE	CONDITIONAL	provider-object-registry object_id	-	Required for externalized provider content.
+4	application_identity_key	AUTHORITY_REFERENCE	CONDITIONAL	application payload/local/supplement identity	-	Mutually scoped with provider_object_id.
+5	supply_artifact_id	SUPPLY_REFERENCE	CONDITIONAL	supply-artifact-registry artifact_id	-	Does not imply package-wide extraction.
+6	source_artifact_member_path	SUPPLY_REFERENCE	CONDITIONAL	exact data member path	-	Supply identity only.
+7	target_domain	TARGET_POLICY	YES	WORLD_CORE|WORLD_DATA|SHARED_PROVIDER|APPLICATION_LOCAL|APPLICATION_SUPPLEMENT|MUTABLE_STATE|GENERATED_CACHE|DEVICE_REFERENCE	-	World core and locale data must remain distinct.
+8	target_relative_path	TARGET_POLICY	YES	normalized relative path	-	No absolute paths, empty components, or .. traversal.
+9	target_node_type	TARGET_POLICY	YES	REGULAR|SYMLINK|DIRECTORY|GENERATED|REFERENCE_ONLY	-	Must agree with target domain and alias policy.
+10	target_mode_policy	TARGET_POLICY	YES	IMMUTABLE_EXECUTABLE|IMMUTABLE_READONLY|DOMAIN_DEFAULT|GENERATED_POLICY|REFERENCE_ONLY	-	Artifact mode cannot be copied implicitly.
+11	target_owner_policy	TARGET_POLICY	YES	WORLD_OWNER|PROVIDER_OWNER|APPLICATION_OWNER|STATE_OWNER|DEVICE_EXTERNAL	-	Numeric artifact uid/gid are not target policy.
+12	target_mutability	TARGET_POLICY	YES	IMMUTABLE|GENERATED_REPLACEABLE|MUTABLE_PERSISTENT|EXTERNAL_REFERENCE	-	Mutable state cannot enter immutable generations.
+13	target_alias_class	TARGET_POLICY	CONDITIONAL	SONAME_RUNTIME_ALIAS|PROVEN_DLOPEN_RUNTIME_ALIAS|LOADER_OR_ENTRYPOINT_ALIAS|PACKAGE_INTERNAL_RELATIVE_ALIAS|NONE	-	LINKER_DEVELOPMENT_ALIAS is not deployable runtime content.
+14	target_collision_policy	TARGET_POLICY	YES	ERROR|SAME_CONTENT_DEDUP|DECLARED_OVERRIDE|EXTERNAL_REFERENCE	-	Silent last-writer-wins is forbidden.
+15	update_domain	LIFECYCLE	YES	WORLD_SUBSTRATE_UPDATE|WORLD_DATA_UPDATE|PLATFORM_INTEGRATION_UPDATE|GENERIC_PROVIDER_UPDATE|APPLICATION_UPDATE|GENERATED_DATA_UPDATE	-	One canonical owner per object/domain.
+16	rollback_domain	LIFECYCLE	YES	WORLD|PROVIDER|APPLICATION|DATA|STATE|NONE_REFERENCE	-	Must not collapse world rollback into generation rollback.
+17	validation_gate_ids	VALIDATION	YES	semicolon-delimited accepted gate identifiers	-	Target population requires named validation.
+18	authority_issue_ids	AUTHORITY	YES	semicolon-delimited unresolved issue ids or -	-	Any unresolved blocking issue prevents population.
+19	authority_acceptance_state	AUTHORITY	YES	ACCEPTED_FINAL|PROVISIONAL_BLOCKED|EXCLUDED|REFERENCE_ONLY	-	Only ACCEPTED_FINAL or declared REFERENCE_ONLY may populate.
+20	population_state	STATE	YES	UNPOPULATED_SCHEMA_ONLY|POPULATED_REVIEW|AUTHORIZED	UNPOPULATED_SCHEMA_ONLY	This stage permits only UNPOPULATED_SCHEMA_ONLY.
