@@ -3,6 +3,7 @@ set -euo pipefail
 
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 REPO=$(git -C "$SCRIPT_DIR" rev-parse --show-toplevel)
+WORK_ROOT=${PROVIDER_AUTHORITY_WORK_ROOT:-$(cd "$SCRIPT_DIR/.." && pwd)/work}
 
 for command in git python3 tar sha256sum find grep awk date dirname basename mkdir rm; do
     command -v "$command" >/dev/null 2>&1 || {
@@ -18,16 +19,15 @@ if [ -n "$tracked_dirty" ]; then
 fi
 
 BASE=${EVIDENCE_BASE:-$PREFIX/tmp/selected-obsidian-provider-authority}
-DOWNLOADS=${DOWNLOADS_DIR:-$HOME/Downloads}
 STAMP=${STAMP:-$(date +%Y%m%d-%H%M%S)}
 N3_OUT=${N3_OUT:-$BASE/selected-obsidian-provider-authority-n3-normalized-classification-20260712-165805}
-SOURCE_REPO_INPUT=${SOURCE_REPO:-$DOWNLOADS/termux-pacman-glibc-packages-source}
+SOURCE_REPO_INPUT=${SOURCE_REPO:-$WORK_ROOT/source/termux-pacman-glibc-packages}
 SOURCE_REPO_EXPECTED_HEAD=${SOURCE_REPO_EXPECTED_HEAD:-fd2ae25e04f3ea26d6c7b4678020814889331d86}
 SOURCE_REPO_APPROVED_ORIGIN=${SOURCE_REPO_APPROVED_ORIGIN:-https://github.com/termux-pacman/glibc-packages.git}
-OUT=${OUT:-$BASE/selected-obsidian-provider-authority-n3-source-recipe-evidence-$STAMP}
-ARCHIVE=${ARCHIVE:-$DOWNLOADS/selected-obsidian-provider-authority-n3-source-recipe-evidence-results-$STAMP.tgz}
-TEMP_SOURCE_REPO=$BASE/source-repository-normalized-view-$STAMP
-TEMP_SOURCE_BUNDLE=$BASE/source-repository-normalized-view-$STAMP.bundle
+OUT=${OUT:-$WORK_ROOT/receipts/unpacked/selected-obsidian-provider-authority-n3-source-recipe-evidence-$STAMP}
+ARCHIVE=${ARCHIVE:-$WORK_ROOT/receipts/selected-obsidian-provider-authority-n3-source-recipe-evidence-results-$STAMP.tgz}
+TEMP_SOURCE_REPO=$WORK_ROOT/tmp/source-repository-normalized-view-$STAMP
+TEMP_SOURCE_BUNDLE=$WORK_ROOT/tmp/source-repository-normalized-view-$STAMP.bundle
 
 cleanup() {
     if [ -e "$TEMP_SOURCE_REPO" ] || [ -L "$TEMP_SOURCE_REPO" ]; then
@@ -39,26 +39,30 @@ cleanup() {
 }
 trap cleanup EXIT
 
-case "$OUT" in
-    "$BASE"/*) ;;
+case "$WORK_ROOT" in
+    "$REPO"/experiments/*/work) ;;
     *)
-        printf 'OUT must remain under EVIDENCE_BASE: %s\n' "$OUT" >&2
-        exit 2
-        ;;
-esac
-case "$ARCHIVE" in
-    "$DOWNLOADS"/*) ;;
-    *)
-        printf 'ARCHIVE must remain under DOWNLOADS_DIR: %s\n' "$ARCHIVE" >&2
+        printf 'WORK_ROOT must use the repository experiment work convention: %s\n' "$WORK_ROOT" >&2
         exit 2
         ;;
 esac
 case "$SOURCE_REPO_INPUT" in
+    "$WORK_ROOT"/source/*) ;;
     "$REPO"|"$REPO"/*)
-        printf 'SOURCE_REPO must remain outside the project checkout: %s\n' "$SOURCE_REPO_INPUT" >&2
+        printf 'SOURCE_REPO inside the project must remain under WORK_ROOT/source: %s\n' "$SOURCE_REPO_INPUT" >&2
         exit 2
         ;;
+    *) ;;
 esac
+for path in "$OUT" "$ARCHIVE" "$TEMP_SOURCE_REPO" "$TEMP_SOURCE_BUNDLE"; do
+    case "$path" in
+        "$WORK_ROOT"/*) ;;
+        *)
+            printf 'transaction path must remain under WORK_ROOT: %s\n' "$path" >&2
+            exit 2
+            ;;
+    esac
+done
 
 if [ ! -d "$N3_OUT" ] || [ -L "$N3_OUT" ]; then
     printf 'missing or unsafe corrected N3 output root: %s\n' "$N3_OUT" >&2
@@ -66,6 +70,7 @@ if [ ! -d "$N3_OUT" ] || [ -L "$N3_OUT" ]; then
 fi
 if [ ! -d "$SOURCE_REPO_INPUT" ] || [ -L "$SOURCE_REPO_INPUT" ]; then
     printf 'missing or unsafe source repository directory: %s\n' "$SOURCE_REPO_INPUT" >&2
+    printf 'prepare it with: git clone %s %s\n' "$SOURCE_REPO_APPROVED_ORIGIN" "$WORK_ROOT/source/termux-pacman-glibc-packages" >&2
     exit 2
 fi
 if [ ! -e "$SOURCE_REPO_INPUT/.git" ]; then
@@ -85,7 +90,7 @@ source_git() {
 }
 
 SOURCE_REPO_INPUT_HEAD=$(source_git rev-parse --verify HEAD) || {
-    printf 'unable to resolve SOURCE_REPO HEAD even with scoped safe.directory:\n' >&2
+    printf 'unable to resolve SOURCE_REPO HEAD with command-scoped trust:\n' >&2
     printf '  logical:  %s\n' "$SOURCE_REPO_INPUT" >&2
     printf '  physical: %s\n' "$SOURCE_REPO_CANONICAL" >&2
     exit 2
@@ -120,11 +125,11 @@ case "$SOURCE_REPO_PERSISTENT_ORIGIN" in
         ;;
 esac
 
-mkdir -p "$BASE" "$DOWNLOADS"
+mkdir -p "$WORK_ROOT/source" "$WORK_ROOT/tmp" "$(dirname "$OUT")" "$(dirname "$ARCHIVE")"
 
-# Android shared storage can legitimately trip Git's dubious-ownership guard.
-# The exception is command-scoped. A bundle avoids a local-clone upload-pack
-# subprocess that would otherwise lose the scoped safe.directory setting.
+# Use a bundle for a deterministic all-ref transfer. The command-scoped
+# safe.directory option also keeps an explicitly overridden shared-storage
+# source usable without persistent Git configuration.
 source_git bundle create "$TEMP_SOURCE_BUNDLE" --all
 
 git clone "$TEMP_SOURCE_BUNDLE" "$TEMP_SOURCE_REPO" >/dev/null
@@ -143,6 +148,15 @@ if [ -n "$(git -C "$TEMP_SOURCE_REPO" status --porcelain --untracked-files=all)"
 fi
 git -C "$TEMP_SOURCE_REPO" fsck --connectivity-only --no-dangling >/dev/null
 rm -f "$TEMP_SOURCE_BUNDLE"
+
+case "$SOURCE_REPO_CANONICAL" in
+    /storage/emulated/*|/sdcard/*)
+        SOURCE_REPO_ORIGIN_MODE=ISOLATED_SHARED_STORAGE_SAFE_DIRECTORY_BUNDLE_CLONE
+        ;;
+    *)
+        SOURCE_REPO_ORIGIN_MODE=ISOLATED_PRIVATE_WORK_TREE_BUNDLE_CLONE
+        ;;
+esac
 
 SOURCE_REPO=$TEMP_SOURCE_REPO
 export N3_OUT SOURCE_REPO OUT PREFIX
@@ -164,7 +178,7 @@ printf 'input_physical_path\t%s\n' "$SOURCE_REPO_CANONICAL" >> "$OUT/source-repo
 printf 'effective_path\t%s\n' "$TEMP_SOURCE_REPO" >> "$OUT/source-repository-origin-guard.tsv"
 printf 'expected_head\t%s\n' "$SOURCE_REPO_EXPECTED_HEAD" >> "$OUT/source-repository-origin-guard.tsv"
 printf 'observed_head\t%s\n' "$SOURCE_REPO_INPUT_HEAD" >> "$OUT/source-repository-origin-guard.tsv"
-printf 'origin_mode\tISOLATED_SHARED_STORAGE_SAFE_DIRECTORY_BUNDLE_CLONE\n' >> "$OUT/source-repository-origin-guard.tsv"
+printf 'origin_mode\t%s\n' "$SOURCE_REPO_ORIGIN_MODE" >> "$OUT/source-repository-origin-guard.tsv"
 printf 'persistent_origin_before\t%s\n' "${SOURCE_REPO_PERSISTENT_ORIGIN:--}" >> "$OUT/source-repository-origin-guard.tsv"
 printf 'effective_origin\t%s\n' "$SOURCE_REPO_APPROVED_ORIGIN" >> "$OUT/source-repository-origin-guard.tsv"
 printf 'input_refs_sha256_before\t%s\n' "$SOURCE_REPO_INPUT_REFS_BEFORE" >> "$OUT/source-repository-origin-guard.tsv"
@@ -194,10 +208,11 @@ fi
 ARCHIVE_SHA256=$(sha256sum "$ARCHIVE" | awk '{print $1}')
 
 printf '\nN3_SOURCE_RECIPE_EVIDENCE=PASS\n'
+printf 'WORK_ROOT=%s\n' "$WORK_ROOT"
 printf 'OUT=%s\n' "$OUT"
 printf 'SOURCE_REPO_INPUT=%s\n' "$SOURCE_REPO_INPUT"
 printf 'SOURCE_REPO_INPUT_PHYSICAL=%s\n' "$SOURCE_REPO_CANONICAL"
 printf 'SOURCE_REPO_EXPECTED_HEAD=%s\n' "$SOURCE_REPO_EXPECTED_HEAD"
-printf 'SOURCE_REPO_ORIGIN_MODE=ISOLATED_SHARED_STORAGE_SAFE_DIRECTORY_BUNDLE_CLONE\n'
+printf 'SOURCE_REPO_ORIGIN_MODE=%s\n' "$SOURCE_REPO_ORIGIN_MODE"
 printf 'ARCHIVE=%s\n' "$ARCHIVE"
 printf 'ARCHIVE_SHA256=%s\n' "$ARCHIVE_SHA256"
