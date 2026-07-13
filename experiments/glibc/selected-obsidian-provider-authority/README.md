@@ -19,6 +19,7 @@ TARGET_LAYOUT_SCHEMA_ONLY_PASS
 WORLD_LOCALE_LOADER_LIFECYCLE_BOUNDARY_PASS
 APPLICATION_PAYLOAD_LAUNCHER_SUPPLEMENT_BOUNDARY_PASS_BOUNDED
 NON_PRIORITY_GENERIC_SOURCE_CLASS_BOUNDARY_PASS_BOUNDED
+GENERIC_EXACT_CANDIDATE_COLLECTOR_READY
 SEMANTIC_FINAL_PROVIDER_AUTHORITY_OPEN
 APPLICATION_RUNTIME_COMPOSITION_NOT_REACHED
 TARGET_LAYOUT_POPULATION_BLOCKED
@@ -37,6 +38,7 @@ docs/refactor/0136-selected-obsidian-provider-authority-coverage-and-lock-semant
 docs/refactor/0137-selected-obsidian-world-internals-locale-and-loader-lifecycle-boundary.md
 docs/refactor/0138-selected-obsidian-application-payload-launcher-and-supplement-authority-boundary.md
 docs/refactor/0139-selected-obsidian-non-priority-generic-source-authority-boundary.md
+docs/refactor/0140-selected-obsidian-non-priority-generic-exact-candidate-evidence-collector.md
 ```
 
 ## Preserved evidence
@@ -273,6 +275,7 @@ review/
     world-lifecycle-authority-boundary.tsv
     application-authority-boundary.tsv
     generic-source-authority-boundary.tsv
+    generic-exact-candidate-search-tokens.tsv
 
     authority-coverage-ledger.tsv
     authority-coverage-ledger/*.tsv
@@ -334,6 +337,24 @@ open:
 
 This boundary does not accept clean supply, final provider authority, composition or target population.
 
+## Generic exact-candidate collector
+
+`review/generic-exact-candidate-search-tokens.tsv` preserves one candidate-search row for each of the 61 generic identities. `recipe/run-generic-exact-candidate-evidence.sh` reads only retained apt indexes/cache and the pinned clean source checkout.
+
+```text
+accepted by implementation:
+    search contract and read-only collector mechanics
+
+not accepted:
+    search match as package ownership
+    object membership inside a candidate artifact
+    artifact-to-build attestation
+    adaptation, necessity or final provider
+    target population
+```
+
+The collector performs no network, package, extraction, build, runtime, generation or current operation.
+
 ## Target-layout boundary
 
 The target schema defines twenty fields for authority/composition references, supply references, target domain/path/node policy, mode/owner/mutability, alias/collision policy, update/rollback, validation, authority issues, and population state.
@@ -369,7 +390,7 @@ AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
 AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
-AUTH-009 non-priority generic capabilities; source classes bounded, exact object/source bindings open
+AUTH-009 non-priority generic capabilities; source classes bounded, exact-candidate collector ready, object/source bindings open
 AUTH-010 exact payload supply, named supplement membership and release execution; launcher source boundary bounded
 ```
 
@@ -398,10 +419,10 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active repository task:
 
 ```text
-COLLECT_NON_PRIORITY_GENERIC_EXACT_CANDIDATE_SOURCE_EVIDENCE
+RUN_NON_PRIORITY_GENERIC_EXACT_CANDIDATE_EVIDENCE_COLLECTOR
 ```
 
-The next work remains repository-side authority analysis. A device transaction is needed only if a specific unresolved authority choice cannot be discriminated from existing repository/oracle evidence.
+The next work is one bounded read-only device execution of the collector. Receipt review must precede any artifact-member comparison proposal.
 
 ## Stop line
 

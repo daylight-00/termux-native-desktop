@@ -1,6 +1,6 @@
 # Status
 
-> **State:** non-priority generic source-class authority boundary PASS / bounded; exact object candidate supply/source bindings and final providers remain open; target population, extraction, materialization and activation remain blocked
+> **State:** generic exact-candidate read-only collector READY; device receipt not yet reviewed; object-member binding and final providers remain open; target population, extraction, materialization and activation remain blocked
 > **Updated:** 2026-07-13
 
 ## Current conclusions
@@ -32,8 +32,9 @@
 - Exact Obsidian payload acquisition identity and named supplement membership remain open; the exact current repository GUI/CLI launcher source identities are bounded and accepted.
 - The 61 non-priority generic identities are now bounded as six capability review units: 60 Debian-rootfs oracle identities and one local graphics-experiment identity. Neither observed origin is clean supply or final provider authority.
 - Shared generic ownership is the default review direction; protected-world, application-local and application-supplement ownership require explicit object-specific authority.
-- Exact Termux/upstream/project/native-adapter candidate inventory and object-to-source binding are the next active repository task.
-- No device transaction was required for this boundary; one bounded read-only candidate inventory collector is permitted only if retained evidence is insufficient.
+- A canonical 61-row exact-candidate search-token contract and read-only apt/source/cache collector are now repository-ready.
+- Candidate search matches remain non-authoritative; `.deb` member binding, adaptation, necessity and final providers remain open.
+- The next active task is one bounded device execution of the collector using retained apt metadata and the pinned clean source checkout.
 
 ## Current authority
 
@@ -55,9 +56,10 @@ docs/refactor/0136-selected-obsidian-provider-authority-coverage-and-lock-semant
 docs/refactor/0137-selected-obsidian-world-internals-locale-and-loader-lifecycle-boundary.md
 docs/refactor/0138-selected-obsidian-application-payload-launcher-and-supplement-authority-boundary.md
 docs/refactor/0139-selected-obsidian-non-priority-generic-source-authority-boundary.md
+docs/refactor/0140-selected-obsidian-non-priority-generic-exact-candidate-evidence-collector.md
 ```
 
-`0116` remains the controlling intervention. `0135` supplies the correction requirements. `0136` records P0-P6 normalization. `0137` accepts the non-materializing world/locale/loader lifecycle boundary. `0138` accepts the non-materializing application identity/launcher lifecycle boundary while keeping exact payload supply, supplement membership, composition and population open. `0139` bounds non-priority generic capability/source classes while keeping exact candidate artifacts, source bindings, adaptation, necessity and final providers open.
+`0116` remains the controlling intervention. `0135` supplies the correction requirements. `0136` records P0-P6 normalization. `0137` accepts the non-materializing world/locale/loader lifecycle boundary. `0138` accepts the non-materializing application identity/launcher lifecycle boundary while keeping exact payload supply, supplement membership, composition and population open. `0139` bounds non-priority generic capability/source classes. `0140` defines the canonical 61-row candidate-search contract and a non-mutating retained-evidence collector; no candidate is accepted before receipt review.
 
 ## Accepted states
 
@@ -72,6 +74,7 @@ TARGET_LAYOUT_SCHEMA_ONLY_PASS
 WORLD_LOCALE_LOADER_LIFECYCLE_BOUNDARY_PASS
 APPLICATION_PAYLOAD_LAUNCHER_SUPPLEMENT_BOUNDARY_PASS_BOUNDED
 NON_PRIORITY_GENERIC_SOURCE_CLASS_BOUNDARY_PASS_BOUNDED
+GENERIC_EXACT_CANDIDATE_COLLECTOR_READY
 SEMANTIC_FINAL_PROVIDER_AUTHORITY_OPEN
 APPLICATION_RUNTIME_COMPOSITION_NOT_REACHED
 TARGET_LAYOUT_POPULATION_BLOCKED
@@ -92,6 +95,7 @@ experiments/glibc/selected-obsidian-provider-authority/review/
     world-lifecycle-authority-boundary.tsv
     application-authority-boundary.tsv
     generic-source-authority-boundary.tsv
+    generic-exact-candidate-search-tokens.tsv
     unresolved-authority-ledger.tsv
 
 experiments/glibc/selected-obsidian-provider-authority/profiles/
@@ -120,7 +124,7 @@ AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
 AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
-AUTH-009 non-priority generic capabilities; source classes bounded, exact object/source bindings open
+AUTH-009 non-priority generic capabilities; source classes bounded, exact-candidate collector ready, object/source bindings open
 AUTH-010 exact application payload supply, named supplement membership and release execution; launcher source boundary bounded
 ```
 
@@ -133,7 +137,7 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active repository task:
 
 ```text
-COLLECT_NON_PRIORITY_GENERIC_EXACT_CANDIDATE_SOURCE_EVIDENCE
+RUN_NON_PRIORITY_GENERIC_EXACT_CANDIDATE_EVIDENCE_COLLECTOR
 ```
 
 Repository-side order:
@@ -141,7 +145,7 @@ Repository-side order:
 ```text
 1. world runtime internals, locale and loader-state lifecycle boundary: PASS / remaining evidence explicit;
 2. application identity/launcher lifecycle boundary: PASS / exact payload supply and named supplement membership OPEN;
-3. non-priority generic capability/source-class boundary: PASS / exact candidate inventory and object binding ACTIVE;
+3. non-priority generic capability/source-class boundary: PASS / read-only exact-candidate collector READY; receipt review ACTIVE;
 4. decide graphics, GTK/Wayland, printing and optional-exec composition policy only after owning candidate sets are explicit;
 5. close font, pixbuf, icon, MIME and generated-schema authority;
 6. define an ApplicationRuntimeComposition only after owning authorities are accepted;
