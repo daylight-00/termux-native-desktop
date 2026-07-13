@@ -53,7 +53,7 @@ grep -F 'OPEN_NO_BUILD_ATTESTATION' "$COLLECTOR" >/dev/null || fail "build-attes
 grep -F 'final_provider_decisions_accepted", 0' "$COLLECTOR" >/dev/null || fail "authority zero boundary missing"
 grep -F 'target_rows_populated", 0' "$COLLECTOR" >/dev/null || fail "target zero boundary missing"
 
-for command in git python3 gcc dpkg-deb sha256sum; do
+for command in git python3 gcc dpkg-deb sha256sum truncate; do
     command -v "$command" >/dev/null 2>&1 || fail "missing smoke prerequisite: $command"
 done
 
@@ -62,8 +62,8 @@ trap 'rm -rf "$TMP"' EXIT
 SOURCE="$TMP/source"
 CACHE="$TMP/cache"
 mkdir -p "$SOURCE/gpkg/foo" "$SOURCE/gpkg/bar" "$CACHE" \
-    "$TMP/pkg-foo/DEBIAN" "$TMP/pkg-foo/usr/lib" \
-    "$TMP/pkg-bar/DEBIAN" "$TMP/pkg-bar/usr/share/bar" "$TMP/inputs"
+    "$TMP/pkg-foo/DEBIAN" "$TMP/pkg-foo/usr/lib" "$TMP/pkg-foo/usr/share/zz-stream-drain" \
+    "$TMP/pkg-bar/DEBIAN" "$TMP/pkg-bar/usr/share/bar" "$TMP/inputs" "$TMP/fakebin"
 chmod 0755 "$TMP/pkg-foo/DEBIAN" "$TMP/pkg-bar/DEBIAN"
 
 cat > "$SOURCE/gpkg/foo/build.sh" <<'EOF'
@@ -99,6 +99,9 @@ int foo(void) { return 7; }
 C
 gcc -shared -fPIC -Wl,-soname,libfoo.so.1 -o "$TMP/pkg-foo/usr/lib/libfoo.so.1.0.0" "$TMP/foo.c"
 ln -s libfoo.so.1.0.0 "$TMP/pkg-foo/usr/lib/libfoo.so.1"
+# Keep substantial data after the target member so an early pipe close reliably
+# reproduces dpkg-deb's Broken pipe failure instead of passing by timing.
+truncate -s 16777216 "$TMP/pkg-foo/usr/share/zz-stream-drain/trailing-zeroes.bin"
 cat > "$TMP/pkg-foo/DEBIAN/control" <<'EOF'
 Package: foo-glibc
 Version: 1.0-1
@@ -118,6 +121,29 @@ FOO_DEB="$CACHE/foo-glibc_1.0-1_aarch64.deb"
 BAR_DEB="$CACHE/bar-glibc_2.0-1_aarch64.deb"
 dpkg-deb --build "$TMP/pkg-foo" "$FOO_DEB" >/dev/null
 dpkg-deb --build "$TMP/pkg-bar" "$BAR_DEB" >/dev/null
+
+REAL_DPKG_DEB=$(command -v dpkg-deb)
+cat > "$TMP/fakebin/dpkg-deb" <<'SH'
+#!/usr/bin/env bash
+set -u
+real=${REAL_DPKG_DEB:?}
+if [ "${1:-}" = --fsys-tarfile ]; then
+    tmp=$(mktemp)
+    trap 'rm -f "$tmp"' EXIT
+    "$real" "$@" > "$tmp" || exit $?
+    set +e
+    cat "$tmp"
+    rc=$?
+    set -e
+    if [ "$rc" -ne 0 ]; then
+        printf '%s\n' 'dpkg-deb: error: paste subprocess was killed by signal (Broken pipe)' >&2
+        exit 2
+    fi
+    exit 0
+fi
+exec "$real" "$@"
+SH
+chmod 0755 "$TMP/fakebin/dpkg-deb"
 
 python3 - "$SOURCE" "$SOURCE_HEAD" "$FOO_DEB" "$BAR_DEB" "$TMP/inputs" <<'PY'
 import csv
@@ -205,6 +231,8 @@ GENERIC_ARTIFACT_CACHE="$CACHE" \
 GENERIC_SOURCE_EXPECTED_HEAD="$SOURCE_HEAD" \
 GENERIC_SOURCE_EXPECTED_TREE="$SOURCE_TREE" \
 GENERIC_RECIPE_DRIFT_TEST_MODE=1 \
+REAL_DPKG_DEB="$REAL_DPKG_DEB" \
+PATH="$TMP/fakebin:$PATH" \
 python3 "$COLLECTOR"
 
 [ "$(cat "$OUT/analysis.status")" = PASS ] || fail "analysis did not pass"

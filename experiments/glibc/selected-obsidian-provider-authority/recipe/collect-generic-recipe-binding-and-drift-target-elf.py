@@ -212,8 +212,12 @@ def read_data_member(artifact: Path, target: str) -> tuple[bytes, dict[str, obje
                 payload = stream.read(MAX_MEMBER_BYTES + 1)
                 if len(payload) != member.size or len(payload) > MAX_MEMBER_BYTES:
                     fail(f"drift target read-size mismatch: {target}")
+                if found is not None:
+                    fail(f"duplicate drift target member: {wanted} in {artifact.name}")
                 found = (payload, {"member_path": normalized, "member_size": member.size, "member_mode_octal": format(member.mode, "o")})
-                break
+                # Continue through EOF instead of closing dpkg-deb's stdout early. On
+                # Termux, an early close is reported as a fatal Broken pipe even
+                # after the requested member was read successfully.
     finally:
         proc.stdout.close()
     stderr = proc.stderr.read().decode(errors="replace")
