@@ -422,7 +422,7 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active repository task:
 
 ```text
-RUN_BOUNDED_GENERIC_ARTIFACT_MEMBER_INVENTORY_COLLECTOR
+RUN_BOUNDED_GENERIC_BUILD_ATTESTATION_AND_ADAPTATION_EVIDENCE_COLLECTOR
 ```
 
 Only after authority closure may the repository define an `ApplicationRuntimeComposition`. Only after composition acceptance may target rows be populated. An intervention-lift audit is required before extraction or materializer implementation.

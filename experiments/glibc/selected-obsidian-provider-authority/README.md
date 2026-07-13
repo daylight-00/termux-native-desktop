@@ -566,6 +566,20 @@ forbidden:
 
 All member observations remain candidate evidence pending receipt review.
 
+## Generic build-attestation and adaptation evidence collector
+
+The 16-requirement, 28-root and 37-object review set now has a bounded read-only collector. It reruns the 34-artifact/15-drift foundation verification and records complete pinned recipe blob evidence, bounded build-script signals, root/object crosswalks, artifact/member output observations and explicit external/semantic/policy gaps.
+
+```text
+local evidence availability != requirement satisfaction
+recipe inventory != build provenance
+syntactic signal != adaptation classification
+member digest/SONAME != producing-build link
+current alias chain != successor/rollback drift policy
+```
+
+No build attestation, adaptation, filename-drift policy, provider authority or target row is accepted. The next state is `REVIEW_BOUNDED_GENERIC_BUILD_ATTESTATION_AND_ADAPTATION_EVIDENCE_RECEIPT`.
+
 ## Target-layout boundary
 
 The target schema defines twenty fields for authority/composition references, supply references, target domain/path/node policy, mode/owner/mutability, alias/collision policy, update/rollback, validation, authority issues, and population state.
@@ -601,7 +615,7 @@ AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
 AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
-AUTH-009 non-priority generic capabilities; 16 requirements and 28-root/37-object review work units defined; bounded evidence collection, libjpeg.so.62 correction and final bindings open
+AUTH-009 non-priority generic capabilities; bounded local evidence collector implemented for 16 requirements and 28-root/37-object work units; production receipt review, external provenance, semantic/policy evidence, libjpeg.so.62 correction and final bindings open
 AUTH-010 exact payload supply, named supplement membership and release execution; launcher source boundary bounded
 ```
 
@@ -630,10 +644,10 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active repository task:
 
 ```text
-COLLECT_BOUNDED_GENERIC_BUILD_ATTESTATION_AND_ADAPTATION_EVIDENCE
+RUN_BOUNDED_GENERIC_BUILD_ATTESTATION_AND_ADAPTATION_EVIDENCE_COLLECTOR
 ```
 
-The review set is defined. The next task must collect only the evidence named by the 16 requirement IDs and 28-root/37-object work units, with no automatic acceptance, provider promotion or target population.
+The review set and bounded collector are defined. The next task is to run the collector against the pinned source checkout and verified artifact cache, then review the resulting receipt separately with no automatic acceptance, provider promotion or target population.
 
 ## Stop line
 

@@ -372,6 +372,9 @@ generic recipe binding and drift-target ELF receipt review:
 
 generic build-attestation and adaptation review set:
     16 evidence requirements, 28 root work units and 37 object work units defined; 36 objects are collection-eligible, libjpeg.so.62 is correction-blocked, and all acceptance remains zero
+
+generic build-attestation and adaptation evidence collector:
+    read-only foundation revalidation plus local recipe/file/signal, root-object and artifact/member evidence collection implemented; external provenance, semantic/policy review and every acceptance remain open
 ```
 
 ## Living authority issues
@@ -385,7 +388,7 @@ AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
 AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
-AUTH-009 non-priority generic capabilities; 16-requirement 28-root/37-object review set defined; evidence collection, libjpeg.so.62 correction and all final bindings open
+AUTH-009 non-priority generic capabilities; bounded evidence collector implemented for the 16-requirement 28-root/37-object review set; production receipt review, external provenance, semantic/policy evidence, libjpeg.so.62 correction and all final bindings open
 AUTH-010 exact application payload supply, named supplements and release execution; launcher source boundary bounded
 ```
 
@@ -398,7 +401,7 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active task:
 
 ```text
-COLLECT_BOUNDED_GENERIC_BUILD_ATTESTATION_AND_ADAPTATION_EVIDENCE
+RUN_BOUNDED_GENERIC_BUILD_ATTESTATION_AND_ADAPTATION_EVIDENCE_COLLECTOR
 ```
 
 Required order:
@@ -406,7 +409,7 @@ Required order:
 ```text
 1. world internals, locale and loader-state lifecycle boundary: PASS / remaining evidence explicit;
 2. application identity/launcher lifecycle boundary: PASS / exact payload supply and named supplement membership OPEN;
-3. non-priority generic capability/source-class boundary: PASS / build-attestation/adaptation review set DEFINED as 16 requirements, 28 roots and 37 objects; bounded evidence collection NEXT;
+3. non-priority generic capability/source-class boundary: PASS / build-attestation/adaptation review set DEFINED as 16 requirements, 28 roots and 37 objects; bounded read-only evidence collector IMPLEMENTED and production receipt NEXT;
 4. decide conditional graphics, GTK/Wayland, printing and optional-exec policy only after owning candidate sets are explicit;
 5. close fonts, pixbuf/icon/MIME and generated-schema authority;
 6. define ApplicationRuntimeComposition only after owning authorities are accepted;

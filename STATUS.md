@@ -163,7 +163,7 @@ AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
 AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
-AUTH-009 non-priority generic capabilities; 16 evidence requirements and 28-root/37-object review work units defined; 36 objects eligible for bounded evidence collection, libjpeg.so.62 correction blocked, and all acceptance/final binding decisions open
+AUTH-009 non-priority generic capabilities; bounded local evidence collector implemented for 16 requirements and 28-root/37-object work units; external build provenance, semantic/policy review, libjpeg.so.62 correction and all acceptance/final binding decisions remain open
 AUTH-010 exact application payload supply, named supplement membership and release execution; launcher source boundary bounded
 ```
 
@@ -176,7 +176,7 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active repository task:
 
 ```text
-COLLECT_BOUNDED_GENERIC_BUILD_ATTESTATION_AND_ADAPTATION_EVIDENCE
+RUN_BOUNDED_GENERIC_BUILD_ATTESTATION_AND_ADAPTATION_EVIDENCE_COLLECTOR
 ```
 
 Repository-side order:
@@ -184,7 +184,7 @@ Repository-side order:
 ```text
 1. world runtime internals, locale and loader-state lifecycle boundary: PASS / remaining evidence explicit;
 2. application identity/launcher lifecycle boundary: PASS / exact payload supply and named supplement membership OPEN;
-3. non-priority generic capability/source-class boundary: PASS / 16-requirement, 28-root and 37-object review set DEFINED; bounded build-attestation/adaptation evidence collection NEXT, with libjpeg.so.62 correction first;
+3. non-priority generic capability/source-class boundary: PASS / 16-requirement, 28-root and 37-object review set DEFINED; bounded local evidence collector IMPLEMENTED, with production receipt collection NEXT and libjpeg.so.62 correction still blocked;
 4. decide graphics, GTK/Wayland, printing and optional-exec composition policy only after owning candidate sets are explicit;
 5. close font, pixbuf, icon, MIME and generated-schema authority;
 6. define an ApplicationRuntimeComposition only after owning authorities are accepted;
