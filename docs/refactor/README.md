@@ -62,6 +62,7 @@ Current branch-local chain:
 0144 non-priority generic artifact member-inventory receipt review
 0145 bounded generic recipe binding and drift-target ELF review
 0146 generic recipe-binding and drift-target ELF receipt review
+0147 generic build-attestation and adaptation review set
 ```
 
 Precedence:
@@ -368,6 +369,9 @@ generic recipe binding and drift-target ELF collector:
 
 generic recipe binding and drift-target ELF receipt review:
     37 lineage candidates confirmed; 20 material-delta, 8 configuration/packaging-delta and 9 no-explicit-token semantic-review rows; 15 concrete filename drifts remain unaccepted and libjpeg.so.62 remains unsatisfied
+
+generic build-attestation and adaptation review set:
+    16 evidence requirements, 28 root work units and 37 object work units defined; 36 objects are collection-eligible, libjpeg.so.62 is correction-blocked, and all acceptance remains zero
 ```
 
 ## Living authority issues
@@ -381,7 +385,7 @@ AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
 AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
-AUTH-009 non-priority generic capabilities; lineage/object receipt reviewed; build attestation, adaptation semantics, filename-drift policy, libjpeg.so.62 correction and final bindings open
+AUTH-009 non-priority generic capabilities; 16-requirement 28-root/37-object review set defined; evidence collection, libjpeg.so.62 correction and all final bindings open
 AUTH-010 exact application payload supply, named supplements and release execution; launcher source boundary bounded
 ```
 
@@ -394,7 +398,7 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active task:
 
 ```text
-DEFINE_BOUNDED_GENERIC_BUILD_ATTESTATION_AND_ADAPTATION_REVIEW_SET
+COLLECT_BOUNDED_GENERIC_BUILD_ATTESTATION_AND_ADAPTATION_EVIDENCE
 ```
 
 Required order:
@@ -402,7 +406,7 @@ Required order:
 ```text
 1. world internals, locale and loader-state lifecycle boundary: PASS / remaining evidence explicit;
 2. application identity/launcher lifecycle boundary: PASS / exact payload supply and named supplement membership OPEN;
-3. non-priority generic capability/source-class boundary: PASS / 37 lineage candidates and 36 object/member candidates REVIEWED; build-attestation and adaptation semantic-review set NEXT;
+3. non-priority generic capability/source-class boundary: PASS / build-attestation/adaptation review set DEFINED as 16 requirements, 28 roots and 37 objects; bounded evidence collection NEXT;
 4. decide conditional graphics, GTK/Wayland, printing and optional-exec policy only after owning candidate sets are explicit;
 5. close fonts, pixbuf/icon/MIME and generated-schema authority;
 6. define ApplicationRuntimeComposition only after owning authorities are accepted;

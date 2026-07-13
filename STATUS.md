@@ -1,6 +1,6 @@
 # Status
 
-> **State:** generic recipe-binding and drift-target ELF receipt REVIEWED / BOUNDED; 37 pinned recipe-lineage candidates and 36 object/member candidate rows are confirmed, while build attestation, adaptation semantics, concrete-filename drift policy and final providers remain open; target population, extraction, materialization and activation remain blocked
+> **State:** generic build-attestation and adaptation review set DEFINED / BOUNDED; 16 evidence requirements, 28 pinned-root work units and 37 object work units are canonical, while evidence collection, all acceptance decisions and target population remain blocked
 > **Updated:** 2026-07-13
 
 ## Current conclusions
@@ -39,7 +39,8 @@
 - The comparison-set definition performed no download or extraction and accepted no authority decision.
 - The recipe-binding/drift-target receipt verifies all 34 cached artifacts, 28 pinned recipe roots, 84 recipe files and 15 drift-target ELFs without package mutation or extraction.
 - Review accepts 37 recipe-lineage candidates and 36 object/member candidate rows, but accepts zero build attestations, adaptations, filename-drift policies, final providers or target rows.
-- The next active task is to define a bounded build-attestation and adaptation semantic-review set; `libjpeg.so.62` remains excluded until the requirement is corrected or a matching candidate is found.
+- A bounded review set now defines 16 evidence requirements across 28 pinned recipe roots and 37 object rows; 36 rows are evidence-collection eligible and `libjpeg.so.62` remains correction-blocked. No build attestation, adaptation, filename drift or provider authority is accepted.
+- The next active task is bounded collection of build-attestation and adaptation evidence according to those root/object work units.
 
 ## Current authority
 
@@ -68,9 +69,10 @@ docs/refactor/0143-selected-obsidian-non-priority-generic-artifact-member-invent
 docs/refactor/0144-selected-obsidian-non-priority-generic-artifact-member-inventory-receipt-review.md
 docs/refactor/0145-selected-obsidian-generic-recipe-binding-and-drift-target-elf-review.md
 docs/refactor/0146-selected-obsidian-generic-recipe-binding-and-drift-target-elf-receipt-review.md
+docs/refactor/0147-selected-obsidian-generic-build-attestation-and-adaptation-review-set.md
 ```
 
-`0116` remains the controlling intervention. `0135` supplies the correction requirements. `0136` records P0-P6 normalization. `0137` accepts the non-materializing world/locale/loader lifecycle boundary. `0138` accepts the non-materializing application identity/launcher lifecycle boundary while keeping exact payload supply, supplement membership, composition and population open. `0139` bounds non-priority generic capability/source classes. `0140` defines the canonical 61-row candidate-search contract and a non-mutating retained-evidence collector. `0141` reviews the exact receipt into direct-family, indirect-only and absent classes while accepting no provider authority. `0142` defines the exact 34-artifact/44-edge member-inventory comparison set and explicit static/development exclusions without downloading or extracting artifacts. `0143` implements bounded exact-artifact acquisition and stream-only member inventory. `0144` reviews the exact device receipt into 21 exact member+SONAME observations, 15 expected-SONAME-alias concrete-filename drifts, and one expected-alias absence while accepting no provider authority. `0145` defines a cache-only collector that verifies 37 pinned recipe family/version/tree candidates and stream-inspects the 15 drift-target ELFs while keeping build attestation and adaptation acceptance open. `0146` reviews the resulting receipt as 37 lineage candidates, 21 exact-member candidates, 15 SONAME-confirmed drift-target candidates and one unsatisfied `libjpeg.so.62` row; it accepts no build attestation, adaptation, filename-drift policy, final provider or target population.
+`0116` remains the controlling intervention. `0135` supplies the correction requirements. `0136` records P0-P6 normalization. `0137` accepts the non-materializing world/locale/loader lifecycle boundary. `0138` accepts the non-materializing application identity/launcher lifecycle boundary while keeping exact payload supply, supplement membership, composition and population open. `0139` bounds non-priority generic capability/source classes. `0140` defines the canonical 61-row candidate-search contract and a non-mutating retained-evidence collector. `0141` reviews the exact receipt into direct-family, indirect-only and absent classes while accepting no provider authority. `0142` defines the exact 34-artifact/44-edge member-inventory comparison set and explicit static/development exclusions without downloading or extracting artifacts. `0143` implements bounded exact-artifact acquisition and stream-only member inventory. `0144` reviews the exact device receipt into 21 exact member+SONAME observations, 15 expected-SONAME-alias concrete-filename drifts, and one expected-alias absence while accepting no provider authority. `0145` defines a cache-only collector that verifies 37 pinned recipe family/version/tree candidates and stream-inspects the 15 drift-target ELFs while keeping build attestation and adaptation acceptance open. `0146` reviews the resulting receipt as 37 lineage candidates, 21 exact-member candidates, 15 SONAME-confirmed drift-target candidates and one unsatisfied `libjpeg.so.62` row; it accepts no build attestation, adaptation, filename-drift policy, final provider or target population. `0147` defines 16 explicit evidence requirements and deterministic work units for 28 roots/37 objects while keeping every acceptance and target row open.
 
 ## Accepted states
 
@@ -92,6 +94,7 @@ GENERIC_ARTIFACT_MEMBER_INVENTORY_COLLECTOR_PASS_BOUNDED
 GENERIC_ARTIFACT_MEMBER_INVENTORY_RECEIPT_REVIEW_PASS_BOUNDED
 GENERIC_RECIPE_BINDING_AND_DRIFT_TARGET_ELF_COLLECTOR_PASS_BOUNDED
 GENERIC_RECIPE_BINDING_AND_DRIFT_TARGET_ELF_RECEIPT_REVIEW_PASS_BOUNDED
+GENERIC_BUILD_ATTESTATION_ADAPTATION_REVIEW_SET_DEFINED_BOUNDED
 SEMANTIC_FINAL_PROVIDER_AUTHORITY_OPEN
 APPLICATION_RUNTIME_COMPOSITION_NOT_REACHED
 TARGET_LAYOUT_POPULATION_BLOCKED
@@ -128,6 +131,10 @@ experiments/glibc/selected-obsidian-provider-authority/review/
     generic-recipe-binding-and-drift-target-receipt-review-rules.tsv
     generic-recipe-binding-and-drift-target-receipt-review.tsv
     generic-recipe-binding-and-drift-target-receipt-metadata.tsv
+    generic-build-attestation-adaptation-review-requirements.tsv
+    generic-build-attestation-adaptation-root-review-set.tsv
+    generic-build-attestation-adaptation-object-review-set.tsv
+    generic-build-attestation-adaptation-review-set-metadata.tsv
     unresolved-authority-ledger.tsv
 
 experiments/glibc/selected-obsidian-provider-authority/profiles/
@@ -156,7 +163,7 @@ AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
 AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
-AUTH-009 non-priority generic capabilities; 37 pinned recipe-lineage candidates and 36 object/member candidates reviewed; 15 drift-target SONAMEs confirmed; build attestation, adaptation semantics, filename-drift policy, libjpeg.so.62 correction and final bindings open
+AUTH-009 non-priority generic capabilities; 16 evidence requirements and 28-root/37-object review work units defined; 36 objects eligible for bounded evidence collection, libjpeg.so.62 correction blocked, and all acceptance/final binding decisions open
 AUTH-010 exact application payload supply, named supplement membership and release execution; launcher source boundary bounded
 ```
 
@@ -169,7 +176,7 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active repository task:
 
 ```text
-DEFINE_BOUNDED_GENERIC_BUILD_ATTESTATION_AND_ADAPTATION_REVIEW_SET
+COLLECT_BOUNDED_GENERIC_BUILD_ATTESTATION_AND_ADAPTATION_EVIDENCE
 ```
 
 Repository-side order:
@@ -177,7 +184,7 @@ Repository-side order:
 ```text
 1. world runtime internals, locale and loader-state lifecycle boundary: PASS / remaining evidence explicit;
 2. application identity/launcher lifecycle boundary: PASS / exact payload supply and named supplement membership OPEN;
-3. non-priority generic capability/source-class boundary: PASS / recipe-binding receipt REVIEWED as 37 lineage candidates, 21 exact-member candidates, 15 SONAME-confirmed drift-target candidates and 1 unsatisfied expected alias; build attestation and adaptation review-set definition NEXT;
+3. non-priority generic capability/source-class boundary: PASS / 16-requirement, 28-root and 37-object review set DEFINED; bounded build-attestation/adaptation evidence collection NEXT, with libjpeg.so.62 correction first;
 4. decide graphics, GTK/Wayland, printing and optional-exec composition policy only after owning candidate sets are explicit;
 5. close font, pixbuf, icon, MIME and generated-schema authority;
 6. define an ApplicationRuntimeComposition only after owning authorities are accepted;
