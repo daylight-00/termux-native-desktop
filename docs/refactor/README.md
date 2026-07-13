@@ -63,6 +63,8 @@ Current branch-local chain:
 0145 bounded generic recipe binding and drift-target ELF review
 0146 generic recipe-binding and drift-target ELF receipt review
 0147 generic build-attestation and adaptation review set
+0148 generic build-attestation and adaptation evidence collector
+0149 generic build-attestation and adaptation evidence receipt review
 ```
 
 Precedence:
@@ -109,6 +111,21 @@ system-foundation
 
 0144
     -> exact device receipt review into exact-member, expected-alias drift and expected-alias-absent classes
+
+0145
+    -> pinned recipe-lineage and read-only drift-target ELF collector boundary
+
+0146
+    -> recipe-lineage/drift-target receipt review with zero authority acceptance
+
+0147
+    -> 16-requirement, 28-root and 37-object build-attestation/adaptation review set
+
+0148
+    -> bounded local recipe, signal, root-object and artifact/member evidence collector
+
+0149
+    -> production receipt review into 6 confirmed local review-input dimensions and 10 explicit gaps
 ```
 
 ## Current state
@@ -176,6 +193,15 @@ generic artifact member-inventory receipt review:
 
 generic recipe binding and drift-target ELF receipt review:
     PASS / 37 LINEAGE CANDIDATES, 21 EXACT OBJECT CANDIDATES, 15 SONAME-CONFIRMED DRIFT TARGETS, 1 UNSATISFIED ALIAS; ZERO AUTHORITY ACCEPTANCE
+
+generic build-attestation and adaptation review set:
+    DEFINED / 16 REQUIREMENTS, 28 ROOTS, 37 OBJECTS
+
+generic build-attestation and adaptation evidence collector:
+    PASS / 34 ARTIFACTS REVERIFIED, 84 RECIPE FILES, 74 SIGNALS, 37 ROOT-OBJECT LINKS, NO MUTATION OR NETWORK ACQUISITION
+
+generic build-attestation and adaptation evidence receipt review:
+    PASS / 6 LOCAL REVIEW-INPUT DIMENSIONS, 10 EXPLICIT GAPS, 21 EXACT OUTPUTS, 15 ALIAS-TARGET OUTPUTS, 1 BLOCKED OBJECT; ZERO AUTHORITY ACCEPTANCE
 
 semantic final-provider authority:
     OPEN
@@ -277,6 +303,11 @@ experiments/glibc/selected-obsidian-provider-authority/review/
     world-lifecycle-authority-boundary.tsv
     application-authority-boundary.tsv
     generic-source-authority-boundary.tsv
+    generic-build-attestation-adaptation-evidence-receipt-review-rules.tsv
+    generic-build-attestation-adaptation-evidence-receipt-review.tsv
+    generic-build-attestation-adaptation-root-evidence-receipt-review.tsv
+    generic-build-attestation-adaptation-object-evidence-receipt-review.tsv
+    generic-build-attestation-adaptation-evidence-receipt-metadata.tsv
     unresolved-authority-ledger.tsv
 
 experiments/glibc/selected-obsidian-provider-authority/profiles/
@@ -374,7 +405,10 @@ generic build-attestation and adaptation review set:
     16 evidence requirements, 28 root work units and 37 object work units defined; 36 objects are collection-eligible, libjpeg.so.62 is correction-blocked, and all acceptance remains zero
 
 generic build-attestation and adaptation evidence collector:
-    read-only foundation revalidation plus local recipe/file/signal, root-object and artifact/member evidence collection implemented; external provenance, semantic/policy review and every acceptance remain open
+    production receipt reverified 34 artifacts and collected 84 recipe files, 74 bounded script signals, 37 root-object links, 21 exact outputs and 15 alias-target outputs without mutation or network acquisition
+
+generic build-attestation and adaptation evidence receipt review:
+    six local evidence dimensions confirmed only as bounded review inputs; ten external provenance, semantic classification, continuity-policy, consumer-binding or object-correction gaps remain explicit; every authority decision remains open
 ```
 
 ## Living authority issues
@@ -388,7 +422,7 @@ AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
 AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
-AUTH-009 non-priority generic capabilities; bounded evidence collector implemented for the 16-requirement 28-root/37-object review set; production receipt review, external provenance, semantic/policy evidence, libjpeg.so.62 correction and all final bindings open
+AUTH-009 non-priority generic capabilities; production evidence receipt reviewed as 6 bounded local review-input dimensions plus 10 explicit provenance/semantic/policy/correction gaps; libjpeg.so.62 correction and all build-attestation, adaptation, filename-drift and final-provider decisions remain open
 AUTH-010 exact application payload supply, named supplements and release execution; launcher source boundary bounded
 ```
 
@@ -401,7 +435,7 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active task:
 
 ```text
-RUN_BOUNDED_GENERIC_BUILD_ATTESTATION_AND_ADAPTATION_EVIDENCE_COLLECTOR
+DEFINE_BOUNDED_GENERIC_BUILD_ATTESTATION_ADAPTATION_GAP_CLOSURE_SET
 ```
 
 Required order:
@@ -409,7 +443,7 @@ Required order:
 ```text
 1. world internals, locale and loader-state lifecycle boundary: PASS / remaining evidence explicit;
 2. application identity/launcher lifecycle boundary: PASS / exact payload supply and named supplement membership OPEN;
-3. non-priority generic capability/source-class boundary: PASS / build-attestation/adaptation review set DEFINED as 16 requirements, 28 roots and 37 objects; bounded read-only evidence collector IMPLEMENTED and production receipt NEXT;
+3. non-priority generic capability/source-class boundary: PASS / production evidence receipt REVIEWED as 6 local review-input dimensions and 10 explicit gaps; deterministic gap-closure work-unit definition NEXT, with libjpeg.so.62 correction still blocked;
 4. decide conditional graphics, GTK/Wayland, printing and optional-exec policy only after owning candidate sets are explicit;
 5. close fonts, pixbuf/icon/MIME and generated-schema authority;
 6. define ApplicationRuntimeComposition only after owning authorities are accepted;

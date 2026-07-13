@@ -81,6 +81,12 @@ Current post-closure audit:
 docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md
 ```
 
+Current provider-authority receipt review:
+
+```text
+docs/refactor/0149-selected-obsidian-generic-build-attestation-and-adaptation-evidence-receipt-review.md
+```
+
 ## Repository checkout
 
 Canonical live-device checkout:
