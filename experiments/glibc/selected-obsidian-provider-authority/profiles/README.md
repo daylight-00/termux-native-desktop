@@ -336,15 +336,41 @@ ld.so.cache:
 
 The boundary defines future update/rollback gates without authorizing loader mutation, composition, target population or clean reconstruction.
 
+## Application payload, launcher and supplement boundary
+
+`../review/application-authority-boundary.tsv` defines seven non-materializing application contracts:
+
+```text
+historical Obsidian 1.12.7 arm64 AppImage behavior:
+    bounded runtime evidence; exact upstream artifact identity remains open
+
+application-local identities:
+    eleven accepted AppDir/$ORIGIN reference roles; not the payload aggregate
+
+GUI and CLI launchers:
+    exact current repository source blobs and SHA-256 accepted
+
+public launcher publication:
+    current checkout symlink implementation accepted; not target-layout policy
+
+application supplements:
+    identity class accepted; no member accepted merely from historical selection or fallback classification
+
+application release transition:
+    payload, launcher and supplement domains remain separate but require one compatible composition/rollback tuple
+```
+
+The boundary does not authorize payload acquisition, extraction, RPATH adaptation, supplement inclusion, target population or activation.
+
 ## Global incompleteness
 
 Provider fragments do not close:
 
 ```text
 complete clean-world reconstruction, acquisition/retention and exact internals if named demand appears;
-Obsidian/Electron payload identity;
-launcher supply identity;
-application supplement identities;
+exact Obsidian/Electron upstream payload artifact identity and retained extraction/adaptation receipt;
+named application supplement membership and source authority;
+future launcher publication and atomic update/rollback;
 D-Bus, GLib/GIO, GTK, Pango/ATK and other generic providers;
 NSS/security and audio providers;
 fonts, pixbuf modules/cache, icons and MIME data;
@@ -363,7 +389,7 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active repository task:
 
 ```text
-ESTABLISH_OBSIDIAN_ELECTRON_PAYLOAD_LAUNCHER_AND_SUPPLEMENT_AUTHORITY
+CLOSE_EXACT_OBSIDIAN_PAYLOAD_SUPPLY_AND_NAMED_SUPPLEMENT_MEMBERSHIP
 ```
 
 Only after authority closure may the repository define an `ApplicationRuntimeComposition`. Only after composition acceptance may target rows be populated. An intervention-lift audit is required before extraction or materializer implementation.

@@ -96,12 +96,17 @@ non-priority generic provider identities:
 
 The 59 priority objects are a subset of the 161-row denominator. The 96 first-generation contents are not the application-local payload.
 
-Additional application identities remain required:
+Additional application identity classes are now bounded separately:
 
 ```text
 APPLICATION_PAYLOAD_IDENTITY
+    historical version/architecture/format bounded; exact source identity open
+
 APPLICATION_LAUNCHER_SUPPLY_IDENTITY
+    exact current repository GUI/CLI source accepted; future publication/update lifecycle open
+
 APPLICATION_DOMAIN_SUPPLEMENT_IDENTITIES
+    identity class accepted; named membership open
 ```
 
 ## Canonical normalized layers
@@ -262,6 +267,7 @@ review/
     post-0134-architecture-audit-findings.tsv
     normalization-codebook.tsv
     world-lifecycle-authority-boundary.tsv
+    application-authority-boundary.tsv
 
     authority-coverage-ledger.tsv
     authority-coverage-ledger/*.tsv
@@ -334,7 +340,7 @@ AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
 AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
 AUTH-009 non-priority generic capabilities
-AUTH-010 application payload/launcher/supplement authority
+AUTH-010 exact payload supply, named supplement membership and release execution; launcher source boundary bounded
 ```
 
 ## Claim discipline
@@ -362,7 +368,7 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active repository task:
 
 ```text
-ESTABLISH_OBSIDIAN_ELECTRON_PAYLOAD_LAUNCHER_AND_SUPPLEMENT_AUTHORITY
+CLOSE_EXACT_OBSIDIAN_PAYLOAD_SUPPLY_AND_NAMED_SUPPLEMENT_MEMBERSHIP
 ```
 
 The next work remains repository-side authority analysis. A device transaction is needed only if a specific unresolved authority choice cannot be discriminated from existing repository/oracle evidence.

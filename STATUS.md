@@ -1,6 +1,6 @@
 # Status
 
-> **State:** world-internals/locale/loader lifecycle boundary PASS; application payload/launcher/supplement authority is next; target population, extraction, materialization and activation remain blocked
+> **State:** application payload/launcher/supplement authority boundary PASS / bounded; exact payload supply and named supplement membership remain open; target population, extraction, materialization and activation remain blocked
 > **Updated:** 2026-07-13
 
 ## Current conclusions
@@ -12,7 +12,7 @@
 - The 59 priority reviewed objects are a bounded subset of the 161 semantic-object denominator, not global authority completion.
 - The 96 first-generation contents are correctly defined as 91 selected external ELF + 4 fonts + 1 generated schema aggregate. They are not application-local payload.
 - Eleven application-local reference identities remain a distinct AppDir/`$ORIGIN` set.
-- Application payload, launcher supply, and application supplement identities are distinct open requirements under `AUTH-010`.
+- Application payload, application-local reference, GUI/CLI launcher supply, publication, supplement, and release-transition identities are now explicitly separated under the bounded `AUTH-010` contract.
 - Exact artifact supply, semantic role, Termux/Android adaptation, candidate-source comparison, artifact-to-recipe binding, necessity, and provisional final provider are now independent states.
 - Canonical provider-object rows total 60: 59 bounded reviewed objects plus optional `libtermux-exec.so`.
 - Canonical provider-fragment pressure contains 63 reviewed memberships plus one optional non-denominator edge.
@@ -29,7 +29,7 @@
 - The world/locale/loader lifecycle boundary is accepted without clean-reconstruction or composition claims.
 - No named glibc NSS/gconv module occurs in the normalized 161-row selected/reference denominator; world internals remain demand-gated.
 - The twelve accepted locale members remain glibc-coupled world data; `ld.so.conf` is composition-derived policy input and `ld.so.cache` is derived mutable state.
-- The next active repository task is Obsidian/Electron payload, launcher, and supplement authority.
+- Exact Obsidian payload acquisition identity and named supplement membership are the next active repository task; the exact current repository GUI/CLI launcher source identities are bounded and accepted.
 - No device transaction is currently required.
 
 ## Current authority
@@ -50,9 +50,10 @@ docs/refactor/0134-selected-obsidian-provider-profile-locked-member-draft.md
 docs/refactor/0135-selected-obsidian-provider-profile-lock-draft-architecture-audit.md
 docs/refactor/0136-selected-obsidian-provider-authority-coverage-and-lock-semantics-normalization.md
 docs/refactor/0137-selected-obsidian-world-internals-locale-and-loader-lifecycle-boundary.md
+docs/refactor/0138-selected-obsidian-application-payload-launcher-and-supplement-authority-boundary.md
 ```
 
-`0116` remains the controlling intervention. `0135` supplies the correction requirements. `0136` records P0-P6 normalization. `0137` accepts the non-materializing world/locale/loader lifecycle boundary without lifting any population or materialization block.
+`0116` remains the controlling intervention. `0135` supplies the correction requirements. `0136` records P0-P6 normalization. `0137` accepts the non-materializing world/locale/loader lifecycle boundary. `0138` accepts the non-materializing application identity/launcher lifecycle boundary while keeping exact payload supply, supplement membership, composition and population open.
 
 ## Accepted states
 
@@ -65,6 +66,7 @@ CANONICAL_SUPPLY_OBJECT_FRAGMENT_REGISTRY_PASS
 ARTIFACT_ALIAS_CLASSIFICATION_PASS
 TARGET_LAYOUT_SCHEMA_ONLY_PASS
 WORLD_LOCALE_LOADER_LIFECYCLE_BOUNDARY_PASS
+APPLICATION_PAYLOAD_LAUNCHER_SUPPLEMENT_BOUNDARY_PASS_BOUNDED
 SEMANTIC_FINAL_PROVIDER_AUTHORITY_OPEN
 APPLICATION_RUNTIME_COMPOSITION_NOT_REACHED
 TARGET_LAYOUT_POPULATION_BLOCKED
@@ -83,6 +85,7 @@ experiments/glibc/selected-obsidian-provider-authority/review/
     non-priority-generic-authority-ledger/*.tsv
     normalization-codebook.tsv
     world-lifecycle-authority-boundary.tsv
+    application-authority-boundary.tsv
     unresolved-authority-ledger.tsv
 
 experiments/glibc/selected-obsidian-provider-authority/profiles/
@@ -112,7 +115,7 @@ AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
 AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
 AUTH-009 non-priority generic capabilities
-AUTH-010 application payload/launcher/supplement authority
+AUTH-010 exact application payload supply, named supplement membership and release execution; launcher source boundary bounded
 ```
 
 ## Next valid state
@@ -124,14 +127,14 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active repository task:
 
 ```text
-ESTABLISH_OBSIDIAN_ELECTRON_PAYLOAD_LAUNCHER_AND_SUPPLEMENT_AUTHORITY
+CLOSE_EXACT_OBSIDIAN_PAYLOAD_SUPPLY_AND_NAMED_SUPPLEMENT_MEMBERSHIP
 ```
 
 Repository-side order:
 
 ```text
 1. world runtime internals, locale and loader-state lifecycle boundary: PASS / remaining evidence explicit;
-2. establish Obsidian/Electron payload, launcher and supplement supply/authority identity: ACTIVE;
+2. application identity/launcher lifecycle boundary: PASS / exact payload supply and named supplement membership ACTIVE;
 3. compare candidate sources for non-priority generic capability groups;
 4. decide graphics, GTK/Wayland, printing and optional-exec composition policy;
 5. close font, pixbuf, icon, MIME and generated-schema authority;

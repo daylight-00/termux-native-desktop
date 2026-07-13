@@ -95,15 +95,19 @@ AppImage acquisition/extraction provenance remains under:
 experiments/glibc/obsidian-appimage/
 ```
 
+The exact current repository launcher sources are bounded by `docs/refactor/0138-selected-obsidian-application-payload-launcher-and-supplement-authority-boundary.md`. The historical Obsidian 1.12.7 arm64 AppImage behavior is accepted, but exact upstream payload supply remains open.
+
 A package-completion pass still needs to promote:
 
 ```text
-source identity
-checksum/signature policy
-extraction/adaptation procedure
+exact upstream release locator and source filename
+source size and SHA-256
+checksum/signature policy and immutable retention
+complete extraction/adaptation receipt and tree manifest
 application-version trigger
 canonical package-level validators
-mutable-state migration policy
+mutable-state migration and release rollback policy
+named application-domain supplement membership
 ```
 
 ## Selected application-domain closure remains open
