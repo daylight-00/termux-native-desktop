@@ -56,6 +56,7 @@ Current branch-local chain:
 0138 application payload, launcher and supplement authority boundary
 0139 non-priority generic source-authority boundary
 0140 non-priority generic exact-candidate evidence collector
+0141 non-priority generic exact-candidate receipt review
 ```
 
 Precedence:
@@ -90,6 +91,9 @@ system-foundation
 
 0140
     -> canonical 61-row exact-candidate search contract and read-only retained-evidence collector
+
+0141
+    -> exact retained receipt review into direct-family, indirect-only and absent classes
 ```
 
 ## Current state
@@ -141,7 +145,10 @@ non-priority generic source-class boundary:
     PASS / EXACT OBJECT/SOURCE BINDING OPEN
 
 generic exact-candidate collector:
-    READY / DEVICE RECEIPT NOT YET REVIEWED
+    READY / DEVICE RECEIPT REVIEWED
+
+generic exact-candidate receipt review:
+    PASS / 37 DIRECT FAMILY, 13 INDIRECT ONLY, 11 ABSENT
 
 semantic final-provider authority:
     OPEN
@@ -319,7 +326,7 @@ non-priority generic source classes:
     60 Debian-rootfs oracle identities + 1 local graphics-experiment identity; oracle/reference only, exact candidate artifacts and source bindings open
 
 generic exact-candidate evidence:
-    canonical 61-row search-token contract and read-only apt/source/cache collector ready; matches remain candidate-only
+    bounded receipt reviewed: 37 direct apt+recipe family candidates, 13 indirect-only rows, 11 retained gaps; all remain candidate-only
 ```
 
 ## Living authority issues
@@ -333,7 +340,7 @@ AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
 AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
-AUTH-009 non-priority generic capabilities; source classes bounded, exact-candidate collector ready, object/source bindings open
+AUTH-009 non-priority generic capabilities; source classes and retained candidate quality bounded, object/member and final bindings open
 AUTH-010 exact application payload supply, named supplements and release execution; launcher source boundary bounded
 ```
 
@@ -346,7 +353,7 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active task:
 
 ```text
-RUN_NON_PRIORITY_GENERIC_EXACT_CANDIDATE_EVIDENCE_COLLECTOR
+DEFINE_NAMED_GENERIC_ARTIFACT_MEMBER_COMPARISON_SET
 ```
 
 Required order:
@@ -354,7 +361,7 @@ Required order:
 ```text
 1. world internals, locale and loader-state lifecycle boundary: PASS / remaining evidence explicit;
 2. application identity/launcher lifecycle boundary: PASS / exact payload supply and named supplement membership OPEN;
-3. non-priority generic capability/source-class boundary: PASS / read-only collector READY; device receipt review ACTIVE;
+3. non-priority generic capability/source-class boundary: PASS / receipt REVIEWED; named artifact/member comparison set NEXT;
 4. decide conditional graphics, GTK/Wayland, printing and optional-exec policy only after owning candidate sets are explicit;
 5. close fonts, pixbuf/icon/MIME and generated-schema authority;
 6. define ApplicationRuntimeComposition only after owning authorities are accepted;

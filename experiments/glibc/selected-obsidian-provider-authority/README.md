@@ -20,6 +20,7 @@ WORLD_LOCALE_LOADER_LIFECYCLE_BOUNDARY_PASS
 APPLICATION_PAYLOAD_LAUNCHER_SUPPLEMENT_BOUNDARY_PASS_BOUNDED
 NON_PRIORITY_GENERIC_SOURCE_CLASS_BOUNDARY_PASS_BOUNDED
 GENERIC_EXACT_CANDIDATE_COLLECTOR_READY
+GENERIC_EXACT_CANDIDATE_RECEIPT_REVIEW_PASS_BOUNDED
 SEMANTIC_FINAL_PROVIDER_AUTHORITY_OPEN
 APPLICATION_RUNTIME_COMPOSITION_NOT_REACHED
 TARGET_LAYOUT_POPULATION_BLOCKED
@@ -39,7 +40,33 @@ docs/refactor/0137-selected-obsidian-world-internals-locale-and-loader-lifecycle
 docs/refactor/0138-selected-obsidian-application-payload-launcher-and-supplement-authority-boundary.md
 docs/refactor/0139-selected-obsidian-non-priority-generic-source-authority-boundary.md
 docs/refactor/0140-selected-obsidian-non-priority-generic-exact-candidate-evidence-collector.md
+docs/refactor/0141-selected-obsidian-non-priority-generic-exact-candidate-receipt-review.md
 ```
+
+
+Generic exact-candidate receipt review:
+
+```text
+receipt archive SHA-256:
+    361d2105c57c6ce3f446de16aedd966a55593fbba4e77d8a40e92b857ca02ea7
+
+review identities:
+    61
+
+direct apt + pinned-recipe family candidates:
+    37
+
+indirect token-only rows:
+    13
+
+no retained candidate rows:
+    11
+
+authority decisions accepted:
+    0
+```
+
+Family-name matches rank later artifact/member comparison candidates only. They do not establish object membership, adaptation, necessity, final provider authority or target population.
 
 ## Preserved evidence
 
@@ -390,7 +417,7 @@ AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
 AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
-AUTH-009 non-priority generic capabilities; source classes bounded, exact-candidate collector ready, object/source bindings open
+AUTH-009 non-priority generic capabilities; source classes and retained candidate quality bounded, object/member and final bindings open
 AUTH-010 exact payload supply, named supplement membership and release execution; launcher source boundary bounded
 ```
 
@@ -419,10 +446,10 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active repository task:
 
 ```text
-RUN_NON_PRIORITY_GENERIC_EXACT_CANDIDATE_EVIDENCE_COLLECTOR
+DEFINE_NAMED_GENERIC_ARTIFACT_MEMBER_COMPARISON_SET
 ```
 
-The next work is one bounded read-only device execution of the collector. Receipt review must precede any artifact-member comparison proposal.
+The retained receipt is reviewed. The next work is to define a named download-only/member-inventory comparison set from the 37 direct-family rows while excluding indirect-only and absent rows.
 
 ## Stop line
 
