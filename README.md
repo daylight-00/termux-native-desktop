@@ -81,10 +81,10 @@ Current post-closure audit:
 docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md
 ```
 
-Current provider-authority gap-closure plan:
+Current provider-authority gap-closure collector:
 
 ```text
-docs/refactor/0150-selected-obsidian-generic-build-attestation-and-adaptation-gap-closure-set.md
+docs/refactor/0151-selected-obsidian-generic-build-attestation-and-adaptation-gap-closure-collector.md
 ```
 
 ## Repository checkout
