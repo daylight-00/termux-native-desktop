@@ -24,7 +24,8 @@ GENERIC_EXACT_CANDIDATE_RECEIPT_REVIEW_PASS_BOUNDED
 GENERIC_ARTIFACT_MEMBER_COMPARISON_SET_DEFINED_BOUNDED
 GENERIC_ARTIFACT_MEMBER_INVENTORY_COLLECTOR_PASS_BOUNDED
 GENERIC_ARTIFACT_MEMBER_INVENTORY_RECEIPT_REVIEW_PASS_BOUNDED
-GENERIC_RECIPE_BINDING_AND_DRIFT_TARGET_ELF_COLLECTOR_READY
+GENERIC_RECIPE_BINDING_AND_DRIFT_TARGET_ELF_COLLECTOR_PASS_BOUNDED
+GENERIC_RECIPE_BINDING_AND_DRIFT_TARGET_ELF_RECEIPT_REVIEW_PASS_BOUNDED
 SEMANTIC_FINAL_PROVIDER_AUTHORITY_OPEN
 APPLICATION_RUNTIME_COMPOSITION_NOT_REACHED
 TARGET_LAYOUT_POPULATION_BLOCKED
@@ -49,6 +50,7 @@ docs/refactor/0142-selected-obsidian-non-priority-generic-artifact-member-compar
 docs/refactor/0143-selected-obsidian-non-priority-generic-artifact-member-inventory-collector.md
 docs/refactor/0144-selected-obsidian-non-priority-generic-artifact-member-inventory-receipt-review.md
 docs/refactor/0145-selected-obsidian-generic-recipe-binding-and-drift-target-elf-review.md
+docs/refactor/0146-selected-obsidian-generic-recipe-binding-and-drift-target-elf-receipt-review.md
 ```
 
 
@@ -159,6 +161,44 @@ target rows populated:
 ```
 
 A SONAME-named symlink does not prove the ELF SONAME of its different concrete target. In particular, `libsqlite3.so.0` is present and must not be classified from the target filename alone. The observed `libjpeg.so.8` family is not accepted as a substitute for `libjpeg.so.62`.
+
+Generic recipe-binding and drift-target ELF receipt review:
+
+```text
+receipt archive SHA-256:
+    a415601cb3cfd6d3d85a69c589f38f9d2ba4151483b887c0e611d40a17beccd0
+
+recipe-lineage candidates confirmed:
+    37
+
+exact-member object candidates:
+    21
+
+drift-target expected SONAME candidates:
+    15
+
+expected alias unsatisfied:
+    1 (libjpeg.so.62)
+
+adaptation semantic-review classes:
+    20 material recipe delta
+     8 configuration or packaging delta
+     9 no explicit bounded token observed
+
+artifact build attestations accepted:
+    0
+
+Termux/Android adaptations accepted:
+    0
+
+concrete filename drifts accepted:
+    0
+
+final provider decisions accepted:
+    0
+```
+
+Pinned source alignment and target ELF SONAME evidence remain candidate evidence. They do not establish artifact build provenance, adaptation acceptance, concrete-filename policy or final provider authority.
 
 ## Preserved evidence
 
@@ -395,6 +435,11 @@ review/
     application-authority-boundary.tsv
     generic-source-authority-boundary.tsv
     generic-exact-candidate-search-tokens.tsv
+    generic-recipe-binding-and-drift-target-rules.tsv
+    generic-recipe-binding-and-drift-target-metadata.tsv
+    generic-recipe-binding-and-drift-target-receipt-review-rules.tsv
+    generic-recipe-binding-and-drift-target-receipt-review.tsv
+    generic-recipe-binding-and-drift-target-receipt-metadata.tsv
 
     authority-coverage-ledger.tsv
     authority-coverage-ledger/*.tsv
@@ -532,7 +577,7 @@ AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
 AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
-AUTH-009 non-priority generic capabilities; exact device receipt reviewed with 21 exact, 15 alias-drift and 1 alias-absent rows; recipe/adaptation and final bindings open
+AUTH-009 non-priority generic capabilities; 37 lineage candidates and 36 object/member candidates reviewed; build attestation, adaptation semantics, filename-drift policy, libjpeg.so.62 correction and final bindings open
 AUTH-010 exact payload supply, named supplement membership and release execution; launcher source boundary bounded
 ```
 
@@ -561,10 +606,10 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active repository task:
 
 ```text
-RUN_BOUNDED_GENERIC_RECIPE_BINDING_AND_DRIFT_TARGET_ELF_COLLECTOR
+DEFINE_BOUNDED_GENERIC_BUILD_ATTESTATION_AND_ADAPTATION_REVIEW_SET
 ```
 
-The exact device receipt is reviewed and the next collector contract is ready. Device execution must verify all 37 pinned recipe family/version/tree candidates and inspect only the 15 unique alias targets for ELF SONAME/hash evidence, while keeping build attestation, adaptation acceptance, provider authority and target population open.
+The recipe-binding receipt is reviewed. The next repository-side task must define the bounded evidence requirements for artifact build attestation, semantic review of recipe deltas and explicit concrete-filename drift policy while keeping provider authority and target population open.
 
 ## Stop line
 

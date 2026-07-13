@@ -61,6 +61,7 @@ Current branch-local chain:
 0143 non-priority generic artifact member-inventory collector
 0144 non-priority generic artifact member-inventory receipt review
 0145 bounded generic recipe binding and drift-target ELF review
+0146 generic recipe-binding and drift-target ELF receipt review
 ```
 
 Precedence:
@@ -171,6 +172,9 @@ generic artifact member-inventory collector:
 
 generic artifact member-inventory receipt review:
     PASS / 21 EXACT MEMBER+SONAME, 15 EXPECTED-ALIAS DRIFT, 1 EXPECTED-ALIAS ABSENT
+
+generic recipe binding and drift-target ELF receipt review:
+    PASS / 37 LINEAGE CANDIDATES, 21 EXACT OBJECT CANDIDATES, 15 SONAME-CONFIRMED DRIFT TARGETS, 1 UNSATISFIED ALIAS; ZERO AUTHORITY ACCEPTANCE
 
 semantic final-provider authority:
     OPEN
@@ -360,7 +364,10 @@ generic artifact member-inventory receipt review:
     21 exact concrete member+expected SONAME observations, 15 expected SONAME aliases with different concrete targets, and 1 absent expected alias; no authority acceptance or target population
 
 generic recipe binding and drift-target ELF collector:
-    37 pinned family/version/tree recipe candidates across 28 roots; 15 cache-only target ELF inspections defined; build attestation and adaptation acceptance remain open
+    37 pinned family/version/tree recipe candidates across 28 roots; all 34 cached artifacts and 15 target ELFs verified read-only
+
+generic recipe binding and drift-target ELF receipt review:
+    37 lineage candidates confirmed; 20 material-delta, 8 configuration/packaging-delta and 9 no-explicit-token semantic-review rows; 15 concrete filename drifts remain unaccepted and libjpeg.so.62 remains unsatisfied
 ```
 
 ## Living authority issues
@@ -374,7 +381,7 @@ AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
 AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
-AUTH-009 non-priority generic capabilities; recipe-lineage and drift-target collector ready; build attestation, adaptation and final bindings open
+AUTH-009 non-priority generic capabilities; lineage/object receipt reviewed; build attestation, adaptation semantics, filename-drift policy, libjpeg.so.62 correction and final bindings open
 AUTH-010 exact application payload supply, named supplements and release execution; launcher source boundary bounded
 ```
 
@@ -387,7 +394,7 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active task:
 
 ```text
-RUN_BOUNDED_GENERIC_RECIPE_BINDING_AND_DRIFT_TARGET_ELF_COLLECTOR
+DEFINE_BOUNDED_GENERIC_BUILD_ATTESTATION_AND_ADAPTATION_REVIEW_SET
 ```
 
 Required order:
@@ -395,7 +402,7 @@ Required order:
 ```text
 1. world internals, locale and loader-state lifecycle boundary: PASS / remaining evidence explicit;
 2. application identity/launcher lifecycle boundary: PASS / exact payload supply and named supplement membership OPEN;
-3. non-priority generic capability/source-class boundary: PASS / 37 recipe-lineage candidates and 15 drift-target ELF inspections READY for cache-only device execution; build attestation and adaptation acceptance OPEN;
+3. non-priority generic capability/source-class boundary: PASS / 37 lineage candidates and 36 object/member candidates REVIEWED; build-attestation and adaptation semantic-review set NEXT;
 4. decide conditional graphics, GTK/Wayland, printing and optional-exec policy only after owning candidate sets are explicit;
 5. close fonts, pixbuf/icon/MIME and generated-schema authority;
 6. define ApplicationRuntimeComposition only after owning authorities are accepted;
