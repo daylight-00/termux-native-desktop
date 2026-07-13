@@ -21,6 +21,7 @@ APPLICATION_PAYLOAD_LAUNCHER_SUPPLEMENT_BOUNDARY_PASS_BOUNDED
 NON_PRIORITY_GENERIC_SOURCE_CLASS_BOUNDARY_PASS_BOUNDED
 GENERIC_EXACT_CANDIDATE_COLLECTOR_READY
 GENERIC_EXACT_CANDIDATE_RECEIPT_REVIEW_PASS_BOUNDED
+GENERIC_ARTIFACT_MEMBER_COMPARISON_SET_DEFINED_BOUNDED
 SEMANTIC_FINAL_PROVIDER_AUTHORITY_OPEN
 APPLICATION_RUNTIME_COMPOSITION_NOT_REACHED
 TARGET_LAYOUT_POPULATION_BLOCKED
@@ -41,6 +42,7 @@ docs/refactor/0138-selected-obsidian-application-payload-launcher-and-supplement
 docs/refactor/0139-selected-obsidian-non-priority-generic-source-authority-boundary.md
 docs/refactor/0140-selected-obsidian-non-priority-generic-exact-candidate-evidence-collector.md
 docs/refactor/0141-selected-obsidian-non-priority-generic-exact-candidate-receipt-review.md
+docs/refactor/0142-selected-obsidian-non-priority-generic-artifact-member-comparison-set.md
 ```
 
 
@@ -67,6 +69,33 @@ authority decisions accepted:
 ```
 
 Family-name matches rank later artifact/member comparison candidates only. They do not establish object membership, adaptation, necessity, final provider authority or target population.
+
+Named artifact/member comparison set:
+
+```text
+direct identities:
+    37
+
+exact artifacts in download/member-inventory scope:
+    34
+
+named identity-to-artifact edges:
+    44
+
+compressed byte ceiling:
+    51,771,348
+
+explicit static/development exclusions:
+    15
+
+network download or extraction performed:
+    NO
+
+authority decisions accepted:
+    0
+```
+
+The set is an execution contract for later bounded inspection, not artifact/member authority.
 
 ## Preserved evidence
 
@@ -417,7 +446,7 @@ AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
 AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
-AUTH-009 non-priority generic capabilities; source classes and retained candidate quality bounded, object/member and final bindings open
+AUTH-009 non-priority generic capabilities; source classes, retained candidate quality and named comparison set bounded, object/member and final bindings open
 AUTH-010 exact payload supply, named supplement membership and release execution; launcher source boundary bounded
 ```
 
@@ -446,10 +475,10 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active repository task:
 
 ```text
-DEFINE_NAMED_GENERIC_ARTIFACT_MEMBER_COMPARISON_SET
+IMPLEMENT_BOUNDED_GENERIC_ARTIFACT_MEMBER_INVENTORY_COLLECTOR
 ```
 
-The retained receipt is reviewed. The next work is to define a named download-only/member-inventory comparison set from the 37 direct-family rows while excluding indirect-only and absent rows.
+The retained receipt is reviewed and the 34-artifact/44-edge comparison set is defined. The next work is to implement a bounded download-only collector that inventories only the named members without installation or authority promotion.
 
 ## Stop line
 

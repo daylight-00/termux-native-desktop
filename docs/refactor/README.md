@@ -57,6 +57,7 @@ Current branch-local chain:
 0139 non-priority generic source-authority boundary
 0140 non-priority generic exact-candidate evidence collector
 0141 non-priority generic exact-candidate receipt review
+0142 non-priority generic artifact/member comparison set
 ```
 
 Precedence:
@@ -94,6 +95,9 @@ system-foundation
 
 0141
     -> exact retained receipt review into direct-family, indirect-only and absent classes
+
+0142
+    -> exact 34-artifact/44-edge named member-inventory comparison set and explicit static/development exclusions
 ```
 
 ## Current state
@@ -149,6 +153,9 @@ generic exact-candidate collector:
 
 generic exact-candidate receipt review:
     PASS / 37 DIRECT FAMILY, 13 INDIRECT ONLY, 11 ABSENT
+
+generic artifact/member comparison set:
+    DEFINED / 34 EXACT ARTIFACTS, 44 NAMED EDGES, 15 STATIC/DEV EXCLUSIONS
 
 semantic final-provider authority:
     OPEN
@@ -327,6 +334,9 @@ non-priority generic source classes:
 
 generic exact-candidate evidence:
     bounded receipt reviewed: 37 direct apt+recipe family candidates, 13 indirect-only rows, 11 retained gaps; all remain candidate-only
+
+generic artifact/member comparison set:
+    34 exact indexed artifacts, 44 named member-search edges, 15 explicit static/development exclusions; no download or extraction performed
 ```
 
 ## Living authority issues
@@ -340,7 +350,7 @@ AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
 AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
-AUTH-009 non-priority generic capabilities; source classes and retained candidate quality bounded, object/member and final bindings open
+AUTH-009 non-priority generic capabilities; source classes, retained candidate quality and named comparison set bounded, object/member and final bindings open
 AUTH-010 exact application payload supply, named supplements and release execution; launcher source boundary bounded
 ```
 
@@ -353,7 +363,7 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active task:
 
 ```text
-DEFINE_NAMED_GENERIC_ARTIFACT_MEMBER_COMPARISON_SET
+IMPLEMENT_BOUNDED_GENERIC_ARTIFACT_MEMBER_INVENTORY_COLLECTOR
 ```
 
 Required order:
@@ -361,7 +371,7 @@ Required order:
 ```text
 1. world internals, locale and loader-state lifecycle boundary: PASS / remaining evidence explicit;
 2. application identity/launcher lifecycle boundary: PASS / exact payload supply and named supplement membership OPEN;
-3. non-priority generic capability/source-class boundary: PASS / receipt REVIEWED; named artifact/member comparison set NEXT;
+3. non-priority generic capability/source-class boundary: PASS / receipt REVIEWED and named comparison set DEFINED; bounded member-inventory collector NEXT;
 4. decide conditional graphics, GTK/Wayland, printing and optional-exec policy only after owning candidate sets are explicit;
 5. close fonts, pixbuf/icon/MIME and generated-schema authority;
 6. define ApplicationRuntimeComposition only after owning authorities are accepted;

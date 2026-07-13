@@ -1,6 +1,6 @@
 # Status
 
-> **State:** generic exact-candidate receipt REVIEWED / BOUNDED; 37 direct family candidates, 13 indirect-only rows and 11 retained gaps; object-member binding and final providers remain open; target population, extraction, materialization and activation remain blocked
+> **State:** generic artifact/member comparison set DEFINED / BOUNDED; 37 direct identities map to 34 exact indexed artifacts through 44 named member-search edges; object-member binding and final providers remain open; target population, extraction, materialization and activation remain blocked
 > **Updated:** 2026-07-13
 
 ## Current conclusions
@@ -35,7 +35,9 @@
 - A canonical 61-row exact-candidate search-token contract and read-only apt/source/cache collector are repository-ready and the bounded device receipt has been reviewed.
 - The reviewed snapshot contains 37 direct apt+recipe family candidates, 13 indirect token-only rows and 11 identities with no retained candidate.
 - Candidate family matches remain non-authoritative; `.deb` member binding, adaptation, necessity and final providers remain open.
-- The next active task is to define a named download-only/member-inventory comparison set from the 37 direct-family rows while excluding indirect-only and absent rows.
+- A bounded named comparison set now covers all 37 direct identities with 34 exact indexed runtime/split artifacts and 44 member-search edges; 14 static-only artifacts and one architecture-all development artifact are explicitly excluded from download scope.
+- The comparison-set definition performed no download or extraction and accepted no authority decision.
+- The next active task is to implement a bounded collector for only those 34 exact artifacts and inventory named members without installation.
 
 ## Current authority
 
@@ -59,9 +61,10 @@ docs/refactor/0138-selected-obsidian-application-payload-launcher-and-supplement
 docs/refactor/0139-selected-obsidian-non-priority-generic-source-authority-boundary.md
 docs/refactor/0140-selected-obsidian-non-priority-generic-exact-candidate-evidence-collector.md
 docs/refactor/0141-selected-obsidian-non-priority-generic-exact-candidate-receipt-review.md
+docs/refactor/0142-selected-obsidian-non-priority-generic-artifact-member-comparison-set.md
 ```
 
-`0116` remains the controlling intervention. `0135` supplies the correction requirements. `0136` records P0-P6 normalization. `0137` accepts the non-materializing world/locale/loader lifecycle boundary. `0138` accepts the non-materializing application identity/launcher lifecycle boundary while keeping exact payload supply, supplement membership, composition and population open. `0139` bounds non-priority generic capability/source classes. `0140` defines the canonical 61-row candidate-search contract and a non-mutating retained-evidence collector. `0141` reviews the exact receipt into direct-family, indirect-only and absent classes while accepting no provider authority.
+`0116` remains the controlling intervention. `0135` supplies the correction requirements. `0136` records P0-P6 normalization. `0137` accepts the non-materializing world/locale/loader lifecycle boundary. `0138` accepts the non-materializing application identity/launcher lifecycle boundary while keeping exact payload supply, supplement membership, composition and population open. `0139` bounds non-priority generic capability/source classes. `0140` defines the canonical 61-row candidate-search contract and a non-mutating retained-evidence collector. `0141` reviews the exact receipt into direct-family, indirect-only and absent classes while accepting no provider authority. `0142` defines the exact 34-artifact/44-edge member-inventory comparison set and explicit static/development exclusions without downloading or extracting artifacts.
 
 ## Accepted states
 
@@ -78,6 +81,7 @@ APPLICATION_PAYLOAD_LAUNCHER_SUPPLEMENT_BOUNDARY_PASS_BOUNDED
 NON_PRIORITY_GENERIC_SOURCE_CLASS_BOUNDARY_PASS_BOUNDED
 GENERIC_EXACT_CANDIDATE_COLLECTOR_READY
 GENERIC_EXACT_CANDIDATE_RECEIPT_REVIEW_PASS_BOUNDED
+GENERIC_ARTIFACT_MEMBER_COMPARISON_SET_DEFINED_BOUNDED
 SEMANTIC_FINAL_PROVIDER_AUTHORITY_OPEN
 APPLICATION_RUNTIME_COMPOSITION_NOT_REACHED
 TARGET_LAYOUT_POPULATION_BLOCKED
@@ -102,6 +106,10 @@ experiments/glibc/selected-obsidian-provider-authority/review/
     generic-exact-candidate-review-rules.tsv
     generic-exact-candidate-receipt-review.tsv
     generic-exact-candidate-receipt-metadata.tsv
+    generic-artifact-member-comparison-artifacts.tsv
+    generic-artifact-member-comparison-edges.tsv
+    generic-artifact-member-comparison-exclusions.tsv
+    generic-artifact-member-comparison-metadata.tsv
     unresolved-authority-ledger.tsv
 
 experiments/glibc/selected-obsidian-provider-authority/profiles/
@@ -130,7 +138,7 @@ AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
 AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
-AUTH-009 non-priority generic capabilities; source classes and retained candidate quality bounded, object/member and final bindings open
+AUTH-009 non-priority generic capabilities; source classes, retained candidate quality and named comparison set bounded, object/member and final bindings open
 AUTH-010 exact application payload supply, named supplement membership and release execution; launcher source boundary bounded
 ```
 
@@ -143,7 +151,7 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active repository task:
 
 ```text
-DEFINE_NAMED_GENERIC_ARTIFACT_MEMBER_COMPARISON_SET
+IMPLEMENT_BOUNDED_GENERIC_ARTIFACT_MEMBER_INVENTORY_COLLECTOR
 ```
 
 Repository-side order:
@@ -151,7 +159,7 @@ Repository-side order:
 ```text
 1. world runtime internals, locale and loader-state lifecycle boundary: PASS / remaining evidence explicit;
 2. application identity/launcher lifecycle boundary: PASS / exact payload supply and named supplement membership OPEN;
-3. non-priority generic capability/source-class boundary: PASS / exact-candidate receipt REVIEWED; named artifact/member comparison set NEXT;
+3. non-priority generic capability/source-class boundary: PASS / exact-candidate receipt REVIEWED and 34-artifact comparison set DEFINED; bounded member-inventory collector NEXT;
 4. decide graphics, GTK/Wayland, printing and optional-exec composition policy only after owning candidate sets are explicit;
 5. close font, pixbuf, icon, MIME and generated-schema authority;
 6. define an ApplicationRuntimeComposition only after owning authorities are accepted;
