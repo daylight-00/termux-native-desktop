@@ -1,6 +1,6 @@
 # Status
 
-> **State:** generic build-attestation and adaptation evidence receipt REVIEWED / BOUNDED; 6 local evidence dimensions are confirmed as review inputs, 10 external/semantic/policy/correction gaps remain explicit, and all authority decisions and target population remain blocked
+> **State:** generic build-attestation and adaptation gap-closure set DEFINED / BOUNDED; 6 closure lanes map all 16 requirements into 28 pinned-root and 37 named-object work units while all evidence acceptance, provider authority and target population remain blocked
 > **Updated:** 2026-07-14
 
 ## Current conclusions
@@ -42,7 +42,9 @@
 - A bounded review set defines 16 evidence requirements across 28 pinned recipe roots and 37 object rows; 36 rows are evidence-collection eligible and `libjpeg.so.62` remains correction-blocked.
 - The production receipt reverified 34 artifacts, inventoried 84 recipe files and 74 bounded script signals, recorded 37 root/object links, and confirmed 21 exact-member plus 15 alias-target output observations without package mutation, extraction or network acquisition.
 - Receipt review accepts six local evidence dimensions only as bounded review inputs and confirms ten external, semantic, continuity-policy, consumer-binding or object-correction gaps. Build attestations, adaptations, filename drifts, final providers and target rows accepted remain zero.
-- The next active task is to define deterministic gap-closure work units for those ten gaps and the remaining semantic/build-link obligations.
+- Six deterministic closure lanes now map all 16 requirements: object correction, digest-bound provenance, output-to-build linkage, adaptation semantic review, consumer binding, and successor/rollback continuity policy.
+- The 28 pinned roots and 37 named objects now have explicit requirement dependencies and completion gates; no new evidence or authority was accepted.
+- The next active task is to implement a bounded collector for those closure lanes.
 
 ## Current authority
 
@@ -74,6 +76,7 @@ docs/refactor/0146-selected-obsidian-generic-recipe-binding-and-drift-target-elf
 docs/refactor/0147-selected-obsidian-generic-build-attestation-and-adaptation-review-set.md
 docs/refactor/0148-selected-obsidian-generic-build-attestation-and-adaptation-evidence-collector.md
 docs/refactor/0149-selected-obsidian-generic-build-attestation-and-adaptation-evidence-receipt-review.md
+docs/refactor/0150-selected-obsidian-generic-build-attestation-and-adaptation-gap-closure-set.md
 ```
 
 `0116` remains the controlling intervention. `0135` supplies the correction requirements. `0136` records P0-P6 normalization. `0137` accepts the non-materializing world/locale/loader lifecycle boundary. `0138` accepts the non-materializing application identity/launcher lifecycle boundary while keeping exact payload supply, supplement membership, composition and population open. `0139` bounds non-priority generic capability/source classes. `0140` defines the canonical 61-row candidate-search contract and a non-mutating retained-evidence collector. `0141` reviews the exact receipt into direct-family, indirect-only and absent classes while accepting no provider authority. `0142` defines the exact 34-artifact/44-edge member-inventory comparison set and explicit static/development exclusions without downloading or extracting artifacts. `0143` implements bounded exact-artifact acquisition and stream-only member inventory. `0144` reviews the exact device receipt into 21 exact member+SONAME observations, 15 expected-SONAME-alias concrete-filename drifts, and one expected-alias absence while accepting no provider authority. `0145` defines a cache-only collector that verifies 37 pinned recipe family/version/tree candidates and stream-inspects the 15 drift-target ELFs while keeping build attestation and adaptation acceptance open. `0146` reviews the resulting receipt as 37 lineage candidates, 21 exact-member candidates, 15 SONAME-confirmed drift-target candidates and one unsatisfied `libjpeg.so.62` row; it accepts no build attestation, adaptation, filename-drift policy, final provider or target population. `0147` defines 16 explicit evidence requirements and deterministic work units for 28 roots/37 objects while keeping every acceptance and target row open. `0148` implements and runs bounded local evidence collection without build, package mutation, extraction or network acquisition. `0149` reviews the resulting receipt into six confirmed local review-input dimensions and ten explicit provenance/semantic/policy/correction gaps while accepting no authority or target population.
@@ -146,6 +149,11 @@ experiments/glibc/selected-obsidian-provider-authority/review/
     generic-build-attestation-adaptation-root-evidence-receipt-review.tsv
     generic-build-attestation-adaptation-object-evidence-receipt-review.tsv
     generic-build-attestation-adaptation-evidence-receipt-metadata.tsv
+    generic-build-attestation-adaptation-gap-closure-lanes.tsv
+    generic-build-attestation-adaptation-gap-closure-requirements.tsv
+    generic-build-attestation-adaptation-root-gap-closure-set.tsv
+    generic-build-attestation-adaptation-object-gap-closure-set.tsv
+    generic-build-attestation-adaptation-gap-closure-set-metadata.tsv
     unresolved-authority-ledger.tsv
 
 experiments/glibc/selected-obsidian-provider-authority/profiles/
@@ -174,7 +182,7 @@ AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
 AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
-AUTH-009 non-priority generic capabilities; production evidence receipt reviewed as 6 bounded local review-input dimensions plus 10 explicit provenance/semantic/policy/correction gaps; libjpeg.so.62 correction and all build-attestation, adaptation, filename-drift and final-provider decisions remain open
+AUTH-009 non-priority generic capabilities; six deterministic gap-closure lanes now map all 16 requirements across 28 roots and 37 objects; libjpeg.so.62 correction and all build-attestation, adaptation, filename-drift and final-provider decisions remain open
 AUTH-010 exact application payload supply, named supplement membership and release execution; launcher source boundary bounded
 ```
 
@@ -187,7 +195,7 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active repository task:
 
 ```text
-DEFINE_BOUNDED_GENERIC_BUILD_ATTESTATION_ADAPTATION_GAP_CLOSURE_SET
+IMPLEMENT_BOUNDED_GENERIC_BUILD_ATTESTATION_ADAPTATION_GAP_CLOSURE_COLLECTOR
 ```
 
 Repository-side order:
@@ -195,7 +203,7 @@ Repository-side order:
 ```text
 1. world runtime internals, locale and loader-state lifecycle boundary: PASS / remaining evidence explicit;
 2. application identity/launcher lifecycle boundary: PASS / exact payload supply and named supplement membership OPEN;
-3. non-priority generic capability/source-class boundary: PASS / production receipt REVIEWED as 6 local review-input dimensions and 10 explicit gaps; deterministic gap-closure work-unit definition NEXT, with libjpeg.so.62 correction still blocked;
+3. non-priority generic capability/source-class boundary: PASS / gap-closure set DEFINED as 6 lanes across 16 requirements, 28 roots and 37 objects; bounded collector implementation NEXT, with libjpeg.so.62 correction still blocked;
 4. decide graphics, GTK/Wayland, printing and optional-exec composition policy only after owning candidate sets are explicit;
 5. close font, pixbuf, icon, MIME and generated-schema authority;
 6. define an ApplicationRuntimeComposition only after owning authorities are accepted;

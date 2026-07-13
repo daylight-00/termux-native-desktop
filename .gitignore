@@ -2,3 +2,5 @@
 .cache/
 experiments/**/work/
 temp/
+__pycache__/
+*.py[cod]

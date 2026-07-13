@@ -409,6 +409,9 @@ generic build-attestation and adaptation evidence collector:
 
 generic build-attestation and adaptation evidence receipt review:
     six local evidence dimensions confirmed only as bounded review inputs; ten external provenance, semantic classification, continuity-policy, consumer-binding or object-correction gaps remain explicit; every authority decision remains open
+
+generic build-attestation and adaptation gap-closure set:
+    six ordered closure lanes map all 16 requirements into 28 root and 37 object work units; dependencies and completion gates are explicit while every authority decision remains open
 ```
 
 ## Living authority issues
@@ -422,7 +425,7 @@ AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
 AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
-AUTH-009 non-priority generic capabilities; production evidence receipt reviewed as 6 bounded local review-input dimensions plus 10 explicit provenance/semantic/policy/correction gaps; libjpeg.so.62 correction and all build-attestation, adaptation, filename-drift and final-provider decisions remain open
+AUTH-009 non-priority generic capabilities; six deterministic gap-closure lanes now map all 16 requirements across 28 roots and 37 objects; libjpeg.so.62 correction and all build-attestation, adaptation, filename-drift and final-provider decisions remain open
 AUTH-010 exact application payload supply, named supplements and release execution; launcher source boundary bounded
 ```
 
@@ -435,7 +438,7 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active task:
 
 ```text
-DEFINE_BOUNDED_GENERIC_BUILD_ATTESTATION_ADAPTATION_GAP_CLOSURE_SET
+IMPLEMENT_BOUNDED_GENERIC_BUILD_ATTESTATION_ADAPTATION_GAP_CLOSURE_COLLECTOR
 ```
 
 Required order:
@@ -443,7 +446,7 @@ Required order:
 ```text
 1. world internals, locale and loader-state lifecycle boundary: PASS / remaining evidence explicit;
 2. application identity/launcher lifecycle boundary: PASS / exact payload supply and named supplement membership OPEN;
-3. non-priority generic capability/source-class boundary: PASS / production evidence receipt REVIEWED as 6 local review-input dimensions and 10 explicit gaps; deterministic gap-closure work-unit definition NEXT, with libjpeg.so.62 correction still blocked;
+3. non-priority generic capability/source-class boundary: PASS / gap-closure set DEFINED as 6 lanes across 16 requirements, 28 roots and 37 objects; bounded collector implementation NEXT, with libjpeg.so.62 correction still blocked;
 4. decide conditional graphics, GTK/Wayland, printing and optional-exec policy only after owning candidate sets are explicit;
 5. close fonts, pixbuf/icon/MIME and generated-schema authority;
 6. define ApplicationRuntimeComposition only after owning authorities are accepted;
