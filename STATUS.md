@@ -62,9 +62,11 @@ docs/refactor/0139-selected-obsidian-non-priority-generic-source-authority-bound
 docs/refactor/0140-selected-obsidian-non-priority-generic-exact-candidate-evidence-collector.md
 docs/refactor/0141-selected-obsidian-non-priority-generic-exact-candidate-receipt-review.md
 docs/refactor/0142-selected-obsidian-non-priority-generic-artifact-member-comparison-set.md
+docs/refactor/0143-selected-obsidian-non-priority-generic-artifact-member-inventory-collector.md
+docs/refactor/0144-selected-obsidian-non-priority-generic-artifact-member-inventory-receipt-review.md
 ```
 
-`0116` remains the controlling intervention. `0135` supplies the correction requirements. `0136` records P0-P6 normalization. `0137` accepts the non-materializing world/locale/loader lifecycle boundary. `0138` accepts the non-materializing application identity/launcher lifecycle boundary while keeping exact payload supply, supplement membership, composition and population open. `0139` bounds non-priority generic capability/source classes. `0140` defines the canonical 61-row candidate-search contract and a non-mutating retained-evidence collector. `0141` reviews the exact receipt into direct-family, indirect-only and absent classes while accepting no provider authority. `0142` defines the exact 34-artifact/44-edge member-inventory comparison set and explicit static/development exclusions without downloading or extracting artifacts.
+`0116` remains the controlling intervention. `0135` supplies the correction requirements. `0136` records P0-P6 normalization. `0137` accepts the non-materializing world/locale/loader lifecycle boundary. `0138` accepts the non-materializing application identity/launcher lifecycle boundary while keeping exact payload supply, supplement membership, composition and population open. `0139` bounds non-priority generic capability/source classes. `0140` defines the canonical 61-row candidate-search contract and a non-mutating retained-evidence collector. `0141` reviews the exact receipt into direct-family, indirect-only and absent classes while accepting no provider authority. `0142` defines the exact 34-artifact/44-edge member-inventory comparison set and explicit static/development exclusions without downloading or extracting artifacts. `0143` implements bounded exact-artifact acquisition and stream-only member inventory. `0144` reviews the exact device receipt into 21 exact member+SONAME observations, 15 expected-SONAME-alias concrete-filename drifts, and one expected-alias absence while accepting no provider authority.
 
 ## Accepted states
 
@@ -82,7 +84,8 @@ NON_PRIORITY_GENERIC_SOURCE_CLASS_BOUNDARY_PASS_BOUNDED
 GENERIC_EXACT_CANDIDATE_COLLECTOR_READY
 GENERIC_EXACT_CANDIDATE_RECEIPT_REVIEW_PASS_BOUNDED
 GENERIC_ARTIFACT_MEMBER_COMPARISON_SET_DEFINED_BOUNDED
-GENERIC_ARTIFACT_MEMBER_INVENTORY_COLLECTOR_READY
+GENERIC_ARTIFACT_MEMBER_INVENTORY_COLLECTOR_PASS_BOUNDED
+GENERIC_ARTIFACT_MEMBER_INVENTORY_RECEIPT_REVIEW_PASS_BOUNDED
 SEMANTIC_FINAL_PROVIDER_AUTHORITY_OPEN
 APPLICATION_RUNTIME_COMPOSITION_NOT_REACHED
 TARGET_LAYOUT_POPULATION_BLOCKED
@@ -111,6 +114,9 @@ experiments/glibc/selected-obsidian-provider-authority/review/
     generic-artifact-member-comparison-edges.tsv
     generic-artifact-member-comparison-exclusions.tsv
     generic-artifact-member-comparison-metadata.tsv
+    generic-artifact-member-inventory-review-rules.tsv
+    generic-artifact-member-inventory-receipt-review.tsv
+    generic-artifact-member-inventory-receipt-metadata.tsv
     unresolved-authority-ledger.tsv
 
 experiments/glibc/selected-obsidian-provider-authority/profiles/
@@ -139,7 +145,7 @@ AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
 AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
-AUTH-009 non-priority generic capabilities; source classes, retained candidate quality and named comparison set bounded, object/member and final bindings open
+AUTH-009 non-priority generic capabilities; exact device receipt reviewed with 21 exact, 15 alias-drift and 1 alias-absent rows; recipe/adaptation and final bindings open
 AUTH-010 exact application payload supply, named supplement membership and release execution; launcher source boundary bounded
 ```
 
@@ -152,7 +158,7 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active repository task:
 
 ```text
-RUN_BOUNDED_GENERIC_ARTIFACT_MEMBER_INVENTORY_COLLECTOR
+DEFINE_BOUNDED_GENERIC_RECIPE_BINDING_AND_DRIFT_TARGET_ELF_REVIEW
 ```
 
 Repository-side order:
@@ -160,7 +166,7 @@ Repository-side order:
 ```text
 1. world runtime internals, locale and loader-state lifecycle boundary: PASS / remaining evidence explicit;
 2. application identity/launcher lifecycle boundary: PASS / exact payload supply and named supplement membership OPEN;
-3. non-priority generic capability/source-class boundary: PASS / exact-candidate receipt REVIEWED, 34-artifact comparison set DEFINED and bounded member-inventory collector READY; device receipt NEXT;
+3. non-priority generic capability/source-class boundary: PASS / device receipt REVIEWED as 21 exact, 15 expected-alias drift and 1 expected-alias absence; recipe binding and drift-target ELF review NEXT;
 4. decide graphics, GTK/Wayland, printing and optional-exec composition policy only after owning candidate sets are explicit;
 5. close font, pixbuf, icon, MIME and generated-schema authority;
 6. define an ApplicationRuntimeComposition only after owning authorities are accepted;

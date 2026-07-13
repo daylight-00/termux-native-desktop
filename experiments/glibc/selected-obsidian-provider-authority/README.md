@@ -22,7 +22,8 @@ NON_PRIORITY_GENERIC_SOURCE_CLASS_BOUNDARY_PASS_BOUNDED
 GENERIC_EXACT_CANDIDATE_COLLECTOR_READY
 GENERIC_EXACT_CANDIDATE_RECEIPT_REVIEW_PASS_BOUNDED
 GENERIC_ARTIFACT_MEMBER_COMPARISON_SET_DEFINED_BOUNDED
-GENERIC_ARTIFACT_MEMBER_INVENTORY_COLLECTOR_READY
+GENERIC_ARTIFACT_MEMBER_INVENTORY_COLLECTOR_PASS_BOUNDED
+GENERIC_ARTIFACT_MEMBER_INVENTORY_RECEIPT_REVIEW_PASS_BOUNDED
 SEMANTIC_FINAL_PROVIDER_AUTHORITY_OPEN
 APPLICATION_RUNTIME_COMPOSITION_NOT_REACHED
 TARGET_LAYOUT_POPULATION_BLOCKED
@@ -45,6 +46,7 @@ docs/refactor/0140-selected-obsidian-non-priority-generic-exact-candidate-eviden
 docs/refactor/0141-selected-obsidian-non-priority-generic-exact-candidate-receipt-review.md
 docs/refactor/0142-selected-obsidian-non-priority-generic-artifact-member-comparison-set.md
 docs/refactor/0143-selected-obsidian-non-priority-generic-artifact-member-inventory-collector.md
+docs/refactor/0144-selected-obsidian-non-priority-generic-artifact-member-inventory-receipt-review.md
 ```
 
 
@@ -125,6 +127,36 @@ target rows populated:
 ```
 
 The collector verifies exact size, SHA-256, Package, Version and Architecture, rejects unapproved hosts or redirects, preserves dpkg/apt/repository state and emits a reviewable receipt.
+
+Generic artifact member-inventory receipt review:
+
+```text
+receipt archive SHA-256:
+    e42db95f816700d1cf80cae7b747e876f831924c5f3df7f416c22243b0e83274
+
+artifacts verified:
+    34 / 34
+
+review identities:
+    37
+
+exact concrete member + expected ELF SONAME observed:
+    21
+
+expected SONAME alias symlink present, concrete filename drift:
+    15
+
+expected SONAME alias absent:
+    1 (libjpeg.so.62)
+
+authority decisions accepted:
+    0
+
+target rows populated:
+    0
+```
+
+A SONAME-named symlink does not prove the ELF SONAME of its different concrete target. In particular, `libsqlite3.so.0` is present and must not be classified from the target filename alone. The observed `libjpeg.so.8` family is not accepted as a substitute for `libjpeg.so.62`.
 
 ## Preserved evidence
 
@@ -498,7 +530,7 @@ AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
 AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
-AUTH-009 non-priority generic capabilities; source classes, retained candidate quality and named comparison set bounded, object/member and final bindings open
+AUTH-009 non-priority generic capabilities; exact device receipt reviewed with 21 exact, 15 alias-drift and 1 alias-absent rows; recipe/adaptation and final bindings open
 AUTH-010 exact payload supply, named supplement membership and release execution; launcher source boundary bounded
 ```
 
@@ -527,10 +559,10 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active repository task:
 
 ```text
-RUN_BOUNDED_GENERIC_ARTIFACT_MEMBER_INVENTORY_COLLECTOR
+DEFINE_BOUNDED_GENERIC_RECIPE_BINDING_AND_DRIFT_TARGET_ELF_REVIEW
 ```
 
-The bounded collector is implemented. The next work is to collect one exact device receipt and review member observations without accepting provider authority or target population.
+The exact device receipt is reviewed. The next work is to bind the 21 exact rows to pinned recipes and inspect only the 15 unique alias targets for ELF SONAME/hash evidence, while keeping provider authority and target population open.
 
 ## Stop line
 

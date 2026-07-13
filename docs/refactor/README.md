@@ -59,6 +59,7 @@ Current branch-local chain:
 0141 non-priority generic exact-candidate receipt review
 0142 non-priority generic artifact/member comparison set
 0143 non-priority generic artifact member-inventory collector
+0144 non-priority generic artifact member-inventory receipt review
 ```
 
 Precedence:
@@ -102,6 +103,9 @@ system-foundation
 
 0143
     -> bounded exact-artifact acquisition and stream-only control/data member-inventory collector implementation
+
+0144
+    -> exact device receipt review into exact-member, expected-alias drift and expected-alias-absent classes
 ```
 
 ## Current state
@@ -162,7 +166,10 @@ generic artifact/member comparison set:
     DEFINED / 34 EXACT ARTIFACTS, 44 NAMED EDGES, 15 STATIC/DEV EXCLUSIONS
 
 generic artifact member-inventory collector:
-    READY / DOWNLOAD-ONLY, STREAM INVENTORY, NO INSTALL OR FILESYSTEM MATERIALIZATION
+    PASS / 34 EXACT ARTIFACTS VERIFIED, STREAM INVENTORY, NO INSTALL OR FILESYSTEM MATERIALIZATION
+
+generic artifact member-inventory receipt review:
+    PASS / 21 EXACT MEMBER+SONAME, 15 EXPECTED-ALIAS DRIFT, 1 EXPECTED-ALIAS ABSENT
 
 semantic final-provider authority:
     OPEN
@@ -346,7 +353,10 @@ generic artifact/member comparison set:
     34 exact indexed artifacts, 44 named member-search edges, 15 explicit static/development exclusions; no download or extraction performed
 
 generic artifact member-inventory collector:
-    bounded exact download/cache and stream-only control/data inventory implementation ready; no authority acceptance or target population
+    34 exact artifacts verified and inventoried without install or filesystem extraction
+
+generic artifact member-inventory receipt review:
+    21 exact concrete member+expected SONAME observations, 15 expected SONAME aliases with different concrete targets, and 1 absent expected alias; no authority acceptance or target population
 ```
 
 ## Living authority issues
@@ -360,7 +370,7 @@ AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
 AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
-AUTH-009 non-priority generic capabilities; source classes, retained candidate quality and named comparison set bounded, object/member and final bindings open
+AUTH-009 non-priority generic capabilities; exact device receipt reviewed with 21 exact, 15 alias-drift and 1 alias-absent rows; recipe/adaptation and final bindings open
 AUTH-010 exact application payload supply, named supplements and release execution; launcher source boundary bounded
 ```
 
@@ -373,7 +383,7 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active task:
 
 ```text
-RUN_BOUNDED_GENERIC_ARTIFACT_MEMBER_INVENTORY_COLLECTOR
+DEFINE_BOUNDED_GENERIC_RECIPE_BINDING_AND_DRIFT_TARGET_ELF_REVIEW
 ```
 
 Required order:
@@ -381,7 +391,7 @@ Required order:
 ```text
 1. world internals, locale and loader-state lifecycle boundary: PASS / remaining evidence explicit;
 2. application identity/launcher lifecycle boundary: PASS / exact payload supply and named supplement membership OPEN;
-3. non-priority generic capability/source-class boundary: PASS / receipt REVIEWED, named comparison set DEFINED and bounded member-inventory collector READY; device receipt NEXT;
+3. non-priority generic capability/source-class boundary: PASS / exact device receipt REVIEWED as 21 exact, 15 expected-alias drift and 1 expected-alias absence; recipe binding and drift-target ELF review NEXT;
 4. decide conditional graphics, GTK/Wayland, printing and optional-exec policy only after owning candidate sets are explicit;
 5. close fonts, pixbuf/icon/MIME and generated-schema authority;
 6. define ApplicationRuntimeComposition only after owning authorities are accepted;
