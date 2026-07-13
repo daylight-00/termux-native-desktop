@@ -54,6 +54,9 @@ trap 'rm -rf "$TMP"' EXIT
 mkdir -p "$TMP/repo" "$TMP/prefix/var/lib/dpkg" "$TMP/prefix/var/lib/apt/lists" \
     "$TMP/http/pool/test/f/foo-glibc" "$TMP/http/pool/test/b/bar-glibc" \
     "$TMP/pkg-foo/DEBIAN" "$TMP/pkg-foo/usr/lib" "$TMP/pkg-bar/DEBIAN" "$TMP/pkg-bar/usr/share/bar"
+# Termux sessions commonly use umask 077. dpkg-deb rejects a control directory
+# outside 0755..0775, so make the synthetic fixture independent of caller umask.
+chmod 0755 "$TMP/pkg-foo/DEBIAN" "$TMP/pkg-bar/DEBIAN"
 
 git -C "$TMP/repo" init -q
 git -C "$TMP/repo" config user.name smoke
