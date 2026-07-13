@@ -60,6 +60,7 @@ Current branch-local chain:
 0142 non-priority generic artifact/member comparison set
 0143 non-priority generic artifact member-inventory collector
 0144 non-priority generic artifact member-inventory receipt review
+0145 bounded generic recipe binding and drift-target ELF review
 ```
 
 Precedence:
@@ -357,6 +358,9 @@ generic artifact member-inventory collector:
 
 generic artifact member-inventory receipt review:
     21 exact concrete member+expected SONAME observations, 15 expected SONAME aliases with different concrete targets, and 1 absent expected alias; no authority acceptance or target population
+
+generic recipe binding and drift-target ELF collector:
+    37 pinned family/version/tree recipe candidates across 28 roots; 15 cache-only target ELF inspections defined; build attestation and adaptation acceptance remain open
 ```
 
 ## Living authority issues
@@ -370,7 +374,7 @@ AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
 AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
-AUTH-009 non-priority generic capabilities; exact device receipt reviewed with 21 exact, 15 alias-drift and 1 alias-absent rows; recipe/adaptation and final bindings open
+AUTH-009 non-priority generic capabilities; recipe-lineage and drift-target collector ready; build attestation, adaptation and final bindings open
 AUTH-010 exact application payload supply, named supplements and release execution; launcher source boundary bounded
 ```
 
@@ -383,7 +387,7 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active task:
 
 ```text
-DEFINE_BOUNDED_GENERIC_RECIPE_BINDING_AND_DRIFT_TARGET_ELF_REVIEW
+RUN_BOUNDED_GENERIC_RECIPE_BINDING_AND_DRIFT_TARGET_ELF_COLLECTOR
 ```
 
 Required order:
@@ -391,7 +395,7 @@ Required order:
 ```text
 1. world internals, locale and loader-state lifecycle boundary: PASS / remaining evidence explicit;
 2. application identity/launcher lifecycle boundary: PASS / exact payload supply and named supplement membership OPEN;
-3. non-priority generic capability/source-class boundary: PASS / exact device receipt REVIEWED as 21 exact, 15 expected-alias drift and 1 expected-alias absence; recipe binding and drift-target ELF review NEXT;
+3. non-priority generic capability/source-class boundary: PASS / 37 recipe-lineage candidates and 15 drift-target ELF inspections READY for cache-only device execution; build attestation and adaptation acceptance OPEN;
 4. decide conditional graphics, GTK/Wayland, printing and optional-exec policy only after owning candidate sets are explicit;
 5. close fonts, pixbuf/icon/MIME and generated-schema authority;
 6. define ApplicationRuntimeComposition only after owning authorities are accepted;

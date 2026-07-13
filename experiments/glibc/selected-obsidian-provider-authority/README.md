@@ -24,6 +24,7 @@ GENERIC_EXACT_CANDIDATE_RECEIPT_REVIEW_PASS_BOUNDED
 GENERIC_ARTIFACT_MEMBER_COMPARISON_SET_DEFINED_BOUNDED
 GENERIC_ARTIFACT_MEMBER_INVENTORY_COLLECTOR_PASS_BOUNDED
 GENERIC_ARTIFACT_MEMBER_INVENTORY_RECEIPT_REVIEW_PASS_BOUNDED
+GENERIC_RECIPE_BINDING_AND_DRIFT_TARGET_ELF_COLLECTOR_READY
 SEMANTIC_FINAL_PROVIDER_AUTHORITY_OPEN
 APPLICATION_RUNTIME_COMPOSITION_NOT_REACHED
 TARGET_LAYOUT_POPULATION_BLOCKED
@@ -47,6 +48,7 @@ docs/refactor/0141-selected-obsidian-non-priority-generic-exact-candidate-receip
 docs/refactor/0142-selected-obsidian-non-priority-generic-artifact-member-comparison-set.md
 docs/refactor/0143-selected-obsidian-non-priority-generic-artifact-member-inventory-collector.md
 docs/refactor/0144-selected-obsidian-non-priority-generic-artifact-member-inventory-receipt-review.md
+docs/refactor/0145-selected-obsidian-generic-recipe-binding-and-drift-target-elf-review.md
 ```
 
 
@@ -559,10 +561,10 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active repository task:
 
 ```text
-DEFINE_BOUNDED_GENERIC_RECIPE_BINDING_AND_DRIFT_TARGET_ELF_REVIEW
+RUN_BOUNDED_GENERIC_RECIPE_BINDING_AND_DRIFT_TARGET_ELF_COLLECTOR
 ```
 
-The exact device receipt is reviewed. The next work is to bind the 21 exact rows to pinned recipes and inspect only the 15 unique alias targets for ELF SONAME/hash evidence, while keeping provider authority and target population open.
+The exact device receipt is reviewed and the next collector contract is ready. Device execution must verify all 37 pinned recipe family/version/tree candidates and inspect only the 15 unique alias targets for ELF SONAME/hash evidence, while keeping build attestation, adaptation acceptance, provider authority and target population open.
 
 ## Stop line
 
