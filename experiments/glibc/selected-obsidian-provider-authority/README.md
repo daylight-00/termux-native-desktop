@@ -17,6 +17,8 @@ PROVIDER_AUTHORITY_COVERAGE_NORMALIZATION_PASS
 LOCK_SEMANTICS_NORMALIZATION_PASS
 TARGET_LAYOUT_SCHEMA_ONLY_PASS
 WORLD_LOCALE_LOADER_LIFECYCLE_BOUNDARY_PASS
+APPLICATION_PAYLOAD_LAUNCHER_SUPPLEMENT_BOUNDARY_PASS_BOUNDED
+NON_PRIORITY_GENERIC_SOURCE_CLASS_BOUNDARY_PASS_BOUNDED
 SEMANTIC_FINAL_PROVIDER_AUTHORITY_OPEN
 APPLICATION_RUNTIME_COMPOSITION_NOT_REACHED
 TARGET_LAYOUT_POPULATION_BLOCKED
@@ -33,6 +35,8 @@ Current correction and normalization authority:
 docs/refactor/0135-selected-obsidian-provider-profile-lock-draft-architecture-audit.md
 docs/refactor/0136-selected-obsidian-provider-authority-coverage-and-lock-semantics-normalization.md
 docs/refactor/0137-selected-obsidian-world-internals-locale-and-loader-lifecycle-boundary.md
+docs/refactor/0138-selected-obsidian-application-payload-launcher-and-supplement-authority-boundary.md
+docs/refactor/0139-selected-obsidian-non-priority-generic-source-authority-boundary.md
 ```
 
 ## Preserved evidence
@@ -268,6 +272,7 @@ review/
     normalization-codebook.tsv
     world-lifecycle-authority-boundary.tsv
     application-authority-boundary.tsv
+    generic-source-authority-boundary.tsv
 
     authority-coverage-ledger.tsv
     authority-coverage-ledger/*.tsv
@@ -304,6 +309,31 @@ work/                                        # ignored by Git
 
 Large canonical registries use a root index plus SHA-256-locked partitions. The authoritative set is the union of indexed partitions.
 
+## Non-priority generic source-class boundary
+
+`review/generic-source-authority-boundary.tsv` defines seven non-materializing contracts:
+
+```text
+global denominator:
+    61 identities in six capability groups
+
+observed byte origins:
+    60 Debian-rootfs oracle identities
+    1 local graphics-experiment identity
+
+accepted boundary:
+    observed origins are reference evidence only
+    shared generic ownership is the default review direction
+    protected-world, application-local and application-supplement ownership require explicit exceptions
+
+open:
+    exact Termux/upstream/project/native-adapter candidates
+    object-to-artifact/source binding
+    adaptation, necessity, final provider and update/rollback authority
+```
+
+This boundary does not accept clean supply, final provider authority, composition or target population.
+
 ## Target-layout boundary
 
 The target schema defines twenty fields for authority/composition references, supply references, target domain/path/node policy, mode/owner/mutability, alias/collision policy, update/rollback, validation, authority issues, and population state.
@@ -339,7 +369,7 @@ AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
 AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
-AUTH-009 non-priority generic capabilities
+AUTH-009 non-priority generic capabilities; source classes bounded, exact object/source bindings open
 AUTH-010 exact payload supply, named supplement membership and release execution; launcher source boundary bounded
 ```
 
@@ -368,7 +398,7 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active repository task:
 
 ```text
-CLOSE_EXACT_OBSIDIAN_PAYLOAD_SUPPLY_AND_NAMED_SUPPLEMENT_MEMBERSHIP
+COLLECT_NON_PRIORITY_GENERIC_EXACT_CANDIDATE_SOURCE_EVIDENCE
 ```
 
 The next work remains repository-side authority analysis. A device transaction is needed only if a specific unresolved authority choice cannot be discriminated from existing repository/oracle evidence.

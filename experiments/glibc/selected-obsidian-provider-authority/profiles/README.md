@@ -21,6 +21,12 @@ artifact alias classification:
 world/locale/loader lifecycle boundary:
     PASS / CLEAN RECONSTRUCTION OPEN
 
+application identity/launcher boundary:
+    PASS / EXACT PAYLOAD AND SUPPLEMENT MEMBERSHIP OPEN
+
+non-priority generic source-class boundary:
+    PASS / EXACT OBJECT/SOURCE BINDING OPEN
+
 final semantic provider authority:
     OPEN
 
@@ -43,6 +49,8 @@ Current authority:
 docs/refactor/0135-selected-obsidian-provider-profile-lock-draft-architecture-audit.md
 docs/refactor/0136-selected-obsidian-provider-authority-coverage-and-lock-semantics-normalization.md
 docs/refactor/0137-selected-obsidian-world-internals-locale-and-loader-lifecycle-boundary.md
+docs/refactor/0138-selected-obsidian-application-payload-launcher-and-supplement-authority-boundary.md
+docs/refactor/0139-selected-obsidian-non-priority-generic-source-authority-boundary.md
 ```
 
 The historical member locks remain exact bounded supply evidence. They are not complete profiles, target manifests, extraction inputs, or materialization authorization.
@@ -362,6 +370,29 @@ application release transition:
 
 The boundary does not authorize payload acquisition, extraction, RPATH adaptation, supplement inclusion, target population or activation.
 
+## Non-priority generic source-class boundary
+
+`../review/generic-source-authority-boundary.tsv` records one global rule and six capability rows for the 61 non-priority generic identities.
+
+```text
+60 Debian-rootfs oracle identities:
+    exact historical comparison anchors only
+
+1 local graphics-experiment identity:
+    bounded feature evidence only
+
+shared generic provider:
+    default review direction, not final authority
+
+Termux/upstream/project/native-adapter source classes:
+    admissible only with exact artifact/source/adaptation evidence
+
+protected world, application-local or application supplement:
+    no inheritance; explicit object-specific exception required
+```
+
+No non-priority row has exact clean-supply, final-provider, composition or target-population authority.
+
 ## Global incompleteness
 
 Provider fragments do not close:
@@ -371,8 +402,8 @@ complete clean-world reconstruction, acquisition/retention and exact internals i
 exact Obsidian/Electron upstream payload artifact identity and retained extraction/adaptation receipt;
 named application supplement membership and source authority;
 future launcher publication and atomic update/rollback;
-D-Bus, GLib/GIO, GTK, Pango/ATK and other generic providers;
-NSS/security and audio providers;
+exact object/source bindings for D-Bus, GLib/GIO, GTK, Pango/ATK and other generic providers;
+exact NSS/security, audio and device candidates;
 fonts, pixbuf modules/cache, icons and MIME data;
 final graphics, GTK/Wayland, printing and optional-exec composition;
 clean artifact acquisition and retention.
@@ -389,7 +420,7 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active repository task:
 
 ```text
-CLOSE_EXACT_OBSIDIAN_PAYLOAD_SUPPLY_AND_NAMED_SUPPLEMENT_MEMBERSHIP
+COLLECT_NON_PRIORITY_GENERIC_EXACT_CANDIDATE_SOURCE_EVIDENCE
 ```
 
 Only after authority closure may the repository define an `ApplicationRuntimeComposition`. Only after composition acceptance may target rows be populated. An intervention-lift audit is required before extraction or materializer implementation.

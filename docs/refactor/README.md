@@ -54,6 +54,7 @@ Current branch-local chain:
 0136 provider-authority coverage and lock-semantics normalization
 0137 world internals, locale and loader lifecycle boundary
 0138 application payload, launcher and supplement authority boundary
+0139 non-priority generic source-authority boundary
 ```
 
 Precedence:
@@ -82,6 +83,9 @@ system-foundation
 
 0138
     -> current application identity, launcher supply and release lifecycle boundary
+
+0139
+    -> current non-priority generic capability/source-class boundary
 ```
 
 ## Current state
@@ -128,6 +132,9 @@ world/locale/loader lifecycle boundary:
 
 application payload/launcher/supplement boundary:
     PASS / EXACT PAYLOAD AND SUPPLEMENT MEMBERSHIP OPEN
+
+non-priority generic source-class boundary:
+    PASS / EXACT OBJECT/SOURCE BINDING OPEN
 
 semantic final-provider authority:
     OPEN
@@ -228,6 +235,7 @@ experiments/glibc/selected-obsidian-provider-authority/review/
     normalization-codebook.tsv
     world-lifecycle-authority-boundary.tsv
     application-authority-boundary.tsv
+    generic-source-authority-boundary.tsv
     unresolved-authority-ledger.tsv
 
 experiments/glibc/selected-obsidian-provider-authority/profiles/
@@ -299,6 +307,9 @@ glibc-runner:
 
 termux-exec-glibc:
     optional; minimum-runtime necessity unproven
+
+non-priority generic source classes:
+    60 Debian-rootfs oracle identities + 1 local graphics-experiment identity; oracle/reference only, exact candidate artifacts and source bindings open
 ```
 
 ## Living authority issues
@@ -312,7 +323,7 @@ AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
 AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
-AUTH-009 non-priority generic capabilities
+AUTH-009 non-priority generic capabilities; source classes bounded, exact object/source bindings open
 AUTH-010 exact application payload supply, named supplements and release execution; launcher source boundary bounded
 ```
 
@@ -325,16 +336,16 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active task:
 
 ```text
-CLOSE_EXACT_OBSIDIAN_PAYLOAD_SUPPLY_AND_NAMED_SUPPLEMENT_MEMBERSHIP
+COLLECT_NON_PRIORITY_GENERIC_EXACT_CANDIDATE_SOURCE_EVIDENCE
 ```
 
 Required order:
 
 ```text
 1. world internals, locale and loader-state lifecycle boundary: PASS / remaining evidence explicit;
-2. application identity/launcher lifecycle boundary: PASS / exact payload supply and named supplement membership ACTIVE;
-3. compare candidate sources for non-priority generic capabilities;
-4. decide conditional graphics, GTK/Wayland, printing and optional-exec policy;
+2. application identity/launcher lifecycle boundary: PASS / exact payload supply and named supplement membership OPEN;
+3. non-priority generic capability/source-class boundary: PASS / exact candidate inventory and object binding ACTIVE;
+4. decide conditional graphics, GTK/Wayland, printing and optional-exec policy only after owning candidate sets are explicit;
 5. close fonts, pixbuf/icon/MIME and generated-schema authority;
 6. define ApplicationRuntimeComposition only after owning authorities are accepted;
 7. populate target rows only after composition acceptance;
