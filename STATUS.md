@@ -82,6 +82,7 @@ NON_PRIORITY_GENERIC_SOURCE_CLASS_BOUNDARY_PASS_BOUNDED
 GENERIC_EXACT_CANDIDATE_COLLECTOR_READY
 GENERIC_EXACT_CANDIDATE_RECEIPT_REVIEW_PASS_BOUNDED
 GENERIC_ARTIFACT_MEMBER_COMPARISON_SET_DEFINED_BOUNDED
+GENERIC_ARTIFACT_MEMBER_INVENTORY_COLLECTOR_READY
 SEMANTIC_FINAL_PROVIDER_AUTHORITY_OPEN
 APPLICATION_RUNTIME_COMPOSITION_NOT_REACHED
 TARGET_LAYOUT_POPULATION_BLOCKED
@@ -151,7 +152,7 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active repository task:
 
 ```text
-IMPLEMENT_BOUNDED_GENERIC_ARTIFACT_MEMBER_INVENTORY_COLLECTOR
+RUN_BOUNDED_GENERIC_ARTIFACT_MEMBER_INVENTORY_COLLECTOR
 ```
 
 Repository-side order:
@@ -159,7 +160,7 @@ Repository-side order:
 ```text
 1. world runtime internals, locale and loader-state lifecycle boundary: PASS / remaining evidence explicit;
 2. application identity/launcher lifecycle boundary: PASS / exact payload supply and named supplement membership OPEN;
-3. non-priority generic capability/source-class boundary: PASS / exact-candidate receipt REVIEWED and 34-artifact comparison set DEFINED; bounded member-inventory collector NEXT;
+3. non-priority generic capability/source-class boundary: PASS / exact-candidate receipt REVIEWED, 34-artifact comparison set DEFINED and bounded member-inventory collector READY; device receipt NEXT;
 4. decide graphics, GTK/Wayland, printing and optional-exec composition policy only after owning candidate sets are explicit;
 5. close font, pixbuf, icon, MIME and generated-schema authority;
 6. define an ApplicationRuntimeComposition only after owning authorities are accepted;

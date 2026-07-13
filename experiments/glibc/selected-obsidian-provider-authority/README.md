@@ -22,6 +22,7 @@ NON_PRIORITY_GENERIC_SOURCE_CLASS_BOUNDARY_PASS_BOUNDED
 GENERIC_EXACT_CANDIDATE_COLLECTOR_READY
 GENERIC_EXACT_CANDIDATE_RECEIPT_REVIEW_PASS_BOUNDED
 GENERIC_ARTIFACT_MEMBER_COMPARISON_SET_DEFINED_BOUNDED
+GENERIC_ARTIFACT_MEMBER_INVENTORY_COLLECTOR_READY
 SEMANTIC_FINAL_PROVIDER_AUTHORITY_OPEN
 APPLICATION_RUNTIME_COMPOSITION_NOT_REACHED
 TARGET_LAYOUT_POPULATION_BLOCKED
@@ -43,6 +44,7 @@ docs/refactor/0139-selected-obsidian-non-priority-generic-source-authority-bound
 docs/refactor/0140-selected-obsidian-non-priority-generic-exact-candidate-evidence-collector.md
 docs/refactor/0141-selected-obsidian-non-priority-generic-exact-candidate-receipt-review.md
 docs/refactor/0142-selected-obsidian-non-priority-generic-artifact-member-comparison-set.md
+docs/refactor/0143-selected-obsidian-non-priority-generic-artifact-member-inventory-collector.md
 ```
 
 
@@ -96,6 +98,33 @@ authority decisions accepted:
 ```
 
 The set is an execution contract for later bounded inspection, not artifact/member authority.
+
+Bounded artifact member-inventory collector:
+
+```text
+exact artifacts permitted:
+    34
+
+named edges inspected:
+    44
+
+private exact-artifact cache:
+    experiments/glibc/selected-obsidian-provider-authority/work/artifacts/generic-artifact-member-inventory
+
+inspection mode:
+    dpkg-deb control/data tar streams; no package installation or filesystem payload materialization
+
+exact basename and ELF SONAME observation:
+    IMPLEMENTED / CANDIDATE EVIDENCE ONLY
+
+authority decisions accepted:
+    0
+
+target rows populated:
+    0
+```
+
+The collector verifies exact size, SHA-256, Package, Version and Architecture, rejects unapproved hosts or redirects, preserves dpkg/apt/repository state and emits a reviewable receipt.
 
 ## Preserved evidence
 
@@ -411,6 +440,29 @@ not accepted:
 
 The collector performs no network, package, extraction, build, runtime, generation or current operation.
 
+## Generic artifact member-inventory collector
+
+`recipe/run-generic-artifact-member-inventory.sh` and `recipe/collect-generic-artifact-member-inventory.py` implement the bounded 0142 execution contract.
+
+```text
+allowed persistent writes:
+    exact verified .deb cache under experiment work
+    evidence receipt under work or handoff directory
+
+allowed package inspection:
+    control identity query
+    control/data tar stream metadata inventory
+    bounded in-memory ELF SONAME observation for named members
+
+forbidden:
+    apt/pkg/dpkg installation transaction
+    maintainer-script execution
+    filesystem payload extraction/materialization
+    runtime composition or target population
+```
+
+All member observations remain candidate evidence pending receipt review.
+
 ## Target-layout boundary
 
 The target schema defines twenty fields for authority/composition references, supply references, target domain/path/node policy, mode/owner/mutability, alias/collision policy, update/rollback, validation, authority issues, and population state.
@@ -475,10 +527,10 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active repository task:
 
 ```text
-IMPLEMENT_BOUNDED_GENERIC_ARTIFACT_MEMBER_INVENTORY_COLLECTOR
+RUN_BOUNDED_GENERIC_ARTIFACT_MEMBER_INVENTORY_COLLECTOR
 ```
 
-The retained receipt is reviewed and the 34-artifact/44-edge comparison set is defined. The next work is to implement a bounded download-only collector that inventories only the named members without installation or authority promotion.
+The bounded collector is implemented. The next work is to collect one exact device receipt and review member observations without accepting provider authority or target population.
 
 ## Stop line
 

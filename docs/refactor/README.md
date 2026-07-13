@@ -58,6 +58,7 @@ Current branch-local chain:
 0140 non-priority generic exact-candidate evidence collector
 0141 non-priority generic exact-candidate receipt review
 0142 non-priority generic artifact/member comparison set
+0143 non-priority generic artifact member-inventory collector
 ```
 
 Precedence:
@@ -98,6 +99,9 @@ system-foundation
 
 0142
     -> exact 34-artifact/44-edge named member-inventory comparison set and explicit static/development exclusions
+
+0143
+    -> bounded exact-artifact acquisition and stream-only control/data member-inventory collector implementation
 ```
 
 ## Current state
@@ -156,6 +160,9 @@ generic exact-candidate receipt review:
 
 generic artifact/member comparison set:
     DEFINED / 34 EXACT ARTIFACTS, 44 NAMED EDGES, 15 STATIC/DEV EXCLUSIONS
+
+generic artifact member-inventory collector:
+    READY / DOWNLOAD-ONLY, STREAM INVENTORY, NO INSTALL OR FILESYSTEM MATERIALIZATION
 
 semantic final-provider authority:
     OPEN
@@ -337,6 +344,9 @@ generic exact-candidate evidence:
 
 generic artifact/member comparison set:
     34 exact indexed artifacts, 44 named member-search edges, 15 explicit static/development exclusions; no download or extraction performed
+
+generic artifact member-inventory collector:
+    bounded exact download/cache and stream-only control/data inventory implementation ready; no authority acceptance or target population
 ```
 
 ## Living authority issues
@@ -363,7 +373,7 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active task:
 
 ```text
-IMPLEMENT_BOUNDED_GENERIC_ARTIFACT_MEMBER_INVENTORY_COLLECTOR
+RUN_BOUNDED_GENERIC_ARTIFACT_MEMBER_INVENTORY_COLLECTOR
 ```
 
 Required order:
@@ -371,7 +381,7 @@ Required order:
 ```text
 1. world internals, locale and loader-state lifecycle boundary: PASS / remaining evidence explicit;
 2. application identity/launcher lifecycle boundary: PASS / exact payload supply and named supplement membership OPEN;
-3. non-priority generic capability/source-class boundary: PASS / receipt REVIEWED and named comparison set DEFINED; bounded member-inventory collector NEXT;
+3. non-priority generic capability/source-class boundary: PASS / receipt REVIEWED, named comparison set DEFINED and bounded member-inventory collector READY; device receipt NEXT;
 4. decide conditional graphics, GTK/Wayland, printing and optional-exec policy only after owning candidate sets are explicit;
 5. close fonts, pixbuf/icon/MIME and generated-schema authority;
 6. define ApplicationRuntimeComposition only after owning authorities are accepted;

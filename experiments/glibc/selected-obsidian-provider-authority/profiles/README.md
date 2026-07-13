@@ -393,6 +393,8 @@ protected world, application-local or application supplement:
 
 No non-priority row has exact clean-supply, final-provider, composition or target-population authority.
 
+The 34-artifact/44-edge comparison set and its bounded member-inventory collector are now repository-defined. The collector may verify and inspect exact package archive streams, but its observations do not populate provider objects, fragments, composition or target layout.
+
 ## Global incompleteness
 
 Provider fragments do not close:
@@ -420,7 +422,7 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active repository task:
 
 ```text
-COLLECT_NON_PRIORITY_GENERIC_EXACT_CANDIDATE_SOURCE_EVIDENCE
+RUN_BOUNDED_GENERIC_ARTIFACT_MEMBER_INVENTORY_COLLECTOR
 ```
 
 Only after authority closure may the repository define an `ApplicationRuntimeComposition`. Only after composition acceptance may target rows be populated. An intervention-lift audit is required before extraction or materializer implementation.
