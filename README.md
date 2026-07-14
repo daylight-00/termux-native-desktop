@@ -81,10 +81,10 @@ Current post-closure audit:
 docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md
 ```
 
-Current provider-authority SUP-02 custodian-export response acquirer:
+Current provider-authority SUP-02 custodian-export response acquisition receipt review:
 
 ```text
-docs/refactor/0163-selected-obsidian-generic-build-attestation-and-adaptation-gap-evidence-supply-batch-sup-02-custodian-export-response-acquirer.md
+docs/refactor/0164-selected-obsidian-generic-build-attestation-and-adaptation-gap-evidence-supply-batch-sup-02-custodian-export-response-acquisition-receipt-review.md
 ```
 
 ## Repository checkout

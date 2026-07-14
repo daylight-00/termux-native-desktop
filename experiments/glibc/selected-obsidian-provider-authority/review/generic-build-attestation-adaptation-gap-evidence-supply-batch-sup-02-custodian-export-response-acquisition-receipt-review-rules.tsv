@@ -1,0 +1,11 @@
+rule_id	dimension	scope	acceptance_rule	rejection_rule	authority_effect
+SUP02R-R01	source_identity	RECEIPT	Exact production archive SHA-256, final HEAD and final tree match the pinned 0163 receipt	Any source archive, HEAD or tree drift	NONE
+SUP02R-R02	issuance_binding	REQUEST_SET	All 28 request IDs and root/recipe bindings match canonical issuance	Missing, duplicate or drifted request identity	NONE
+SUP02R-R03	contract_binding	RECORD_SET	All 84 issued record contracts remain present and unsupplied	Missing, duplicate, promoted or drifted record contract	NONE
+SUP02R-R04	acquisition_status	RECEIPT	Transaction and analysis status are PASS with the exact acquisition claim boundary	Failure, missing status or claim-boundary drift	NONE
+SUP02R-R05	response_absence	ROOT	Each issued request is explicitly NO_RESPONSE_DROP_PRESENT with zero verified records	Any implicit, partial or invented response state	NONE
+SUP02R-R06	candidate_inventory	RECEIPT	Response record inventory is header-only and candidate root is empty	Any candidate file or inventory row in the zero-response production receipt	NONE
+SUP02R-R07	acknowledgement_boundary	ROOT	Requests remain NOT_ACKNOWLEDGED and response absence does not imply custodian action	Any inferred acknowledgement or response receipt	NONE
+SUP02R-R08	attestation_boundary	ROOT	BA-001, BA-002 and BA-003 remain open pending exact response records	Any build-attestation acceptance without reviewed records	NONE
+SUP02R-R09	authority_boundary	GLOBAL	Provider decisions and target population remain zero	Any provider or target effect	NONE
+SUP02R-R10	next_action	GLOBAL	A new exact custodian response is required; replay without new input is non-progress	Advancing to later supply batches or repeating the empty acquisition as progress	NONE
