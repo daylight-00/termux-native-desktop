@@ -1,6 +1,6 @@
 # Status
 
-> **State:** generic build-attestation and adaptation gap-evidence supply batch SUP-02 response acquisition receipt REVIEWED / BOUNDED; all 28 issued requests lack a staged response, BA-001/002/003 remain open, and exact custodian response fulfillment is the next meaningful event
+> **State:** generic build-attestation and adaptation gap-evidence supply batch SUP-02 custodian-export response producer IMPLEMENTED / BOUNDED; all 28 issued requests remain outstanding, no canonical response is produced, and one exact instrumented producing build is the next meaningful event
 > **Updated:** 2026-07-14
 
 ## Current conclusions
@@ -74,6 +74,8 @@
 - Absent response drops are explicit non-failures; malformed, partial, unknown, unmanifested or cross-build responses are rejected, and acquisition accepts no build attestation, provider or target row.
 - The production response-acquisition receipt records an absent input root, zero complete candidate responses, twenty-eight explicit no-response states and zero verified response records.
 - Receipt review accepts only that no response was staged at the bounded surface; all requests remain unacknowledged and repeating the same empty acquisition is non-progress.
+- A strict custodian-side producer now executes the actual build command only after exact request and recipe-tree verification, captures bounded invocation, input, environment, toolchain and package-member records, and emits an `0163`-compatible candidate response.
+- Producer implementation is not request execution: canonical responses, acknowledgements, build-attestation acceptance, provider decisions and target population remain zero.
 
 ## Current authority
 
@@ -119,6 +121,8 @@ docs/refactor/0160-selected-obsidian-generic-build-attestation-and-adaptation-ga
 docs/refactor/0161-selected-obsidian-generic-build-attestation-and-adaptation-gap-evidence-supply-batch-sup-02-custodian-export-request-set.md
 docs/refactor/0162-selected-obsidian-generic-build-attestation-and-adaptation-gap-evidence-supply-batch-sup-02-custodian-export-request-issuance.md
 docs/refactor/0163-selected-obsidian-generic-build-attestation-and-adaptation-gap-evidence-supply-batch-sup-02-custodian-export-response-acquirer.md
+docs/refactor/0164-selected-obsidian-generic-build-attestation-and-adaptation-gap-evidence-supply-batch-sup-02-custodian-export-response-acquisition-receipt-review.md
+docs/refactor/0165-selected-obsidian-generic-build-attestation-and-adaptation-gap-evidence-supply-batch-sup-02-custodian-export-response-producer.md
 ```
 
 `0116` remains the controlling intervention. `0135` supplies the correction requirements. `0136` records P0-P6 normalization. `0137` accepts the non-materializing world/locale/loader lifecycle boundary. `0138` accepts the non-materializing application identity/launcher lifecycle boundary while keeping exact payload supply, supplement membership, composition and population open. `0139` bounds non-priority generic capability/source classes. `0140` defines the canonical 61-row candidate-search contract and a non-mutating retained-evidence collector. `0141` reviews the exact receipt into direct-family, indirect-only and absent classes while accepting no provider authority. `0142` defines the exact 34-artifact/44-edge member-inventory comparison set and explicit static/development exclusions without downloading or extracting artifacts. `0143` implements bounded exact-artifact acquisition and stream-only member inventory. `0144` reviews the exact device receipt into 21 exact member+SONAME observations, 15 expected-SONAME-alias concrete-filename drifts, and one expected-alias absence while accepting no provider authority. `0145` defines a cache-only collector that verifies 37 pinned recipe family/version/tree candidates and stream-inspects the 15 drift-target ELFs while keeping build attestation and adaptation acceptance open. `0146` reviews the resulting receipt as 37 lineage candidates, 21 exact-member candidates, 15 SONAME-confirmed drift-target candidates and one unsatisfied `libjpeg.so.62` row; it accepts no build attestation, adaptation, filename-drift policy, final provider or target population. `0147` defines 16 explicit evidence requirements and deterministic work units for 28 roots/37 objects while keeping every acceptance and target row open. `0148` implements and runs bounded local evidence collection without build, package mutation, extraction or network acquisition. `0149` reviews the resulting receipt into six confirmed local review-input dimensions and ten explicit provenance/semantic/policy/correction gaps while accepting no authority or target population. `0150` maps those requirements into six ordered closure lanes. `0151` implements a strict-manifest, read-only collector that records verified candidate files or explicit unavailable gaps without accepting any closure or authority claim. `0152` reviews the production no-candidate receipt as six incomplete local foundations plus ten explicit gaps and accepts no closure, authority or target claim. `0153` defines ten source contracts and deterministic acquisition work units for all six lanes, sixteen requirements, twenty-eight roots and thirty-seven objects without acquiring evidence. `0154` implements a bounded input-only acquirer that validates exact source-contract modes, locator classes, scopes, units, digests and file-set equality before emitting an `0151`-compatible candidate evidence root with zero authority effect. `0155` reviews the production no-input receipt as zero candidates, six incomplete local foundations and ten explicit unavailable direct gaps, with every authority and target decision still open. `0156` defines six bounded supply batches, one exact request for each of the sixteen requirements, fourteen dependency components and exact request fan-out across twenty-eight root and thirty-seven object units without issuing a request or accepting evidence. `0157` prepares the isolated `SUP-01` authoritative correction response: stable required SONAME `libjpeg.so.62`, no `libjpeg.so.8` substitution, no matching provider candidate bound and no authority effect. `0158` reviews that response, accepts the narrow OJ-001 required-identity correction, keeps the SONAME-8 family rejected and advances to SUP-02 without accepting provider authority or target population. `0159` implements a bounded operator-local provenance locator for exact producing-build invocation, environment and output-manifest exports while treating GitHub metadata as locator-only. `0160` reviews the production locator receipt as twenty-eight absent custodian exports and zero records, preserves all three build-provenance requirements as open, and requires an exact custodian-export request set. `0161` defines that request set as twenty-eight root-scoped requests and eighty-four cross-linked record contracts without issuing a request or accepting evidence. `0162` publishes the exact request packets through the canonical repository transport, records twenty-eight issued-but-unacknowledged requests and preserves zero response, attestation, provider and target effects. `0163` implements the strict input-only response acquirer, validates complete three-record one-build bindings, records absent drops explicitly and emits candidate response input without acceptance effect. `0164` reviews the production zero-response receipt, confirms all twenty-eight requests remain outstanding, accepts no attestation or authority effect, and requires exact custodian response fulfillment before any further batch progression.
@@ -161,6 +165,7 @@ GENERIC_BUILD_ATTESTATION_ADAPTATION_GAP_EVIDENCE_SUPPLY_BATCH_SUP_02_CUSTODIAN_
 GENERIC_BUILD_ATTESTATION_ADAPTATION_GAP_EVIDENCE_SUPPLY_BATCH_SUP_02_CUSTODIAN_EXPORT_REQUESTS_ISSUED_BOUNDED
 GENERIC_BUILD_ATTESTATION_ADAPTATION_GAP_EVIDENCE_SUPPLY_BATCH_SUP_02_CUSTODIAN_EXPORT_RESPONSE_ACQUIRER_IMPLEMENTED_BOUNDED
 GENERIC_BUILD_ATTESTATION_ADAPTATION_GAP_EVIDENCE_SUPPLY_BATCH_SUP_02_CUSTODIAN_EXPORT_RESPONSE_ACQUISITION_RECEIPT_REVIEW_PASS_BOUNDED
+GENERIC_BUILD_ATTESTATION_ADAPTATION_GAP_EVIDENCE_SUPPLY_BATCH_SUP_02_CUSTODIAN_EXPORT_RESPONSE_PRODUCER_IMPLEMENTED_BOUNDED
 OBJECT_REQUIREMENT_CORRECTION_OJ_001_ACCEPTED_STABLE_SONAME_LIBJPEG_SO_62
 SEMANTIC_FINAL_PROVIDER_AUTHORITY_OPEN
 APPLICATION_RUNTIME_COMPOSITION_NOT_REACHED
@@ -281,7 +286,7 @@ AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
 AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
-AUTH-009 non-priority generic capabilities; SUP-01 closes the libjpeg requirement-definition defect, while SUP-02 has 28 issued-but-unacknowledged requests and a reviewed zero-response acquisition receipt; BA-001/002/003 remain open pending exact custodian responses
+AUTH-009 non-priority generic capabilities; SUP-01 closes the libjpeg requirement-definition defect, while SUP-02 has 28 issued-but-unacknowledged requests, a reviewed zero-response receipt and a strict response producer; BA-001/002/003 remain open pending an exact produced, acquired and separately reviewed custodian response
 AUTH-010 exact application payload supply, named supplement membership and release execution; launcher source boundary bounded
 ```
 
@@ -294,7 +299,7 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active repository task:
 
 ```text
-FULFILL_BOUNDED_GENERIC_BUILD_ATTESTATION_ADAPTATION_GAP_EVIDENCE_SUPPLY_BATCH_SUP_02_CUSTODIAN_EXPORT_RESPONSES
+RUN_BOUNDED_GENERIC_BUILD_ATTESTATION_ADAPTATION_GAP_EVIDENCE_SUPPLY_BATCH_SUP_02_CUSTODIAN_EXPORT_RESPONSE_PRODUCER_FOR_EXACT_REQUEST
 ```
 
 Repository-side order:
@@ -302,7 +307,7 @@ Repository-side order:
 ```text
 1. world runtime internals, locale and loader-state lifecycle boundary: PASS / remaining evidence explicit;
 2. application identity/launcher lifecycle boundary: PASS / exact payload supply and named supplement membership OPEN;
-3. non-priority generic capability/source-class boundary: PASS / SUP-01 correction REVIEWED; SUP-02 zero-response acquisition receipt REVIEWED with all 28 requests still outstanding; fulfill exact custodian-export responses NEXT;
+3. non-priority generic capability/source-class boundary: PASS / SUP-01 correction REVIEWED; SUP-02 zero-response receipt REVIEWED and strict response producer IMPLEMENTED with all 28 requests still outstanding; execute one exact instrumented custodian build NEXT;
 4. decide graphics, GTK/Wayland, printing and optional-exec composition policy only after owning candidate sets are explicit;
 5. close font, pixbuf, icon, MIME and generated-schema authority;
 6. define an ApplicationRuntimeComposition only after owning authorities are accepted;
