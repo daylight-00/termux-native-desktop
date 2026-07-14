@@ -430,6 +430,9 @@ generic build-attestation and adaptation gap-closure collector:
 
 generic build-attestation and adaptation gap-closure receipt review:
     production receipt contained zero candidate files; all six lanes, sixteen requirements, twenty-eight roots and thirty-seven objects remain incomplete as six local foundations plus ten explicit no-candidate gaps; every authority decision remains open
+
+generic build-attestation and adaptation gap-evidence acquisition set:
+    ten strict source contracts map all sixteen requirements into deterministic import, passive-capture or authoring modes across twenty-eight root and thirty-seven object rows; no evidence or authority was accepted
 ```
 
 ## Living authority issues
@@ -443,7 +446,7 @@ AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
 AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
-AUTH-009 non-priority generic capabilities; production gap-closure receipt reviewed as 0 candidate files, 6 incomplete local foundations and 10 explicit no-candidate gaps across 6 lanes, 28 roots and 37 objects; libjpeg.so.62 correction and all build-attestation, adaptation, filename-drift and final-provider decisions remain open
+AUTH-009 non-priority generic capabilities; 10 bounded source contracts and deterministic acquisition work units now cover 6 lanes, 16 requirements, 28 roots and 37 objects; no evidence was acquired, libjpeg.so.62 correction and all build-attestation, adaptation, filename-drift and final-provider decisions remain open
 AUTH-010 exact application payload supply, named supplements and release execution; launcher source boundary bounded
 ```
 
@@ -456,7 +459,7 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active task:
 
 ```text
-DEFINE_BOUNDED_GENERIC_BUILD_ATTESTATION_ADAPTATION_GAP_EVIDENCE_ACQUISITION_SET
+IMPLEMENT_BOUNDED_GENERIC_BUILD_ATTESTATION_ADAPTATION_GAP_EVIDENCE_ACQUIRER
 ```
 
 Required order:
@@ -464,7 +467,7 @@ Required order:
 ```text
 1. world internals, locale and loader-state lifecycle boundary: PASS / remaining evidence explicit;
 2. application identity/launcher lifecycle boundary: PASS / exact payload supply and named supplement membership OPEN;
-3. non-priority generic capability/source-class boundary: PASS / production gap-closure receipt REVIEWED as 0 candidates, 6 incomplete local foundations and 10 explicit gaps; bounded evidence-acquisition work-unit definition NEXT, with libjpeg.so.62 correction still blocked;
+3. non-priority generic capability/source-class boundary: PASS / bounded gap-evidence acquisition set DEFINED with 10 source contracts, 28 root rows and 37 object rows; bounded acquirer implementation NEXT, with libjpeg.so.62 correction still blocked;
 4. decide conditional graphics, GTK/Wayland, printing and optional-exec policy only after owning candidate sets are explicit;
 5. close fonts, pixbuf/icon/MIME and generated-schema authority;
 6. define ApplicationRuntimeComposition only after owning authorities are accepted;
