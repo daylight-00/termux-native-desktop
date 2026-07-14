@@ -70,6 +70,8 @@ Current branch-local chain:
 0152 generic build-attestation and adaptation gap-closure receipt review
 0153 generic build-attestation and adaptation gap-evidence acquisition set
 0154 generic build-attestation and adaptation gap-evidence acquirer
+0155 generic build-attestation and adaptation gap-evidence acquisition receipt review
+0156 generic build-attestation and adaptation gap-evidence supply-request set
 ```
 
 Precedence:
@@ -146,6 +148,12 @@ system-foundation
 
 0154
     -> bounded input-only acquirer that emits a strict 0151-compatible evidence root without authority effect
+
+0155
+    -> production no-input acquisition receipt review preserving all sixteen open requirements and zero authority effect
+
+0156
+    -> six bounded supply batches, sixteen exact requests and dependency-aware root/object request fan-out without request issuance
 ```
 
 ## Current state
@@ -441,6 +449,15 @@ generic build-attestation and adaptation gap-closure receipt review:
 
 generic build-attestation and adaptation gap-evidence acquisition set:
     ten strict source contracts map all sixteen requirements into deterministic import, passive-capture or authoring modes across twenty-eight root and thirty-seven object rows; no evidence or authority was accepted
+
+generic build-attestation and adaptation gap-evidence acquirer:
+    bounded input-only validation emits strict-manifest candidates and represents absent input as six local foundations plus ten unavailable direct gaps
+
+generic build-attestation and adaptation gap-evidence acquisition receipt review:
+    production no-input receipt reviewed as zero candidates with every requirement, provider and target decision still open
+
+generic build-attestation and adaptation gap-evidence supply-request set:
+    six supplier batches and sixteen exact requests cover fourteen dependency components, twenty-eight root units and thirty-seven object units; no request was issued
 ```
 
 ## Living authority issues
@@ -454,7 +471,7 @@ AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
 AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
-AUTH-009 non-priority generic capabilities; bounded input-only gap-evidence acquirer now validates 10 source contracts across 6 lanes, 16 requirements, 28 roots and 37 objects and emits strict-manifest candidates only; libjpeg.so.62 correction and all build-attestation, adaptation, filename-drift and final-provider decisions remain open
+AUTH-009 non-priority generic capabilities; six bounded evidence-supply batches and sixteen exact requests now cover fourteen dependency components, twenty-eight roots and thirty-seven objects; request issuance, libjpeg.so.62 correction and all build-attestation, adaptation, filename-drift and final-provider decisions remain open
 AUTH-010 exact application payload supply, named supplements and release execution; launcher source boundary bounded
 ```
 
@@ -467,7 +484,7 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active task:
 
 ```text
-RUN_BOUNDED_GENERIC_BUILD_ATTESTATION_ADAPTATION_GAP_EVIDENCE_ACQUIRER
+FULFILL_BOUNDED_GENERIC_BUILD_ATTESTATION_ADAPTATION_GAP_EVIDENCE_SUPPLY_BATCH_SUP_01
 ```
 
 Required order:
@@ -475,7 +492,7 @@ Required order:
 ```text
 1. world internals, locale and loader-state lifecycle boundary: PASS / remaining evidence explicit;
 2. application identity/launcher lifecycle boundary: PASS / exact payload supply and named supplement membership OPEN;
-3. non-priority generic capability/source-class boundary: PASS / bounded gap-evidence acquirer IMPLEMENTED for 10 source contracts, 28 root units and 37 object units; production acquisition receipt run NEXT, with libjpeg.so.62 correction still blocked;
+3. non-priority generic capability/source-class boundary: PASS / bounded supply-request set DEFINED as 6 batches and 16 exact requests; isolated P0 `SUP-01` authoritative correction NEXT, with libjpeg.so.62 unresolved;
 4. decide conditional graphics, GTK/Wayland, printing and optional-exec policy only after owning candidate sets are explicit;
 5. close fonts, pixbuf/icon/MIME and generated-schema authority;
 6. define ApplicationRuntimeComposition only after owning authorities are accepted;
@@ -504,3 +521,4 @@ reopen closed graphics gates.
 ```
 
 - [`0155-selected-obsidian-generic-build-attestation-and-adaptation-gap-evidence-acquisition-receipt-review.md`](0155-selected-obsidian-generic-build-attestation-and-adaptation-gap-evidence-acquisition-receipt-review.md)
+- [`0156-selected-obsidian-generic-build-attestation-and-adaptation-gap-evidence-supply-request-set.md`](0156-selected-obsidian-generic-build-attestation-and-adaptation-gap-evidence-supply-request-set.md)
