@@ -1,0 +1,43 @@
+schema_version: 1
+state_version: 2026-07-15.01
+updated_on: 2026-07-15
+
+project:
+  phase: documentation-control-plane
+  status: active
+
+repository:
+  long_lived_branch: main
+  authoritative_remote_mutation: user-termux-local-git-and-gh
+  web_chat_transport: user-provided-full-git-bundle
+  github_connector_role: lightweight-remote-inspection-only
+
+runtime:
+  deployment_model: immutable-release
+  deployment_profile: full
+  checkout_is_live_authority: false
+
+local_layout:
+  source_authority: project-repository
+  legacy_gl_git: retired
+  mesa_workspace: xdg-state-workspace
+  mesa_provider_store: xdg-state-provider-store
+  legacy_gl_build_and_opt: compatibility-paths-only
+
+provider_authority:
+  workstream: paused
+  boundary: sup-02-producer-implemented-no-canonical-response
+  next_research_decision: assurance-depth-policy
+  prohibited_claims:
+    - complete-provider-authority
+    - complete-runtime-composition
+    - target-population-ready
+    - selected-generation-activation-ready
+
+active_task:
+  id: current-authority-synchronization
+  document: docs/current/ACTIVE_TASK.md
+
+pending_artifacts:
+  document: docs/current/PENDING_ARTIFACTS.yaml
+  blocking_count: 0

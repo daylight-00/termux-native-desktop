@@ -8,14 +8,14 @@ REPO="$ROOT/repo"
 HOME_TEST="$ROOT/home"
 PREFIX_TEST="$ROOT/prefix"
 STATE_TEST="$ROOT/state"
-mkdir -p "$REPO" "$HOME_TEST" "$PREFIX_TEST"
+mkdir -p "$HOME_TEST" "$PREFIX_TEST"
 
 PROJECT_ROOT=$(CDPATH= cd -- "$(dirname "$0")/../.." && pwd)
-cp -a "$PROJECT_ROOT/.git" "$REPO/.git"
-mkdir -p "$REPO/tools" "$REPO/config/deployment" "$REPO/modules" "$REPO/packages"
-cp "$PROJECT_ROOT/tools/deploy" "$REPO/tools/deploy"
-cp "$PROJECT_ROOT/config/deployment/workstation.tsv" "$REPO/config/deployment/workstation.tsv"
-cp "$PROJECT_ROOT/config/deployment/development.tsv" "$REPO/config/deployment/development.tsv"
+# Candidate gates run from linked Git worktrees, where `.git` is a control file
+# rather than a directory. Copying it would make fixture commits mutate the
+# candidate worktree. A local no-hardlink clone gives the fixture an independent
+# object database and index without requiring a network remote.
+git clone --no-hardlinks "$PROJECT_ROOT" "$REPO" >/dev/null 2>&1
 chmod +x "$REPO/tools/deploy"
 
 fail() { printf 'deploy smoke test: FAIL: %s\n' "$*" >&2; exit 1; }

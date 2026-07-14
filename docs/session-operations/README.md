@@ -1,5 +1,7 @@
 # Session initialization
 
+> **Process transition:** New sessions now start from a user-provided full Git bundle and repository-root `START_HERE.md`. The durable collaboration lessons in this directory remain applicable, but the mandatory narrative-handoff lifecycle described below is legacy process material pending synchronization.
+
 This is the stable entry point for recurring ChatGPT session changes. It deliberately separates long-lived collaboration rules from the project state recorded under [`../handoff/`](../handoff/README.md).
 
 ## New-session boot order

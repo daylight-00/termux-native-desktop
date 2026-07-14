@@ -18,6 +18,7 @@
 | `unbound variable` under `set -u` in a helper | Separate `local` declarations from assignments and command substitutions. |
 | Wrapper appears stuck | Inspect process state and `transaction.log`; do not infer from intended behavior. |
 | Test can inherit interactive stdin | Run through `timeout --foreground --kill-after=10s ... </dev/null`. |
+| A smoke test copies `.git` from a linked worktree and unexpectedly mutates the candidate checkout | Never copy a linked-worktree `.git` control file into a fixture. Create an independent local fixture with `git clone --no-hardlinks` instead. |
 | Failure after patch application | Reset to pinned base HEAD and clean only the expected new paths; preserve unrelated untracked files. |
 | Remote moved during execution | Abort before push. Never force the branch. |
 | Push succeeded but a later packaging step failed | Do not reset the repository or remote; report the pushed state and package failure separately. |

@@ -1,5 +1,7 @@
 # Current project-state handoff
 
+> **Deprecated current-state surface:** Do not use this file for onboarding or current authority. Current state is owned by `docs/current/`; this file is retained temporarily as historical evidence until the handoff archive is reorganized.
+
 Read [`../PROJECT_PRINCIPLES.md`](../PROJECT_PRINCIPLES.md), then the dated handoff linked below.
 
 ## Active handoff

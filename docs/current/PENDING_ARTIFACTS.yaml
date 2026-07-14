@@ -1,0 +1,9 @@
+schema_version: 1
+state_version: 2026-07-15.01
+
+blocking: []
+
+non_blocking:
+  - id: provider-authority-sup-02-responses
+    state: not-produced
+    note: All issued SUP-02 requests remain outstanding; there is no result archive awaiting review.

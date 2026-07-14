@@ -6,6 +6,13 @@ An active systems-engineering project for turning a single non-root Android phon
 
 This repository is both the working laboratory and the curated technical record. It is not an installer framework, package manager, or black-box setup script.
 
+
+## Agent and session initialization
+
+The repository is its own onboarding surface. Web-chat sessions receive a user-created full Git bundle, clone it in the sandbox, and begin at [`START_HERE.md`](START_HERE.md). Current semantic state and the active task live under [`docs/current/`](docs/current/); dated handoffs are historical transition evidence, not current authority.
+
+The GitHub connector is limited to lightweight remote inspection. Authoritative remote Git mutation and Android/device execution remain in the user's Termux environment.
+
 ## Project question
 
 Can a stock, non-root Android phone provide a desktop environment suitable for real technical work—coding, remote development, project navigation, scientific visualization, data inspection, Git review, and manuscript writing—without accepting a containerized runtime as the normal execution path?
@@ -55,37 +62,19 @@ Current paths such as `modules/gl`, `~/gl/env`, `gl-run`, and the broad farm are
 
 ## Current milestone
 
-```text
-scoped graphics-policy promotion:
-    CLOSED
-
-selected D-Bus provider pilot:
-    PASS
-
-selected Obsidian application-domain closure:
-    ACTIVE / INCOMPLETE
-
-atomic activation:
-    OPEN
-
-glibc corrected/newer substrate lifecycle:
-    OPEN
-
-PyMOL runtime pilot:
-    DEFERRED pending reusable-object decisions
-```
-
-Current post-closure audit:
+The repository and deployment control planes are consolidated:
 
 ```text
-docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md
+canonical integration branch: main
+repository deployment: immutable release + current/previous pointers
+legacy ~/gl Git authority: retired
+Mesa mutable workspace: XDG state
+Mesa provider candidates/current: XDG state
+provider-authority workstream: paused at SUP-02 pending assurance-depth policy
+documentation control plane: active
 ```
 
-Current provider-authority SUP-02 custodian-export response acquisition receipt review:
-
-```text
-docs/refactor/0164-selected-obsidian-generic-build-attestation-and-adaptation-gap-evidence-supply-batch-sup-02-custodian-export-response-acquisition-receipt-review.md
-```
+Use [`docs/current/BRIEF.md`](docs/current/BRIEF.md) for the compact current boundary and [`docs/current/ACTIVE_TASK.md`](docs/current/ACTIVE_TASK.md) for the next valid work.
 
 ## Repository checkout
 
@@ -131,6 +120,11 @@ Not every experiment helper becomes a permanent active test.
 
 ## Documentation guide
 
+- [`START_HERE.md`](START_HERE.md) — agent/session initialization and reading order.
+- [`AGENTS.md`](AGENTS.md) — durable project-agent contract.
+- [`docs/INDEX.md`](docs/INDEX.md) — question-oriented documentation router.
+- [`docs/current/BRIEF.md`](docs/current/BRIEF.md) — compact current semantic state.
+- [`docs/current/ACTIVE_TASK.md`](docs/current/ACTIVE_TASK.md) — current bounded work and required reading.
 - [`docs/PROJECT_CONTEXT.md`](docs/PROJECT_CONTEXT.md) — motivation and scope.
 - [`docs/architecture.md`](docs/architecture.md) — current operational realization and target semantic model.
 - [`docs/glibc-layer.md`](docs/glibc-layer.md) — current compatibility baseline, application-domain target, and lifecycle boundaries.
@@ -143,19 +137,9 @@ Not every experiment helper becomes a permanent active test.
 
 Top-down foundation documents live in this canonical tree under `docs/system-foundation/`.
 
-## Immediate architecture order
+## Immediate work order
 
-```text
-1. synchronize documentation and gate lifecycle;
-2. resume or terminate selected Obsidian closure;
-3. decide semantic world/provider/bridge/family/application ownership;
-4. define atomic activation before another multi-file migration;
-5. move high-risk over-scoped policies with evidence;
-6. define glibc substrate upgrade/recovery lifecycle;
-7. use PyMOL as proof of the resulting architecture.
-```
-
-Do not begin PyMOL by copying an Electron launcher, expanding `gl/env`, or blindly broadening the farm.
+The authoritative work order is maintained in [`docs/current/ACTIVE_TASK.md`](docs/current/ACTIVE_TASK.md). Historical numbered records remain evidence and are opened only when the active task names a specific need.
 
 ## Companion project
 
