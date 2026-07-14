@@ -1,53 +1,53 @@
-# Session Handoffs
+# Project-state handoffs
 
-This directory contains compact but operationally complete onboarding records for continuing long-running architecture and device-evidence work in a new session.
+This directory owns session-transition records whose contents depend on the current project state. Durable collaboration, packaging and agent-execution rules live separately under [`../session-operations/`](../session-operations/README.md).
 
-## Working rule
+## Entry point
 
-```text
-current repository authority
-    +
-latest relevant handoff
-    +
-actual device receipts
-    =
-new-session starting state
-```
-
-A handoff does not supersede numbered architecture records. It points to them, preserves the current claim boundaries, and records the collaboration workflow needed to continue safely.
-
-## Current handoff
+Read [`CURRENT.md`](CURRENT.md) first. It is a compact index, not a substitute for the dated handoff and authoritative project documents that it links.
 
 ```text
-2026-07-12-selected-obsidian-provider-authority-handoff.md
+CURRENT.md
+    -> active dated handoff
+    -> STATUS.md and controlling numbered records
+    -> exact pending packages or receipts
 ```
 
-Use it for the selected-Obsidian provider-authority intervention, bounded pixbuf diagnostics, receipt inspection workflow, and successor-generation stop lines.
+## Scope
+
+A project-state handoff records only information that can change between sessions:
+
+```text
+repository, branch, last verified HEAD and tree;
+current authority and claim boundaries;
+accepted and rejected conclusions;
+exact result/package names, hashes and Drive locators;
+verified versus intentionally unverified artifacts;
+allowed next action and stop lines;
+links to the controlling project documents.
+```
+
+It must not duplicate the long-lived Git/Drive workflow, wrapper contract, connector limitations or general troubleshooting rules. Link to `../session-operations/` instead.
 
 ## Onboarding order
 
 ```text
-1. read the current handoff;
-2. read every authority document named by the handoff;
-3. pull the named branch and verify a clean tracked worktree;
-4. inspect the latest receipts before changing recipes or claims;
-5. continue only the explicitly allowed workstream.
+1. obtain and verify the mandatory handoff .tar.zst;
+2. read its START_HERE.md and `../PROJECT_PRINCIPLES.md`;
+3. read this CURRENT.md and its active dated handoff;
+4. inspect any explicitly pending result before repository mutation;
+5. verify repository branch, HEAD, tree, tracked state and remote state;
+6. read the authoritative project documents linked by the dated handoff;
+7. continue only the explicitly allowed workstream.
 ```
 
-## Handoff discipline
+## Maintenance
 
-Every active handoff should include:
+At every session close:
 
-```text
-repository and branch;
-authority precedence;
-accepted and rejected claims;
-immutable/runtime/device state;
-important receipt names and hashes;
-allowed and blocked operations;
-next execution order;
-exact collaboration and archive conventions;
-unresolved evidence and intervention gates.
-```
+1. create a new dated handoff when the project state changed;
+2. update `CURRENT.md` to point to it;
+3. preserve older handoffs as historical evidence;
+4. update `../session-operations/CHANGELOG.md` only when a durable operating rule changed.
 
-Historical handoffs remain evidence. The newest handoff plus the current numbered authority records control the active session.
+The session-close procedure is defined in [`../session-operations/SESSION_CLOSE.md`](../session-operations/SESSION_CLOSE.md).
