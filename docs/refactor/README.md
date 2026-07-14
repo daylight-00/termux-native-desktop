@@ -67,6 +67,7 @@ Current branch-local chain:
 0149 generic build-attestation and adaptation evidence receipt review
 0150 generic build-attestation and adaptation gap-closure set
 0151 generic build-attestation and adaptation gap-closure collector
+0152 generic build-attestation and adaptation gap-closure receipt review
 ```
 
 Precedence:
@@ -134,6 +135,9 @@ system-foundation
 
 0151
     -> strict-manifest candidate-evidence collector with explicit unavailable-gap output and zero authority effect
+
+0152
+    -> production no-candidate receipt review preserving 6 local foundations, 10 explicit gaps and zero authority effect
 ```
 
 ## Current state
@@ -423,6 +427,9 @@ generic build-attestation and adaptation gap-closure set:
 
 generic build-attestation and adaptation gap-closure collector:
     strict-manifest optional candidate evidence is digest-verified; absent evidence becomes an explicit gap; six local foundations remain incomplete review inputs and every authority decision remains open
+
+generic build-attestation and adaptation gap-closure receipt review:
+    production receipt contained zero candidate files; all six lanes, sixteen requirements, twenty-eight roots and thirty-seven objects remain incomplete as six local foundations plus ten explicit no-candidate gaps; every authority decision remains open
 ```
 
 ## Living authority issues
@@ -436,7 +443,7 @@ AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
 AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
-AUTH-009 non-priority generic capabilities; six deterministic lanes and a strict-manifest bounded collector now cover all 16 requirements across 28 roots and 37 objects; libjpeg.so.62 correction and all build-attestation, adaptation, filename-drift and final-provider decisions remain open
+AUTH-009 non-priority generic capabilities; production gap-closure receipt reviewed as 0 candidate files, 6 incomplete local foundations and 10 explicit no-candidate gaps across 6 lanes, 28 roots and 37 objects; libjpeg.so.62 correction and all build-attestation, adaptation, filename-drift and final-provider decisions remain open
 AUTH-010 exact application payload supply, named supplements and release execution; launcher source boundary bounded
 ```
 
@@ -449,7 +456,7 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active task:
 
 ```text
-RUN_BOUNDED_GENERIC_BUILD_ATTESTATION_ADAPTATION_GAP_CLOSURE_COLLECTOR
+DEFINE_BOUNDED_GENERIC_BUILD_ATTESTATION_ADAPTATION_GAP_EVIDENCE_ACQUISITION_SET
 ```
 
 Required order:
@@ -457,7 +464,7 @@ Required order:
 ```text
 1. world internals, locale and loader-state lifecycle boundary: PASS / remaining evidence explicit;
 2. application identity/launcher lifecycle boundary: PASS / exact payload supply and named supplement membership OPEN;
-3. non-priority generic capability/source-class boundary: PASS / gap-closure collector IMPLEMENTED for 6 lanes, 16 requirements, 28 roots and 37 objects; production receipt run NEXT, with libjpeg.so.62 correction still blocked;
+3. non-priority generic capability/source-class boundary: PASS / production gap-closure receipt REVIEWED as 0 candidates, 6 incomplete local foundations and 10 explicit gaps; bounded evidence-acquisition work-unit definition NEXT, with libjpeg.so.62 correction still blocked;
 4. decide conditional graphics, GTK/Wayland, printing and optional-exec policy only after owning candidate sets are explicit;
 5. close fonts, pixbuf/icon/MIME and generated-schema authority;
 6. define ApplicationRuntimeComposition only after owning authorities are accepted;
