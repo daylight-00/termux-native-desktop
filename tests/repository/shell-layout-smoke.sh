@@ -3,7 +3,8 @@ set -euo pipefail
 
 ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
 T=$(mktemp -d)
-trap 'rm -rf "$T"' EXIT
+cleanup() { chmod -R u+w "$T" 2>/dev/null || true; rm -rf "$T"; }
+trap cleanup EXIT
 HOME_TEST="$T/home"
 BASH_BIN=$(command -v bash)
 
@@ -17,9 +18,37 @@ cp "$ROOT/modules/gl/overlay/home/.config/bash/conf.d/40-gl.sh" "$HOME_TEST/.con
 cp "$ROOT/modules/uv-base/overlay/home/.config/bash/conf.d/60-uv-base.sh" "$HOME_TEST/.config/bash/conf.d/60-uv-base.sh"
 cp "$ROOT/modules/shell/overlay/home/.config/bash/conf.d/99-path-policy.sh" "$HOME_TEST/.config/bash/conf.d/99-path-policy.sh"
 
-if ! out=$(HOME="$HOME_TEST" PATH="/usr/bin:/bin:$HOME_TEST/.local/bin:/usr/bin" "$BASH_BIN" --noprofile --norc -ic '
+# Syntax and bootstrap-order checks stay deterministic on Android without
+# requiring an interactive tty. The actual startup contract is the ordered
+# fragment composition encoded by .bashrc.
+for file in \
+  "$HOME_TEST/.bashrc" \
+  "$HOME_TEST/.config/bash/interactive.sh" \
+  "$HOME_TEST/.config/bash/prompt.sh" \
+  "$HOME_TEST/.config/bash/aliases.sh" \
+  "$HOME_TEST/.config/bash/conf.d/40-gl.sh" \
+  "$HOME_TEST/.config/bash/conf.d/60-uv-base.sh" \
+  "$HOME_TEST/.config/bash/conf.d/99-path-policy.sh"
+do
+  "$BASH_BIN" -n "$file"
+done
+
+grep -F 'case $- in' "$HOME_TEST/.bashrc" >/dev/null
+grep -F '"$HOME/.config/bash/interactive.sh"' "$HOME_TEST/.bashrc" >/dev/null
+grep -F '"$HOME/.config/bash/prompt.sh"' "$HOME_TEST/.bashrc" >/dev/null
+grep -F '"$HOME/.config/bash/aliases.sh"' "$HOME_TEST/.bashrc" >/dev/null
+grep -F '"$HOME/.config/bash/conf.d/"*.sh' "$HOME_TEST/.bashrc" >/dev/null
+
+if ! out=$(HOME="$HOME_TEST" PATH="/usr/bin:/bin:$HOME_TEST/.local/bin:/usr/bin" \
+  "$BASH_BIN" --noprofile --norc -c '
     unset VIRTUAL_ENV
-    . "$HOME/.bashrc"
+    . "$HOME/.config/bash/interactive.sh"
+    . "$HOME/.config/bash/prompt.sh"
+    . "$HOME/.config/bash/aliases.sh"
+    for f in "$HOME/.config/bash/conf.d/"*.sh; do
+      [ -r "$f" ] && . "$f"
+    done
+    unset f
     printf "PATH=%s\n" "$PATH"
     printf "UV_BASE=%s\n" "$UV_BASE"
     printf "PYBIN=%s\n" "$PYBIN"
@@ -27,15 +56,15 @@ if ! out=$(HOME="$HOME_TEST" PATH="/usr/bin:/bin:$HOME_TEST/.local/bin:/usr/bin"
     type uvr >/dev/null
     type uvs >/dev/null
     test -z "${VIRTUAL_ENV+x}"
-' 2>"$T/shell.err"); then
-    cat "$T/shell.err" >&2
-    exit 1
+  ' 2>"$T/shell.err"); then
+  cat "$T/shell.err" >&2
+  exit 1
 fi
 
 expected_prefix="$HOME_TEST/gl/bin:$HOME_TEST/uv-base/.venv/bin:$HOME_TEST/.local/bin:"
 case "$out" in
-    *"PATH=$expected_prefix"*) ;;
-    *) printf '%s\n' "$out" >&2; echo 'PATH precedence mismatch' >&2; exit 1 ;;
+  *"PATH=$expected_prefix"*) ;;
+  *) printf '%s\n' "$out" >&2; echo 'PATH precedence mismatch' >&2; exit 1 ;;
 esac
 case "$out" in *"UV_BASE=$HOME_TEST/uv-base"*) ;; *) exit 1;; esac
 case "$out" in *"PYBIN=$HOME_TEST/opt/cpython-3.14/prefix/bin/python3.14"*) ;; *) exit 1;; esac

@@ -27,13 +27,13 @@ awk -F '\t' '$1 == "AUTH-010" && $4 == "OPEN_CONTRACT" {found=1} END {exit !foun
 declare -A expected_sha=(
   [packages/obsidian/launcher/obsidian]=f9787804d6e17e1e53f7096890d352c05247cd902e73312797d27967516bc751
   [packages/obsidian/launcher/obsidian-app]=010de5793e9e28c77277f0801e10ae0841e60d7ff432770644e03b54f0a66aad
-  [tools/deploy]=1de55639dae1affe2b6447a3ef854f8e069c4a30a5c2e3769936d31c8877d297
+  [tools/deploy]=bfe4eb01b36f476673088603c936dfb71cb6796984695e60f1d72240ec3208dd
 )
 
 declare -A expected_blob=(
   [packages/obsidian/launcher/obsidian]=42f1c164f77804822f6773c34b232cc205c59fb3
   [packages/obsidian/launcher/obsidian-app]=b3f131392f0aeed9ba9d45b9d13ec7531fe477c7
-  [tools/deploy]=97b26780d3bb8fb71b190ca9e5e8144caa170661
+  [tools/deploy]=44fceda2fae67b5931da299523c798127844a7b4
 )
 
 for rel in "${!expected_sha[@]}"; do

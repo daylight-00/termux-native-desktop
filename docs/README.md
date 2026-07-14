@@ -44,3 +44,9 @@ experiment report / evidence
         -> decision record, when durable
         -> integrated guide / promoted artifact
 ```
+
+## Constitutional foundation
+
+- [`knowledge/README.md`](knowledge/README.md) — systems-study map and references.
+- [`system-foundation/README.md`](system-foundation/README.md) — project essence, invariants, target model and execution precedence.
+- [`decisions/0004-single-main-and-immutable-release-deployment.md`](decisions/0004-single-main-and-immutable-release-deployment.md) — canonical branch and deployment authority.

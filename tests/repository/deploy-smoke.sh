@@ -2,88 +2,99 @@
 set -euo pipefail
 
 ROOT=$(mktemp -d)
-trap 'rm -rf "$ROOT"' EXIT
+cleanup() { chmod -R u+w "$ROOT" 2>/dev/null || true; rm -rf "$ROOT"; }
+trap cleanup EXIT
 REPO="$ROOT/repo"
 HOME_TEST="$ROOT/home"
 PREFIX_TEST="$ROOT/prefix"
-mkdir -p "$REPO/tools" "$HOME_TEST" "$PREFIX_TEST"
-cp "$(cd "$(dirname "$0")/../.." && pwd)/tools/deploy" "$REPO/tools/deploy"
+STATE_TEST="$ROOT/state"
+mkdir -p "$REPO" "$HOME_TEST" "$PREFIX_TEST"
+
+PROJECT_ROOT=$(CDPATH= cd -- "$(dirname "$0")/../.." && pwd)
+cp -a "$PROJECT_ROOT/.git" "$REPO/.git"
+mkdir -p "$REPO/tools" "$REPO/config/deployment" "$REPO/modules" "$REPO/packages"
+cp "$PROJECT_ROOT/tools/deploy" "$REPO/tools/deploy"
+cp "$PROJECT_ROOT/config/deployment/workstation.tsv" "$REPO/config/deployment/workstation.tsv"
+cp "$PROJECT_ROOT/config/deployment/development.tsv" "$REPO/config/deployment/development.tsv"
 chmod +x "$REPO/tools/deploy"
 
-fail() {
-  printf 'deploy smoke test: FAIL: %s\n' "$*" >&2
-  exit 1
-}
-
-assert_symlink() {
-  local path=$1
+fail() { printf 'deploy smoke test: FAIL: %s\n' "$*" >&2; exit 1; }
+assert_link() {
+  local path=$1 expected=$2
   [ -L "$path" ] || fail "expected symlink: $path"
+  [ "$(readlink "$path")" = "$expected" ] || fail "unexpected target: $path -> $(readlink "$path")"
 }
 
-# Minimal source tree required by tools/deploy.
-mkdir -p \
-  "$REPO/modules/desktop/overlay/home/.local/bin" \
-  "$REPO/modules/gl/overlay/home/gl/bin" \
-  "$REPO/modules/gl/overlay/home/gl/policy/vulkan" \
-  "$REPO/modules/gl/overlay/home/gl/shims" \
-  "$REPO/modules/gl/overlay/home/gl/toolchain" \
-  "$REPO/packages/vscode/launcher" \
-  "$REPO/packages/obsidian/launcher" \
-  "$REPO/packages/mesa-glibc/build-env" \
-  "$REPO/packages/mesa-glibc/patches/mesa"
+# Build exactly the source paths named by both manifests.
+cat "$REPO/config/deployment/workstation.tsv" "$REPO/config/deployment/development.tsv" |
+  awk -F '\t' 'NF && $1 !~ /^#/ { print $1 "\t" $2 }' |
+  while IFS=$'\t' read -r type src; do
+    mkdir -p "$REPO/$(dirname "$src")"
+    case "$type" in
+      file) printf 'source=%s\n' "$src" >"$REPO/$src" ;;
+      dir) mkdir -p "$REPO/$src"; printf 'patch\n' >"$REPO/$src/member" ;;
+      *) fail "bad fixture type: $type" ;;
+    esac
+  done
 
-touch \
+# Executable leaves should preserve executable mode.
+chmod +x \
   "$REPO/modules/desktop/overlay/home/.local/bin/startxfce-x11" \
-  "$REPO/modules/gl/overlay/home/gl/env" \
-  "$REPO/modules/gl/overlay/home/gl/bin/gl-run" \
   "$REPO/modules/gl/overlay/home/gl/bin/gl-farm" \
-  "$REPO/modules/gl/overlay/home/gl/policy/vulkan/freedreno.sh" \
-  "$REPO/modules/gl/overlay/home/gl/shims/xdg-open" \
-  "$REPO/modules/gl/overlay/home/gl/toolchain/glibc-exec" \
+  "$REPO/modules/gl/overlay/home/gl/bin/gl-run" \
   "$REPO/packages/vscode/launcher/code" \
   "$REPO/packages/obsidian/launcher/obsidian" \
-  "$REPO/packages/obsidian/launcher/obsidian-app" \
-  "$REPO/packages/mesa-glibc/build.sh" \
-  "$REPO/packages/mesa-glibc/build-env/pyproject.toml" \
-  "$REPO/packages/mesa-glibc/build-env/uv.lock" \
-  "$REPO/packages/mesa-glibc/patches/mesa/.gitkeep"
+  "$REPO/packages/obsidian/launcher/obsidian-app"
 
-# Reproduce the legacy live layout: directory symlinks into setup-like trees.
-mkdir -p "$ROOT/legacy/gl-bin" "$ROOT/legacy/shims" "$ROOT/legacy/toolchain" "$ROOT/legacy/diag"
-touch "$ROOT/legacy/gl-bin/gl-run" "$ROOT/legacy/gl-bin/gl-farm"
-mkdir -p "$HOME_TEST/gl/build" "$HOME_TEST/gl" "$HOME_TEST/.local/bin"
-ln -s "$ROOT/legacy/gl-bin" "$HOME_TEST/gl/bin"
-ln -s "$ROOT/legacy/shims" "$HOME_TEST/gl/shims"
-ln -s "$ROOT/legacy/toolchain" "$HOME_TEST/gl/toolchain"
-ln -s "$ROOT/legacy/diag" "$HOME_TEST/gl/build/diag"
-mkdir -p "$ROOT/legacy/patches/mesa"
-ln -s "$ROOT/legacy/patches" "$HOME_TEST/gl/build/patches"
+git -C "$REPO" add .
+git -C "$REPO" -c user.name=test -c user.email=test@example.invalid commit -m fixture >/dev/null
 
-# Dry-run must succeed and must not mutate the legacy symlinks.
-if ! HOME="$HOME_TEST" PREFIX="$PREFIX_TEST" bash "$REPO/tools/deploy" --dry-run >"$ROOT/dry-run.log" 2>&1; then
-  cat "$ROOT/dry-run.log" >&2
-  fail "dry-run exited non-zero"
-fi
-assert_symlink "$HOME_TEST/gl/bin"
-assert_symlink "$HOME_TEST/gl/build/diag"
+# Legacy source-linked state.
+mkdir -p "$HOME_TEST/gl/bin" "$HOME_TEST/.local/bin"
+ln -s "$REPO/modules/gl/overlay/home/gl/bin/gl-run" "$HOME_TEST/gl/bin/gl-run"
+ln -s "$REPO/packages/vscode/launcher/code" "$HOME_TEST/.local/bin/code"
 
-# Real deployment converts legacy directory links and installs leaf links.
-if ! HOME="$HOME_TEST" PREFIX="$PREFIX_TEST" bash "$REPO/tools/deploy" >"$ROOT/deploy.log" 2>&1; then
-  cat "$ROOT/deploy.log" >&2
-  fail "real deployment exited non-zero"
-fi
+HOME="$HOME_TEST" PREFIX="$PREFIX_TEST" XDG_STATE_HOME="$STATE_TEST" \
+  bash "$REPO/tools/deploy" --dry-run --profile full >"$ROOT/dry-run.log"
+[ ! -e "$STATE_TEST/termux-native-desktop/deployment/current" ] || fail 'dry-run mutated state'
 
-[ -d "$HOME_TEST/gl/bin" ] && [ ! -L "$HOME_TEST/gl/bin" ] || fail "gl/bin was not materialized"
-assert_symlink "$HOME_TEST/gl/bin/gl-run"
-assert_symlink "$HOME_TEST/gl/bin/gl-farm"
-assert_symlink "$HOME_TEST/gl/bin/obsidian"
-assert_symlink "$HOME_TEST/gl/bin/obsidian-app"
-assert_symlink "$HOME_TEST/gl/policy/vulkan/freedreno.sh"
-assert_symlink "$HOME_TEST/.local/bin/code"
-assert_symlink "$HOME_TEST/.local/bin/startxfce-x11"
-assert_symlink "$HOME_TEST/gl/env"
-assert_symlink "$HOME_TEST/gl/build/build-mesa.sh"
-assert_symlink "$HOME_TEST/gl/build/patches/mesa"
-[ ! -e "$HOME_TEST/gl/build/diag" ] && [ ! -L "$HOME_TEST/gl/build/diag" ] || fail "obsolete diag link still exists"
+HOME="$HOME_TEST" PREFIX="$PREFIX_TEST" XDG_STATE_HOME="$STATE_TEST" \
+  bash "$REPO/tools/deploy" --profile full >"$ROOT/deploy-1.log"
+
+DEPLOY_STATE="$STATE_TEST/termux-native-desktop/deployment"
+[ -L "$DEPLOY_STATE/current" ] || fail 'current pointer missing'
+FIRST_RELEASE=$(readlink "$DEPLOY_STATE/current")
+[ -d "$FIRST_RELEASE" ] || fail 'first release missing'
+assert_link "$HOME_TEST/gl/bin/gl-run" "$DEPLOY_STATE/current/root/home/gl/bin/gl-run"
+assert_link "$HOME_TEST/.local/bin/code" "$DEPLOY_STATE/current/root/home/.local/bin/code"
+assert_link "$HOME_TEST/gl/toolchain/glibc-gcc" "$DEPLOY_STATE/current/root/home/gl/toolchain/glibc-gcc"
+grep -F 'modules/gl/overlay/home/gl/bin/gl-run' "$HOME_TEST/gl/bin/gl-run" >/dev/null
+
+# Editing and committing the checkout must not alter the active copy until redeploy.
+printf 'second release\n' >"$REPO/modules/gl/overlay/home/gl/bin/gl-run"
+git -C "$REPO" add modules/gl/overlay/home/gl/bin/gl-run
+git -C "$REPO" -c user.name=test -c user.email=test@example.invalid commit -m second >/dev/null
+! grep -F 'second release' "$HOME_TEST/gl/bin/gl-run" >/dev/null || fail 'checkout edit leaked into active release'
+
+HOME="$HOME_TEST" PREFIX="$PREFIX_TEST" XDG_STATE_HOME="$STATE_TEST" \
+  bash "$REPO/tools/deploy" --profile full >"$ROOT/deploy-2.log"
+SECOND_RELEASE=$(readlink "$DEPLOY_STATE/current")
+[ "$SECOND_RELEASE" != "$FIRST_RELEASE" ] || fail 'second release did not change'
+[ "$(readlink "$DEPLOY_STATE/previous")" = "$FIRST_RELEASE" ] || fail 'previous pointer mismatch'
+grep -F 'second release' "$HOME_TEST/gl/bin/gl-run" >/dev/null
+
+HOME="$HOME_TEST" PREFIX="$PREFIX_TEST" XDG_STATE_HOME="$STATE_TEST" \
+  bash "$REPO/tools/deploy" --rollback >"$ROOT/rollback.log"
+[ "$(readlink "$DEPLOY_STATE/current")" = "$FIRST_RELEASE" ] || fail 'rollback did not restore first release'
+! grep -F 'second release' "$HOME_TEST/gl/bin/gl-run" >/dev/null || fail 'rollback content mismatch'
+
+HOME="$HOME_TEST" PREFIX="$PREFIX_TEST" XDG_STATE_HOME="$STATE_TEST" \
+  bash "$REPO/tools/deploy" --status --profile full >"$ROOT/status.log"
+
+# Workstation profile retires only managed development links.
+HOME="$HOME_TEST" PREFIX="$PREFIX_TEST" XDG_STATE_HOME="$STATE_TEST" \
+  bash "$REPO/tools/deploy" --profile workstation >"$ROOT/workstation.log"
+[ ! -e "$HOME_TEST/gl/toolchain/glibc-gcc" ] && [ ! -L "$HOME_TEST/gl/toolchain/glibc-gcc" ] || fail 'development link remained'
+[ -L "$HOME_TEST/gl/bin/gl-run" ] || fail 'workstation link disappeared'
 
 printf 'deploy smoke test: PASS\n'

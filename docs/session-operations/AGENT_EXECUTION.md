@@ -7,7 +7,7 @@
 2. inspect only the controlling project documents and receipts;
 3. author changes in a local Git worktree;
 4. run syntax, canonical generation, negative and regression tests;
-5. generate one patch with an exact expected path set;
+5. generate one patch with an exact expected path set, or a Git bundle when preserving merge ancestry is part of the requested result;
 6. construct and simulate one wrapper;
 7. package as one .tar.zst and verify it before upload;
 8. fetch the uploaded object and verify it again.

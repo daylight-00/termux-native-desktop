@@ -3,6 +3,17 @@
 > **State:** generic build-attestation and adaptation gap-evidence supply batch SUP-02 custodian-export response producer IMPLEMENTED / BOUNDED; all 28 issued requests remain outstanding, no canonical response is produced, and one exact instrumented producing build is the next meaningful event
 > **Updated:** 2026-07-14
 
+## Repository and deployment consolidation
+
+- `main` is the sole intended long-lived branch.
+- The system-foundation history and the active implementation/evidence history are integrated by a history-preserving merge.
+- Topic branches are deleted only after their tips are verified as ancestors of the pushed `main`.
+- Direct checkout-to-live symlinks are superseded by immutable materialized repository releases and a stable atomic `current` pointer.
+- `tools/deploy --profile workstation|full` owns managed public leaves; external payloads, selected generations, provider installs, build trees and user state remain outside this cleanup transaction.
+- The provider-authority workstream remains paused at its current bounded evidence boundary pending an assurance-tier decision; branch consolidation does not accept provider authority or populate a target layout.
+
+See `docs/decisions/0004-single-main-and-immutable-release-deployment.md`.
+
 ## Current conclusions
 
 - Existing prototype, ownership, ABI, graphics, selected-generation, passive-runtime, N2/N3, source-recipe, and exact binary-artifact evidence remain valid.

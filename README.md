@@ -97,6 +97,12 @@ $HOME/projects/termux-native-desktop
 
 Repository tools must derive source root from their own location rather than treating the checkout pathname as architectural identity.
 
+The checkout is not the live release. `tools/deploy` materializes an immutable repository release under XDG state and points managed public leaves through one stable `current` pointer. Repository pulls and branch changes therefore remain authoring events until an explicit deployment activation.
+
+## Branch policy
+
+`main` is the only long-lived integration branch. Bounded topic branches may be used temporarily, but constitutional documents and accepted implementation must be merged into `main`, and merged branches are deleted after ancestry verification. Milestones use tags and recorded commit/tree identities rather than permanent branch proliferation.
+
 ## Repository map
 
 - `modules/` — current project-authored physical integrations and overlays; not necessarily one-to-one with final semantic objects.
@@ -135,7 +141,7 @@ Not every experiment helper becomes a permanent active test.
 - [`docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md`](docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md) — current top-down audit, missing work, and revised priority.
 - [`experiments/README.md`](experiments/README.md) — experiment status and provenance contract.
 
-Top-down foundation documents live on `main` under `docs/system-foundation/`; branch-local absence does not make them irrelevant.
+Top-down foundation documents live in this canonical tree under `docs/system-foundation/`.
 
 ## Immediate architecture order
 

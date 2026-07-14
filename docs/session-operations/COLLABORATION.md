@@ -46,13 +46,13 @@ One related exchange is one raw `.tar.zst`.
 An execution package contains:
 
 ```text
-one repository patch;
+one repository patch, or one Git bundle when ancestry/merge topology must be preserved;
 one executable wrapper;
 RUN.txt;
 MANIFEST.sha256.
 ```
 
-Do not use Base64 envelopes. Do not split the patch, wrapper and instructions into separate Drive items. Do not add a separate `.sha256` file unless an external tool specifically requires it; the published checksum and internal manifest are sufficient.
+Do not use Base64 envelopes. Do not split the patch or bundle, wrapper and instructions into separate Drive items. Do not add a separate `.sha256` file unless an external tool specifically requires it; the published checksum and internal manifest are sufficient.
 
 The user command should be one copy-paste block using `rclone copyto`, `sha256sum -c`, `tar --zstd -xf` and the package wrapper.
 

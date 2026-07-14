@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+MODE=${1:---fast}
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+TIMEOUT_SECONDS=${TND_TEST_TIMEOUT_SECONDS:-90}
+
+case "$MODE" in
+  --fast)
+    tests=(
+      tests/repository/adopt-user-env-smoke.sh
+      tests/repository/deploy-smoke.sh
+      tests/repository/shell-layout-smoke.sh
+      tests/repository/vulkan-policy-scope-smoke.sh
+      tests/repository/application-authority-boundary-smoke.sh
+      tests/repository/generic-source-authority-boundary-smoke.sh
+    )
+    ;;
+  --full)
+    mapfile -t tests < <(
+      cd "$ROOT"
+      find tests/repository -maxdepth 1 -type f -name '*-smoke.sh' -printf '%p\n' | sort
+    )
+    ;;
+  *)
+    echo "usage: $0 [--fast|--full]" >&2
+    exit 2
+    ;;
+esac
+
+resolve_tmp_base() {
+  local candidate
+  for candidate in \
+    "${TND_TEST_TMPDIR:-}" \
+    "${TMPDIR:-}" \
+    "${PREFIX:+$PREFIX/tmp}" \
+    "${XDG_RUNTIME_DIR:-}" \
+    "$ROOT/.tmp"
+  do
+    [ -n "$candidate" ] || continue
+    if mkdir -p "$candidate" 2>/dev/null && [ -d "$candidate" ] && [ -w "$candidate" ]; then
+      printf '%s\n' "$candidate"
+      return 0
+    fi
+  done
+  return 1
+}
+
+TMP_BASE=$(resolve_tmp_base) || {
+  echo 'repository tests: no writable temporary directory found' >&2
+  exit 1
+}
+RUN_TMP=$(mktemp -d "$TMP_BASE/tnd-repository-tests.XXXXXX")
+cleanup() {
+  chmod -R u+w "$RUN_TMP" 2>/dev/null || true
+  rm -rf "$RUN_TMP"
+}
+trap cleanup EXIT HUP INT TERM
+
+failures=0
+printf 'test\tstatus\n'
+for rel in "${tests[@]}"; do
+  safe_name=${rel//\//_}
+  stdout="$RUN_TMP/$safe_name.stdout"
+  stderr="$RUN_TMP/$safe_name.stderr"
+
+  if timeout --kill-after=10s "$TIMEOUT_SECONDS" \
+      bash "$ROOT/$rel" </dev/null >"$stdout" 2>"$stderr"; then
+    printf '%s\tPASS\n' "$rel"
+  else
+    rc=$?
+    printf '%s\tFAIL(%s)\n' "$rel" "$rc"
+    sed -n '1,120p' "$stdout" >&2 || true
+    sed -n '1,160p' "$stderr" >&2 || true
+    failures=$((failures + 1))
+  fi
+done
+
+[ "$failures" -eq 0 ]

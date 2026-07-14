@@ -1,0 +1,15 @@
+# type	source	root	destination
+file	modules/uv-base/overlay/home/.config/bash/conf.d/60-uv-base.sh	home	.config/bash/conf.d/60-uv-base.sh
+file	modules/uv-base/overlay/home/uv-base/pyproject.toml	home	uv-base/pyproject.toml
+file	modules/uv-base/overlay/home/uv-base/uv.lock	home	uv-base/uv.lock
+file	modules/gl/overlay/home/gl/toolchain/glibc-ar	home	gl/toolchain/glibc-ar
+file	modules/gl/overlay/home/gl/toolchain/glibc-exec	home	gl/toolchain/glibc-exec
+file	modules/gl/overlay/home/gl/toolchain/glibc-g++	home	gl/toolchain/glibc-g++
+file	modules/gl/overlay/home/gl/toolchain/glibc-gcc	home	gl/toolchain/glibc-gcc
+file	modules/gl/overlay/home/gl/toolchain/glibc-pkg-config	home	gl/toolchain/glibc-pkg-config
+file	modules/gl/overlay/home/gl/toolchain/glibc-ranlib	home	gl/toolchain/glibc-ranlib
+file	modules/gl/overlay/home/gl/toolchain/glibc-strip	home	gl/toolchain/glibc-strip
+file	packages/mesa-glibc/build.sh	home	gl/build/build-mesa.sh
+file	packages/mesa-glibc/build-env/pyproject.toml	home	gl/build/pyproject.toml
+file	packages/mesa-glibc/build-env/uv.lock	home	gl/build/uv.lock
+dir	packages/mesa-glibc/patches/mesa	home	gl/build/patches/mesa

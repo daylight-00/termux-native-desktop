@@ -1,158 +1,311 @@
 #!/data/data/com.termux/files/usr/bin/bash
-# Deploy runtime-facing module overlays and package-owned entry points.
-#
-# Personal shell and uv-base adoption is handled separately by
-# tools/adopt-user-env so pre-existing real files remain hash-guarded.
+# Materialize a repository release and atomically activate its stable pointer.
+# Public live leaves point through $STATE_ROOT/current, never at a checkout.
 set -euo pipefail
 
-DRY_RUN=0
-case "${1:-}" in
-  --dry-run) DRY_RUN=1; shift ;;
-  "") ;;
-  *) printf 'usage: %s [--dry-run]\n' "$0" >&2; exit 2 ;;
-esac
-[ "$#" -eq 0 ] || { printf 'usage: %s [--dry-run]\n' "$0" >&2; exit 2; }
+MODE=apply
+ACTION=deploy
+PROFILE=full
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --dry-run) MODE=dry-run ;;
+    --apply) MODE=apply ;;
+    --status) ACTION=status ;;
+    --rollback) ACTION=rollback ;;
+    --profile)
+      shift
+      [ "$#" -gt 0 ] || { echo 'missing value for --profile' >&2; exit 2; }
+      PROFILE=$1
+      ;;
+    --profile=*) PROFILE=${1#*=} ;;
+    -h|--help)
+      cat <<'USAGE'
+usage: tools/deploy [--dry-run|--apply] [--profile workstation|full]
+       tools/deploy --status [--profile workstation|full]
+       tools/deploy --rollback
+
+workstation: shell, desktop, glibc runtime adapters and application launchers
+full:        workstation plus uv, target toolchain and Mesa maintenance links
+USAGE
+      exit 0
+      ;;
+    *) printf 'unknown argument: %s\n' "$1" >&2; exit 2 ;;
+  esac
+  shift
+done
+
+case "$PROFILE" in workstation|full) ;; *) echo "unsupported profile: $PROFILE" >&2; exit 2;; esac
 
 R=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 : "${HOME:?HOME must be set}"
 : "${PREFIX:?PREFIX must be set}"
-
-PLANNED_DIRS=$'\n'
+STATE_ROOT=${TND_DEPLOY_STATE_ROOT:-${XDG_STATE_HOME:-$HOME/.local/state}/termux-native-desktop/deployment}
+LEGACY_REPO_ROOT=${TND_DEPLOY_LEGACY_REPO_ROOT:-$R}
+RELEASES="$STATE_ROOT/releases"
+CURRENT="$STATE_ROOT/current"
+PREVIOUS="$STATE_ROOT/previous"
+BACKUPS="$STATE_ROOT/backups"
+LOCK_DIR="$STATE_ROOT/lock.d"
+TREE=$(git -C "$R" rev-parse HEAD^{tree})
+HEAD=$(git -C "$R" rev-parse HEAD)
+RELEASE_ID="${TREE}-${PROFILE}"
+RELEASE="$RELEASES/$RELEASE_ID"
+ROOT="$RELEASE/root"
+MANAGED="$RELEASE/managed-links.tsv"
 
 log() { printf '%s\n' "$*"; }
-
+fail() { printf 'deploy: %s\n' "$*" >&2; exit 1; }
 run() {
-  if [ "$DRY_RUN" -eq 1 ]; then
-    printf '+ '
-    printf '%q ' "$@"
-    printf '\n'
+  if [ "$MODE" = dry-run ]; then
+    printf '+ '; printf '%q ' "$@"; printf '\n'
   else
     "$@"
   fi
 }
 
-is_planned_dir() {
-  local dst=$1
-  case "$PLANNED_DIRS" in
-    *$'\n'"$dst"$'\n'*) return 0 ;;
-    *) return 1 ;;
+link_target_for() {
+  local root=$1 rel=$2
+  case "$root" in
+    home) printf '%s/root/home/%s\n' "$CURRENT" "$rel" ;;
+    prefix) printf '%s/root/prefix/%s\n' "$CURRENT" "$rel" ;;
+    *) fail "bad manifest root: $root" ;;
   esac
 }
 
-mark_planned_dir() {
-  local dst=$1
-  is_planned_dir "$dst" || PLANNED_DIRS+="$dst"$'\n'
+destination_for() {
+  local root=$1 rel=$2
+  case "$root" in
+    home) printf '%s/%s\n' "$HOME" "$rel" ;;
+    prefix) printf '%s/%s\n' "$PREFIX" "$rel" ;;
+    *) fail "bad manifest root: $root" ;;
+  esac
 }
 
-ensure_dir() {
-  local dst=$1
-
-  if [ "$DRY_RUN" -eq 1 ] && is_planned_dir "$dst"; then
-    return 0
-  fi
-
-  if [ -L "$dst" ]; then
-    log "convert symlink directory: $dst -> $(readlink "$dst")"
-    run rm -f "$dst"
-  elif [ -e "$dst" ] && [ ! -d "$dst" ]; then
-    printf 'refusing to replace non-directory target: %s\n' "$dst" >&2
-    exit 1
-  fi
-
-  run mkdir -p "$dst"
-  if [ "$DRY_RUN" -eq 1 ]; then
-    mark_planned_dir "$dst"
-  fi
-  return 0
+manifest_files() {
+  printf '%s\n' "$R/config/deployment/workstation.tsv"
+  [ "$PROFILE" = full ] && printf '%s\n' "$R/config/deployment/development.tsv"
 }
 
-has_symlink_ancestor() {
-  local p
-  p=$(dirname "$1")
-  while [ "$p" != "/" ]; do
-    [ -L "$p" ] && return 0
-    p=$(dirname "$p")
-  done
+manifest_rows() {
+  local f
+  while IFS= read -r f; do
+    [ -f "$f" ] || fail "missing deployment manifest: $f"
+    awk -F '\t' 'NF && $1 !~ /^#/ { print }' "$f"
+  done < <(manifest_files)
+}
+
+is_allowed_existing_symlink() {
+  local dst=$1 resolved raw
+  [ -L "$dst" ] || return 1
+  raw=$(readlink "$dst")
+  resolved=$(readlink -f "$dst" 2>/dev/null || true)
+  case "$raw" in
+    "$CURRENT"/*|"$RELEASES"/*) return 0 ;;
+  esac
+  case "$resolved" in
+    "$R"/*|"$LEGACY_REPO_ROOT"/*|"$RELEASES"/*|"$HOME/termux-native-desktop"/*) return 0 ;;
+  esac
   return 1
 }
 
-link_leaf() {
-  local src=$1
-  local dst=$2
-  [ -e "$src" ] || { printf 'missing source: %s\n' "$src" >&2; exit 1; }
-  ensure_dir "$(dirname "$dst")"
-  if [ -e "$dst" ] && [ ! -L "$dst" ]; then
-    if [ "$DRY_RUN" -eq 1 ] && has_symlink_ancestor "$dst"; then
-      :
-    else
-      printf 'refusing to replace unmanaged target: %s\n' "$dst" >&2
-      exit 1
-    fi
-  fi
-  log "link: $dst -> $src"
-  run ln -sfn "$src" "$dst"
+legacy_adoptable_hash() {
+  local dst=$1 actual expected=
+  [ -f "$dst" ] && [ ! -L "$dst" ] || return 1
+  case "$dst" in
+    "$HOME/.bashrc") expected=3c7b8682c4debff14f68fa2a239635aed7d13ec6c11918ddee8f59040245a7cf ;;
+    "$HOME/uv-base/pyproject.toml") expected=2b89a3855976ca27d81f7bda0c42b7880b52e6b74fae41c83982d115576b4355 ;;
+    "$HOME/uv-base/uv.lock") expected=79dab5fa4e9246ccfd72c28d569400013858723730f599a15ef6e6f566635a53 ;;
+    *) return 1 ;;
+  esac
+  actual=$(sha256sum "$dst" | awk '{print $1}')
+  [ "$actual" = "$expected" ]
 }
 
-remove_managed_symlink() {
+validate_destination() {
   local dst=$1
   if [ -L "$dst" ]; then
-    log "remove obsolete symlink: $dst -> $(readlink "$dst")"
-    run rm -f "$dst"
+    is_allowed_existing_symlink "$dst" || fail "refusing unmanaged symlink: $dst -> $(readlink "$dst")"
   elif [ -e "$dst" ]; then
-    printf 'refusing to remove non-symlink target: %s\n' "$dst" >&2
-    exit 1
+    legacy_adoptable_hash "$dst" || fail "refusing unmanaged target: $dst"
   fi
 }
 
-deploy_overlay_root() {
-  local src_root=$1
-  local dst_root=$2
-  local rel
-  [ -d "$src_root" ] || return 0
+write_release() {
+  local stage type src root rel dest_dir
+  if [ -d "$RELEASE" ]; then
+    [ -f "$RELEASE/release.env" ] || fail "existing release is incomplete: $RELEASE"
+    return 0
+  fi
+  stage="$RELEASES/.stage-${RELEASE_ID}-$$"
+  run mkdir -p "$RELEASES" "$BACKUPS"
+  run rm -rf "$stage"
+  run mkdir -p "$stage/root/home" "$stage/root/prefix"
 
-  while IFS= read -r rel; do
-    [ -n "$rel" ] || continue
-    ensure_dir "$dst_root/$rel"
-  done < <(cd "$src_root" && find . -mindepth 1 -type d -printf '%P\n' | sort)
+  if [ "$MODE" = dry-run ]; then
+    manifest_rows | while IFS=$'\t' read -r type src root rel; do
+      printf '+ materialize %q -> %q\n' "$R/$src" "$stage/root/$root/$rel"
+    done
+    printf '+ write release metadata and manifest in %q\n' "$stage"
+    printf '+ mv %q %q\n' "$stage" "$RELEASE"
+    return 0
+  fi
 
-  while IFS= read -r rel; do
+  : >"$stage/managed-links.tsv"
+  manifest_rows | while IFS=$'\t' read -r type src root rel; do
     [ -n "$rel" ] || continue
-    link_leaf "$src_root/$rel" "$dst_root/$rel"
-  done < <(cd "$src_root" && find . -mindepth 1 \( -type f -o -type l \) -printf '%P\n' | sort)
+    [ -e "$R/$src" ] || fail "missing manifest source: $src"
+    dest_dir="$stage/root/$root/$rel"
+    mkdir -p "$(dirname "$dest_dir")"
+    case "$type" in
+      file) cp -a "$R/$src" "$dest_dir" ;;
+      dir) cp -a "$R/$src" "$dest_dir" ;;
+      *) fail "bad manifest type: $type" ;;
+    esac
+    printf '%s\t%s\t%s\t%s\n' "$type" "$root" "$rel" "$(destination_for "$root" "$rel")" >>"$stage/managed-links.tsv"
+  done
+  cat >"$stage/release.env" <<META
+REPOSITORY_HEAD=$HEAD
+REPOSITORY_TREE=$TREE
+PROFILE=$PROFILE
+RELEASE_ID=$RELEASE_ID
+META
+  (
+    cd "$stage"
+    find root -type f -print0 | sort -z | xargs -0 sha256sum >MANIFEST.sha256
+    sha256sum -c MANIFEST.sha256 >/dev/null
+  )
+  chmod -R a-w "$stage"
+  mv "$stage" "$RELEASE"
 }
 
-deploy_module() {
-  local module=$1
-  local root="$R/modules/$module/overlay"
-  deploy_overlay_root "$root/home" "$HOME"
-  deploy_overlay_root "$root/prefix" "$PREFIX"
+backup_regular_if_needed() {
+  local dst=$1 rel safe backup
+  [ -e "$dst" ] && [ ! -L "$dst" ] || return 0
+  legacy_adoptable_hash "$dst" || fail "unmanaged regular file changed during transaction: $dst"
+  rel=${dst#/}
+  safe=${rel//\//_}
+  backup="$BACKUPS/${safe}-${HEAD}"
+  [ ! -e "$backup" ] || fail "adoption backup already exists: $backup"
+  run cp -p "$dst" "$backup"
+  run rm -f "$dst"
 }
 
-log "== runtime-facing module overlays =="
-for module in desktop gl; do
-  deploy_module "$module"
-done
+activate_pointer() {
+  local pointer=$1 target=$2 tmp
+  tmp="$pointer.new.$$"
+  run mkdir -p "$STATE_ROOT"
+  run rm -f "$tmp"
+  run ln -s "$target" "$tmp"
+  run mv -Tf "$tmp" "$pointer"
+}
 
-log "== package-owned public entry points =="
-link_leaf "$R/packages/vscode/launcher/code" "$HOME/.local/bin/code"
-link_leaf "$R/packages/obsidian/launcher/obsidian" "$HOME/gl/bin/obsidian"
-link_leaf "$R/packages/obsidian/launcher/obsidian-app" "$HOME/gl/bin/obsidian-app"
+activate_release() {
+  local old_current= type root rel dst target
+  [ -d "$RELEASE" ] || [ "$MODE" = dry-run ] || fail "release missing: $RELEASE"
 
-log "== Mesa maintenance compatibility links =="
-link_leaf "$R/packages/mesa-glibc/build.sh" "$HOME/gl/build/build-mesa.sh"
-link_leaf "$R/packages/mesa-glibc/build-env/pyproject.toml" "$HOME/gl/build/pyproject.toml"
-link_leaf "$R/packages/mesa-glibc/build-env/uv.lock" "$HOME/gl/build/uv.lock"
+  while IFS=$'\t' read -r type src root rel; do
+    dst=$(destination_for "$root" "$rel")
+    validate_destination "$dst"
+  done < <(manifest_rows)
 
-ensure_dir "$HOME/gl/build/patches"
-if [ -L "$HOME/gl/build/patches/mesa" ] || \
-   [ ! -e "$HOME/gl/build/patches/mesa" ] || \
-   { [ "$DRY_RUN" -eq 1 ] && has_symlink_ancestor "$HOME/gl/build/patches/mesa"; }; then
-  link_leaf "$R/packages/mesa-glibc/patches/mesa" "$HOME/gl/build/patches/mesa"
-else
-  printf 'refusing to replace unmanaged patch directory: %s\n' "$HOME/gl/build/patches/mesa" >&2
-  exit 1
-fi
+  if [ -L "$CURRENT" ]; then old_current=$(readlink "$CURRENT"); fi
+  if [ -n "$old_current" ] && [ "$old_current" != "$RELEASE" ]; then
+    activate_pointer "$PREVIOUS" "$old_current"
+  fi
+  activate_pointer "$CURRENT" "$RELEASE"
 
-remove_managed_symlink "$HOME/gl/build/diag"
+  while IFS=$'\t' read -r type src root rel; do
+    dst=$(destination_for "$root" "$rel")
+    target=$(link_target_for "$root" "$rel")
+    run mkdir -p "$(dirname "$dst")"
+    backup_regular_if_needed "$dst"
+    log "link: $dst -> $target"
+    run ln -sfn "$target" "$dst"
+  done < <(manifest_rows)
 
-log "deployed: runtime module/package sources -> live Termux paths"
+  if [ -L "$HOME/gl/build/diag" ]; then
+    run rm -f "$HOME/gl/build/diag"
+  elif [ -e "$HOME/gl/build/diag" ]; then
+    fail "obsolete gl/build/diag is not a symlink"
+  fi
+
+  if [ "$PROFILE" = workstation ]; then
+    # Development leaves are removed only when they are release/repository-managed symlinks.
+    awk -F '\t' 'NF && $1 !~ /^#/ { print }' "$R/config/deployment/development.tsv" |
+      while IFS=$'\t' read -r type src root rel; do
+        dst=$(destination_for "$root" "$rel")
+        if [ -L "$dst" ] && is_allowed_existing_symlink "$dst"; then
+          run rm -f "$dst"
+        elif [ -e "$dst" ]; then
+          fail "cannot retire unmanaged development target: $dst"
+        fi
+      done
+  fi
+
+  if [ -e "$HOME/uv-base/.uvrc" ] && [ ! -L "$HOME/uv-base/.uvrc" ]; then
+    local uvrc_hash
+    uvrc_hash=$(sha256sum "$HOME/uv-base/.uvrc" | awk '{print $1}')
+    if [ "$uvrc_hash" = f851fe1147541c2f6040c5cce66852ba3d848f70b62ef3e843c8e41339a4641c ]; then
+      run mkdir -p "$BACKUPS"
+      run cp -p "$HOME/uv-base/.uvrc" "$BACKUPS/uv-base-.uvrc-$HEAD"
+      run rm -f "$HOME/uv-base/.uvrc"
+    else
+      fail "refusing modified legacy uv-base/.uvrc"
+    fi
+  fi
+}
+
+status_release() {
+  local failures=0 type src root rel dst target current_target=
+  [ -L "$CURRENT" ] && current_target=$(readlink "$CURRENT")
+  printf 'STATE_ROOT=%s\nCURRENT=%s\nPREVIOUS=%s\n' "$STATE_ROOT" "${current_target:-<unset>}" "$([ -L "$PREVIOUS" ] && readlink "$PREVIOUS" || printf '<unset>')"
+  while IFS=$'\t' read -r type src root rel; do
+    dst=$(destination_for "$root" "$rel")
+    target=$(link_target_for "$root" "$rel")
+    if [ -L "$dst" ] && [ "$(readlink "$dst")" = "$target" ]; then
+      printf 'PASS\t%s\t%s\n' "$dst" "$target"
+    else
+      printf 'FAIL\t%s\t%s\n' "$dst" "$target"
+      failures=$((failures + 1))
+    fi
+  done < <(manifest_rows)
+  [ "$failures" -eq 0 ]
+}
+
+rollback_release() {
+  local current_target previous_target tmp
+  [ -L "$CURRENT" ] || fail 'current release pointer is absent'
+  [ -L "$PREVIOUS" ] || fail 'previous release pointer is absent'
+  current_target=$(readlink "$CURRENT")
+  previous_target=$(readlink "$PREVIOUS")
+  [ -d "$previous_target" ] || fail "previous release missing: $previous_target"
+  activate_pointer "$CURRENT" "$previous_target"
+  activate_pointer "$PREVIOUS" "$current_target"
+  log "rolled back current to: $previous_target"
+}
+
+case "$ACTION" in
+  status) status_release ;;
+  rollback) rollback_release ;;
+  deploy)
+    run mkdir -p "$STATE_ROOT"
+    if [ "$MODE" = apply ]; then
+      mkdir -p "$STATE_ROOT"
+      if ! mkdir "$LOCK_DIR" 2>/dev/null; then
+        fail "another deployment transaction holds: $LOCK_DIR"
+      fi
+      trap 'rmdir "$LOCK_DIR" 2>/dev/null || true' EXIT HUP INT TERM
+    fi
+    write_release
+    activate_release
+    if [ "$MODE" = apply ]; then
+      status_release
+      log "activated immutable repository release: $RELEASE_ID"
+      rmdir "$LOCK_DIR"
+      trap - EXIT HUP INT TERM
+    else
+      log "dry-run complete for immutable repository release: $RELEASE_ID"
+    fi
+    ;;
+  *) fail "bad action: $ACTION" ;;
+esac

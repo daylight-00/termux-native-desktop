@@ -1,0 +1,16 @@
+# type	source	root	destination
+file	modules/shell/overlay/home/.bashrc	home	.bashrc
+file	modules/shell/overlay/home/.config/bash/interactive.sh	home	.config/bash/interactive.sh
+file	modules/shell/overlay/home/.config/bash/prompt.sh	home	.config/bash/prompt.sh
+file	modules/shell/overlay/home/.config/bash/aliases.sh	home	.config/bash/aliases.sh
+file	modules/shell/overlay/home/.config/bash/conf.d/99-path-policy.sh	home	.config/bash/conf.d/99-path-policy.sh
+file	modules/desktop/overlay/home/.local/bin/startxfce-x11	home	.local/bin/startxfce-x11
+file	modules/gl/overlay/home/.config/bash/conf.d/40-gl.sh	home	.config/bash/conf.d/40-gl.sh
+file	modules/gl/overlay/home/gl/env	home	gl/env
+file	modules/gl/overlay/home/gl/bin/gl-farm	home	gl/bin/gl-farm
+file	modules/gl/overlay/home/gl/bin/gl-run	home	gl/bin/gl-run
+file	modules/gl/overlay/home/gl/policy/vulkan/freedreno.sh	home	gl/policy/vulkan/freedreno.sh
+file	modules/gl/overlay/home/gl/shims/xdg-open	home	gl/shims/xdg-open
+file	packages/vscode/launcher/code	home	.local/bin/code
+file	packages/obsidian/launcher/obsidian	home	gl/bin/obsidian
+file	packages/obsidian/launcher/obsidian-app	home	gl/bin/obsidian-app
