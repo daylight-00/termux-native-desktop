@@ -81,10 +81,10 @@ Current post-closure audit:
 docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md
 ```
 
-Current provider-authority SUP-01 response:
+Current provider-authority SUP-01 response review:
 
 ```text
-docs/refactor/0157-selected-obsidian-generic-build-attestation-and-adaptation-gap-evidence-supply-batch-sup-01-response.md
+docs/refactor/0158-selected-obsidian-generic-build-attestation-and-adaptation-gap-evidence-supply-batch-sup-01-response-review.md
 ```
 
 ## Repository checkout

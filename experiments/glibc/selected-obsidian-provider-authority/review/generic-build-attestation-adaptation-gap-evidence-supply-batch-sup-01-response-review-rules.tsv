@@ -1,0 +1,11 @@
+rule_id	rule_class	input_scope	requirement	failure_state	accepted_effect
+SUP01-R01	RESPONSE_IDENTITY	SUP-01/SRQ-OJ-001/OJ-001	The response must bind exactly one authoritative-reference payload to the canonical SUP-01 request, OJ-001 acquisition unit, lane and object scope.	REJECT_RESPONSE_IDENTITY_DRIFT	NONE
+SUP01-R02	PAYLOAD_INTEGRITY	response metadata, manifest and payload	Tracked payload and manifest SHA-256, byte size and file-set equality must match exactly.	REJECT_RESPONSE_INTEGRITY_DRIFT	NONE
+SUP01-R03	REQUIRED_IDENTITY	object requirement correction	The accepted requirement is the stable ELF SONAME libjpeg.so.62; provider-versioned concrete filename libjpeg.so.62.3.0 is only prior oracle evidence.	REJECT_CONCRETE_FILENAME_AS_PERMANENT_REQUIREMENT	OBJECT_REQUIREMENT_CORRECTION_ONLY
+SUP01-R04	UPSTREAM_ABI_BOUNDARY	pinned libjpeg-turbo 3.1.0 references	Default v6b emulation maps to SOVERSION 62; WITH_JPEG8 is backward-incompatible and maps to SOVERSION 8.	REJECT_MISSING_OR_CONTRADICTORY_ABI_REFERENCE	OBJECT_REQUIREMENT_CORRECTION_ONLY
+SUP01-R05	SELECTED_CANDIDATE_CLASSIFICATION	selected Termux artifact and recipe	The selected recipe is -DWITH_JPEG8=ON and the observed family is libjpeg.so, libjpeg.so.8 and libjpeg.so.8.3.2 with no SONAME-62 member.	REJECT_SELECTED_CANDIDATE_CLASSIFICATION_DRIFT	NONE
+SUP01-R06	NO_SUBSTITUTION	provider candidate decision	libjpeg.so.8, aliases to it and ABI-family similarity cannot satisfy libjpeg.so.62.	REJECT_ABI_FAMILY_SUBSTITUTION	NONE
+SUP01-R07	CORRECTION_SCOPE	OJ-001 completion gate	Accept only the required-identity correction; bind no matching provider candidate and accept no final provider authority.	REJECT_PROVIDER_PROMOTION	OBJECT_REQUIREMENT_CORRECTION_ONLY
+SUP01-R08	NO_TARGET_EFFECT	authority and target states	Build attestation, adaptation, filename-drift, final-provider and target-population counters remain zero.	REJECT_AUTHORITY_OR_TARGET_EFFECT	NONE
+SUP01-R09	DEPENDENCY_ADVANCE	supply batch order	After OJ-001 closes by required-identity correction, advance to SUP-02 producing-build provenance and output linkage.	REJECT_NEXT_BATCH_DRIFT	NEXT_BATCH_SUP_02
+SUP01-R10	FAIL_CLOSED	all response inputs	Any source locator, decision basis, configuration, observed family, digest, scope or state drift must fail before output creation.	REJECT_TAMPERED_RESPONSE	NONE
