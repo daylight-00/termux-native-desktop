@@ -81,10 +81,10 @@ Current post-closure audit:
 docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md
 ```
 
-Current provider-authority SUP-02 provenance locator:
+Current provider-authority SUP-02 provenance locator receipt review:
 
 ```text
-docs/refactor/0159-selected-obsidian-generic-build-attestation-and-adaptation-gap-evidence-supply-batch-sup-02-provenance-locator.md
+docs/refactor/0160-selected-obsidian-generic-build-attestation-and-adaptation-gap-evidence-supply-batch-sup-02-provenance-locator-receipt-review.md
 ```
 
 ## Repository checkout

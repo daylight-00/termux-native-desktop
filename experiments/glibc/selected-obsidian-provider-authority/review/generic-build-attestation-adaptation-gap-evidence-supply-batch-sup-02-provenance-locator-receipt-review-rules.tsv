@@ -1,0 +1,11 @@
+rule_id	dimension	scope	acceptance_rule	rejection_rule	authority_effect
+SUP02L-R01	SOURCE_IDENTITY	production locator receipt	The reviewed receipt is bound to exact archive SHA-256, source HEAD and source tree.	REJECT_SOURCE_IDENTITY_DRIFT	NONE
+SUP02L-R02	ROOT_DENOMINATOR	canonical root request set	Exactly 28 unique SUP-02 root rows must be represented with unchanged acquisition-unit, root-review, recipe-root and recipe-tree bindings.	REJECT_ROOT_DENOMINATOR_OR_BINDING_DRIFT	NONE
+SUP02L-R03	RECORD_INVENTORY	custodian export files	A header-only inventory is accepted only as proof that zero explicit build-invocation, build-environment or build-output-manifest records were located.	REJECT_INVENTED_OR_UNBOUND_RECORD	NONE
+SUP02L-R04	ABSENCE_CLASSIFICATION	root locator rows	All 28 roots may be classified NO_CUSTODIAN_EXPORT_FOUND only when each of the three record counts is zero and BA-001, BA-002 and BA-003 remain open.	REJECT_FALSE_COMPLETE_OR_PARTIAL_EXPORT	NONE
+SUP02L-R05	CUSTODIAN_SURFACE	GitHub metadata captures	Repository, workflow and release captures remain locator-only and cannot satisfy any producing-build provenance requirement.	REJECT_METADATA_AS_BUILD_PROVENANCE	NONE
+SUP02L-R06	NO_PROVENANCE_INFERENCE	repository and package observations	Repository proximity, workflow definitions, release presence, package members, versions and artifact digests cannot be converted into a producing-build invocation, immutable environment or output linkage.	REJECT_PROVENANCE_SYNTHESIS	NONE
+SUP02L-R07	REQUIREMENT_STATE	BA-001 BA-002 BA-003	All three requirements remain open because no producing-build custodian export was found.	REJECT_REQUIREMENT_CLOSURE_WITHOUT_EXPORT	NONE
+SUP02L-R08	NO_AUTHORITY_EFFECT	provider and target states	Build-attestation, final-provider and target-population acceptance counters remain zero.	REJECT_AUTHORITY_OR_TARGET_EFFECT	NONE
+SUP02L-R09	NEXT_ACTION	SUP-02 continuation	Define an exact custodian-export request set rather than repeating the same empty locator or advancing to independent reproduction.	REJECT_NEXT_ACTION_DRIFT	SUP_02_CUSTODIAN_EXPORT_REQUEST_SET
+SUP02L-R10	FAIL_CLOSED	all receipt inputs	Any count, binding, state, claim-boundary, source identity or captured-surface drift must fail before review outputs are created.	REJECT_TAMPERED_RECEIPT	NONE
