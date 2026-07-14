@@ -502,3 +502,5 @@ create or change current;
 mutate launcher, loader state or RPATH;
 reopen closed graphics gates.
 ```
+
+- [`0155-selected-obsidian-generic-build-attestation-and-adaptation-gap-evidence-acquisition-receipt-review.md`](0155-selected-obsidian-generic-build-attestation-and-adaptation-gap-evidence-acquisition-receipt-review.md)

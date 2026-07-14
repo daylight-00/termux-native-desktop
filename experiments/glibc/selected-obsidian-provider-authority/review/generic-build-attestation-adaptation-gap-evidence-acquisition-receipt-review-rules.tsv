@@ -1,0 +1,11 @@
+rule_id	scope	criterion	rejection_boundary	review_effect
+GAR-001	RECEIPT	Production transaction, validation, branch, HEAD, tree and pushed remote identity match the exact 0154 receipt	No source Git identity drift	RECEIPT_IDENTITY_CONFIRMED_ONLY
+GAR-002	CANONICAL_INPUTS	10 source contracts, 6 lanes, 16 requirements, 28 root units and 37 object units retain canonical hashes	No denominator or canonical-hash drift	ACQUISITION_SET_BINDING_CONFIRMED_ONLY
+GAR-003	INPUT_ROOT	Acquisition input root is ABSENT_NO_ACQUISITION_INPUT and input manifest row count is zero	No absent-input reinterpretation as closure	NO_INPUT_STATE_CONFIRMED_ONLY
+GAR-004	CANDIDATES	Evidence manifest is header-only and acquisition inventory contains zero rows	No implicit candidate creation	ZERO_CANDIDATES_CONFIRMED_ONLY
+GAR-005	REQUIREMENTS	Six local foundations and ten direct gaps retain their exact unavailable states	No local-foundation promotion and no gap suppression	OPEN_REQUIREMENTS_CONFIRMED_ONLY
+GAR-006	LANES	All six lanes remain open with exact completion gates and stop conditions	No lane completion inference	OPEN_LANES_CONFIRMED_ONLY
+GAR-007	ROOTS	All 28 root acquisition units retain exact identities, missing requirement sets and zero candidates	No root-wide authority inference	OPEN_ROOT_UNITS_CONFIRMED_ONLY
+GAR-008	OBJECTS	All 37 object acquisition units retain exact identities, missing requirement sets, unresolved providers and unpopulated targets	No object correction, provider or target promotion	OPEN_OBJECT_UNITS_CONFIRMED_ONLY
+GAR-009	AUTHORITY	All build-attestation, adaptation, filename-drift, correction, provider and target counters remain zero	No authority effect from receipt PASS	ZERO_AUTHORITY_EFFECT_CONFIRMED
+GAR-010	NEXT	A separate bounded evidence-supply request set is required before another acquisition run	No empty-run repetition as progress	SUPPLY_REQUEST_DEFINITION_REQUIRED

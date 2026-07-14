@@ -81,10 +81,10 @@ Current post-closure audit:
 docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md
 ```
 
-Current provider-authority gap-evidence acquirer:
+Current provider-authority gap-evidence acquisition receipt review:
 
 ```text
-docs/refactor/0154-selected-obsidian-generic-build-attestation-and-adaptation-gap-evidence-acquirer.md
+docs/refactor/0155-selected-obsidian-generic-build-attestation-and-adaptation-gap-evidence-acquisition-receipt-review.md
 ```
 
 ## Repository checkout

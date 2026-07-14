@@ -1,6 +1,6 @@
 # Status
 
-> **State:** generic build-attestation and adaptation gap-evidence acquirer IMPLEMENTED / BOUNDED; explicit local inputs are validated against 10 source contracts and exact ROOT/OBJECT acquisition units before a strict 0151-compatible candidate evidence root is emitted, while all evidence acceptance, authority decisions and target population remain blocked
+> **State:** generic build-attestation and adaptation gap-evidence acquisition receipt REVIEWED / BOUNDED; the production run received no staged inputs, preserved 6 incomplete local foundations and 10 explicit unavailable direct gaps, and accepted no evidence, authority decision or target population
 > **Updated:** 2026-07-14
 
 ## Current conclusions
@@ -52,7 +52,9 @@
 - This transaction acquired zero candidate files and accepted no correction, build attestation, adaptation, filename drift, provider or target row.
 - A bounded input-only acquirer now rejects unmanifested or contract-mismatched files and emits a deterministic strict-manifest evidence root with post-copy digest verification.
 - Missing acquisition input is recorded as six local-foundation-only requirements plus ten explicit unavailable direct gaps; it is neither failure nor closure.
-- The next active task is to run the bounded gap-evidence acquirer and review its production receipt separately.
+- The production acquirer receipt contains zero candidates, six local-foundation-only requirements and ten explicit unavailable direct gaps; all six lanes, twenty-eight roots and thirty-seven objects remain open.
+- Receipt review confirms the strict evidence manifest is header-only and every build-attestation, adaptation, filename-drift, correction, provider and target counter remains zero.
+- The next active task is to define a bounded evidence-supply request set rather than repeat an empty acquisition run.
 
 ## Current authority
 
@@ -89,9 +91,10 @@ docs/refactor/0151-selected-obsidian-generic-build-attestation-and-adaptation-ga
 docs/refactor/0152-selected-obsidian-generic-build-attestation-and-adaptation-gap-closure-receipt-review.md
 docs/refactor/0153-selected-obsidian-generic-build-attestation-and-adaptation-gap-evidence-acquisition-set.md
 docs/refactor/0154-selected-obsidian-generic-build-attestation-and-adaptation-gap-evidence-acquirer.md
+docs/refactor/0155-selected-obsidian-generic-build-attestation-and-adaptation-gap-evidence-acquisition-receipt-review.md
 ```
 
-`0116` remains the controlling intervention. `0135` supplies the correction requirements. `0136` records P0-P6 normalization. `0137` accepts the non-materializing world/locale/loader lifecycle boundary. `0138` accepts the non-materializing application identity/launcher lifecycle boundary while keeping exact payload supply, supplement membership, composition and population open. `0139` bounds non-priority generic capability/source classes. `0140` defines the canonical 61-row candidate-search contract and a non-mutating retained-evidence collector. `0141` reviews the exact receipt into direct-family, indirect-only and absent classes while accepting no provider authority. `0142` defines the exact 34-artifact/44-edge member-inventory comparison set and explicit static/development exclusions without downloading or extracting artifacts. `0143` implements bounded exact-artifact acquisition and stream-only member inventory. `0144` reviews the exact device receipt into 21 exact member+SONAME observations, 15 expected-SONAME-alias concrete-filename drifts, and one expected-alias absence while accepting no provider authority. `0145` defines a cache-only collector that verifies 37 pinned recipe family/version/tree candidates and stream-inspects the 15 drift-target ELFs while keeping build attestation and adaptation acceptance open. `0146` reviews the resulting receipt as 37 lineage candidates, 21 exact-member candidates, 15 SONAME-confirmed drift-target candidates and one unsatisfied `libjpeg.so.62` row; it accepts no build attestation, adaptation, filename-drift policy, final provider or target population. `0147` defines 16 explicit evidence requirements and deterministic work units for 28 roots/37 objects while keeping every acceptance and target row open. `0148` implements and runs bounded local evidence collection without build, package mutation, extraction or network acquisition. `0149` reviews the resulting receipt into six confirmed local review-input dimensions and ten explicit provenance/semantic/policy/correction gaps while accepting no authority or target population. `0150` maps those requirements into six ordered closure lanes. `0151` implements a strict-manifest, read-only collector that records verified candidate files or explicit unavailable gaps without accepting any closure or authority claim. `0152` reviews the production no-candidate receipt as six incomplete local foundations plus ten explicit gaps and accepts no closure, authority or target claim. `0153` defines ten source contracts and deterministic acquisition work units for all six lanes, sixteen requirements, twenty-eight roots and thirty-seven objects without acquiring evidence. `0154` implements a bounded input-only acquirer that validates exact source-contract modes, locator classes, scopes, units, digests and file-set equality before emitting an `0151`-compatible candidate evidence root with zero authority effect.
+`0116` remains the controlling intervention. `0135` supplies the correction requirements. `0136` records P0-P6 normalization. `0137` accepts the non-materializing world/locale/loader lifecycle boundary. `0138` accepts the non-materializing application identity/launcher lifecycle boundary while keeping exact payload supply, supplement membership, composition and population open. `0139` bounds non-priority generic capability/source classes. `0140` defines the canonical 61-row candidate-search contract and a non-mutating retained-evidence collector. `0141` reviews the exact receipt into direct-family, indirect-only and absent classes while accepting no provider authority. `0142` defines the exact 34-artifact/44-edge member-inventory comparison set and explicit static/development exclusions without downloading or extracting artifacts. `0143` implements bounded exact-artifact acquisition and stream-only member inventory. `0144` reviews the exact device receipt into 21 exact member+SONAME observations, 15 expected-SONAME-alias concrete-filename drifts, and one expected-alias absence while accepting no provider authority. `0145` defines a cache-only collector that verifies 37 pinned recipe family/version/tree candidates and stream-inspects the 15 drift-target ELFs while keeping build attestation and adaptation acceptance open. `0146` reviews the resulting receipt as 37 lineage candidates, 21 exact-member candidates, 15 SONAME-confirmed drift-target candidates and one unsatisfied `libjpeg.so.62` row; it accepts no build attestation, adaptation, filename-drift policy, final provider or target population. `0147` defines 16 explicit evidence requirements and deterministic work units for 28 roots/37 objects while keeping every acceptance and target row open. `0148` implements and runs bounded local evidence collection without build, package mutation, extraction or network acquisition. `0149` reviews the resulting receipt into six confirmed local review-input dimensions and ten explicit provenance/semantic/policy/correction gaps while accepting no authority or target population. `0150` maps those requirements into six ordered closure lanes. `0151` implements a strict-manifest, read-only collector that records verified candidate files or explicit unavailable gaps without accepting any closure or authority claim. `0152` reviews the production no-candidate receipt as six incomplete local foundations plus ten explicit gaps and accepts no closure, authority or target claim. `0153` defines ten source contracts and deterministic acquisition work units for all six lanes, sixteen requirements, twenty-eight roots and thirty-seven objects without acquiring evidence. `0154` implements a bounded input-only acquirer that validates exact source-contract modes, locator classes, scopes, units, digests and file-set equality before emitting an `0151`-compatible candidate evidence root with zero authority effect. `0155` reviews the production no-input receipt as zero candidates, six incomplete local foundations and ten explicit unavailable direct gaps, with every authority and target decision still open.
 
 ## Accepted states
 
@@ -121,6 +124,7 @@ GENERIC_BUILD_ATTESTATION_ADAPTATION_GAP_CLOSURE_COLLECTOR_IMPLEMENTED_BOUNDED
 GENERIC_BUILD_ATTESTATION_ADAPTATION_GAP_CLOSURE_RECEIPT_REVIEW_PASS_BOUNDED
 GENERIC_BUILD_ATTESTATION_ADAPTATION_GAP_EVIDENCE_ACQUISITION_SET_DEFINED_BOUNDED
 GENERIC_BUILD_ATTESTATION_ADAPTATION_GAP_EVIDENCE_ACQUIRER_IMPLEMENTED_BOUNDED
+GENERIC_BUILD_ATTESTATION_ADAPTATION_GAP_EVIDENCE_ACQUISITION_RECEIPT_REVIEW_PASS_BOUNDED
 SEMANTIC_FINAL_PROVIDER_AUTHORITY_OPEN
 APPLICATION_RUNTIME_COMPOSITION_NOT_REACHED
 TARGET_LAYOUT_POPULATION_BLOCKED
@@ -183,6 +187,12 @@ experiments/glibc/selected-obsidian-provider-authority/review/
     generic-build-attestation-adaptation-root-gap-evidence-acquisition-set.tsv
     generic-build-attestation-adaptation-object-gap-evidence-acquisition-set.tsv
     generic-build-attestation-adaptation-gap-evidence-acquisition-set-metadata.tsv
+    generic-build-attestation-adaptation-gap-evidence-acquisition-receipt-review-rules.tsv
+    generic-build-attestation-adaptation-gap-evidence-acquisition-receipt-review.tsv
+    generic-build-attestation-adaptation-gap-evidence-acquisition-lane-receipt-review.tsv
+    generic-build-attestation-adaptation-root-gap-evidence-acquisition-receipt-review.tsv
+    generic-build-attestation-adaptation-object-gap-evidence-acquisition-receipt-review.tsv
+    generic-build-attestation-adaptation-gap-evidence-acquisition-receipt-review-metadata.tsv
     unresolved-authority-ledger.tsv
 
 experiments/glibc/selected-obsidian-provider-authority/profiles/
@@ -211,7 +221,7 @@ AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
 AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
-AUTH-009 non-priority generic capabilities; bounded input-only gap-evidence acquirer now validates 10 source contracts across 6 lanes, 16 requirements, 28 roots and 37 objects and emits strict-manifest candidates only; libjpeg.so.62 correction and all build-attestation, adaptation, filename-drift and final-provider decisions remain open
+AUTH-009 non-priority generic capabilities; production gap-evidence acquisition receipt reviewed as 0 candidates, 6 incomplete local foundations and 10 unavailable direct gaps across 6 lanes, 28 roots and 37 objects; libjpeg.so.62 correction and all build-attestation, adaptation, filename-drift and final-provider decisions remain open
 AUTH-010 exact application payload supply, named supplement membership and release execution; launcher source boundary bounded
 ```
 
@@ -224,7 +234,7 @@ CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
 Active repository task:
 
 ```text
-RUN_BOUNDED_GENERIC_BUILD_ATTESTATION_ADAPTATION_GAP_EVIDENCE_ACQUIRER
+DEFINE_BOUNDED_GENERIC_BUILD_ATTESTATION_ADAPTATION_GAP_EVIDENCE_SUPPLY_REQUEST_SET
 ```
 
 Repository-side order:
@@ -232,7 +242,7 @@ Repository-side order:
 ```text
 1. world runtime internals, locale and loader-state lifecycle boundary: PASS / remaining evidence explicit;
 2. application identity/launcher lifecycle boundary: PASS / exact payload supply and named supplement membership OPEN;
-3. non-priority generic capability/source-class boundary: PASS / bounded gap-evidence acquirer IMPLEMENTED for 10 source contracts, 28 root units and 37 object units; production acquisition receipt run NEXT, with libjpeg.so.62 correction still blocked;
+3. non-priority generic capability/source-class boundary: PASS / production gap-evidence acquisition receipt REVIEWED as 0 candidates, 6 incomplete local foundations and 10 unavailable direct gaps; bounded evidence-supply request definition NEXT, with libjpeg.so.62 correction still blocked;
 4. decide graphics, GTK/Wayland, printing and optional-exec composition policy only after owning candidate sets are explicit;
 5. close font, pixbuf, icon, MIME and generated-schema authority;
 6. define an ApplicationRuntimeComposition only after owning authorities are accepted;
