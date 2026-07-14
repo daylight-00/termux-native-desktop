@@ -1,9 +1,10 @@
 #!/data/data/com.termux/files/usr/bin/bash
 # build-mesa.sh â€” Mesa (Turnip KGSL + Zink) glibc build for the gl layer.
 #
-# Host tools:  bionic (meson/ninja via uv project in ~/gl/build)
+# Host tools:  bionic (Meson/Ninja via the immutable project under ~/gl/build)
+# Mutable state: $XDG_STATE_HOME/termux-native-desktop/workspaces/mesa
 # Target:      Termux glibc ($PREFIX/glibc), Adreno 7xx via KGSL
-# Output:      ~/gl/opt/mesa-glibc-<version>[-tx]/  (+ promote symlink after verify)
+# Output:      $XDG_STATE_HOME/termux-native-desktop/providers/mesa/candidates/
 #
 # Usage:
 #   ./build-mesa.sh                    # latest stable tag of $SERIES
@@ -18,7 +19,11 @@ set -euo pipefail
 
 GL="$HOME/gl"
 TC="$GL/toolchain"
-WORK="$GL/build/mesa"
+STATE_BASE="${TND_STATE_BASE:-${XDG_STATE_HOME:-$HOME/.local/state}/termux-native-desktop}"
+WORKSPACE="${TND_MESA_WORKSPACE:-$STATE_BASE/workspaces/mesa}"
+PROVIDER_ROOT="${TND_MESA_PROVIDER_ROOT:-$STATE_BASE/providers/mesa}"
+WORK="$WORKSPACE/mesa"
+VENV="$WORKSPACE/.venv"
 SERIES="${SERIES:-26.1}"
 JOBS="${JOBS:-$(nproc)}"
 
@@ -30,14 +35,12 @@ for t in glibc-gcc glibc-g++ glibc-pkg-config glibc-exec; do
   [ -x "$TC/$t" ] || { echo "missing toolchain wrapper: $TC/$t"; exit 1; }
 done
 
-# Python build deps as a uv project (declarative, locked)
-if [ ! -f "$GL/build/pyproject.toml" ]; then
-  echo "== initializing uv build project =="
-  ( cd "$GL/build" && uv init --name gl-build --no-workspace --bare \
-      && uv add meson mako packaging pyyaml ninja )
-fi
-( cd "$GL/build" && uv sync )
-export PATH="$GL/build/.venv/bin:$PATH"
+# Python build deps remain declarative under the immutable release, while the
+# generated environment is stored in XDG state.
+[ -f "$GL/build/pyproject.toml" ] || { echo "missing build project: $GL/build/pyproject.toml"; exit 1; }
+mkdir -p "$WORKSPACE" "$PROVIDER_ROOT/candidates" "$GL/opt"
+( cd "$GL/build" && UV_PROJECT_ENVIRONMENT="$VENV" uv sync )
+export PATH="$VENV/bin:$PATH"
 
 CCACHE=""
 command -v ccache >/dev/null && CCACHE="'ccache', "
@@ -87,13 +90,28 @@ if ls "$PATCHDIR"/*.patch >/dev/null 2>&1; then
   done
 fi
 
-DESTDIR="$GL/opt/mesa-glibc-$VERSION$PATCHSET"
+DESTDIR="$PROVIDER_ROOT/candidates/mesa-glibc-$VERSION$PATCHSET"
+COMPAT_DEST="$GL/opt/mesa-glibc-$VERSION$PATCHSET"
 BUILDDIR="$WORK/build-$VERSION$PATCHSET"
+
+if [ -e "$COMPAT_DEST" ] && [ ! -L "$COMPAT_DEST" ]; then
+  echo "legacy provider path is still a directory; run tools/migrate-local-layout first: $COMPAT_DEST" >&2
+  exit 1
+fi
+if [ -L "$COMPAT_DEST" ]; then
+  compat_resolved=$(readlink -f "$COMPAT_DEST" 2>/dev/null || true)
+  expected_resolved=$(readlink -f "$DESTDIR" 2>/dev/null || printf '%s' "$DESTDIR")
+  [ "$compat_resolved" = "$expected_resolved" ] || {
+    echo "legacy provider compatibility path points elsewhere: $COMPAT_DEST" >&2
+    exit 1
+  }
+fi
+ln -sfn "$DESTDIR" "$COMPAT_DEST"
 
 # Known issue: generator scripts fail on #!/usr/bin/env shebangs.
 find src -name '*.py' -exec termux-fix-shebang {} + 2>/dev/null || true
 
-# ---------------------------------------------------------------- cross fim”
+# ---------------------------------------------------------------- cross file
 CROSS="$WORK/cross-$VERSION$PATCHSET.ini"
 cat > "$CROSS" <<CROSSEOF
 [binaries]
@@ -152,8 +170,9 @@ fi
 
 echo
 echo "== installed: $DESTDIR =="
-echo "Verify, then promote:"
+echo "Verify, then promote atomically:"
 echo "  ICD=$DESTDIR/share/vulkan/icd.d/freedreno_icd.aarch64.json"
 echo "  VK_ICD_FILENAMES=\$ICD VK_DRIVER_FILES=\$ICD \\"
 echo "    $TC/glibc-exec \$PREFIX/glibc/bin/vkcube --wsi xcb    # default-WSI presentation check"
-echo "  ln -sfn '$DESTDIR' '$GL/opt/mesa-glibc'"
+echo "  ln -sfn '$DESTDIR' '$PROVIDER_ROOT/current'"
+echo "  ln -sfn '$PROVIDER_ROOT/current' '$GL/opt/mesa-glibc'"

@@ -10,6 +10,7 @@ case "$MODE" in
     tests=(
       tests/repository/adopt-user-env-smoke.sh
       tests/repository/deploy-smoke.sh
+      tests/repository/local-layout-migration-smoke.sh
       tests/repository/shell-layout-smoke.sh
       tests/repository/vulkan-policy-scope-smoke.sh
       tests/repository/application-authority-boundary-smoke.sh

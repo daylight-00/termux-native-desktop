@@ -1,0 +1,306 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# Retire the legacy ~/gl Git authority and move mutable Mesa state into XDG state.
+set -Eeuo pipefail
+
+MODE=status
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --apply) MODE=apply ;;
+    --dry-run) MODE=dry-run ;;
+    --status) MODE=status ;;
+    -h|--help)
+      cat <<'USAGE'
+usage: tools/migrate-local-layout [--status|--dry-run|--apply]
+
+Retires the legacy ~/gl Git repository, moves mutable Mesa build state and
+provider candidates under XDG_STATE_HOME, and preserves old paths as explicit
+compatibility symlinks. Application payloads, selected generations and ~/gl/lib
+are not modified.
+USAGE
+      exit 0
+      ;;
+    *) printf 'unknown argument: %s\n' "$1" >&2; exit 2 ;;
+  esac
+  shift
+done
+
+: "${HOME:?HOME must be set}"
+: "${PREFIX:?PREFIX must be set}"
+
+GL=${TND_LEGACY_GL_ROOT:-$HOME/gl}
+STATE_BASE=${TND_STATE_BASE:-${XDG_STATE_HOME:-$HOME/.local/state}/termux-native-desktop}
+WORKSPACE=${TND_MESA_WORKSPACE:-$STATE_BASE/workspaces/mesa}
+PROVIDER_ROOT=${TND_MESA_PROVIDER_ROOT:-$STATE_BASE/providers/mesa}
+CANDIDATES=$PROVIDER_ROOT/candidates
+SAFETY_ROOT=${TND_LOCAL_LAYOUT_SAFETY_ROOT:-$HOME/.cache/hw-t-safety}
+EXPECTED_GL_HEAD=${TND_EXPECTED_GL_HEAD:-9c5686cd0377a38c971d8c2e358c034b070169ae}
+LOCK_DIR=$STATE_BASE/local-layout-migration.lock.d
+TIMESTAMP=${TND_MIGRATION_TIMESTAMP:-$(date -u +%Y%m%dT%H%M%SZ)}
+SAFETY_PREFIX=$SAFETY_ROOT/termux-native-desktop-local-layout-$TIMESTAMP
+LEGACY_BUNDLE=$SAFETY_PREFIX-gl-legacy-all-refs.bundle
+LEGACY_GIT_ARCHIVE=$SAFETY_PREFIX-gl-legacy-git.tar.zst
+LEGACY_DIFF=$SAFETY_PREFIX-gl-legacy-dirty.patch
+LEGACY_STATUS=$SAFETY_PREFIX-gl-legacy-status.txt
+LEGACY_FSCK=$SAFETY_PREFIX-gl-legacy-fsck.txt
+MIGRATION_MANIFEST=$SAFETY_PREFIX-migration.tsv
+STAGE=$STATE_BASE/.local-layout-migration-$TIMESTAMP-$$
+BROKEN_COMPAT=$HOME/opt/mesa-26-glibc
+
+log() { printf '%s\n' "$*"; }
+fail() { printf 'migrate-local-layout: %s\n' "$*" >&2; exit 1; }
+
+resolved_or_empty() {
+  readlink -f "$1" 2>/dev/null || true
+}
+
+legacy_provider_names() {
+  [ -d "$GL/opt" ] || return 0
+  find "$GL/opt" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort
+}
+
+status_layout() {
+  local failures=0 name target
+  printf 'GL_ROOT=%s\nSTATE_BASE=%s\nWORKSPACE=%s\nPROVIDER_ROOT=%s\n' \
+    "$GL" "$STATE_BASE" "$WORKSPACE" "$PROVIDER_ROOT"
+
+  if [ ! -e "$GL/.git" ]; then printf 'PASS\tlegacy-git-retired\n';
+  else printf 'FAIL\tlegacy-git-present\n'; failures=$((failures + 1)); fi
+
+  for name in .venv mesa; do
+    target=$WORKSPACE/$name
+    if [ -L "$GL/build/$name" ] && [ "$(resolved_or_empty "$GL/build/$name")" = "$(resolved_or_empty "$target")" ]; then
+      printf 'PASS\tbuild-%s\t%s\n' "$name" "$target"
+    else
+      printf 'FAIL\tbuild-%s\t%s\n' "$name" "$target"
+      failures=$((failures + 1))
+    fi
+  done
+
+  if [ -L "$PROVIDER_ROOT/current" ] && [ -d "$(resolved_or_empty "$PROVIDER_ROOT/current")" ]; then
+    printf 'PASS\tprovider-current\t%s\n' "$(resolved_or_empty "$PROVIDER_ROOT/current")"
+  else
+    printf 'FAIL\tprovider-current\n'
+    failures=$((failures + 1))
+  fi
+
+  if [ -L "$GL/opt/mesa-glibc" ] && [ "$(resolved_or_empty "$GL/opt/mesa-glibc")" = "$(resolved_or_empty "$PROVIDER_ROOT/current")" ]; then
+    printf 'PASS\tlegacy-active-provider\t%s\n' "$(resolved_or_empty "$GL/opt/mesa-glibc")"
+  else
+    printf 'FAIL\tlegacy-active-provider\n'
+    failures=$((failures + 1))
+  fi
+
+  if [ ! -L "$BROKEN_COMPAT" ]; then printf 'PASS\tbroken-mesa-control-retired\n';
+  else printf 'FAIL\tbroken-mesa-control-present\n'; failures=$((failures + 1)); fi
+
+  [ "$failures" -eq 0 ]
+}
+
+if [ "$MODE" = status ]; then
+  status_layout
+  exit
+fi
+
+preflight() {
+  local current_head active_resolved active_name count
+  for cmd in git tar zstd sha256sum find readlink mv ln rm mkdir chmod; do
+    command -v "$cmd" >/dev/null 2>&1 || fail "missing command: $cmd"
+  done
+
+  [ -d "$GL/.git" ] || fail "legacy Git repository is absent: $GL/.git"
+  current_head=$(git -C "$GL" rev-parse HEAD)
+  [ "$current_head" = "$EXPECTED_GL_HEAD" ] || fail "unexpected legacy Git HEAD: $current_head"
+  [ -f "$GL/.gitignore" ] || fail "legacy .gitignore is absent"
+
+  [ -d "$GL/build/.venv" ] && [ ! -L "$GL/build/.venv" ] || fail "expected mutable build venv directory"
+  [ -d "$GL/build/mesa" ] && [ ! -L "$GL/build/mesa" ] || fail "expected mutable Mesa workspace directory"
+  [ ! -e "$WORKSPACE" ] || fail "workspace destination already exists: $WORKSPACE"
+  [ ! -e "$PROVIDER_ROOT" ] || fail "provider destination already exists: $PROVIDER_ROOT"
+
+  active_resolved=$(resolved_or_empty "$GL/opt/mesa-glibc")
+  [ -n "$active_resolved" ] && [ -d "$active_resolved" ] || fail "active Mesa provider is unresolved"
+  active_name=${active_resolved##*/}
+  [ -d "$GL/opt/$active_name" ] || fail "active provider is outside legacy provider set"
+  count=$(legacy_provider_names | wc -l | tr -d ' ')
+  [ "$count" -gt 0 ] || fail "no legacy Mesa provider candidates found"
+
+  if [ "${TND_SKIP_ACTIVE_MAPPING_CHECK:-0}" != 1 ]; then
+    local maps
+    for maps in /proc/[0-9]*/maps; do
+      [ -r "$maps" ] || continue
+      if grep -F -e "$GL/opt/" -e "$GL/build/" "$maps" >/dev/null 2>&1; then
+        fail "a running process maps legacy build/provider paths: $maps"
+      fi
+    done
+  fi
+}
+
+print_plan() {
+  local name active_resolved
+  active_resolved=$(resolved_or_empty "$GL/opt/mesa-glibc")
+  printf 'retire\t%s/.git\n' "$GL"
+  printf 'retire\t%s/.gitignore\n' "$GL"
+  printf 'move\t%s/build/.venv\t%s/.venv\n' "$GL" "$WORKSPACE"
+  printf 'move\t%s/build/mesa\t%s/mesa\n' "$GL" "$WORKSPACE"
+  while IFS= read -r name; do
+    [ -n "$name" ] || continue
+    printf 'move\t%s/opt/%s\t%s/candidates/%s\n' "$GL" "$name" "$PROVIDER_ROOT" "$name"
+    printf 'compat\t%s/opt/%s\t%s/candidates/%s\n' "$GL" "$name" "$PROVIDER_ROOT" "$name"
+  done < <(legacy_provider_names)
+  printf 'active\t%s/opt/mesa-glibc\t%s/current\t%s\n' "$GL" "$PROVIDER_ROOT" "$active_resolved"
+  [ -L "$BROKEN_COMPAT" ] && printf 'retire-broken\t%s\t%s\n' "$BROKEN_COMPAT" "$(readlink "$BROKEN_COMPAT")"
+}
+
+preflight
+if [ "$MODE" = dry-run ]; then
+  print_plan
+  exit
+fi
+
+mkdir -p "$STATE_BASE" "$SAFETY_ROOT"
+if ! mkdir "$LOCK_DIR" 2>/dev/null; then
+  fail "migration lock is held: $LOCK_DIR"
+fi
+
+ACTIVE_NAME=$(basename "$(resolved_or_empty "$GL/opt/mesa-glibc")")
+BROKEN_TARGET=
+mapfile -t PROVIDER_NAMES < <(legacy_provider_names)
+mapfile -t CROSS_PATHS < <(find "$GL/build" -mindepth 1 -maxdepth 1 -type f -name 'cross-*.ini' -print | sort)
+CROSS_NAMES=()
+COMMITTED=0
+
+rollback() {
+  local rc=${1:-1} name
+  set +e
+  if [ "$COMMITTED" -eq 0 ]; then
+    if [ -L "$BROKEN_COMPAT" ]; then :;
+    elif [ -n "$BROKEN_TARGET" ]; then mkdir -p "$(dirname "$BROKEN_COMPAT")"; ln -s "$BROKEN_TARGET" "$BROKEN_COMPAT"; fi
+
+    rm -f "$GL/opt/mesa-glibc"
+    for (( idx=${#PROVIDER_NAMES[@]}-1; idx>=0; idx-- )); do
+      name=${PROVIDER_NAMES[$idx]}
+      if [ -L "$GL/opt/$name" ] && [ -d "$CANDIDATES/$name" ]; then
+        rm -f "$GL/opt/$name"
+        mv "$CANDIDATES/$name" "$GL/opt/$name"
+      fi
+    done
+    rm -f "$PROVIDER_ROOT/current"
+    if [ -n "$ACTIVE_NAME" ] && [ -d "$GL/opt/$ACTIVE_NAME" ]; then
+      ln -s "$GL/opt/$ACTIVE_NAME" "$GL/opt/mesa-glibc"
+    fi
+    rmdir "$CANDIDATES" "$PROVIDER_ROOT" 2>/dev/null || true
+
+    for (( idx=${#CROSS_NAMES[@]}-1; idx>=0; idx-- )); do
+      name=${CROSS_NAMES[$idx]}
+      if [ -L "$GL/build/$name" ] && [ -f "$WORKSPACE/legacy-cross/$name" ]; then
+        rm -f "$GL/build/$name"
+        mv "$WORKSPACE/legacy-cross/$name" "$GL/build/$name"
+      fi
+    done
+    rmdir "$WORKSPACE/legacy-cross" 2>/dev/null || true
+
+    for name in mesa .venv; do
+      if [ -L "$GL/build/$name" ] && [ -e "$WORKSPACE/$name" ]; then
+        rm -f "$GL/build/$name"
+        mv "$WORKSPACE/$name" "$GL/build/$name"
+      fi
+    done
+    rmdir "$WORKSPACE" "$(dirname "$WORKSPACE")" 2>/dev/null || true
+
+    if [ ! -e "$GL/.git" ] && [ -d "$STAGE/gl.git" ]; then mv "$STAGE/gl.git" "$GL/.git"; fi
+    if [ ! -e "$GL/.gitignore" ] && [ -f "$STAGE/gl.gitignore" ]; then mv "$STAGE/gl.gitignore" "$GL/.gitignore"; fi
+  fi
+  chmod -R u+w "$STAGE" 2>/dev/null || true
+  rm -rf "$STAGE"
+  rmdir "$LOCK_DIR" 2>/dev/null || true
+  return "$rc"
+}
+trap 'rc=$?; rollback "$rc"; exit "$rc"' ERR HUP INT TERM
+
+mkdir -p "$STAGE"
+
+# Preserve both reachable history and the complete legacy Git metadata,
+# including unreachable objects that are not representable in a normal bundle.
+git -C "$GL" bundle create "$LEGACY_BUNDLE" --all
+(
+  verify_dir=$STAGE/bundle-verify
+  mkdir -p "$verify_dir"
+  git -C "$verify_dir" init -q
+  git -C "$verify_dir" bundle verify "$LEGACY_BUNDLE" >/dev/null
+)
+git -C "$GL" status --short --branch >"$LEGACY_STATUS"
+git -C "$GL" diff --binary >"$LEGACY_DIFF"
+git -C "$GL" fsck --full --unreachable >"$LEGACY_FSCK" 2>&1 || true
+tar --zstd -cf "$LEGACY_GIT_ARCHIVE" -C "$GL" .git .gitignore
+tar --zstd -tf "$LEGACY_GIT_ARCHIVE" >/dev/null
+sha256sum "$LEGACY_BUNDLE" "$LEGACY_GIT_ARCHIVE" "$LEGACY_DIFF" "$LEGACY_STATUS" "$LEGACY_FSCK" >"$SAFETY_PREFIX-SHA256SUMS"
+
+{
+  printf 'kind\tlegacy_path\tcanonical_path\n'
+  printf 'legacy-git\t%s/.git\t%s\n' "$GL" "$LEGACY_GIT_ARCHIVE"
+  printf 'build-state\t%s/build/.venv\t%s/.venv\n' "$GL" "$WORKSPACE"
+  printf 'build-state\t%s/build/mesa\t%s/mesa\n' "$GL" "$WORKSPACE"
+} >"$MIGRATION_MANIFEST"
+
+mkdir -p "$WORKSPACE" "$CANDIDATES" "$GL/build" "$GL/opt"
+
+mv "$GL/build/.venv" "$WORKSPACE/.venv"
+ln -s "$WORKSPACE/.venv" "$GL/build/.venv"
+mv "$GL/build/mesa" "$WORKSPACE/mesa"
+ln -s "$WORKSPACE/mesa" "$GL/build/mesa"
+
+mkdir -p "$WORKSPACE/legacy-cross"
+for path in "${CROSS_PATHS[@]}"; do
+  [ -n "$path" ] || continue
+  name=${path##*/}
+  CROSS_NAMES+=("$name")
+  mv "$path" "$WORKSPACE/legacy-cross/$name"
+  ln -s "$WORKSPACE/legacy-cross/$name" "$path"
+  printf 'build-state\t%s\t%s\n' "$path" "$WORKSPACE/legacy-cross/$name" >>"$MIGRATION_MANIFEST"
+done
+
+for name in "${PROVIDER_NAMES[@]}"; do
+  [ -n "$name" ] || continue
+  mv "$GL/opt/$name" "$CANDIDATES/$name"
+  ln -s "$CANDIDATES/$name" "$GL/opt/$name"
+  printf 'provider-candidate\t%s/opt/%s\t%s/%s\n' "$GL" "$name" "$CANDIDATES" "$name" >>"$MIGRATION_MANIFEST"
+done
+
+ln -s "$CANDIDATES/$ACTIVE_NAME" "$PROVIDER_ROOT/current.new.$$"
+mv -Tf "$PROVIDER_ROOT/current.new.$$" "$PROVIDER_ROOT/current"
+rm -f "$GL/opt/mesa-glibc"
+ln -s "$PROVIDER_ROOT/current" "$GL/opt/mesa-glibc.new.$$"
+mv -Tf "$GL/opt/mesa-glibc.new.$$" "$GL/opt/mesa-glibc"
+printf 'provider-active\t%s/opt/mesa-glibc\t%s/current\n' "$GL" "$PROVIDER_ROOT" >>"$MIGRATION_MANIFEST"
+
+if [ -L "$BROKEN_COMPAT" ] && [ ! -e "$BROKEN_COMPAT" ]; then
+  BROKEN_TARGET=$(readlink "$BROKEN_COMPAT")
+  rm -f "$BROKEN_COMPAT"
+  printf 'retired-broken-symlink\t%s\t%s\n' "$BROKEN_COMPAT" "$BROKEN_TARGET" >>"$MIGRATION_MANIFEST"
+fi
+
+mv "$GL/.git" "$STAGE/gl.git"
+mv "$GL/.gitignore" "$STAGE/gl.gitignore"
+
+# Static continuity gates; no application or graphics workload is executed.
+[ ! -e "$GL/.git" ]
+[ -L "$GL/build/.venv" ] && [ "$(resolved_or_empty "$GL/build/.venv")" = "$(resolved_or_empty "$WORKSPACE/.venv")" ]
+[ -L "$GL/build/mesa" ] && [ "$(resolved_or_empty "$GL/build/mesa")" = "$(resolved_or_empty "$WORKSPACE/mesa")" ]
+for name in "${PROVIDER_NAMES[@]}"; do
+  [ -L "$GL/opt/$name" ]
+  [ "$(resolved_or_empty "$GL/opt/$name")" = "$(resolved_or_empty "$CANDIDATES/$name")" ]
+done
+[ "$(resolved_or_empty "$GL/opt/mesa-glibc")" = "$(resolved_or_empty "$PROVIDER_ROOT/current")" ]
+[ "$(resolved_or_empty "$PROVIDER_ROOT/current")" = "$(resolved_or_empty "$CANDIDATES/$ACTIVE_NAME")" ]
+[ ! -L "$BROKEN_COMPAT" ]
+
+COMMITTED=1
+chmod -R u+w "$STAGE" 2>/dev/null || true
+rm -rf "$STAGE"
+rmdir "$LOCK_DIR"
+trap - ERR HUP INT TERM
+
+printf 'MIGRATION_STATUS=applied\n'
+printf 'WORKSPACE=%s\nPROVIDER_ROOT=%s\nACTIVE_PROVIDER=%s\n' "$WORKSPACE" "$PROVIDER_ROOT" "$(resolved_or_empty "$PROVIDER_ROOT/current")"
+printf 'LEGACY_BUNDLE=%s\nLEGACY_GIT_ARCHIVE=%s\nLEGACY_DIFF=%s\nMIGRATION_MANIFEST=%s\n' \
+  "$LEGACY_BUNDLE" "$LEGACY_GIT_ARCHIVE" "$LEGACY_DIFF" "$MIGRATION_MANIFEST"

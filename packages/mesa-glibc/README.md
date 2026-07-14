@@ -100,14 +100,15 @@ Changes to any participating layer can trigger affected graphics gates.
 
 ## Versioned install and promotion
 
-Generated provider state remains outside Git:
+Generated provider state remains outside Git and outside the runtime adapter tree:
 
 ```text
-$HOME/gl/build/mesa/src/
-$HOME/gl/build/mesa/build-*/
-$HOME/gl/build/mesa/cross-*.ini
-$HOME/gl/opt/mesa-*/
+${XDG_STATE_HOME:-$HOME/.local/state}/termux-native-desktop/workspaces/mesa/
+${XDG_STATE_HOME:-$HOME/.local/state}/termux-native-desktop/providers/mesa/candidates/
+${XDG_STATE_HOME:-$HOME/.local/state}/termux-native-desktop/providers/mesa/current
 ```
+
+Legacy `$HOME/gl/build/{.venv,mesa}` and `$HOME/gl/opt/mesa-*` paths are compatibility symlinks only.
 
 The intended provider lifecycle is:
 
@@ -124,7 +125,13 @@ A versioned directory is useful only when its provider bytes are actually retain
 
 ## Current stable pointer
 
-The current live consumer policy expects the managed stable Mesa prefix under:
+The canonical active pointer is:
+
+```text
+${XDG_STATE_HOME:-$HOME/.local/state}/termux-native-desktop/providers/mesa/current
+```
+
+The current live consumer policy retains this compatibility path:
 
 ```text
 $HOME/gl/opt/mesa-glibc
@@ -156,9 +163,7 @@ packages/mesa-glibc/patches/mesa
     -> $HOME/gl/build/patches/mesa
 ```
 
-These are migration compatibility paths, not architectural identities.
-
-The next multi-file provider/build migration must use the project atomic-activation design rather than relying on mutable checkout symlinks.
+These are migration compatibility paths, not architectural identities. Mutable build state and provider candidates are migrated with `tools/migrate-local-layout`; repository deployment remains independently atomic.
 
 ## Revalidation triggers
 
