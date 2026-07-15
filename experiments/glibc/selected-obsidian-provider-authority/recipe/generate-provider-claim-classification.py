@@ -16,6 +16,7 @@ LIBTASN1_PROVIDER_REVIEW = Path('experiments/glibc/selected-obsidian-provider-au
 LIBEPOXY_PROVIDER_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/libepoxy-reference-consumed-provider-authority.tsv')
 PANGO_PROVIDER_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/pango-reference-consumed-provider-authority.tsv')
 LIBJPEG_DISPOSITION = Path('experiments/glibc/selected-obsidian-provider-authority/review/libjpeg-so-62-provider-candidate-disposition.tsv')
+LIBJPEG_RESULT_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/libjpeg-so-62-compatibility-provider-candidate-result-review.tsv')
 
 CLAIM_OUTPUT = Path('experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification.tsv')
 SUP02_OUTPUT = Path('experiments/glibc/selected-obsidian-provider-authority/review/provider-sup-02-request-disposition.tsv')
@@ -118,6 +119,7 @@ def main() -> None:
     libepoxy_provider_reviews = read_tsv(repo / LIBEPOXY_PROVIDER_REVIEW)
     pango_provider_reviews = read_tsv(repo / PANGO_PROVIDER_REVIEW)
     libjpeg_dispositions = read_tsv(repo / LIBJPEG_DISPOSITION)
+    libjpeg_result_reviews = read_tsv(repo / LIBJPEG_RESULT_REVIEW)
     provider_reviews = xorg_provider_reviews + libtasn1_provider_reviews + libepoxy_provider_reviews + pango_provider_reviews
     if len(roots) != 28:
         raise SystemExit(f'expected 28 root rows, found {len(roots)}')
@@ -137,11 +139,18 @@ def main() -> None:
         raise SystemExit(f'expected 1 Pango provider review, found {len(pango_provider_reviews)}')
     if len(libjpeg_dispositions) != 1:
         raise SystemExit(f'expected 1 libjpeg disposition row, found {len(libjpeg_dispositions)}')
+    if len(libjpeg_result_reviews) != 1:
+        raise SystemExit(f'expected 1 libjpeg result review row, found {len(libjpeg_result_reviews)}')
     libjpeg_disposition = libjpeg_dispositions[0]
+    libjpeg_result_review = libjpeg_result_reviews[0]
     if libjpeg_disposition['requirement_id'] != 'OJ-001' or libjpeg_disposition['required_lookup_identity'] != 'libjpeg.so.62':
         raise SystemExit('libjpeg disposition does not bind canonical OJ-001 identity')
-    if libjpeg_disposition['disposition'] != 'EXPLICIT_SOURCE_BUILD_COMPATIBILITY_PROVIDER_REQUIRED':
-        raise SystemExit('libjpeg disposition must require explicit compatibility-provider production')
+    if libjpeg_disposition['disposition'] != 'COMPATIBILITY_PROVIDER_CANDIDATE_REBUILD_REQUIRED_NO_RUNPATH':
+        raise SystemExit('libjpeg disposition must require a runpath-free compatibility-provider rebuild')
+    if libjpeg_result_review['requirement_id'] != 'OJ-001' or libjpeg_result_review['candidate_decision'] != 'REJECTED_REBUILD_REQUIRED_NO_RUNPATH':
+        raise SystemExit('libjpeg result review does not preserve the rejected first-candidate boundary')
+    if libjpeg_result_review['dt_runpath_state'] != 'PRESENT_COLON_ONLY_BUILD_TREE_PLACEHOLDER':
+        raise SystemExit('libjpeg result review no longer records the blocking runpath')
     semantic_by_root = {row['root_review_id']: row for row in semantic_reviews}
     if len(semantic_by_root) != len(semantic_reviews):
         raise SystemExit('duplicate root_review_id in no-token semantic review')
@@ -197,10 +206,10 @@ def main() -> None:
         )
 
         if root['object_correction_requirement_set'] != 'NONE':
-            artifact_gap = 'OJ-001_EXPLICIT_COMPATIBILITY_PROVIDER_BUILD_REQUIRED_NO_EXACT_REPOSITORY_CANDIDATE'
-            artifact_action = 'PRODUCE_AND_ANALYZE_EXACT_LIBJPEG_SO_62_COMPATIBILITY_PROVIDER_CANDIDATE_FROM_PINNED_SOURCE'
-            artifact_state = 'REQUIREMENT_IDENTITY_DECIDED_COMPATIBILITY_CANDIDATE_NOT_YET_PRODUCED'
-            common_evidence += f';{LIBJPEG_DISPOSITION.name};{libjpeg_disposition["review_id"]}'
+            artifact_gap = 'OJ-001_FIRST_COMPATIBILITY_CANDIDATE_REJECTED_COLON_ONLY_RUNPATH_CORRECTED_CANDIDATE_NOT_YET_PRODUCED'
+            artifact_action = 'REBUILD_EXACT_LIBJPEG_SO_62_COMPATIBILITY_PROVIDER_CANDIDATE_WITH_CMAKE_SKIP_RPATH_ON_AND_REQUIRE_NO_DT_RPATH_OR_DT_RUNPATH'
+            artifact_state = 'FIRST_COMPATIBILITY_CANDIDATE_IDENTITY_REVIEWED_REBUILD_REQUIRED_NO_RUNPATH'
+            common_evidence += f';{LIBJPEG_DISPOSITION.name};{libjpeg_disposition["review_id"]};{LIBJPEG_RESULT_REVIEW.name};{libjpeg_result_review["review_id"]}'
         else:
             artifact_gap = 'NONE_FOR_EXACT_CANDIDATE_ARTIFACT_AND_NAMED_MEMBER_IDENTITY'
             artifact_action = 'NONE_RETAIN_EXACT_ARTIFACT_AND_MEMBER_DIGESTS_AT_TRANSFER'
@@ -247,9 +256,9 @@ def main() -> None:
             adaptation_gap += ';CF-001_CF-002_CF-003_CF-004_ALIAS_SUCCESSOR_AND_ROLLBACK_POLICY'
             adaptation_action += ';REVIEW_CONSUMER_ALIAS_BINDING_AND_VERSION_DRIFT_POLICY'
         if root['object_correction_requirement_set'] != 'NONE':
-            adaptation_gap += ';OJ-001_MINIMAL_WITH_JPEG8_OFF_COMPATIBILITY_BUILD_NOT_YET_PRODUCED'
-            adaptation_action = 'PRODUCE_EXACT_COMPATIBILITY_CANDIDATE_THEN_REVIEW_MINIMAL_SOURCE_BUILD_DELTA_AND_OBJECT_IMPACT'
-            adaptation_evidence_suffix += f';{LIBJPEG_DISPOSITION.name};{libjpeg_disposition["review_id"]}'
+            adaptation_gap += ';OJ-001_FIRST_WITH_JPEG8_OFF_BUILD_REJECTED_FOR_RUNPATH_CORRECTED_BUILD_NOT_YET_PRODUCED'
+            adaptation_action = 'REBUILD_EXACT_COMPATIBILITY_CANDIDATE_WITH_RPATH_DISABLED_THEN_REVIEW_MINIMAL_SOURCE_BUILD_DELTA_AND_OBJECT_IMPACT'
+            adaptation_evidence_suffix += f';{LIBJPEG_DISPOSITION.name};{libjpeg_disposition["review_id"]};{LIBJPEG_RESULT_REVIEW.name};{libjpeg_result_review["review_id"]}'
 
         claims.append({
             'claim_id': f'PCC-{root_slug}-ADAPTATION',
@@ -292,9 +301,9 @@ def main() -> None:
                 'selected-object-authority-base.tsv'
             )
             if root['object_correction_requirement_set'] != 'NONE':
-                provider_gap = 'EXACT_COMPATIBILITY_PROVIDER_ARTIFACT_MEMBER_DIGEST_AND_SONAME_NOT_YET_PRODUCED;ADAPTATION_CLASSIFICATION;CAPABILITY_NECESSITY_AND_CONSUMER_BINDING;CONFLICT_AND_EXCLUSION_REVIEW;UPDATE_AND_ROLLBACK_BOUNDARY'
-                provider_action = 'RUN_BOUNDED_TERMUX_COMPATIBILITY_CANDIDATE_BUILD_AND_ANALYZER_THEN_PERFORM_SEPARATE_PROVIDER_AUTHORITY_REVIEW'
-                provider_state = 'COMPATIBILITY_PROVIDER_SPECIFIED_CANDIDATE_NOT_YET_PRODUCED'
+                provider_gap = 'RUNPATH_FREE_EXACT_COMPATIBILITY_PROVIDER_ARTIFACT_MEMBER_DIGEST_AND_SONAME_NOT_YET_PRODUCED;ADAPTATION_CLASSIFICATION;CAPABILITY_NECESSITY_AND_CONSUMER_BINDING;CONFLICT_AND_EXCLUSION_REVIEW;UPDATE_AND_ROLLBACK_BOUNDARY'
+                provider_action = 'REBUILD_BOUNDED_TERMUX_COMPATIBILITY_CANDIDATE_WITH_NO_RPATH_OR_RUNPATH_THEN_PERFORM_SEPARATE_PROVIDER_AUTHORITY_REVIEW'
+                provider_state = 'FIRST_COMPATIBILITY_CANDIDATE_REJECTED_RUNPATH_REBUILD_REQUIRED'
             else:
                 provider_gap = ('CAPABILITY_NECESSITY_AND_CONSUMER_BINDING;CONFLICT_AND_EXCLUSION_REVIEW;UPDATE_AND_ROLLBACK_BOUNDARY' if semantic_review else 'ADAPTATION_CLASSIFICATION;CAPABILITY_NECESSITY_AND_CONSUMER_BINDING;CONFLICT_AND_EXCLUSION_REVIEW;UPDATE_AND_ROLLBACK_BOUNDARY')
                 provider_action = ('CAPABILITY_LEVEL_PROVIDER_REVIEW_WITH_TARGETED_PASSIVE_CONSUMER_BINDING_ONLY_WHERE_AMBIGUOUS' if semantic_review else 'CAPABILITY_LEVEL_PROVIDER_REVIEW_AFTER_ADAPTATION_CLASSIFICATION_WITH_TARGETED_PASSIVE_CONSUMER_BINDING_ONLY_WHERE_AMBIGUOUS')
@@ -334,12 +343,12 @@ def main() -> None:
         'supplier_or_reference_boundary': 'AUTHORITATIVE_WORKLOAD_OR_REFERENCE_REQUIREMENT',
         'project_owned_changed_boundary': 'PROJECT_INTERPRETATION_OF_THE_REQUIRED_RUNTIME_IDENTITY',
         'risk_modifiers': 'ABI_FAMILY_SUBSTITUTION;GUI_IMAGE_DECODING',
-        'existing_evidence': f'0157_SUP-01_RESPONSE;0158_SUP-01_RESPONSE_REVIEW;libjpeg.so.8_SUBSTITUTION_REJECTED;{LIBJPEG_DISPOSITION.name};{libjpeg_disposition["review_id"]}',
-        'remaining_gap': 'EXACT_LIBJPEG_SO_62_COMPATIBILITY_PROVIDER_ARTIFACT_MEMBER_DIGEST_AND_SONAME_NOT_YET_PRODUCED',
-        'minimum_closure_action': 'RUN_BOUNDED_USER_TERMUX_SOURCE_BUILD_AND_ELF_ANALYZER_FOR_PINNED_LIBJPEG_TURBO_3_1_0_WITH_JPEG8_OFF',
+        'existing_evidence': f'0157_SUP-01_RESPONSE;0158_SUP-01_RESPONSE_REVIEW;libjpeg.so.8_SUBSTITUTION_REJECTED;{LIBJPEG_DISPOSITION.name};{libjpeg_disposition["review_id"]};{LIBJPEG_RESULT_REVIEW.name};{libjpeg_result_review["review_id"]}',
+        'remaining_gap': 'RUNPATH_FREE_EXACT_LIBJPEG_SO_62_COMPATIBILITY_PROVIDER_ARTIFACT_MEMBER_DIGEST_AND_SONAME_NOT_YET_PRODUCED',
+        'minimum_closure_action': 'REBUILD_BOUNDED_USER_TERMUX_SOURCE_CANDIDATE_WITH_CMAKE_SKIP_RPATH_ON_AND_REJECT_ANY_DT_RPATH_OR_DT_RUNPATH',
         'explicitly_excluded_evidence': 'SUP-02_BUILD_ATTESTATION_FOR_THE_WRONG_ABI_FAMILY;LIBJPEG_SO_8_ALIAS_OR_SUBSTITUTION',
         'escalation_trigger': 'COMPATIBILITY_CANDIDATE_OUTPUT_DIFFERS_FROM_EXPECTED_SONAME_OR_SOURCE_BUILD_COORDINATES',
-        'classification_state': 'EXPLICIT_COMPATIBILITY_PROVIDER_BUILD_REQUIRED_CANDIDATE_NOT_YET_PRODUCED',
+        'classification_state': 'FIRST_COMPATIBILITY_CANDIDATE_REJECTED_RUNPATH_REBUILD_REQUIRED',
         'authority_effect': 'NO_PROVIDER_OR_TARGET_EFFECT',
         'prohibited_inference': 'A_BUILD_RECORD_FOR_LIBJPEG_SO_8_CANNOT_SATISFY_A_LIBJPEG_SO_62_REQUIREMENT',
     })
@@ -504,7 +513,10 @@ def main() -> None:
         ('oj001_disposition', libjpeg_disposition['disposition']),
         ('oj001_required_identity', libjpeg_disposition['required_lookup_identity']),
         ('oj001_candidate_state', libjpeg_disposition['exact_repository_candidate_state']),
-        ('next_review_tranche', 'LIBJPEG_SO_62_COMPATIBILITY_PROVIDER_CANDIDATE_PRODUCTION'),
+        ('oj001_first_candidate_decision', libjpeg_result_review['candidate_decision']),
+        ('oj001_first_candidate_sha256', libjpeg_result_review['candidate_sha256']),
+        ('oj001_first_candidate_runpath_state', libjpeg_result_review['dt_runpath_state']),
+        ('next_review_tranche', 'LIBJPEG_SO_62_RUNPATH_FREE_COMPATIBILITY_PROVIDER_CANDIDATE_REBUILD'),
     ]
 
     write_tsv(out_root / CLAIM_OUTPUT, CLAIM_FIELDS, claims)

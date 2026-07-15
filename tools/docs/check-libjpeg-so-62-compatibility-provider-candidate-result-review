@@ -1,0 +1,91 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT=${1:-$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)}
+REVIEW=experiments/glibc/selected-obsidian-provider-authority/review
+required=(
+  docs/evidence/libjpeg-so-62-compatibility-provider-candidate-result-review.md
+  docs/evidence/libjpeg-so-62-provider-candidate-disposition.md
+  "$REVIEW/libjpeg-so-62-compatibility-provider-candidate-result-review.tsv"
+  "$REVIEW/libjpeg-so-62-provider-candidate-disposition.tsv"
+  "$REVIEW/provider-claim-classification.tsv"
+  "$REVIEW/provider-claim-classification-metadata.tsv"
+)
+for rel in "${required[@]}"; do
+  [ -f "$ROOT/$rel" ] || { echo "libjpeg-candidate-result-review: FAIL: missing $rel" >&2; exit 1; }
+done
+python3 - "$ROOT" <<'PY'
+from pathlib import Path
+import csv,sys
+root=Path(sys.argv[1]); review=root/'experiments/glibc/selected-obsidian-provider-authority/review'
+def read(name):
+    with (review/name).open(newline='',encoding='utf-8') as f: return list(csv.DictReader(f,delimiter='\t'))
+errors=[]
+rows=read('libjpeg-so-62-compatibility-provider-candidate-result-review.tsv')
+dispositions=read('libjpeg-so-62-provider-candidate-disposition.tsv')
+claims={r['claim_id']:r for r in read('provider-claim-classification.tsv')}
+meta={r['key']:r['value'] for r in read('provider-claim-classification-metadata.tsv')}
+if len(rows)!=1: errors.append(f'expected one result review row, found {len(rows)}')
+row=rows[0] if rows else {}
+expected={
+'review_id':'LIBJPEG-OJ-001-CAND-001','requirement_id':'OJ-001',
+'result_archive_sha256':'e9ab2755c8d70d2c21e33b87f4ea438702e0dbaf8a8718480ea78792394369c8',
+'repository_head':'7978a7d60182d03866b38bb0a8412207819d3c16','repository_tree':'214d4324819cdec39dec531ba05ebfd8375f7f0f',
+'source_version':'3.1.0','source_sha256':'9564c72b1dfd1d6fe6274c5f95a8d989b59854575d4bbee44ade7bc17aa9bc93',
+'cmake_version':'4.4.0','candidate_member':'libjpeg.so.62.4.0',
+'candidate_sha256':'1d32a4b12ef3a6032626af13b69a64c45a0a0a9bb4090e0b61d9312811208d88',
+'candidate_size':'770688','elf_class':'ELF64','elf_machine':'AArch64','elf_type':'DYN','dt_soname':'libjpeg.so.62',
+'dt_needed':'libc.so.6;ld-linux-aarch64.so.1','dt_runpath_state':'PRESENT_COLON_ONLY_BUILD_TREE_PLACEHOLDER',
+'dt_runpath_length':'175','dt_runpath_value':'COLON_ONLY_175','protected_state':'UNCHANGED',
+'build_result':'SCRATCH_BUILD_SUCCEEDED','candidate_decision':'REJECTED_REBUILD_REQUIRED_NO_RUNPATH',
+'authority_effect':'RESULT_REVIEW_ONLY_NO_PROVIDER_COMPOSITION_TARGET_MATERIALIZATION_OR_ACTIVATION_EFFECT',
+}
+for k,v in expected.items():
+    if row.get(k)!=v: errors.append(f'{k}: expected {v}, got {row.get(k)!r}')
+for field,token in [
+ ('symbol_version_set','LIBJPEG_6.2'),('symbol_version_set','LIBJPEGTURBO_6.2'),
+ ('rebuild_delta','CMAKE_SKIP_RPATH_ON'),('rebuild_delta','NO_DT_RPATH_OR_DT_RUNPATH'),
+ ('next_action','REBUILD_EXACT_PINNED_CANDIDATE'),('prohibited_inference','DOES_NOT_ACCEPT_THE_FIRST_ELF_AS_PROVIDER'),
+ ('prohibited_inference','COLON_ONLY_RUNPATH_AS_EMPTY')]:
+    if token not in row.get(field,''): errors.append(f'{field} lacks {token}')
+if len(dispositions)!=1 or dispositions[0].get('disposition')!='COMPATIBILITY_PROVIDER_CANDIDATE_REBUILD_REQUIRED_NO_RUNPATH':
+    errors.append('canonical disposition does not require runpath-free rebuild')
+want={
+'PCC-LIBJPEG-TURBO-ARTIFACT':('FIRST_COMPATIBILITY_CANDIDATE_IDENTITY_REVIEWED_REBUILD_REQUIRED_NO_RUNPATH','CORRECTED_CANDIDATE_NOT_YET_PRODUCED'),
+'PCC-LIBJPEG-TURBO-PROVIDER':('FIRST_COMPATIBILITY_CANDIDATE_REJECTED_RUNPATH_REBUILD_REQUIRED','RUNPATH_FREE_EXACT_COMPATIBILITY_PROVIDER'),
+'PCC-OJ-001-REQUIRED-OBJECT':('FIRST_COMPATIBILITY_CANDIDATE_REJECTED_RUNPATH_REBUILD_REQUIRED','RUNPATH_FREE_EXACT_LIBJPEG_SO_62'),
+}
+for cid,(state,gap) in want.items():
+    claim=claims.get(cid,{})
+    if claim.get('classification_state')!=state: errors.append(f'{cid}: state differs')
+    if gap not in claim.get('remaining_gap',''): errors.append(f'{cid}: gap differs')
+    if 'libjpeg-so-62-compatibility-provider-candidate-result-review.tsv' not in claim.get('existing_evidence',''):
+        errors.append(f'{cid}: result review is not cited')
+    if 'ACCEPTED' in claim.get('authority_effect',''): errors.append(f'{cid}: authority was broadened')
+meta_expected={
+'oj001_disposition':'COMPATIBILITY_PROVIDER_CANDIDATE_REBUILD_REQUIRED_NO_RUNPATH',
+'oj001_first_candidate_decision':'REJECTED_REBUILD_REQUIRED_NO_RUNPATH',
+'oj001_first_candidate_sha256':'1d32a4b12ef3a6032626af13b69a64c45a0a0a9bb4090e0b61d9312811208d88',
+'oj001_first_candidate_runpath_state':'PRESENT_COLON_ONLY_BUILD_TREE_PLACEHOLDER',
+'next_review_tranche':'LIBJPEG_SO_62_RUNPATH_FREE_COMPATIBILITY_PROVIDER_CANDIDATE_REBUILD',
+}
+for k,v in meta_expected.items():
+    if meta.get(k)!=v: errors.append(f'metadata {k}: expected {v}, got {meta.get(k)!r}')
+state=(root/'docs/current/STATE.yaml').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); brief=(root/'docs/current/BRIEF.md').read_text(); evidence=(root/'docs/evidence/libjpeg-so-62-compatibility-provider-candidate-result-review.md').read_text(); catalog=(root/'docs/catalog.tsv').read_text()
+markers=[
+ ('state version','state_version: 2026-07-15.15' in state),
+ ('state first rejection','first_candidate_state: rejected-rebuild-required-no-runpath' in state),
+ ('active task','Task ID: `rebuild-libjpeg-so-62-compatibility-provider-candidate-without-runpath`' in active),
+ ('active no runpath','CMAKE_SKIP_RPATH=ON' in active and 'required DT_RPATH/DT_RUNPATH state: absent' in active),
+ ('brief rejection','175-character colon-only `DT_RUNPATH`' in brief),
+ ('evidence CMake boundary','CMake was installed separately by the user' in evidence),
+ ('evidence no in-place patch','does not normalize, strip in place, or accept the first object' in evidence),
+ ('catalog','libjpeg-so-62-compatibility-provider-candidate-result-review\tevidence\tcurrent\tcanonical' in catalog),
+]
+for label,ok in markers:
+    if not ok: errors.append(f'missing current marker: {label}')
+if errors:
+    for e in errors: print('libjpeg-candidate-result-review: FAIL:',e,file=sys.stderr)
+    raise SystemExit(1)
+print('libjpeg-candidate-result-review: PASS: first exact SONAME-62 build is preserved and rejected for colon-only RUNPATH')
+PY
+echo 'libjpeg-candidate-result-review: all checks passed'

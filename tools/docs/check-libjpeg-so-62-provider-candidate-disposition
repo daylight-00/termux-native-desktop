@@ -4,7 +4,9 @@ ROOT=${1:-$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)}
 REVIEW=experiments/glibc/selected-obsidian-provider-authority/review
 required=(
   docs/evidence/libjpeg-so-62-provider-candidate-disposition.md
+  docs/evidence/libjpeg-so-62-compatibility-provider-candidate-result-review.md
   "$REVIEW/libjpeg-so-62-provider-candidate-disposition.tsv"
+  "$REVIEW/libjpeg-so-62-compatibility-provider-candidate-result-review.tsv"
   "$REVIEW/generic-build-attestation-adaptation-object-review-set.tsv"
   "$REVIEW/generic-build-attestation-adaptation-gap-evidence-supply-batch-sup-01-response-review.tsv"
   "$REVIEW/generic-recipe-binding-and-drift-target-receipt-review.tsv"
@@ -42,8 +44,8 @@ expected={
 'upstream_source_ref':'libjpeg-turbo/libjpeg-turbo@3.1.0',
 'upstream_source_sha256':'9564c72b1dfd1d6fe6274c5f95a8d989b59854575d4bbee44ade7bc17aa9bc93',
 'expected_compatibility_soname':'libjpeg.so.62','expected_compatibility_concrete_member':'libjpeg.so.62.4.0',
-'disposition':'EXPLICIT_SOURCE_BUILD_COMPATIBILITY_PROVIDER_REQUIRED',
-'authority_effect':'REQUIREMENT_AND_CANDIDATE_PRODUCTION_SPECIFICATION_ONLY_NO_PROVIDER_COMPOSITION_TARGET_MATERIALIZATION_OR_ACTIVATION_EFFECT',
+'disposition':'COMPATIBILITY_PROVIDER_CANDIDATE_REBUILD_REQUIRED_NO_RUNPATH',
+'authority_effect':'FIRST_CANDIDATE_RESULT_REVIEW_ONLY_NO_PROVIDER_COMPOSITION_TARGET_MATERIALIZATION_OR_ACTIVATION_EFFECT',
 }
 for k,v in expected.items():
     if row.get(k)!=v: errors.append(f'{k}: expected {v}, got {row.get(k)!r}')
@@ -51,8 +53,9 @@ for field,token in [
  ('repository_candidate_search_scope','TERMUX_PACMAN_GLIBC_PACKAGES_PINNED_AND_CURRENT'),
  ('upstream_default_abi_mode','WITH_JPEG8=OFF'),('upstream_default_abi_mode','SO_AGE=4'),
  ('required_build_delta','REMOVE_WITH_JPEG8_ON'),('required_build_delta','WITHOUT_INSTALL_ALIAS_CREATION_OR_ACTIVATION'),
- ('next_action','USER_TERMUX_SOURCE_BUILD_AND_ELF_ANALYZER'),
- ('prohibited_inference','DOES_NOT_ACCEPT_LIBJPEG_SO_8_AS_SUBSTITUTE'),('prohibited_inference','CREATE_A_SONAME_ALIAS'),
+ ('required_build_delta','CMAKE_SKIP_RPATH_ON'),('required_build_delta','NO_DT_RPATH_OR_DT_RUNPATH'),
+ ('next_action','REBUILD_BOUNDED_USER_TERMUX_SOURCE_CANDIDATE'),
+ ('prohibited_inference','DOES_NOT_ACCEPT_LIBJPEG_SO_8_AS_SUBSTITUTE'),('prohibited_inference','CREATE_A_SONAME_ALIAS'),('prohibited_inference','COLON_ONLY_RUNPATH_CANDIDATE'),
 ]:
     if token not in row.get(field,''): errors.append(f'{field} lacks {token}')
 obj=next((r for r in objects if r['object_review_id']==row.get('object_review_id')),None)
@@ -68,9 +71,9 @@ br=next((r for r in binding if r['evidence_row_id']==row.get('evidence_row_id'))
 if not br or br.get('recipe_source_sha256')!=row.get('upstream_source_sha256'): errors.append('pinned source digest differs from canonical recipe binding')
 claim={r['claim_id']:r for r in claims}
 want={
-'PCC-LIBJPEG-TURBO-ARTIFACT':('REQUIREMENT_IDENTITY_DECIDED_COMPATIBILITY_CANDIDATE_NOT_YET_PRODUCED','OJ-001_EXPLICIT_COMPATIBILITY_PROVIDER_BUILD_REQUIRED'),
-'PCC-LIBJPEG-TURBO-PROVIDER':('COMPATIBILITY_PROVIDER_SPECIFIED_CANDIDATE_NOT_YET_PRODUCED','EXACT_COMPATIBILITY_PROVIDER_ARTIFACT_MEMBER_DIGEST_AND_SONAME_NOT_YET_PRODUCED'),
-'PCC-OJ-001-REQUIRED-OBJECT':('EXPLICIT_COMPATIBILITY_PROVIDER_BUILD_REQUIRED_CANDIDATE_NOT_YET_PRODUCED','EXACT_LIBJPEG_SO_62_COMPATIBILITY_PROVIDER_ARTIFACT_MEMBER_DIGEST_AND_SONAME_NOT_YET_PRODUCED'),
+'PCC-LIBJPEG-TURBO-ARTIFACT':('FIRST_COMPATIBILITY_CANDIDATE_IDENTITY_REVIEWED_REBUILD_REQUIRED_NO_RUNPATH','CORRECTED_CANDIDATE_NOT_YET_PRODUCED'),
+'PCC-LIBJPEG-TURBO-PROVIDER':('FIRST_COMPATIBILITY_CANDIDATE_REJECTED_RUNPATH_REBUILD_REQUIRED','RUNPATH_FREE_EXACT_COMPATIBILITY_PROVIDER_ARTIFACT_MEMBER_DIGEST_AND_SONAME_NOT_YET_PRODUCED'),
+'PCC-OJ-001-REQUIRED-OBJECT':('FIRST_COMPATIBILITY_CANDIDATE_REJECTED_RUNPATH_REBUILD_REQUIRED','RUNPATH_FREE_EXACT_LIBJPEG_SO_62_COMPATIBILITY_PROVIDER_ARTIFACT_MEMBER_DIGEST_AND_SONAME_NOT_YET_PRODUCED'),
 }
 for cid,(state,gap) in want.items():
     r=claim.get(cid,{})
@@ -80,27 +83,30 @@ for cid,(state,gap) in want.items():
 if claim.get('PCC-LIBJPEG-TURBO-PROVIDER',{}).get('authority_effect')!='NO_PROVIDER_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT': errors.append('libjpeg provider authority was broadened')
 want_meta={
 'provider_review_count':'7','provider_authority_accepted_count':'7','provider_authority_open_count':'21',
-'oj001_disposition':'EXPLICIT_SOURCE_BUILD_COMPATIBILITY_PROVIDER_REQUIRED','oj001_required_identity':'libjpeg.so.62',
+'oj001_disposition':'COMPATIBILITY_PROVIDER_CANDIDATE_REBUILD_REQUIRED_NO_RUNPATH','oj001_required_identity':'libjpeg.so.62',
 'oj001_candidate_state':'NO_EXACT_SONAME_62_PACKAGE_DEFINITION_OR_BOUND_ARTIFACT_FOUND',
-'next_review_tranche':'LIBJPEG_SO_62_COMPATIBILITY_PROVIDER_CANDIDATE_PRODUCTION',
+'oj001_first_candidate_decision':'REJECTED_REBUILD_REQUIRED_NO_RUNPATH',
+'oj001_first_candidate_sha256':'1d32a4b12ef3a6032626af13b69a64c45a0a0a9bb4090e0b61d9312811208d88',
+'oj001_first_candidate_runpath_state':'PRESENT_COLON_ONLY_BUILD_TREE_PLACEHOLDER',
+'next_review_tranche':'LIBJPEG_SO_62_RUNPATH_FREE_COMPATIBILITY_PROVIDER_CANDIDATE_REBUILD',
 }
 for k,v in want_meta.items():
     if meta.get(k)!=v: errors.append(f'metadata {k}: expected {v}, got {meta.get(k)!r}')
 state=(root/'docs/current/STATE.yaml').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); brief=(root/'docs/current/BRIEF.md').read_text(); status=(root/'STATUS.md').read_text(); catalog=(root/'docs/catalog.tsv').read_text(); evidence=(root/'docs/evidence/libjpeg-so-62-provider-candidate-disposition.md').read_text()
 markers=[
-('state version','state_version: 2026-07-15.14' in state),('state task','produce-libjpeg-so-62-compatibility-provider-candidate' in state),
-('active task','Task ID: `produce-libjpeg-so-62-compatibility-provider-candidate`' in active),
-('brief task','produce-libjpeg-so-62-compatibility-provider-candidate' in brief),
-('status disposition','LIBJPEG_SO_62_EXPLICIT_COMPATIBILITY_PROVIDER_BUILD_REQUIRED' in status),
+('state version','state_version: 2026-07-15.15' in state),('state task','rebuild-libjpeg-so-62-compatibility-provider-candidate-without-runpath' in state),
+('active task','Task ID: `rebuild-libjpeg-so-62-compatibility-provider-candidate-without-runpath`' in active),
+('brief task','rebuild-libjpeg-so-62-compatibility-provider-candidate-without-runpath' in brief),
+('status disposition','LIBJPEG_SO_62_FIRST_CANDIDATE_REJECTED_RUNPATH_FREE_REBUILD_REQUIRED' in status),
 ('catalog','libjpeg-so-62-provider-candidate-disposition\tevidence\tcurrent\tcanonical' in catalog),
-('evidence expected concrete','libjpeg.so.62.4.0' in evidence),('evidence no alias','not an alias bridge' in evidence),
+('evidence expected concrete','libjpeg.so.62.4.0' in evidence),('evidence no alias','not an alias bridge' in evidence),('evidence rebuild','CMAKE_SKIP_RPATH=ON' in evidence),
 ]
 for label,ok in markers:
     if not ok: errors.append(f'missing current marker: {label}')
 if errors:
     for e in errors: print('libjpeg-so-62-disposition: FAIL:',e,file=sys.stderr)
     raise SystemExit(1)
-print('libjpeg-so-62-disposition: PASS: SONAME-8 substitution rejected and pinned v6b compatibility-provider production is required')
+print('libjpeg-so-62-disposition: PASS: SONAME-8 substitution and first runpath-bearing candidate are rejected; clean rebuild required')
 PY
 
 echo 'libjpeg-so-62-disposition: all checks passed'

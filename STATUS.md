@@ -1,6 +1,6 @@
 # Status
 
-> **State:** bundle-native documentation and operations control planes active; compact constitutional authority installed; ADR 0005 claim classification complete; seven no-token recipes confirmed Class A and all seven bounded provider roots accepted; Pango filename continuity decided; libjpeg.so.62 explicit compatibility-provider production active
+> **State:** bundle-native documentation and operations control planes active; compact constitutional authority installed; ADR 0005 claim classification complete; seven no-token recipes confirmed Class A and all seven bounded provider roots accepted; Pango filename continuity decided; libjpeg.so.62 first candidate rejected for runpath; corrected scratch rebuild active
 > **Updated:** 2026-07-15
 
 ## Repository and deployment consolidation
@@ -11,6 +11,7 @@
 - Direct checkout-to-live symlinks are superseded by immutable materialized repository releases and a stable atomic `current` pointer.
 - `tools/deploy --profile workstation|full` owns managed public leaves; external payloads, selected generations, provider installs, build trees and user state remain outside this cleanup transaction.
 - The provider-authority corpus is classified under ADR 0005: 89 separated claims and 28 historical SUP-02 requests reclassified as 14 narrowed, 7 replaced and 7 unnecessary. Seven exact provider claims are accepted: four X.Org members for bounded selected GTK X11 scope, libtasn1 for bounded external GnuTLS 3.8.9 ASN.1/security scope, libepoxy for bounded GTK 3.24.49 X11 GLX dispatch, and the exact three-member Pango 1.54.0 family for bounded GTK text/FreeType/Fontconfig/Cairo scope with explicit SONAME continuity. No composition, target row or activation is accepted.
+- OJ-001 produced one exact scratch-built `libjpeg.so.62.4.0` AArch64 object from the pinned source. Its source/member/SONAME identity and unchanged protected state are accepted as result facts, but the object is rejected for provider review because it contains a 175-character colon-only `DT_RUNPATH`. A clean rebuild with `CMAKE_SKIP_RPATH=ON` and no `DT_RPATH`/`DT_RUNPATH` is active.
 
 See `docs/decisions/0004-single-main-and-immutable-release-deployment.md`.
 
@@ -203,7 +204,7 @@ GENERIC_BUILD_ATTESTATION_ADAPTATION_GAP_EVIDENCE_SUPPLY_BATCH_SUP_02_CUSTODIAN_
 GENERIC_BUILD_ATTESTATION_ADAPTATION_GAP_EVIDENCE_SUPPLY_BATCH_SUP_02_CUSTODIAN_EXPORT_RESPONSE_ACQUISITION_RECEIPT_REVIEW_PASS_BOUNDED
 GENERIC_BUILD_ATTESTATION_ADAPTATION_GAP_EVIDENCE_SUPPLY_BATCH_SUP_02_CUSTODIAN_EXPORT_RESPONSE_PRODUCER_IMPLEMENTED_BOUNDED
 OBJECT_REQUIREMENT_CORRECTION_OJ_001_ACCEPTED_STABLE_SONAME_LIBJPEG_SO_62
-LIBJPEG_SO_62_EXPLICIT_COMPATIBILITY_PROVIDER_BUILD_REQUIRED
+LIBJPEG_SO_62_FIRST_CANDIDATE_REJECTED_RUNPATH_FREE_REBUILD_REQUIRED
 NO_TOKEN_RECIPE_SEMANTIC_REVIEW_CLASS_A_7
 XORG_REFERENCE_CONSUMED_PROVIDER_AUTHORITY_ACCEPTED_BOUNDED_4
 SEMANTIC_FINAL_PROVIDER_AUTHORITY_OPEN

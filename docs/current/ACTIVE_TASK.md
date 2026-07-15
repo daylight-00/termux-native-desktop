@@ -1,47 +1,53 @@
-# Active task: produce the `libjpeg.so.62` compatibility-provider candidate
+# Active task: rebuild the `libjpeg.so.62` compatibility-provider candidate without runpath
 
-> Task ID: `produce-libjpeg-so-62-compatibility-provider-candidate`
+> Task ID: `rebuild-libjpeg-so-62-compatibility-provider-candidate-without-runpath`
 >
-> Expected state on completion: one exact scratch-built `libjpeg.so.62` candidate and structured build/ELF evidence are returned from authoritative user Termux, or the build is explicitly blocked with bounded diagnostics; no installation, provider acceptance, target population, materialization or activation is implied.
+> Expected state on completion: one new scratch-built `libjpeg.so.62.4.0` object from the exact pinned source is returned with no `DT_RPATH` or `DT_RUNPATH`, or the corrected build is explicitly blocked with bounded diagnostics. Provider authority, target population, materialization and activation remain separate and unaccepted.
 
 ## Objective
 
-Produce and analyze the exact compatibility candidate specified by OJ-001:
+Repeat the successful OJ-001 source build with the smallest correction required by the first candidate review:
 
 ```text
 source: libjpeg-turbo 3.1.0
 source SHA-256: 9564c72b1dfd1d6fe6274c5f95a8d989b59854575d4bbee44ade7bc17aa9bc93
 WITH_JPEG7=OFF
 WITH_JPEG8=OFF
+ENABLE_SHARED=ON
+ENABLE_STATIC=OFF
+CMAKE_SKIP_RPATH=ON
 expected member: libjpeg.so.62.4.0
 expected DT_SONAME: libjpeg.so.62
+required DT_RPATH/DT_RUNPATH state: absent
 ```
 
 ## Why now
 
-OJ-001 is the only remaining T0 identity contradiction. The requirement and production path are now explicit, so the smallest next step is to obtain one real SONAME-62 object before any provider-authority or broader reference-adapted review proceeds.
+The first real candidate was produced successfully and has the expected source, AArch64 ELF, concrete member, digest, SONAME and `LIBJPEG_6.2` symbol version. It is rejected because its dynamic section contains a 175-character colon-only `DT_RUNPATH` created by the scratch build configuration. The smallest valid next step is a new unmodified build with RPATH generation disabled, not in-place editing of the first ELF.
 
 ## Current accepted decisions
 
-- `libjpeg.so.62` is the authoritative stable lookup requirement.
-- Existing Termux and Termux-glibc package recipes enable `WITH_JPEG8` and produce the incompatible `libjpeg.so.8` family.
-- No exact repository SONAME-62 package or artifact is bound.
-- A source-built compatibility provider is required, but no unbuilt object has provider authority.
-- Seven previously bounded providers remain accepted; composition, target population and activation remain blocked.
+- `libjpeg.so.62` remains the authoritative lookup requirement.
+- `libjpeg.so.8` remains an incompatible substitute and no alias bridge is permitted.
+- First candidate `1d32a4b12ef3a6032626af13b69a64c45a0a0a9bb4090e0b61d9312811208d88` proves the pinned build path can produce `libjpeg.so.62.4.0` but is rejected for provider review because `DT_RUNPATH` is present.
+- CMake 4.4.0 was installed separately by the user before the first runner; the runner did not mutate package state.
+- Seven previously bounded providers remain accepted. Complete composition, target population and activation remain blocked.
 
 ## In scope
 
-- Build one scratch-only shared candidate from the exact pinned source in user Termux.
-- Record source, command, environment/toolchain coordinates and output manifest.
-- Verify source digest, member digest, ELF class/machine and `DT_SONAME`.
-- Return candidate bytes and compact evidence in one result `.tar.zst`.
-- Preserve all package databases, installed files, provider stores, target layouts and selectors.
+- Build one new scratch-only shared candidate with `CMAKE_SKIP_RPATH=ON`.
+- Preserve the exact source digest, ABI options and glibc AArch64 toolchain boundary.
+- Verify member digest, ELF class/machine/type, SONAME, dynamic dependency set and versioned symbols.
+- Fail if either `DT_RPATH` or `DT_RUNPATH` is present.
+- Return the new candidate bytes and compact structured evidence in one result `.tar.zst`.
+- Preserve package databases, installed files, provider stores, target layouts and selectors.
 
 ## Out of scope
 
-- Installing or packaging the candidate into the live Termux prefix.
+- Editing, stripping or patching the first candidate in place.
+- Installing or packaging either candidate into the live prefix.
 - Creating `libjpeg.so.62` aliases to a SONAME-8 object.
-- Accepting provider authority solely because the build succeeds.
+- Accepting provider authority merely because the corrected build succeeds.
 - Complete JPEG/GTK composition, target paths, population, deployment or activation.
 - Rebuilding unrelated dependencies or fulfilling historical SUP-02 requests.
 
@@ -51,33 +57,35 @@ OJ-001 is the only remaining T0 identity contradiction. The requirement and prod
 - `docs/constitution/PRINCIPLES.md`
 - `docs/decisions/0005-proportional-assurance-depth.md`
 - `docs/evidence/libjpeg-so-62-provider-candidate-disposition.md`
+- `docs/evidence/libjpeg-so-62-compatibility-provider-candidate-result-review.md`
 - `docs/operations/COLLABORATION.md`
 - `docs/operations/EXECUTION.md`
 - `docs/operations/platforms/chatgpt-web.md`
-- `experiments/glibc/selected-obsidian-provider-authority/review/libjpeg-so-62-provider-candidate-disposition.tsv`
 
 ## Pending external inputs
 
-None at task start. The agent must prepare the bounded Termux source-build/analyzer package first.
+None at task start. The agent must prepare the corrected bounded Termux source-build/analyzer package.
 
 ## Next valid action
 
-Create and sandbox-test one self-contained Termux runner that verifies the exact source, builds only in scratch, analyzes the resulting ELF, emits structured status and archives candidate bytes plus evidence without installation.
+Create and synthetic-test one self-contained Termux runner that repeats the exact pinned scratch build with `CMAKE_SKIP_RPATH=ON`, rejects any `DT_RPATH` or `DT_RUNPATH`, and returns the new bytes plus source/build/ELF evidence without installation.
 
 ## Stop conditions
 
-Stop without accepting a candidate if:
+Stop without accepting a corrected candidate if:
 
 - the source digest differs;
-- the build produces no `libjpeg.so.62` member or a different `DT_SONAME`;
-- the runner would modify installed packages, the live prefix, provider stores, target layouts or selectors;
-- the toolchain/build boundary cannot be recorded sufficiently to identify the produced object;
-- the only available result remains `libjpeg.so.8`.
+- the build produces no `libjpeg.so.62.4.0` member or a different `DT_SONAME`;
+- any `DT_RPATH` or `DT_RUNPATH` remains;
+- the toolchain/build boundary cannot be recorded sufficiently;
+- protected live state changes;
+- the only available output remains `libjpeg.so.8` or the first rejected candidate bytes.
 
 ## Completion criteria
 
-- one bounded runner package is produced and exact-simulated where possible;
+- one corrected runner package is produced and synthetic-tested;
 - the user returns one structured result archive;
-- candidate bytes, member SHA-256, ELF identity, `DT_SONAME`, source digest and build manifest are reviewable;
+- new candidate bytes, digest, ELF identity, SONAME, dynamic tags, source digest and build manifest are reviewable;
+- the result explicitly proves no `DT_RPATH` or `DT_RUNPATH`;
 - provider authority remains a separate next decision;
 - repository and runtime remain unchanged outside accepted review metadata and tests.

@@ -71,10 +71,13 @@ expected_meta={
     'no_token_reclassified_b_count':'0','provider_review_count':'7',
     'provider_authority_accepted_count':'7','provider_authority_open_count':'21',
     'authority_effect':'SEVEN_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT',
-    'oj001_disposition':'EXPLICIT_SOURCE_BUILD_COMPATIBILITY_PROVIDER_REQUIRED',
+    'oj001_disposition':'COMPATIBILITY_PROVIDER_CANDIDATE_REBUILD_REQUIRED_NO_RUNPATH',
     'oj001_required_identity':'libjpeg.so.62',
     'oj001_candidate_state':'NO_EXACT_SONAME_62_PACKAGE_DEFINITION_OR_BOUND_ARTIFACT_FOUND',
-    'next_review_tranche':'LIBJPEG_SO_62_COMPATIBILITY_PROVIDER_CANDIDATE_PRODUCTION',
+    'oj001_first_candidate_decision':'REJECTED_REBUILD_REQUIRED_NO_RUNPATH',
+    'oj001_first_candidate_sha256':'1d32a4b12ef3a6032626af13b69a64c45a0a0a9bb4090e0b61d9312811208d88',
+    'oj001_first_candidate_runpath_state':'PRESENT_COLON_ONLY_BUILD_TREE_PLACEHOLDER',
+    'next_review_tranche':'LIBJPEG_SO_62_RUNPATH_FREE_COMPATIBILITY_PROVIDER_CANDIDATE_REBUILD',
 }
 for key,val in expected_meta.items():
     if metadata.get(key)!=val:
@@ -127,10 +130,10 @@ for rid, source in root_by_id.items():
         if not provider_claim['remaining_gap'].startswith('NONE_FOR_BOUNDED'):
             errors.append(f'{rid}: reviewed provider gap is not closed')
     elif source['recipe_root']=='gpkg/libjpeg-turbo':
-        if provider_claim['classification_state']!='COMPATIBILITY_PROVIDER_SPECIFIED_CANDIDATE_NOT_YET_PRODUCED':
-            errors.append(f'{rid}: libjpeg provider claim does not retain candidate-production boundary')
-        if 'EXACT_COMPATIBILITY_PROVIDER_ARTIFACT_MEMBER_DIGEST_AND_SONAME_NOT_YET_PRODUCED' not in provider_claim['remaining_gap']:
-            errors.append(f'{rid}: libjpeg provider claim lacks exact candidate gap')
+        if provider_claim['classification_state']!='FIRST_COMPATIBILITY_CANDIDATE_REJECTED_RUNPATH_REBUILD_REQUIRED':
+            errors.append(f'{rid}: libjpeg provider claim does not retain rejected-first-candidate boundary')
+        if 'RUNPATH_FREE_EXACT_COMPATIBILITY_PROVIDER_ARTIFACT_MEMBER_DIGEST_AND_SONAME_NOT_YET_PRODUCED' not in provider_claim['remaining_gap']:
+            errors.append(f'{rid}: libjpeg provider claim lacks runpath-free replacement gap')
     elif provider_claim['classification_state']!='CLASSIFIED_OPEN_PROVIDER_AUTHORITY_NOT_ACCEPTED':
         errors.append(f'{rid}: unreviewed provider claim is not open')
 
@@ -168,10 +171,10 @@ checks=[
     ('state version','state_version:' in state),
     ('claim count state','total: 89' in state),
     ('SUP-02 state','required_now: 0' in state),
-    ('next task','Task ID: `produce-libjpeg-so-62-compatibility-provider-candidate`' in active),
+    ('next task','Task ID: `rebuild-libjpeg-so-62-compatibility-provider-candidate-without-runpath`' in active),
     ('brief classification','89 separated claims' in brief),
     ('catalog row','provider-claim-classification\tevidence\tcurrent\tcanonical' in catalog),
-    ('status next phase','LIBJPEG_SO_62_EXPLICIT_COMPATIBILITY_PROVIDER_BUILD_REQUIRED' in status),
+    ('status next phase','LIBJPEG_SO_62_FIRST_CANDIDATE_REJECTED_RUNPATH_FREE_REBUILD_REQUIRED' in status),
     ('disposition catalog','libjpeg-so-62-provider-candidate-disposition\tevidence\tcurrent\tcanonical' in catalog),
 ]
 for label,ok in checks:
@@ -181,7 +184,7 @@ if errors:
     for err in errors:
         print('provider-claim-classification: FAIL:',err,file=sys.stderr)
     raise SystemExit(1)
-print('provider-claim-classification: PASS: 89 claims, 7 bounded providers, OJ-001 compatibility disposition and 28 SUP-02 dispositions are coherent')
+print('provider-claim-classification: PASS: 89 claims, 7 bounded providers, rejected first OJ-001 candidate and 28 SUP-02 dispositions are coherent')
 PY
 
 echo 'provider-claim-classification: all checks passed'

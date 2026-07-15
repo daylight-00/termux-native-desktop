@@ -1,9 +1,9 @@
 schema_version: 1
-state_version: 2026-07-15.14
+state_version: 2026-07-15.15
 updated_on: 2026-07-15
 
 project:
-  phase: provider-compatibility-candidate-production
+  phase: provider-compatibility-candidate-correction
   status: active
 
 repository:
@@ -49,10 +49,11 @@ documentation:
   libepoxy_provider_authority_review: docs/evidence/libepoxy-reference-consumed-provider-authority.md
   pango_provider_authority_review: docs/evidence/pango-reference-consumed-provider-authority-and-filename-continuity.md
   libjpeg_provider_candidate_disposition: docs/evidence/libjpeg-so-62-provider-candidate-disposition.md
+  libjpeg_first_candidate_result_review: docs/evidence/libjpeg-so-62-compatibility-provider-candidate-result-review.md
 
 provider_authority:
-  workstream: no-token-provider-review-complete-libjpeg-compatibility-provider-production-active
-  boundary: seven-bounded-providers-accepted-oj-001-explicit-compatibility-provider-required
+  workstream: no-token-provider-review-complete-libjpeg-runpath-free-compatibility-provider-rebuild-active
+  boundary: seven-bounded-providers-accepted-oj-001-first-candidate-rejected-runpath-rebuild-required
   claim_inventory:
     total: 89
     class_a: 36
@@ -70,13 +71,22 @@ provider_authority:
     rejected: 0
     open_no_token_roots: 0
     accepted_scope: exact-xorg-members-and-selected-gtk-x11-capabilities-plus-exact-libtasn1-external-gnutls-asn1-security-plus-exact-libepoxy-gtk-3-24-49-x11-glx-dispatch-plus-exact-pango-three-member-gtk-text-family-and-soname-continuity
+  libjpeg_compatibility_candidate:
+    first_candidate_state: rejected-rebuild-required-no-runpath
+    first_candidate_member: libjpeg.so.62.4.0
+    first_candidate_sha256: 1d32a4b12ef3a6032626af13b69a64c45a0a0a9bb4090e0b61d9312811208d88
+    first_candidate_soname: libjpeg.so.62
+    first_candidate_machine: AArch64
+    first_candidate_runpath: present-colon-only-175
+    corrected_candidate_state: not-yet-produced
+    provider_authority: not-accepted
   sup_02_disposition:
     still_necessary: 0
     narrowed: 14
     replaced: 7
     unnecessary: 7
     required_now: 0
-  next_research_decision: produce-libjpeg-so-62-compatibility-provider-candidate
+  next_research_decision: rebuild-libjpeg-so-62-compatibility-provider-candidate-without-runpath
   prohibited_claims:
     - complete-provider-authority
     - complete-runtime-composition
@@ -84,7 +94,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: produce-libjpeg-so-62-compatibility-provider-candidate
+  id: rebuild-libjpeg-so-62-compatibility-provider-candidate-without-runpath
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:
