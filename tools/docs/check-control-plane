@@ -34,6 +34,11 @@ required_files=(
   docs/constitution/PRINCIPLES.md
   docs/architecture/README.md
   docs/operations/README.md
+  docs/operations/COLLABORATION.md
+  docs/operations/WORKFLOW.md
+  docs/operations/EXECUTION.md
+  docs/operations/CHECKPOINTS.md
+  docs/operations/TROUBLESHOOTING.md
   docs/evidence/README.md
   docs/history/README.md
   docs/current/BRIEF.md

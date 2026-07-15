@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This handoff records the project-specific boundary after independently reviewing the 0164 result. Read [`../PROJECT_PRINCIPLES.md`](../PROJECT_PRINCIPLES.md) for the evidence and authority philosophy. General Git/Drive, wrapper and package rules are maintained under [`../session-operations/`](../session-operations/README.md).
+This handoff records the project-specific boundary after independently reviewing the 0164 result. Read [`../PROJECT_PRINCIPLES.md`](../PROJECT_PRINCIPLES.md) for the evidence and authority philosophy. General Git/Drive, wrapper and package rules are maintained under [`../operations/`](../operations/README.md).
 
 ## Repository
 

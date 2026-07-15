@@ -26,7 +26,7 @@ if bash "$WORK/repo/tools/docs/check-current-authority" >/dev/null 2>&1; then
 fi
 
 cp "$WORK/architecture.md.original" "$WORK/repo/docs/architecture.md"
-printf '\nmandatory handoff\n' >> "$WORK/repo/docs/session-operations/SESSION_LIFECYCLE.md"
+printf '\nmandatory handoff\n' >> "$WORK/repo/docs/operations/WORKFLOW.md"
 if bash "$WORK/repo/tools/docs/check-current-authority" >/dev/null 2>&1; then
   printf 'current-authority smoke: mandatory handoff dependency was not rejected\n' >&2
   exit 1

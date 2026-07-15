@@ -1,21 +1,39 @@
-
 # Operations documentation
 
-This is the canonical router for progress-independent user/agent collaboration, repository transport, package exchange, testing, and platform behavior.
+This directory is the single current authority for progress-independent web-chat collaboration, repository transport, execution transactions, result review, optional checkpoints, and platform capability boundaries.
 
-## Platform profile
+## Canonical documents
 
-- [`platforms/chatgpt-web.md`](platforms/chatgpt-web.md) — current web-chat sandbox, Git bundle transport, connector limits, Drive exchange, and Termux authority.
+| Question | Read |
+|---|---|
+| Who does what, and how are artifacts exchanged? | [`COLLABORATION.md`](COLLABORATION.md) |
+| How does one bundle-native work cycle proceed? | [`WORKFLOW.md`](WORKFLOW.md) |
+| How are candidates, wrappers, tests, results, and acceptance handled? | [`EXECUTION.md`](EXECUTION.md) |
+| What happens at a clean boundary or with valuable incomplete work? | [`CHECKPOINTS.md`](CHECKPOINTS.md) |
+| What failures have known operational mitigations? | [`TROUBLESHOOTING.md`](TROUBLESHOOTING.md) |
+| What can the current web-chat sandbox and connectors actually do? | [`platforms/chatgpt-web.md`](platforms/chatgpt-web.md) |
 
-Codex or Claude Code profiles may be added when those environments are actually adopted. They must reuse `AGENTS.md` rather than fork the project contract.
+These responsibilities must not be duplicated as current authority in another directory. The former `docs/session-operations/` surface is historical and is indexed under [`../history/session-operations-v1/`](../history/session-operations-v1/).
 
-## Durable collaboration and execution
+## Ownership boundary
 
-- [`../session-operations/README.md`](../session-operations/README.md) — session-operation index.
-- [`../session-operations/COLLABORATION.md`](../session-operations/COLLABORATION.md) — user/agent roles and Drive exchange.
-- [`../session-operations/AGENT_EXECUTION.md`](../session-operations/AGENT_EXECUTION.md) — candidate, runner, result, and acceptance discipline.
-- [`../session-operations/SESSION_LIFECYCLE.md`](../session-operations/SESSION_LIFECYCLE.md) — bundle-native receive-to-accepted-transition lifecycle.
-- [`../session-operations/SESSION_CLOSE.md`](../session-operations/SESSION_CLOSE.md) — clean boundary and optional incomplete-work checkpoint.
-- [`../session-operations/TROUBLESHOOTING.md`](../session-operations/TROUBLESHOOTING.md) — known operational failure modes.
+```text
+AGENTS.md
+    agent/user authority and non-negotiable execution boundaries
 
-Current project progress does not live in operations documents. It is owned by [`../current/`](../current/).
+docs/current/
+    current semantic state, active task, and pending artifacts
+
+docs/operations/
+    durable collaboration and execution method
+
+docs/architecture/ and docs/decisions/
+    system contracts and accepted choices
+
+docs/evidence/, experiments/, docs/refactor/, Git history
+    observations, receipts, and historical transactions
+```
+
+Current project progress does not live here. Reusable operational lessons are updated here in the same accepted repository transition in which they are learned; they are not deferred to session close or hidden only in chat narrative.
+
+Codex or Claude Code profiles may be added when those environments are actually adopted. They must reuse `AGENTS.md` and the platform-neutral documents in this directory rather than fork the project contract.

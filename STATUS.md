@@ -1,6 +1,6 @@
 # Status
 
-> **State:** bundle-native documentation control plane active; current-facing authority synchronized; compact constitutional authority installed; ADR 0005 accepted for risk-proportional assurance; provider-authority workstream paused at the bounded 0165 SUP-02 no-response boundary
+> **State:** bundle-native documentation and operations control planes active; compact constitutional authority installed; ADR 0005 accepted for risk-proportional assurance; provider-authority workstream resumed only for claim-by-claim assurance classification at the bounded 0165 SUP-02 no-response boundary
 > **Updated:** 2026-07-15
 
 ## Repository and deployment consolidation
@@ -21,6 +21,8 @@ See `docs/decisions/0004-single-main-and-immutable-release-deployment.md`.
 - Narrative handoffs and numbered refactor records are historical evidence, not default onboarding authority.
 - The GitHub connector is limited to lightweight remote inspection; user Termux local Git/`gh` is authoritative for remote mutation.
 - Repository state transitions update canonical current documents when accepted rather than deferring maintenance to session close.
+- `docs/operations/` is the single current authority for collaboration, bundle transport, execution, result review, optional checkpoints, troubleshooting, and platform capability boundaries.
+- The former `docs/session-operations/` surface and narrative handoffs are historical only.
 - Docker is outside the available and intended workflow.
 
 ## Local-layout consolidation
@@ -321,23 +323,23 @@ AUTH-010 exact application payload supply, named supplement membership and relea
 ## Next valid state
 
 ```text
-CONSOLIDATE_OPERATIONS_AND_HISTORICAL_SURFACES
+CLASSIFY_PROVIDER_CLAIMS_UNDER_ADR_0005
 ```
 
 Active task:
 
 ```text
-OPERATIONS_CONSOLIDATION_AND_HISTORICAL_SURFACE_CLEANUP
+PROVIDER_CLAIM_CLASSIFICATION_UNDER_ADR_0005
 ```
 
 Required order:
 
 ```text
-1. keep the compact constitution, accepted ADR 0005 and bundle-native current-state surface authoritative;
-2. consolidate collaboration, transport, runner/result and optional checkpoint rules under one operations surface;
-3. retire or classify legacy session/handoff narratives without losing reusable failure lessons;
-4. classify each paused provider claim under ADR 0005 before requesting more evidence;
-5. issue or fulfill only the bounded evidence required by that classification;
+1. keep the compact constitution, accepted ADR 0005, bundle-native current state, and canonical operations surface authoritative;
+2. separate provider authority, composition, target-population, and activation claims;
+3. classify each claim by implementation class, project-owned changed boundary, and risk modifiers;
+4. bind existing evidence and record the smallest remaining assurance gap;
+5. review the classification before issuing or fulfilling any evidence request;
 6. define ApplicationRuntimeComposition only after owning authorities are accepted;
 7. populate target rows and implement materialization only after composition acceptance and intervention-lift review.
 ```

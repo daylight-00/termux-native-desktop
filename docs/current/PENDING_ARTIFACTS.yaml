@@ -1,9 +1,9 @@
 schema_version: 1
-state_version: 2026-07-15.04
+state_version: 2026-07-15.05
 
 blocking: []
 
 non_blocking:
   - id: provider-authority-sup-02-responses
     state: not-produced
-    note: All 28 issued requests remain outstanding; there is no result archive awaiting review and no automatic obligation to produce one before the assurance-depth decision.
+    note: All 28 issued requests remain unanswered historical requests. There is no result archive awaiting review, and no response should be requested until claim-by-claim ADR 0005 classification determines which requirements remain proportionate.

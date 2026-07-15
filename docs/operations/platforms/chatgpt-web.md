@@ -1,102 +1,48 @@
-# ChatGPT web session profile
+# ChatGPT web capability profile
 
-This profile defines how the project operates in a web chat whose sandbox, connectors, and context do not behave like a persistent repository-native coding agent.
+This profile records concrete platform behavior for a web chat whose sandbox, connectors, and context are not a persistent repository-native coding environment. Platform-neutral workflow and transaction rules live in [`../WORKFLOW.md`](../WORKFLOW.md) and [`../EXECUTION.md`](../EXECUTION.md).
 
-## Session repository input
+## Capability matrix
 
-The normal first input is a full Git bundle created by the user from the authoritative Termux checkout.
+| Surface | Appropriate use | Not authoritative or unavailable |
+|---|---|---|
+| Session sandbox | clone supplied bundle; inspect and author; local commits; candidate bundles; package construction; shell/static/synthetic tests; selective result review | Android runtime; Termux deployment; GPU/device validation; user application data; remote Git mutation |
+| User Termux | authoritative fetch/commit/push/`gh`; deployment and local-layout mutation; Android/package/runtime inspection; device tests; `rclone`; future full-bundle creation | delegated broad manual editing or log analysis when the agent can package it |
+| GitHub connector | repository metadata; commit confirmation; comparison; PR/issue reads; small targeted read-only lookup | clone; normal object database; bulk reconstruction; context-efficient authoring; authoritative commit/push |
+| Google Drive connector | exchange of packages, results, patches, bundles, logs, safety artifacts, and evidence | automatic equivalence between a Drive reference and sandbox path |
+
+Docker is not available and must not be used or proposed.
+
+## Repository input
+
+The normal first input is a full Git bundle created by the user from a clean accepted Termux checkout and attached directly to the chat.
 
 ```text
-user Termux repository
+user Termux main
     -> full Git bundle
-    -> direct chat attachment
+    -> chat attachment
     -> sandbox clone
-    -> repository START_HERE.md
+    -> START_HERE.md
 ```
 
-The bundle should represent a clean accepted repository boundary. The agent verifies it, clones it with ordinary Git, checks out `main`, records `HEAD` and tree, then follows the repository initialization documents.
+A GitHub URL or connector is not a replacement for the bundle. Raw-text file operations consume model context and do not reproduce object-based Git collaboration.
 
-A GitHub repository URL or connector is not a replacement for the bundle.
+## Drive-specific constraints
 
-## GitHub connector boundary
-
-The connector is suitable for:
-
-- repository metadata;
-- remote commit confirmation;
-- branch comparison;
-- pull requests and issues;
-- small targeted file reads when a local bundle is unavailable for read-only inspection.
-
-It is not suitable for:
-
-- cloning the repository;
-- obtaining a normal Git object database and working tree;
-- large repository reconstruction;
-- context-efficient bulk authoring;
-- authoritative commit, branch, or push workflows.
-
-The connector's raw-text file operations can consume substantial model context and do not reproduce ordinary object-based Git collaboration. Do not use them to simulate a clone.
-
-## Sandbox boundary
-
-The session sandbox is appropriate for:
-
-- cloning the supplied bundle;
-- repository inspection and authoring;
-- local commits and candidate bundles;
-- patch and runner construction;
-- shell/static/synthetic tests;
-- selective result-archive analysis.
-
-It is not authoritative for:
-
-- Android package or runtime behavior;
-- Termux deployment state;
-- GPU/device validation;
-- the user's remote Git mutation;
-- user application data or live payload state.
-
-Docker is not available and must not be introduced into project plans.
-
-## User Termux authority
-
-The user's Android Termux environment owns:
-
-```text
-authoritative repository fetch / commit / push / gh
-live deployment and local-layout mutation
-Android package and runtime inspection
-GPU and application tests
-rclone exchange
-full bundle creation for a future web session
-```
-
-The agent should reduce device work to one bounded wrapper whenever possible.
-
-## Google Drive exchange
-
-Drive is the bidirectional exchange channel for runner packages, patches, bundles, results, safety artifacts, logs, and evidence.
-
-Operational constraints:
-
-- Local files are upload-eligible only when located anywhere under `/mnt/data`.
-- In a new chat, local-path upload rewriting may be blocked on the first assistant turn. Do not repeat the same failing upload in that turn.
-- A Drive file reference is not automatically a sandbox path.
-- Binary fetches may materialize with a `.bin` suffix; trust byte identity and checksum, not the local suffix.
-- After upload or fetch, verify size, SHA-256, zstd integrity, member safety, and the internal manifest when present.
+- A local file is upload-eligible only when it is located anywhere under `/mnt/data`; it need not be a direct child.
+- In a new chat, local-path rewriting can be blocked on the first assistant turn. Do not repeat the same failing upload in that turn.
+- A connector file reference is not automatically a local sandbox path.
+- Binary fetches may materialize with a `.bin` suffix; trust byte identity and checksum, not the suffix.
 - Prefer exact folder listing and file IDs over fuzzy binary filename search.
+- Verify size, SHA-256, zstd integrity, safe members, and internal manifest after upload or fetch.
+- When valid bytes are rejected because of path handling, copy the identical bytes to a short ASCII path under `/mnt/data`, publish with the intended name, and verify readback. Do not transform the artifact.
 
-## Session continuity
+## Context and continuity
 
-There is no narrative handoff requirement.
+The platform does not automatically read repository files, preserve a working tree between sessions, or guarantee a graceful session close. Therefore:
 
-Accepted state must be committed to canonical repository documents during the accepted transition. A new session starts from a new full bundle and reads current state from the repository.
-
-Uncommitted sandbox work is not durable. Preserve it only when explicitly necessary by producing a patch or checkpoint ref; otherwise restart from the latest accepted bundle.
-
-## Onboarding behavior
-
-A new session must not immediately propose a local technical plan. It first produces the onboarding receipt required by `START_HERE.md`, including the tool and authority boundary.
-
-When the repository current state is internally inconsistent, the first task is to report the inconsistency and follow the explicit active-task stop conditions. Do not choose an old handoff or historical record as current truth by convenience.
+- current state is committed at accepted transition time;
+- default onboarding remains bounded by `START_HERE.md`;
+- historical documents are not loaded by default;
+- uncommitted sandbox work is disposable unless a checkpoint is explicitly justified;
+- the first response after clone is the onboarding receipt, not an ungrounded local plan.

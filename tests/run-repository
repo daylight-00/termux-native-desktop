@@ -15,10 +15,20 @@ case "$MODE" in
       tests/repository/current-authority-smoke.sh
       tests/repository/document-model-smoke.sh
       tests/repository/constitution-smoke.sh
+      tests/repository/operations-model-smoke.sh
       tests/repository/shell-layout-smoke.sh
       tests/repository/vulkan-policy-scope-smoke.sh
       tests/repository/application-authority-boundary-smoke.sh
       tests/repository/generic-source-authority-boundary-smoke.sh
+    )
+    ;;
+  --docs)
+    tests=(
+      tests/repository/control-plane-smoke.sh
+      tests/repository/current-authority-smoke.sh
+      tests/repository/document-model-smoke.sh
+      tests/repository/constitution-smoke.sh
+      tests/repository/operations-model-smoke.sh
     )
     ;;
   --full)
@@ -28,7 +38,7 @@ case "$MODE" in
     )
     ;;
   *)
-    echo "usage: $0 [--fast|--full]" >&2
+    echo "usage: $0 [--docs|--fast|--full]" >&2
     exit 2
     ;;
 esac

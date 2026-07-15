@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-15.04`
+> Semantic state version: `2026-07-15.05`
 >
 > This is the compact current-state entry point. Exact commit and tree coordinates come from the checked-out full Git bundle, not from self-referential repository text.
 
@@ -78,29 +78,31 @@ The previous blanket demand for producing-build custodian exports across all 28 
 - Default onboarding is exactly four files and loads no history.
 - Narrative handoffs, numbered refactor records, experiment reports, and system-foundation documents are not default onboarding authority.
 - GitHub connector use is limited to lightweight remote inspection; it is not clone/commit/push transport.
+- [`../operations/README.md`](../operations/README.md) is the single current surface for collaboration, bundle transport, execution transactions, result review, checkpoints, troubleshooting, and platform capabilities.
+- The former `docs/session-operations/` surface and narrative handoffs are historical only.
 - Google Drive is the normal exchange path for bundles, patches, runners, results, logs, and safety artifacts.
 
 ## Current project phase
 
-The active task is `operations-consolidation-and-historical-surface-cleanup`.
+The active task is `provider-claim-classification-under-adr-0005`.
 
 It will:
 
 ```text
-consolidate durable collaboration and tool rules under docs/operations
-remove remaining overlap with legacy session-operations documents
-preserve reusable failure lessons
-keep normal accepted sessions handoff-free
-make optional incomplete-work checkpoints explicit and bounded
+separate provider authority, composition, target, and activation claims
+classify each claim under ADR 0005
+bind existing evidence without overpromoting it
+identify the minimum proportionate remaining assurance action
+review the classification before issuing any new evidence request
 ```
 
-The provider-authority workstream stays paused during this task.
+The provider-authority workstream has resumed only as a classification and decision phase. Evidence collection, provider promotion, target population, and activation remain prohibited.
 
 ## Current non-goals
 
 Do not currently:
 
-- resume or fulfill SUP-02 requests;
+- issue or fulfill a new SUP-02 request before claim classification;
 - infer provider acceptance from ADR 0005;
 - populate a provider target layout;
 - activate the selected Obsidian generation;

@@ -7,6 +7,7 @@ This index is for reconstructing chronology and earlier state. History is exclud
 |---|---|
 | Transaction-level refactor/provider sequence | [`../refactor/README.md`](../refactor/README.md), then one named numbered record |
 | Former session-boundary narrative | [`../handoff/README.md`](../handoff/README.md), historical use only |
+| Former session-operations lifecycle and rule evolution | [`session-operations-v1/README.md`](session-operations-v1/README.md) |
 | Broad chronological navigation | [`../timeline.md`](../timeline.md) |
 | Git-level source transition | Git history from the supplied full bundle |
 

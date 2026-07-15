@@ -17,7 +17,7 @@ docs/current/BRIEF.md
 docs/current/ACTIVE_TASK.md
 ```
 
-Current state is owned by [`../current/`](../current/). Durable collaboration rules are under [`../session-operations/`](../session-operations/README.md).
+Current state is owned by [`../current/`](../current/). Durable collaboration rules are under [`../operations/`](../operations/README.md).
 
 ## Historical use
 

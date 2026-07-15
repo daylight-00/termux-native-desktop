@@ -26,6 +26,7 @@ applicable platform profile
 ```
 
 Use `docs/INDEX.md` to locate deeper material. [`docs/DOCUMENTATION_MODEL.md`](docs/DOCUMENTATION_MODEL.md) defines authority by question, lifecycle states, conflict handling, and the machine-readable catalog.
+Durable collaboration and execution mechanics are routed by [`docs/operations/README.md`](docs/operations/README.md).
 
 Current semantic state is owned by `docs/current/`. Architecture and accepted decisions support that state. Experiment reports, foundation records, numbered refactor records, and dated handoffs preserve evidence or design provenance; they are not default onboarding authority. A proposed decision has no authority effect until explicitly accepted.
 

@@ -1,4 +1,14 @@
-# Session-operations changelog
+# Historical session-operations changelog
+
+> Current operations are canonical under [`../../operations/`](../../operations/README.md). Earlier entries describe superseded process states.
+
+## 2026-07-15 — canonical operations surface
+
+- Moved the durable collaboration, workflow, execution, checkpoint, troubleshooting, and web-platform rules into `docs/operations/`.
+- Retired `docs/session-operations/` as a current authority surface rather than maintaining duplicate compatibility documents.
+- Preserved this changelog and the former process lineage under `docs/history/session-operations-v1/`.
+- Added mechanical checks that reject current catalog rows, links, or mandatory-handoff rules pointing back to the retired surface.
+- Advanced the active task to provider-claim classification under accepted ADR 0005.
 
 ## 2026-07-15 — bundle-native initialization and repository-owned current state
 

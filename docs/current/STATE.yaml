@@ -1,9 +1,9 @@
 schema_version: 1
-state_version: 2026-07-15.04
+state_version: 2026-07-15.05
 updated_on: 2026-07-15
 
 project:
-  phase: documentation-control-plane
+  phase: provider-claim-reclassification
   status: active
 
 repository:
@@ -33,12 +33,14 @@ documentation:
     project_identity: docs/constitution/PROJECT.md
     engineering_principles: docs/constitution/PRINCIPLES.md
     agent_authority: AGENTS.md
+  operations_surface: docs/operations/README.md
+  former_session_operations: historical-session-operations-v1
   system_foundation_lifecycle: historical-design-provenance
-  physical_reorganization: deferred-until-operations-consolidation
+  narrative_handoffs: historical-only
   assurance_depth_decision: accepted-adr-0005
 
 provider_authority:
-  workstream: paused
+  workstream: reclassification-active
   boundary: sup-02-producer-implemented-no-canonical-response
   next_research_decision: classify-provider-claims-under-adr-0005
   prohibited_claims:
@@ -48,7 +50,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: operations-consolidation-and-historical-surface-cleanup
+  id: provider-claim-classification-under-adr-0005
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:

@@ -56,7 +56,7 @@ Tree hashes are the cross-session content invariant. Receipts and numbered proje
 
 ## Human and agent relationship
 
-The user supplies the minimum environment-specific action. The agent performs authoring, validation, packaging and evidence review. This division reduces transcription errors and keeps every mutation inside one guarded, reproducible transaction. The durable mechanics are defined under [`session-operations/`](session-operations/README.md).
+The user supplies the minimum environment-specific action. The agent performs authoring, validation, packaging and evidence review. This division reduces transcription errors and keeps every mutation inside one guarded, reproducible transaction. The durable mechanics are defined under [`operations/`](operations/README.md).
 
 ## Reading precedence
 

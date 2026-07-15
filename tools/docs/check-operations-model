@@ -1,0 +1,111 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+FAILURES=0
+pass() { printf 'operations-model: PASS: %s\n' "$*"; }
+fail() { printf 'operations-model: FAIL: %s\n' "$*" >&2; FAILURES=$((FAILURES + 1)); }
+require_text() {
+  local rel=$1 pattern=$2 label=$3
+  grep -Fq -- "$pattern" "$ROOT/$rel" && pass "$label" || fail "$label"
+}
+reject_text() {
+  local rel=$1 pattern=$2 label=$3
+  grep -Fq -- "$pattern" "$ROOT/$rel" && fail "$label" || pass "$label"
+}
+
+required=(
+  docs/operations/README.md
+  docs/operations/COLLABORATION.md
+  docs/operations/WORKFLOW.md
+  docs/operations/EXECUTION.md
+  docs/operations/CHECKPOINTS.md
+  docs/operations/TROUBLESHOOTING.md
+  docs/operations/platforms/chatgpt-web.md
+  docs/history/session-operations-v1/README.md
+  docs/history/session-operations-v1/CHANGELOG.md
+)
+for rel in "${required[@]}"; do
+  [ -f "$ROOT/$rel" ] && pass "$rel exists" || fail "$rel missing"
+done
+
+if [ -e "$ROOT/docs/session-operations" ]; then
+  fail 'retired docs/session-operations path still exists'
+else
+  pass 'retired docs/session-operations path is absent'
+fi
+
+require_text docs/operations/README.md 'single current authority' 'operations router declares single current authority'
+require_text docs/operations/COLLABORATION.md 'full Git bundle' 'collaboration contract declares full-bundle transport'
+require_text docs/operations/COLLABORATION.md 'one raw `.tar.zst`' 'collaboration contract keeps one-package exchange'
+require_text docs/operations/WORKFLOW.md 'RECEIVE_FULL_BUNDLE' 'workflow begins from full bundle'
+require_text docs/operations/WORKFLOW.md 'there is no handoff action' 'clean accepted workflow has no handoff action'
+require_text docs/operations/EXECUTION.md 'never attempt rollback after a confirmed successful push' 'execution contract preserves successful push boundary'
+require_text docs/operations/CHECKPOINTS.md 'explicitly non-authoritative' 'checkpoint contract is non-authoritative'
+require_text docs/operations/platforms/chatgpt-web.md 'Docker is not available' 'web profile prohibits Docker'
+require_text docs/operations/platforms/chatgpt-web.md 'located anywhere under `/mnt/data`' 'web profile records local upload subtree rule'
+require_text docs/operations/platforms/chatgpt-web.md 'blocked on the first assistant turn' 'web profile records first-turn upload constraint'
+require_text docs/operations/platforms/chatgpt-web.md 'not a replacement for the bundle' 'web profile rejects connector-as-clone substitution'
+require_text docs/history/session-operations-v1/README.md 'Current operational authority is under' 'former session operations are historical'
+require_text docs/handoff/README.md '[`../operations/`](../operations/README.md)' 'handoff archive routes current operations correctly'
+require_text docs/current/STATE.yaml 'operations_surface: docs/operations/README.md' 'semantic state records canonical operations surface'
+require_text docs/current/ACTIVE_TASK.md 'Task ID: `provider-claim-classification-under-adr-0005`' 'next active task is provider classification'
+
+for rel in docs/operations/README.md docs/operations/COLLABORATION.md docs/operations/WORKFLOW.md docs/operations/EXECUTION.md docs/operations/CHECKPOINTS.md docs/operations/platforms/chatgpt-web.md; do
+  reject_text "$rel" 'mandatory handoff' "$rel has no mandatory-handoff authority"
+done
+
+python3 - "$ROOT" <<'PY'
+from pathlib import Path
+import csv, re, sys
+root=Path(sys.argv[1])
+rows=list(csv.DictReader((root/'docs/catalog.tsv').open(), delimiter='\t'))
+by_id={r['document_id']:r for r in rows}
+errors=[]
+expected={
+ 'operations-index':('operations','current','canonical','docs/operations/README.md'),
+ 'operations-collaboration':('operations','current','canonical','docs/operations/COLLABORATION.md'),
+ 'operations-workflow':('operations','current','canonical','docs/operations/WORKFLOW.md'),
+ 'operations-execution':('operations','current','canonical','docs/operations/EXECUTION.md'),
+ 'operations-checkpoints':('operations','current','canonical','docs/operations/CHECKPOINTS.md'),
+ 'operations-troubleshooting':('operations','current','operational','docs/operations/TROUBLESHOOTING.md'),
+ 'chatgpt-web-profile':('operations','current','operational','docs/operations/platforms/chatgpt-web.md'),
+ 'session-operations-history':('history','historical','history','docs/history/session-operations-v1/README.md'),
+}
+for did, want in expected.items():
+    row=by_id.get(did)
+    if row is None:
+        errors.append(f'missing catalog row {did}')
+        continue
+    got=(row['class'],row['status'],row['authority'],row['path'])
+    if got != want:
+        errors.append(f'{did}: expected {want}, got {got}')
+for row in rows:
+    if row['status'] in {'current','accepted'} and row['path'].startswith('docs/session-operations/'):
+        errors.append(f'current catalog row uses retired session-operations path: {row}')
+
+current_files=[
+ 'AGENTS.md','START_HERE.md','STATUS.md','docs/README.md','docs/INDEX.md',
+ 'docs/DOCUMENTATION_MODEL.md','docs/current/BRIEF.md','docs/current/STATE.yaml',
+ 'docs/current/ACTIVE_TASK.md','docs/operations/README.md',
+ 'docs/operations/COLLABORATION.md','docs/operations/WORKFLOW.md',
+ 'docs/operations/EXECUTION.md','docs/operations/CHECKPOINTS.md',
+ 'docs/operations/TROUBLESHOOTING.md','docs/operations/platforms/chatgpt-web.md',
+]
+link_pat=re.compile(r'\[[^\]]*\]\(([^)]*)\)')
+for rel in current_files:
+    text=(root/rel).read_text(errors='replace')
+    for target in link_pat.findall(text):
+        clean=target.split('#',1)[0]
+        if clean.startswith(('docs/session-operations/','session-operations/','../session-operations/')):
+            errors.append(f'{rel}: links to retired session-operations surface: {target}')
+if errors:
+    for e in errors: print('operations-model: FAIL:',e,file=sys.stderr)
+    raise SystemExit(1)
+print('operations-model: PASS: catalog and current-link ownership are coherent')
+PY
+rc=$?
+[ "$rc" -eq 0 ] || FAILURES=$((FAILURES + 1))
+
+[ "$FAILURES" -eq 0 ] || exit 1
+printf 'operations-model: all checks passed\n'

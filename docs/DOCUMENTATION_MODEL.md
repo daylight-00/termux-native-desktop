@@ -68,7 +68,7 @@ A path or helper is not permanent architecture merely because it currently works
 
 ### Operations
 
-Operations documents own progress-independent collaboration, tooling, packaging, validation, and platform behavior. They must remain usable even when the active research topic changes.
+`docs/operations/` is the single current authority for progress-independent collaboration, bundle transport, execution transactions, result review, optional checkpoints, troubleshooting, and platform behavior. Its canonical router assigns one owner to each operational question. The retired `docs/session-operations/` surface is historical and must not reappear as current authority.
 
 ### Decisions
 

@@ -31,12 +31,10 @@ require_text docs/decisions/0005-proportional-assurance-depth.md 'The project re
 require_text docs/decisions/0005-proportional-assurance-depth.md 'That blanket requirement is no longer the default policy.' 'ADR 0005 bounds SUP-02 continuation'
 require_text docs/current/STATE.yaml 'assurance_depth_decision: accepted-adr-0005' 'semantic state records accepted assurance policy'
 require_text docs/current/STATE.yaml 'system_foundation_lifecycle: historical-design-provenance' 'semantic state records foundation lifecycle'
-require_text docs/current/ACTIVE_TASK.md 'Task ID: `operations-consolidation-and-historical-surface-cleanup`' 'next active task is installed'
 require_text STATUS.md 'ADR 0005 accepted for risk-proportional assurance' 'STATUS records accepted assurance policy'
 
 reject_text docs/constitution/README.md 'remain canonical' 'constitution router has no temporary legacy-canonical language'
 reject_text docs/system-foundation/README.md '11 and 12 take precedence' 'foundation index has no current precedence claim'
-reject_text docs/current/ACTIVE_TASK.md 'constitution-consolidation-and-assurance-decision' 'completed task is not still active'
 
 for i in $(seq -w 1 12); do
   rel=$(find "$ROOT/docs/system-foundation" -maxdepth 1 -type f -name "$i-*.md" -printf '%P\n')

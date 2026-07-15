@@ -1,67 +1,64 @@
-# Active task: consolidate operations and historical surfaces
+# Active task: classify provider claims under ADR 0005
 
-> Task ID: `operations-consolidation-and-historical-surface-cleanup`
+> Task ID: `provider-claim-classification-under-adr-0005`
 >
-> Expected state on completion: durable web-chat collaboration rules have one canonical operations surface; legacy session-process and handoff documents are clearly historical or replaced; and a new session can locate operational guidance without reading superseded lifecycle narratives.
+> Expected state on completion: the paused provider-authority corpus is converted into a bounded claim inventory whose implementation class, project-owned changed boundary, risk modifiers, accepted evidence, remaining gap, and minimum next assurance action are explicit; no new evidence request is issued until that classification is reviewed.
 
 ## Objective
 
-Consolidate the progress-independent collaboration, transport, execution-package, result-review, and optional checkpoint rules under `docs/operations/`, then reduce the remaining authority ambiguity in `docs/session-operations/` and `docs/handoff/`.
+Apply accepted ADR 0005 to the provider-authority work accumulated in records 0118–0165. Replace the former blanket producing-build requirement with claim-by-claim assurance classification without silently accepting provider authority, composition, target population, or activation.
 
 ## Why now
 
-The constitutional surface is compact and ADR 0005 now bounds assurance work. The largest remaining documentation overlap affecting every web-chat session is operational: current rules are split between `AGENTS.md`, the ChatGPT platform profile, and seven legacy `session-operations` documents that evolved from the former mandatory-handoff model.
-
-This should be resolved before resuming the provider-authority workstream so future sessions inherit one stable execution contract.
+The documentation and operations control planes are consolidated. Future sessions can start from one full bundle and find current authority without narrative handoffs. The provider workstream can therefore resume at its actual decision boundary: determining what each provider claim needs under proportional assurance before collecting more evidence.
 
 ## Current accepted decisions
 
-- Project identity is canonical in `docs/constitution/PROJECT.md`.
-- Engineering, evidence, promotion, and assurance principles are canonical in `docs/constitution/PRINCIPLES.md`.
-- Agent/user authority is canonical in `AGENTS.md`.
-- ADR 0005 is accepted: assurance is proportional to the claim, implementation class, changed boundary, and risk.
+- `docs/operations/` is the single current operations surface; the former `docs/session-operations/` surface is historical.
 - New web-chat sessions start from a user-provided full Git bundle and `START_HERE.md`.
-- Narrative handoffs are not current authority.
-- The provider-authority workstream remains paused pending object/claim reclassification under ADR 0005.
+- ADR 0005 is accepted: assurance is proportional to the exact claim, implementation class, project-owned changed boundary, and risk.
+- Existing exact supply, semantic-role, artifact comparison, adaptation, and receipt evidence remains evidence; it is not automatically sufficient for every authority claim.
+- The 28 unanswered SUP-02 requests remain historical open requests, but blanket completion of all 28 is no longer the default prerequisite.
 
 ## In scope
 
-- Map overlap among `docs/operations/`, `docs/session-operations/`, the ChatGPT platform profile, and legacy handoff procedures.
-- Define one canonical home for collaboration roles, Git/bundle transport, Drive exchange, runner/result lifecycle, troubleshooting, and optional incomplete-work checkpoints.
-- Preserve reusable failure lessons while removing obsolete mandatory-handoff assumptions.
-- Decide whether legacy files should become compact tombstones, move under history, or remain reference sources with explicit lifecycle labels.
-- Keep the web-chat operational surface small enough for task-specific reading.
-- Add mechanical checks preventing reintroduction of narrative handoff authority or unsupported tool capabilities.
+- Identify the distinct claims currently hidden inside provider authority, composition, target population, and activation language.
+- Map each claim or coherent claim group to ADR 0005 class A, B, C, or D.
+- Record the project-owned changed boundary and relevant risk modifiers.
+- Bind existing evidence that already supports the claim.
+- State the remaining gap and the minimum proportionate assurance action, including `none` when reference evidence is sufficient.
+- Distinguish accepted evidence from accepted authority and from target membership.
+- Produce a reviewable classification artifact and a bounded next task.
 
 ## Out of scope
 
-- Resuming SUP-02 or collecting provider evidence.
-- Reclassifying the 28 provider roots under ADR 0005.
-- Moving the numbered refactor corpus.
-- Rewriting experiment reports.
-- Device runtime, deployment, graphics, or application testing.
-- Adopting Codex or Claude Code as the current execution environment.
+- Issuing or fulfilling a new SUP-02 request.
+- Collecting new device, custodian, build, or runtime evidence.
+- Installing, extracting, promoting, or activating a provider.
+- Populating a target layout or selected generation.
+- Rewriting historical numbered records to match the new policy.
+- Treating package-wide inference or successful launch as global authority.
 
 ## Required reading
 
 - `docs/current/STATE.yaml`
-- `docs/DOCUMENTATION_MODEL.md`
-- `docs/operations/README.md`
-- `docs/operations/platforms/chatgpt-web.md`
-- `docs/session-operations/README.md`
-- `docs/session-operations/COLLABORATION.md`
-- `docs/session-operations/AGENT_EXECUTION.md`
+- `docs/constitution/PRINCIPLES.md`
+- `docs/decisions/0005-proportional-assurance-depth.md`
+- `docs/refactor/0118-selected-obsidian-provider-authority-census-schema-and-evidence-plan.md`
+- `docs/refactor/0139-selected-obsidian-non-priority-generic-source-authority-boundary.md`
+- `docs/refactor/0147-selected-obsidian-generic-build-attestation-and-adaptation-review-set.md`
+- `docs/refactor/0156-selected-obsidian-generic-build-attestation-and-adaptation-gap-evidence-supply-request-set.md`
+- `docs/refactor/0165-selected-obsidian-generic-build-attestation-and-adaptation-gap-evidence-supply-batch-sup-02-custodian-export-response-producer.md`
 
-Do not read dated handoffs or the full refactor corpus. Open another legacy operations file only to resolve a named overlap or preserve a reusable failure lesson.
+The five numbered records are loaded for the explicit historical reconstruction question: which claims and evidence requirements were encoded before ADR 0005 changed the default assurance policy. Do not scan the rest of the numbered corpus unless one of these records points to a specific unresolved definition.
 
 ## Known facts
 
-- Accepted repository transitions update current state directly; normal session close produces no handoff.
-- The user may create a full bundle directly from authoritative Termux `main` for the next session.
-- GitHub connector raw-content actions are not a substitute for clone/object transport.
-- Google Drive carries bundles, patches, runners, results, logs, and safety artifacts.
-- New-chat local-path upload rewriting can be unavailable on the first assistant turn.
-- Docker is unavailable and outside the project workflow.
+- The canonical provider-object set contains 60 rows, including 59 bounded reviewed objects and optional `libtermux-exec.so`.
+- The earlier supply/request machinery grouped 28 root requests and 84 record contracts.
+- Zero canonical SUP-02 responses were accepted at the 0165 boundary.
+- Exact artifact supply, semantic role, platform adaptation, producing-build provenance, necessity, provider authority, composition, and target population are independent states.
+- ADR 0005 permits lower assurance for reference-consumed claims and requires deeper assurance for adapted, independently reproduced, novel, or high-risk changed boundaries.
 
 ## Pending external inputs
 
@@ -69,23 +66,24 @@ None. See [`PENDING_ARTIFACTS.yaml`](PENDING_ARTIFACTS.yaml).
 
 ## Next valid action
 
-Build an overlap map for the current operations documents, then define the smallest canonical operations set before moving or tombstoning any legacy file.
+Construct a claim-classification table from the controlling records and current canonical generated tables. For each claim, record: claim ID, subject, authority state requested, ADR class, changed boundary, risk modifiers, existing evidence, remaining gap, minimum closure action, and prohibited inference. Review the classification before generating any collector, request, or runtime mutation.
 
 ## Stop conditions
 
-Stop before implementation if:
+Stop before evidence collection or repository implementation if:
 
-- a reusable operational lesson would be lost;
-- two documents would remain canonical for the same rule;
-- the new surface assumes repository-local capabilities unavailable in web chat;
-- a physical move lacks complete inbound-link migration and repository-wide link validation;
-- the change reintroduces a required session-close handoff.
+- one row combines artifact identity, adaptation, authority, composition, and target membership into a single claim;
+- classification cannot identify the project-owned changed boundary;
+- an existing historical requirement is treated as binding solely because it was previously encoded;
+- a lower assurance level would conceal security, ABI, loader, or broad runtime blast radius;
+- the proposed next action would collect evidence without a reviewed claim classification;
+- any provider or target is implicitly accepted by the classification itself.
 
 ## Completion criteria
 
-- Each durable collaboration/tool/exchange rule has one canonical home.
-- Legacy session and handoff narratives are explicitly historical or replaced.
-- The web-chat profile accurately distinguishes sandbox, Drive, GitHub connector, and user Termux authority.
-- Optional checkpointing is defined only for valuable incomplete work.
-- Default onboarding remains four files and history-free.
-- The next active task can apply ADR 0005 to the paused provider claims without relying on chat memory.
+- A bounded claim inventory covers the currently active provider-authority decision surface.
+- Every claim has an ADR 0005 class and explicit risk rationale.
+- Existing evidence and remaining gaps are separately recorded.
+- The 28 SUP-02 requests are classified as still necessary, narrowed, replaced, or unnecessary rather than assumed uniformly mandatory.
+- No provider, composition, target row, or activation is accepted by implication.
+- The next active task names one smallest valid assurance or decision phase.
