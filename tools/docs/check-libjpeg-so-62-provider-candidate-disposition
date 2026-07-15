@@ -6,9 +6,11 @@ for rel in \
   docs/evidence/libjpeg-so-62-provider-candidate-disposition.md \
   docs/evidence/libjpeg-so-62-compatibility-provider-candidate-result-review.md \
   docs/evidence/libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review.md \
+  docs/evidence/libjpeg-so-62-gdkpixbuf-consumer-binding-result-review.md \
   "$REVIEW/libjpeg-so-62-provider-candidate-disposition.tsv" \
   "$REVIEW/libjpeg-so-62-compatibility-provider-candidate-result-review.tsv" \
   "$REVIEW/libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review.tsv" \
+  "$REVIEW/libjpeg-so-62-gdkpixbuf-consumer-binding-result-review.tsv" \
   "$REVIEW/provider-claim-classification.tsv" \
   "$REVIEW/provider-claim-classification-metadata.tsv"
 do [ -f "$ROOT/$rel" ] || { echo "libjpeg-so-62-disposition: FAIL: missing $rel" >&2; exit 1; }; done
@@ -26,15 +28,15 @@ want={
 'rejected_artifact_sha256':'e672a721d7a949048cab5c7073ef0a0c05f627b8fc691ecc2d0adea6a5a5689e',
 'upstream_source_sha256':'9564c72b1dfd1d6fe6274c5f95a8d989b59854575d4bbee44ade7bc17aa9bc93',
 'expected_compatibility_soname':'libjpeg.so.62','expected_compatibility_concrete_member':'libjpeg.so.62.4.0',
-'disposition':'RUNPATH_FREE_COMPATIBILITY_PROVIDER_CANDIDATE_IDENTITY_ACCEPTED_PROVIDER_REVIEW_REQUIRED',
-'authority_effect':'CANDIDATE_IDENTITY_ONLY_NO_PROVIDER_COMPOSITION_TARGET_MATERIALIZATION_OR_ACTIVATION_EFFECT',
+'disposition':'RUNPATH_FREE_COMPATIBILITY_PROVIDER_CANDIDATE_IDENTITY_ACCEPTED_FUNCTIONAL_DIAGNOSTIC_REQUIRED',
+'authority_effect':'CANDIDATE_IDENTITY_AND_FAILED_FUNCTIONAL_EVIDENCE_ONLY_NO_PROVIDER_COMPOSITION_TARGET_MATERIALIZATION_OR_ACTIVATION_EFFECT',
 }
 for k,v in want.items():
     if row.get(k)!=v: errors.append(f'{k}: expected {v}, got {row.get(k)!r}')
 for field,token in [
 ('exact_repository_candidate_state','RUNPATH_FREE_PROJECT_CANDIDATE_IDENTITY_ACCEPTED'),
 ('required_build_delta','CMAKE_SKIP_RPATH_ON'),('required_build_delta','NO_DT_RPATH_OR_DT_RUNPATH'),
-('next_action','GDK_PIXBUF_CONSUMER_BINDING'),('prohibited_inference','LIBJPEG_SO_8_AS_SUBSTITUTE'),
+('next_action','DIAGNOSTIC_MATRIX'),('prohibited_inference','LIBJPEG_SO_8_AS_SUBSTITUTE'),
 ('prohibited_inference','ACCEPT_PROVIDER_AUTHORITY')]:
     if token not in row.get(field,''): errors.append(f'{field} lacks {token}')
 first=read('libjpeg-so-62-compatibility-provider-candidate-result-review.tsv')[0]
@@ -51,9 +53,9 @@ for k,v in list(second_want.items()):
 claims={r['claim_id']:r for r in read('provider-claim-classification.tsv')}
 want_claims={
 'PCC-LIBJPEG-TURBO-ARTIFACT':('RUNPATH_FREE_COMPATIBILITY_CANDIDATE_IDENTITY_ACCEPTED','NONE_FOR_RUNPATH_FREE_EXACT_COMPATIBILITY_CANDIDATE_IDENTITY'),
-'PCC-LIBJPEG-TURBO-PROVIDER':('RUNPATH_FREE_CANDIDATE_IDENTITY_ACCEPTED_PROVIDER_REVIEW_REQUIRED','BOUNDED_CONSUMER_BINDING_FUNCTIONAL_EQUIVALENCE'),
+'PCC-LIBJPEG-TURBO-PROVIDER':('CANDIDATE_IDENTITY_ACCEPTED_CONSUMER_VALIDATION_BLOCKED_SIGSEGV','FUNCTIONAL_SIGSEGV_ROOT_CAUSE_ISOLATION'),
 'PCC-OJ-001-REQUIRED-OBJECT':('RUNPATH_FREE_EXACT_CANDIDATE_IDENTITY_ACCEPTED','NONE_FOR_REQUIRED_SONAME_AND_EXACT_RUNPATH_FREE_CANDIDATE_IDENTITY'),
-'PCC-GLOBAL-BUILD-PROVENANCE':('ACTIVE_CLASS_C_PRODUCING_RECORD_ACCEPTED_FUNCTIONAL_EQUIVALENCE_OPEN','BOUNDED_FUNCTIONAL_EQUIVALENCE_AND_EXACT_CONSUMER_BINDING'),
+'PCC-GLOBAL-BUILD-PROVENANCE':('ACTIVE_CLASS_C_PRODUCING_RECORD_ACCEPTED_FUNCTIONAL_VALIDATION_BLOCKED_SIGSEGV','FUNCTIONAL_SIGSEGV_ROOT_CAUSE_ISOLATION'),
 }
 for cid,(state,gap) in want_claims.items():
     r=claims.get(cid,{})
@@ -64,19 +66,19 @@ meta_want={
 'oj001_disposition':want['disposition'],'oj001_corrected_candidate_decision':'CANDIDATE_IDENTITY_ACCEPTED_PROVIDER_REVIEW_REQUIRED',
 'oj001_corrected_candidate_sha256':'a537840ef9da6135cb3284bc3b3e0d1fb4f624180a416c2a3964b94714eb7fe5',
 'oj001_corrected_candidate_rpath_state':'ABSENT','oj001_corrected_candidate_runpath_state':'ABSENT',
-'next_review_tranche':'LIBJPEG_SO_62_BOUNDED_GDK_PIXBUF_CONSUMER_BINDING_VALIDATION'}
+'next_review_tranche':'LIBJPEG_SO_62_GDKPIXBUF_FUNCTIONAL_SIGSEGV_DIAGNOSTIC_MATRIX'}
 for k,v in meta_want.items():
     if meta.get(k)!=v: errors.append(f'metadata {k}: expected {v}, got {meta.get(k)!r}')
 state=(root/'docs/current/STATE.yaml').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); brief=(root/'docs/current/BRIEF.md').read_text(); status=(root/'STATUS.md').read_text()
 for label,ok in [
-('state version','state_version: 2026-07-15.16' in state),('active task','Task ID: `validate-libjpeg-so-62-compatibility-provider-consumer-binding`' in active),
+('state version','state_version: 2026-07-15.17' in state),('active task','Task ID: `diagnose-libjpeg-so-62-gdkpixbuf-functional-segfault`' in active),
 ('candidate digest','a537840ef9da6135cb3284bc3b3e0d1fb4f624180a416c2a3964b94714eb7fe5' in state),
-('brief task','validate-libjpeg-so-62-compatibility-provider-consumer-binding' in brief),
-('status marker','LIBJPEG_SO_62_RUNPATH_FREE_CANDIDATE_IDENTITY_ACCEPTED_CONSUMER_VALIDATION_REQUIRED' in status)]:
+('brief task','diagnose-libjpeg-so-62-gdkpixbuf-functional-segfault' in brief),
+('status marker','DIAGNOSE_LIBJPEG_SO_62_GDKPIXBUF_FUNCTIONAL_SIGSEGV' in status)]:
     if not ok: errors.append(f'missing current marker: {label}')
 if errors:
     for e in errors: print('libjpeg-so-62-disposition: FAIL:',e,file=sys.stderr)
     raise SystemExit(1)
-print('libjpeg-so-62-disposition: PASS: runpath-free candidate identity accepted; bounded consumer validation required')
+print('libjpeg-so-62-disposition: PASS: candidate identity retained; functional SIGSEGV diagnostic required')
 PY
 echo 'libjpeg-so-62-disposition: all checks passed'

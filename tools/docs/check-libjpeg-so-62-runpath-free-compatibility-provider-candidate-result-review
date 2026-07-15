@@ -32,13 +32,13 @@ for k,v in want.items():
 for field,token in [('remaining_gap','CONSUMER_BINDING'),('remaining_gap','FUNCTIONAL_EQUIVALENCE'),('next_action','GDK_PIXBUF'),('prohibited_inference','DOES_NOT_ACCEPT_PROVIDER_AUTHORITY')]:
     if token not in r.get(field,''): errors.append(f'{field} lacks {token}')
 claims={x['claim_id']:x for x in read('provider-claim-classification.tsv')}
-if claims.get('PCC-GLOBAL-BUILD-PROVENANCE',{}).get('classification_state')!='ACTIVE_CLASS_C_PRODUCING_RECORD_ACCEPTED_FUNCTIONAL_EQUIVALENCE_OPEN': errors.append('Class C producing state differs')
-if claims.get('PCC-LIBJPEG-TURBO-PROVIDER',{}).get('classification_state')!='RUNPATH_FREE_CANDIDATE_IDENTITY_ACCEPTED_PROVIDER_REVIEW_REQUIRED': errors.append('provider claim state differs')
+if claims.get('PCC-GLOBAL-BUILD-PROVENANCE',{}).get('classification_state')!='ACTIVE_CLASS_C_PRODUCING_RECORD_ACCEPTED_FUNCTIONAL_VALIDATION_BLOCKED_SIGSEGV': errors.append('Class C producing state differs')
+if claims.get('PCC-LIBJPEG-TURBO-PROVIDER',{}).get('classification_state')!='CANDIDATE_IDENTITY_ACCEPTED_CONSUMER_VALIDATION_BLOCKED_SIGSEGV': errors.append('provider claim state differs')
 meta={x['key']:x['value'] for x in read('provider-claim-classification-metadata.tsv')}
-for k,v in {'oj001_corrected_candidate_sha256':want['candidate_sha256'],'oj001_corrected_candidate_rpath_state':'ABSENT','oj001_corrected_candidate_runpath_state':'ABSENT','next_review_tranche':'LIBJPEG_SO_62_BOUNDED_GDK_PIXBUF_CONSUMER_BINDING_VALIDATION'}.items():
+for k,v in {'oj001_corrected_candidate_sha256':want['candidate_sha256'],'oj001_corrected_candidate_rpath_state':'ABSENT','oj001_corrected_candidate_runpath_state':'ABSENT','next_review_tranche':'LIBJPEG_SO_62_GDKPIXBUF_FUNCTIONAL_SIGSEGV_DIAGNOSTIC_MATRIX'}.items():
     if meta.get(k)!=v: errors.append(f'metadata {k} differs')
 active=(root/'docs/current/ACTIVE_TASK.md').read_text(); state=(root/'docs/current/STATE.yaml').read_text(); doc=(root/'docs/evidence/libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review.md').read_text()
-for label,ok in [('task','Task ID: `validate-libjpeg-so-62-compatibility-provider-consumer-binding`' in active),('state digest',want['candidate_sha256'] in state),('consumer digest','16d15168c69d4ad61862462da9fe811b5be3bef898b940a4023e15b039f5b43c' in active),('doc no provider','provider authority: not accepted' in doc),('doc no runpath','DT_RUNPATH: absent' in doc)]:
+for label,ok in [('task','Task ID: `diagnose-libjpeg-so-62-gdkpixbuf-functional-segfault`' in active),('state digest',want['candidate_sha256'] in state),('consumer digest','16d15168c69d4ad61862462da9fe811b5be3bef898b940a4023e15b039f5b43c' in active),('doc no provider','provider authority: not accepted' in doc),('doc no runpath','DT_RUNPATH: absent' in doc)]:
     if not ok: errors.append(f'missing marker: {label}')
 if errors:
     for e in errors: print('libjpeg-runpath-free-review: FAIL:',e,file=sys.stderr)

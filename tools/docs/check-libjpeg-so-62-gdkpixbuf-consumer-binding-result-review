@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT=${1:-$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)}
+REVIEW=experiments/glibc/selected-obsidian-provider-authority/review
+for rel in \
+  docs/evidence/libjpeg-so-62-gdkpixbuf-consumer-binding-result-review.md \
+  "$REVIEW/libjpeg-so-62-gdkpixbuf-consumer-binding-result-review.tsv" \
+  "$REVIEW/libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review.tsv" \
+  "$REVIEW/provider-claim-classification.tsv" \
+  "$REVIEW/provider-claim-classification-metadata.tsv" \
+  docs/current/STATE.yaml docs/current/ACTIVE_TASK.md docs/current/BRIEF.md STATUS.md
+do [ -f "$ROOT/$rel" ] || { echo "libjpeg-gdkpixbuf-review: FAIL: missing $rel" >&2; exit 1; }; done
+python3 - "$ROOT" <<'PY'
+from pathlib import Path
+import csv,sys
+root=Path(sys.argv[1]); review=root/'experiments/glibc/selected-obsidian-provider-authority/review'
+def read(name):
+    with (review/name).open(newline='',encoding='utf-8') as f:return list(csv.DictReader(f,delimiter='\t'))
+errors=[]
+rows=read('libjpeg-so-62-gdkpixbuf-consumer-binding-result-review.tsv')
+if len(rows)!=1: errors.append(f'expected one review row, found {len(rows)}')
+row=rows[0] if rows else {}
+want={
+'review_id':'LIBJPEG-OJ-001-CONSUMER-001','requirement_id':'OJ-001',
+'result_archive_sha256':'b010695561974c491aa0706600e867ea3a2b8b8abf43f8573c075418a047d92a',
+'repository_head':'43c93d2b9e2cc2879d9b6b24e7b6c7e6eecc33ad','repository_tree':'7a4b22a42216491ea35b71e04643eff34d579ca7',
+'candidate_member':'libjpeg.so.62.4.0','candidate_sha256':'a537840ef9da6135cb3284bc3b3e0d1fb4f624180a416c2a3964b94714eb7fe5',
+'candidate_soname':'libjpeg.so.62','candidate_rpath_state':'ABSENT','candidate_runpath_state':'ABSENT',
+'consumer_member':'libgdk_pixbuf-2.0.so.0.4200.12','consumer_sha256':'16d15168c69d4ad61862462da9fe811b5be3bef898b940a4023e15b039f5b43c',
+'consumer_needed_state':'EXACT_LIBJPEG_SO_62','consumer_undefined_jpeg_symbols':'22','missing_jpeg_symbols':'0',
+'probe_build_state':'SUCCEEDED','functional_result':'SIGSEGV_BEFORE_OUTPUT','process_exit_code':'139','signal':'SIGSEGV',
+'decode_width':'-','decode_height':'-','decode_channels':'-','mapped_candidate_state':'UNPROVEN_DUE_TO_PRE_OUTPUT_SIGSEGV',
+'protected_state':'UNCHANGED','candidate_decision':'CANDIDATE_IDENTITY_RETAINED_FUNCTIONAL_VALIDATION_BLOCKED_SIGSEGV',
+'provider_authority':'NOT_ACCEPTED'
+}
+for k,v in want.items():
+    if row.get(k)!=v: errors.append(f'{k}: expected {v}, got {row.get(k)!r}')
+for field,token in [
+('runtime_loader_boundary','TERMUX_GLIBC_LOADER_AND_LIBC_WITH_DEBIAN_GDKPIXBUF_DEPENDENCY_WORLD'),
+('diagnostic_conclusion','STATIC_BINDING_SUCCEEDED_FUNCTIONAL_CAUSE_NOT_ISOLATED'),
+('remaining_gap','DIRECT_LIBJPEG_CONTROL'),('remaining_gap','ORACLE_VS_CANDIDATE_GDKPIXBUF_CONTROL'),
+('next_action','DIAGNOSTIC_MATRIX'),('authority_effect','NO_PROVIDER_COMPOSITION_TARGET_MATERIALIZATION_OR_ACTIVATION_EFFECT'),
+('prohibited_inference','DOES_NOT_PROVE_CANDIDATE_ABI_FAILURE')]:
+    if token not in row.get(field,''): errors.append(f'{field} lacks {token}')
+claims={r['claim_id']:r for r in read('provider-claim-classification.tsv')}
+for cid,state,gap in [
+('PCC-LIBJPEG-TURBO-ADAPTATION','CLASS_C_PRODUCING_RECORD_ACCEPTED_FUNCTIONAL_VALIDATION_BLOCKED_SIGSEGV','FUNCTIONAL_SIGSEGV_ROOT_CAUSE_ISOLATION'),
+('PCC-LIBJPEG-TURBO-PROVIDER','CANDIDATE_IDENTITY_ACCEPTED_CONSUMER_VALIDATION_BLOCKED_SIGSEGV','FUNCTIONAL_SIGSEGV_ROOT_CAUSE_ISOLATION'),
+('PCC-GLOBAL-BUILD-PROVENANCE','ACTIVE_CLASS_C_PRODUCING_RECORD_ACCEPTED_FUNCTIONAL_VALIDATION_BLOCKED_SIGSEGV','FUNCTIONAL_SIGSEGV_ROOT_CAUSE_ISOLATION')]:
+    r=claims.get(cid,{})
+    if r.get('classification_state')!=state: errors.append(f'{cid}: state {r.get("classification_state")!r}')
+    if gap not in r.get('remaining_gap',''): errors.append(f'{cid}: gap missing {gap}')
+meta={r['key']:r['value'] for r in read('provider-claim-classification-metadata.tsv')}
+for k,v in {
+'oj001_consumer_binding_review_id':'LIBJPEG-OJ-001-CONSUMER-001',
+'oj001_consumer_binding_result_sha256':want['result_archive_sha256'],
+'oj001_consumer_binding_functional_result':'SIGSEGV_BEFORE_OUTPUT',
+'oj001_consumer_binding_static_missing_symbols':'0',
+'next_review_tranche':'LIBJPEG_SO_62_GDKPIXBUF_FUNCTIONAL_SIGSEGV_DIAGNOSTIC_MATRIX'}.items():
+    if meta.get(k)!=v: errors.append(f'metadata {k}: expected {v}, got {meta.get(k)!r}')
+state=(root/'docs/current/STATE.yaml').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); brief=(root/'docs/current/BRIEF.md').read_text(); status=(root/'STATUS.md').read_text(); doc=(root/'docs/evidence/libjpeg-so-62-gdkpixbuf-consumer-binding-result-review.md').read_text()
+checks=[
+('state version','state_version: 2026-07-15.17' in state),
+('active task','Task ID: `diagnose-libjpeg-so-62-gdkpixbuf-functional-segfault`' in active),
+('state result',want['result_archive_sha256'] in state),
+('brief SIGSEGV','SIGSEGV' in brief and 'does not yet isolate candidate behavior' in brief),
+('status marker','DIAGNOSE_LIBJPEG_SO_62_GDKPIXBUF_FUNCTIONAL_SIGSEGV' in status),
+('doc no provider','provider authority: not accepted' in doc),
+('doc mixed boundary','loader and core libc came from the Termux-glibc prefix' in doc),
+]
+for label,ok in checks:
+    if not ok: errors.append(f'missing current marker: {label}')
+if errors:
+    for e in errors: print('libjpeg-gdkpixbuf-review: FAIL:',e,file=sys.stderr)
+    raise SystemExit(1)
+print('libjpeg-gdkpixbuf-review: PASS: static binding complete; functional SIGSEGV retained as unisolated and provider authority remains open')
+PY
+echo 'libjpeg-gdkpixbuf-review: all checks passed'

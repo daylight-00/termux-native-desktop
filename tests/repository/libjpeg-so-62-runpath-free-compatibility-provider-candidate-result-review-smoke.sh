@@ -25,6 +25,6 @@ restore
 mutate candidate_sha256 0000000000000000000000000000000000000000000000000000000000000000
 if bash "$CHECK" "$FIXTURE" >/dev/null 2>&1; then echo 'runpath-free review smoke: digest drift accepted' >&2; exit 1; fi
 restore
-sed -i 's/validate-libjpeg-so-62-compatibility-provider-consumer-binding/rebuild-libjpeg-so-62-compatibility-provider-candidate-without-runpath/' "$FIXTURE/docs/current/ACTIVE_TASK.md"
+sed -i 's/diagnose-libjpeg-so-62-gdkpixbuf-functional-segfault/validate-libjpeg-so-62-compatibility-provider-consumer-binding/' "$FIXTURE/docs/current/ACTIVE_TASK.md"
 if bash "$CHECK" "$FIXTURE" >/dev/null 2>&1; then echo 'runpath-free review smoke: stale task accepted' >&2; exit 1; fi
 echo 'libjpeg.so.62 runpath-free candidate result review smoke: PASS'

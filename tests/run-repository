@@ -26,6 +26,7 @@ case "$MODE" in
       tests/repository/libjpeg-so-62-provider-candidate-disposition-smoke.sh
       tests/repository/libjpeg-so-62-compatibility-provider-candidate-result-review-smoke.sh
       tests/repository/libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review-smoke.sh
+      tests/repository/libjpeg-so-62-gdkpixbuf-consumer-binding-result-review-smoke.sh
       tests/repository/shell-layout-smoke.sh
       tests/repository/vulkan-policy-scope-smoke.sh
       tests/repository/application-authority-boundary-smoke.sh
@@ -49,6 +50,7 @@ case "$MODE" in
       tests/repository/libjpeg-so-62-provider-candidate-disposition-smoke.sh
       tests/repository/libjpeg-so-62-compatibility-provider-candidate-result-review-smoke.sh
       tests/repository/libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review-smoke.sh
+      tests/repository/libjpeg-so-62-gdkpixbuf-consumer-binding-result-review-smoke.sh
     )
     ;;
   --full)

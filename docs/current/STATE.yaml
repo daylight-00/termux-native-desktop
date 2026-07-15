@@ -1,9 +1,9 @@
 schema_version: 1
-state_version: 2026-07-15.16
+state_version: 2026-07-15.17
 updated_on: 2026-07-15
 
 project:
-  phase: provider-compatibility-candidate-validation
+  phase: provider-compatibility-functional-diagnostics
   status: active
 
 repository:
@@ -53,8 +53,8 @@ documentation:
   libjpeg_runpath_free_candidate_result_review: docs/evidence/libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review.md
 
 provider_authority:
-  workstream: no-token-provider-review-complete-libjpeg-runpath-free-candidate-consumer-validation-active
-  boundary: seven-bounded-providers-accepted-oj-001-runpath-free-candidate-identity-accepted-provider-open
+  workstream: no-token-provider-review-complete-libjpeg-gdkpixbuf-functional-segfault-diagnostic-active
+  boundary: seven-bounded-providers-accepted-oj-001-candidate-identity-accepted-functional-validation-blocked-sigsegv-provider-open
   claim_inventory:
     total: 89
     class_a: 36
@@ -87,6 +87,9 @@ provider_authority:
     corrected_candidate_runpath: absent
     bounded_consumer: libgdk_pixbuf-2.0.so.0.4200.12
     bounded_consumer_sha256: 16d15168c69d4ad61862462da9fe811b5be3bef898b940a4023e15b039f5b43c
+    consumer_binding_attempt: static-binding-complete-functional-sigsegv
+    consumer_binding_result_sha256: b010695561974c491aa0706600e867ea3a2b8b8abf43f8573c075418a047d92a
+    consumer_binding_runtime_boundary: termux-glibc-loader-with-debian-consumer-world
     provider_authority: not-accepted
   sup_02_disposition:
     still_necessary: 0
@@ -94,7 +97,7 @@ provider_authority:
     replaced: 7
     unnecessary: 7
     required_now: 0
-  next_research_decision: validate-libjpeg-so-62-compatibility-provider-consumer-binding
+  next_research_decision: diagnose-libjpeg-so-62-gdkpixbuf-functional-segfault
   prohibited_claims:
     - complete-provider-authority
     - complete-runtime-composition
@@ -102,7 +105,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: validate-libjpeg-so-62-compatibility-provider-consumer-binding
+  id: diagnose-libjpeg-so-62-gdkpixbuf-functional-segfault
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:

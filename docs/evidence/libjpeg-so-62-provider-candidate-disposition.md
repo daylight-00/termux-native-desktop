@@ -154,3 +154,7 @@ the first pinned-source build is rejected for runpath; the corrected runpath-fre
 ```
 
 It does not accept provider authority, complete image/GTK composition, a target path, alias policy, installation, materialization, deployment or activation.
+
+## First bounded consumer result
+
+The exact consumer identity, `DT_NEEDED=libjpeg.so.62`, and all 22 required JPEG symbols were verified. The fixed JPEG call then exited with `SIGSEGV` before decode or mapped-path output. This does not revoke candidate identity and does not accept provider authority. The next action is the bounded runtime/API diagnostic matrix recorded in [`libjpeg-so-62-gdkpixbuf-consumer-binding-result-review.md`](libjpeg-so-62-gdkpixbuf-consumer-binding-result-review.md).

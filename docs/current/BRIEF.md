@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-15.16`
+> Semantic state version: `2026-07-15.17`
 >
 > This is the compact current-state entry point. Exact commit and tree coordinates come from the checked-out full Git bundle, not from self-referential repository text.
 
@@ -100,9 +100,9 @@ Exact artifact/member identity, adaptation semantics, provider selection, compos
 
 ## Current project phase
 
-The active task is `validate-libjpeg-so-62-compatibility-provider-consumer-binding`.
+The active task is `diagnose-libjpeg-so-62-gdkpixbuf-functional-segfault`.
 
-All no-token provider roots are complete. The first OJ-001 scratch object was rejected because it retained a 175-character colon-only `DT_RUNPATH`. OJ-001 now has an exact corrected scratch-built `libjpeg.so.62.4.0` AArch64 candidate from pinned libjpeg-turbo 3.1.0. Candidate `a537840e…` has `DT_SONAME=libjpeg.so.62`, no `DT_RPATH`/`DT_RUNPATH`, and the expected `LIBJPEG_6.2`/`LIBJPEGTURBO_6.2` symbol versions. Its identity is accepted as a candidate; the next phase validates exact GdkPixbuf consumer binding and fixed JPEG decoding before provider authority is decided. The `libjpeg.so.8` family remains an invalid substitute, and no provider authority, composition, target population, materialization or activation is accepted.
+All no-token provider roots are complete. The corrected OJ-001 candidate `a537840e…` retains accepted identity: exact `libjpeg.so.62.4.0`, `DT_SONAME=libjpeg.so.62`, no dynamic search path and the expected symbol versions. The first GdkPixbuf consumer analyzer verified exact consumer identity, `DT_NEEDED=libjpeg.so.62`, and complete 22-symbol coverage, then exited with `SIGSEGV` during the fixed JPEG file decode before mapped-path evidence. Because that process mixed the Termux-glibc loader/libc with a Debian consumer dependency world, the crash does not yet isolate candidate behavior. The active phase runs direct-libjpeg, candidate-versus-oracle, memory-versus-file API and loader-boundary controls. The `libjpeg.so.8` family remains an invalid substitute, and no provider authority, composition, target population, materialization or activation is accepted.
 
 ## Current non-goals
 
