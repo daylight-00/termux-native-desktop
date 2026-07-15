@@ -16,6 +16,7 @@ required=(
   experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification-metadata.tsv
   experiments/glibc/selected-obsidian-provider-authority/review/no-token-recipe-semantic-review.tsv
   experiments/glibc/selected-obsidian-provider-authority/review/xorg-reference-consumed-provider-authority.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/libtasn1-reference-consumed-provider-authority.tsv
 )
 for rel in "${required[@]}"; do
   [ -f "$ROOT/$rel" ] || { echo "provider-claim-classification: FAIL: missing $rel" >&2; exit 1; }
@@ -51,7 +52,7 @@ dispositions = read('provider-sup-02-request-disposition.tsv')
 roots = read('generic-build-attestation-adaptation-root-review-set.tsv')
 requests = read('generic-build-attestation-adaptation-gap-evidence-supply-batch-sup-02-custodian-export-requests.tsv')
 metadata = {row['key']: row['value'] for row in read('provider-claim-classification-metadata.tsv')}
-provider_reviews = read('xorg-reference-consumed-provider-authority.tsv')
+provider_reviews = read('xorg-reference-consumed-provider-authority.tsv') + read('libtasn1-reference-consumed-provider-authority.tsv')
 provider_review_by_root = {row['root_review_id']: row for row in provider_reviews}
 
 errors=[]
@@ -64,10 +65,10 @@ expected_meta={
     'sup02_still_necessary_count':'0','sup02_narrowed_count':'14',
     'sup02_replaced_count':'7','sup02_unnecessary_count':'7',
     'no_token_semantic_review_count':'7','no_token_confirmed_a_count':'7',
-    'no_token_reclassified_b_count':'0','provider_review_count':'4',
-    'provider_authority_accepted_count':'4','provider_authority_open_count':'24',
-    'authority_effect':'FOUR_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT',
-    'next_review_tranche':'LIBTASN1_REFERENCE_CONSUMED_PROVIDER_ROOT',
+    'no_token_reclassified_b_count':'0','provider_review_count':'5',
+    'provider_authority_accepted_count':'5','provider_authority_open_count':'23',
+    'authority_effect':'FIVE_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT',
+    'next_review_tranche':'LIBEPOXY_REFERENCE_CONSUMED_PROVIDER_ROOT',
 }
 for key,val in expected_meta.items():
     if metadata.get(key)!=val:
@@ -153,13 +154,13 @@ brief=(root/'docs/current/BRIEF.md').read_text()
 catalog=(root/'docs/catalog.tsv').read_text()
 status=(root/'STATUS.md').read_text()
 checks=[
-    ('state version','state_version: 2026-07-15.08' in state),
+    ('state version','state_version: 2026-07-15.09' in state),
     ('claim count state','total: 89' in state),
     ('SUP-02 state','required_now: 0' in state),
-    ('next task','Task ID: `review-libtasn1-reference-consumed-provider-authority`' in active),
+    ('next task','Task ID: `review-libepoxy-reference-consumed-provider-authority`' in active),
     ('brief classification','89 separated claims' in brief),
     ('catalog row','provider-claim-classification\tevidence\tcurrent\tcanonical' in catalog),
-    ('status next phase','REVIEW_LIBTASN1_REFERENCE_CONSUMED_PROVIDER_ROOT' in status),
+    ('status next phase','REVIEW_LIBEPOXY_REFERENCE_CONSUMED_PROVIDER_ROOT' in status),
 ]
 for label,ok in checks:
     if not ok: errors.append(f'missing current-state marker: {label}')
@@ -168,7 +169,7 @@ if errors:
     for err in errors:
         print('provider-claim-classification: FAIL:',err,file=sys.stderr)
     raise SystemExit(1)
-print('provider-claim-classification: PASS: 89 claims, 4 bounded providers and 28 SUP-02 dispositions are coherent')
+print('provider-claim-classification: PASS: 89 claims, 5 bounded providers and 28 SUP-02 dispositions are coherent')
 PY
 
 echo 'provider-claim-classification: all checks passed'

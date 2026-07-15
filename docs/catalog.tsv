@@ -42,3 +42,4 @@ knowledge-index	knowledge	reference	reference	no	docs/knowledge/README.md	reusab
 provider-claim-classification	evidence	current	canonical	no	docs/evidence/provider-claim-classification.md	ADR 0005 claim inventory and SUP-02 disposition
 no-token-recipe-semantic-review	evidence	current	canonical	no	docs/evidence/no-token-recipe-semantic-review.md	seven-root pinned recipe and upstream semantic review
 xorg-reference-consumed-provider-authority	evidence	current	canonical	no	docs/evidence/xorg-reference-consumed-provider-authority.md	four exact X.Org provider decisions bounded to selected GTK X11 capabilities
+libtasn1-reference-consumed-provider-authority	evidence	current	canonical	no	docs/evidence/libtasn1-reference-consumed-provider-authority.md	exact libtasn1 provider decision bounded to external GnuTLS ASN.1 security capability

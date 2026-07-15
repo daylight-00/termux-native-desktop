@@ -1,0 +1,148 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+required=(
+  docs/evidence/libtasn1-reference-consumed-provider-authority.md
+  experiments/glibc/selected-obsidian-provider-authority/review/libtasn1-reference-consumed-provider-authority.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification-metadata.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/generic-build-attestation-adaptation-root-review-set.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/generic-recipe-binding-and-drift-target-receipt-review.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/generic-artifact-member-inventory-receipt-review.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/generic-artifact-member-comparison-exclusions.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/no-token-recipe-semantic-review.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/non-priority-generic-authority-ledger/printing.tsv
+)
+for rel in "${required[@]}"; do
+  [ -f "$ROOT/$rel" ] || { echo "libtasn1-provider-authority: FAIL: missing $rel" >&2; exit 1; }
+done
+
+python3 - "$ROOT" <<'PY'
+from pathlib import Path
+import csv, sys
+root=Path(sys.argv[1])
+review=root/'experiments/glibc/selected-obsidian-provider-authority/review'
+
+def read(path):
+    with path.open(newline='',encoding='utf-8') as f:
+        return list(csv.DictReader(f,delimiter='\t'))
+
+rows=read(review/'libtasn1-reference-consumed-provider-authority.tsv')
+roots={r['recipe_root']:r for r in read(review/'generic-build-attestation-adaptation-root-review-set.tsv')}
+recipes={}
+for r in read(review/'generic-recipe-binding-and-drift-target-receipt-review.tsv'):
+    recipes.setdefault(r['recipe_root'],r)
+members={r['evidence_row_id']:r for r in read(review/'generic-artifact-member-inventory-receipt-review.tsv')}
+semantics={r['recipe_root']:r for r in read(review/'no-token-recipe-semantic-review.tsv')}
+claims={r['claim_id']:r for r in read(review/'provider-claim-classification.tsv')}
+meta={r['key']:r['value'] for r in read(review/'provider-claim-classification-metadata.tsv')}
+exclusions=read(review/'generic-artifact-member-comparison-exclusions.tsv')
+oracle=read(review/'non-priority-generic-authority-ledger/printing.tsv')
+errors=[]
+
+if len(rows)!=1:
+    errors.append(f'expected 1 review row, found {len(rows)}')
+else:
+    r=rows[0]
+    if r['review_id']!='LIBTASN1-PROV-001': errors.append('review_id mismatch')
+    if r['recipe_root']!='gpkg/libtasn1': errors.append('recipe root mismatch')
+    provider_root=roots.get('gpkg/libtasn1')
+    consumer_root=roots.get('gpkg/libgnutls')
+    provider_recipe=recipes.get('gpkg/libtasn1')
+    consumer_recipe=recipes.get('gpkg/libgnutls')
+    provider_member=members.get(r['evidence_row_id'])
+    consumer_member=members.get(r['consumer_evidence_row_id'])
+    semantic=semantics.get('gpkg/libtasn1')
+    if not provider_root or not consumer_root or not provider_recipe or not consumer_recipe:
+        errors.append('canonical provider or consumer root/recipe row missing')
+    else:
+        bindings=[
+          ('root_review_id', provider_root['root_review_id']),
+          ('recipe_tree', provider_root['recipe_tree']),
+          ('artifact_id', provider_recipe['artifact_id']),
+          ('artifact_package', provider_recipe['artifact_package']),
+          ('artifact_version', provider_recipe['artifact_version']),
+          ('artifact_sha256', provider_recipe['artifact_sha256']),
+          ('evidence_row_id', provider_recipe['evidence_row_id']),
+          ('consumer_root_review_id', consumer_root['root_review_id']),
+          ('consumer_recipe_tree', consumer_root['recipe_tree']),
+          ('consumer_artifact_id', consumer_recipe['artifact_id']),
+          ('consumer_artifact_package', consumer_recipe['artifact_package']),
+          ('consumer_artifact_version', consumer_recipe['artifact_version']),
+          ('consumer_artifact_sha256', consumer_recipe['artifact_sha256']),
+          ('consumer_evidence_row_id', consumer_recipe['evidence_row_id']),
+        ]
+        for field,want in bindings:
+            if r[field]!=want: errors.append(f'{field}: expected {want}, got {r[field]!r}')
+    if provider_member:
+        for field,source in [('exact_member_path','exact_member_path'),('exact_member_sha256','exact_member_sha256'),('observed_soname','exact_observed_elf_soname')]:
+            if r[field]!=provider_member[source]: errors.append(f'{field} drift from canonical provider member')
+    else:
+        errors.append('canonical provider member row missing')
+    if consumer_member:
+        for field,source in [('consumer_exact_member_path','exact_member_path'),('consumer_exact_member_sha256','exact_member_sha256'),('consumer_observed_soname','exact_observed_elf_soname')]:
+            if r[field]!=consumer_member[source]: errors.append(f'{field} drift from canonical consumer member')
+    else:
+        errors.append('canonical consumer member row missing')
+    if r['observed_soname']!='libtasn1.so.6': errors.append('unexpected provider SONAME')
+    if r['consumer_observed_soname']!='libgnutls.so.30': errors.append('unexpected consumer SONAME')
+    if not semantic or semantic['semantic_result']!='CONFIRMED_A': errors.append('Class A libtasn1 semantic review missing')
+    if r['decision']!='ACCEPTED_BOUNDED_PROVIDER': errors.append('decision is not accepted bounded provider')
+    if r['remaining_gap']!='NONE_FOR_BOUNDED_PROVIDER_AUTHORITY': errors.append('bounded provider gap is not closed')
+    if 'NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT' not in r['authority_effect']: errors.append('authority effect not bounded')
+    for field in ['capability_scope','necessity_basis','consumer_binding_basis','candidate_conflict_and_exclusion_result','update_boundary','rollback_boundary','prohibited_inference']:
+        if not r[field]: errors.append(f'empty {field}')
+    tokens={
+      'STATIC_VARIANT_EXCLUDED':'static exclusion not recorded',
+      'DEBIAN_ROOTFS_ORACLE_BYTES_EXCLUDED_FROM_TARGET_AUTHORITY':'Debian oracle exclusion not recorded',
+      'INCLUDED_MINITASN1_FALLBACK_NOT_SELECTED':'included minitasn1 exclusion not recorded',
+      'NO_CONCRETE_FILENAME_OR_SONAME_DRIFT':'filename/SONAME result not recorded',
+    }
+    for token,msg in tokens.items():
+        if token not in r['candidate_conflict_and_exclusion_result']: errors.append(msg)
+    if not any(e['package']=='libtasn1-glibc-static' and e['exclusion_reason']=='STATIC_ONLY_PACKAGE_OUTSIDE_DYNAMIC_MEMBER_SEARCH' for e in exclusions):
+        errors.append('canonical libtasn1 static exclusion missing')
+    if not any(o.get('identity_label')=='libtasn1.so.6.6.4' and o.get('observed_supply_origin')=='DEBIAN_ROOTFS_ORACLE_BYTES' for o in oracle):
+        errors.append('canonical Debian oracle row missing')
+    claim=claims.get('PCC-LIBTASN1-PROVIDER')
+    if not claim:
+        errors.append('generated libtasn1 provider claim missing')
+    else:
+        if claim['classification_state']!='BOUNDED_PROVIDER_AUTHORITY_ACCEPTED': errors.append('generated provider state mismatch')
+        if claim['remaining_gap']!='NONE_FOR_BOUNDED_PROVIDER_AUTHORITY': errors.append('generated provider gap mismatch')
+        if claim['authority_effect']!=r['authority_effect']: errors.append('generated authority effect mismatch')
+        if r['review_id'] not in claim['existing_evidence']: errors.append('generated provider evidence does not link review row')
+
+expected_meta={
+ 'provider_review_count':'5',
+ 'provider_authority_accepted_count':'5',
+ 'provider_authority_open_count':'23',
+ 'authority_effect':'FIVE_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT',
+ 'next_review_tranche':'LIBEPOXY_REFERENCE_CONSUMED_PROVIDER_ROOT',
+}
+for k,v in expected_meta.items():
+    if meta.get(k)!=v: errors.append(f'metadata {k}: expected {v}, got {meta.get(k)!r}')
+
+state=(root/'docs/current/STATE.yaml').read_text()
+active=(root/'docs/current/ACTIVE_TASK.md').read_text()
+brief=(root/'docs/current/BRIEF.md').read_text()
+status=(root/'STATUS.md').read_text()
+catalog=(root/'docs/catalog.tsv').read_text()
+markers=[
+ ('state version','state_version: 2026-07-15.09' in state),
+ ('accepted five','accepted: 5' in state),
+ ('open two','open_no_token_roots: 2' in state),
+ ('next task','Task ID: `review-libepoxy-reference-consumed-provider-authority`' in active),
+ ('brief accepted','bounded providers accepted: 5' in brief),
+ ('status accepted','libtasn1 exact provider accepted' in status),
+ ('catalog','libtasn1-reference-consumed-provider-authority\tevidence\tcurrent\tcanonical' in catalog),
+]
+for label,ok in markers:
+    if not ok: errors.append(f'missing current-state marker: {label}')
+
+if errors:
+    for e in errors: print('libtasn1-provider-authority: FAIL:',e,file=sys.stderr)
+    raise SystemExit(1)
+print('libtasn1-provider-authority: PASS: exact libtasn1 provider accepted for bounded external GnuTLS 3.8.9 ASN.1 security scope')
+PY

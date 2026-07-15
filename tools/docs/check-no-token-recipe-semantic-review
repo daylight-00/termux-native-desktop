@@ -77,7 +77,7 @@ for recipe, exp in expected.items():
         errors.append(f'{recipe}: canonical source-binding mismatch')
 
 claim_map={(r['subject_label'],r['claim_type']):r for r in claims}
-accepted_xorg={'gpkg/libxfixes','gpkg/libxcomposite','gpkg/libxi','gpkg/libxinerama'}
+accepted_xorg={'gpkg/libxfixes','gpkg/libxcomposite','gpkg/libxi','gpkg/libxinerama','gpkg/libtasn1'}
 for recipe in expected:
     adaptation=claim_map.get((recipe,'ADAPTATION_SEMANTICS'))
     provider=claim_map.get((recipe,'PROVIDER_AUTHORITY'))
@@ -108,11 +108,11 @@ brief=(root/'docs/current/BRIEF.md').read_text()
 evidence=(root/'docs/evidence/no-token-recipe-semantic-review.md').read_text()
 catalog=(root/'docs/catalog.tsv').read_text()
 markers=[
- ('state version','state_version: 2026-07-15.08' in state),
+ ('state version','state_version: 2026-07-15.09' in state),
  ('seven confirmed','confirmed_a: 7' in state),
- ('provider accepted four','provider_authority_accepted: 4' in state),
- ('provider open three','provider_authority_open: 3' in state),
- ('next task','Task ID: `review-libtasn1-reference-consumed-provider-authority`' in active),
+ ('provider accepted four','provider_authority_accepted: 5' in state),
+ ('provider open three','provider_authority_open: 2' in state),
+ ('next task','Task ID: `review-libepoxy-reference-consumed-provider-authority`' in active),
  ('brief result','all seven are Class A' in brief),
  ('evidence status','confirmed Class A: 7' in evidence),
  ('catalog row','no-token-recipe-semantic-review\tevidence\tcurrent\tcanonical' in catalog),
@@ -122,5 +122,5 @@ for label,ok in markers:
 if errors:
     for err in errors: print('no-token-recipe-semantic-review: FAIL:',err,file=sys.stderr)
     raise SystemExit(1)
-print('no-token-recipe-semantic-review: PASS: 7 roots confirmed Class A; 4 bounded providers accepted and 3 remain open')
+print('no-token-recipe-semantic-review: PASS: 7 roots confirmed Class A; 5 bounded providers accepted and 2 remain open')
 PY

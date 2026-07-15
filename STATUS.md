@@ -1,6 +1,6 @@
 # Status
 
-> **State:** bundle-native documentation and operations control planes active; compact constitutional authority installed; ADR 0005 claim classification complete; seven no-token recipes confirmed Class A; four X.Org exact providers accepted for bounded selected GTK X11 scope; libtasn1 provider review active
+> **State:** bundle-native documentation and operations control planes active; compact constitutional authority installed; ADR 0005 claim classification complete; seven no-token recipes confirmed Class A; four X.Org exact providers and libtasn1 exact provider accepted for bounded capability scopes; libepoxy provider review active
 > **Updated:** 2026-07-15
 
 ## Repository and deployment consolidation
@@ -10,7 +10,7 @@
 - Topic branches are deleted only after their tips are verified as ancestors of the pushed `main`.
 - Direct checkout-to-live symlinks are superseded by immutable materialized repository releases and a stable atomic `current` pointer.
 - `tools/deploy --profile workstation|full` owns managed public leaves; external payloads, selected generations, provider installs, build trees and user state remain outside this cleanup transaction.
-- The provider-authority corpus is classified under ADR 0005: 89 separated claims and 28 historical SUP-02 requests reclassified as 14 narrowed, 7 replaced and 7 unnecessary. Four exact X.Org provider claims are accepted for bounded selected GTK X11 scope; no composition, target row or activation is accepted.
+- The provider-authority corpus is classified under ADR 0005: 89 separated claims and 28 historical SUP-02 requests reclassified as 14 narrowed, 7 replaced and 7 unnecessary. Five exact provider claims are accepted: four X.Org members for bounded selected GTK X11 scope and libtasn1 for bounded external GnuTLS 3.8.9 ASN.1/security scope. No composition, target row or activation is accepted.
 
 See `docs/decisions/0004-single-main-and-immutable-release-deployment.md`.
 
@@ -109,7 +109,7 @@ See `docs/decisions/0004-single-main-and-immutable-release-deployment.md`.
 - The ADR 0005 classification now separates 28 artifact-identity claims, 28 adaptation claims, 28 provider-authority claims, OJ-001, conditional build provenance, composition, target population and activation into 89 rows.
 - Class distribution is 36 A, 49 B, 1 conditional C and 3 D; the Class C producing-build claim is deferred because no root is currently classified as independently reproduced.
 - All 28 SUP-02 requests remain historical: 14 are narrowed to claim-specific escalation only, 7 are replaced by reference/artifact/semantic integration evidence, and 7 are unnecessary at the current boundary. Zero requests are required now.
-- All seven no-token roots have completed exact pinned-recipe semantic review as Class A. Four X.Org roots now have bounded exact-member provider authority for the selected GTK 3.24.49 X11 feature set. `libtasn1` is the next single-root provider review; complete composition, target population and activation remain blocked.
+- All seven no-token roots have completed exact pinned-recipe semantic review as Class A. Four X.Org roots have bounded exact-member provider authority for the selected GTK 3.24.49 X11 feature set, and `libtasn1` has bounded exact-member provider authority for the external GnuTLS 3.8.9 ASN.1/security capability. `libepoxy` is the next single-root provider review; complete composition, target population and activation remain blocked.
 
 ## Current authority
 
@@ -322,30 +322,30 @@ AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
 AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
-AUTH-009 non-priority generic capabilities; OJ-001 required identity is corrected, the 89-row ADR 0005 claim inventory is complete, all 28 SUP-02 requests are historical with zero currently required, seven no-token recipes are Class A, and four X.Org exact providers have bounded selected GTK X11 authority while the remaining provider and composition claims stay open
+AUTH-009 non-priority generic capabilities; OJ-001 required identity is corrected, the 89-row ADR 0005 claim inventory is complete, all 28 SUP-02 requests are historical with zero currently required, seven no-token recipes are Class A, and five exact providers have bounded authority while the remaining provider and composition claims stay open
 AUTH-010 exact application payload supply, named supplement membership and release execution; launcher source boundary bounded
 ```
 
 ## Next valid state
 
 ```text
-REVIEW_LIBTASN1_REFERENCE_CONSUMED_PROVIDER_ROOT
+REVIEW_LIBEPOXY_REFERENCE_CONSUMED_PROVIDER_ROOT
 ```
 
 Active task:
 
 ```text
-REVIEW_LIBTASN1_REFERENCE_CONSUMED_PROVIDER_AUTHORITY
+REVIEW_LIBEPOXY_REFERENCE_CONSUMED_PROVIDER_AUTHORITY
 ```
 
 Required order:
 
 ```text
 1. preserve the 89-row claim inventory and the separation between identity, adaptation, provider, composition, target and activation;
-2. retain the seven Class A recipe decisions and the four bounded X.Org provider rows without broadening their scope;
-3. review the exact libtasn1 member, ASN.1 necessity, GnuTLS/security consumer binding, conflicts/exclusions and rollback;
-4. request passive runtime evidence only for a named unresolved consumer-binding ambiguity;
-5. keep libepoxy, Pango filename drift and all explicit-delta roots outside this tranche;
+2. retain the seven Class A recipe decisions and the five bounded provider rows without broadening their scope;
+3. review the exact libepoxy member, selected GTK GL dispatch binding, GLX/EGL/X11 feature selection, conflicts/exclusions and rollback;
+4. request passive artifact evidence only for a named unresolved feature-selection or consumer-binding ambiguity;
+5. keep Pango filename drift and all explicit-delta roots outside this tranche;
 6. do not issue SUP-02 without a recorded Class C reclassification or escalation trigger;
 7. do not treat a bounded provider decision as complete security composition, application composition, target membership or activation.
 ```

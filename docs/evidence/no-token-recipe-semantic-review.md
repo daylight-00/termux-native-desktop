@@ -115,7 +115,9 @@ ADAPTATION_SEMANTICS
     AD-006 semantic-review gap closed
 
 PROVIDER_AUTHORITY
-    remains Class B and open
+    remains Class B
+    five roots have bounded provider authority accepted
+    libepoxy and pango remain open
     adaptation-classification prerequisite removed
 ```
 
@@ -135,7 +137,9 @@ No historical SUP-02 request becomes required. The six T6 requests remain unnece
 
 The four-root X.Org provider-authority tranche is complete: `libxfixes`, `libxcomposite`, `libxi`, and `libxinerama` are accepted only as exact bounded providers for the selected GTK 3.24.49 X11 capability scope. See [`xorg-reference-consumed-provider-authority.md`](xorg-reference-consumed-provider-authority.md).
 
-The next smallest no-token provider review is `gpkg/libtasn1`. `libepoxy` and Pango remain later separate tranches; Pango concrete-filename drift remains open.
+The `libtasn1` tranche is also complete: its exact provider is accepted only for the selected external GnuTLS 3.8.9 ASN.1/security capability. See [`libtasn1-reference-consumed-provider-authority.md`](libtasn1-reference-consumed-provider-authority.md).
+
+The next no-token provider review is `gpkg/libepoxy`. Pango remains a later separate tranche and its concrete-filename drift remains open.
 
 ## Stop line
 

@@ -9,7 +9,7 @@ roots: 28
 objects: 37
 claims: 89
 new evidence collected: 0
-provider authority accepted: 4
+provider authority accepted: 5
 composition accepted: 0
 target rows accepted: 0
 activation accepted: 0
@@ -145,7 +145,7 @@ The `libjpeg-turbo` SUP-02 request is also unnecessary at the current boundary b
 ## Current authority states
 
 ```text
-bounded provider authority accepted: 4 roots
+bounded provider authority accepted: 5 roots
 provider authority still open:       24 roots
 application runtime composition:     NOT REACHED
 target population:                   BLOCKED
@@ -161,7 +161,7 @@ The seven-root no-token semantic review is complete:
 ```text
 confirmed Class A: 7
 reclassified Class B: 0
-provider authority accepted: 4
+provider authority accepted: 5
 ```
 
 Canonical review surface:

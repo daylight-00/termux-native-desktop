@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-15.08`
+> Semantic state version: `2026-07-15.09`
 >
 > This is the compact current-state entry point. Exact commit and tree coordinates come from the checked-out full Git bundle, not from self-referential repository text.
 
@@ -67,11 +67,11 @@ replaced:             7
 unnecessary:          7
 ```
 
-The seven no-token recipe roots have completed bounded semantic review: all seven are Class A for package-specific recipe adaptation, with zero Class B reclassifications. The four X.Org roots `libxfixes`, `libxcomposite`, `libxi`, and `libxinerama` now also have bounded provider authority for their exact Termux members and the selected GTK 3.24.49 X11 capability scope. The decision is recorded in [`../evidence/xorg-reference-consumed-provider-authority.md`](../evidence/xorg-reference-consumed-provider-authority.md).
+The seven no-token recipe roots have completed bounded semantic review: all seven are Class A for package-specific recipe adaptation, with zero Class B reclassifications. The four X.Org roots `libxfixes`, `libxcomposite`, `libxi`, and `libxinerama` have bounded provider authority for their exact Termux members and the selected GTK 3.24.49 X11 capability scope. `libtasn1` now also has bounded provider authority for its exact Termux member and the selected external GnuTLS 3.8.9 ASN.1/security capability. The decisions are recorded in [`../evidence/xorg-reference-consumed-provider-authority.md`](../evidence/xorg-reference-consumed-provider-authority.md) and [`../evidence/libtasn1-reference-consumed-provider-authority.md`](../evidence/libtasn1-reference-consumed-provider-authority.md).
 
 ```text
-bounded providers accepted: 4
-remaining no-token provider roots open: 3
+bounded providers accepted: 5
+remaining no-token provider roots open: 2
 complete composition: not reached
 target population: blocked
 activation: blocked
@@ -94,16 +94,16 @@ Exact artifact/member identity, adaptation semantics, provider selection, compos
 
 ## Current project phase
 
-The active task is `review-libtasn1-reference-consumed-provider-authority`.
+The active task is `review-libepoxy-reference-consumed-provider-authority`.
 
-It reviews the remaining Class A root `gpkg/libtasn1` for exact ASN.1 provider authority in the selected GnuTLS/security closure. The review decides only exact member identity, capability necessity, consumer binding, conflicts/exclusions, update boundary, and rollback. No complete security composition, application composition, target population, or activation is allowed in this phase.
+It reviews `gpkg/libepoxy` for exact GL dispatch provider authority in the selected GTK 3.24.49 capability. The material boundary is upstream GLX/EGL/X11 auto-selection under the supplier environment. The review decides only exact member identity, capability necessity, consumer binding, feature selection, conflicts/exclusions, update boundary, and rollback. No complete graphics composition, application composition, target population, or activation is allowed in this phase.
 
 ## Current non-goals
 
 Do not currently:
 
 - issue or fulfill a SUP-02 request without a recorded Class C reclassification or escalation trigger;
-- broaden the four accepted X.Org provider rows beyond their exact selected GTK X11 scope;
+- broaden the five accepted provider rows beyond their exact bounded capability scopes;
 - populate a provider target layout;
 - activate the selected Obsidian generation;
 - redesign the runtime around Docker or a PRoot application baseline;

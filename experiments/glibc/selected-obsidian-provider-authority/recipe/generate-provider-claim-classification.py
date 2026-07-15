@@ -11,7 +11,8 @@ ROOT_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/revie
 OBJECT_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/generic-build-attestation-adaptation-object-review-set.tsv')
 SUP02_REQUESTS = Path('experiments/glibc/selected-obsidian-provider-authority/review/generic-build-attestation-adaptation-gap-evidence-supply-batch-sup-02-custodian-export-requests.tsv')
 SEMANTIC_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/no-token-recipe-semantic-review.tsv')
-PROVIDER_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/xorg-reference-consumed-provider-authority.tsv')
+XORG_PROVIDER_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/xorg-reference-consumed-provider-authority.tsv')
+LIBTASN1_PROVIDER_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/libtasn1-reference-consumed-provider-authority.tsv')
 
 CLAIM_OUTPUT = Path('experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification.tsv')
 SUP02_OUTPUT = Path('experiments/glibc/selected-obsidian-provider-authority/review/provider-sup-02-request-disposition.tsv')
@@ -109,7 +110,9 @@ def main() -> None:
     objects = read_tsv(repo / OBJECT_REVIEW)
     requests = read_tsv(repo / SUP02_REQUESTS)
     semantic_reviews = read_tsv(repo / SEMANTIC_REVIEW)
-    provider_reviews = read_tsv(repo / PROVIDER_REVIEW)
+    xorg_provider_reviews = read_tsv(repo / XORG_PROVIDER_REVIEW)
+    libtasn1_provider_reviews = read_tsv(repo / LIBTASN1_PROVIDER_REVIEW)
+    provider_reviews = xorg_provider_reviews + libtasn1_provider_reviews
     if len(roots) != 28:
         raise SystemExit(f'expected 28 root rows, found {len(roots)}')
     if len(objects) != 37:
@@ -118,8 +121,10 @@ def main() -> None:
         raise SystemExit(f'expected 28 SUP-02 requests, found {len(requests)}')
     if len(semantic_reviews) != 7:
         raise SystemExit(f'expected 7 no-token semantic reviews, found {len(semantic_reviews)}')
-    if len(provider_reviews) != 4:
-        raise SystemExit(f'expected 4 X.Org provider reviews, found {len(provider_reviews)}')
+    if len(xorg_provider_reviews) != 4:
+        raise SystemExit(f'expected 4 X.Org provider reviews, found {len(xorg_provider_reviews)}')
+    if len(libtasn1_provider_reviews) != 1:
+        raise SystemExit(f'expected 1 libtasn1 provider review, found {len(libtasn1_provider_reviews)}')
     semantic_by_root = {row['root_review_id']: row for row in semantic_reviews}
     if len(semantic_by_root) != len(semantic_reviews):
         raise SystemExit('duplicate root_review_id in no-token semantic review')
@@ -132,16 +137,21 @@ def main() -> None:
 
     provider_by_root = {row['root_review_id']: row for row in provider_reviews}
     if len(provider_by_root) != len(provider_reviews):
-        raise SystemExit('duplicate root_review_id in X.Org provider review')
+        raise SystemExit('duplicate root_review_id across provider reviews')
+    provider_source_by_root = {row['root_review_id']: XORG_PROVIDER_REVIEW.name for row in xorg_provider_reviews}
+    provider_source_by_root.update({row['root_review_id']: LIBTASN1_PROVIDER_REVIEW.name for row in libtasn1_provider_reviews})
     expected_provider_roots = {
         row['root_review_id'] for row in semantic_reviews
         if row['recipe_root'] in {'gpkg/libxfixes', 'gpkg/libxcomposite', 'gpkg/libxi', 'gpkg/libxinerama'}
     }
-    if set(provider_by_root) != expected_provider_roots:
+    if {row['root_review_id'] for row in xorg_provider_reviews} != expected_provider_roots:
         raise SystemExit('X.Org provider reviews do not exactly cover the four canonical roots')
+    libtasn1_expected = {row['root_review_id'] for row in semantic_reviews if row['recipe_root'] == 'gpkg/libtasn1'}
+    if {row['root_review_id'] for row in libtasn1_provider_reviews} != libtasn1_expected:
+        raise SystemExit('libtasn1 provider review does not cover the canonical root')
     for row in provider_reviews:
         if row['decision'] != 'ACCEPTED_BOUNDED_PROVIDER':
-            raise SystemExit(f"invalid X.Org provider decision for {row['root_review_id']}: {row['decision']}")
+            raise SystemExit(f"invalid provider decision for {row['root_review_id']}: {row['decision']}")
 
     objects_by_root: dict[str, list[dict[str, str]]] = defaultdict(list)
     for row in objects:
@@ -242,7 +252,7 @@ def main() -> None:
         if provider_review:
             provider_existing_evidence = (
                 f"{common_evidence};authority-coverage-ledger.tsv;generic-source-authority-boundary.tsv;"
-                f"selected-object-authority-base.tsv;{PROVIDER_REVIEW.name};{provider_review['review_id']}"
+                f"selected-object-authority-base.tsv;{provider_source_by_root[root['root_review_id']]};{provider_review['review_id']}"
             )
             provider_gap = provider_review['remaining_gap']
             provider_action = 'RETAIN_BOUNDED_PROVIDER_AUTHORITY_AND_REVALIDATE_ON_RECORDED_UPDATE_OR_ROLLBACK_TRIGGER'
@@ -458,8 +468,8 @@ def main() -> None:
         ('provider_review_count', str(len(provider_reviews))),
         ('provider_authority_accepted_count', str(sum(1 for row in provider_reviews if row['decision'] == 'ACCEPTED_BOUNDED_PROVIDER'))),
         ('provider_authority_open_count', str(claim_type_counts['PROVIDER_AUTHORITY'] - len(provider_reviews))),
-        ('authority_effect', 'FOUR_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT'),
-        ('next_review_tranche', 'LIBTASN1_REFERENCE_CONSUMED_PROVIDER_ROOT'),
+        ('authority_effect', 'FIVE_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT'),
+        ('next_review_tranche', 'LIBEPOXY_REFERENCE_CONSUMED_PROVIDER_ROOT'),
     ]
 
     write_tsv(out_root / CLAIM_OUTPUT, CLAIM_FIELDS, claims)

@@ -1,92 +1,101 @@
-# Active task: review the libtasn1 reference-consumed provider root
+# Active task: review the libepoxy reference-consumed provider root
 
-> Task ID: `review-libtasn1-reference-consumed-provider-authority`
+> Task ID: `review-libepoxy-reference-consumed-provider-authority`
 >
-> Expected state on completion: `gpkg/libtasn1` has a bounded provider-authority decision or an explicit remaining gap; no security composition, target membership, or activation is implied.
+> Expected state on completion: `gpkg/libepoxy` has a bounded provider-authority decision or an explicit remaining gap; no composition, target membership, materialization, or activation is implied.
 
 ## Objective
 
 Review provider authority for the exact Class A root:
 
 ```text
-gpkg/libtasn1
+gpkg/libepoxy
 ```
 
-Determine whether its exact package member is necessary and suitable as the selected runtime provider for the ASN.1 capability used by the Obsidian security/TLS closure. Keep artifact identity, recipe semantics, provider authority, composition, target population, and activation as separate decisions.
+Determine whether its exact Termux member is necessary and suitable as the selected GL dispatch provider for the bounded GTK 3.24.49 capability. Keep artifact identity, recipe semantics, provider authority, composition, target population, and activation as separate decisions.
 
 ## Why now
 
-The four X.Org roots have bounded provider authority accepted for their exact members and selected GTK 3.24.49 X11 capability scope. `libtasn1` is the smallest remaining no-token root with no concrete-filename drift and a narrow security dependency role.
+Five no-token roots now have bounded provider authority: four X.Org providers for the selected GTK X11 scope and `libtasn1` for the exact external GnuTLS 3.8.9 ASN.1/security scope. `libepoxy` is the next no-token root without concrete-filename drift, but its upstream GLX/EGL/X11 feature selection is environment-sensitive and must be bounded explicitly.
 
 ## Current accepted decisions
 
-- The seven no-token recipes are Class A for package-specific adaptation.
+- All seven no-token recipes are Class A for package-specific adaptation.
 - `libxfixes`, `libxcomposite`, `libxi`, and `libxinerama` have bounded provider authority for exact members and selected GTK X11 capabilities.
-- Those four decisions do not imply complete composition, target membership, or activation.
-- `libtasn1` artifact/member identity and recipe semantics are accepted only as inputs; provider authority remains open.
-- Pango filename drift remains open and is excluded from this tranche.
+- `libtasn1` has bounded provider authority for its exact member and the selected external GnuTLS 3.8.9 ASN.1/security capability.
+- None of those decisions implies complete composition, target membership, materialization, or activation.
+- `libepoxy` artifact/member identity and recipe semantics are accepted only as inputs; provider authority remains open.
+- Pango filename drift and provider authority remain open and are excluded from this tranche.
 - No SUP-02 request is currently required.
 
 ## In scope
 
-- Review the exact `libtasn1` artifact, member and SONAME.
-- Establish ASN.1 capability necessity and the concrete GnuTLS/security consumer binding.
-- Compare dynamic provider candidates and exclusions.
-- Record update and rollback boundaries.
-- Decide `ACCEPTED_BOUNDED_PROVIDER`, `REJECTED_PROVIDER`, or `OPEN_EXPLICIT_GAP`.
+- Review exact artifact `libepoxy-glibc` 1.5.10.
+- Bind exact member `libepoxy.so.0.0.0`, its digest, and SONAME `libepoxy.so.0`.
+- Determine the selected GTK 3.24.49 GL dispatch consumer binding.
+- Bound upstream GLX, EGL, and X11 auto-selection to the actual selected supplier contract.
+- Review dynamic candidates, conflicts, and explicit exclusions.
+- Define update and rollback triggers.
+- Use targeted passive artifact observation only if the existing recipe/upstream/consumer evidence cannot resolve a material feature ambiguity.
 
 ## Out of scope
 
-- Reviewing `libepoxy` or `pango` provider authority.
-- Resolving Pango concrete-filename drift.
-- Reviewing explicit-delta recipe roots.
-- Issuing or fulfilling SUP-02.
-- Authoring the complete security or application composition.
-- Populating or activating a provider generation.
+- Pango concrete-filename drift or provider decision.
+- Complete graphics or application composition.
+- Provider target paths, aliases, extraction, copying, or installation.
+- Runtime launch, selector mutation, deployment, or activation.
+- Blanket producing-build provenance or SUP-02 execution.
 
 ## Required reading
 
 - `docs/current/STATE.yaml`
 - `docs/constitution/PRINCIPLES.md`
 - `docs/decisions/0005-proportional-assurance-depth.md`
-- `docs/evidence/xorg-reference-consumed-provider-authority.md`
-- `docs/evidence/no-token-recipe-semantic-review.md`
 - `docs/evidence/provider-claim-classification.md`
-- `experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification.tsv`
+- `docs/evidence/no-token-recipe-semantic-review.md`
+- `docs/evidence/xorg-reference-consumed-provider-authority.md`
+- `docs/evidence/libtasn1-reference-consumed-provider-authority.md`
 - `experiments/glibc/selected-obsidian-provider-authority/review/generic-artifact-member-inventory-receipt-review.tsv`
+
+Do not read historical refactor or handoff records by default.
 
 ## Known facts
 
-- The `libtasn1` recipe is Class A with no package-specific patch, hook, build option or output transformation.
-- Exact artifact/member identity is bounded and has no concrete-filename drift.
-- The provider claim is Class B because the project selects and integrates the member into a mixed-world security runtime.
-- The likely consumer relationship is GnuTLS, but provider authority requires an exact bounded consumer-binding decision rather than package-presence inference.
+```text
+root review:  generic-root-review:2f6c3972ae083cff8dd2
+recipe tree: bb827daab0491d4ff49c822f96dd4bbb80102ef0
+artifact:     libepoxy-glibc 1.5.10
+artifact id:  generic-artifact:e53dc3b7f5419f13eb09
+artifact SHA: e53dc3b7f5419f13eb0948d2e16994061d2d593c1db2c535022c0d504af6a0e8
+member:       libepoxy.so.0.0.0
+member SHA:   403f566468fb5212173407d041a660af0ff459841e9b0ca2274e9c28ac98c723
+SONAME:       libepoxy.so.0
+semantic:     CONFIRMED_A
+```
+
+The recipe adds no package-specific patch, hook, build option, or output transformation. Upstream Meson defaults select GLX and EGL from the host/dependency environment; this is the material provider-review boundary.
 
 ## Pending external inputs
 
-None initially. See [`PENDING_ARTIFACTS.yaml`](PENDING_ARTIFACTS.yaml).
-
-Passive runtime evidence may be requested only if repository and authoritative upstream evidence cannot resolve a concrete consumer-binding ambiguity.
+None. Existing repository evidence is sufficient to begin the bounded review. Request passive artifact evidence only if a named feature-selection or consumer-binding ambiguity remains after the semantic comparison.
 
 ## Next valid action
 
-Construct one `libtasn1` provider-authority row from exact artifact/member, recipe, security dependency and selected-closure evidence. Preserve the four accepted X.Org rows without broadening their scope.
+Construct one canonical provider-review row binding the exact libepoxy member to the selected GTK GL dispatch capability, with explicit feature-selection, conflict/exclusion, update, rollback, and prohibited-inference fields.
 
 ## Stop conditions
 
-Stop before provider acceptance if:
+Stop without accepting provider authority if:
 
-- the exact member or SONAME is ambiguous;
-- ASN.1 capability necessity is inferred only from package presence;
-- the GnuTLS/security consumer binding cannot be bounded;
-- multiple non-equivalent dynamic provider candidates are not compared;
-- a security or ABI conflict remains unresolved;
-- provider acceptance would be treated as complete security composition, target membership or activation.
+- the selected GLX/EGL/X11 feature set cannot be bounded from existing evidence;
+- the exact member or SONAME conflicts with canonical inventory;
+- multiple dynamic provider candidates remain unresolved;
+- the proposed decision implies composition, target population, materialization, or activation.
 
 ## Completion criteria
 
-- `libtasn1` has one explicit provider-authority review row.
-- The row states exact member identity, capability scope, necessity basis, consumer binding, conflicts/exclusions, update boundary, rollback boundary, decision and prohibited inference.
-- Any runtime observation is narrow, passive and claim-specific.
-- No composition, target, materialization or activation state changes by implication.
-- The next active task chooses `libepoxy`, Pango drift/provider review, or the smallest explicit-delta tranche.
+- one canonical libepoxy provider-review row exists;
+- the claim generator reproduces the updated provider state deterministically;
+- negative tests reject feature/SONAME drift and authority broadening;
+- current state advances to the next bounded provider tranche;
+- repository and runtime remain unmodified outside documentation and review metadata.
