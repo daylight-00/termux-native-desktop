@@ -170,3 +170,8 @@ The first structure-consolidation phase therefore adds canonical routers and met
 [`catalog.tsv`](catalog.tsv) records the canonical routers and key authority documents. It is intentionally not a 284-file inventory. Large evidence and history trees inherit their class from their canonical directory index.
 
 The catalog is validated by `tools/docs/check-document-model`.
+
+Repository-wide Markdown link validation covers Git-tracked, project-managed
+Markdown. Ignored upstream source snapshots under experiment `work/source/`
+trees are evidence inputs and are intentionally outside the documentation
+model; their internal links are governed by their upstream repository.

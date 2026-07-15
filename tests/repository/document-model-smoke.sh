@@ -16,6 +16,20 @@ bash "$ROOT/tools/docs/check-document-model"
 mkdir -p "$WORK/repo"
 git -C "$ROOT" archive HEAD | tar -xf - -C "$WORK/repo"
 
+# Ignored upstream source snapshots are not project documentation authority.
+mkdir -p "$WORK/repo/experiments/example/work/source/upstream"
+printf '%s\n' '[Security](/SECURITY.md)' \
+  >"$WORK/repo/experiments/example/work/source/upstream/README.md"
+bash "$WORK/repo/tools/docs/check-document-model" >/dev/null
+
+# A broken link in repository-managed documentation must still be rejected.
+printf '%s\n' '[Missing](does-not-exist.md)' >"$WORK/repo/docs/broken-link-test.md"
+if bash "$WORK/repo/tools/docs/check-document-model" >/dev/null 2>&1; then
+  printf 'document-model smoke: managed broken link was not rejected\n' >&2
+  exit 1
+fi
+rm -f "$WORK/repo/docs/broken-link-test.md"
+
 # The guard must reject historical material in the default onboarding set.
 python3 - "$WORK/repo/docs/catalog.tsv" <<'PY'
 from pathlib import Path

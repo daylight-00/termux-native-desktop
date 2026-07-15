@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import csv
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -148,12 +149,43 @@ for phrase in [
     if phrase not in model_text:
         errors.append(f'DOCUMENTATION_MODEL.md lacks budget statement: {phrase}')
 
-# Validate all local Markdown links repository-wide. Ignore generated/vendor trees
-# because this repository stores only project-authored Markdown in tracked paths.
+# Validate links only in repository-managed Markdown. A live user checkout can
+# contain ignored upstream source snapshots under experiment work/source trees;
+# those files are evidence inputs, not project documentation authority.
+def excluded_markdown(rel: Path) -> bool:
+    parts = rel.parts
+    return '.git' in parts or any(
+        parts[index:index + 2] == ('work', 'source')
+        for index in range(len(parts) - 1)
+    )
+
+
+def managed_markdown_paths() -> list[Path]:
+    probe = subprocess.run(
+        ['git', '-C', str(root), 'rev-parse', '--show-toplevel'],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+        check=False,
+        text=True,
+    )
+    git_top = Path(probe.stdout.strip()).resolve() if probe.returncode == 0 else None
+    if git_top == root:
+        raw = subprocess.check_output(
+            ['git', '-C', str(root), 'ls-files', '-z', '--', '*.md']
+        )
+        paths = [root / item.decode() for item in raw.split(b'\0') if item]
+    else:
+        # Archive fixtures can be nested below another worktree. Treat them as
+        # standalone trees unless this exact root is the Git top-level.
+        paths = list(root.rglob('*.md'))
+    return sorted(
+        path for path in paths
+        if not excluded_markdown(path.relative_to(root))
+    )
+
+
 link_pattern = re.compile(r'\[[^\]]*\]\(([^)]+)\)')
-for path in root.rglob('*.md'):
-    if '.git' in path.parts:
-        continue
+for path in managed_markdown_paths():
     rel_source = path.relative_to(root)
     for target in link_pattern.findall(path.read_text(errors='replace')):
         target = target.strip()
