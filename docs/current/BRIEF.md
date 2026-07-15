@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-15.15`
+> Semantic state version: `2026-07-15.16`
 >
 > This is the compact current-state entry point. Exact commit and tree coordinates come from the checked-out full Git bundle, not from self-referential repository text.
 
@@ -82,7 +82,7 @@ target population: blocked
 activation: blocked
 ```
 
-Exact artifact/member identity, adaptation semantics, provider selection, composition, target population, and activation remain separate states. OJ-001 is dispositioned at [`../evidence/libjpeg-so-62-provider-candidate-disposition.md`](../evidence/libjpeg-so-62-provider-candidate-disposition.md), and the rejected first-candidate review is at [`../evidence/libjpeg-so-62-compatibility-provider-candidate-result-review.md`](../evidence/libjpeg-so-62-compatibility-provider-candidate-result-review.md). The claim inventory remains at [`../evidence/provider-claim-classification.md`](../evidence/provider-claim-classification.md).
+Exact artifact/member identity, adaptation semantics, provider selection, composition, target population, and activation remain separate states. OJ-001 is dispositioned at [`../evidence/libjpeg-so-62-provider-candidate-disposition.md`](../evidence/libjpeg-so-62-provider-candidate-disposition.md), and the rejected first-candidate review is at [`../evidence/libjpeg-so-62-compatibility-provider-candidate-result-review.md`](../evidence/libjpeg-so-62-compatibility-provider-candidate-result-review.md), and the corrected candidate review is at [`../evidence/libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review.md`](../evidence/libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review.md). The claim inventory remains at [`../evidence/provider-claim-classification.md`](../evidence/provider-claim-classification.md).
 
 ## Documentation and web-session state
 
@@ -100,9 +100,9 @@ Exact artifact/member identity, adaptation semantics, provider selection, compos
 
 ## Current project phase
 
-The active task is `rebuild-libjpeg-so-62-compatibility-provider-candidate-without-runpath`.
+The active task is `validate-libjpeg-so-62-compatibility-provider-consumer-binding`.
 
-All no-token provider roots are complete. OJ-001 now has one real scratch-built `libjpeg.so.62.4.0` AArch64 object from pinned libjpeg-turbo 3.1.0, but the first candidate is rejected because its dynamic section contains a 175-character colon-only `DT_RUNPATH`. The next phase repeats the exact build with `CMAKE_SKIP_RPATH=ON` and requires both `DT_RPATH` and `DT_RUNPATH` to be absent. The `libjpeg.so.8` family remains an invalid substitute, and no provider authority, composition, target population, materialization or activation is accepted.
+All no-token provider roots are complete. The first OJ-001 scratch object was rejected because it retained a 175-character colon-only `DT_RUNPATH`. OJ-001 now has an exact corrected scratch-built `libjpeg.so.62.4.0` AArch64 candidate from pinned libjpeg-turbo 3.1.0. Candidate `a537840e…` has `DT_SONAME=libjpeg.so.62`, no `DT_RPATH`/`DT_RUNPATH`, and the expected `LIBJPEG_6.2`/`LIBJPEGTURBO_6.2` symbol versions. Its identity is accepted as a candidate; the next phase validates exact GdkPixbuf consumer binding and fixed JPEG decoding before provider authority is decided. The `libjpeg.so.8` family remains an invalid substitute, and no provider authority, composition, target population, materialization or activation is accepted.
 
 ## Current non-goals
 

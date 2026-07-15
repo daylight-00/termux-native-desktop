@@ -47,39 +47,39 @@ for field,token in [
  ('next_action','REBUILD_EXACT_PINNED_CANDIDATE'),('prohibited_inference','DOES_NOT_ACCEPT_THE_FIRST_ELF_AS_PROVIDER'),
  ('prohibited_inference','COLON_ONLY_RUNPATH_AS_EMPTY')]:
     if token not in row.get(field,''): errors.append(f'{field} lacks {token}')
-if len(dispositions)!=1 or dispositions[0].get('disposition')!='COMPATIBILITY_PROVIDER_CANDIDATE_REBUILD_REQUIRED_NO_RUNPATH':
-    errors.append('canonical disposition does not require runpath-free rebuild')
-want={
-'PCC-LIBJPEG-TURBO-ARTIFACT':('FIRST_COMPATIBILITY_CANDIDATE_IDENTITY_REVIEWED_REBUILD_REQUIRED_NO_RUNPATH','CORRECTED_CANDIDATE_NOT_YET_PRODUCED'),
-'PCC-LIBJPEG-TURBO-PROVIDER':('FIRST_COMPATIBILITY_CANDIDATE_REJECTED_RUNPATH_REBUILD_REQUIRED','RUNPATH_FREE_EXACT_COMPATIBILITY_PROVIDER'),
-'PCC-OJ-001-REQUIRED-OBJECT':('FIRST_COMPATIBILITY_CANDIDATE_REJECTED_RUNPATH_REBUILD_REQUIRED','RUNPATH_FREE_EXACT_LIBJPEG_SO_62'),
-}
-for cid,(state,gap) in want.items():
+if len(dispositions)!=1:
+    errors.append(f'expected one disposition row, found {len(dispositions)}')
+else:
+    d=dispositions[0]
+    if 'RUNPATH_FREE_COMPATIBILITY_PROVIDER_CANDIDATE_IDENTITY_ACCEPTED_PROVIDER_REVIEW_REQUIRED' not in d.get('disposition',''):
+        errors.append('canonical disposition does not preserve corrected candidate progression')
+    if row.get('candidate_sha256') in d.get('exact_project_candidate_sha256',''):
+        errors.append('first rejected candidate is still selected as exact project candidate')
+for cid in ('PCC-LIBJPEG-TURBO-ARTIFACT','PCC-LIBJPEG-TURBO-PROVIDER','PCC-OJ-001-REQUIRED-OBJECT'):
     claim=claims.get(cid,{})
-    if claim.get('classification_state')!=state: errors.append(f'{cid}: state differs')
-    if gap not in claim.get('remaining_gap',''): errors.append(f'{cid}: gap differs')
     if 'libjpeg-so-62-compatibility-provider-candidate-result-review.tsv' not in claim.get('existing_evidence',''):
-        errors.append(f'{cid}: result review is not cited')
-    if 'ACCEPTED' in claim.get('authority_effect',''): errors.append(f'{cid}: authority was broadened')
+        errors.append(f'{cid}: first result review is not preserved as evidence')
 meta_expected={
-'oj001_disposition':'COMPATIBILITY_PROVIDER_CANDIDATE_REBUILD_REQUIRED_NO_RUNPATH',
 'oj001_first_candidate_decision':'REJECTED_REBUILD_REQUIRED_NO_RUNPATH',
 'oj001_first_candidate_sha256':'1d32a4b12ef3a6032626af13b69a64c45a0a0a9bb4090e0b61d9312811208d88',
 'oj001_first_candidate_runpath_state':'PRESENT_COLON_ONLY_BUILD_TREE_PLACEHOLDER',
-'next_review_tranche':'LIBJPEG_SO_62_RUNPATH_FREE_COMPATIBILITY_PROVIDER_CANDIDATE_REBUILD',
+'oj001_corrected_candidate_sha256':'a537840ef9da6135cb3284bc3b3e0d1fb4f624180a416c2a3964b94714eb7fe5',
+'oj001_corrected_candidate_runpath_state':'ABSENT',
 }
 for k,v in meta_expected.items():
     if meta.get(k)!=v: errors.append(f'metadata {k}: expected {v}, got {meta.get(k)!r}')
 state=(root/'docs/current/STATE.yaml').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); brief=(root/'docs/current/BRIEF.md').read_text(); evidence=(root/'docs/evidence/libjpeg-so-62-compatibility-provider-candidate-result-review.md').read_text(); catalog=(root/'docs/catalog.tsv').read_text()
 markers=[
- ('state version','state_version: 2026-07-15.15' in state),
+ ('state version','state_version: 2026-07-15.16' in state),
  ('state first rejection','first_candidate_state: rejected-rebuild-required-no-runpath' in state),
- ('active task','Task ID: `rebuild-libjpeg-so-62-compatibility-provider-candidate-without-runpath`' in active),
- ('active no runpath','CMAKE_SKIP_RPATH=ON' in active and 'required DT_RPATH/DT_RUNPATH state: absent' in active),
+ ('state corrected candidate','corrected_candidate_state: runpath-free-candidate-identity-accepted' in state),
+ ('active task','Task ID: `validate-libjpeg-so-62-compatibility-provider-consumer-binding`' in active),
  ('brief rejection','175-character colon-only `DT_RUNPATH`' in brief),
+ ('brief corrected candidate','a537840e' in brief and 'no `DT_RPATH`/`DT_RUNPATH`' in brief),
  ('evidence CMake boundary','CMake was installed separately by the user' in evidence),
  ('evidence no in-place patch','does not normalize, strip in place, or accept the first object' in evidence),
- ('catalog','libjpeg-so-62-compatibility-provider-candidate-result-review\tevidence\tcurrent\tcanonical' in catalog),
+ ('evidence corrected build contract','add CMAKE_SKIP_RPATH=ON' in evidence),
+ ('catalog','libjpeg-so-62-compatibility-provider-candidate-result-review	evidence	current	canonical' in catalog),
 ]
 for label,ok in markers:
     if not ok: errors.append(f'missing current marker: {label}')

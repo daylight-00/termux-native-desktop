@@ -7,8 +7,11 @@ requirement: OJ-001
 required lookup identity: libjpeg.so.62
 existing Termux glibc candidate: libjpeg.so.8 family rejected
 exact repository SONAME-62 candidate: not found
-first scratch candidate: produced and rejected for colon-only DT_RUNPATH
-canonical disposition: COMPATIBILITY_PROVIDER_CANDIDATE_REBUILD_REQUIRED_NO_RUNPATH
+first scratch candidate: rejected for colon-only DT_RUNPATH
+corrected scratch candidate: runpath-free identity accepted
+corrected candidate SHA-256:
+    a537840ef9da6135cb3284bc3b3e0d1fb4f624180a416c2a3964b94714eb7fe5
+canonical disposition: RUNPATH_FREE_COMPATIBILITY_PROVIDER_CANDIDATE_IDENTITY_ACCEPTED_PROVIDER_REVIEW_REQUIRED
 provider authority: not accepted
 composition: not reached
 target population: blocked
@@ -102,22 +105,27 @@ protected live state: unchanged
 
 That object is rejected for provider review because it contains a 175-character colon-only `DT_RUNPATH`. The canonical result review is [`libjpeg-so-62-compatibility-provider-candidate-result-review.md`](libjpeg-so-62-compatibility-provider-candidate-result-review.md).
 
-## Next bounded action
+## Corrected scratch candidate result
 
-The next transaction prepares one corrected user-Termux source-build and ELF analyzer wrapper. It must:
+The second bounded build returned:
 
 ```text
-acquire the exact pinned source and verify SHA-256
-build in scratch with the explicit v6b ABI options
-set CMAKE_SKIP_RPATH=ON
-perform no package installation or target mutation
-record the complete configure/build command and relevant toolchain coordinates
-verify the concrete member, SHA-256, ELF class/machine and DT_SONAME
-reject any DT_RPATH or DT_RUNPATH
-archive the candidate bytes and structured evidence in one .tar.zst
+member: libjpeg.so.62.4.0
+SHA-256:
+    a537840ef9da6135cb3284bc3b3e0d1fb4f624180a416c2a3964b94714eb7fe5
+ELF: ELF64 little-endian AArch64 DYN
+DT_SONAME: libjpeg.so.62
+DT_RPATH: absent
+DT_RUNPATH: absent
+symbol versions: LIBJPEG_6.2; LIBJPEGTURBO_6.2
+protected live state: unchanged
 ```
 
-The corrected returned object remains a candidate until a later provider-authority review accepts its consumer binding, conflict/exclusion set, update boundary and rollback boundary.
+Its canonical review is [`libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review.md`](libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review.md). The object identity is accepted as a candidate; provider authority remains open.
+
+## Next bounded action
+
+Perform one read-only consumer-binding and functional-equivalence diagnostic using the exact retained `libgdk_pixbuf-2.0.so.0.4200.12` oracle consumer. The diagnostic must verify its `DT_NEEDED` binding and undefined JPEG symbol set, load the corrected candidate from scratch, decode a fixed JPEG fixture, record the mapped candidate path and competing SONAME-62 objects, and perform no installation or target mutation.
 
 ## Update and rollback boundary
 
@@ -142,7 +150,7 @@ This decision accepts only:
 libjpeg.so.62 remains the required lookup identity
 libjpeg.so.8 remains an invalid substitute
 no exact repository candidate is available
-the first pinned-source build is rejected for runpath and a runpath-free rebuild is required
+the first pinned-source build is rejected for runpath; the corrected runpath-free candidate identity is accepted for bounded provider review
 ```
 
 It does not accept provider authority, complete image/GTK composition, a target path, alias policy, installation, materialization, deployment or activation.

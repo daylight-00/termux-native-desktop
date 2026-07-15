@@ -17,6 +17,7 @@ LIBEPOXY_PROVIDER_REVIEW = Path('experiments/glibc/selected-obsidian-provider-au
 PANGO_PROVIDER_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/pango-reference-consumed-provider-authority.tsv')
 LIBJPEG_DISPOSITION = Path('experiments/glibc/selected-obsidian-provider-authority/review/libjpeg-so-62-provider-candidate-disposition.tsv')
 LIBJPEG_RESULT_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/libjpeg-so-62-compatibility-provider-candidate-result-review.tsv')
+LIBJPEG_RUNPATH_FREE_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review.tsv')
 
 CLAIM_OUTPUT = Path('experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification.tsv')
 SUP02_OUTPUT = Path('experiments/glibc/selected-obsidian-provider-authority/review/provider-sup-02-request-disposition.tsv')
@@ -120,6 +121,7 @@ def main() -> None:
     pango_provider_reviews = read_tsv(repo / PANGO_PROVIDER_REVIEW)
     libjpeg_dispositions = read_tsv(repo / LIBJPEG_DISPOSITION)
     libjpeg_result_reviews = read_tsv(repo / LIBJPEG_RESULT_REVIEW)
+    libjpeg_runpath_free_reviews = read_tsv(repo / LIBJPEG_RUNPATH_FREE_REVIEW)
     provider_reviews = xorg_provider_reviews + libtasn1_provider_reviews + libepoxy_provider_reviews + pango_provider_reviews
     if len(roots) != 28:
         raise SystemExit(f'expected 28 root rows, found {len(roots)}')
@@ -141,16 +143,23 @@ def main() -> None:
         raise SystemExit(f'expected 1 libjpeg disposition row, found {len(libjpeg_dispositions)}')
     if len(libjpeg_result_reviews) != 1:
         raise SystemExit(f'expected 1 libjpeg result review row, found {len(libjpeg_result_reviews)}')
+    if len(libjpeg_runpath_free_reviews) != 1:
+        raise SystemExit(f'expected 1 runpath-free libjpeg result review row, found {len(libjpeg_runpath_free_reviews)}')
     libjpeg_disposition = libjpeg_dispositions[0]
     libjpeg_result_review = libjpeg_result_reviews[0]
+    libjpeg_runpath_free_review = libjpeg_runpath_free_reviews[0]
     if libjpeg_disposition['requirement_id'] != 'OJ-001' or libjpeg_disposition['required_lookup_identity'] != 'libjpeg.so.62':
         raise SystemExit('libjpeg disposition does not bind canonical OJ-001 identity')
-    if libjpeg_disposition['disposition'] != 'COMPATIBILITY_PROVIDER_CANDIDATE_REBUILD_REQUIRED_NO_RUNPATH':
-        raise SystemExit('libjpeg disposition must require a runpath-free compatibility-provider rebuild')
+    if libjpeg_disposition['disposition'] != 'RUNPATH_FREE_COMPATIBILITY_PROVIDER_CANDIDATE_IDENTITY_ACCEPTED_PROVIDER_REVIEW_REQUIRED':
+        raise SystemExit('libjpeg disposition must retain the runpath-free candidate/provider-review boundary')
     if libjpeg_result_review['requirement_id'] != 'OJ-001' or libjpeg_result_review['candidate_decision'] != 'REJECTED_REBUILD_REQUIRED_NO_RUNPATH':
         raise SystemExit('libjpeg result review does not preserve the rejected first-candidate boundary')
     if libjpeg_result_review['dt_runpath_state'] != 'PRESENT_COLON_ONLY_BUILD_TREE_PLACEHOLDER':
         raise SystemExit('libjpeg result review no longer records the blocking runpath')
+    if libjpeg_runpath_free_review['requirement_id'] != 'OJ-001' or libjpeg_runpath_free_review['candidate_decision'] != 'CANDIDATE_IDENTITY_ACCEPTED_PROVIDER_REVIEW_REQUIRED':
+        raise SystemExit('runpath-free libjpeg review does not preserve candidate-only acceptance')
+    if libjpeg_runpath_free_review['dt_rpath_state'] != 'ABSENT' or libjpeg_runpath_free_review['dt_runpath_state'] != 'ABSENT':
+        raise SystemExit('runpath-free libjpeg review must reject all dynamic search paths')
     semantic_by_root = {row['root_review_id']: row for row in semantic_reviews}
     if len(semantic_by_root) != len(semantic_reviews):
         raise SystemExit('duplicate root_review_id in no-token semantic review')
@@ -206,10 +215,10 @@ def main() -> None:
         )
 
         if root['object_correction_requirement_set'] != 'NONE':
-            artifact_gap = 'OJ-001_FIRST_COMPATIBILITY_CANDIDATE_REJECTED_COLON_ONLY_RUNPATH_CORRECTED_CANDIDATE_NOT_YET_PRODUCED'
-            artifact_action = 'REBUILD_EXACT_LIBJPEG_SO_62_COMPATIBILITY_PROVIDER_CANDIDATE_WITH_CMAKE_SKIP_RPATH_ON_AND_REQUIRE_NO_DT_RPATH_OR_DT_RUNPATH'
-            artifact_state = 'FIRST_COMPATIBILITY_CANDIDATE_IDENTITY_REVIEWED_REBUILD_REQUIRED_NO_RUNPATH'
-            common_evidence += f';{LIBJPEG_DISPOSITION.name};{libjpeg_disposition["review_id"]};{LIBJPEG_RESULT_REVIEW.name};{libjpeg_result_review["review_id"]}'
+            artifact_gap = 'NONE_FOR_RUNPATH_FREE_EXACT_COMPATIBILITY_CANDIDATE_IDENTITY'
+            artifact_action = 'RETAIN_EXACT_SOURCE_BUILD_MEMBER_DIGEST_SONAME_DYNAMIC_TAG_AND_SYMBOL_VERSION_COORDINATES'
+            artifact_state = 'RUNPATH_FREE_COMPATIBILITY_CANDIDATE_IDENTITY_ACCEPTED'
+            common_evidence += f';{LIBJPEG_DISPOSITION.name};{libjpeg_disposition["review_id"]};{LIBJPEG_RESULT_REVIEW.name};{libjpeg_result_review["review_id"]};{LIBJPEG_RUNPATH_FREE_REVIEW.name};{libjpeg_runpath_free_review["review_id"]}'
         else:
             artifact_gap = 'NONE_FOR_EXACT_CANDIDATE_ARTIFACT_AND_NAMED_MEMBER_IDENTITY'
             artifact_action = 'NONE_RETAIN_EXACT_ARTIFACT_AND_MEMBER_DIGESTS_AT_TRANSFER'
@@ -256,9 +265,11 @@ def main() -> None:
             adaptation_gap += ';CF-001_CF-002_CF-003_CF-004_ALIAS_SUCCESSOR_AND_ROLLBACK_POLICY'
             adaptation_action += ';REVIEW_CONSUMER_ALIAS_BINDING_AND_VERSION_DRIFT_POLICY'
         if root['object_correction_requirement_set'] != 'NONE':
-            adaptation_gap += ';OJ-001_FIRST_WITH_JPEG8_OFF_BUILD_REJECTED_FOR_RUNPATH_CORRECTED_BUILD_NOT_YET_PRODUCED'
-            adaptation_action = 'REBUILD_EXACT_COMPATIBILITY_CANDIDATE_WITH_RPATH_DISABLED_THEN_REVIEW_MINIMAL_SOURCE_BUILD_DELTA_AND_OBJECT_IMPACT'
-            adaptation_evidence_suffix += f';{LIBJPEG_DISPOSITION.name};{libjpeg_disposition["review_id"]};{LIBJPEG_RESULT_REVIEW.name};{libjpeg_result_review["review_id"]}'
+            adaptation_gap = 'BOUNDED_FUNCTIONAL_EQUIVALENCE_AND_CONSUMER_IMPACT_REVIEW_FOR_PROJECT_PRODUCED_V6B_CANDIDATE'
+            adaptation_action = 'RUN_READ_ONLY_EXACT_GDK_PIXBUF_CONSUMER_BINDING_AND_JPEG_DECODE_VALIDATION'
+            adaptation_state = 'CLASS_C_PRODUCING_RECORD_ACCEPTED_FUNCTIONAL_EQUIVALENCE_OPEN'
+            adaptation_boundary = 'PROJECT_SELECTED_V6B_ABI_MODE_SHARED_ONLY_BUILD_AND_RPATH_SUPPRESSION_FOR_EXACT_SONAME_62_COMPATIBILITY_PROVIDER'
+            adaptation_evidence_suffix += f';{LIBJPEG_DISPOSITION.name};{libjpeg_disposition["review_id"]};{LIBJPEG_RESULT_REVIEW.name};{libjpeg_result_review["review_id"]};{LIBJPEG_RUNPATH_FREE_REVIEW.name};{libjpeg_runpath_free_review["review_id"]}'
 
         claims.append({
             'claim_id': f'PCC-{root_slug}-ADAPTATION',
@@ -301,9 +312,10 @@ def main() -> None:
                 'selected-object-authority-base.tsv'
             )
             if root['object_correction_requirement_set'] != 'NONE':
-                provider_gap = 'RUNPATH_FREE_EXACT_COMPATIBILITY_PROVIDER_ARTIFACT_MEMBER_DIGEST_AND_SONAME_NOT_YET_PRODUCED;ADAPTATION_CLASSIFICATION;CAPABILITY_NECESSITY_AND_CONSUMER_BINDING;CONFLICT_AND_EXCLUSION_REVIEW;UPDATE_AND_ROLLBACK_BOUNDARY'
-                provider_action = 'REBUILD_BOUNDED_TERMUX_COMPATIBILITY_CANDIDATE_WITH_NO_RPATH_OR_RUNPATH_THEN_PERFORM_SEPARATE_PROVIDER_AUTHORITY_REVIEW'
-                provider_state = 'FIRST_COMPATIBILITY_CANDIDATE_REJECTED_RUNPATH_REBUILD_REQUIRED'
+                provider_gap = 'BOUNDED_CONSUMER_BINDING_FUNCTIONAL_EQUIVALENCE;CONFLICT_AND_EXCLUSION_REVIEW;UPDATE_AND_ROLLBACK_BOUNDARY'
+                provider_action = 'RUN_READ_ONLY_GDK_PIXBUF_CONSUMER_BINDING_AND_JPEG_DECODE_VALIDATION_THEN_REVIEW_PROVIDER_AUTHORITY'
+                provider_state = 'RUNPATH_FREE_CANDIDATE_IDENTITY_ACCEPTED_PROVIDER_REVIEW_REQUIRED'
+                provider_existing_evidence += f';{LIBJPEG_RUNPATH_FREE_REVIEW.name};{libjpeg_runpath_free_review["review_id"]}'
             else:
                 provider_gap = ('CAPABILITY_NECESSITY_AND_CONSUMER_BINDING;CONFLICT_AND_EXCLUSION_REVIEW;UPDATE_AND_ROLLBACK_BOUNDARY' if semantic_review else 'ADAPTATION_CLASSIFICATION;CAPABILITY_NECESSITY_AND_CONSUMER_BINDING;CONFLICT_AND_EXCLUSION_REVIEW;UPDATE_AND_ROLLBACK_BOUNDARY')
                 provider_action = ('CAPABILITY_LEVEL_PROVIDER_REVIEW_WITH_TARGETED_PASSIVE_CONSUMER_BINDING_ONLY_WHERE_AMBIGUOUS' if semantic_review else 'CAPABILITY_LEVEL_PROVIDER_REVIEW_AFTER_ADAPTATION_CLASSIFICATION_WITH_TARGETED_PASSIVE_CONSUMER_BINDING_ONLY_WHERE_AMBIGUOUS')
@@ -343,13 +355,13 @@ def main() -> None:
         'supplier_or_reference_boundary': 'AUTHORITATIVE_WORKLOAD_OR_REFERENCE_REQUIREMENT',
         'project_owned_changed_boundary': 'PROJECT_INTERPRETATION_OF_THE_REQUIRED_RUNTIME_IDENTITY',
         'risk_modifiers': 'ABI_FAMILY_SUBSTITUTION;GUI_IMAGE_DECODING',
-        'existing_evidence': f'0157_SUP-01_RESPONSE;0158_SUP-01_RESPONSE_REVIEW;libjpeg.so.8_SUBSTITUTION_REJECTED;{LIBJPEG_DISPOSITION.name};{libjpeg_disposition["review_id"]};{LIBJPEG_RESULT_REVIEW.name};{libjpeg_result_review["review_id"]}',
-        'remaining_gap': 'RUNPATH_FREE_EXACT_LIBJPEG_SO_62_COMPATIBILITY_PROVIDER_ARTIFACT_MEMBER_DIGEST_AND_SONAME_NOT_YET_PRODUCED',
-        'minimum_closure_action': 'REBUILD_BOUNDED_USER_TERMUX_SOURCE_CANDIDATE_WITH_CMAKE_SKIP_RPATH_ON_AND_REJECT_ANY_DT_RPATH_OR_DT_RUNPATH',
+        'existing_evidence': f'0157_SUP-01_RESPONSE;0158_SUP-01_RESPONSE_REVIEW;libjpeg.so.8_SUBSTITUTION_REJECTED;{LIBJPEG_DISPOSITION.name};{libjpeg_disposition["review_id"]};{LIBJPEG_RESULT_REVIEW.name};{libjpeg_result_review["review_id"]};{LIBJPEG_RUNPATH_FREE_REVIEW.name};{libjpeg_runpath_free_review["review_id"]}',
+        'remaining_gap': 'NONE_FOR_REQUIRED_SONAME_AND_EXACT_RUNPATH_FREE_CANDIDATE_IDENTITY',
+        'minimum_closure_action': 'RETAIN_EXACT_CANDIDATE_IDENTITY_AND_PROCEED_TO_SEPARATE_PROVIDER_REVIEW',
         'explicitly_excluded_evidence': 'SUP-02_BUILD_ATTESTATION_FOR_THE_WRONG_ABI_FAMILY;LIBJPEG_SO_8_ALIAS_OR_SUBSTITUTION',
         'escalation_trigger': 'COMPATIBILITY_CANDIDATE_OUTPUT_DIFFERS_FROM_EXPECTED_SONAME_OR_SOURCE_BUILD_COORDINATES',
-        'classification_state': 'FIRST_COMPATIBILITY_CANDIDATE_REJECTED_RUNPATH_REBUILD_REQUIRED',
-        'authority_effect': 'NO_PROVIDER_OR_TARGET_EFFECT',
+        'classification_state': 'RUNPATH_FREE_EXACT_CANDIDATE_IDENTITY_ACCEPTED',
+        'authority_effect': 'OBJECT_REQUIREMENT_AND_CANDIDATE_IDENTITY_ONLY_NO_PROVIDER_OR_TARGET_EFFECT',
         'prohibited_inference': 'A_BUILD_RECORD_FOR_LIBJPEG_SO_8_CANNOT_SATISFY_A_LIBJPEG_SO_62_REQUIREMENT',
     })
 
@@ -363,15 +375,15 @@ def main() -> None:
             'requested_state': 'DIGEST_BOUND_PRODUCING_BUILD_OR_INDEPENDENT_REPRODUCTION_CLAIM',
             'adr_class': 'C',
             'supplier_or_reference_boundary': 'EXACT_PRODUCING_ENVIRONMENT_OR_PROJECT_REPRODUCTION_BOUNDARY',
-            'project_owned_changed_boundary': 'ONLY_ACTIVE_WHEN_THE_PROJECT_CLAIMS_REPRODUCED_EQUIVALENCE_OR_WHEN_A_REFERENCE_ARTIFACT_REQUIRES_EXPLICIT_ESCALATION',
-            'risk_modifiers': 'CLAIM_DEPENDENT',
-            'existing_evidence': 'SUP-02_REQUEST_AND_PRODUCER_MECHANISM_EXIST;ZERO_CANONICAL_RESPONSES_ACCEPTED',
-            'remaining_gap': 'NO_ACTIVE_CLASS_C_ROOT_CLAIM_SELECTED_BY_THIS_CLASSIFICATION',
-            'minimum_closure_action': 'NONE_UNTIL_A_RECORDED_ESCALATION_TRIGGER_OR_CLASS_C_RECLASSIFICATION',
+            'project_owned_changed_boundary': 'EXACT_LIBJPEG_TURBO_3_1_0_V6B_SHARED_BUILD_WITH_RECORDED_TERMUX_GLIBC_TOOLCHAIN_AND_RPATH_SUPPRESSION',
+            'risk_modifiers': 'GUI_IMAGE_DECODING;PROJECT_PRODUCED_ARTIFACT;BOUNDED_REVERSIBLE_NON_INSTALLED_CANDIDATE',
+            'existing_evidence': f'{LIBJPEG_RUNPATH_FREE_REVIEW.name};{libjpeg_runpath_free_review["review_id"]};SOURCE_BUILD_COMMAND_TOOLCHAIN_OUTPUT_MANIFEST_ELF_AND_SYMBOL_VERSION_EVIDENCE',
+            'remaining_gap': 'BOUNDED_FUNCTIONAL_EQUIVALENCE_AND_EXACT_CONSUMER_BINDING',
+            'minimum_closure_action': 'RUN_READ_ONLY_EXACT_GDK_PIXBUF_CONSUMER_BINDING_AND_FIXED_JPEG_DECODE_VALIDATION',
             'explicitly_excluded_evidence': 'BLANKET_CUSTODIAN_EXPORTS_FOR_ALL_REFERENCE_CONSUMED_OR_REFERENCE_ADAPTED_ROOTS',
             'escalation_trigger': 'CLASS_C_RECLASSIFICATION;ARTIFACT_RECIPE_MISMATCH;OPAQUE_HIGH_RISK_GENERATED_OUTPUT;UNRESOLVED_SUPPLIER_CLAIM_REQUIRED_FOR_A_SPECIFIC_PROMOTION',
-            'classification_state': 'DEFERRED_NOT_REQUIRED_BY_CURRENT_ACTIVE_CLAIMS',
-            'authority_effect': 'NO_BUILD_ATTESTATION_PROVIDER_OR_TARGET_EFFECT',
+            'classification_state': 'ACTIVE_CLASS_C_PRODUCING_RECORD_ACCEPTED_FUNCTIONAL_EQUIVALENCE_OPEN',
+            'authority_effect': 'PRODUCING_RECORD_ONLY_NO_PROVIDER_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT',
             'prohibited_inference': 'IMPLEMENTED_PRODUCER_OR_ISSUED_REQUEST_DOES_NOT_CREATE_A_BUILD_ATTESTATION',
         },
         {
@@ -516,7 +528,11 @@ def main() -> None:
         ('oj001_first_candidate_decision', libjpeg_result_review['candidate_decision']),
         ('oj001_first_candidate_sha256', libjpeg_result_review['candidate_sha256']),
         ('oj001_first_candidate_runpath_state', libjpeg_result_review['dt_runpath_state']),
-        ('next_review_tranche', 'LIBJPEG_SO_62_RUNPATH_FREE_COMPATIBILITY_PROVIDER_CANDIDATE_REBUILD'),
+        ('oj001_corrected_candidate_decision', libjpeg_runpath_free_review['candidate_decision']),
+        ('oj001_corrected_candidate_sha256', libjpeg_runpath_free_review['candidate_sha256']),
+        ('oj001_corrected_candidate_rpath_state', libjpeg_runpath_free_review['dt_rpath_state']),
+        ('oj001_corrected_candidate_runpath_state', libjpeg_runpath_free_review['dt_runpath_state']),
+        ('next_review_tranche', 'LIBJPEG_SO_62_BOUNDED_GDK_PIXBUF_CONSUMER_BINDING_VALIDATION'),
     ]
 
     write_tsv(out_root / CLAIM_OUTPUT, CLAIM_FIELDS, claims)

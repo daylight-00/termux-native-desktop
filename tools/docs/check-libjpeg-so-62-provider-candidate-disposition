@@ -2,111 +2,81 @@
 set -euo pipefail
 ROOT=${1:-$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)}
 REVIEW=experiments/glibc/selected-obsidian-provider-authority/review
-required=(
-  docs/evidence/libjpeg-so-62-provider-candidate-disposition.md
-  docs/evidence/libjpeg-so-62-compatibility-provider-candidate-result-review.md
-  "$REVIEW/libjpeg-so-62-provider-candidate-disposition.tsv"
-  "$REVIEW/libjpeg-so-62-compatibility-provider-candidate-result-review.tsv"
-  "$REVIEW/generic-build-attestation-adaptation-object-review-set.tsv"
-  "$REVIEW/generic-build-attestation-adaptation-gap-evidence-supply-batch-sup-01-response-review.tsv"
-  "$REVIEW/generic-recipe-binding-and-drift-target-receipt-review.tsv"
-  "$REVIEW/provider-claim-classification.tsv"
+for rel in \
+  docs/evidence/libjpeg-so-62-provider-candidate-disposition.md \
+  docs/evidence/libjpeg-so-62-compatibility-provider-candidate-result-review.md \
+  docs/evidence/libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review.md \
+  "$REVIEW/libjpeg-so-62-provider-candidate-disposition.tsv" \
+  "$REVIEW/libjpeg-so-62-compatibility-provider-candidate-result-review.tsv" \
+  "$REVIEW/libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review.tsv" \
+  "$REVIEW/provider-claim-classification.tsv" \
   "$REVIEW/provider-claim-classification-metadata.tsv"
-)
-for rel in "${required[@]}"; do
-  [ -f "$ROOT/$rel" ] || { echo "libjpeg-so-62-disposition: FAIL: missing $rel" >&2; exit 1; }
-done
-
+do [ -f "$ROOT/$rel" ] || { echo "libjpeg-so-62-disposition: FAIL: missing $rel" >&2; exit 1; }; done
 python3 - "$ROOT" <<'PY'
 from pathlib import Path
 import csv,sys
 root=Path(sys.argv[1]); review=root/'experiments/glibc/selected-obsidian-provider-authority/review'
-def read(name):
-    with (review/name).open(newline='',encoding='utf-8') as f: return list(csv.DictReader(f,delimiter='\t'))
+def read(n):
+    with (review/n).open(newline='',encoding='utf-8') as f:return list(csv.DictReader(f,delimiter='\t'))
 errors=[]
-rows=read('libjpeg-so-62-provider-candidate-disposition.tsv')
-objects=read('generic-build-attestation-adaptation-object-review-set.tsv')
-sup01=read('generic-build-attestation-adaptation-gap-evidence-supply-batch-sup-01-response-review.tsv')
-binding=read('generic-recipe-binding-and-drift-target-receipt-review.tsv')
-claims=read('provider-claim-classification.tsv')
-meta={r['key']:r['value'] for r in read('provider-claim-classification-metadata.tsv')}
-if len(rows)!=1: errors.append(f'expected 1 disposition row, found {len(rows)}')
-row=rows[0] if rows else {}
-expected={
-'review_id':'LIBJPEG-OJ-001-DISP-001','requirement_id':'OJ-001',
-'object_review_id':'generic-object-review:fc085dca914b298d1356','evidence_row_id':'selected:a7e42baafca8ed4717e3',
-'required_lookup_identity':'libjpeg.so.62','prior_oracle_concrete_identity':'libjpeg.so.62.3.0',
-'rejected_artifact_id':'generic-artifact:e672a721d7a949048cab','rejected_artifact_package':'libjpeg-turbo-glibc',
-'rejected_artifact_version':'3.1.0','rejected_artifact_sha256':'e672a721d7a949048cab5c7073ef0a0c05f627b8fc691ecc2d0adea6a5a5689e',
-'rejected_recipe_root':'gpkg/libjpeg-turbo','rejected_recipe_tree':'cb58a7c1d7f4a1f89d036e4c80da596c0c61234c',
-'rejected_recipe_configuration':'-DWITH_JPEG8=ON','rejected_observed_family':'libjpeg.so;libjpeg.so.8;libjpeg.so.8.3.2',
-'exact_repository_candidate_state':'NO_EXACT_SONAME_62_PACKAGE_DEFINITION_OR_BOUND_ARTIFACT_FOUND',
-'upstream_source_ref':'libjpeg-turbo/libjpeg-turbo@3.1.0',
+row=read('libjpeg-so-62-provider-candidate-disposition.tsv')[0]
+want={
+'review_id':'LIBJPEG-OJ-001-DISP-001','requirement_id':'OJ-001','required_lookup_identity':'libjpeg.so.62',
+'prior_oracle_concrete_identity':'libjpeg.so.62.3.0','rejected_artifact_package':'libjpeg-turbo-glibc',
+'rejected_artifact_sha256':'e672a721d7a949048cab5c7073ef0a0c05f627b8fc691ecc2d0adea6a5a5689e',
 'upstream_source_sha256':'9564c72b1dfd1d6fe6274c5f95a8d989b59854575d4bbee44ade7bc17aa9bc93',
 'expected_compatibility_soname':'libjpeg.so.62','expected_compatibility_concrete_member':'libjpeg.so.62.4.0',
-'disposition':'COMPATIBILITY_PROVIDER_CANDIDATE_REBUILD_REQUIRED_NO_RUNPATH',
-'authority_effect':'FIRST_CANDIDATE_RESULT_REVIEW_ONLY_NO_PROVIDER_COMPOSITION_TARGET_MATERIALIZATION_OR_ACTIVATION_EFFECT',
+'disposition':'RUNPATH_FREE_COMPATIBILITY_PROVIDER_CANDIDATE_IDENTITY_ACCEPTED_PROVIDER_REVIEW_REQUIRED',
+'authority_effect':'CANDIDATE_IDENTITY_ONLY_NO_PROVIDER_COMPOSITION_TARGET_MATERIALIZATION_OR_ACTIVATION_EFFECT',
 }
-for k,v in expected.items():
+for k,v in want.items():
     if row.get(k)!=v: errors.append(f'{k}: expected {v}, got {row.get(k)!r}')
 for field,token in [
- ('repository_candidate_search_scope','TERMUX_PACMAN_GLIBC_PACKAGES_PINNED_AND_CURRENT'),
- ('upstream_default_abi_mode','WITH_JPEG8=OFF'),('upstream_default_abi_mode','SO_AGE=4'),
- ('required_build_delta','REMOVE_WITH_JPEG8_ON'),('required_build_delta','WITHOUT_INSTALL_ALIAS_CREATION_OR_ACTIVATION'),
- ('required_build_delta','CMAKE_SKIP_RPATH_ON'),('required_build_delta','NO_DT_RPATH_OR_DT_RUNPATH'),
- ('next_action','REBUILD_BOUNDED_USER_TERMUX_SOURCE_CANDIDATE'),
- ('prohibited_inference','DOES_NOT_ACCEPT_LIBJPEG_SO_8_AS_SUBSTITUTE'),('prohibited_inference','CREATE_A_SONAME_ALIAS'),('prohibited_inference','COLON_ONLY_RUNPATH_CANDIDATE'),
-]:
+('exact_repository_candidate_state','RUNPATH_FREE_PROJECT_CANDIDATE_IDENTITY_ACCEPTED'),
+('required_build_delta','CMAKE_SKIP_RPATH_ON'),('required_build_delta','NO_DT_RPATH_OR_DT_RUNPATH'),
+('next_action','GDK_PIXBUF_CONSUMER_BINDING'),('prohibited_inference','LIBJPEG_SO_8_AS_SUBSTITUTE'),
+('prohibited_inference','ACCEPT_PROVIDER_AUTHORITY')]:
     if token not in row.get(field,''): errors.append(f'{field} lacks {token}')
-obj=next((r for r in objects if r['object_review_id']==row.get('object_review_id')),None)
-if not obj: errors.append('canonical object review row missing')
-else:
-    checks={'evidence_row_id':row.get('evidence_row_id'),'artifact_id':row.get('rejected_artifact_id'),'artifact_package':row.get('rejected_artifact_package'),'artifact_version':row.get('rejected_artifact_version'),'artifact_sha256':row.get('rejected_artifact_sha256'),'recipe_root':row.get('rejected_recipe_root'),'recipe_tree':row.get('rejected_recipe_tree')}
-    for k,v in checks.items():
-        if obj.get(k)!=v: errors.append(f'object review {k} differs')
-    if obj.get('object_member_review_state')!='EXPECTED_SONAME_ALIAS_ABSENT_CORRECT_CANDIDATE_REQUIRED': errors.append('object row no longer rejects missing SONAME-62 candidate')
-sr=next((r for r in sup01 if r['requirement_id']=='OJ-001'),None)
-if not sr or sr.get('accepted_required_identity')!='libjpeg.so.62' or sr.get('rejected_substitute_identity')!='libjpeg.so.8': errors.append('SUP-01 accepted requirement boundary differs')
-br=next((r for r in binding if r['evidence_row_id']==row.get('evidence_row_id')),None)
-if not br or br.get('recipe_source_sha256')!=row.get('upstream_source_sha256'): errors.append('pinned source digest differs from canonical recipe binding')
-claim={r['claim_id']:r for r in claims}
-want={
-'PCC-LIBJPEG-TURBO-ARTIFACT':('FIRST_COMPATIBILITY_CANDIDATE_IDENTITY_REVIEWED_REBUILD_REQUIRED_NO_RUNPATH','CORRECTED_CANDIDATE_NOT_YET_PRODUCED'),
-'PCC-LIBJPEG-TURBO-PROVIDER':('FIRST_COMPATIBILITY_CANDIDATE_REJECTED_RUNPATH_REBUILD_REQUIRED','RUNPATH_FREE_EXACT_COMPATIBILITY_PROVIDER_ARTIFACT_MEMBER_DIGEST_AND_SONAME_NOT_YET_PRODUCED'),
-'PCC-OJ-001-REQUIRED-OBJECT':('FIRST_COMPATIBILITY_CANDIDATE_REJECTED_RUNPATH_REBUILD_REQUIRED','RUNPATH_FREE_EXACT_LIBJPEG_SO_62_COMPATIBILITY_PROVIDER_ARTIFACT_MEMBER_DIGEST_AND_SONAME_NOT_YET_PRODUCED'),
+first=read('libjpeg-so-62-compatibility-provider-candidate-result-review.tsv')[0]
+second=read('libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review.tsv')[0]
+if first['candidate_decision']!='REJECTED_REBUILD_REQUIRED_NO_RUNPATH': errors.append('first candidate rejection lost')
+second_want={
+'candidate_sha256':'a537840ef9da6135cb3284bc3b3e0d1fb4f624180a416c2a3964b94714eb7fe5',
+'dt_soname':'libjpeg.so.62','dt_rpath_state':'ABSENT','dt_runpath_state':'ABSENT',
+'candidate_decision':'CANDIDATE_IDENTITY_ACCEPTED_PROVIDER_REVIEW_REQUIRED',
+'provider_authority':'NOT_ACCEPTED' if 'provider_authority' in second else None,
 }
-for cid,(state,gap) in want.items():
-    r=claim.get(cid,{})
-    if r.get('classification_state')!=state: errors.append(f'{cid}: state differs')
-    if gap not in r.get('remaining_gap',''): errors.append(f'{cid}: gap differs')
-    if 'libjpeg-so-62-provider-candidate-disposition.tsv' not in r.get('existing_evidence',''): errors.append(f'{cid}: canonical disposition not cited')
-if claim.get('PCC-LIBJPEG-TURBO-PROVIDER',{}).get('authority_effect')!='NO_PROVIDER_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT': errors.append('libjpeg provider authority was broadened')
-want_meta={
-'provider_review_count':'7','provider_authority_accepted_count':'7','provider_authority_open_count':'21',
-'oj001_disposition':'COMPATIBILITY_PROVIDER_CANDIDATE_REBUILD_REQUIRED_NO_RUNPATH','oj001_required_identity':'libjpeg.so.62',
-'oj001_candidate_state':'NO_EXACT_SONAME_62_PACKAGE_DEFINITION_OR_BOUND_ARTIFACT_FOUND',
-'oj001_first_candidate_decision':'REJECTED_REBUILD_REQUIRED_NO_RUNPATH',
-'oj001_first_candidate_sha256':'1d32a4b12ef3a6032626af13b69a64c45a0a0a9bb4090e0b61d9312811208d88',
-'oj001_first_candidate_runpath_state':'PRESENT_COLON_ONLY_BUILD_TREE_PLACEHOLDER',
-'next_review_tranche':'LIBJPEG_SO_62_RUNPATH_FREE_COMPATIBILITY_PROVIDER_CANDIDATE_REBUILD',
+for k,v in list(second_want.items()):
+    if v is not None and second.get(k)!=v: errors.append(f'corrected {k}: expected {v}, got {second.get(k)!r}')
+claims={r['claim_id']:r for r in read('provider-claim-classification.tsv')}
+want_claims={
+'PCC-LIBJPEG-TURBO-ARTIFACT':('RUNPATH_FREE_COMPATIBILITY_CANDIDATE_IDENTITY_ACCEPTED','NONE_FOR_RUNPATH_FREE_EXACT_COMPATIBILITY_CANDIDATE_IDENTITY'),
+'PCC-LIBJPEG-TURBO-PROVIDER':('RUNPATH_FREE_CANDIDATE_IDENTITY_ACCEPTED_PROVIDER_REVIEW_REQUIRED','BOUNDED_CONSUMER_BINDING_FUNCTIONAL_EQUIVALENCE'),
+'PCC-OJ-001-REQUIRED-OBJECT':('RUNPATH_FREE_EXACT_CANDIDATE_IDENTITY_ACCEPTED','NONE_FOR_REQUIRED_SONAME_AND_EXACT_RUNPATH_FREE_CANDIDATE_IDENTITY'),
+'PCC-GLOBAL-BUILD-PROVENANCE':('ACTIVE_CLASS_C_PRODUCING_RECORD_ACCEPTED_FUNCTIONAL_EQUIVALENCE_OPEN','BOUNDED_FUNCTIONAL_EQUIVALENCE_AND_EXACT_CONSUMER_BINDING'),
 }
-for k,v in want_meta.items():
+for cid,(state,gap) in want_claims.items():
+    r=claims.get(cid,{})
+    if r.get('classification_state')!=state: errors.append(f'{cid}: state {r.get("classification_state")!r}')
+    if gap not in r.get('remaining_gap',''): errors.append(f'{cid}: gap missing {gap}')
+meta={r['key']:r['value'] for r in read('provider-claim-classification-metadata.tsv')}
+meta_want={
+'oj001_disposition':want['disposition'],'oj001_corrected_candidate_decision':'CANDIDATE_IDENTITY_ACCEPTED_PROVIDER_REVIEW_REQUIRED',
+'oj001_corrected_candidate_sha256':'a537840ef9da6135cb3284bc3b3e0d1fb4f624180a416c2a3964b94714eb7fe5',
+'oj001_corrected_candidate_rpath_state':'ABSENT','oj001_corrected_candidate_runpath_state':'ABSENT',
+'next_review_tranche':'LIBJPEG_SO_62_BOUNDED_GDK_PIXBUF_CONSUMER_BINDING_VALIDATION'}
+for k,v in meta_want.items():
     if meta.get(k)!=v: errors.append(f'metadata {k}: expected {v}, got {meta.get(k)!r}')
-state=(root/'docs/current/STATE.yaml').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); brief=(root/'docs/current/BRIEF.md').read_text(); status=(root/'STATUS.md').read_text(); catalog=(root/'docs/catalog.tsv').read_text(); evidence=(root/'docs/evidence/libjpeg-so-62-provider-candidate-disposition.md').read_text()
-markers=[
-('state version','state_version: 2026-07-15.15' in state),('state task','rebuild-libjpeg-so-62-compatibility-provider-candidate-without-runpath' in state),
-('active task','Task ID: `rebuild-libjpeg-so-62-compatibility-provider-candidate-without-runpath`' in active),
-('brief task','rebuild-libjpeg-so-62-compatibility-provider-candidate-without-runpath' in brief),
-('status disposition','LIBJPEG_SO_62_FIRST_CANDIDATE_REJECTED_RUNPATH_FREE_REBUILD_REQUIRED' in status),
-('catalog','libjpeg-so-62-provider-candidate-disposition\tevidence\tcurrent\tcanonical' in catalog),
-('evidence expected concrete','libjpeg.so.62.4.0' in evidence),('evidence no alias','not an alias bridge' in evidence),('evidence rebuild','CMAKE_SKIP_RPATH=ON' in evidence),
-]
-for label,ok in markers:
+state=(root/'docs/current/STATE.yaml').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); brief=(root/'docs/current/BRIEF.md').read_text(); status=(root/'STATUS.md').read_text()
+for label,ok in [
+('state version','state_version: 2026-07-15.16' in state),('active task','Task ID: `validate-libjpeg-so-62-compatibility-provider-consumer-binding`' in active),
+('candidate digest','a537840ef9da6135cb3284bc3b3e0d1fb4f624180a416c2a3964b94714eb7fe5' in state),
+('brief task','validate-libjpeg-so-62-compatibility-provider-consumer-binding' in brief),
+('status marker','LIBJPEG_SO_62_RUNPATH_FREE_CANDIDATE_IDENTITY_ACCEPTED_CONSUMER_VALIDATION_REQUIRED' in status)]:
     if not ok: errors.append(f'missing current marker: {label}')
 if errors:
     for e in errors: print('libjpeg-so-62-disposition: FAIL:',e,file=sys.stderr)
     raise SystemExit(1)
-print('libjpeg-so-62-disposition: PASS: SONAME-8 substitution and first runpath-bearing candidate are rejected; clean rebuild required')
+print('libjpeg-so-62-disposition: PASS: runpath-free candidate identity accepted; bounded consumer validation required')
 PY
-
 echo 'libjpeg-so-62-disposition: all checks passed'

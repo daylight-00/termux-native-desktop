@@ -1,9 +1,9 @@
 schema_version: 1
-state_version: 2026-07-15.15
+state_version: 2026-07-15.16
 updated_on: 2026-07-15
 
 project:
-  phase: provider-compatibility-candidate-correction
+  phase: provider-compatibility-candidate-validation
   status: active
 
 repository:
@@ -50,10 +50,11 @@ documentation:
   pango_provider_authority_review: docs/evidence/pango-reference-consumed-provider-authority-and-filename-continuity.md
   libjpeg_provider_candidate_disposition: docs/evidence/libjpeg-so-62-provider-candidate-disposition.md
   libjpeg_first_candidate_result_review: docs/evidence/libjpeg-so-62-compatibility-provider-candidate-result-review.md
+  libjpeg_runpath_free_candidate_result_review: docs/evidence/libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review.md
 
 provider_authority:
-  workstream: no-token-provider-review-complete-libjpeg-runpath-free-compatibility-provider-rebuild-active
-  boundary: seven-bounded-providers-accepted-oj-001-first-candidate-rejected-runpath-rebuild-required
+  workstream: no-token-provider-review-complete-libjpeg-runpath-free-candidate-consumer-validation-active
+  boundary: seven-bounded-providers-accepted-oj-001-runpath-free-candidate-identity-accepted-provider-open
   claim_inventory:
     total: 89
     class_a: 36
@@ -78,7 +79,14 @@ provider_authority:
     first_candidate_soname: libjpeg.so.62
     first_candidate_machine: AArch64
     first_candidate_runpath: present-colon-only-175
-    corrected_candidate_state: not-yet-produced
+    corrected_candidate_state: runpath-free-candidate-identity-accepted
+    corrected_candidate_member: libjpeg.so.62.4.0
+    corrected_candidate_sha256: a537840ef9da6135cb3284bc3b3e0d1fb4f624180a416c2a3964b94714eb7fe5
+    corrected_candidate_soname: libjpeg.so.62
+    corrected_candidate_rpath: absent
+    corrected_candidate_runpath: absent
+    bounded_consumer: libgdk_pixbuf-2.0.so.0.4200.12
+    bounded_consumer_sha256: 16d15168c69d4ad61862462da9fe811b5be3bef898b940a4023e15b039f5b43c
     provider_authority: not-accepted
   sup_02_disposition:
     still_necessary: 0
@@ -86,7 +94,7 @@ provider_authority:
     replaced: 7
     unnecessary: 7
     required_now: 0
-  next_research_decision: rebuild-libjpeg-so-62-compatibility-provider-candidate-without-runpath
+  next_research_decision: validate-libjpeg-so-62-compatibility-provider-consumer-binding
   prohibited_claims:
     - complete-provider-authority
     - complete-runtime-composition
@@ -94,7 +102,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: rebuild-libjpeg-so-62-compatibility-provider-candidate-without-runpath
+  id: validate-libjpeg-so-62-compatibility-provider-consumer-binding
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:

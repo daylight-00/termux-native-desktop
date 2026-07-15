@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT=${1:-$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)}
+REVIEW=experiments/glibc/selected-obsidian-provider-authority/review
+for rel in \
+ docs/evidence/libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review.md \
+ "$REVIEW/libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review.tsv" \
+ "$REVIEW/provider-claim-classification.tsv" \
+ "$REVIEW/provider-claim-classification-metadata.tsv"
+do [ -f "$ROOT/$rel" ] || { echo "libjpeg-runpath-free-review: FAIL: missing $rel" >&2; exit 1; }; done
+python3 - "$ROOT" <<'PY'
+from pathlib import Path
+import csv,sys
+root=Path(sys.argv[1]); review=root/'experiments/glibc/selected-obsidian-provider-authority/review'
+def read(n):
+    with (review/n).open(newline='',encoding='utf-8') as f:return list(csv.DictReader(f,delimiter='\t'))
+errors=[]; rows=read('libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review.tsv')
+if len(rows)!=1: errors.append(f'expected one row, found {len(rows)}')
+r=rows[0] if rows else {}
+want={
+'review_id':'LIBJPEG-OJ-001-CAND-002','requirement_id':'OJ-001','result_archive_sha256':'5fe0e57a28e09c4765b7da68ace947f7a3b2af6ea26ae06c95a4ad6a102d19aa',
+'repository_head':'ccd91121e24c3f6146b99ed712faac8d3d6706e3','repository_tree':'65e78e2b975fb8e0f41d04440bb2dce6fce57bbb',
+'source_version':'3.1.0','source_sha256':'9564c72b1dfd1d6fe6274c5f95a8d989b59854575d4bbee44ade7bc17aa9bc93',
+'candidate_member':'libjpeg.so.62.4.0','candidate_sha256':'a537840ef9da6135cb3284bc3b3e0d1fb4f624180a416c2a3964b94714eb7fe5',
+'candidate_size':'770664','elf_class':'ELF64','elf_data':'LITTLE_ENDIAN','elf_machine':'AArch64','elf_type':'DYN',
+'dt_soname':'libjpeg.so.62','dt_needed':'libc.so.6;ld-linux-aarch64.so.1','dt_rpath_state':'ABSENT','dt_runpath_state':'ABSENT',
+'symbol_version_set':'LIBJPEG_6.2;LIBJPEGTURBO_6.2','protected_state':'UNCHANGED','build_result':'SCRATCH_BUILD_SUCCEEDED',
+'candidate_decision':'CANDIDATE_IDENTITY_ACCEPTED_PROVIDER_REVIEW_REQUIRED',
+'authority_effect':'RUNPATH_FREE_CANDIDATE_IDENTITY_ONLY_NO_PROVIDER_COMPOSITION_TARGET_MATERIALIZATION_OR_ACTIVATION_EFFECT'}
+for k,v in want.items():
+    if r.get(k)!=v: errors.append(f'{k}: expected {v}, got {r.get(k)!r}')
+for field,token in [('remaining_gap','CONSUMER_BINDING'),('remaining_gap','FUNCTIONAL_EQUIVALENCE'),('next_action','GDK_PIXBUF'),('prohibited_inference','DOES_NOT_ACCEPT_PROVIDER_AUTHORITY')]:
+    if token not in r.get(field,''): errors.append(f'{field} lacks {token}')
+claims={x['claim_id']:x for x in read('provider-claim-classification.tsv')}
+if claims.get('PCC-GLOBAL-BUILD-PROVENANCE',{}).get('classification_state')!='ACTIVE_CLASS_C_PRODUCING_RECORD_ACCEPTED_FUNCTIONAL_EQUIVALENCE_OPEN': errors.append('Class C producing state differs')
+if claims.get('PCC-LIBJPEG-TURBO-PROVIDER',{}).get('classification_state')!='RUNPATH_FREE_CANDIDATE_IDENTITY_ACCEPTED_PROVIDER_REVIEW_REQUIRED': errors.append('provider claim state differs')
+meta={x['key']:x['value'] for x in read('provider-claim-classification-metadata.tsv')}
+for k,v in {'oj001_corrected_candidate_sha256':want['candidate_sha256'],'oj001_corrected_candidate_rpath_state':'ABSENT','oj001_corrected_candidate_runpath_state':'ABSENT','next_review_tranche':'LIBJPEG_SO_62_BOUNDED_GDK_PIXBUF_CONSUMER_BINDING_VALIDATION'}.items():
+    if meta.get(k)!=v: errors.append(f'metadata {k} differs')
+active=(root/'docs/current/ACTIVE_TASK.md').read_text(); state=(root/'docs/current/STATE.yaml').read_text(); doc=(root/'docs/evidence/libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review.md').read_text()
+for label,ok in [('task','Task ID: `validate-libjpeg-so-62-compatibility-provider-consumer-binding`' in active),('state digest',want['candidate_sha256'] in state),('consumer digest','16d15168c69d4ad61862462da9fe811b5be3bef898b940a4023e15b039f5b43c' in active),('doc no provider','provider authority: not accepted' in doc),('doc no runpath','DT_RUNPATH: absent' in doc)]:
+    if not ok: errors.append(f'missing marker: {label}')
+if errors:
+    for e in errors: print('libjpeg-runpath-free-review: FAIL:',e,file=sys.stderr)
+    raise SystemExit(1)
+print('libjpeg-runpath-free-review: PASS: corrected candidate identity accepted; functional consumer review remains open')
+PY
+echo 'libjpeg-runpath-free-review: all checks passed'

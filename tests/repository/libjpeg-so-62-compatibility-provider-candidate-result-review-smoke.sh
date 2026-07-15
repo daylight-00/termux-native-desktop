@@ -28,6 +28,6 @@ restore
 mutate authority_effect PROVIDER_AUTHORITY_ACCEPTED
 if bash "$CHECK" "$FIXTURE" >/dev/null 2>&1; then echo 'libjpeg result smoke: authority broadening accepted' >&2; exit 1; fi
 restore
-sed -i 's/CMAKE_SKIP_RPATH=ON/CMAKE_SKIP_RPATH=OFF/' "$FIXTURE/docs/current/ACTIVE_TASK.md"
+sed -i 's/add CMAKE_SKIP_RPATH=ON/add CMAKE_SKIP_RPATH=OFF/' "$FIXTURE/docs/evidence/libjpeg-so-62-compatibility-provider-candidate-result-review.md"
 if bash "$CHECK" "$FIXTURE" >/dev/null 2>&1; then echo 'libjpeg result smoke: corrected build contract weakened' >&2; exit 1; fi
 echo 'libjpeg.so.62 compatibility-provider candidate result review smoke: PASS'

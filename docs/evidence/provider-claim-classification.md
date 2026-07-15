@@ -72,9 +72,9 @@ Class B: 49 claims
     21 reference-adapted recipe claims
     28 project integration/provider-selection claims
 
-Class C: 1 global conditional claim
-    producing-build equivalence or independent reproduction
-    deferred because no current root claim is classified as independently reproduced
+Class C: 1 active bounded producing claim
+    exact libjpeg-turbo 3.1.0 v6b compatibility candidate production
+    producing record accepted; functional equivalence and consumer binding remain open
 
 Class D: 3 global project-authored claims
     composition
@@ -82,7 +82,7 @@ Class D: 3 global project-authored claims
     activation
 ```
 
-The single Class C row does not request evidence. It records the conditions that would make producing-build evidence proportionate.
+The single Class C row is now active for the project-produced runpath-free `libjpeg.so.62.4.0` candidate. Source, build invocation, toolchain, output manifest, ELF identity and symbol versions are recorded; bounded GdkPixbuf consumer binding and fixed JPEG decoding remain the minimum closure action.
 
 ## Existing evidence retained
 
@@ -145,14 +145,14 @@ The `libjpeg-turbo` SUP-02 request is also unnecessary at the current boundary b
 ## Current authority states
 
 ```text
-bounded provider authority accepted: 6 roots
-provider authority still open:       22 roots
+bounded provider authority accepted: 7 roots
+provider authority still open:       21 roots
 application runtime composition:     NOT REACHED
 target population:                   BLOCKED
 selected-generation activation:      BLOCKED
 ```
 
-The six accepted rows are `libxfixes`, `libxcomposite`, `libxi`, `libxinerama`, `libtasn1`, and `libepoxy`. Each is limited to an exact member and a named consumer capability; libepoxy is restricted to GTK 3.24.49 X11 GLX dispatch and does not claim EGL. The classification still does not authorize extraction, installation, target population, complete composition, selected-generation mutation, or activation.
+The seven accepted rows are `libxfixes`, `libxcomposite`, `libxi`, `libxinerama`, `libtasn1`, `libepoxy`, and `pango`. Each is limited to an exact member and a named consumer capability; libepoxy is restricted to GTK 3.24.49 X11 GLX dispatch and does not claim EGL. The classification still does not authorize extraction, installation, target population, complete composition, selected-generation mutation, or activation.
 
 ## Seven-root semantic-review result
 
@@ -161,7 +161,7 @@ The seven-root no-token semantic review is complete:
 ```text
 confirmed Class A: 7
 reclassified Class B: 0
-provider authority accepted: 6
+provider authority accepted: 7
 ```
 
 Canonical review surface:
@@ -176,16 +176,17 @@ For all seven roots, the pinned recipe contains only source/version identity and
 `pango` concrete-filename drift remains a separate provider-integration and continuity question. It was not closed by the Class A recipe result.
 
 ## Completed bounded provider tranches and smallest next phase
+The seven no-token provider tranches are complete. Their canonical rationales are in the X.Org, libtasn1, libepoxy, and Pango provider review documents.
 
-The X.Org, libtasn1, and libepoxy provider tranches are complete. Their canonical rationales are in [`xorg-reference-consumed-provider-authority.md`](xorg-reference-consumed-provider-authority.md), [`libtasn1-reference-consumed-provider-authority.md`](libtasn1-reference-consumed-provider-authority.md), and [`libepoxy-reference-consumed-provider-authority.md`](libepoxy-reference-consumed-provider-authority.md).
-
-The next and final no-token provider tranche is:
+The smallest next phase is the bounded OJ-001 consumer-validation tranche:
 
 ```text
-gpkg/pango
+candidate: a537840ef9da6135cb3284bc3b3e0d1fb4f624180a416c2a3964b94714eb7fe5
+consumer: libgdk_pixbuf-2.0.so.0.4200.12
+claim: exact SONAME-62 binding and fixed JPEG decode with the scratch candidate mapped
 ```
 
-It reviews provider capability together with CF-001–CF-004 concrete-filename continuity without inferring complete composition, target membership, materialization, or activation.
+It does not install the candidate, accept provider authority, infer complete GTK/image composition, populate a target, or activate a generation.
 
 ## Stop line
 
