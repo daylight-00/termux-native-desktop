@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+required=(
+  docs/evidence/libepoxy-reference-consumed-provider-authority.md
+  experiments/glibc/selected-obsidian-provider-authority/review/libepoxy-reference-consumed-provider-authority.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification-metadata.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/generic-build-attestation-adaptation-root-review-set.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/generic-recipe-binding-and-drift-target-receipt-review.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/generic-artifact-member-inventory-receipt-review.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/no-token-recipe-semantic-review.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/non-priority-generic-authority-ledger/gtk-gui.tsv
+)
+for rel in "${required[@]}"; do
+  [ -f "$ROOT/$rel" ] || { echo "libepoxy-provider-authority: FAIL: missing $rel" >&2; exit 1; }
+done
+python3 - "$ROOT" <<'PY'
+from pathlib import Path
+import csv,sys
+root=Path(sys.argv[1]); review=root/'experiments/glibc/selected-obsidian-provider-authority/review'
+def read(name):
+    with (review/name).open(newline='',encoding='utf-8') as f: return list(csv.DictReader(f,delimiter='\t'))
+def by(rows,key): return {r[key]:r for r in rows}
+rows=read('libepoxy-reference-consumed-provider-authority.tsv')
+roots=by(read('generic-build-attestation-adaptation-root-review-set.tsv'),'recipe_root')
+recipes={}
+for r in read('generic-recipe-binding-and-drift-target-receipt-review.tsv'): recipes.setdefault(r['recipe_root'],r)
+members=by(read('generic-artifact-member-inventory-receipt-review.tsv'),'evidence_row_id')
+semantics=by(read('no-token-recipe-semantic-review.tsv'),'recipe_root')
+claims=by(read('provider-claim-classification.tsv'),'claim_id')
+meta={r['key']:r['value'] for r in read('provider-claim-classification-metadata.tsv')}
+oracle=read('non-priority-generic-authority-ledger/gtk-gui.tsv')
+errors=[]
+if len(rows)!=1: errors.append(f'expected 1 review row, found {len(rows)}')
+else:
+ r=rows[0]; rr=roots.get('gpkg/libepoxy'); br=recipes.get('gpkg/libepoxy'); mr=members.get(r.get('evidence_row_id')); sr=semantics.get('gpkg/libepoxy')
+ expected={'review_id':'LIBEPOXY-PROV-001','root_review_id':'generic-root-review:2f6c3972ae083cff8dd2','recipe_root':'gpkg/libepoxy','recipe_tree':'bb827daab0491d4ff49c822f96dd4bbb80102ef0','artifact_id':'generic-artifact:e53dc3b7f5419f13eb09','artifact_package':'libepoxy-glibc','artifact_version':'1.5.10','artifact_sha256':'e53dc3b7f5419f13eb0948d2e16994061d2d593c1db2c535022c0d504af6a0e8','evidence_row_id':'selected:0802b57eadc2dd33925a','exact_member_path':'data/data/com.termux/files/usr/glibc/lib/libepoxy.so.0.0.0','exact_member_sha256':'403f566468fb5212173407d041a660af0ff459841e9b0ca2274e9c28ac98c723','observed_soname':'libepoxy.so.0','consumer_scope':'GTK_3_24_49_X11_GLX_DISPATCH','consumer_source_ref':'GNOME_GTK_TAG_3_24_49','feature_selection_contract':'X11_REQUIRED_AND_BOUND;GLX_REQUIRED_AND_BOUND;EGL_NOT_CLAIMED_BY_THIS_PROVIDER_DECISION','decision':'ACCEPTED_BOUNDED_PROVIDER','remaining_gap':'NONE_FOR_BOUNDED_GTK_X11_GLX_PROVIDER_AUTHORITY'}
+ for k,v in expected.items():
+  if r.get(k)!=v: errors.append(f'{k}: expected {v}, got {r.get(k)!r}')
+ if not rr or not br or not mr: errors.append('canonical root, recipe or member row missing')
+ else:
+  bindings={'root_review_id':rr['root_review_id'],'recipe_tree':rr['recipe_tree'],'artifact_id':br['artifact_id'],'artifact_package':br['artifact_package'],'artifact_version':br['artifact_version'],'artifact_sha256':br['artifact_sha256'],'evidence_row_id':br['evidence_row_id'],'exact_member_path':mr['exact_member_path'],'exact_member_sha256':mr['exact_member_sha256'],'observed_soname':mr['exact_observed_elf_soname']}
+  for k,v in bindings.items():
+   if r.get(k)!=v: errors.append(f'{k} drift from canonical evidence')
+ if not sr or sr['semantic_result']!='CONFIRMED_A': errors.append('Class A libepoxy semantic review missing')
+ required_tokens={
+  'consumer_source_paths':['meson.build','gdk/x11/gdkglcontext-x11.c'],
+  'necessity_basis':['GTK_3_24_49_REQUIRES_EPOXY_GE_1_4','GTK_X11_GL_IMPLEMENTATION_INCLUDES_EPOXY_GLX_HEADER'],
+  'consumer_binding_basis':['EPOXY_HAS_GLX','GENERATES_AND_INSTALLS_GLX_HEADER_AND_DISPATCH_ONLY_WHEN_BUILD_GLX_IS_TRUE'],
+  'supplier_framework_boundary':['FLOATING_TERMUX_PACKAGES_MASTER','DOES_NOT_CLAIM_PRODUCING_BUILD_EQUIVALENCE'],
+  'candidate_conflict_and_exclusion_result':['DEBIAN_ROOTFS_ORACLE_BYTES_EXCLUDED_FROM_TARGET_AUTHORITY','EGL_CAPABILITY_EXCLUDED_FROM_ACCEPTED_SCOPE','COMPLETE_GL_PROVIDER_COMPOSITION_EXCLUDED'],
+  'authority_effect':['GTK_3_24_49_X11_GLX_DISPATCH_ONLY','NO_EGL_EFFECT_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT'],
+  'prohibited_inference':['DOES_NOT_ACCEPT_EGL_OR_WAYLAND_CAPABILITY','PRODUCING_BUILD_EQUIVALENCE'],
+ }
+ for field,tokens in required_tokens.items():
+  for token in tokens:
+   if token not in r.get(field,''): errors.append(f'{field} missing {token}')
+ if not any(o.get('identity_label')=='libepoxy.so.0.0.0' and o.get('observed_supply_origin')=='DEBIAN_ROOTFS_ORACLE_BYTES' for o in oracle): errors.append('canonical Debian oracle row missing')
+ claim=claims.get('PCC-LIBEPOXY-PROVIDER')
+ if not claim: errors.append('generated libepoxy provider claim missing')
+ else:
+  if claim['classification_state']!='BOUNDED_PROVIDER_AUTHORITY_ACCEPTED': errors.append('generated provider state mismatch')
+  if claim['remaining_gap']!='NONE_FOR_BOUNDED_GTK_X11_GLX_PROVIDER_AUTHORITY': errors.append('generated provider gap mismatch')
+  if claim['authority_effect']!=r['authority_effect']: errors.append('generated authority effect mismatch')
+  if r['review_id'] not in claim['existing_evidence']: errors.append('generated provider evidence missing review row')
+expected_meta={'provider_review_count':'6','provider_authority_accepted_count':'6','provider_authority_open_count':'22','authority_effect':'SIX_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT','next_review_tranche':'PANGO_REFERENCE_CONSUMED_PROVIDER_AND_FILENAME_DRIFT'}
+for k,v in expected_meta.items():
+ if meta.get(k)!=v: errors.append(f'metadata {k}: expected {v}, got {meta.get(k)!r}')
+state=(root/'docs/current/STATE.yaml').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); brief=(root/'docs/current/BRIEF.md').read_text(); status=(root/'STATUS.md').read_text(); catalog=(root/'docs/catalog.tsv').read_text(); evidence=(root/'docs/evidence/libepoxy-reference-consumed-provider-authority.md').read_text()
+markers=[('accepted six','accepted: 6' in state),('open one','open_no_token_roots: 1' in state),('next task','Task ID: `review-pango-reference-consumed-provider-authority-and-concrete-filename-drift`' in active),('brief accepted','bounded providers accepted: 6' in brief),('status accepted','Bounded libepoxy provider authority' in status),('catalog','libepoxy-reference-consumed-provider-authority\tevidence\tcurrent\tcanonical' in catalog),('egl boundary','EGL_NOT_CLAIMED_BY_THIS_PROVIDER_DECISION' in evidence)]
+for label,ok in markers:
+ if not ok: errors.append(f'missing current marker: {label}')
+if errors:
+ for e in errors: print('libepoxy-provider-authority: FAIL:',e,file=sys.stderr)
+ raise SystemExit(1)
+print('libepoxy-provider-authority: PASS: exact libepoxy provider accepted only for GTK 3.24.49 X11 GLX dispatch; EGL remains unclaimed')
+PY

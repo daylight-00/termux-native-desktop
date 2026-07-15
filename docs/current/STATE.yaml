@@ -1,5 +1,5 @@
 schema_version: 1
-state_version: 2026-07-15.10
+state_version: 2026-07-15.11
 updated_on: 2026-07-15
 
 project:
@@ -45,10 +45,11 @@ documentation:
   no_token_recipe_semantic_review: docs/evidence/no-token-recipe-semantic-review.md
   xorg_provider_authority_review: docs/evidence/xorg-reference-consumed-provider-authority.md
   libtasn1_provider_authority_review: docs/evidence/libtasn1-reference-consumed-provider-authority.md
+  libepoxy_provider_authority_review: docs/evidence/libepoxy-reference-consumed-provider-authority.md
 
 provider_authority:
-  workstream: libtasn1-reference-consumed-provider-review-complete-libepoxy-review-active
-  boundary: five-bounded-providers-accepted-two-no-token-provider-roots-open
+  workstream: libepoxy-reference-consumed-provider-review-complete-pango-review-active
+  boundary: six-bounded-providers-accepted-one-no-token-provider-root-open
   claim_inventory:
     total: 89
     class_a: 36
@@ -59,20 +60,20 @@ provider_authority:
     reviewed: 7
     confirmed_a: 7
     reclassified_b: 0
-    provider_authority_accepted: 5
-    provider_authority_open: 2
+    provider_authority_accepted: 6
+    provider_authority_open: 1
   bounded_provider_authority:
-    accepted: 5
+    accepted: 6
     rejected: 0
-    open_no_token_roots: 2
-    accepted_scope: exact-xorg-members-and-selected-gtk-x11-capabilities-plus-exact-libtasn1-member-and-external-gnutls-3-8-9-asn1-security-capability
+    open_no_token_roots: 1
+    accepted_scope: exact-xorg-members-and-selected-gtk-x11-capabilities-plus-exact-libtasn1-external-gnutls-asn1-security-plus-exact-libepoxy-gtk-3-24-49-x11-glx-dispatch
   sup_02_disposition:
     still_necessary: 0
     narrowed: 14
     replaced: 7
     unnecessary: 7
     required_now: 0
-  next_research_decision: review-libepoxy-reference-consumed-provider-root
+  next_research_decision: review-pango-reference-consumed-provider-and-concrete-filename-drift
   prohibited_claims:
     - complete-provider-authority
     - complete-runtime-composition
@@ -80,7 +81,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: review-libepoxy-reference-consumed-provider-authority
+  id: review-pango-reference-consumed-provider-authority-and-concrete-filename-drift
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:

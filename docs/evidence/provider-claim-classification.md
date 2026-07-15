@@ -9,7 +9,7 @@ roots: 28
 objects: 37
 claims: 89
 new evidence collected: 0
-provider authority accepted: 5
+provider authority accepted: 6
 composition accepted: 0
 target rows accepted: 0
 activation accepted: 0
@@ -145,14 +145,14 @@ The `libjpeg-turbo` SUP-02 request is also unnecessary at the current boundary b
 ## Current authority states
 
 ```text
-bounded provider authority accepted: 5 roots
-provider authority still open:       24 roots
+bounded provider authority accepted: 6 roots
+provider authority still open:       22 roots
 application runtime composition:     NOT REACHED
 target population:                   BLOCKED
 selected-generation activation:      BLOCKED
 ```
 
-The four accepted rows are `libxfixes`, `libxcomposite`, `libxi`, and `libxinerama`, limited to exact members and selected GTK 3.24.49 X11 capability scope. The classification still does not authorize extraction, installation, target population, complete composition, selected-generation mutation, or activation.
+The six accepted rows are `libxfixes`, `libxcomposite`, `libxi`, `libxinerama`, `libtasn1`, and `libepoxy`. Each is limited to an exact member and a named consumer capability; libepoxy is restricted to GTK 3.24.49 X11 GLX dispatch and does not claim EGL. The classification still does not authorize extraction, installation, target population, complete composition, selected-generation mutation, or activation.
 
 ## Seven-root semantic-review result
 
@@ -161,7 +161,7 @@ The seven-root no-token semantic review is complete:
 ```text
 confirmed Class A: 7
 reclassified Class B: 0
-provider authority accepted: 5
+provider authority accepted: 6
 ```
 
 Canonical review surface:
@@ -175,23 +175,23 @@ For all seven roots, the pinned recipe contains only source/version identity and
 
 `pango` concrete-filename drift remains a separate provider-integration and continuity question. It was not closed by the Class A recipe result.
 
-## Completed X.Org provider tranche and smallest next phase
+## Completed bounded provider tranches and smallest next phase
 
-The four-root X.Org provider-authority review is complete. All four rows are accepted as bounded Class B project-integration decisions; the canonical rationale is in [`xorg-reference-consumed-provider-authority.md`](xorg-reference-consumed-provider-authority.md).
+The X.Org, libtasn1, and libepoxy provider tranches are complete. Their canonical rationales are in [`xorg-reference-consumed-provider-authority.md`](xorg-reference-consumed-provider-authority.md), [`libtasn1-reference-consumed-provider-authority.md`](libtasn1-reference-consumed-provider-authority.md), and [`libepoxy-reference-consumed-provider-authority.md`](libepoxy-reference-consumed-provider-authority.md).
 
-The next smallest provider tranche is:
+The next and final no-token provider tranche is:
 
 ```text
-gpkg/libtasn1
+gpkg/pango
 ```
 
-It reviews exact ASN.1 capability necessity and GnuTLS/security consumer binding without inferring complete security composition, target membership, or activation.
+It reviews provider capability together with CF-001–CF-004 concrete-filename continuity without inferring complete composition, target membership, materialization, or activation.
 
 ## Stop line
 
 Do not:
 
-- treat claim classification alone as provider acceptance outside the four explicit bounded X.Org review rows;
+- treat claim classification alone as provider acceptance outside the six explicit bounded provider review rows;
 - fulfill a SUP-02 request solely because it was historically issued;
 - combine artifact identity, adaptation, provider authority, composition, target population, and activation into one decision;
 - use package metadata or build provenance as a substitute for runtime provider selection;

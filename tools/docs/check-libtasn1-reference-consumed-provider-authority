@@ -115,11 +115,11 @@ else:
         if r['review_id'] not in claim['existing_evidence']: errors.append('generated provider evidence does not link review row')
 
 expected_meta={
- 'provider_review_count':'5',
- 'provider_authority_accepted_count':'5',
- 'provider_authority_open_count':'23',
- 'authority_effect':'FIVE_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT',
- 'next_review_tranche':'LIBEPOXY_REFERENCE_CONSUMED_PROVIDER_ROOT',
+ 'provider_review_count':'6',
+ 'provider_authority_accepted_count':'6',
+ 'provider_authority_open_count':'22',
+ 'authority_effect':'SIX_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT',
+ 'next_review_tranche':'PANGO_REFERENCE_CONSUMED_PROVIDER_AND_FILENAME_DRIFT',
 }
 for k,v in expected_meta.items():
     if meta.get(k)!=v: errors.append(f'metadata {k}: expected {v}, got {meta.get(k)!r}')
@@ -131,11 +131,11 @@ status=(root/'STATUS.md').read_text()
 catalog=(root/'docs/catalog.tsv').read_text()
 markers=[
  ('state version','state_version:' in state),
- ('accepted five','accepted: 5' in state),
- ('open two','open_no_token_roots: 2' in state),
- ('next task','Task ID: `review-libepoxy-reference-consumed-provider-authority`' in active),
- ('brief accepted','bounded providers accepted: 5' in brief),
- ('status accepted','libtasn1 exact provider accepted' in status),
+ ('accepted six','accepted: 6' in state),
+ ('open one','open_no_token_roots: 1' in state),
+ ('next task','Task ID: `review-pango-reference-consumed-provider-authority-and-concrete-filename-drift`' in active),
+ ('brief accepted','bounded providers accepted: 6' in brief),
+ ('status accepted','libtasn1' in status and 'bounded capability scopes' in status),
  ('catalog','libtasn1-reference-consumed-provider-authority\tevidence\tcurrent\tcanonical' in catalog),
 ]
 for label,ok in markers:

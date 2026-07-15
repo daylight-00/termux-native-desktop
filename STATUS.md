@@ -1,6 +1,6 @@
 # Status
 
-> **State:** bundle-native documentation and operations control planes active; compact constitutional authority installed; ADR 0005 claim classification complete; seven no-token recipes confirmed Class A; four X.Org exact providers and libtasn1 exact provider accepted for bounded capability scopes; libepoxy provider review active
+> **State:** bundle-native documentation and operations control planes active; compact constitutional authority installed; ADR 0005 claim classification complete; seven no-token recipes confirmed Class A; four X.Org providers, libtasn1, and libepoxy accepted for bounded capability scopes; Pango provider and filename-drift review active
 > **Updated:** 2026-07-15
 
 ## Repository and deployment consolidation
@@ -322,9 +322,13 @@ AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
 AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
-AUTH-009 non-priority generic capabilities; OJ-001 required identity is corrected, the 89-row ADR 0005 claim inventory is complete, all 28 SUP-02 requests are historical with zero currently required, seven no-token recipes are Class A, and five exact providers have bounded authority while the remaining provider and composition claims stay open
+AUTH-009 non-priority generic capabilities; OJ-001 required identity is corrected, the 89-row ADR 0005 claim inventory is complete, all 28 SUP-02 requests are historical with zero currently required, seven no-token recipes are Class A, and six exact providers have bounded authority while the remaining provider and composition claims stay open
 AUTH-010 exact application payload supply, named supplement membership and release execution; launcher source boundary bounded
 ```
+
+## Bounded libepoxy provider authority
+
+The exact `libepoxy.so.0.0.0` member is accepted only for the GTK 3.24.49 X11 GLX dispatch capability. X11 and GLX are required and bound; EGL is explicitly not claimed. The supplier build framework remains a relied-upon boundary because the supplier pipeline fetched a floating `termux-packages` master. This decision authorizes no composition, target membership, materialization, or activation.
 
 ## Web-chat capability fallback contract
 
@@ -333,23 +337,23 @@ Known sandbox, connector, network, filesystem, timeout, context, and device-auth
 ## Next valid state
 
 ```text
-REVIEW_LIBEPOXY_REFERENCE_CONSUMED_PROVIDER_ROOT
+REVIEW_PANGO_REFERENCE_CONSUMED_PROVIDER_AND_FILENAME_DRIFT
 ```
 
 Active task:
 
 ```text
-REVIEW_LIBEPOXY_REFERENCE_CONSUMED_PROVIDER_AUTHORITY
+REVIEW_PANGO_REFERENCE_CONSUMED_PROVIDER_AUTHORITY_AND_CONCRETE_FILENAME_DRIFT
 ```
 
 Required order:
 
 ```text
 1. preserve the 89-row claim inventory and the separation between identity, adaptation, provider, composition, target and activation;
-2. retain the seven Class A recipe decisions and the five bounded provider rows without broadening their scope;
-3. review the exact libepoxy member, selected GTK GL dispatch binding, GLX/EGL/X11 feature selection, conflicts/exclusions and rollback;
-4. request passive artifact evidence only for a named unresolved feature-selection or consumer-binding ambiguity;
-5. keep Pango filename drift and all explicit-delta roots outside this tranche;
+2. retain the seven Class A recipe decisions and the six bounded provider rows without broadening their scope;
+3. review Pango exact members, SONAME aliases, concrete-filename successors, consumer binding, conflicts/exclusions and rollback;
+4. request a bounded Termux analyzer only for a named unresolved ELF or consumer-binding fact;
+5. keep all explicit-delta roots and complete composition outside this tranche;
 6. do not issue SUP-02 without a recorded Class C reclassification or escalation trigger;
 7. do not treat a bounded provider decision as complete security composition, application composition, target membership or activation.
 ```

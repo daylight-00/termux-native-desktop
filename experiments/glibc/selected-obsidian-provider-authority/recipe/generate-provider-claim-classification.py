@@ -13,6 +13,7 @@ SUP02_REQUESTS = Path('experiments/glibc/selected-obsidian-provider-authority/re
 SEMANTIC_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/no-token-recipe-semantic-review.tsv')
 XORG_PROVIDER_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/xorg-reference-consumed-provider-authority.tsv')
 LIBTASN1_PROVIDER_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/libtasn1-reference-consumed-provider-authority.tsv')
+LIBEPOXY_PROVIDER_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/libepoxy-reference-consumed-provider-authority.tsv')
 
 CLAIM_OUTPUT = Path('experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification.tsv')
 SUP02_OUTPUT = Path('experiments/glibc/selected-obsidian-provider-authority/review/provider-sup-02-request-disposition.tsv')
@@ -112,7 +113,8 @@ def main() -> None:
     semantic_reviews = read_tsv(repo / SEMANTIC_REVIEW)
     xorg_provider_reviews = read_tsv(repo / XORG_PROVIDER_REVIEW)
     libtasn1_provider_reviews = read_tsv(repo / LIBTASN1_PROVIDER_REVIEW)
-    provider_reviews = xorg_provider_reviews + libtasn1_provider_reviews
+    libepoxy_provider_reviews = read_tsv(repo / LIBEPOXY_PROVIDER_REVIEW)
+    provider_reviews = xorg_provider_reviews + libtasn1_provider_reviews + libepoxy_provider_reviews
     if len(roots) != 28:
         raise SystemExit(f'expected 28 root rows, found {len(roots)}')
     if len(objects) != 37:
@@ -125,6 +127,8 @@ def main() -> None:
         raise SystemExit(f'expected 4 X.Org provider reviews, found {len(xorg_provider_reviews)}')
     if len(libtasn1_provider_reviews) != 1:
         raise SystemExit(f'expected 1 libtasn1 provider review, found {len(libtasn1_provider_reviews)}')
+    if len(libepoxy_provider_reviews) != 1:
+        raise SystemExit(f'expected 1 libepoxy provider review, found {len(libepoxy_provider_reviews)}')
     semantic_by_root = {row['root_review_id']: row for row in semantic_reviews}
     if len(semantic_by_root) != len(semantic_reviews):
         raise SystemExit('duplicate root_review_id in no-token semantic review')
@@ -140,6 +144,7 @@ def main() -> None:
         raise SystemExit('duplicate root_review_id across provider reviews')
     provider_source_by_root = {row['root_review_id']: XORG_PROVIDER_REVIEW.name for row in xorg_provider_reviews}
     provider_source_by_root.update({row['root_review_id']: LIBTASN1_PROVIDER_REVIEW.name for row in libtasn1_provider_reviews})
+    provider_source_by_root.update({row['root_review_id']: LIBEPOXY_PROVIDER_REVIEW.name for row in libepoxy_provider_reviews})
     expected_provider_roots = {
         row['root_review_id'] for row in semantic_reviews
         if row['recipe_root'] in {'gpkg/libxfixes', 'gpkg/libxcomposite', 'gpkg/libxi', 'gpkg/libxinerama'}
@@ -149,6 +154,9 @@ def main() -> None:
     libtasn1_expected = {row['root_review_id'] for row in semantic_reviews if row['recipe_root'] == 'gpkg/libtasn1'}
     if {row['root_review_id'] for row in libtasn1_provider_reviews} != libtasn1_expected:
         raise SystemExit('libtasn1 provider review does not cover the canonical root')
+    libepoxy_expected = {row['root_review_id'] for row in semantic_reviews if row['recipe_root'] == 'gpkg/libepoxy'}
+    if {row['root_review_id'] for row in libepoxy_provider_reviews} != libepoxy_expected:
+        raise SystemExit('libepoxy provider review does not cover the canonical root')
     for row in provider_reviews:
         if row['decision'] != 'ACCEPTED_BOUNDED_PROVIDER':
             raise SystemExit(f"invalid provider decision for {row['root_review_id']}: {row['decision']}")
@@ -468,8 +476,8 @@ def main() -> None:
         ('provider_review_count', str(len(provider_reviews))),
         ('provider_authority_accepted_count', str(sum(1 for row in provider_reviews if row['decision'] == 'ACCEPTED_BOUNDED_PROVIDER'))),
         ('provider_authority_open_count', str(claim_type_counts['PROVIDER_AUTHORITY'] - len(provider_reviews))),
-        ('authority_effect', 'FIVE_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT'),
-        ('next_review_tranche', 'LIBEPOXY_REFERENCE_CONSUMED_PROVIDER_ROOT'),
+        ('authority_effect', 'SIX_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT'),
+        ('next_review_tranche', 'PANGO_REFERENCE_CONSUMED_PROVIDER_AND_FILENAME_DRIFT'),
     ]
 
     write_tsv(out_root / CLAIM_OUTPUT, CLAIM_FIELDS, claims)

@@ -21,6 +21,7 @@ case "$MODE" in
       tests/repository/no-token-recipe-semantic-review-smoke.sh
       tests/repository/xorg-reference-consumed-provider-authority-smoke.sh
       tests/repository/libtasn1-reference-consumed-provider-authority-smoke.sh
+      tests/repository/libepoxy-reference-consumed-provider-authority-smoke.sh
       tests/repository/shell-layout-smoke.sh
       tests/repository/vulkan-policy-scope-smoke.sh
       tests/repository/application-authority-boundary-smoke.sh
@@ -39,6 +40,7 @@ case "$MODE" in
       tests/repository/no-token-recipe-semantic-review-smoke.sh
       tests/repository/xorg-reference-consumed-provider-authority-smoke.sh
       tests/repository/libtasn1-reference-consumed-provider-authority-smoke.sh
+      tests/repository/libepoxy-reference-consumed-provider-authority-smoke.sh
     )
     ;;
   --full)

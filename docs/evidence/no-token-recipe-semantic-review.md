@@ -8,7 +8,7 @@ roots reviewed: 7
 confirmed Class A: 7
 reclassified Class B: 0
 new supplier or runtime evidence collected: 0
-provider authority accepted: 0
+bounded provider authority accepted after follow-through: 6
 composition accepted: 0
 target population accepted: 0
 activation accepted: 0
@@ -116,8 +116,8 @@ ADAPTATION_SEMANTICS
 
 PROVIDER_AUTHORITY
     remains Class B
-    five roots have bounded provider authority accepted
-    libepoxy and pango remain open
+    six roots have bounded provider authority accepted
+    pango remains open
     adaptation-classification prerequisite removed
 ```
 
@@ -139,7 +139,9 @@ The four-root X.Org provider-authority tranche is complete: `libxfixes`, `libxco
 
 The `libtasn1` tranche is also complete: its exact provider is accepted only for the selected external GnuTLS 3.8.9 ASN.1/security capability. See [`libtasn1-reference-consumed-provider-authority.md`](libtasn1-reference-consumed-provider-authority.md).
 
-The next no-token provider review is `gpkg/libepoxy`. Pango remains a later separate tranche and its concrete-filename drift remains open.
+The `libepoxy` tranche is complete: its exact provider is accepted only for GTK 3.24.49 X11 GLX dispatch, while EGL remains unclaimed. See [`libepoxy-reference-consumed-provider-authority.md`](libepoxy-reference-consumed-provider-authority.md).
+
+The next and final no-token provider review is `gpkg/pango`, including CF-001–CF-004 concrete-filename continuity.
 
 ## Stop line
 
@@ -147,7 +149,7 @@ Do not infer from this review that:
 
 - supplier producing-build provenance has been reconstructed;
 - generic Termux glibc framework behavior is project-owned;
-- any package member outside the four explicit bounded X.Org decisions is an accepted provider;
+- any package member outside the six explicit bounded decisions is an accepted provider;
 - Pango filename drift is resolved;
 - the selected runtime composition or target population is complete;
 - activation is authorized.

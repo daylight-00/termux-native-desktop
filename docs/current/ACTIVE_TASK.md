@@ -1,50 +1,46 @@
-# Active task: review the libepoxy reference-consumed provider root
+# Active task: review Pango provider authority and concrete-filename drift
 
-> Task ID: `review-libepoxy-reference-consumed-provider-authority`
+> Task ID: `review-pango-reference-consumed-provider-authority-and-concrete-filename-drift`
 >
-> Expected state on completion: `gpkg/libepoxy` has a bounded provider-authority decision or an explicit remaining gap; no composition, target membership, materialization, or activation is implied.
+> Expected state on completion: `gpkg/pango` has a bounded provider decision and an explicit CF-001–CF-004 continuity policy, or a precise remaining gap; no complete composition, target population, materialization, or activation is implied.
 
 ## Objective
 
-Review provider authority for the exact Class A root:
+Review the final no-token Class A root:
 
 ```text
-gpkg/libepoxy
+gpkg/pango
 ```
 
-Determine whether its exact Termux member is necessary and suitable as the selected GL dispatch provider for the bounded GTK 3.24.49 capability. Keep artifact identity, recipe semantics, provider authority, composition, target population, and activation as separate decisions.
+Separate provider capability from concrete-filename continuity. Decide whether the observed SONAME aliases and drifted concrete members can support the selected GTK 3.24.49 text stack without treating an alias observation as target-path authority.
 
 ## Why now
 
-Five no-token roots now have bounded provider authority: four X.Org providers for the selected GTK X11 scope and `libtasn1` for the exact external GnuTLS 3.8.9 ASN.1/security scope. `libepoxy` is the next no-token root without concrete-filename drift, but its upstream GLX/EGL/X11 feature selection is environment-sensitive and must be bounded explicitly.
+Six no-token roots now have bounded provider authority: four X.Org providers, `libtasn1`, and `libepoxy`. Pango is the remaining no-token root and the only one with unresolved concrete-filename drift.
 
 ## Current accepted decisions
 
 - All seven no-token recipes are Class A for package-specific adaptation.
-- `libxfixes`, `libxcomposite`, `libxi`, and `libxinerama` have bounded provider authority for exact members and selected GTK X11 capabilities.
-- `libtasn1` has bounded provider authority for its exact member and the selected external GnuTLS 3.8.9 ASN.1/security capability.
-- None of those decisions implies complete composition, target membership, materialization, or activation.
-- `libepoxy` artifact/member identity and recipe semantics are accepted only as inputs; provider authority remains open.
-- Pango filename drift and provider authority remain open and are excluded from this tranche.
-- No SUP-02 request is currently required.
+- Six exact provider decisions are bounded to named consumer capabilities.
+- `libepoxy.so.0` is accepted only for GTK 3.24.49 X11 GLX dispatch; EGL is not claimed.
+- Pango provider authority and CF-001–CF-004 remain open.
+- Composition, target population, materialization, activation, and blanket SUP-02 execution remain blocked.
 
 ## In scope
 
-- Review exact artifact `libepoxy-glibc` 1.5.10.
-- Bind exact member `libepoxy.so.0.0.0`, its digest, and SONAME `libepoxy.so.0`.
-- Determine the selected GTK 3.24.49 GL dispatch consumer binding.
-- Bound upstream GLX, EGL, and X11 auto-selection to the actual selected supplier contract.
-- Review dynamic candidates, conflicts, and explicit exclusions.
-- Define update and rollback triggers.
-- Use targeted passive artifact observation only if the existing recipe/upstream/consumer evidence cannot resolve a material feature ambiguity.
+- Review `pango-glibc` 1.54.0 and its exact artifact identity.
+- Review observed SONAME aliases and drifted concrete filenames for `libpango`, `libpangoft2`, and `libpangocairo`.
+- Bind required capabilities to GTK 3.24.49, Cairo, Fontconfig, FreeType, HarfBuzz, Fribidi, and Xft only as supported by existing evidence.
+- Decide CF-001 alias necessity, CF-002 successor selection, CF-003 update boundary, and CF-004 rollback continuity.
+- Define conflict and exclusion rules without choosing target paths or materializing files.
+- Request a bounded Termux analyzer only when exact target ELF identity or consumer binding cannot be resolved from retained evidence.
 
 ## Out of scope
 
-- Pango concrete-filename drift or provider decision.
-- Complete graphics or application composition.
-- Provider target paths, aliases, extraction, copying, or installation.
+- Complete GTK/application runtime composition.
+- Provider extraction, target paths, copying, installation, or alias creation.
 - Runtime launch, selector mutation, deployment, or activation.
-- Blanket producing-build provenance or SUP-02 execution.
+- Reconstructing the supplier producing build without a recorded Class C escalation.
 
 ## Required reading
 
@@ -53,49 +49,45 @@ Five no-token roots now have bounded provider authority: four X.Org providers fo
 - `docs/decisions/0005-proportional-assurance-depth.md`
 - `docs/evidence/provider-claim-classification.md`
 - `docs/evidence/no-token-recipe-semantic-review.md`
-- `docs/evidence/xorg-reference-consumed-provider-authority.md`
-- `docs/evidence/libtasn1-reference-consumed-provider-authority.md`
+- `docs/evidence/libepoxy-reference-consumed-provider-authority.md`
 - `experiments/glibc/selected-obsidian-provider-authority/review/generic-artifact-member-inventory-receipt-review.tsv`
+- `experiments/glibc/selected-obsidian-provider-authority/review/generic-recipe-binding-and-drift-target-receipt-review.tsv`
 
-Do not read historical refactor or handoff records by default.
+Do not load historical handoff or refactor records by default.
 
 ## Known facts
 
 ```text
-root review:  generic-root-review:2f6c3972ae083cff8dd2
-recipe tree: bb827daab0491d4ff49c822f96dd4bbb80102ef0
-artifact:     libepoxy-glibc 1.5.10
-artifact id:  generic-artifact:e53dc3b7f5419f13eb09
-artifact SHA: e53dc3b7f5419f13eb0948d2e16994061d2d593c1db2c535022c0d504af6a0e8
-member:       libepoxy.so.0.0.0
-member SHA:   403f566468fb5212173407d041a660af0ff459841e9b0ca2274e9c28ac98c723
-SONAME:       libepoxy.so.0
-semantic:     CONFIRMED_A
+root review: generic-root-review:0dacddae106c6bd1006b
+recipe tree: f9e9e2303e2c91322f7edcf1bc0c3b99f2d1d74a
+artifact: pango-glibc 1.54.0
+semantic: CONFIRMED_A
+observed state: expected SONAME aliases present, concrete filenames drifted
+open issues: CF-001;CF-002;CF-003;CF-004
 ```
-
-The recipe adds no package-specific patch, hook, build option, or output transformation. Upstream Meson defaults select GLX and EGL from the host/dependency environment; this is the material provider-review boundary.
 
 ## Pending external inputs
 
-None. Existing repository evidence is sufficient to begin the bounded review. Request passive artifact evidence only if a named feature-selection or consumer-binding ambiguity remains after the semantic comparison.
+None at task start. Use the registered web-chat stop-loss and create a one-command Termux analyzer only for a named unresolved ELF or consumer-binding fact.
 
 ## Next valid action
 
-Construct one canonical provider-review row binding the exact libepoxy member to the selected GTK GL dispatch capability, with explicit feature-selection, conflict/exclusion, update, rollback, and prohibited-inference fields.
+Construct a canonical Pango review surface that separates exact artifact/member evidence, SONAME alias continuity, provider capability, successor policy, update boundary, rollback, and prohibited inference.
 
 ## Stop conditions
 
 Stop without accepting provider authority if:
 
-- the selected GLX/EGL/X11 feature set cannot be bounded from existing evidence;
-- the exact member or SONAME conflicts with canonical inventory;
-- multiple dynamic provider candidates remain unresolved;
-- the proposed decision implies composition, target population, materialization, or activation.
+- alias targets cannot be bound to exact ELF members and SONAMEs;
+- multiple non-equivalent successors remain unresolved;
+- consumer binding is inferred only from package-wide presence;
+- the decision would choose target paths, create aliases, materialize files, or authorize activation.
 
 ## Completion criteria
 
-- one canonical libepoxy provider-review row exists;
-- the claim generator reproduces the updated provider state deterministically;
-- negative tests reject feature/SONAME drift and authority broadening;
-- current state advances to the next bounded provider tranche;
-- repository and runtime remain unmodified outside documentation and review metadata.
+- canonical Pango provider and drift-policy rows exist;
+- CF-001–CF-004 each have an explicit disposition or remaining gap;
+- generated claims reproduce deterministically;
+- negative tests reject alias drift and authority broadening;
+- current state advances beyond the no-token provider tranche;
+- repository and runtime remain unchanged outside review metadata and tests.
