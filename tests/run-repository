@@ -18,6 +18,7 @@ case "$MODE" in
       tests/repository/operations-model-smoke.sh
       tests/repository/provider-claim-classification-smoke.sh
       tests/repository/no-token-recipe-semantic-review-smoke.sh
+      tests/repository/xorg-reference-consumed-provider-authority-smoke.sh
       tests/repository/shell-layout-smoke.sh
       tests/repository/vulkan-policy-scope-smoke.sh
       tests/repository/application-authority-boundary-smoke.sh
@@ -33,6 +34,7 @@ case "$MODE" in
       tests/repository/operations-model-smoke.sh
       tests/repository/provider-claim-classification-smoke.sh
       tests/repository/no-token-recipe-semantic-review-smoke.sh
+      tests/repository/xorg-reference-consumed-provider-authority-smoke.sh
     )
     ;;
   --full)

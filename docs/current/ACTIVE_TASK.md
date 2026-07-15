@@ -1,98 +1,92 @@
-# Active task: review four X.Org reference-consumed provider roots
+# Active task: review the libtasn1 reference-consumed provider root
 
-> Task ID: `review-xorg-reference-consumed-provider-authority`
+> Task ID: `review-libtasn1-reference-consumed-provider-authority`
 >
-> Expected state on completion: `libxfixes`, `libxcomposite`, `libxi`, and `libxinerama` each have a bounded provider-authority decision or an explicit remaining gap; no composition, target membership, or activation is implied.
+> Expected state on completion: `gpkg/libtasn1` has a bounded provider-authority decision or an explicit remaining gap; no security composition, target membership, or activation is implied.
 
 ## Objective
 
-Review the provider-authority claims for the four Class A X.Org recipe roots:
+Review provider authority for the exact Class A root:
 
 ```text
-gpkg/libxfixes
-gpkg/libxcomposite
-gpkg/libxi
-gpkg/libxinerama
+gpkg/libtasn1
 ```
 
-Determine whether each exact package member is necessary and suitable as the runtime provider for its declared X11 capability scope. Keep artifact identity, recipe semantics, provider authority, composition, target population, and activation as separate decisions.
+Determine whether its exact package member is necessary and suitable as the selected runtime provider for the ASN.1 capability used by the Obsidian security/TLS closure. Keep artifact identity, recipe semantics, provider authority, composition, target population, and activation as separate decisions.
 
 ## Why now
 
-The seven no-token recipe reviews are complete: all seven are confirmed Class A for package-specific recipe adaptation, with no Class B reclassification. The four X.Org roots form the smallest coherent provider chain because they share an authoritative release model, have no package-specific recipe delta, have no concrete-filename drift row, and expose explicit dependency relationships.
+The four X.Org roots have bounded provider authority accepted for their exact members and selected GTK 3.24.49 X11 capability scope. `libtasn1` is the smallest remaining no-token root with no concrete-filename drift and a narrow security dependency role.
 
 ## Current accepted decisions
 
-- The seven no-token roots are Class A for package-specific recipe adaptation.
-- Their generic cross-build framework and upstream build semantics remain a relied-upon supplier boundary, not a project reproduction claim.
-- The four X.Org roots still have open Class B provider-authority claims.
+- The seven no-token recipes are Class A for package-specific adaptation.
+- `libxfixes`, `libxcomposite`, `libxi`, and `libxinerama` have bounded provider authority for exact members and selected GTK X11 capabilities.
+- Those four decisions do not imply complete composition, target membership, or activation.
+- `libtasn1` artifact/member identity and recipe semantics are accepted only as inputs; provider authority remains open.
 - Pango filename drift remains open and is excluded from this tranche.
 - No SUP-02 request is currently required.
-- Provider acceptance does not imply complete composition, target membership, or activation.
 
 ## In scope
 
-- Review exact artifact/member identities and observed SONAMEs for the four roots.
-- Review package dependency edges and capability relationships.
-- Determine capability necessity for the selected Obsidian runtime boundary.
-- Review candidate conflicts, exclusions, update boundaries, and rollback alternatives.
-- Use bounded passive consumer-binding evidence only where the dependency or runtime selection is ambiguous.
-- Record one provider-authority row per root with decision, evidence, remaining gap, and prohibited inference.
+- Review the exact `libtasn1` artifact, member and SONAME.
+- Establish ASN.1 capability necessity and the concrete GnuTLS/security consumer binding.
+- Compare dynamic provider candidates and exclusions.
+- Record update and rollback boundaries.
+- Decide `ACCEPTED_BOUNDED_PROVIDER`, `REJECTED_PROVIDER`, or `OPEN_EXPLICIT_GAP`.
 
 ## Out of scope
 
-- Reviewing `libepoxy`, `libtasn1`, or `pango` provider authority.
+- Reviewing `libepoxy` or `pango` provider authority.
 - Resolving Pango concrete-filename drift.
-- Reviewing the twenty-one explicit-delta recipe roots.
+- Reviewing explicit-delta recipe roots.
 - Issuing or fulfilling SUP-02.
-- Materializing a provider target.
-- Authoring a complete composition manifest.
-- Mutating the selected generation or activation selector.
+- Authoring the complete security or application composition.
+- Populating or activating a provider generation.
 
 ## Required reading
 
 - `docs/current/STATE.yaml`
 - `docs/constitution/PRINCIPLES.md`
 - `docs/decisions/0005-proportional-assurance-depth.md`
+- `docs/evidence/xorg-reference-consumed-provider-authority.md`
 - `docs/evidence/no-token-recipe-semantic-review.md`
 - `docs/evidence/provider-claim-classification.md`
 - `experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification.tsv`
-- `experiments/glibc/selected-obsidian-provider-authority/review/generic-artifact-member-comparison-artifacts.tsv`
-- `experiments/glibc/selected-obsidian-provider-authority/review/authority-coverage-ledger.tsv`
+- `experiments/glibc/selected-obsidian-provider-authority/review/generic-artifact-member-inventory-receipt-review.tsv`
 
 ## Known facts
 
-- All four recipes are Class A for package-specific adaptation.
-- Artifact/member identity evidence is already bounded, but does not establish provider authority.
-- The roots form a dependency chain around XFixes, Composite, XI, and Xinerama capabilities.
-- No concrete-filename drift is recorded for these four roots.
-- Provider claims remain open for capability necessity, consumer binding, conflicts/exclusions, and update/rollback.
+- The `libtasn1` recipe is Class A with no package-specific patch, hook, build option or output transformation.
+- Exact artifact/member identity is bounded and has no concrete-filename drift.
+- The provider claim is Class B because the project selects and integrates the member into a mixed-world security runtime.
+- The likely consumer relationship is GnuTLS, but provider authority requires an exact bounded consumer-binding decision rather than package-presence inference.
 
 ## Pending external inputs
 
 None initially. See [`PENDING_ARTIFACTS.yaml`](PENDING_ARTIFACTS.yaml).
 
-Passive runtime evidence may be requested only if repository evidence cannot resolve an explicit consumer-binding ambiguity.
+Passive runtime evidence may be requested only if repository and authoritative upstream evidence cannot resolve a concrete consumer-binding ambiguity.
 
 ## Next valid action
 
-Construct a four-row provider-authority review table from the canonical artifact/member, dependency, capability, and runtime evidence. Decide each row as `ACCEPTED_BOUNDED_PROVIDER`, `REJECTED_PROVIDER`, or `OPEN_EXPLICIT_GAP` without changing composition or target state.
+Construct one `libtasn1` provider-authority row from exact artifact/member, recipe, security dependency and selected-closure evidence. Preserve the four accepted X.Org rows without broadening their scope.
 
 ## Stop conditions
 
 Stop before provider acceptance if:
 
 - the exact member or SONAME is ambiguous;
-- capability necessity is inferred only from package presence;
-- multiple non-equivalent provider candidates are not compared;
-- consumer binding remains ambiguous and no bounded passive observation is available;
-- provider acceptance would require resolving a composition-wide conflict;
-- an accepted provider is silently treated as target membership or activation authority.
+- ASN.1 capability necessity is inferred only from package presence;
+- the GnuTLS/security consumer binding cannot be bounded;
+- multiple non-equivalent dynamic provider candidates are not compared;
+- a security or ABI conflict remains unresolved;
+- provider acceptance would be treated as complete security composition, target membership or activation.
 
 ## Completion criteria
 
-- All four roots have an explicit provider-authority review row.
-- Every row states exact member identity, capability scope, necessity basis, conflict/exclusion result, update and rollback boundary, decision, and prohibited inference.
-- Any requested runtime observation is narrow, passive, and claim-specific.
-- No composition, target, or activation state changes by implication.
-- The next active task selects the smallest unresolved provider or explicit-delta tranche.
+- `libtasn1` has one explicit provider-authority review row.
+- The row states exact member identity, capability scope, necessity basis, consumer binding, conflicts/exclusions, update boundary, rollback boundary, decision and prohibited inference.
+- Any runtime observation is narrow, passive and claim-specific.
+- No composition, target, materialization or activation state changes by implication.
+- The next active task chooses `libepoxy`, Pango drift/provider review, or the smallest explicit-delta tranche.

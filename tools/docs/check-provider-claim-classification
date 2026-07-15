@@ -15,6 +15,7 @@ required=(
   experiments/glibc/selected-obsidian-provider-authority/review/provider-sup-02-request-disposition.tsv
   experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification-metadata.tsv
   experiments/glibc/selected-obsidian-provider-authority/review/no-token-recipe-semantic-review.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/xorg-reference-consumed-provider-authority.tsv
 )
 for rel in "${required[@]}"; do
   [ -f "$ROOT/$rel" ] || { echo "provider-claim-classification: FAIL: missing $rel" >&2; exit 1; }
@@ -50,6 +51,8 @@ dispositions = read('provider-sup-02-request-disposition.tsv')
 roots = read('generic-build-attestation-adaptation-root-review-set.tsv')
 requests = read('generic-build-attestation-adaptation-gap-evidence-supply-batch-sup-02-custodian-export-requests.tsv')
 metadata = {row['key']: row['value'] for row in read('provider-claim-classification-metadata.tsv')}
+provider_reviews = read('xorg-reference-consumed-provider-authority.tsv')
+provider_review_by_root = {row['root_review_id']: row for row in provider_reviews}
 
 errors=[]
 expected_meta={
@@ -61,8 +64,10 @@ expected_meta={
     'sup02_still_necessary_count':'0','sup02_narrowed_count':'14',
     'sup02_replaced_count':'7','sup02_unnecessary_count':'7',
     'no_token_semantic_review_count':'7','no_token_confirmed_a_count':'7',
-    'no_token_reclassified_b_count':'0','authority_effect':'NONE',
-    'next_review_tranche':'FOUR_XORG_REFERENCE_CONSUMED_PROVIDER_ROOTS',
+    'no_token_reclassified_b_count':'0','provider_review_count':'4',
+    'provider_authority_accepted_count':'4','provider_authority_open_count':'24',
+    'authority_effect':'FOUR_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT',
+    'next_review_tranche':'LIBTASN1_REFERENCE_CONSUMED_PROVIDER_ROOT',
 }
 for key,val in expected_meta.items():
     if metadata.get(key)!=val:
@@ -83,8 +88,11 @@ for row in claims:
         errors.append(f"{row['claim_id']}: invalid adr_class {row['adr_class']}")
     for field in ['project_owned_changed_boundary','remaining_gap','minimum_closure_action','authority_effect','prohibited_inference']:
         if not row[field]: errors.append(f"{row['claim_id']}: empty {field}")
-    if 'ACCEPTED' in row['authority_effect'] or row['authority_effect'] in {'PROVIDER_AUTHORITY','TARGET_POPULATION','ACTIVATION'}:
-        errors.append(f"{row['claim_id']}: classification has authority effect")
+    if 'ACCEPTED' in row['authority_effect']:
+        if not (row['claim_type']=='PROVIDER_AUTHORITY' and row['subject_id'] in provider_review_by_root and row['classification_state']=='BOUNDED_PROVIDER_AUTHORITY_ACCEPTED'):
+            errors.append(f"{row['claim_id']}: unreviewed claim has authority effect")
+    if row['authority_effect'] in {'PROVIDER_AUTHORITY','TARGET_POPULATION','ACTIVATION'}:
+        errors.append(f"{row['claim_id']}: invalid broad authority effect")
 
 by_subject=defaultdict(dict)
 for row in claims:
@@ -105,6 +113,14 @@ for rid, source in root_by_id.items():
         errors.append(f'{rid}: adaptation class mismatch')
     if group['PROVIDER_AUTHORITY']['adr_class']!='B':
         errors.append(f'{rid}: provider authority is not class B')
+    provider_claim=group['PROVIDER_AUTHORITY']
+    if rid in provider_review_by_root:
+        if provider_claim['classification_state']!='BOUNDED_PROVIDER_AUTHORITY_ACCEPTED':
+            errors.append(f'{rid}: reviewed provider claim is not accepted')
+        if provider_claim['remaining_gap']!='NONE_FOR_BOUNDED_PROVIDER_AUTHORITY':
+            errors.append(f'{rid}: reviewed provider gap is not closed')
+    elif provider_claim['classification_state']!='CLASSIFIED_OPEN_PROVIDER_AUTHORITY_NOT_ACCEPTED':
+        errors.append(f'{rid}: unreviewed provider claim is not open')
 
 ctype=Counter(r['claim_type'] for r in claims)
 want_types={'ARTIFACT_IDENTITY':28,'ADAPTATION_SEMANTICS':28,'PROVIDER_AUTHORITY':28,'OBJECT_REQUIREMENT_IDENTITY':1,'BUILD_PROVENANCE':1,'COMPOSITION':1,'TARGET_POPULATION':1,'ACTIVATION':1}
@@ -137,13 +153,13 @@ brief=(root/'docs/current/BRIEF.md').read_text()
 catalog=(root/'docs/catalog.tsv').read_text()
 status=(root/'STATUS.md').read_text()
 checks=[
-    ('state version','state_version: 2026-07-15.07' in state),
+    ('state version','state_version: 2026-07-15.08' in state),
     ('claim count state','total: 89' in state),
     ('SUP-02 state','required_now: 0' in state),
-    ('next task','Task ID: `review-xorg-reference-consumed-provider-authority`' in active),
+    ('next task','Task ID: `review-libtasn1-reference-consumed-provider-authority`' in active),
     ('brief classification','89 separated claims' in brief),
     ('catalog row','provider-claim-classification\tevidence\tcurrent\tcanonical' in catalog),
-    ('status next phase','REVIEW_FOUR_XORG_REFERENCE_CONSUMED_PROVIDER_ROOTS' in status),
+    ('status next phase','REVIEW_LIBTASN1_REFERENCE_CONSUMED_PROVIDER_ROOT' in status),
 ]
 for label,ok in checks:
     if not ok: errors.append(f'missing current-state marker: {label}')
@@ -152,7 +168,7 @@ if errors:
     for err in errors:
         print('provider-claim-classification: FAIL:',err,file=sys.stderr)
     raise SystemExit(1)
-print('provider-claim-classification: PASS: 89 claims and 28 SUP-02 dispositions are coherent')
+print('provider-claim-classification: PASS: 89 claims, 4 bounded providers and 28 SUP-02 dispositions are coherent')
 PY
 
 echo 'provider-claim-classification: all checks passed'

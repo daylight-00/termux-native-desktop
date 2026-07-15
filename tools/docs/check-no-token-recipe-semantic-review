@@ -77,6 +77,7 @@ for recipe, exp in expected.items():
         errors.append(f'{recipe}: canonical source-binding mismatch')
 
 claim_map={(r['subject_label'],r['claim_type']):r for r in claims}
+accepted_xorg={'gpkg/libxfixes','gpkg/libxcomposite','gpkg/libxi','gpkg/libxinerama'}
 for recipe in expected:
     adaptation=claim_map.get((recipe,'ADAPTATION_SEMANTICS'))
     provider=claim_map.get((recipe,'PROVIDER_AUTHORITY'))
@@ -88,10 +89,18 @@ for recipe in expected:
         errors.append(f'{recipe}: semantic-review gap remains open')
     if 'ADAPTATION_CLASSIFICATION' in provider['remaining_gap']:
         errors.append(f'{recipe}: provider claim still depends on adaptation classification')
-    if provider['classification_state']!='CLASSIFIED_OPEN_PROVIDER_AUTHORITY_NOT_ACCEPTED':
-        errors.append(f'{recipe}: provider authority was changed')
-    if 'ACCEPTED' in provider['authority_effect']:
-        errors.append(f'{recipe}: provider authority effect introduced')
+    if recipe in accepted_xorg:
+        if provider['classification_state']!='BOUNDED_PROVIDER_AUTHORITY_ACCEPTED':
+            errors.append(f'{recipe}: bounded provider authority not accepted')
+        if provider['remaining_gap']!='NONE_FOR_BOUNDED_PROVIDER_AUTHORITY':
+            errors.append(f'{recipe}: bounded provider gap not closed')
+        if 'NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT' not in provider['authority_effect']:
+            errors.append(f'{recipe}: accepted provider authority is not bounded')
+    else:
+        if provider['classification_state']!='CLASSIFIED_OPEN_PROVIDER_AUTHORITY_NOT_ACCEPTED':
+            errors.append(f'{recipe}: provider authority was changed unexpectedly')
+        if 'ACCEPTED' in provider['authority_effect']:
+            errors.append(f'{recipe}: provider authority effect introduced unexpectedly')
 
 state=(root/'docs/current/STATE.yaml').read_text()
 active=(root/'docs/current/ACTIVE_TASK.md').read_text()
@@ -99,11 +108,12 @@ brief=(root/'docs/current/BRIEF.md').read_text()
 evidence=(root/'docs/evidence/no-token-recipe-semantic-review.md').read_text()
 catalog=(root/'docs/catalog.tsv').read_text()
 markers=[
- ('state version','state_version: 2026-07-15.07' in state),
+ ('state version','state_version: 2026-07-15.08' in state),
  ('seven confirmed','confirmed_a: 7' in state),
- ('provider accepted zero','provider_authority_accepted: 0' in state),
- ('next task','Task ID: `review-xorg-reference-consumed-provider-authority`' in active),
- ('brief result','all seven are confirmed Class A' in brief),
+ ('provider accepted four','provider_authority_accepted: 4' in state),
+ ('provider open three','provider_authority_open: 3' in state),
+ ('next task','Task ID: `review-libtasn1-reference-consumed-provider-authority`' in active),
+ ('brief result','all seven are Class A' in brief),
  ('evidence status','confirmed Class A: 7' in evidence),
  ('catalog row','no-token-recipe-semantic-review\tevidence\tcurrent\tcanonical' in catalog),
 ]
@@ -112,5 +122,5 @@ for label,ok in markers:
 if errors:
     for err in errors: print('no-token-recipe-semantic-review: FAIL:',err,file=sys.stderr)
     raise SystemExit(1)
-print('no-token-recipe-semantic-review: PASS: 7 roots confirmed Class A; provider authority remains open')
+print('no-token-recipe-semantic-review: PASS: 7 roots confirmed Class A; 4 bounded providers accepted and 3 remain open')
 PY

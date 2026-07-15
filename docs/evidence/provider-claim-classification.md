@@ -9,7 +9,7 @@ roots: 28
 objects: 37
 claims: 89
 new evidence collected: 0
-provider authority accepted: 0
+provider authority accepted: 4
 composition accepted: 0
 target rows accepted: 0
 activation accepted: 0
@@ -96,7 +96,7 @@ The classification retains the following evidence without overpromoting it:
 - the accepted OJ-001 correction that the required ABI identity is `libjpeg.so.62`, not `libjpeg.so.8`;
 - all historical SUP-02 request, acquisition, receipt, and producer records.
 
-These remain evidence inputs. They do not create final provider authority.
+These remain evidence inputs. They do not create final provider authority by themselves. Four provider claims are now accepted only through the separate bounded X.Org provider review.
 
 ## SUP-02 disposition
 
@@ -142,16 +142,17 @@ Six T6 no-token roots have completed bounded recipe/upstream semantic comparison
 
 The `libjpeg-turbo` SUP-02 request is also unnecessary at the current boundary because producing-build evidence for a package that does not provide the required `libjpeg.so.62` identity cannot close OJ-001.
 
-## Authority states that remain open
+## Current authority states
 
 ```text
-provider authority: OPEN for all 28 roots
-application runtime composition: NOT REACHED
-target population: BLOCKED
-selected-generation activation: BLOCKED
+bounded provider authority accepted: 4 roots
+provider authority still open:       24 roots
+application runtime composition:     NOT REACHED
+target population:                   BLOCKED
+selected-generation activation:      BLOCKED
 ```
 
-The classification does not authorize extraction, installation, target population, provider promotion, selected-generation mutation, or activation.
+The four accepted rows are `libxfixes`, `libxcomposite`, `libxi`, and `libxinerama`, limited to exact members and selected GTK 3.24.49 X11 capability scope. The classification still does not authorize extraction, installation, target population, complete composition, selected-generation mutation, or activation.
 
 ## Seven-root semantic-review result
 
@@ -160,7 +161,7 @@ The seven-root no-token semantic review is complete:
 ```text
 confirmed Class A: 7
 reclassified Class B: 0
-provider authority accepted: 0
+provider authority accepted: 4
 ```
 
 Canonical review surface:
@@ -174,24 +175,23 @@ For all seven roots, the pinned recipe contains only source/version identity and
 
 `pango` concrete-filename drift remains a separate provider-integration and continuity question. It was not closed by the Class A recipe result.
 
-## Smallest next phase
+## Completed X.Org provider tranche and smallest next phase
 
-The next bounded phase is the four-root X.Org provider-authority review:
+The four-root X.Org provider-authority review is complete. All four rows are accepted as bounded Class B project-integration decisions; the canonical rationale is in [`xorg-reference-consumed-provider-authority.md`](xorg-reference-consumed-provider-authority.md).
+
+The next smallest provider tranche is:
 
 ```text
-gpkg/libxfixes
-gpkg/libxcomposite
-gpkg/libxi
-gpkg/libxinerama
+gpkg/libtasn1
 ```
 
-Each root remains Class B for provider selection and integration. The review may decide exact capability necessity, consumer binding, conflicts/exclusions, update boundary, and rollback. It must not infer complete composition, target membership, or activation.
+It reviews exact ASN.1 capability necessity and GnuTLS/security consumer binding without inferring complete security composition, target membership, or activation.
 
 ## Stop line
 
 Do not:
 
-- interpret this classification as provider acceptance;
+- treat claim classification alone as provider acceptance outside the four explicit bounded X.Org review rows;
 - fulfill a SUP-02 request solely because it was historically issued;
 - combine artifact identity, adaptation, provider authority, composition, target population, and activation into one decision;
 - use package metadata or build provenance as a substitute for runtime provider selection;

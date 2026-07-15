@@ -1,0 +1,120 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+required=(
+  docs/evidence/xorg-reference-consumed-provider-authority.md
+  experiments/glibc/selected-obsidian-provider-authority/review/xorg-reference-consumed-provider-authority.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification-metadata.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/generic-build-attestation-adaptation-root-review-set.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/generic-recipe-binding-and-drift-target-receipt-review.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/generic-artifact-member-inventory-receipt-review.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/generic-artifact-member-comparison-exclusions.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/no-token-recipe-semantic-review.tsv
+)
+for rel in "${required[@]}"; do
+  [ -f "$ROOT/$rel" ] || { echo "xorg-provider-authority: FAIL: missing $rel" >&2; exit 1; }
+done
+
+python3 - "$ROOT" <<'PY'
+from pathlib import Path
+import csv, sys
+from collections import Counter
+root=Path(sys.argv[1])
+review=root/'experiments/glibc/selected-obsidian-provider-authority/review'
+
+def read(name):
+    with (review/name).open(newline='',encoding='utf-8') as f:
+        return list(csv.DictReader(f,delimiter='\t'))
+
+def by(rows,key):
+    return {r[key]:r for r in rows}
+
+rows=read('xorg-reference-consumed-provider-authority.tsv')
+roots=by(read('generic-build-attestation-adaptation-root-review-set.tsv'),'recipe_root')
+recipe_rows=read('generic-recipe-binding-and-drift-target-receipt-review.tsv')
+recipes={}
+for row in recipe_rows:
+    recipes.setdefault(row['recipe_root'], row)
+members=by(read('generic-artifact-member-inventory-receipt-review.tsv'),'evidence_row_id')
+semantics=by(read('no-token-recipe-semantic-review.tsv'),'recipe_root')
+claims=by(read('provider-claim-classification.tsv'),'claim_id')
+meta={r['key']:r['value'] for r in read('provider-claim-classification-metadata.tsv')}
+exclusions=read('generic-artifact-member-comparison-exclusions.tsv')
+errors=[]
+expected={
+ 'gpkg/libxfixes':('XORG-PROV-001','libXfixes.so.3','PCC-LIBXFIXES-PROVIDER'),
+ 'gpkg/libxcomposite':('XORG-PROV-002','libXcomposite.so.1','PCC-LIBXCOMPOSITE-PROVIDER'),
+ 'gpkg/libxi':('XORG-PROV-003','libXi.so.6','PCC-LIBXI-PROVIDER'),
+ 'gpkg/libxinerama':('XORG-PROV-004','libXinerama.so.1','PCC-LIBXINERAMA-PROVIDER'),
+}
+if len(rows)!=4: errors.append(f'expected 4 review rows, found {len(rows)}')
+if {r['recipe_root'] for r in rows}!=set(expected): errors.append('review roots do not exactly match four X.Org roots')
+if len({r['review_id'] for r in rows})!=len(rows): errors.append('duplicate review_id')
+for r in rows:
+    root_row=roots.get(r['recipe_root']); rr=recipes.get(r['recipe_root']); mr=members.get(r['evidence_row_id']); sr=semantics.get(r['recipe_root'])
+    if not root_row: errors.append(f"{r['recipe_root']}: canonical root-review row missing"); continue
+    if not rr: errors.append(f"{r['recipe_root']}: canonical recipe row missing"); continue
+    if not mr: errors.append(f"{r['recipe_root']}: canonical member row missing"); continue
+    exp_id,exp_soname,claim_id=expected[r['recipe_root']]
+    if r['review_id']!=exp_id: errors.append(f"{r['recipe_root']}: review_id mismatch")
+    if r['root_review_id']!=root_row['root_review_id']: errors.append(f"{r['recipe_root']}: root_review_id drift")
+    if r['recipe_tree']!=root_row['recipe_tree'] or r['recipe_tree']!=rr['recipe_tree']:
+        errors.append(f"{r['recipe_root']}: recipe_tree drift")
+    for field in ['artifact_id','artifact_package','artifact_version','artifact_sha256','evidence_row_id']:
+        if r[field]!=rr[field]: errors.append(f"{r['recipe_root']}: {field} drift from canonical recipe row")
+    if r['artifact_id']!=mr['exact_artifact_id']:
+        errors.append(f"{r['recipe_root']}: artifact_id drift from canonical member row")
+    member_map={'exact_member_path':'exact_member_path','exact_member_sha256':'exact_member_sha256','observed_soname':'exact_observed_elf_soname'}
+    for field,source_field in member_map.items():
+        if r[field]!=mr[source_field]: errors.append(f"{r['recipe_root']}: {field} drift from canonical member row")
+    if r['observed_soname']!=exp_soname: errors.append(f"{r['recipe_root']}: unexpected SONAME {r['observed_soname']}")
+    if not sr or sr['semantic_result']!='CONFIRMED_A': errors.append(f"{r['recipe_root']}: Class A semantic review missing")
+    if r['decision']!='ACCEPTED_BOUNDED_PROVIDER': errors.append(f"{r['recipe_root']}: decision not accepted bounded provider")
+    if r['remaining_gap']!='NONE_FOR_BOUNDED_PROVIDER_AUTHORITY': errors.append(f"{r['recipe_root']}: remaining gap not closed")
+    if 'NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT' not in r['authority_effect']: errors.append(f"{r['recipe_root']}: authority effect not bounded")
+    for field in ['capability_scope','necessity_basis','consumer_binding_basis','candidate_conflict_and_exclusion_result','update_boundary','rollback_boundary','prohibited_inference']:
+        if not r[field]: errors.append(f"{r['recipe_root']}: empty {field}")
+    if 'STATIC_VARIANT_EXCLUDED' not in r['candidate_conflict_and_exclusion_result']:
+        errors.append(f"{r['recipe_root']}: static exclusion not recorded")
+    package=r['artifact_package']+'-static'
+    if not any(e['package']==package and e['exclusion_reason']=='STATIC_ONLY_PACKAGE_OUTSIDE_DYNAMIC_MEMBER_SEARCH' for e in exclusions):
+        errors.append(f"{r['recipe_root']}: canonical static exclusion missing")
+    claim=claims.get(claim_id)
+    if not claim: errors.append(f"{r['recipe_root']}: generated provider claim missing")
+    else:
+        if claim['classification_state']!='BOUNDED_PROVIDER_AUTHORITY_ACCEPTED': errors.append(f"{claim_id}: state mismatch")
+        if claim['remaining_gap']!='NONE_FOR_BOUNDED_PROVIDER_AUTHORITY': errors.append(f"{claim_id}: gap mismatch")
+        if claim['authority_effect']!=r['authority_effect']: errors.append(f"{claim_id}: authority effect mismatch")
+        if r['review_id'] not in claim['existing_evidence']: errors.append(f"{claim_id}: review evidence not linked")
+
+expected_meta={
+ 'provider_review_count':'4','provider_authority_accepted_count':'4','provider_authority_open_count':'24',
+ 'authority_effect':'FOUR_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT',
+ 'next_review_tranche':'LIBTASN1_REFERENCE_CONSUMED_PROVIDER_ROOT',
+}
+for k,v in expected_meta.items():
+    if meta.get(k)!=v: errors.append(f'metadata {k}: expected {v}, got {meta.get(k)!r}')
+
+state=(root/'docs/current/STATE.yaml').read_text()
+active=(root/'docs/current/ACTIVE_TASK.md').read_text()
+brief=(root/'docs/current/BRIEF.md').read_text()
+status=(root/'STATUS.md').read_text()
+catalog=(root/'docs/catalog.tsv').read_text()
+checks=[
+ ('state version','state_version: 2026-07-15.08' in state),
+ ('state accepted','accepted: 4' in state),
+ ('next task','Task ID: `review-libtasn1-reference-consumed-provider-authority`' in active),
+ ('brief accepted','bounded providers accepted: 4' in brief),
+ ('status accepted','four X.Org exact providers accepted' in status),
+ ('catalog','xorg-reference-consumed-provider-authority\tevidence\tcurrent\tcanonical' in catalog),
+]
+for label,ok in checks:
+    if not ok: errors.append(f'missing current-state marker: {label}')
+
+if errors:
+    for e in errors: print('xorg-provider-authority: FAIL:',e,file=sys.stderr)
+    raise SystemExit(1)
+print('xorg-provider-authority: PASS: 4 exact X.Org providers accepted with no composition, target or activation effect')
+PY

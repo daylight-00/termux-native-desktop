@@ -36,3 +36,5 @@ Evidence can establish an observation, candidate, identity, or bounded compariso
 The accepted assurance-depth policy is in [`../decisions/0005-proportional-assurance-depth.md`](../decisions/0005-proportional-assurance-depth.md).
 
 The current provider claim inventory and SUP-02 reclassification are in [`provider-claim-classification.md`](provider-claim-classification.md).
+
+The completed seven-root Class A recipe review is in [`no-token-recipe-semantic-review.md`](no-token-recipe-semantic-review.md). The four bounded X.Org provider decisions are in [`xorg-reference-consumed-provider-authority.md`](xorg-reference-consumed-provider-authority.md).

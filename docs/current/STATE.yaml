@@ -1,5 +1,5 @@
 schema_version: 1
-state_version: 2026-07-15.07
+state_version: 2026-07-15.08
 updated_on: 2026-07-15
 
 project:
@@ -40,10 +40,11 @@ documentation:
   assurance_depth_decision: accepted-adr-0005
   provider_claim_classification: docs/evidence/provider-claim-classification.md
   no_token_recipe_semantic_review: docs/evidence/no-token-recipe-semantic-review.md
+  xorg_provider_authority_review: docs/evidence/xorg-reference-consumed-provider-authority.md
 
 provider_authority:
-  workstream: xorg-reference-consumed-provider-review-active
-  boundary: seven-no-token-roots-confirmed-class-a-provider-authority-open
+  workstream: xorg-reference-consumed-provider-review-complete-libtasn1-review-active
+  boundary: four-xorg-bounded-providers-accepted-three-no-token-provider-roots-open
   claim_inventory:
     total: 89
     class_a: 36
@@ -54,14 +55,20 @@ provider_authority:
     reviewed: 7
     confirmed_a: 7
     reclassified_b: 0
-    provider_authority_accepted: 0
+    provider_authority_accepted: 4
+    provider_authority_open: 3
+  bounded_provider_authority:
+    accepted: 4
+    rejected: 0
+    open_no_token_roots: 3
+    accepted_scope: exact-members-and-selected-gtk-3-24-49-x11-capabilities-only
   sup_02_disposition:
     still_necessary: 0
     narrowed: 14
     replaced: 7
     unnecessary: 7
     required_now: 0
-  next_research_decision: review-four-xorg-reference-consumed-provider-roots
+  next_research_decision: review-libtasn1-reference-consumed-provider-root
   prohibited_claims:
     - complete-provider-authority
     - complete-runtime-composition
@@ -69,7 +76,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: review-xorg-reference-consumed-provider-authority
+  id: review-libtasn1-reference-consumed-provider-authority
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:

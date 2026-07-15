@@ -11,6 +11,7 @@ ROOT_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/revie
 OBJECT_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/generic-build-attestation-adaptation-object-review-set.tsv')
 SUP02_REQUESTS = Path('experiments/glibc/selected-obsidian-provider-authority/review/generic-build-attestation-adaptation-gap-evidence-supply-batch-sup-02-custodian-export-requests.tsv')
 SEMANTIC_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/no-token-recipe-semantic-review.tsv')
+PROVIDER_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/xorg-reference-consumed-provider-authority.tsv')
 
 CLAIM_OUTPUT = Path('experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification.tsv')
 SUP02_OUTPUT = Path('experiments/glibc/selected-obsidian-provider-authority/review/provider-sup-02-request-disposition.tsv')
@@ -108,6 +109,7 @@ def main() -> None:
     objects = read_tsv(repo / OBJECT_REVIEW)
     requests = read_tsv(repo / SUP02_REQUESTS)
     semantic_reviews = read_tsv(repo / SEMANTIC_REVIEW)
+    provider_reviews = read_tsv(repo / PROVIDER_REVIEW)
     if len(roots) != 28:
         raise SystemExit(f'expected 28 root rows, found {len(roots)}')
     if len(objects) != 37:
@@ -116,6 +118,8 @@ def main() -> None:
         raise SystemExit(f'expected 28 SUP-02 requests, found {len(requests)}')
     if len(semantic_reviews) != 7:
         raise SystemExit(f'expected 7 no-token semantic reviews, found {len(semantic_reviews)}')
+    if len(provider_reviews) != 4:
+        raise SystemExit(f'expected 4 X.Org provider reviews, found {len(provider_reviews)}')
     semantic_by_root = {row['root_review_id']: row for row in semantic_reviews}
     if len(semantic_by_root) != len(semantic_reviews):
         raise SystemExit('duplicate root_review_id in no-token semantic review')
@@ -125,6 +129,19 @@ def main() -> None:
     for row in semantic_reviews:
         if row['semantic_result'] not in {'CONFIRMED_A', 'RECLASSIFIED_B'}:
             raise SystemExit(f"invalid semantic result for {row['root_review_id']}: {row['semantic_result']}")
+
+    provider_by_root = {row['root_review_id']: row for row in provider_reviews}
+    if len(provider_by_root) != len(provider_reviews):
+        raise SystemExit('duplicate root_review_id in X.Org provider review')
+    expected_provider_roots = {
+        row['root_review_id'] for row in semantic_reviews
+        if row['recipe_root'] in {'gpkg/libxfixes', 'gpkg/libxcomposite', 'gpkg/libxi', 'gpkg/libxinerama'}
+    }
+    if set(provider_by_root) != expected_provider_roots:
+        raise SystemExit('X.Org provider reviews do not exactly cover the four canonical roots')
+    for row in provider_reviews:
+        if row['decision'] != 'ACCEPTED_BOUNDED_PROVIDER':
+            raise SystemExit(f"invalid X.Org provider decision for {row['root_review_id']}: {row['decision']}")
 
     objects_by_root: dict[str, list[dict[str, str]]] = defaultdict(list)
     for row in objects:
@@ -221,6 +238,28 @@ def main() -> None:
             'prohibited_inference': 'RECIPE_TOKEN_PRESENCE_OR_ABSENCE_DOES_NOT_BY_ITSELF_ESTABLISH_PLATFORM_NECESSITY_OR_EQUIVALENCE',
         })
 
+        provider_review = provider_by_root.get(root['root_review_id'])
+        if provider_review:
+            provider_existing_evidence = (
+                f"{common_evidence};authority-coverage-ledger.tsv;generic-source-authority-boundary.tsv;"
+                f"selected-object-authority-base.tsv;{PROVIDER_REVIEW.name};{provider_review['review_id']}"
+            )
+            provider_gap = provider_review['remaining_gap']
+            provider_action = 'RETAIN_BOUNDED_PROVIDER_AUTHORITY_AND_REVALIDATE_ON_RECORDED_UPDATE_OR_ROLLBACK_TRIGGER'
+            provider_state = 'BOUNDED_PROVIDER_AUTHORITY_ACCEPTED'
+            provider_effect = provider_review['authority_effect']
+            provider_prohibited = provider_review['prohibited_inference']
+        else:
+            provider_existing_evidence = (
+                f"{common_evidence};authority-coverage-ledger.tsv;generic-source-authority-boundary.tsv;"
+                'selected-object-authority-base.tsv'
+            )
+            provider_gap = ('CAPABILITY_NECESSITY_AND_CONSUMER_BINDING;CONFLICT_AND_EXCLUSION_REVIEW;UPDATE_AND_ROLLBACK_BOUNDARY' if semantic_review else 'ADAPTATION_CLASSIFICATION;CAPABILITY_NECESSITY_AND_CONSUMER_BINDING;CONFLICT_AND_EXCLUSION_REVIEW;UPDATE_AND_ROLLBACK_BOUNDARY')
+            provider_action = ('CAPABILITY_LEVEL_PROVIDER_REVIEW_WITH_TARGETED_PASSIVE_CONSUMER_BINDING_ONLY_WHERE_AMBIGUOUS' if semantic_review else 'CAPABILITY_LEVEL_PROVIDER_REVIEW_AFTER_ADAPTATION_CLASSIFICATION_WITH_TARGETED_PASSIVE_CONSUMER_BINDING_ONLY_WHERE_AMBIGUOUS')
+            provider_state = 'CLASSIFIED_OPEN_PROVIDER_AUTHORITY_NOT_ACCEPTED'
+            provider_effect = 'NO_PROVIDER_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT'
+            provider_prohibited = 'PACKAGE_MEMBER_AND_RECIPE_EVIDENCE_DO_NOT_IMPLY_PROVIDER_AUTHORITY_OR_COMPLETE_RUNTIME_COMPOSITION'
+
         claims.append({
             'claim_id': f'PCC-{root_slug}-PROVIDER',
             'subject_kind': 'ROOT',
@@ -232,17 +271,14 @@ def main() -> None:
             'supplier_or_reference_boundary': f'AUTHORITATIVE_PACKAGE_MEMBERS_FOR_CAPABILITY_PARTITIONS={partitions}',
             'project_owned_changed_boundary': 'PROJECT_SELECTION_AND_INTEGRATION_OF_REFERENCE_MEMBERS_IN_A_CUSTOM_MIXED_WORLD_APPLICATION_RUNTIME',
             'risk_modifiers': risks,
-            'existing_evidence': (
-                f"{common_evidence};authority-coverage-ledger.tsv;generic-source-authority-boundary.tsv;"
-                'selected-object-authority-base.tsv'
-            ),
-            'remaining_gap': ('CAPABILITY_NECESSITY_AND_CONSUMER_BINDING;CONFLICT_AND_EXCLUSION_REVIEW;UPDATE_AND_ROLLBACK_BOUNDARY' if semantic_review else 'ADAPTATION_CLASSIFICATION;CAPABILITY_NECESSITY_AND_CONSUMER_BINDING;CONFLICT_AND_EXCLUSION_REVIEW;UPDATE_AND_ROLLBACK_BOUNDARY'),
-            'minimum_closure_action': ('CAPABILITY_LEVEL_PROVIDER_REVIEW_WITH_TARGETED_PASSIVE_CONSUMER_BINDING_ONLY_WHERE_AMBIGUOUS' if semantic_review else 'CAPABILITY_LEVEL_PROVIDER_REVIEW_AFTER_ADAPTATION_CLASSIFICATION_WITH_TARGETED_PASSIVE_CONSUMER_BINDING_ONLY_WHERE_AMBIGUOUS'),
+            'existing_evidence': provider_existing_evidence,
+            'remaining_gap': provider_gap,
+            'minimum_closure_action': provider_action,
             'explicitly_excluded_evidence': 'SUPPLIER_BUILD_PROVENANCE_AS_A_SUBSTITUTE_FOR_PROVIDER_SELECTION_OR_RUNTIME_BINDING',
-            'escalation_trigger': 'AMBIGUOUS_CONSUMER_BINDING;ABI_OR_SECURITY_CONFLICT;MULTIPLE_NON_EQUIVALENT_PROVIDER_CANDIDATES;NO_OBSERVABLE_FALLBACK',
-            'classification_state': 'CLASSIFIED_OPEN_PROVIDER_AUTHORITY_NOT_ACCEPTED',
-            'authority_effect': 'NO_PROVIDER_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT',
-            'prohibited_inference': 'PACKAGE_MEMBER_AND_RECIPE_EVIDENCE_DO_NOT_IMPLY_PROVIDER_AUTHORITY_OR_COMPLETE_RUNTIME_COMPOSITION',
+            'escalation_trigger': 'AMBIGUOUS_CONSUMER_BINDING;ABI_OR_SECURITY_CONFLICT;MULTIPLE_NON_EQUIVALENT_PROVIDER_CANDIDATES;NO_OBSERVABLE_FALLBACK;ARTIFACT_MEMBER_RECIPE_OR_CONSUMER_BINDING_CHANGE',
+            'classification_state': provider_state,
+            'authority_effect': provider_effect,
+            'prohibited_inference': provider_prohibited,
         })
 
     claims.append({
@@ -419,8 +455,11 @@ def main() -> None:
         ('no_token_semantic_review_count', str(len(semantic_reviews))),
         ('no_token_confirmed_a_count', str(sum(1 for row in semantic_reviews if row['semantic_result'] == 'CONFIRMED_A'))),
         ('no_token_reclassified_b_count', str(sum(1 for row in semantic_reviews if row['semantic_result'] == 'RECLASSIFIED_B'))),
-        ('authority_effect', 'NONE'),
-        ('next_review_tranche', 'FOUR_XORG_REFERENCE_CONSUMED_PROVIDER_ROOTS'),
+        ('provider_review_count', str(len(provider_reviews))),
+        ('provider_authority_accepted_count', str(sum(1 for row in provider_reviews if row['decision'] == 'ACCEPTED_BOUNDED_PROVIDER'))),
+        ('provider_authority_open_count', str(claim_type_counts['PROVIDER_AUTHORITY'] - len(provider_reviews))),
+        ('authority_effect', 'FOUR_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT'),
+        ('next_review_tranche', 'LIBTASN1_REFERENCE_CONSUMED_PROVIDER_ROOT'),
     ]
 
     write_tsv(out_root / CLAIM_OUTPUT, CLAIM_FIELDS, claims)

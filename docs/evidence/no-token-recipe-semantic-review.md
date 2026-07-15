@@ -131,18 +131,11 @@ The overall inventory remains:
 
 No historical SUP-02 request becomes required. The six T6 requests remain unnecessary and the Pango request remains replaced by bounded semantic and drift-policy review.
 
-## Next bounded tranche
+## Provider follow-through
 
-The smallest coherent next tranche is the four-root X.Org provider-authority chain:
+The four-root X.Org provider-authority tranche is complete: `libxfixes`, `libxcomposite`, `libxi`, and `libxinerama` are accepted only as exact bounded providers for the selected GTK 3.24.49 X11 capability scope. See [`xorg-reference-consumed-provider-authority.md`](xorg-reference-consumed-provider-authority.md).
 
-```text
-gpkg/libxfixes
-gpkg/libxcomposite
-gpkg/libxi
-gpkg/libxinerama
-```
-
-That review may use exact artifact/member identities, SONAMEs, package dependency edges, capability necessity, and bounded passive consumer evidence. It must not infer composition, target membership, or activation.
+The next smallest no-token provider review is `gpkg/libtasn1`. `libepoxy` and Pango remain later separate tranches; Pango concrete-filename drift remains open.
 
 ## Stop line
 
@@ -150,7 +143,7 @@ Do not infer from this review that:
 
 - supplier producing-build provenance has been reconstructed;
 - generic Termux glibc framework behavior is project-owned;
-- any package member is an accepted provider;
+- any package member outside the four explicit bounded X.Org decisions is an accepted provider;
 - Pango filename drift is resolved;
 - the selected runtime composition or target population is complete;
 - activation is authorized.

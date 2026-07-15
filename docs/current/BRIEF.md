@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-15.07`
+> Semantic state version: `2026-07-15.08`
 >
 > This is the compact current-state entry point. Exact commit and tree coordinates come from the checked-out full Git bundle, not from self-referential repository text.
 
@@ -67,9 +67,17 @@ replaced:             7
 unnecessary:          7
 ```
 
-The seven no-token recipe roots have now completed bounded semantic review: all seven are confirmed Class A for package-specific recipe adaptation, with zero Class B reclassifications. This closes AD-006 for those roots only; their supplier build framework and all provider-authority claims remain open. The review is recorded in [`../evidence/no-token-recipe-semantic-review.md`](../evidence/no-token-recipe-semantic-review.md).
+The seven no-token recipe roots have completed bounded semantic review: all seven are Class A for package-specific recipe adaptation, with zero Class B reclassifications. The four X.Org roots `libxfixes`, `libxcomposite`, `libxi`, and `libxinerama` now also have bounded provider authority for their exact Termux members and the selected GTK 3.24.49 X11 capability scope. The decision is recorded in [`../evidence/xorg-reference-consumed-provider-authority.md`](../evidence/xorg-reference-consumed-provider-authority.md).
 
-This classification does not accept provider authority. Exact artifact/member identity, adaptation semantics, provider selection, composition, target population, and activation remain separate states. The claim inventory remains at [`../evidence/provider-claim-classification.md`](../evidence/provider-claim-classification.md).
+```text
+bounded providers accepted: 4
+remaining no-token provider roots open: 3
+complete composition: not reached
+target population: blocked
+activation: blocked
+```
+
+Exact artifact/member identity, adaptation semantics, provider selection, composition, target population, and activation remain separate states. The claim inventory remains at [`../evidence/provider-claim-classification.md`](../evidence/provider-claim-classification.md).
 
 ## Documentation and web-session state
 
@@ -86,25 +94,16 @@ This classification does not accept provider authority. Exact artifact/member id
 
 ## Current project phase
 
-The active task is `review-xorg-reference-consumed-provider-authority`.
+The active task is `review-libtasn1-reference-consumed-provider-authority`.
 
-It reviews the four Class A X.Org recipe roots:
-
-```text
-libxfixes
-libxcomposite
-libxi
-libxinerama
-```
-
-The review decides only bounded provider authority: exact member identity, capability necessity, consumer binding, conflicts/exclusions, update boundary, and rollback. No complete composition, target population, or activation is allowed in this phase.
+It reviews the remaining Class A root `gpkg/libtasn1` for exact ASN.1 provider authority in the selected GnuTLS/security closure. The review decides only exact member identity, capability necessity, consumer binding, conflicts/exclusions, update boundary, and rollback. No complete security composition, application composition, target population, or activation is allowed in this phase.
 
 ## Current non-goals
 
 Do not currently:
 
 - issue or fulfill a SUP-02 request without a recorded Class C reclassification or escalation trigger;
-- infer provider acceptance from ADR 0005;
+- broaden the four accepted X.Org provider rows beyond their exact selected GTK X11 scope;
 - populate a provider target layout;
 - activate the selected Obsidian generation;
 - redesign the runtime around Docker or a PRoot application baseline;
