@@ -34,7 +34,7 @@ llvm=disabled
 
 Host orchestration remains bionic-native; artifacts target Termux glibc through the wrappers in `modules/gl/overlay/home/gl/toolchain/`.
 
-`packages/mesa-glibc/build.sh` builds into versioned prefixes under `~/gl/opt/` and only expects the stable `~/gl/opt/mesa-glibc` symlink to be promoted after verification. `tools/deploy` preserves the current live compatibility path `~/gl/build/build-mesa.sh` while the package build workflow is further normalized.
+`packages/mesa-glibc/build.sh` uses the XDG-state Mesa workspace and writes versioned candidates under the XDG-state provider store. The canonical active provider is `.../providers/mesa/current`. Legacy `~/gl/build/...` and `~/gl/opt/mesa-*` coordinates are compatibility symlinks retained for absolute-path and operator continuity; they are not canonical mutable ownership.
 
 ## Runtime contract
 

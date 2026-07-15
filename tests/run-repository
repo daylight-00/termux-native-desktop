@@ -12,6 +12,7 @@ case "$MODE" in
       tests/repository/deploy-smoke.sh
       tests/repository/local-layout-migration-smoke.sh
       tests/repository/control-plane-smoke.sh
+      tests/repository/current-authority-smoke.sh
       tests/repository/shell-layout-smoke.sh
       tests/repository/vulkan-policy-scope-smoke.sh
       tests/repository/application-authority-boundary-smoke.sh
@@ -59,14 +60,19 @@ cleanup() {
 }
 trap cleanup EXIT HUP INT TERM
 
+mkdir -p "$RUN_TMP/logs" "$RUN_TMP/tests"
+
 failures=0
 printf 'test\tstatus\n'
 for rel in "${tests[@]}"; do
   safe_name=${rel//\//_}
-  stdout="$RUN_TMP/$safe_name.stdout"
-  stderr="$RUN_TMP/$safe_name.stderr"
+  stdout="$RUN_TMP/logs/$safe_name.stdout"
+  stderr="$RUN_TMP/logs/$safe_name.stderr"
+  test_tmp="$RUN_TMP/tests/$safe_name"
+  mkdir -p "$test_tmp"
 
   if timeout --kill-after=10s "$TIMEOUT_SECONDS" \
+      env TND_TEST_TMPDIR="$test_tmp" \
       bash "$ROOT/$rel" </dev/null >"$stdout" 2>"$stderr"; then
     printf '%s\tPASS\n' "$rel"
   else

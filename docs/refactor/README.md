@@ -1,6 +1,8 @@
 # Repository Refactor and Architecture Work Log
 
-This directory is the transaction-level source of truth for migration from the original prototype toward explicit ownership, semantic provider authority, locked supply identity, clean runtime composition, controlled materialization, and activation.
+> **Authority classification:** this directory is chronological transaction evidence. Current semantic state and active work are owned by [`../current/`](../current/). Open a numbered record only for a specifically named evidence or reconstruction need.
+
+This directory is the chronological transaction-level evidence record for migration from the original prototype toward explicit ownership, semantic provider authority, locked supply identity, clean runtime composition, controlled materialization and activation.
 
 ## Working rule
 
@@ -17,8 +19,8 @@ Historical numbered records remain intact when later audits narrow or supersede 
 checkout:
     $HOME/projects/termux-native-desktop
 
-active architecture branch:
-    docs/post-graphics-architecture-audit
+canonical integration branch:
+    main
 ```
 
 The historical `$HOME/termux-native-desktop` path is evidence only.
@@ -36,7 +38,7 @@ docs/system-foundation/11-architecture-reassessment-and-hard-refactor-decision.m
 docs/system-foundation/12-document-consistency-audit-and-execution-order.md
 ```
 
-Current branch-local chain:
+Current integrated evidence chain:
 
 ```text
 0112 selected passive runtime/map facts
@@ -72,6 +74,11 @@ Current branch-local chain:
 0154 generic build-attestation and adaptation gap-evidence acquirer
 0155 generic build-attestation and adaptation gap-evidence acquisition receipt review
 0156 generic build-attestation and adaptation gap-evidence supply-request set
+0157-0158 SUP-01 response and bounded review
+0159-0160 SUP-02 provenance locator and receipt review
+0161-0162 SUP-02 custodian-export request set and issuance
+0163-0164 SUP-02 response acquirer and no-response acquisition review
+0165 SUP-02 response producer implementation; no canonical response produced
 ```
 
 Precedence:
@@ -154,6 +161,21 @@ system-foundation
 
 0156
     -> six bounded supply batches, sixteen exact requests and dependency-aware root/object request fan-out without request issuance
+
+0157-0158
+    -> SUP-01 response and bounded review; libjpeg correction handled without global authority acceptance
+
+0159-0160
+    -> SUP-02 provenance-locator production and receipt review
+
+0161-0162
+    -> SUP-02 custodian-export request set and issuance
+
+0163-0164
+    -> strict response acquirer and no-response acquisition review
+
+0165
+    -> strict response producer implementation with zero canonical responses and all requests still outstanding
 ```
 
 ## Current state
@@ -249,7 +271,7 @@ extraction/materializer:
 successor materialization:
     BLOCKED
 
-current activation:
+selected-generation activation:
     BLOCKED
 
 clean reconstruction:
@@ -477,28 +499,26 @@ AUTH-010 exact application payload supply, named supplements and release executi
 
 ## Current next state
 
-```text
-CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
-```
-
-Active task:
+The provider-authority evidence chain is preserved but paused at the 0165 boundary:
 
 ```text
-FULFILL_BOUNDED_GENERIC_BUILD_ATTESTATION_ADAPTATION_GAP_EVIDENCE_SUPPLY_BATCH_SUP_01
+SUP-02 response producer implemented
+28 issued requests outstanding
+no canonical response produced
+no provider/composition/target acceptance
 ```
 
-Required order:
+Current active work is owned by `docs/current/ACTIVE_TASK.md`, not by the historical next-action language in numbered records.
 
 ```text
-1. world internals, locale and loader-state lifecycle boundary: PASS / remaining evidence explicit;
-2. application identity/launcher lifecycle boundary: PASS / exact payload supply and named supplement membership OPEN;
-3. non-priority generic capability/source-class boundary: PASS / bounded supply-request set DEFINED as 6 batches and 16 exact requests; isolated P0 `SUP-01` authoritative correction NEXT, with libjpeg.so.62 unresolved;
-4. decide conditional graphics, GTK/Wayland, printing and optional-exec policy only after owning candidate sets are explicit;
-5. close fonts, pixbuf/icon/MIME and generated-schema authority;
-6. define ApplicationRuntimeComposition only after owning authorities are accepted;
-7. populate target rows only after composition acceptance;
-8. perform intervention-lift audit before extraction/materializer implementation.
+documentation control plane
+    -> current-authority synchronization
+    -> documentation authority/structure consolidation
+    -> proportional assurance-depth decision
+    -> explicit decision on resuming or terminating provider evidence acquisition
 ```
+
+Until the assurance-depth decision is accepted, do not fulfill additional SUP-02 requests merely because 0165 made production possible.
 
 ## Stop line
 
@@ -515,7 +535,7 @@ write extraction/materializer code;
 install/remove/upgrade/downgrade packages;
 run maintainer scripts;
 materialize or activate a successor;
-create or change current;
+create or change the selected-generation current pointer;
 mutate launcher, loader state or RPATH;
 reopen closed graphics gates.
 ```

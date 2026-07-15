@@ -1,7 +1,7 @@
 # Status
 
-> **State:** generic build-attestation and adaptation gap-evidence supply batch SUP-02 custodian-export response producer IMPLEMENTED / BOUNDED; all 28 issued requests remain outstanding, no canonical response is produced, and one exact instrumented producing build is the next meaningful event
-> **Updated:** 2026-07-14
+> **State:** bundle-native documentation control plane active; current-facing authority synchronized with `main`, immutable deployment and XDG-state Mesa ownership; provider-authority workstream paused at the bounded 0165 SUP-02 no-response boundary pending proportional assurance-depth policy
+> **Updated:** 2026-07-15
 
 ## Repository and deployment consolidation
 
@@ -13,6 +13,23 @@
 - The provider-authority workstream remains paused at its current bounded evidence boundary pending an assurance-tier decision; branch consolidation does not accept provider authority or populate a target layout.
 
 See `docs/decisions/0004-single-main-and-immutable-release-deployment.md`.
+
+## Documentation and web-session control plane
+
+- A new web-chat session receives a user-created full Git bundle from authoritative Termux `main`, clones it in the sandbox and starts at `START_HERE.md`.
+- `docs/current/` owns compact current state, the active task and pending external artifacts.
+- Narrative handoffs and numbered refactor records are historical evidence, not default onboarding authority.
+- The GitHub connector is limited to lightweight remote inspection; user Termux local Git/`gh` is authoritative for remote mutation.
+- Repository state transitions update canonical current documents when accepted rather than deferring maintenance to session close.
+- Docker is outside the available and intended workflow.
+
+## Local-layout consolidation
+
+- The historical `$HOME/gl/.git` repository authority is retired and preserved in safety artifacts.
+- Mesa mutable source/build state lives under `${XDG_STATE_HOME:-$HOME/.local/state}/termux-native-desktop/workspaces/mesa/`.
+- Mesa provider candidates and the canonical provider `current` pointer live under `${XDG_STATE_HOME:-$HOME/.local/state}/termux-native-desktop/providers/mesa/`.
+- Legacy `$HOME/gl/build` and `$HOME/gl/opt` paths remain compatibility symlinks only.
+- Application bodies, selected generations, user data and provider contents were preserved.
 
 ## Current conclusions
 
@@ -304,26 +321,26 @@ AUTH-010 exact application payload supply, named supplement membership and relea
 ## Next valid state
 
 ```text
-CLOSE_GLOBAL_WORLD_APPLICATION_GENERIC_AND_DATA_AUTHORITY_GAPS
+CONSOLIDATE_DOCUMENTATION_AUTHORITY_AND_DEFINE_ASSURANCE_DEPTH
 ```
 
-Active repository task:
+Active task:
 
 ```text
-RUN_BOUNDED_GENERIC_BUILD_ATTESTATION_ADAPTATION_GAP_EVIDENCE_SUPPLY_BATCH_SUP_02_CUSTODIAN_EXPORT_RESPONSE_PRODUCER_FOR_EXACT_REQUEST
+DOCUMENTATION_STRUCTURE_CONSOLIDATION
 ```
 
-Repository-side order:
+Required order:
 
 ```text
-1. world runtime internals, locale and loader-state lifecycle boundary: PASS / remaining evidence explicit;
-2. application identity/launcher lifecycle boundary: PASS / exact payload supply and named supplement membership OPEN;
-3. non-priority generic capability/source-class boundary: PASS / SUP-01 correction REVIEWED; SUP-02 zero-response receipt REVIEWED and strict response producer IMPLEMENTED with all 28 requests still outstanding; execute one exact instrumented custodian build NEXT;
-4. decide graphics, GTK/Wayland, printing and optional-exec composition policy only after owning candidate sets are explicit;
-5. close font, pixbuf, icon, MIME and generated-schema authority;
-6. define an ApplicationRuntimeComposition only after owning authorities are accepted;
-7. populate target-layout rows only after composition acceptance;
-8. perform an intervention-lift audit before any extraction/materializer implementation.
+1. keep bundle-native initialization and docs/current/ as the current authority surface;
+2. classify durable, current, superseded and historical documentation without rewriting evidence history;
+3. consolidate project essence, architecture and decision routing so a new agent loads only relevant current material;
+4. define proportional assurance depth for reference, adapted, independently reproduced and novel providers;
+5. explicitly decide whether the paused provider-authority workstream should resume, narrow or terminate;
+6. only then issue or fulfill further evidence requests;
+7. define ApplicationRuntimeComposition only after owning authorities are accepted;
+8. populate target rows and implement materialization only after composition acceptance and intervention-lift review.
 ```
 
 ## Stop lines
@@ -342,7 +359,7 @@ write an extraction or materializer script;
 install, remove, upgrade or downgrade packages;
 run package maintainer scripts;
 materialize or activate a successor;
-create or modify current;
+create or modify the selected-generation current pointer;
 mutate the promoted launcher or loader state;
 patch RPATH;
 reopen closed graphics gates.

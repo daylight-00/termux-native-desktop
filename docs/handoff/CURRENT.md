@@ -1,23 +1,14 @@
-# Current project-state handoff
+# Retired current-handoff pointer
 
-> **Deprecated current-state surface:** Do not use this file for onboarding or current authority. Current state is owned by `docs/current/`; this file is retained temporarily as historical evidence until the handoff archive is reorganized.
+> **Historical tombstone:** narrative handoffs are no longer current authority and this file is no longer updated.
 
-Read [`../PROJECT_PRINCIPLES.md`](../PROJECT_PRINCIPLES.md), then the dated handoff linked below.
+Current project state:
 
-## Active handoff
+- [`../current/BRIEF.md`](../current/BRIEF.md)
+- [`../current/STATE.yaml`](../current/STATE.yaml)
+- [`../current/ACTIVE_TASK.md`](../current/ACTIVE_TASK.md)
+- [`../current/PENDING_ARTIFACTS.yaml`](../current/PENDING_ARTIFACTS.yaml)
 
-[`2026-07-14-sup-02-response-acquisition-receipt-reviewed.md`](2026-07-14-sup-02-response-acquisition-receipt-reviewed.md)
+New web-chat sessions receive a user-created full Git bundle and begin at [`../../START_HERE.md`](../../START_HERE.md).
 
-## Verified boundary
-
-```text
-repository: daylight-00/termux-native-desktop
-branch: docs/post-graphics-architecture-audit
-HEAD: 7b381088bfeb137054e5bd35b78917cd6c02654e
-tree: bdcfc671e39ad129875570112e56987c2068a1f4
-result SHA-256: 8b9302dd5e8f5fc4a49bf7631b87dc5a702f5b1763310d4218e110eca0fba138
-0164 decision: PASS_BOUNDED
-next state: FULFILL_BOUNDED_GENERIC_BUILD_ATTESTATION_ADAPTATION_GAP_EVIDENCE_SUPPLY_BATCH_SUP_02_CUSTODIAN_EXPORT_RESPONSES
-```
-
-Durable collaboration rules: [`../session-operations/README.md`](../session-operations/README.md).
+Dated files in this directory remain historical evidence only. Do not infer the current branch, repository coordinate, active task or pending result from them.

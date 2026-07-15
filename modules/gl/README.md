@@ -159,24 +159,26 @@ Do not infer from this that all contents belong to one permanent module.
 The current module does not Git-own:
 
 ```text
-$HOME/gl/apps/       external application payloads
+$HOME/gl/apps/       upstream-supplied application bodies
 $HOME/gl/lib/        generated compatibility farm
-$HOME/gl/opt/        installed/versioned runtime prefixes
-$HOME/gl/build/      source checkouts and generated build work
+XDG-state workspaces mutable source/build state
+XDG-state providers  versioned candidates and active provider pointers
+$HOME/gl/build/      compatibility paths into the Mesa workspace
+$HOME/gl/opt/        compatibility paths into provider candidates/current
 $PREFIX/glibc/       package-manager-owned world substrate
-Debian rootfs        supply backend and package/library/data warehouse
+Debian rootfs        oracle, supply backend and package/library/data warehouse
 ```
 
 Application-specific launchers belong to their package/application owners, not to generic `gl/bin` ownership.
 
 ## Next ownership pressure
 
-Before another multi-file runtime migration:
+The repository activation boundary and Mesa local-layout separation are complete. The remaining ownership pressure is semantic rather than a missing filesystem move:
 
 ```text
-1. complete or terminate the selected Obsidian closure pilot;
-2. define the semantic provider/bridge/family/application split;
-3. define an atomic activation boundary;
+1. define proportional assurance depth before resuming provider acquisition;
+2. decide the semantic provider/bridge/family/application split;
+3. preserve or narrow the broad farm based on accepted composition evidence;
 4. move high-risk over-scoped policies only with evidence;
 5. preserve current adapters only when they remain the simplest valid implementation.
 ```

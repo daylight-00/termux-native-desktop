@@ -1,0 +1,131 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+FAILURES=0
+
+fail() {
+  printf 'current-authority: FAIL: %s\n' "$*" >&2
+  FAILURES=$((FAILURES + 1))
+}
+
+pass() {
+  printf 'current-authority: PASS: %s\n' "$*"
+}
+
+require_text() {
+  local rel=$1 pattern=$2 label=$3
+  if grep -Fq -- "$pattern" "$ROOT/$rel"; then
+    pass "$label"
+  else
+    fail "$label"
+  fi
+}
+
+reject_text() {
+  local rel=$1 pattern=$2 label=$3
+  if grep -Fq -- "$pattern" "$ROOT/$rel"; then
+    fail "$label"
+  else
+    pass "$label"
+  fi
+}
+
+require_text STATUS.md 'bundle-native documentation control plane active' 'STATUS declares the documentation control plane'
+require_text STATUS.md 'provider-authority workstream paused' 'STATUS preserves the paused provider boundary'
+require_text STATUS.md 'DOCUMENTATION_STRUCTURE_CONSOLIDATION' 'STATUS names the active documentation task'
+require_text docs/architecture.md 'immutable releases' 'architecture describes immutable deployment'
+require_text docs/architecture.md 'Repository deployment rollback and provider rollback are separate authority domains.' 'architecture separates rollback authorities'
+require_text docs/glibc-layer.md 'Repository deployment already uses immutable materialized releases and explicit activation.' 'glibc guide describes explicit activation'
+require_text packages/mesa-glibc/README.md 'providers/mesa/current' 'Mesa package documents canonical provider current pointer'
+require_text modules/gl/README.md 'compatibility paths into the Mesa workspace' 'gl module classifies legacy build paths as compatibility only'
+require_text docs/refactor/README.md 'canonical integration branch:' 'refactor index names the canonical branch field'
+require_text docs/refactor/README.md '0165 SUP-02 response producer implementation' 'refactor index covers the accepted chain through 0165'
+require_text docs/handoff/CURRENT.md 'Historical tombstone' 'old current handoff is a tombstone'
+require_text docs/decisions/0002-glibc-core-from-termux-glibc-repo.md 'Superseded as a universal ownership and sourcing rule.' 'Decision 0002 is explicitly superseded'
+require_text docs/session-operations/SESSION_LIFECYCLE.md 'RECEIVE_FULL_BUNDLE' 'session lifecycle begins from a full bundle'
+require_text docs/session-operations/SESSION_CLOSE.md 'Normal accepted work does not require a narrative handoff.' 'session close removes mandatory handoff creation'
+
+reject_text docs/architecture.md 'Current deployment uses source-linked leaves.' 'architecture has no stale source-linked current deployment claim'
+reject_text docs/glibc-layer.md 'Current deployed leaves are source-linked symlinks.' 'glibc guide has no stale source-linked current deployment claim'
+reject_text docs/gpu.md 'builds into versioned prefixes under `~/gl/opt/`' 'GPU guide has no stale canonical Mesa output path'
+reject_text docs/refactor/README.md 'active architecture branch:' 'refactor index has no deleted active-branch field'
+reject_text docs/refactor/README.md 'docs/post-graphics-architecture-audit' 'refactor current index has no deleted branch value'
+reject_text docs/session-operations/README.md 'mandatory handoff' 'session operations index has no mandatory handoff dependency'
+reject_text docs/session-operations/SESSION_LIFECYCLE.md 'mandatory handoff' 'session lifecycle has no mandatory handoff dependency'
+reject_text docs/session-operations/SESSION_CLOSE.md 'mandatory handoff' 'session close has no mandatory handoff dependency'
+reject_text docs/session-operations/SESSION_LIFECYCLE.md 'handoff/CURRENT.md' 'session lifecycle has no CURRENT handoff dependency'
+reject_text docs/handoff/CURRENT.md 'branch:' 'handoff tombstone has no stale branch coordinate'
+reject_text docs/handoff/CURRENT.md 'HEAD:' 'handoff tombstone has no stale HEAD coordinate'
+reject_text docs/system-foundation/REFERENCES.md '../../setup/glibc/' 'foundation references have no removed setup/glibc links'
+reject_text docs/system-foundation/REFERENCES.md '../../scripts/deploy-gl.sh' 'foundation references have no removed deploy script link'
+
+STATE_VERSION=$(awk '$1 == "state_version:" { print $2; exit }' "$ROOT/docs/current/STATE.yaml")
+PENDING_VERSION=$(awk '$1 == "state_version:" { print $2; exit }' "$ROOT/docs/current/PENDING_ARTIFACTS.yaml")
+BRIEF_VERSION=$(sed -n 's/^> Semantic state version: `\([^`]*\)`$/\1/p' "$ROOT/docs/current/BRIEF.md" | head -n1)
+
+if [ -n "$STATE_VERSION" ] && [ "$STATE_VERSION" = "$PENDING_VERSION" ] && [ "$STATE_VERSION" = "$BRIEF_VERSION" ]; then
+  pass "current state versions agree: $STATE_VERSION"
+else
+  fail "state version mismatch: state=${STATE_VERSION:-empty} pending=${PENDING_VERSION:-empty} brief=${BRIEF_VERSION:-empty}"
+fi
+
+python3 - "$ROOT" <<'PY'
+from pathlib import Path
+import re
+import sys
+
+root = Path(sys.argv[1])
+files = [
+    'README.md', 'STATUS.md', 'START_HERE.md', 'AGENTS.md', 'CLAUDE.md',
+    'docs/README.md', 'docs/INDEX.md',
+    'docs/current/BRIEF.md', 'docs/current/ACTIVE_TASK.md',
+    'docs/architecture.md', 'docs/glibc-layer.md', 'docs/gpu.md',
+    'modules/gl/README.md', 'docs/refactor/README.md',
+    'docs/session-operations/README.md',
+    'docs/session-operations/SESSION_LIFECYCLE.md',
+    'docs/session-operations/SESSION_CLOSE.md',
+    'docs/session-operations/COLLABORATION.md',
+    'docs/session-operations/AGENT_EXECUTION.md',
+    'docs/handoff/README.md', 'docs/handoff/CURRENT.md',
+    'docs/decisions/README.md',
+    'docs/decisions/0002-glibc-core-from-termux-glibc-repo.md',
+    'docs/decisions/0004-single-main-and-immutable-release-deployment.md',
+    'docs/system-foundation/REFERENCES.md',
+]
+pattern = re.compile(r'\[[^\]]*\]\(([^)]+)\)')
+errors = []
+for rel in files:
+    path = root / rel
+    if not path.is_file():
+        errors.append(f'{rel}: missing file')
+        continue
+    text = path.read_text(errors='replace')
+    for target in pattern.findall(text):
+        target = target.strip()
+        if not target or target.startswith(('#', 'http://', 'https://', 'mailto:')):
+            continue
+        target = target.split('#', 1)[0]
+        if not target:
+            continue
+        resolved = (path.parent / target).resolve()
+        try:
+            resolved.relative_to(root.resolve())
+        except ValueError:
+            errors.append(f'{rel}: link escapes repository: {target}')
+            continue
+        if not resolved.exists():
+            errors.append(f'{rel}: missing link target: {target}')
+if errors:
+    for error in errors:
+        print(f'current-authority: FAIL: {error}', file=sys.stderr)
+    raise SystemExit(1)
+print('current-authority: PASS: selected current-document links resolve')
+PY
+link_rc=$?
+if [ "$link_rc" -ne 0 ]; then
+  FAILURES=$((FAILURES + 1))
+fi
+
+[ "$FAILURES" -eq 0 ] || exit 1
+printf 'current-authority: all checks passed\n'

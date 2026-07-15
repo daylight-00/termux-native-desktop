@@ -38,3 +38,12 @@ This timeline is a compact navigation aid. Detailed claims belong in experiment 
 ## Repository consolidation
 
 - **2026-07-08** — glibc, GPU, desktop/session, and workstation-workflow tracks are consolidated as one research workbench. Session-derived full reports are promoted from `temp/` into the corresponding experiment directories as `report.md`, while concise `README.md` files remain the canonical current interpretation.
+
+## Architecture, evidence and control-plane consolidation
+
+- **2026-07-09 to 2026-07-11** — physical ownership refactoring, glibc ABI recovery, selected D-Bus closure and scoped graphics-policy promotion establish explicit boundaries and reusable validation gates.
+- **2026-07-11 to 2026-07-14** — selected Obsidian closure work evolves into a provider-authority intervention. N2/N3 census, source-recipe and exact-artifact reviews separate supply identity, semantic authority, composition and target population.
+- **2026-07-14** — bounded generic build-attestation/adaptation work reaches SUP-02 response-producer implementation. All 28 issued requests remain outstanding and no canonical supplier response or provider authority is accepted. The workstream is paused before further production pending an assurance-depth policy.
+- **2026-07-14** — the repository histories are consolidated onto the sole long-lived `main` branch. Runtime deployment changes from checkout-linked leaves to immutable releases with explicit `current`/`previous` activation pointers.
+- **2026-07-14** — the duplicate `$HOME/gl/.git` authority is retired. Mesa source/build state and versioned provider candidates move to separate XDG-state workspace and provider stores while legacy absolute paths remain compatibility symlinks.
+- **2026-07-15** — a bundle-native documentation and agent control plane is introduced. Web-chat sessions start from a user-created full Git bundle and repository-owned `START_HERE.md`; current state moves to `docs/current/` and narrative handoffs become historical evidence.

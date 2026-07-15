@@ -1,5 +1,7 @@
 # 6. Current-State Assessment
 
+> **Historical assessment:** this document records the pre-immutable-deployment and pre-local-layout-refactor state used to derive the target architecture. It is not a current-state surface. For current state use `docs/current/BRIEF.md`, `docs/architecture.md`, Decision 0004 and `packages/mesa-glibc/README.md`.
+
 This assessment compares the repository’s current documented and promoted model with the target architecture in this set. It is not a criticism of the bottom-up work that created the system. The current design contains several strong architectural discoveries; the goal is to identify which discoveries should be promoted into contracts and where implementation history has accumulated too much responsibility.
 
 ## 6.1 Executive assessment
@@ -473,8 +475,8 @@ Then migrate implementation behind those contracts gradually.
 - [`../desktop-session.md`](../desktop-session.md)
 - [`../gpu.md`](../gpu.md)
 - [`../../STATUS.md`](../../STATUS.md)
-- [`../../setup/glibc/env`](../../setup/glibc/env)
-- [`../../setup/glibc/bin/gl-farm`](../../setup/glibc/bin/gl-farm)
-- [`../../setup/glibc/bin/gl-run`](../../setup/glibc/bin/gl-run)
-- [`../../setup/glibc/bin/code`](../../setup/glibc/bin/code)
-- [`../../scripts/deploy-gl.sh`](../../scripts/deploy-gl.sh)
+- [`../../modules/gl/overlay/home/gl/env`](../../modules/gl/overlay/home/gl/env)
+- [`../../modules/gl/overlay/home/gl/bin/gl-farm`](../../modules/gl/overlay/home/gl/bin/gl-farm)
+- [`../../modules/gl/overlay/home/gl/bin/gl-run`](../../modules/gl/overlay/home/gl/bin/gl-run)
+- [`../../packages/vscode/README.md`](../../packages/vscode/README.md)
+- [`../../tools/deploy`](../../tools/deploy)

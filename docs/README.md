@@ -32,7 +32,7 @@ A new agent should not begin from `handoff/CURRENT.md`. Dated handoffs are histo
 - [`session-operations/AGENT_EXECUTION.md`](session-operations/AGENT_EXECUTION.md) — candidate, wrapper, and result-review discipline.
 - [`session-operations/TROUBLESHOOTING.md`](session-operations/TROUBLESHOOTING.md) — accumulated operational failure modes.
 
-The old mandatory narrative-handoff lifecycle is being retired. Reusable operating lessons remain valid while current-state ownership moves to `current/`.
+The old mandatory narrative-handoff lifecycle is retired. Reusable operating lessons remain valid while current-state ownership moves to `current/`.
 
 ## Evidence and history
 

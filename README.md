@@ -46,7 +46,7 @@ native desktop/session
         |
         +-- glibc application processes
         |      +-- package-manager-owned glibc substrate
-        |      +-- current prefix/rootfs/farm providers
+        |      +-- protected substrate, selected compatibility providers and rootfs-derived candidates
         |      +-- application-local payloads
         |      +-- VS Code / Obsidian / Conda
         |

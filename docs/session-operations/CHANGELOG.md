@@ -1,5 +1,14 @@
 # Session-operations changelog
 
+## 2026-07-15 — bundle-native initialization and repository-owned current state
+
+- Replaced the mandatory narrative-handoff lifecycle with user-provided full Git bundle initialization through root `START_HERE.md`.
+- Made `docs/current/` the canonical owner of current semantic state, active task and pending external artifacts.
+- Restricted the GitHub connector to lightweight remote inspection; authoritative mutation remains in user Termux local Git/`gh`.
+- Retained Google Drive for runner, result, safety, patch, bundle and evidence exchange after onboarding.
+- Defined a clean session boundary with no handoff artifact and an optional explicitly non-authoritative checkpoint only for valuable incomplete sandbox work.
+- Added machine checks that reject stale source-linked deployment, deleted active-branch and mandatory-handoff claims from current-facing documentation.
+
 ## 2026-07-14 — structured recurring handoff
 
 - Separated durable collaboration rules from project-state handoffs.

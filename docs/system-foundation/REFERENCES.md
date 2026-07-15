@@ -11,11 +11,11 @@ The target architecture is derived primarily from the project’s own experiment
 - [`../desktop-session.md`](../desktop-session.md) — current two-world session contract.
 - [`../../STATUS.md`](../../STATUS.md) — current working conclusions and open questions.
 - [`../../experiments/README.md`](../../experiments/README.md) — experiment provenance contract.
-- [`../../setup/glibc/env`](../../setup/glibc/env) — current shared glibc environment implementation.
-- [`../../setup/glibc/bin/gl-farm`](../../setup/glibc/bin/gl-farm) — current Debian library farm materialization.
-- [`../../setup/glibc/bin/gl-run`](../../setup/glibc/bin/gl-run) — current glibc OpenGL/Zink capability wrapper.
-- [`../../setup/glibc/bin/code`](../../setup/glibc/bin/code) — current VS Code launcher policy.
-- [`../../scripts/deploy-gl.sh`](../../scripts/deploy-gl.sh) — current repository-to-live deployment linkage.
+- [`../../modules/gl/overlay/home/gl/env`](../../modules/gl/overlay/home/gl/env) — current shared glibc environment implementation.
+- [`../../modules/gl/overlay/home/gl/bin/gl-farm`](../../modules/gl/overlay/home/gl/bin/gl-farm) — current Debian library farm materialization.
+- [`../../modules/gl/overlay/home/gl/bin/gl-run`](../../modules/gl/overlay/home/gl/bin/gl-run) — current glibc OpenGL/Zink capability wrapper.
+- [`../../packages/vscode/README.md`](../../packages/vscode/README.md) — VS Code package and launcher policy.
+- [`../../tools/deploy`](../../tools/deploy) — immutable repository release materialization and activation.
 
 ## External systems references
 

@@ -1,91 +1,104 @@
-# Recurring session lifecycle
+# Recurring web-chat session lifecycle
 
-This is the closed-loop procedure for every successor session. It starts with one mandatory handoff `.tar.zst` and ends by producing the next handoff packages.
+This is the closed-loop procedure for a web-chat agent that receives a full Git bundle. It does not depend on a previous chat, a narrative handoff, an immediate connector read, or a repository clone from GitHub.
 
 ## State machine
 
 ```text
-RECEIVE_HANDOFF
-    -> VERIFY_HANDOFF
-    -> UNDERSTAND_PRINCIPLES
-    -> RESOLVE_PENDING_BOUNDARY
-    -> SYNCHRONIZE_REPOSITORY
-    -> READ_CONTROLLING_AUTHORITY
+RECEIVE_FULL_BUNDLE
+    -> VERIFY_AND_CLONE
+    -> READ_START_HERE
+    -> CONFIRM_CURRENT_STATE
+    -> RESOLVE_BLOCKING_ARTIFACT
     -> EXECUTE_ONE_BOUNDED_PHASE
     -> VERIFY_RESULT
-    -> UPDATE_DURABLE_RULES_IF_NEEDED
-    -> PREPARE_NEXT_HANDOFF
-    -> VERIFY_REMOTE_BACKUPS
+    -> UPDATE_CANONICAL_STATE
+    -> ACCEPT_OR_RECORD_BLOCK
 ```
 
-Do not skip forward. In particular, no repository mutation is allowed before an explicitly pending result is resolved.
+A clean accepted transition is its own continuation point. The user can create the next full bundle directly from authoritative Termux `main` whenever a new session is needed.
 
-## 1. Receive and verify
+## 1. Receive, verify and clone
 
-The mandatory handoff package is the first input. Record its observed SHA-256, test zstd, reject unsafe archive members, extract into an isolated directory, then run its internal verification script and `MANIFEST.sha256`.
+The normal first input is a user-created full Git bundle.
 
-A pending result may be included as raw, quarantined bytes. Verifying its transfer and zstd stream does not accept its project meaning.
+```text
+verify the supplied checksum when present
+run git bundle verify from a temporary repository context
+clone into an isolated sandbox directory
+checkout main explicitly
+record branch, HEAD, tree and tracked status
+```
 
-## 2. Understand the project before acting
+Do not reconstruct the repository through repeated raw GitHub connector reads.
 
-Read:
+## 2. Initialize from repository authority
+
+Read in this order:
 
 ```text
 START_HERE.md
-PROJECT_PRINCIPLES.md
-current project-state summary
-current dated handoff
+AGENTS.md
+docs/current/BRIEF.md
+docs/current/ACTIVE_TASK.md
+active-task required reading
+applicable platform profile
 ```
 
-The successor must be able to state:
+The agent must be able to state the current phase, active task, stop conditions, user/agent authority boundary, unavailable environments and first valid action before changing the repository.
+
+Historical numbered records, experiment reports and archived handoffs are loaded only when the active task names a specific need.
+
+## 3. Resolve blocking external state
+
+Read `docs/current/PENDING_ARTIFACTS.yaml`.
+
+When a blocking result exists:
+
+1. retrieve the exact artifact;
+2. verify its reported digest and archive integrity;
+3. inspect structured status and Git coordinates;
+4. accept, reject or preserve the boundary in canonical current state;
+5. do not author the next unrelated repository transition first.
+
+A result mentioned only in old chat or an archived handoff is not automatically blocking.
+
+## 4. Execute one bounded phase
+
+The active task defines scope, required reading, next valid action, stop conditions and completion criteria.
+
+The agent authors and tests in the sandbox, creates one self-contained execution package, and gives the user one bounded command. The user's Termux environment performs authoritative Git mutation, deployment and device-only checks.
+
+Retrieve and review the returned result before claiming acceptance or beginning another dependent phase.
+
+## 5. Persist state at transition time
+
+When a transition is accepted, update in the same repository change:
 
 ```text
-what the project is proving;
-what the evidence-to-authority ladder is;
-which Git/result coordinates are verified;
-which artifact is still pending;
-which claims remain prohibited;
-what the first safe action is.
+docs/current/STATE.yaml
+docs/current/BRIEF.md
+docs/current/ACTIVE_TASK.md
+docs/current/PENDING_ARTIFACTS.yaml when needed
+relevant durable architecture/operations documents
 ```
 
-## 3. Resolve the pending boundary
+Do not defer this work to a future session-close summary.
 
-Prefer the raw pending result included in the handoff package. Use the exact Drive ID only as a fallback or remote-identity check. Review structured status files first, confirm Git and remote state, and use a lightweight GitHub read before accepting the new boundary.
+## 6. Session boundary
 
-Update `handoff/CURRENT.md` only after this review.
+When authoritative `main` already contains the accepted state and there is no unreviewed blocking artifact, no handoff artifact is required.
 
-## 4. Continue one bounded phase
-
-Read only the controlling project documents named by the handoff. Author and test in a local worktree, generate one immutable patch, and send one self-contained wrapper package. The user executes one command and returns the final status block.
-
-Retrieve and verify the result before authoring another phase.
-
-## 5. Maintain the operating system of collaboration
-
-When a reusable lesson is learned, update the relevant file under `session-operations/` during the same session and add one changelog entry. Project decisions remain in numbered project documents; transient state remains in the dated handoff.
-
-## 6. Close and hand over
-
-Read [`SESSION_CLOSE.md`](SESSION_CLOSE.md) and classify the boundary:
-
-```text
-latest result verified;
-execution package not run;
-result exists but review deferred;
-no execution pending.
-```
-
-Create two or three packages according to that state. The mandatory package must allow the next session to repeat this lifecycle without relying on the old container or on immediate connector availability.
+If valuable work exists only in the sandbox and cannot be accepted before the session ends, follow [`SESSION_CLOSE.md`](SESSION_CLOSE.md) to create an explicitly non-authoritative checkpoint. The next session otherwise starts from the latest accepted full bundle and repeats only unfinished work.
 
 ## Completion test
 
-The cycle is complete only when:
+A bounded cycle is complete when:
 
 ```text
-mandatory handoff uploaded and remotely reverified;
-miscellaneous backup uploaded and remotely reverified;
-execution package also uploaded when applicable;
-exact filenames, Drive IDs, sizes and SHA-256 values recorded;
-START_HERE names one unambiguous first action;
-next session can begin from the mandatory zst alone.
+the returned result has been verified;
+remote main and local authoritative main agree;
+canonical current-state documents describe the accepted boundary;
+no hidden chat-only next action remains;
+the repository can initialize a new agent through START_HERE.md.
 ```

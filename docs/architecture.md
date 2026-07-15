@@ -19,7 +19,7 @@ main: docs/system-foundation/11-architecture-reassessment-and-hard-refactor-deci
 main: docs/system-foundation/12-document-consistency-audit-and-execution-order.md
 ```
 
-Current post-closure audit:
+Historical post-graphics audit that motivated the current refactor:
 
 ```text
 docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md
@@ -46,7 +46,7 @@ Android kernel + device hardware
         +-- glibc application processes
                 |
                 +-- package-manager-owned glibc substrate
-                +-- current prefix/rootfs/farm providers
+                +-- protected substrate, selected compatibility providers and rootfs-derived candidates
                 +-- application-local payloads
                 +-- managed graphics providers
                 +-- VS Code, Obsidian, Conda, future workloads
@@ -408,30 +408,40 @@ Do not solve this by making the farm or `gl-run` the lifecycle owner.
 
 ## 11. Deployment and activation
 
-Current deployment uses source-linked leaves.
+The repository checkout is authoring state, not live runtime authority.
 
-Therefore:
-
-```text
-checkout mutation
-    can equal
-live activation
-```
-
-A partial multi-file activation window was observed during graphics-policy migration.
-
-Before another promoted multi-file semantic split, define a minimum activation boundary with:
+`tools/deploy` materializes complete immutable releases under:
 
 ```text
-complete candidate leaf set
-pre-activation validation
-one active identity/atomic transition where practical
-post-activation smoke
-known previous active identity
-real rollback target
+${XDG_STATE_HOME:-$HOME/.local/state}/termux-native-desktop/deployment/releases/<tree>-<profile>/
 ```
 
-This must remain smaller than a universal package manager unless evidence requires more.
+Managed public leaves resolve through one stable deployment `current` pointer. A repository checkout, pull or branch change has no live effect until a complete candidate release is built, validated and activated. The deployment retains a `previous` pointer and supports pointer rollback.
+
+```text
+checkout change
+    -> candidate immutable release
+    -> pre-activation validation
+    -> atomic current-pointer switch
+    -> post-activation status/smoke
+    -> retained previous release
+```
+
+Physical profiles are `workstation` and `full`; they are deployment groupings, not final semantic ownership claims.
+
+Generated state remains outside repository releases:
+
+```text
+application payloads and user data
+selected application generations
+Mesa workspace
+Mesa provider candidates and active provider pointer
+compatibility farm and other derived runtime state
+```
+
+Mesa mutable build state and versioned provider candidates now live under the XDG-state workspace/provider store. Legacy `$HOME/gl/build` and `$HOME/gl/opt` locations are compatibility paths only.
+
+Repository deployment rollback and provider rollback are separate authority domains. Neither implies application-generation activation or provider-authority acceptance.
 
 ## 12. Evidence lifecycle
 
@@ -465,7 +475,7 @@ Current graphics closure:
 docs/refactor/0091-scoped-graphics-policy-promotion-closure.md
 ```
 
-Current architecture audit:
+Historical architecture audit:
 
 ```text
 docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md
@@ -474,16 +484,19 @@ docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md
 ## 13. Next architecture order
 
 ```text
-1. synchronize knowledge/control-plane documents;
-2. resume or terminate selected Obsidian closure;
-3. decide semantic world/provider/bridge/family/application ownership;
-4. define atomic activation;
-5. apply bounded ownership moves, beginning with high-risk over-scoped policy;
-6. define corrected/newer glibc substrate lifecycle;
-7. use PyMOL as proof of the resulting reusable objects.
+1. keep the current documentation and agent control plane internally consistent;
+2. consolidate durable document authority and explicitly classify current, superseded and historical material;
+3. define proportional assurance depth for reference-supplied, adapted, independently reproduced and novel providers;
+4. decide whether and how the paused provider-authority workstream resumes;
+5. define ApplicationRuntimeComposition only after owning authorities are accepted;
+6. populate target rows only after composition acceptance;
+7. implement extraction/materialization only after the intervention-lift audit permits it;
+8. use later workloads such as PyMOL to test the resulting reusable objects rather than expanding global compatibility by inertia.
 ```
 
-Do not start PyMOL by expanding the broad farm or global environment.
+Immutable repository activation and XDG-state Mesa ownership are already implemented. Do not reopen them as missing architecture work unless a new failure demonstrates a contract gap.
+
+Do not resume SUP-02 production, populate a provider target or start PyMOL by expanding the broad farm or global environment before the assurance and ownership decisions above.
 
 ## 14. Repository ownership map
 

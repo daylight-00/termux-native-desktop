@@ -10,7 +10,7 @@ experiments/gpu/
 docs/refactor/
 ```
 
-Current architecture audit:
+Historical architecture audit that motivated the current ownership model:
 
 ```text
 docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md
@@ -27,7 +27,9 @@ application payloads    $HOME/gl/apps/<name>/
 compatibility farm      $HOME/gl/lib/
 glibc substrate         $PREFIX/glibc/
 Debian warehouse        $PREFIX/var/lib/proot-distro/containers/debian/rootfs
-managed providers       $HOME/gl/opt/ and other validated stores
+Mesa workspace          ${XDG_STATE_HOME:-$HOME/.local/state}/termux-native-desktop/workspaces/mesa/
+Mesa provider store     ${XDG_STATE_HOME:-$HOME/.local/state}/termux-native-desktop/providers/mesa/
+legacy Mesa paths       $HOME/gl/build and $HOME/gl/opt compatibility symlinks
 ```
 
 PRoot is retained for package installation, dependency discovery, passive artifacts/data, and debugging controls. Runtime applications execute outside PRoot.
@@ -318,22 +320,32 @@ Do not revive a farm-centric or `gl-run`-centric lifecycle.
 
 ## Activation boundary
 
-Current deployed leaves are source-linked symlinks.
-
-This means checkout mutation can alter live behavior before a complete multi-file transaction is validated.
-
-Before the next promoted semantic split, define a minimum activation model with:
+Repository deployment already uses immutable materialized releases and explicit activation.
 
 ```text
-complete candidate leaf set
-pre-activation validation
-single active identity/transition
-post-activation smoke
-previous active identity
-real rollback target
+repository checkout
+    != live release
+
+complete release candidate
+    -> validation
+    -> deployment current-pointer switch
+    -> post-activation status/smoke
+    -> previous-pointer rollback target
 ```
 
-The design should remain smaller than a universal package manager unless evidence requires more.
+`tools/deploy --profile workstation|full` owns project-managed public leaves. A pull or branch change does not alter those leaves until deployment activation.
+
+Other mutable authorities remain separate:
+
+```text
+Mesa provider promotion
+selected application-generation activation
+compatibility-farm regeneration
+loader cache/state mutation
+application payload and user-data changes
+```
+
+The Mesa provider store has its own canonical `current` pointer under XDG state, while legacy `$HOME/gl/opt/mesa-glibc` remains a compatibility path. Repository rollback does not automatically roll back a provider, and provider rollback does not change the glibc substrate or selected application generation.
 
 ## Evidence interpretation
 
@@ -367,7 +379,7 @@ superseded false-negative model
 7. **Unexpected Zink/Gallium** — bridge/device policy leaked from session or another consumer.
 8. **Implicit software provider** — unset Vulkan variables allow discovery; they do not mean no Vulkan.
 9. **Application-state mismatch** — probe observes a different user-data authority than the app.
-10. **Partial live activation** — source-linked existing leaves change before newly required leaves exist.
+10. **Activation-domain mismatch** — repository release, provider pointer, selected generation or derived loader state is changed or rolled back as though it were the same authority domain.
 
 ## Current validated workloads
 

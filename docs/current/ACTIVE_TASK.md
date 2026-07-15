@@ -1,88 +1,71 @@
-# Active task: synchronize current documentation authority
+# Active task: consolidate documentation authority and structure
 
-> Task ID: `current-authority-synchronization`
+> Task ID: `documentation-structure-consolidation`
 >
-> Expected state on completion: `documentation-control-plane` remains active, but all default current-facing documents agree with the accepted repository, deployment, local-layout, and research boundary.
+> Expected state on completion: the repository has an agreed durable/current/history documentation model, a bounded default onboarding set and an explicit decision surface for proportional assurance depth.
 
 ## Objective
 
-Repair the existing current-facing documentation so a new agent following `START_HERE.md` cannot be redirected into deleted branches, completed activation work, retired local ownership, or the former narrative-handoff lifecycle.
+Design and implement the next bounded documentation reorganization so project philosophy, current state, architecture, operating rules, decisions, evidence and history have unambiguous authority and routing.
 
 ## Why now
 
-The repository already has accepted structural changes that several prominent documents do not reflect:
+Bundle-native onboarding and current-authority synchronization are complete. The remaining documents are still numerous and partly overlapping. Without a deliberate authority model, later agents may load superseded foundation assessments or reconstruct the project from transaction history instead of current contracts.
 
-```text
-single canonical main
-immutable repository releases
-explicit deployment activation
-retired ~/gl/.git authority
-XDG-state Mesa workspace and provider store
-provider-authority workstream paused for assurance-depth policy
-```
-
-Until these are synchronized, the new initialization control plane can route correctly but deeper current documents can still contradict it.
+The paused provider-authority workstream also exposed a missing policy: how much assurance is justified when following a reference path versus adapting, independently reproducing or inventing a provider.
 
 ## Current accepted decisions
 
-- New web-chat sessions start from a user-provided full Git bundle.
-- The cloned repository initializes itself through `START_HERE.md`.
-- Narrative handoff documents are not current authority.
-- Canonical current state belongs under `docs/current/`.
-- Historical records remain available but are excluded from default onboarding.
-- GitHub connector use is limited to lightweight remote inspection.
-- User Termux local Git and `gh` remain authoritative for remote mutation.
-- Docker is unavailable and outside the project workflow.
+- Web-chat sessions start from a user-provided full Git bundle and `START_HERE.md`.
+- `docs/current/` owns current semantic state and the active task.
+- Narrative handoffs are historical evidence only.
+- `main` is the sole intended long-lived branch.
+- Repository deployment is immutable and explicitly activated.
+- Mesa mutable workspace and provider candidates are owned under XDG state.
+- The provider-authority workstream remains paused at the 0165 no-response boundary.
 
 ## In scope
 
-- Update root and documentation indexes to route through the new control plane.
-- Synchronize `README.md`, `STATUS.md`, `docs/architecture.md`, `docs/glibc-layer.md`, and `modules/gl/README.md` with immutable deployment and the XDG-state local layout.
-- Correct `docs/refactor/README.md` branch and current-chain metadata.
-- Remove `docs/handoff/CURRENT.md` from current authority and classify dated handoffs as historical transition evidence.
-- Recast the old session lifecycle and close documents as historical process material or replace them with bundle-native start guidance.
-- Update the timeline through repository consolidation and local-layout migration.
-- Mark Decision 0002 as superseded or narrowed by the later provider-authority model.
-- Repair current internal links that still target removed pre-refactor paths.
+- Define a concise documentation authority model covering constitution, current state, architecture, operations, decisions, evidence, history and knowledge.
+- Decide whether physical moves are needed or whether indexes/status metadata are sufficient.
+- Consolidate overlapping project-essence and system-foundation material without losing provenance.
+- Add status metadata or indexes for accepted, superseded and historical decisions/documents.
+- Define a bounded default onboarding reading set and context-budget expectations.
+- Draft the proportional assurance-depth policy and its relation to reference, adapted, reproduced and novel paths.
+- Add machine-checkable rules that prevent current and historical authority from being mixed again.
 
 ## Out of scope
 
-- Moving or renaming all numbered refactor records.
-- Rewriting all experiment reports.
-- Resuming provider evidence acquisition or SUP-02 response production.
-- Performing device runtime, graphics, or application tests.
-- Large constitutional consolidation beyond corrections needed to resolve current authority.
-- Designing the final assurance-depth policy; this task may prepare its explicit decision surface only.
+- Rewriting 0001–0165 transaction records.
+- Moving every experiment report in one transaction.
+- Resuming SUP-02 evidence acquisition or producing supplier responses.
+- Device runtime, graphics or application testing.
+- Provider target population, extraction or selected-generation activation.
+- Adopting Codex or Claude Code as the current execution environment.
 
 ## Required reading
 
-Read these documents as current authority or direct repair targets:
-
 - `docs/current/BRIEF.md`
 - `docs/current/STATE.yaml`
+- `AGENTS.md`
+- `docs/INDEX.md`
+- `docs/PROJECT_CONTEXT.md`
 - `docs/PROJECT_PRINCIPLES.md`
-- `docs/decisions/0004-single-main-and-immutable-release-deployment.md`
-- `packages/mesa-glibc/README.md`
-- `README.md`
-- `STATUS.md`
-- `docs/README.md`
+- `docs/system-foundation/README.md`
+- `docs/system-foundation/11-architecture-reassessment-and-hard-refactor-decision.md`
+- `docs/system-foundation/12-document-consistency-audit-and-execution-order.md`
 - `docs/architecture.md`
-- `docs/glibc-layer.md`
-- `modules/gl/README.md`
-- `docs/refactor/README.md`
+- `docs/decisions/README.md`
 - `docs/session-operations/README.md`
-- `docs/handoff/CURRENT.md`
 
-Do not read numbered refactor records or full experiment reports by default. Open a specific record only when one of the repair targets makes a claim whose current replacement cannot be established from the documents above and Git history.
+Do not read all numbered refactor records or experiment reports. Open a specific historical source only to resolve a concrete provenance question encountered during consolidation.
 
 ## Known facts
 
-- The accepted repository branch is `main`.
-- Immutable release deployment is implemented and active.
-- The local-layout migration completed successfully.
-- The canonical active Mesa provider is represented through the XDG-state provider store.
-- The old current handoff records a deleted branch and an obsolete boundary.
-- There is no blocking result archive awaiting review.
+- Current-facing branch, deployment, local-layout and session-operation documents have been synchronized.
+- Historical documents intentionally retain old paths and old branch names where they describe past facts.
+- The document corpus is large enough that default onboarding must be routed rather than exhaustive.
+- Full Git bundle transport gives the web-chat sandbox ordinary Git objects and a working tree; GitHub raw-content reconstruction is unnecessary and undesirable.
 
 ## Pending external inputs
 
@@ -90,22 +73,22 @@ None. See [`PENDING_ARTIFACTS.yaml`](PENDING_ARTIFACTS.yaml).
 
 ## Next valid action
 
-Produce one bounded documentation synchronization candidate and a repository test that rejects the known stale current-authority patterns.
+Produce a proposed documentation authority matrix and target tree, map every existing document class into it, and identify the smallest first physical reorganization that improves routing without breaking historical links unnecessarily.
 
 ## Stop conditions
 
 Stop before implementation if:
 
-- the checked-out bundle does not contain the accepted local-layout migration;
-- `main` is not the candidate's sole intended long-lived base;
-- a proposed correction would reinterpret provider evidence rather than only synchronize accepted state;
-- a historical record would need destructive rewriting instead of indexing or status classification.
+- the proposal requires destructive rewriting of evidence history;
+- a move would create more broken links than the routing benefit justifies without an automated migration plan;
+- the assurance policy would silently accept or reject provider authority rather than defining evidence depth;
+- the initial onboarding set exceeds its intended bounded context without a clear justification.
 
 ## Completion criteria
 
-- Default onboarding contains no deleted branch or narrative-handoff dependency.
-- Current-facing deployment and local-layout descriptions agree.
-- The current provider-authority boundary and prohibited claims agree.
-- Historical handoffs and numbered records remain discoverable but are not default authority.
-- Repository tests reject reintroduction of the known stale patterns.
-- `docs/current/` advances to the next explicit task without relying on chat memory.
+- Every document class has one explicit authority and lifecycle role.
+- Current, superseded and historical material are mechanically distinguishable.
+- A new web-chat agent can find needed documents by question without scanning the corpus.
+- The default onboarding set remains small and excludes unrelated history.
+- Assurance depth has an explicit draft decision surface tied to deviation and risk.
+- The next implementation phase is repository-owned and does not depend on chat memory.

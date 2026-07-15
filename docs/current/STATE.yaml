@@ -1,5 +1,5 @@
 schema_version: 1
-state_version: 2026-07-15.01
+state_version: 2026-07-15.02
 updated_on: 2026-07-15
 
 project:
@@ -35,7 +35,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: current-authority-synchronization
+  id: documentation-structure-consolidation
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:

@@ -21,6 +21,12 @@ user
 
 Do not shift patch editing, command assembly, log analysis or Git repair to the user unless the user's environment is the only place where the operation can occur.
 
+## New-session repository transport
+
+The normal new-session input is a full Git bundle created directly by the user from the authoritative Termux checkout and attached to the web chat. The bundle contains the repository, its documentation control plane and Git objects; no separate narrative handoff or bootstrap repository is required.
+
+The agent verifies and clones the bundle, then follows `START_HERE.md`. Google Drive remains the normal channel for execution packages, results, safety material and optional bundle/patch exchange after onboarding.
+
 ## Exchange locations
 
 Canonical Drive root:
@@ -33,8 +39,8 @@ Logical surfaces:
 
 ```text
 agent-outbox/    agent -> user execution packages
-user-results/    user -> agent result archives
-handoff/         mandatory session handoffs and miscellaneous backups
+user-results/    user -> agent result archives and transaction safety material
+handoff/         legacy archive only; not an active onboarding channel
 ```
 
 Current folder IDs may be recorded in the dated handoff package. Logical paths are the durable contract.
@@ -61,7 +67,7 @@ The user command should be one copy-paste block using `rclone copyto`, `sha256su
 ### Google Drive
 
 - Only local files located anywhere under `/mnt/data` are eligible for local-path upload rewriting. They do not need to be directly inside `/mnt/data`.
-- In a new chat, local-path rewriting is blocked during the first assistant turn. Do not retry the same upload in that turn; use the handoff package already supplied by the user or expose the local artifact for later use.
+- In a new chat, local-path rewriting is blocked during the first assistant turn. Do not retry the same upload in that turn; use the full bundle already supplied by the user or expose the local artifact for a later turn.
 - Binary filename search can be unreliable. Prefer exact folder listing and exact file IDs.
 - After upload, fetch the remote item again and verify byte identity, SHA-256, zstd integrity and the internal manifest.
 - If a valid raw upload is rejected because of a path or filename handling issue, copy the exact bytes to a short ASCII path under `/mnt/data`, upload with the intended destination filename, then verify the fetched bytes. The workaround must not change the artifact.

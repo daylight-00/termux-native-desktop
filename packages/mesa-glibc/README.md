@@ -198,7 +198,7 @@ Current graphics contract:
 docs/refactor/0091-scoped-graphics-policy-promotion-closure.md
 ```
 
-Current architecture audit:
+Historical architecture audit:
 
 ```text
 docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md
