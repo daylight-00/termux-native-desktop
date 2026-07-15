@@ -49,6 +49,36 @@ if run_check 2>/dev/null; then
 fi
 restore_file AGENTS.md
 
+# Negative: the runtime-first-upload fallback cannot demote Drive for future artifacts.
+python3 - "$FIXTURE/docs/operations/platforms/chatgpt-web-limitations.tsv" <<'PY'
+from pathlib import Path
+p=Path(__import__('sys').argv[1])
+s=p.read_text().replace(
+ 'expose the identical artifact through a user-visible sandbox link for the current delivery then attempt Drive first again on the next outbound upload while the runtime persists and verify SHA-256',
+ 'use user-visible sandbox links for all current and future artifacts')
+p.write_text(s)
+PY
+if run_check 2>/dev/null; then
+  echo 'web-chat capability smoke: permanent Drive demotion was accepted' >&2
+  exit 1
+fi
+restore_file docs/operations/platforms/chatgpt-web-limitations.tsv
+
+# Negative: runtime reset behavior must not be narrowed to new-chat first turn.
+python3 - "$FIXTURE/docs/operations/platforms/chatgpt-web-limitations.tsv" <<'PY'
+from pathlib import Path
+p=Path(__import__('sys').argv[1])
+s=p.read_text().replace(
+ 'the first upload attempted after the web-chat runtime is initialized or reset blocks local-path-to-file-reference rewrite even in an existing chat',
+ 'the first assistant turn of a new chat blocks local-path rewrite')
+p.write_text(s)
+PY
+if run_check 2>/dev/null; then
+  echo 'web-chat capability smoke: new-chat-only Drive model was accepted' >&2
+  exit 1
+fi
+restore_file docs/operations/platforms/chatgpt-web-limitations.tsv
+
 # Negative: device evidence cannot be reassigned to the sandbox.
 python3 - "$FIXTURE/docs/operations/platforms/chatgpt-web-limitations.tsv" <<'PY'
 from pathlib import Path

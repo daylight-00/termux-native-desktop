@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-15.11`
+> Semantic state version: `2026-07-15.12`
 >
 > This is the compact current-state entry point. Exact commit and tree coordinates come from the checked-out full Git bundle, not from self-referential repository text.
 
@@ -94,7 +94,8 @@ Exact artifact/member identity, adaptation semantics, provider selection, compos
 - GitHub connector use is limited to lightweight remote inspection; it is not clone/commit/push transport.
 - [`../operations/README.md`](../operations/README.md) is the single current surface for collaboration, bundle transport, execution transactions, result review, checkpoints, troubleshooting, and platform capabilities.
 - The former `docs/session-operations/` surface and narrative handoffs are historical only.
-- Google Drive is the normal exchange path for bundles, patches, runners, results, logs, and safety artifacts.
+- Google Drive is the primary exchange path for bundles, patches, runners, results, logs, and safety artifacts.
+- The first connector upload after runtime initialization or reset may block file-reference rewriting even in an existing chat; use a user-visible sandbox link only for that delivery, then attempt Drive first again on the next outbound artifact.
 
 ## Current project phase
 

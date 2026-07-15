@@ -25,7 +25,7 @@ Do not spend a session repeatedly trying mirrors, proxy variants, alternate clon
 | Session sandbox | clone supplied bundle; inspect and author; local commits; candidate bundles; package construction; shell/static/synthetic tests; selective result review; bounded public HTTP fetch when it actually works | Android runtime; Termux deployment; GPU/device validation; user application data; remote Git mutation; guaranteed DNS or outbound access |
 | User Termux | authoritative fetch/commit/push/`gh`; exact dependency and source acquisition; deployment and local-layout mutation; Android/package/runtime inspection; device tests; `rclone`; future full-bundle creation | delegated broad manual editing or log analysis when the agent can package it |
 | GitHub connector | repository metadata; commit confirmation; comparison; PR/issue reads; exact small file reads at a known path/ref | clone; normal object database; complete code-search recall; context-efficient authoring; authoritative commit/push |
-| Google Drive connector | exchange of packages, results, patches, bundles, logs, safety artifacts, and evidence | automatic equivalence between a Drive reference and sandbox path; guaranteed local-path rewrite |
+| Google Drive connector | primary exchange path for packages, results, patches, bundles, logs, safety artifacts, and evidence; attempt it first for each outbound artifact | automatic equivalence between a Drive reference and sandbox path; guaranteed local-path rewrite on the runtime's first upload |
 
 Docker is not available and must not be used or proposed.
 
@@ -68,9 +68,19 @@ Do not treat a sandbox simulation as Android, loader, package-manager, GPU, file
 
 ### Connector upload boundary
 
-Use `WEB-DRIVE-UPLOAD-001` or `WEB-DRIVE-FIRST-TURN-001`.
+Use `WEB-DRIVE-UPLOAD-001` or `WEB-DRIVE-RUNTIME-FIRST-UPLOAD-001`.
 
-Do not transform valid bytes to satisfy a connector. Preserve byte identity, provide a sandbox download link when necessary, let the user transfer with `rclone`, or retry on a later turn with a real connector file reference. Always verify the returned or uploaded SHA-256.
+Google Drive remains the primary outbound exchange path. Attempt connector upload first for each outbound artifact. The first upload after the web-chat runtime is initialized or reset can block local-path-to-file-reference rewriting even when the chat itself is not new.
+
+When that first-runtime-upload block occurs:
+
+1. preserve the artifact bytes and expected digest;
+2. do not repeat the same blocked upload during the current delivery;
+3. expose the identical artifact through a user-visible sandbox link;
+4. on the next outbound upload, attempt Drive first again because the persistent runtime is normally warm;
+5. verify SHA-256 whenever Drive returns an uploaded or fetched object.
+
+This is a per-runtime warm-up fallback, not a reason to demote Drive permanently or default future artifacts to user-visible delivery. For other connector contract failures, inspect the action schema once and use the registered current-delivery fallback without transforming bytes.
 
 ### Shared filesystem or execution-budget mismatch
 
@@ -97,7 +107,7 @@ A GitHub URL or connector is not a replacement for the bundle. Raw-text file ope
 ## Drive-specific constraints
 
 - A local file is upload-eligible only when it is located anywhere under `/mnt/data`; it need not be a direct child.
-- In a new chat, local-path rewriting can be blocked on the first assistant turn. Do not repeat the same failing upload in that turn.
+- After the web-chat runtime is initialized or reset, its first upload attempt can block local-path-to-file-reference rewriting even in an existing chat. Attempt Drive first, fall back to a user-visible link for that delivery, and attempt Drive first again on the next outbound upload if the runtime persists.
 - An upload action may require a connector file-reference object and reject a raw local path even under `/mnt/data`.
 - A connector file reference is not automatically a local sandbox path.
 - Binary fetches may materialize with a `.bin` suffix; trust byte identity and checksum, not the suffix.

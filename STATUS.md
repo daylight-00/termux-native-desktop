@@ -10,7 +10,7 @@
 - Topic branches are deleted only after their tips are verified as ancestors of the pushed `main`.
 - Direct checkout-to-live symlinks are superseded by immutable materialized repository releases and a stable atomic `current` pointer.
 - `tools/deploy --profile workstation|full` owns managed public leaves; external payloads, selected generations, provider installs, build trees and user state remain outside this cleanup transaction.
-- The provider-authority corpus is classified under ADR 0005: 89 separated claims and 28 historical SUP-02 requests reclassified as 14 narrowed, 7 replaced and 7 unnecessary. Five exact provider claims are accepted: four X.Org members for bounded selected GTK X11 scope and libtasn1 for bounded external GnuTLS 3.8.9 ASN.1/security scope. No composition, target row or activation is accepted.
+- The provider-authority corpus is classified under ADR 0005: 89 separated claims and 28 historical SUP-02 requests reclassified as 14 narrowed, 7 replaced and 7 unnecessary. Six exact provider claims are accepted: four X.Org members for bounded selected GTK X11 scope, libtasn1 for bounded external GnuTLS 3.8.9 ASN.1/security scope, and libepoxy for bounded GTK 3.24.49 X11 GLX dispatch. No composition, target row or activation is accepted.
 
 See `docs/decisions/0004-single-main-and-immutable-release-deployment.md`.
 
@@ -24,6 +24,7 @@ See `docs/decisions/0004-single-main-and-immutable-release-deployment.md`.
 - `docs/operations/` is the single current authority for collaboration, bundle transport, execution, result review, optional checkpoints, troubleshooting, and platform capability boundaries.
 - The former `docs/session-operations/` surface and narrative handoffs are historical only.
 - Docker is outside the available and intended workflow.
+- Google Drive is the primary outbound exchange path. A runtime-initialization first-upload file-reference block falls back to a user-visible file only for that delivery; the next outbound upload attempts Drive first again.
 
 ## Local-layout consolidation
 

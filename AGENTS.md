@@ -91,6 +91,8 @@ logs and bounded evidence
 
 Use one related `.tar.zst` per exchange. Prefer a full Git bundle when repository history or topology must cross the environment boundary; use patches or candidate bundles for ordinary bounded changes.
 
+For outbound artifacts, attempt Google Drive connector upload first. The first upload after the web-chat runtime is initialized or reset can have local-path-to-file-reference rewriting blocked, including in an existing chat. If that first attempt fails for this reason, expose the identical artifact through a user-visible sandbox link for the current delivery and do not repeat the blocked call. On the next outbound upload, attempt Drive first again; a persistent runtime is normally warm by then.
+
 ## Execution environment restrictions
 
 - Do not use or propose Docker for this project.

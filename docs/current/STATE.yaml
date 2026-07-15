@@ -1,5 +1,5 @@
 schema_version: 1
-state_version: 2026-07-15.11
+state_version: 2026-07-15.12
 updated_on: 2026-07-15
 
 project:
@@ -37,6 +37,7 @@ documentation:
   web_chat_capability_profile: docs/operations/platforms/chatgpt-web.md
   web_chat_limitation_registry: docs/operations/platforms/chatgpt-web-limitations.tsv
   capability_failure_policy: one-probe-then-registered-fallback
+  drive_exchange_policy: drive-first-runtime-first-upload-user-visible-fallback-then-drive-first-retry-next-artifact
   former_session_operations: historical-session-operations-v1
   system_foundation_lifecycle: historical-design-provenance
   narrative_handoffs: historical-only

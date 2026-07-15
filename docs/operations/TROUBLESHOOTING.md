@@ -28,7 +28,7 @@ Do not turn an unavailable web capability into repeated trial-and-error. The act
 | Binary file is not found by Drive search | List the exact canonical folder and select by full filename and creation time. |
 | Fetched binary appears as a local `.bin` | Treat it as raw bytes; verify the expected SHA-256 and zstd stream before extraction. |
 | Local upload path is rejected | Confirm the file is anywhere under `/mnt/data`; paths outside that subtree cannot be rewritten. |
-| Upload fails on the first assistant turn of a new chat | Do not retry in that turn. Continue from the user-supplied full bundle and publish on a later turn. |
+| The first upload after runtime initialization or reset blocks local-path-to-file-reference rewriting, including in an existing chat | Keep Drive as the primary path, do not repeat the blocked call for the current delivery, expose identical bytes through a user-visible sandbox link, then attempt Drive first again on the next outbound upload if the runtime persists. |
 | Valid archive is rejected because of filename/path handling | Copy identical bytes to a short ASCII path under `/mnt/data`, set the intended Drive filename explicitly, and verify fetched bytes. |
 | Upload reports success but trust is uncertain | Fetch by exact file ID and compare size, SHA-256, zstd integrity, and internal manifest. |
 

@@ -43,7 +43,7 @@ user-results/    user -> agent results, receipts, and safety material
 handoff/         historical archive only; not an onboarding channel
 ```
 
-Google Drive is used after onboarding for execution packages, results, patches, bundles, logs, and safety artifacts. Concrete web-chat connector limitations are owned by [`platforms/chatgpt-web.md`](platforms/chatgpt-web.md).
+Google Drive is the primary exchange path after onboarding for execution packages, results, patches, bundles, logs, and safety artifacts. The agent attempts Drive first for each outbound artifact. If the first upload after runtime initialization or reset is blocked at local-path-to-file-reference rewriting, the current artifact is delivered through an identical user-visible sandbox file; the next outbound artifact returns to Drive-first behavior. Concrete web-chat connector limitations are owned by [`platforms/chatgpt-web.md`](platforms/chatgpt-web.md).
 
 ## Artifact classes
 

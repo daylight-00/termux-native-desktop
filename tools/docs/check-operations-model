@@ -44,7 +44,7 @@ require_text docs/operations/EXECUTION.md 'never attempt rollback after a confir
 require_text docs/operations/CHECKPOINTS.md 'explicitly non-authoritative' 'checkpoint contract is non-authoritative'
 require_text docs/operations/platforms/chatgpt-web.md 'Docker is not available' 'web profile prohibits Docker'
 require_text docs/operations/platforms/chatgpt-web.md 'located anywhere under `/mnt/data`' 'web profile records local upload subtree rule'
-require_text docs/operations/platforms/chatgpt-web.md 'blocked on the first assistant turn' 'web profile records first-turn upload constraint'
+require_text docs/operations/platforms/chatgpt-web.md 'first upload after the web-chat runtime is initialized or reset' 'web profile records runtime-first-upload constraint'
 require_text docs/operations/platforms/chatgpt-web.md 'not a replacement for the bundle' 'web profile rejects connector-as-clone substitution'
 require_text docs/operations/platforms/chatgpt-web.md 'chatgpt-web-limitations.tsv' 'web profile routes limitation registry'
 require_text docs/operations/platforms/chatgpt-web-limitations.tsv 'WEB-NET-DNS-001' 'limitation registry records DNS fallback'
