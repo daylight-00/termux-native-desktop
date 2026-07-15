@@ -1,6 +1,6 @@
 # Status
 
-> **State:** bundle-native documentation and operations control planes active; compact constitutional authority installed; ADR 0005 accepted for risk-proportional assurance; provider-authority workstream resumed only for claim-by-claim assurance classification at the bounded 0165 SUP-02 no-response boundary
+> **State:** bundle-native documentation and operations control planes active; compact constitutional authority installed; ADR 0005 provider claim classification complete; seven no-token roots selected for bounded semantic review
 > **Updated:** 2026-07-15
 
 ## Repository and deployment consolidation
@@ -10,7 +10,7 @@
 - Topic branches are deleted only after their tips are verified as ancestors of the pushed `main`.
 - Direct checkout-to-live symlinks are superseded by immutable materialized repository releases and a stable atomic `current` pointer.
 - `tools/deploy --profile workstation|full` owns managed public leaves; external payloads, selected generations, provider installs, build trees and user state remain outside this cleanup transaction.
-- The provider-authority workstream remains paused at its current bounded evidence boundary pending claim-by-claim reclassification under ADR 0005; the assurance decision does not accept provider authority or populate a target layout.
+- The provider-authority corpus is classified under ADR 0005: 89 separated claims and 28 historical SUP-02 requests reclassified as 14 narrowed, 7 replaced and 7 unnecessary; no provider authority or target row is accepted.
 
 See `docs/decisions/0004-single-main-and-immutable-release-deployment.md`.
 
@@ -106,6 +106,10 @@ See `docs/decisions/0004-single-main-and-immutable-release-deployment.md`.
 - Receipt review accepts only that no response was staged at the bounded surface; all requests remain unacknowledged and repeating the same empty acquisition is non-progress.
 - A strict custodian-side producer now executes the actual build command only after exact request and recipe-tree verification, captures bounded invocation, input, environment, toolchain and package-member records, and emits an `0163`-compatible candidate response.
 - Producer implementation is not request execution: canonical responses, acknowledgements, build-attestation acceptance, provider decisions and target population remain zero.
+- The ADR 0005 classification now separates 28 artifact-identity claims, 28 adaptation claims, 28 provider-authority claims, OJ-001, conditional build provenance, composition, target population and activation into 89 rows.
+- Class distribution is 36 A, 49 B, 1 conditional C and 3 D; the Class C producing-build claim is deferred because no root is currently classified as independently reproduced.
+- All 28 SUP-02 requests remain historical: 14 are narrowed to claim-specific escalation only, 7 are replaced by reference/artifact/semantic integration evidence, and 7 are unnecessary at the current boundary. Zero requests are required now.
+- The next bounded tranche reviews seven no-token roots against their exact pinned upstream baselines; absence of a collector token is not accepted as equivalence.
 
 ## Current authority
 
@@ -316,32 +320,31 @@ AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
 AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
-AUTH-009 non-priority generic capabilities; SUP-01 closes the libjpeg requirement-definition defect, while SUP-02 has 28 issued-but-unacknowledged requests, a reviewed zero-response receipt and a strict response producer; BA-001/002/003 remain open pending an exact produced, acquired and separately reviewed custodian response
+AUTH-009 non-priority generic capabilities; OJ-001 required identity is corrected, the 89-row ADR 0005 claim inventory is complete, and all 28 SUP-02 requests are historical with zero currently required; seven no-token roots enter bounded semantic review
 AUTH-010 exact application payload supply, named supplement membership and release execution; launcher source boundary bounded
 ```
 
 ## Next valid state
 
 ```text
-CLASSIFY_PROVIDER_CLAIMS_UNDER_ADR_0005
+REVIEW_SEVEN_NO_TOKEN_REFERENCE_CONSUMED_ROOTS
 ```
 
 Active task:
 
 ```text
-PROVIDER_CLAIM_CLASSIFICATION_UNDER_ADR_0005
+REVIEW_NO_TOKEN_REFERENCE_CONSUMED_ROOTS
 ```
 
 Required order:
 
 ```text
-1. keep the compact constitution, accepted ADR 0005, bundle-native current state, and canonical operations surface authoritative;
-2. separate provider authority, composition, target-population, and activation claims;
-3. classify each claim by implementation class, project-owned changed boundary, and risk modifiers;
-4. bind existing evidence and record the smallest remaining assurance gap;
-5. review the classification before issuing or fulfilling any evidence request;
-6. define ApplicationRuntimeComposition only after owning authorities are accepted;
-7. populate target rows and implement materialization only after composition acceptance and intervention-lift review.
+1. preserve the 89-row claim inventory and the separation between identity, adaptation, provider, composition, target and activation;
+2. compare the exact pinned recipes for libepoxy, libtasn1, libxcomposite, libxfixes, libxi, libxinerama and pango with their pinned upstream baselines;
+3. confirm Class A only with semantic review, or record the exact Class B changed boundary;
+4. keep pango filename drift separate from recipe adaptation;
+5. do not issue SUP-02 without a recorded Class C reclassification or escalation trigger;
+6. select the next smallest provider-authority or explicit-delta review tranche after the seven-root review.
 ```
 
 ## Stop lines

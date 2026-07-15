@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-15.05`
+> Semantic state version: `2026-07-15.06`
 >
 > This is the compact current-state entry point. Exact commit and tree coordinates come from the checked-out full Git bundle, not from self-referential repository text.
 
@@ -46,28 +46,28 @@ Former project-context/principles and system-foundation documents are preserved 
 
 ## Current provider boundary
 
-The provider-authority workstream remains paused at the 0165 SUP-02 boundary:
+The provider-authority corpus is now classified under accepted ADR 0005.
 
 ```text
-SUP-02 producer implemented
-28 issued requests still without canonical responses
-no build-attestation/adaptation closure accepted
-no provider/composition/target-layout completion accepted
-no selected-generation activation accepted
+28 roots
+37 reviewed objects
+89 separated claims
+36 Class A
+49 Class B
+ 1 conditional Class C
+ 3 Class D
 ```
 
-[`../decisions/0005-proportional-assurance-depth.md`](../decisions/0005-proportional-assurance-depth.md) is now accepted policy.
-
-Assurance is selected before evidence collection from:
+The 28 historical SUP-02 requests are classified as:
 
 ```text
-exact claim
-    + implementation class
-    + project-owned changed boundary
-    + risk modifiers
+still necessary now: 0
+narrowed:            14
+replaced:             7
+unnecessary:          7
 ```
 
-The previous blanket demand for producing-build custodian exports across all 28 roots is no longer the default. Existing provider claims must be reclassified before further evidence requests. This policy change does not itself accept a provider or target.
+This classification does not accept provider authority. Exact artifact/member identity, adaptation semantics, provider selection, composition, target population, and activation remain separate states. The current review surface is [`../evidence/provider-claim-classification.md`](../evidence/provider-claim-classification.md).
 
 ## Documentation and web-session state
 
@@ -84,25 +84,27 @@ The previous blanket demand for producing-build custodian exports across all 28 
 
 ## Current project phase
 
-The active task is `provider-claim-classification-under-adr-0005`.
+The active task is `review-no-token-reference-consumed-roots`.
 
-It will:
+It reviews seven roots whose earlier collector found no explicit adaptation token:
 
 ```text
-separate provider authority, composition, target, and activation claims
-classify each claim under ADR 0005
-bind existing evidence without overpromoting it
-identify the minimum proportionate remaining assurance action
-review the classification before issuing any new evidence request
+libepoxy
+libtasn1
+libxcomposite
+libxfixes
+libxi
+libxinerama
+pango
 ```
 
-The provider-authority workstream has resumed only as a classification and decision phase. Evidence collection, provider promotion, target population, and activation remain prohibited.
+The exact pinned recipe and upstream baseline must confirm Class A or identify the exact Class B changed boundary. No external evidence request, provider promotion, target population, or activation is allowed in this phase.
 
 ## Current non-goals
 
 Do not currently:
 
-- issue or fulfill a new SUP-02 request before claim classification;
+- issue or fulfill a SUP-02 request without a recorded Class C reclassification or escalation trigger;
 - infer provider acceptance from ADR 0005;
 - populate a provider target layout;
 - activate the selected Obsidian generation;

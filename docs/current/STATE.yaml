@@ -1,9 +1,9 @@
 schema_version: 1
-state_version: 2026-07-15.05
+state_version: 2026-07-15.06
 updated_on: 2026-07-15
 
 project:
-  phase: provider-claim-reclassification
+  phase: provider-no-token-semantic-review
   status: active
 
 repository:
@@ -38,11 +38,24 @@ documentation:
   system_foundation_lifecycle: historical-design-provenance
   narrative_handoffs: historical-only
   assurance_depth_decision: accepted-adr-0005
+  provider_claim_classification: docs/evidence/provider-claim-classification.md
 
 provider_authority:
-  workstream: reclassification-active
-  boundary: sup-02-producer-implemented-no-canonical-response
-  next_research_decision: classify-provider-claims-under-adr-0005
+  workstream: no-token-semantic-review-active
+  boundary: claim-inventory-89-rows-sup02-reclassified
+  claim_inventory:
+    total: 89
+    class_a: 36
+    class_b: 49
+    class_c: 1
+    class_d: 3
+  sup_02_disposition:
+    still_necessary: 0
+    narrowed: 14
+    replaced: 7
+    unnecessary: 7
+    required_now: 0
+  next_research_decision: review-seven-no-token-roots
   prohibited_claims:
     - complete-provider-authority
     - complete-runtime-composition
@@ -50,7 +63,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: provider-claim-classification-under-adr-0005
+  id: review-no-token-reference-consumed-roots
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:

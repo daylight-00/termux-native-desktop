@@ -1,9 +1,9 @@
 schema_version: 1
-state_version: 2026-07-15.05
+state_version: 2026-07-15.06
 
 blocking: []
 
 non_blocking:
   - id: provider-authority-sup-02-responses
-    state: not-produced
-    note: All 28 issued requests remain unanswered historical requests. There is no result archive awaiting review, and no response should be requested until claim-by-claim ADR 0005 classification determines which requirements remain proportionate.
+    state: historical-requests-not-currently-required
+    note: All 28 issued requests remain unanswered historical requests. ADR 0005 classification records 14 narrowed, 7 replaced, and 7 unnecessary requests; zero requests are required now. A request may be revisited only after an explicit Class C reclassification or recorded escalation trigger.

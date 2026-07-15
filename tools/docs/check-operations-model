@@ -49,7 +49,7 @@ require_text docs/operations/platforms/chatgpt-web.md 'not a replacement for the
 require_text docs/history/session-operations-v1/README.md 'Current operational authority is under' 'former session operations are historical'
 require_text docs/handoff/README.md '[`../operations/`](../operations/README.md)' 'handoff archive routes current operations correctly'
 require_text docs/current/STATE.yaml 'operations_surface: docs/operations/README.md' 'semantic state records canonical operations surface'
-require_text docs/current/ACTIVE_TASK.md 'Task ID: `provider-claim-classification-under-adr-0005`' 'next active task is provider classification'
+require_text docs/current/ACTIVE_TASK.md 'Task ID: `review-no-token-reference-consumed-roots`' 'next active task is bounded no-token semantic review'
 
 for rel in docs/operations/README.md docs/operations/COLLABORATION.md docs/operations/WORKFLOW.md docs/operations/EXECUTION.md docs/operations/CHECKPOINTS.md docs/operations/platforms/chatgpt-web.md; do
   reject_text "$rel" 'mandatory handoff' "$rel has no mandatory-handoff authority"

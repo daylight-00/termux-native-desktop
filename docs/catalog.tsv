@@ -39,3 +39,4 @@ history-index	history	current	canonical	no	docs/history/README.md	historical rec
 handoff-index	history	historical	history	no	docs/handoff/README.md	legacy session-transition archive
 timeline	history	historical	history	no	docs/timeline.md	chronological navigation
 knowledge-index	knowledge	reference	reference	no	docs/knowledge/README.md	reusable systems knowledge router
+provider-claim-classification	evidence	current	canonical	no	docs/evidence/provider-claim-classification.md	ADR 0005 claim inventory and SUP-02 disposition

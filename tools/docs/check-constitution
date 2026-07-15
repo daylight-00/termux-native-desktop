@@ -31,7 +31,7 @@ require_text docs/decisions/0005-proportional-assurance-depth.md 'The project re
 require_text docs/decisions/0005-proportional-assurance-depth.md 'That blanket requirement is no longer the default policy.' 'ADR 0005 bounds SUP-02 continuation'
 require_text docs/current/STATE.yaml 'assurance_depth_decision: accepted-adr-0005' 'semantic state records accepted assurance policy'
 require_text docs/current/STATE.yaml 'system_foundation_lifecycle: historical-design-provenance' 'semantic state records foundation lifecycle'
-require_text STATUS.md 'ADR 0005 accepted for risk-proportional assurance' 'STATUS records accepted assurance policy'
+require_text STATUS.md 'ADR 0005 provider claim classification complete' 'STATUS records accepted assurance policy and completed classification'
 
 reject_text docs/constitution/README.md 'remain canonical' 'constitution router has no temporary legacy-canonical language'
 reject_text docs/system-foundation/README.md '11 and 12 take precedence' 'foundation index has no current precedence claim'

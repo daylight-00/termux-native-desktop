@@ -33,4 +33,6 @@ A historical report may describe a superseded architecture. Use the experiment R
 
 Evidence can establish an observation, candidate, identity, or bounded comparison. Promotion to provider authority, composition, target population, activation, or acceptance requires the applicable current contract and accepted decision.
 
-The proposed assurance-depth policy is in [`../decisions/0005-proportional-assurance-depth.md`](../decisions/0005-proportional-assurance-depth.md).
+The accepted assurance-depth policy is in [`../decisions/0005-proportional-assurance-depth.md`](../decisions/0005-proportional-assurance-depth.md).
+
+The current provider claim inventory and SUP-02 reclassification are in [`provider-claim-classification.md`](provider-claim-classification.md).

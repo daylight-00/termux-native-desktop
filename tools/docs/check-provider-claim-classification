@@ -1,0 +1,155 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+TMP_BASE=${TND_TEST_TMPDIR:-${TMPDIR:-$ROOT/.tmp}}
+mkdir -p "$TMP_BASE"
+TMP=$(mktemp -d "$TMP_BASE/provider-claim-check.XXXXXX")
+cleanup() { chmod -R u+w "$TMP" 2>/dev/null || true; rm -rf "$TMP"; }
+trap cleanup EXIT HUP INT TERM
+
+required=(
+  docs/evidence/provider-claim-classification.md
+  experiments/glibc/selected-obsidian-provider-authority/recipe/generate-provider-claim-classification.py
+  experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/provider-sup-02-request-disposition.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification-metadata.tsv
+)
+for rel in "${required[@]}"; do
+  [ -f "$ROOT/$rel" ] || { echo "provider-claim-classification: FAIL: missing $rel" >&2; exit 1; }
+done
+
+python3 "$ROOT/experiments/glibc/selected-obsidian-provider-authority/recipe/generate-provider-claim-classification.py" \
+  --repo-root "$ROOT" --output-root "$TMP"
+for rel in \
+  experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification.tsv \
+  experiments/glibc/selected-obsidian-provider-authority/review/provider-sup-02-request-disposition.tsv \
+  experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification-metadata.tsv
+do
+  cmp "$ROOT/$rel" "$TMP/$rel" >/dev/null || {
+    echo "provider-claim-classification: FAIL: generated output drift: $rel" >&2
+    exit 1
+  }
+done
+
+python3 - "$ROOT" <<'PY'
+from pathlib import Path
+import csv, sys
+from collections import Counter, defaultdict
+
+root = Path(sys.argv[1])
+review = root / 'experiments/glibc/selected-obsidian-provider-authority/review'
+
+def read(name):
+    with (review/name).open(newline='', encoding='utf-8') as fh:
+        return list(csv.DictReader(fh, delimiter='\t'))
+
+claims = read('provider-claim-classification.tsv')
+dispositions = read('provider-sup-02-request-disposition.tsv')
+roots = read('generic-build-attestation-adaptation-root-review-set.tsv')
+requests = read('generic-build-attestation-adaptation-gap-evidence-supply-batch-sup-02-custodian-export-requests.tsv')
+metadata = {row['key']: row['value'] for row in read('provider-claim-classification-metadata.tsv')}
+
+errors=[]
+expected_meta={
+    'root_count':'28','object_count':'37','claim_count':'89',
+    'artifact_identity_claim_count':'28','adaptation_claim_count':'28',
+    'provider_authority_claim_count':'28','object_requirement_claim_count':'1',
+    'global_claim_count':'4','class_a_claim_count':'36','class_b_claim_count':'49',
+    'class_c_claim_count':'1','class_d_claim_count':'3','sup02_request_count':'28',
+    'sup02_still_necessary_count':'0','sup02_narrowed_count':'14',
+    'sup02_replaced_count':'7','sup02_unnecessary_count':'7','authority_effect':'NONE',
+    'next_review_tranche':'SEVEN_NO_TOKEN_ROOTS',
+}
+for key,val in expected_meta.items():
+    if metadata.get(key)!=val:
+        errors.append(f'metadata {key}: expected {val}, got {metadata.get(key)!r}')
+
+ids=[row['claim_id'] for row in claims]
+if len(ids)!=len(set(ids)):
+    errors.append('claim_id values are not unique')
+if len(claims)!=89:
+    errors.append(f'expected 89 claims, found {len(claims)}')
+
+allowed_types={'ARTIFACT_IDENTITY','ADAPTATION_SEMANTICS','PROVIDER_AUTHORITY','OBJECT_REQUIREMENT_IDENTITY','BUILD_PROVENANCE','COMPOSITION','TARGET_POPULATION','ACTIVATION'}
+allowed_classes={'A','B','C','D'}
+for row in claims:
+    if row['claim_type'] not in allowed_types:
+        errors.append(f"{row['claim_id']}: invalid claim_type {row['claim_type']}")
+    if row['adr_class'] not in allowed_classes:
+        errors.append(f"{row['claim_id']}: invalid adr_class {row['adr_class']}")
+    for field in ['project_owned_changed_boundary','remaining_gap','minimum_closure_action','authority_effect','prohibited_inference']:
+        if not row[field]: errors.append(f"{row['claim_id']}: empty {field}")
+    if 'ACCEPTED' in row['authority_effect'] or row['authority_effect'] in {'PROVIDER_AUTHORITY','TARGET_POPULATION','ACTIVATION'}:
+        errors.append(f"{row['claim_id']}: classification has authority effect")
+
+by_subject=defaultdict(dict)
+for row in claims:
+    if row['subject_kind']=='ROOT':
+        by_subject[row['subject_id']][row['claim_type']]=row
+root_by_id={r['root_review_id']:r for r in roots}
+if set(by_subject)!=set(root_by_id):
+    errors.append('root claim subjects do not exactly match 28 canonical roots')
+for rid, source in root_by_id.items():
+    group=by_subject.get(rid,{})
+    if set(group)!={'ARTIFACT_IDENTITY','ADAPTATION_SEMANTICS','PROVIDER_AUTHORITY'}:
+        errors.append(f'{rid}: expected exactly three separated root claims')
+        continue
+    if group['ARTIFACT_IDENTITY']['adr_class']!='A':
+        errors.append(f'{rid}: artifact identity is not class A')
+    expected_adapt='A' if source['adaptation_evidence_tokens']=='NONE_DECLARED' else 'B'
+    if group['ADAPTATION_SEMANTICS']['adr_class']!=expected_adapt:
+        errors.append(f'{rid}: adaptation class mismatch')
+    if group['PROVIDER_AUTHORITY']['adr_class']!='B':
+        errors.append(f'{rid}: provider authority is not class B')
+
+ctype=Counter(r['claim_type'] for r in claims)
+want_types={'ARTIFACT_IDENTITY':28,'ADAPTATION_SEMANTICS':28,'PROVIDER_AUTHORITY':28,'OBJECT_REQUIREMENT_IDENTITY':1,'BUILD_PROVENANCE':1,'COMPOSITION':1,'TARGET_POPULATION':1,'ACTIVATION':1}
+if ctype!=Counter(want_types):
+    errors.append(f'claim type counts differ: {dict(ctype)}')
+classes=Counter(r['adr_class'] for r in claims)
+if classes!=Counter({'A':36,'B':49,'C':1,'D':3}):
+    errors.append(f'class counts differ: {dict(classes)}')
+
+request_ids={r['request_id'] for r in requests}
+disposition_ids=[r['request_id'] for r in dispositions]
+if len(disposition_ids)!=len(set(disposition_ids)):
+    errors.append('SUP-02 request disposition IDs are not unique')
+if set(disposition_ids)!=request_ids:
+    errors.append('SUP-02 dispositions do not exactly cover canonical requests')
+counts=Counter(r['disposition'] for r in dispositions)
+if counts!=Counter({'NARROWED':14,'REPLACED':7,'UNNECESSARY':7}):
+    errors.append(f'SUP-02 disposition counts differ: {dict(counts)}')
+for row in dispositions:
+    if row['required_now']!='NO':
+        errors.append(f"{row['request_id']}: required_now must remain NO")
+    if row['disposition']=='STILL_NECESSARY':
+        errors.append(f"{row['request_id']}: blanket still-necessary disposition reintroduced")
+    if row['authority_effect']!='REQUEST_RECLASSIFICATION_ONLY_NO_EVIDENCE_OR_AUTHORITY_EFFECT':
+        errors.append(f"{row['request_id']}: unexpected authority effect")
+
+state=(root/'docs/current/STATE.yaml').read_text()
+active=(root/'docs/current/ACTIVE_TASK.md').read_text()
+brief=(root/'docs/current/BRIEF.md').read_text()
+catalog=(root/'docs/catalog.tsv').read_text()
+status=(root/'STATUS.md').read_text()
+checks=[
+    ('state version','state_version: 2026-07-15.06' in state),
+    ('claim count state','total: 89' in state),
+    ('SUP-02 state','required_now: 0' in state),
+    ('next task','Task ID: `review-no-token-reference-consumed-roots`' in active),
+    ('brief classification','89 separated claims' in brief),
+    ('catalog row','provider-claim-classification\tevidence\tcurrent\tcanonical' in catalog),
+    ('status next phase','REVIEW_SEVEN_NO_TOKEN_REFERENCE_CONSUMED_ROOTS' in status),
+]
+for label,ok in checks:
+    if not ok: errors.append(f'missing current-state marker: {label}')
+
+if errors:
+    for err in errors:
+        print('provider-claim-classification: FAIL:',err,file=sys.stderr)
+    raise SystemExit(1)
+print('provider-claim-classification: PASS: 89 claims and 28 SUP-02 dispositions are coherent')
+PY
+
+echo 'provider-claim-classification: all checks passed'
