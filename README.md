@@ -120,22 +120,19 @@ Not every experiment helper becomes a permanent active test.
 
 ## Documentation guide
 
-- [`START_HERE.md`](START_HERE.md) — agent/session initialization and reading order.
+- [`START_HERE.md`](START_HERE.md) — bundle-native agent/session initialization.
 - [`AGENTS.md`](AGENTS.md) — durable project-agent contract.
-- [`docs/INDEX.md`](docs/INDEX.md) — question-oriented documentation router.
-- [`docs/current/BRIEF.md`](docs/current/BRIEF.md) — compact current semantic state.
-- [`docs/current/ACTIVE_TASK.md`](docs/current/ACTIVE_TASK.md) — current bounded work and required reading.
-- [`docs/PROJECT_CONTEXT.md`](docs/PROJECT_CONTEXT.md) — motivation and scope.
-- [`docs/architecture.md`](docs/architecture.md) — current operational realization and target semantic model.
-- [`docs/glibc-layer.md`](docs/glibc-layer.md) — current compatibility baseline, application-domain target, and lifecycle boundaries.
-- [`docs/gpu.md`](docs/gpu.md) — current graphics composition and evidence contract.
-- [`docs/desktop-session.md`](docs/desktop-session.md) — Termux:X11/XFCE two-world session contract.
-- [`docs/refactor/README.md`](docs/refactor/README.md) — chronological refactor/evidence index and precedence.
-- [`docs/refactor/0091-scoped-graphics-policy-promotion-closure.md`](docs/refactor/0091-scoped-graphics-policy-promotion-closure.md) — closed graphics transaction.
-- [`docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md`](docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md) — current top-down audit, missing work, and revised priority.
-- [`experiments/README.md`](experiments/README.md) — experiment status and provenance contract.
+- [`docs/DOCUMENTATION_MODEL.md`](docs/DOCUMENTATION_MODEL.md) — authority classes, lifecycle, conflict handling, and context budget.
+- [`docs/INDEX.md`](docs/INDEX.md) — question-oriented router.
+- [`docs/current/`](docs/current/) — current semantic state and active task.
+- [`docs/constitution/`](docs/constitution/) — project purpose and invariants.
+- [`docs/architecture/`](docs/architecture/) — current system and component contracts.
+- [`docs/operations/`](docs/operations/) — collaboration, tool, and platform contracts.
+- [`docs/decisions/`](docs/decisions/) — durable decision lifecycle.
+- [`docs/evidence/`](docs/evidence/) — experiment and transaction evidence routing.
+- [`docs/history/`](docs/history/) — chronology and old-state reconstruction.
 
-Top-down foundation documents live in this canonical tree under `docs/system-foundation/`.
+Historical numbered records and dated handoffs remain available but are not default onboarding material.
 
 ## Immediate work order
 

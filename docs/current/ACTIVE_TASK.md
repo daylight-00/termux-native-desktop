@@ -1,71 +1,70 @@
-# Active task: consolidate documentation authority and structure
 
-> Task ID: `documentation-structure-consolidation`
+# Active task: consolidate the constitution and decide assurance depth
+
+> Task ID: `constitution-consolidation-and-assurance-decision`
 >
-> Expected state on completion: the repository has an agreed durable/current/history documentation model, a bounded default onboarding set and an explicit decision surface for proportional assurance depth.
+> Expected state on completion: the project has a compact, non-overlapping constitutional surface; the system-foundation lifecycle is explicit; and ADR 0005 is accepted, revised, rejected, or replaced through an explicit decision.
 
 ## Objective
 
-Design and implement the next bounded documentation reorganization so project philosophy, current state, architecture, operating rules, decisions, evidence and history have unambiguous authority and routing.
+Consolidate the durable project identity and invariant documents, then review the proposed proportional assurance-depth policy before any provider-authority evidence campaign resumes.
 
 ## Why now
 
-Bundle-native onboarding and current-authority synchronization are complete. The remaining documents are still numerous and partly overlapping. Without a deliberate authority model, later agents may load superseded foundation assessments or reconstruct the project from transaction history instead of current contracts.
+The logical documentation authority model and question-based routers are in place. The remaining high-value overlap is concentrated among project context, project principles, the system-foundation series, and the agent contract. Leaving those as partially overlapping canonical sources would still force future agents to reconstruct precedence.
 
-The paused provider-authority workstream also exposed a missing policy: how much assurance is justified when following a reference path versus adapting, independently reproducing or inventing a provider.
+The paused provider-authority workstream also needs an explicit decision on assurance depth rather than another evidence-producing transaction by inertia.
 
 ## Current accepted decisions
 
 - Web-chat sessions start from a user-provided full Git bundle and `START_HERE.md`.
 - `docs/current/` owns current semantic state and the active task.
-- Narrative handoffs are historical evidence only.
+- `docs/DOCUMENTATION_MODEL.md` defines the logical authority and lifecycle classes.
+- `docs/catalog.tsv` identifies canonical routers and key documents.
+- Historical refactor and handoff records are excluded from default onboarding.
 - `main` is the sole intended long-lived branch.
 - Repository deployment is immutable and explicitly activated.
 - Mesa mutable workspace and provider candidates are owned under XDG state.
 - The provider-authority workstream remains paused at the 0165 no-response boundary.
+- ADR 0005 is proposed, not accepted.
 
 ## In scope
 
-- Define a concise documentation authority model covering constitution, current state, architecture, operations, decisions, evidence, history and knowledge.
-- Decide whether physical moves are needed or whether indexes/status metadata are sufficient.
-- Consolidate overlapping project-essence and system-foundation material without losing provenance.
-- Add status metadata or indexes for accepted, superseded and historical decisions/documents.
-- Define a bounded default onboarding reading set and context-budget expectations.
-- Draft the proportional assurance-depth policy and its relation to reference, adapted, reproduced and novel paths.
-- Add machine-checkable rules that prevent current and historical authority from being mixed again.
+- Map overlap among `PROJECT_CONTEXT.md`, `PROJECT_PRINCIPLES.md`, `AGENTS.md`, and system-foundation documents 01-05 and 11-12.
+- Define the smallest compact constitutional surface that preserves project purpose, invariants, evidence philosophy, and agent authority.
+- Classify system-foundation 06-10 as historical planning/assessment material without rewriting it.
+- Review ADR 0005 class definitions, risk modifiers, stop rules, and provider-workstream consequences.
+- Accept, revise, reject, or replace ADR 0005 explicitly.
+- Prepare or implement bounded physical moves only with complete link migration and repository checks.
+- Further reduce default and task-specific reading where consolidation makes that possible.
 
 ## Out of scope
 
-- Rewriting 0001–0165 transaction records.
-- Moving every experiment report in one transaction.
-- Resuming SUP-02 evidence acquisition or producing supplier responses.
-- Device runtime, graphics or application testing.
-- Provider target population, extraction or selected-generation activation.
+- Rewriting numbered refactor records or experiment reports.
+- Moving all architecture, operations, evidence, or history documents at once.
+- Resuming SUP-02 acquisition or producing supplier responses.
+- Accepting provider authority, composition, target population, or activation.
+- Device runtime, graphics, or application testing.
 - Adopting Codex or Claude Code as the current execution environment.
 
 ## Required reading
 
-- `docs/current/BRIEF.md`
 - `docs/current/STATE.yaml`
-- `AGENTS.md`
-- `docs/INDEX.md`
-- `docs/PROJECT_CONTEXT.md`
-- `docs/PROJECT_PRINCIPLES.md`
-- `docs/system-foundation/README.md`
+- `docs/DOCUMENTATION_MODEL.md`
+- `docs/constitution/README.md`
+- `docs/decisions/0005-proportional-assurance-depth.md`
 - `docs/system-foundation/11-architecture-reassessment-and-hard-refactor-decision.md`
 - `docs/system-foundation/12-document-consistency-audit-and-execution-order.md`
-- `docs/architecture.md`
-- `docs/decisions/README.md`
-- `docs/session-operations/README.md`
 
-Do not read all numbered refactor records or experiment reports. Open a specific historical source only to resolve a concrete provenance question encountered during consolidation.
+Do not read all foundation, refactor, or experiment records. Open an older source only to resolve a specific overlap or provenance question.
 
 ## Known facts
 
-- Current-facing branch, deployment, local-layout and session-operation documents have been synchronized.
-- Historical documents intentionally retain old paths and old branch names where they describe past facts.
-- The document corpus is large enough that default onboarding must be routed rather than exhaustive.
-- Full Git bundle transport gives the web-chat sandbox ordinary Git objects and a working tree; GitHub raw-content reconstruction is unnecessary and undesirable.
+- Logical routing is complete without moving the historical corpus.
+- The default onboarding set is four files, within the enforced line and word budget.
+- System-foundation 01-05 are durable design sources; 06-10 describe an earlier assessment and plan; 11-12 reinterpret the series after later evidence.
+- ADR 0005 currently has no authority effect.
+- Full Git bundle transport gives the web-chat sandbox ordinary Git objects and a working tree.
 
 ## Pending external inputs
 
@@ -73,22 +72,23 @@ None. See [`PENDING_ARTIFACTS.yaml`](PENDING_ARTIFACTS.yaml).
 
 ## Next valid action
 
-Produce a proposed documentation authority matrix and target tree, map every existing document class into it, and identify the smallest first physical reorganization that improves routing without breaking historical links unnecessarily.
+Review the proposed assurance classes and risk modifiers against the project’s reference-first philosophy, then produce an explicit constitutional target map showing which current sources remain canonical, which are consolidated, and which become historical design provenance.
 
 ## Stop conditions
 
 Stop before implementation if:
 
-- the proposal requires destructive rewriting of evidence history;
-- a move would create more broken links than the routing benefit justifies without an automated migration plan;
-- the assurance policy would silently accept or reject provider authority rather than defining evidence depth;
-- the initial onboarding set exceeds its intended bounded context without a clear justification.
+- the constitutional target would erase important project motivation or evidence principles;
+- ADR 0005 would silently accept or reject a provider rather than define evidence depth;
+- a physical move lacks complete inbound-link migration and a repository-wide link check;
+- the result creates two competing canonical copies;
+- the required-reading set expands rather than contracts without a concrete reason.
 
 ## Completion criteria
 
-- Every document class has one explicit authority and lifecycle role.
-- Current, superseded and historical material are mechanically distinguishable.
-- A new web-chat agent can find needed documents by question without scanning the corpus.
-- The default onboarding set remains small and excludes unrelated history.
-- Assurance depth has an explicit draft decision surface tied to deviation and risk.
+- Project purpose, invariants, evidence philosophy, and agent authority each have one canonical home.
+- System-foundation lifecycle and precedence are mechanically clear.
+- ADR 0005 has an explicit final status and rationale.
+- The provider-authority next action follows from the accepted policy rather than historical momentum.
+- Default onboarding remains bounded and history-free.
 - The next implementation phase is repository-owned and does not depend on chat memory.

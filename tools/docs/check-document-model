@@ -1,0 +1,183 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+
+python3 - "$ROOT" <<'PY'
+from __future__ import annotations
+
+import csv
+import re
+import sys
+from pathlib import Path
+
+root = Path(sys.argv[1]).resolve()
+catalog_path = root / 'docs/catalog.tsv'
+errors: list[str] = []
+
+if not catalog_path.is_file():
+    raise SystemExit('document-model: FAIL: docs/catalog.tsv is missing')
+
+expected_header = [
+    'document_id', 'class', 'status', 'authority',
+    'default_onboarding', 'path', 'purpose',
+]
+allowed_classes = {
+    'routing', 'current', 'constitution', 'governance', 'architecture',
+    'operations', 'decisions', 'evidence', 'history', 'knowledge',
+}
+allowed_statuses = {
+    'current', 'accepted', 'proposed', 'superseded',
+    'historical', 'evidence', 'reference', 'mixed',
+}
+allowed_authorities = {
+    'canonical', 'source-index', 'operational', 'history',
+    'review', 'reference',
+}
+
+with catalog_path.open(newline='') as fh:
+    reader = csv.DictReader(fh, delimiter='\t')
+    if reader.fieldnames != expected_header:
+        errors.append(
+            f'catalog header mismatch: expected {expected_header!r}, got {reader.fieldnames!r}'
+        )
+    rows = list(reader)
+
+ids: set[str] = set()
+paths: set[str] = set()
+for line_no, row in enumerate(rows, start=2):
+    doc_id = row.get('document_id', '')
+    cls = row.get('class', '')
+    status = row.get('status', '')
+    authority = row.get('authority', '')
+    default = row.get('default_onboarding', '')
+    rel = row.get('path', '')
+    purpose = row.get('purpose', '')
+
+    if not doc_id or not re.fullmatch(r'[a-z0-9][a-z0-9-]*', doc_id):
+        errors.append(f'line {line_no}: invalid document_id {doc_id!r}')
+    elif doc_id in ids:
+        errors.append(f'line {line_no}: duplicate document_id {doc_id!r}')
+    ids.add(doc_id)
+
+    if cls not in allowed_classes:
+        errors.append(f'line {line_no}: invalid class {cls!r}')
+    if status not in allowed_statuses:
+        errors.append(f'line {line_no}: invalid status {status!r}')
+    if authority not in allowed_authorities:
+        errors.append(f'line {line_no}: invalid authority {authority!r}')
+    if default not in {'yes', 'no'}:
+        errors.append(f'line {line_no}: invalid default_onboarding {default!r}')
+    if not purpose:
+        errors.append(f'line {line_no}: purpose is empty')
+
+    if not rel or rel.startswith('/') or '..' in Path(rel).parts:
+        errors.append(f'line {line_no}: unsafe path {rel!r}')
+    else:
+        target = root / rel
+        if not target.exists():
+            errors.append(f'line {line_no}: missing target {rel!r}')
+        if rel in paths:
+            errors.append(f'line {line_no}: duplicate path {rel!r}')
+        paths.add(rel)
+
+expected_defaults = {
+    'start-here', 'agent-contract', 'current-brief', 'active-task',
+}
+default_rows = [row for row in rows if row['default_onboarding'] == 'yes']
+default_ids = {row['document_id'] for row in default_rows}
+if default_ids != expected_defaults:
+    errors.append(
+        f'default onboarding ids mismatch: expected {sorted(expected_defaults)}, '
+        f'got {sorted(default_ids)}'
+    )
+if len(default_rows) != 4:
+    errors.append(f'default onboarding must contain exactly 4 files, got {len(default_rows)}')
+
+line_count = 0
+word_count = 0
+for row in default_rows:
+    text = (root / row['path']).read_text(errors='replace')
+    line_count += len(text.splitlines())
+    word_count += len(text.split())
+    if row['class'] in {'history', 'evidence'} or row['status'] in {'historical', 'evidence'}:
+        errors.append(f'historical/evidence document is default onboarding: {row["path"]}')
+
+if line_count > 450:
+    errors.append(f'default onboarding line budget exceeded: {line_count} > 450')
+if word_count > 3500:
+    errors.append(f'default onboarding word budget exceeded: {word_count} > 3500')
+
+active_task = root / 'docs/current/ACTIVE_TASK.md'
+text = active_task.read_text(errors='replace')
+required_block = re.search(
+    r'^## Required reading\s*$\n(?P<body>.*?)(?=^## |\Z)',
+    text,
+    flags=re.M | re.S,
+)
+if not required_block:
+    errors.append('ACTIVE_TASK.md has no Required reading block')
+else:
+    required = re.findall(r'^- `([^`]+)`\s*$', required_block.group('body'), flags=re.M)
+    if len(required) > 8:
+        errors.append(f'active-task required reading exceeds 8 documents: {len(required)}')
+    if len(required) != len(set(required)):
+        errors.append('active-task required reading contains duplicates')
+    for rel in required:
+        if not (root / rel).exists():
+            errors.append(f'active-task required-reading target is missing: {rel}')
+        row = next((r for r in rows if r['path'] == rel), None)
+        if row and row['status'] == 'historical':
+            errors.append(f'active-task loads historical document without an explicit evidence rationale: {rel}')
+
+required_router_ids = {
+    'constitution-index', 'architecture-index', 'operations-index',
+    'decision-index', 'evidence-index', 'history-index', 'knowledge-index',
+}
+missing_router_ids = sorted(required_router_ids - ids)
+if missing_router_ids:
+    errors.append(f'missing router catalog ids: {missing_router_ids}')
+
+model_text = (root / 'docs/DOCUMENTATION_MODEL.md').read_text(errors='replace')
+for phrase in [
+    'maximum default-onboarding files: 4',
+    'maximum combined lines: 450',
+    'maximum combined words: 3500',
+    'historical files loaded by default: 0',
+]:
+    if phrase not in model_text:
+        errors.append(f'DOCUMENTATION_MODEL.md lacks budget statement: {phrase}')
+
+# Validate all local Markdown links repository-wide. Ignore generated/vendor trees
+# because this repository stores only project-authored Markdown in tracked paths.
+link_pattern = re.compile(r'\[[^\]]*\]\(([^)]+)\)')
+for path in root.rglob('*.md'):
+    if '.git' in path.parts:
+        continue
+    rel_source = path.relative_to(root)
+    for target in link_pattern.findall(path.read_text(errors='replace')):
+        target = target.strip()
+        if not target or target.startswith(('#', 'http://', 'https://', 'mailto:')):
+            continue
+        target = target.split('#', 1)[0]
+        if not target:
+            continue
+        resolved = (path.parent / target).resolve()
+        try:
+            resolved.relative_to(root)
+        except ValueError:
+            errors.append(f'{rel_source}: link escapes repository: {target}')
+            continue
+        if not resolved.exists():
+            errors.append(f'{rel_source}: missing link target: {target}')
+
+if errors:
+    for error in errors:
+        print(f'document-model: FAIL: {error}', file=sys.stderr)
+    raise SystemExit(1)
+
+print(f'document-model: PASS: {len(rows)} catalog rows')
+print(f'document-model: PASS: default onboarding {len(default_rows)} files, {line_count} lines, {word_count} words')
+print('document-model: PASS: required-reading and router constraints')
+print('document-model: PASS: repository Markdown links resolve')
+PY

@@ -1,6 +1,6 @@
 # Status
 
-> **State:** bundle-native documentation control plane active; current-facing authority synchronized with `main`, immutable deployment and XDG-state Mesa ownership; provider-authority workstream paused at the bounded 0165 SUP-02 no-response boundary pending proportional assurance-depth policy
+> **State:** bundle-native documentation control plane active; current-facing authority synchronized; logical documentation authority model and question routers installed; ADR 0005 proposed for proportional assurance depth; provider-authority workstream paused at the bounded 0165 SUP-02 no-response boundary
 > **Updated:** 2026-07-15
 
 ## Repository and deployment consolidation
@@ -321,23 +321,23 @@ AUTH-010 exact application payload supply, named supplement membership and relea
 ## Next valid state
 
 ```text
-CONSOLIDATE_DOCUMENTATION_AUTHORITY_AND_DEFINE_ASSURANCE_DEPTH
+CONSOLIDATE_CONSTITUTION_AND_DECIDE_ASSURANCE_DEPTH
 ```
 
 Active task:
 
 ```text
-DOCUMENTATION_STRUCTURE_CONSOLIDATION
+CONSTITUTION_CONSOLIDATION_AND_ASSURANCE_DECISION
 ```
 
 Required order:
 
 ```text
-1. keep bundle-native initialization and docs/current/ as the current authority surface;
-2. classify durable, current, superseded and historical documentation without rewriting evidence history;
-3. consolidate project essence, architecture and decision routing so a new agent loads only relevant current material;
-4. define proportional assurance depth for reference, adapted, independently reproduced and novel providers;
-5. explicitly decide whether the paused provider-authority workstream should resume, narrow or terminate;
+1. keep the installed documentation model, catalog and bundle-native current-state surface authoritative;
+2. consolidate project context, principles, agent invariants and foundation precedence into one compact constitutional surface;
+3. review proposed ADR 0005 and explicitly accept, revise, reject or replace it;
+4. keep system-foundation 06-10 and the numbered work log as historical source material rather than default onboarding;
+5. derive the provider-authority next action from the decided assurance policy;
 6. only then issue or fulfill further evidence requests;
 7. define ApplicationRuntimeComposition only after owning authorities are accepted;
 8. populate target rows and implement materialization only after composition acceptance and intervention-lift review.

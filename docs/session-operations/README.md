@@ -1,5 +1,7 @@
 # Session operations
 
+Canonical operations routing: [`../operations/README.md`](../operations/README.md).
+
 This directory records durable collaboration and execution rules for recurring web-chat sessions. Current project state does **not** live here; it is owned by [`../current/`](../current/).
 
 ## Normal web-chat start

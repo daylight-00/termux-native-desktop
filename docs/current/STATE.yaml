@@ -1,5 +1,5 @@
 schema_version: 1
-state_version: 2026-07-15.02
+state_version: 2026-07-15.03
 updated_on: 2026-07-15
 
 project:
@@ -24,6 +24,14 @@ local_layout:
   mesa_provider_store: xdg-state-provider-store
   legacy_gl_build_and_opt: compatibility-paths-only
 
+documentation:
+  authority_model: docs/DOCUMENTATION_MODEL.md
+  catalog: docs/catalog.tsv
+  default_onboarding_files: 4
+  default_history_files: 0
+  physical_reorganization: deferred-until-canonical-consolidation
+  assurance_depth_decision: proposed-adr-0005
+
 provider_authority:
   workstream: paused
   boundary: sup-02-producer-implemented-no-canonical-response
@@ -35,7 +43,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: documentation-structure-consolidation
+  id: constitution-consolidation-and-assurance-decision
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:

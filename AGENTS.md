@@ -44,9 +44,9 @@ ACTIVE_TASK required-reading list
 applicable platform profile
 ```
 
-Use `docs/INDEX.md` to locate deeper material.
+Use `docs/INDEX.md` to locate deeper material. [`docs/DOCUMENTATION_MODEL.md`](docs/DOCUMENTATION_MODEL.md) defines authority by question, lifecycle states, conflict handling, and the machine-readable catalog.
 
-Current semantic state is owned by `docs/current/`. Durable architecture and decisions support that state. Experiment reports and numbered refactor records preserve evidence and history; they are not default onboarding material.
+Current semantic state is owned by `docs/current/`. Durable architecture and decisions support that state. Experiment reports and numbered refactor records preserve evidence and history; they are not default onboarding material. A proposed decision has no authority effect until explicitly accepted.
 
 A dated handoff is never current authority. Historical handoffs may be consulted only when a task requires reconstruction of a specific transition.
 
@@ -56,6 +56,8 @@ A dated handoff is never current authority. Historical handoffs may be consulted
 - Do not load `docs/refactor/`, dated handoffs, or large experiment reports by default.
 - Read historical evidence only when a current document cites a specific unresolved claim or the active task explicitly requests historical reconstruction.
 - Do not read session-close instructions during normal onboarding or active research.
+- Keep default onboarding within the cataloged four-file budget; active-task required reading may contain at most eight documents.
+- A platform profile is loaded when platform-specific transport, exchange, or execution becomes relevant, not merely because the platform exists.
 - When a current document conflicts with an older document, record the conflict and follow the explicit current authority until it is repaired.
 - Reusable lessons belong in durable operations or architecture documents, not only in chat narrative.
 

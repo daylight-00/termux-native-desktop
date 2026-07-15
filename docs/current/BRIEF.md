@@ -1,30 +1,30 @@
+
 # Current project brief
 
-> Semantic state version: `2026-07-15.02`
+> Semantic state version: `2026-07-15.03`
 >
 > This document is the compact current-state entry point. Exact commit and tree coordinates come from the checked-out Git bundle, not from self-referential text in the repository.
 
 ## Purpose
 
-`termux-native-desktop` is an active systems-engineering project for turning a stock, non-root Android phone into a practical native Termux research and development workstation. It keeps the Android/Termux host authoritative while composing explicit glibc application worlds, graphics providers, bridges, application domains and promotion evidence.
+`termux-native-desktop` is an active systems-engineering project for turning a stock, non-root Android phone into a practical native Termux research and development workstation. It keeps the Android/Termux host authoritative while composing explicit glibc application worlds, graphics providers, bridges, application domains, and promotion evidence.
 
-PRoot and Debian remain useful as oracle, dependency solver, supply source, artifact warehouse and debugging control. They are excluded from the normal application runtime baseline.
+PRoot and Debian remain useful as oracle, dependency solver, supply source, artifact warehouse, and debugging control. They are excluded from the normal application runtime baseline.
 
 ## Current structural state
 
 - `main` is the only intended long-lived integration branch.
 - The canonical checkout is `$HOME/projects/termux-native-desktop`.
 - The checkout is authoring state, not live runtime authority.
-- Repository deployment materializes immutable releases under XDG state and activates them through a stable `current` pointer with a retained `previous` pointer.
+- Repository deployment materializes immutable releases under XDG state and activates them through stable `current` and retained `previous` pointers.
 - The historical `$HOME/gl/.git` authority is retired and preserved in safety artifacts.
-- Mutable Mesa source/build state lives under the XDG-state workspace.
-- Versioned Mesa provider candidates and the active provider pointer live under the XDG-state provider store.
+- Mutable Mesa source/build state and versioned providers are separated under XDG state.
 - Legacy `$HOME/gl/build` and `$HOME/gl/opt` coordinates are compatibility paths, not canonical ownership.
-- VS Code and Obsidian application bodies, selected generations, user data and provider contents remain outside repository ownership and were preserved through the migration.
+- VS Code and Obsidian application bodies, selected generations, user data, and provider contents remain outside repository ownership.
 
 ## Current research boundary
 
-The provider-authority workstream is paused at a bounded boundary:
+The provider-authority workstream remains paused:
 
 ```text
 SUP-02 producer implemented
@@ -34,36 +34,45 @@ no build-attestation/adaptation closure accepted
 no provider/composition/target-layout completion accepted
 ```
 
-The project must decide how much assurance is appropriate for reference-supplied, adapted, independently reproduced and novel providers before additional evidence production resumes. Evidence depth should be proportional to deviation, uncertainty and consequence rather than expanding automatically.
+The project must decide how much assurance is appropriate for reference-consumed, reference-adapted, independently reproduced, and novel paths before additional evidence production resumes.
 
-## Documentation and session state
+[`../decisions/0005-proportional-assurance-depth.md`](../decisions/0005-proportional-assurance-depth.md) is a proposed policy only. It has no provider, target-population, or activation effect.
 
-The current-facing documents agree on:
+## Documentation authority state
+
+The repository now has a canonical logical documentation model:
 
 ```text
-bundle-native web-session initialization
-repository-owned START_HERE routing
-main-only long-lived branch policy
-immutable repository deployment
-XDG-state Mesa workspace/provider ownership
-historical-only narrative handoffs
-paused provider-authority boundary
+current
+constitution
+architecture
+operations
+decisions
+evidence
+history
+knowledge
 ```
 
-A new web-chat session receives a user-created full Git bundle, clones it in the sandbox and uses repository documents rather than previous chat memory.
+- [`../DOCUMENTATION_MODEL.md`](../DOCUMENTATION_MODEL.md) defines authority, lifecycle, conflict handling, and context budgets.
+- [`../catalog.tsv`](../catalog.tsv) is the machine-readable catalog of canonical routers and key authority documents.
+- Canonical routers exist for constitution, architecture, operations, evidence, and history.
+- The large historical corpus has not been physically moved; its current classification is inherited from its directory indexes.
+- Narrative handoffs remain historical only.
+
+Default onboarding remains bounded to four files and loads no history.
 
 ## Current project phase
 
-The documentation control plane remains active. The next task is to consolidate document authority and structure without destructively rewriting evidence history.
+The next bounded task is to consolidate the overlapping constitutional surface and decide the proposed assurance-depth policy.
 
-The task will:
+It will:
 
 ```text
-clarify durable constitution versus current state versus history
-make superseded decisions and assessments explicit
-improve question-based document routing
-prepare a proportional assurance-depth decision surface
-keep initial onboarding context bounded
+review ADR 0005 without silently accepting it
+consolidate project context, principles, and foundation precedence
+separate durable constitution from historical design assessment
+prepare any physical moves with automated link migration
+keep the provider-authority workstream paused until the policy decision
 ```
 
 ## Current non-goals
@@ -75,12 +84,14 @@ Do not currently:
 - activate the selected Obsidian generation;
 - redesign the runtime around Docker or a PRoot application baseline;
 - reconstruct the repository through raw GitHub connector reads;
-- move or rewrite all historical records before the authority structure is agreed.
+- move or rewrite the entire historical corpus;
+- treat proposed ADR 0005 as accepted.
 
 ## Start and navigation
 
 - Active task: [`ACTIVE_TASK.md`](ACTIVE_TASK.md)
 - Machine state: [`STATE.yaml`](STATE.yaml)
 - Pending external inputs: [`PENDING_ARTIFACTS.yaml`](PENDING_ARTIFACTS.yaml)
+- Documentation authority model: [`../DOCUMENTATION_MODEL.md`](../DOCUMENTATION_MODEL.md)
 - Documentation router: [`../INDEX.md`](../INDEX.md)
 - Project agent contract: [`../../AGENTS.md`](../../AGENTS.md)

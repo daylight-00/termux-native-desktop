@@ -1,12 +1,33 @@
+
 # Decision index
 
-Decision records preserve durable choices and their status. Current state remains under `docs/current/`.
+Decision records preserve durable choices and their lifecycle. Current state remains under `docs/current/`.
+
+## Status meanings
+
+```text
+proposed
+    explicit review surface; no authority effect
+
+accepted
+    binding current decision
+
+superseded
+    replaced for current use; retained as provenance
+
+rejected
+    considered and not adopted
+
+historical
+    past decision context without current force
+```
 
 | Decision | Status | Current meaning |
 |---|---|---|
 | [`0001-no-proot-runtime.md`](0001-no-proot-runtime.md) | accepted | PRoot is excluded from normal application execution and retained for bounded oracle/supply/control roles. |
-| [`0002-glibc-core-from-termux-glibc-repo.md`](0002-glibc-core-from-termux-glibc-repo.md) | superseded as a universal sourcing rule | Its protected glibc/X11 observations remain evidence; broad “everything else from Debian” ownership is replaced by role- and provider-specific authority. |
+| [`0002-glibc-core-from-termux-glibc-repo.md`](0002-glibc-core-from-termux-glibc-repo.md) | superseded | Its protected glibc/X11 observations remain evidence; broad “everything else from Debian” ownership is replaced by role- and provider-specific authority. |
 | [`0003-mesa-kmds-msm-kgsl.md`](0003-mesa-kmds-msm-kgsl.md) | accepted / scoped | The validated project Mesa build retains `msm,kgsl`; KGSL is the Android runtime device interface. |
 | [`0004-single-main-and-immutable-release-deployment.md`](0004-single-main-and-immutable-release-deployment.md) | accepted | `main` is the long-lived integration branch and runtime deployment uses immutable releases plus explicit activation. |
+| [`0005-proportional-assurance-depth.md`](0005-proportional-assurance-depth.md) | proposed | Review surface for evidence depth across reference-consumed, reference-adapted, independently reproduced, and novel paths; no provider or target effect. |
 
-A superseded record remains useful historical evidence but must not be applied as current universal policy.
+A proposed decision must never be cited as accepted policy. A superseded record remains useful historical evidence but must not be applied as current universal policy.

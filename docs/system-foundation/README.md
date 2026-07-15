@@ -6,6 +6,20 @@
 >
 > **Precedence note:** `11-architecture-reassessment-and-hard-refactor-decision.md` is the latest architectural reasoning and decision authority. `12-document-consistency-audit-and-execution-order.md` is the current cross-document consistency index and execution-order guide. Where earlier migration documents can be read as requiring preservation of current command names, compatibility facades, the broad farm, or the `gl` umbrella object, documents 11 and 12 take precedence. Preserve validated semantics and evidence, not accidental object identity.
 
+
+## Lifecycle classification
+
+This series is not one uniformly current specification.
+
+| Range | Classification | Current use |
+|---|---|---|
+| `01`-`05` | durable design source | project essence, invariants, system model, object model, and target architecture source material |
+| `06`-`10` | historical assessment and planning | earlier current-state assessment, migration strategy, roadmap, validation model, and open-question snapshot |
+| `11`-`12` | current reassessment and reconciliation source | controls interpretation of the earlier series until the constitutional surface is consolidated |
+| `REFERENCES.md` | reference index | project-local and external source routing |
+
+Do not read the whole series during default onboarding. Select a specific document for a specific constitutional or architecture question through [`../constitution/README.md`](../constitution/README.md).
+
 This documentation set starts above individual implementations. It asks:
 
 > What is the project fundamentally building, which constraints are essential, what system model follows from those constraints, what would an ideal implementation look like, and how should the current system evolve toward it without destroying validated behavior?

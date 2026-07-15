@@ -33,7 +33,7 @@ reject_text() {
 
 require_text STATUS.md 'bundle-native documentation control plane active' 'STATUS declares the documentation control plane'
 require_text STATUS.md 'provider-authority workstream paused' 'STATUS preserves the paused provider boundary'
-require_text STATUS.md 'DOCUMENTATION_STRUCTURE_CONSOLIDATION' 'STATUS names the active documentation task'
+require_text STATUS.md 'CONSTITUTION_CONSOLIDATION_AND_ASSURANCE_DECISION' 'STATUS names the active documentation task'
 require_text docs/architecture.md 'immutable releases' 'architecture describes immutable deployment'
 require_text docs/architecture.md 'Repository deployment rollback and provider rollback are separate authority domains.' 'architecture separates rollback authorities'
 require_text docs/glibc-layer.md 'Repository deployment already uses immutable materialized releases and explicit activation.' 'glibc guide describes explicit activation'
@@ -43,6 +43,9 @@ require_text docs/refactor/README.md 'canonical integration branch:' 'refactor i
 require_text docs/refactor/README.md '0165 SUP-02 response producer implementation' 'refactor index covers the accepted chain through 0165'
 require_text docs/handoff/CURRENT.md 'Historical tombstone' 'old current handoff is a tombstone'
 require_text docs/decisions/0002-glibc-core-from-termux-glibc-repo.md 'Superseded as a universal ownership and sourcing rule.' 'Decision 0002 is explicitly superseded'
+require_text docs/decisions/0005-proportional-assurance-depth.md '- **Status:** proposed' 'Decision 0005 remains explicitly proposed'
+require_text docs/DOCUMENTATION_MODEL.md 'maximum default-onboarding files: 4' 'documentation model bounds default onboarding'
+require_text docs/history/README.md 'History is excluded from default onboarding.' 'history router excludes default onboarding'
 require_text docs/session-operations/SESSION_LIFECYCLE.md 'RECEIVE_FULL_BUNDLE' 'session lifecycle begins from a full bundle'
 require_text docs/session-operations/SESSION_CLOSE.md 'Normal accepted work does not require a narrative handoff.' 'session close removes mandatory handoff creation'
 
@@ -78,7 +81,10 @@ import sys
 root = Path(sys.argv[1])
 files = [
     'README.md', 'STATUS.md', 'START_HERE.md', 'AGENTS.md', 'CLAUDE.md',
-    'docs/README.md', 'docs/INDEX.md',
+    'docs/README.md', 'docs/INDEX.md', 'docs/DOCUMENTATION_MODEL.md',
+    'docs/constitution/README.md', 'docs/architecture/README.md',
+    'docs/operations/README.md', 'docs/evidence/README.md',
+    'docs/history/README.md',
     'docs/current/BRIEF.md', 'docs/current/ACTIVE_TASK.md',
     'docs/architecture.md', 'docs/glibc-layer.md', 'docs/gpu.md',
     'modules/gl/README.md', 'docs/refactor/README.md',

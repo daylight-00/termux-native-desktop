@@ -1,5 +1,7 @@
 # Historical session-transition archive
 
+Canonical history routing: [`../history/README.md`](../history/README.md).
+
 This directory preserves dated records from the former narrative-handoff workflow.
 
 It is not a current-state surface and is not part of default onboarding.

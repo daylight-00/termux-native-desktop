@@ -2,6 +2,10 @@
 
 Date: 2026-06-30 (pilot), reaffirmed 2026-07-04 (project start)
 
+## Status
+
+Accepted.
+
 ## Decision
 proot is banned as a runtime; it is an install-time dependency resolver and
 debug control group only.

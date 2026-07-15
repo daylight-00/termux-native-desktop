@@ -2,6 +2,10 @@
 
 Date: 2026-07-05
 
+## Status
+
+Accepted for the validated Mesa build scope.
+
 ## Decision
 All glibc Mesa builds include the msm KMD alongside kgsl, even though only
 kgsl is used at runtime (/dev/kgsl-3d0, stock Android kernel).

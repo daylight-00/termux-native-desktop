@@ -9,8 +9,9 @@ This repository is self-initializing. A web-chat agent should receive a full Git
 3. Read [`docs/current/BRIEF.md`](docs/current/BRIEF.md).
 4. Read [`docs/current/ACTIVE_TASK.md`](docs/current/ACTIVE_TASK.md).
 5. Read only the documents listed under **Required reading** in the active task.
-6. Read the applicable platform profile under `docs/operations/platforms/`.
-7. Produce a compact onboarding receipt before proposing or executing project work.
+6. Read a platform profile only when the active task requires it or before platform-specific transport, file exchange, or device execution.
+7. Use [`docs/DOCUMENTATION_MODEL.md`](docs/DOCUMENTATION_MODEL.md) and [`docs/INDEX.md`](docs/INDEX.md) only when deeper routing is needed.
+8. Produce a compact onboarding receipt before proposing or executing project work.
 
 Do not use a dated handoff, a numbered refactor record, or an old session narrative as current authority unless the active task names it as evidence or as a document being repaired.
 
@@ -35,3 +36,7 @@ user and agent authority boundary
 available and unavailable execution environments
 first valid action
 ```
+
+## Context boundary
+
+The default onboarding set is exactly this routing file plus the three files named in steps 2-4. Historical records are never loaded by default. The active task may name at most eight additional required-reading documents.

@@ -27,6 +27,13 @@ required_files=(
   AGENTS.md
   CLAUDE.md
   docs/INDEX.md
+  docs/DOCUMENTATION_MODEL.md
+  docs/catalog.tsv
+  docs/constitution/README.md
+  docs/architecture/README.md
+  docs/operations/README.md
+  docs/evidence/README.md
+  docs/history/README.md
   docs/current/BRIEF.md
   docs/current/STATE.yaml
   docs/current/ACTIVE_TASK.md

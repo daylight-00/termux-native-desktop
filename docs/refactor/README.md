@@ -2,6 +2,8 @@
 
 > **Authority classification:** this directory is chronological transaction evidence. Current semantic state and active work are owned by [`../current/`](../current/). Open a numbered record only for a specifically named evidence or reconstruction need.
 
+> Canonical history routing: [`../history/README.md`](../history/README.md). Evidence routing: [`../evidence/README.md`](../evidence/README.md).
+
 This directory is the chronological transaction-level evidence record for migration from the original prototype toward explicit ownership, semantic provider authority, locked supply identity, clean runtime composition, controlled materialization and activation.
 
 ## Working rule
