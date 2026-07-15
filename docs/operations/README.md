@@ -12,6 +12,7 @@ This directory is the single current authority for progress-independent web-chat
 | What happens at a clean boundary or with valuable incomplete work? | [`CHECKPOINTS.md`](CHECKPOINTS.md) |
 | What failures have known operational mitigations? | [`TROUBLESHOOTING.md`](TROUBLESHOOTING.md) |
 | What can the current web-chat sandbox and connectors actually do? | [`platforms/chatgpt-web.md`](platforms/chatgpt-web.md) |
+| Which known web-chat limitation maps to which practical fallback? | [`platforms/chatgpt-web-limitations.tsv`](platforms/chatgpt-web-limitations.tsv) |
 
 These responsibilities must not be duplicated as current authority in another directory. The former `docs/session-operations/` surface is historical and is indexed under [`../history/session-operations-v1/`](../history/session-operations-v1/).
 

@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-15.09`
+> Semantic state version: `2026-07-15.10`
 >
 > This is the compact current-state entry point. Exact commit and tree coordinates come from the checked-out full Git bundle, not from self-referential repository text.
 
@@ -32,6 +32,10 @@ AGENTS.md
 ```
 
 Former project-context/principles and system-foundation documents are preserved as design provenance.
+
+## Web-chat operational boundary
+
+Web-chat capability failures follow a stop-loss contract: perform one bounded representative probe, classify the missing capability, stop equivalent retries, and switch to the registered fallback authority. In particular, exact bytes blocked by sandbox DNS or egress are acquired or analyzed through one self-contained user-Termux wrapper with pinned coordinates and digests. Reusable new limitations are committed to the platform registry rather than rediscovered by later sessions.
 
 ## Current structural state
 

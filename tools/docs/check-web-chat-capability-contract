@@ -1,0 +1,126 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT=${1:-$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)}
+FAILURES=0
+
+fail() {
+  printf 'web-chat-capability-contract: FAIL: %s\n' "$*" >&2
+  FAILURES=$((FAILURES + 1))
+}
+
+require_file() {
+  [ -f "$ROOT/$1" ] || fail "missing $1"
+}
+
+require_text() {
+  local rel=$1 pattern=$2 label=$3
+  grep -Fq -- "$pattern" "$ROOT/$rel" || fail "$label"
+}
+
+reject_text() {
+  local rel=$1 pattern=$2 label=$3
+  if grep -Fiq -- "$pattern" "$ROOT/$rel"; then
+    fail "$label"
+  fi
+}
+
+files=(
+  AGENTS.md
+  docs/operations/README.md
+  docs/operations/COLLABORATION.md
+  docs/operations/WORKFLOW.md
+  docs/operations/TROUBLESHOOTING.md
+  docs/operations/platforms/chatgpt-web.md
+  docs/operations/platforms/chatgpt-web-limitations.tsv
+  docs/current/BRIEF.md
+  docs/current/STATE.yaml
+  docs/catalog.tsv
+)
+for rel in "${files[@]}"; do require_file "$rel"; done
+
+require_text AGENTS.md '## Platform-failure stop-loss' 'AGENTS lacks platform stop-loss section'
+require_text AGENTS.md 'one bounded representative probe' 'AGENTS lacks one-probe rule'
+require_text AGENTS.md 'user-Termux acquisition or analyzer wrapper' 'AGENTS lacks DNS/egress fallback'
+require_text AGENTS.md 'chatgpt-web-limitations.tsv' 'AGENTS does not route the limitation registry'
+
+require_text docs/operations/platforms/chatgpt-web.md '## Stop-loss rule' 'web profile lacks stop-loss rule'
+require_text docs/operations/platforms/chatgpt-web.md 'Do one bounded representative probe' 'web profile lacks one bounded probe'
+require_text docs/operations/platforms/chatgpt-web.md 'Do not spend a session repeatedly trying mirrors' 'web profile does not prohibit retry accumulation'
+require_text docs/operations/platforms/chatgpt-web.md '### Exact bytes blocked by DNS or outbound access' 'web profile lacks exact-byte DNS fallback'
+require_text docs/operations/platforms/chatgpt-web.md 'one user-Termux acquisition/analyzer package' 'web profile lacks Termux acquisition package'
+require_text docs/operations/platforms/chatgpt-web.md 'no installation unless installation is the explicit task' 'web profile lacks read-only acquisition boundary'
+require_text docs/operations/platforms/chatgpt-web.md 'Every reusable newly observed limitation must be added there' 'web profile lacks future limitation recording rule'
+
+require_text docs/operations/COLLABORATION.md '### Acquisition/analyzer package' 'collaboration contract lacks acquisition package class'
+require_text docs/operations/COLLABORATION.md 'only metadata or ELF/package facts needed' 'collaboration contract lacks compact-analysis alternative'
+require_text docs/operations/WORKFLOW.md 'perform one bounded probe and switch authority' 'workflow lacks capability fallback transition'
+require_text docs/operations/TROUBLESHOOTING.md '## Capability-failure triage' 'troubleshooting lacks capability triage'
+require_text docs/operations/TROUBLESHOOTING.md 'DNS resolution or outbound download fails' 'troubleshooting lacks DNS case'
+require_text docs/current/STATE.yaml 'capability_failure_policy: one-probe-then-registered-fallback' 'state lacks capability failure policy'
+require_text docs/current/BRIEF.md 'Web-chat capability failures follow a stop-loss contract' 'brief lacks durable stop-loss summary'
+require_text docs/catalog.tsv $'chatgpt-web-limitations\toperations\tcurrent\toperational\tno\tdocs/operations/platforms/chatgpt-web-limitations.tsv' 'catalog lacks current limitation registry row'
+
+
+python3 - "$ROOT" <<'PY'
+from pathlib import Path
+import csv, sys
+root = Path(sys.argv[1])
+path = root / 'docs/operations/platforms/chatgpt-web-limitations.tsv'
+with path.open(newline='') as f:
+    rows = list(csv.DictReader(f, delimiter='\t'))
+expected_fields = [
+    'limitation_id','surface','trigger','do_not','preferred_fallback','authority_owner'
+]
+errors=[]
+if not rows:
+    errors.append('registry has no rows')
+if rows and list(rows[0]) != expected_fields:
+    errors.append(f'registry header mismatch: {list(rows[0])}')
+ids=[]
+for n,row in enumerate(rows, start=2):
+    missing=[k for k in expected_fields if not (row.get(k) or '').strip()]
+    if missing:
+        errors.append(f'row {n} empty fields: {missing}')
+    lid=(row.get('limitation_id') or '').strip()
+    ids.append(lid)
+    if not lid.startswith('WEB-'):
+        errors.append(f'row {n} invalid limitation id: {lid}')
+    if row.get('do_not','').strip() == row.get('preferred_fallback','').strip():
+        errors.append(f'row {n} fallback repeats prohibited action')
+if len(ids) != len(set(ids)):
+    errors.append('duplicate limitation IDs')
+required={
+ 'WEB-NET-DNS-001','WEB-GIT-OBJECT-001','WEB-GH-SEARCH-001',
+ 'WEB-DRIVE-UPLOAD-001','WEB-DRIVE-FIRST-TURN-001','WEB-CONNECTOR-REF-001',
+ 'WEB-DEVICE-001','WEB-FS-001','WEB-TIMEOUT-001','WEB-DOCKER-001','WEB-CONTEXT-001'
+}
+missing=sorted(required-set(ids))
+if missing:
+    errors.append(f'missing required limitation IDs: {missing}')
+by_id={r['limitation_id']:r for r in rows}
+checks={
+ 'WEB-NET-DNS-001': [('do_not','mirrors'),('preferred_fallback','user-Termux'),('preferred_fallback','digest'),('preferred_fallback','tar.zst'),('authority_owner','user-termux')],
+ 'WEB-GIT-OBJECT-001': [('preferred_fallback','full Git bundle')],
+ 'WEB-DRIVE-UPLOAD-001': [('preferred_fallback','rclone'),('preferred_fallback','SHA-256')],
+ 'WEB-DEVICE-001': [('preferred_fallback','Termux runner'),('authority_owner','user-termux')],
+ 'WEB-FS-001': [('preferred_fallback','local sandbox temporary storage'),('preferred_fallback','Termux')],
+ 'WEB-TIMEOUT-001': [('preferred_fallback','inspect logs'),('preferred_fallback','split bounded tests')],
+ 'WEB-DOCKER-001': [('do_not','Docker')],
+ 'WEB-CONTEXT-001': [('preferred_fallback','full Git bundle'),('preferred_fallback','START_HERE')],
+}
+for lid, rules in checks.items():
+    row=by_id.get(lid,{})
+    for field, text in rules:
+        if text not in row.get(field,''):
+            errors.append(f'{lid}: {field} lacks {text!r}')
+if errors:
+    for e in errors:
+        print('web-chat-capability-contract: FAIL:',e,file=sys.stderr)
+    raise SystemExit(1)
+print(f'web-chat-capability-contract: PASS: {len(rows)} registered limitations')
+PY
+rc=$?
+[ "$rc" -eq 0 ] || FAILURES=$((FAILURES + 1))
+
+[ "$FAILURES" -eq 0 ] || exit 1
+printf 'web-chat-capability-contract: all checks passed\n'

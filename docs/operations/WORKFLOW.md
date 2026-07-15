@@ -59,6 +59,8 @@ Read `docs/current/PENDING_ARTIFACTS.yaml`. When a blocking artifact exists:
 
 An artifact mentioned only in old chat or historical prose is not automatically blocking.
 
+When the exact artifact is blocking but the sandbox cannot fetch it because DNS, outbound access, connector contracts, or device-only tooling are unavailable, perform one bounded probe and switch authority. Create a self-contained acquisition/analyzer wrapper for user Termux; do not accumulate equivalent retries in the web session.
+
 ## 4. Execute one bounded phase
 
 The active task owns scope, required reading, next valid action, stop conditions, and completion criteria.

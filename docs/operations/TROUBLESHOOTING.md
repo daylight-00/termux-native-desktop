@@ -1,5 +1,26 @@
 # Operational troubleshooting
 
+## Capability-failure triage
+
+Use the limitation IDs in [`platforms/chatgpt-web-limitations.tsv`](platforms/chatgpt-web-limitations.tsv).
+
+```text
+one representative probe
+    -> environmental/tool-contract failure confirmed
+    -> stop equivalent retries
+    -> preserve exact coordinates and error
+    -> use the registered fallback authority
+```
+
+Do not turn an unavailable web capability into repeated trial-and-error. The active task should continue through a bundle, connector exact-read, user-Termux acquisition/analyzer wrapper, device runner, or later-turn Drive transfer as appropriate.
+
+| Symptom | Do not | Proven response |
+|---|---|---|
+| DNS resolution or outbound download fails while exact dependency/source bytes are required | Keep trying mirrors, proxy tricks, package managers, or versions; disable digest checks | Generate one Termux acquisition/analyzer wrapper with exact URL and SHA-256. Return verified bytes when agent-side analysis is required, otherwise return compact package/ELF metadata. |
+| GitHub code search misses a file or ref already known to exist | Infer absence or rebuild the repository from search snippets | Fetch the exact path at the exact ref, compare commits, or use the user's Git object database/full bundle. |
+| A required fact is Android-, loader-, package-, GPU-, filesystem-, or runtime-specific | Treat synthetic sandbox behavior as authoritative | Generate the smallest bounded Termux runner and review its result archive. |
+| A combined test call is terminated by an outer execution limit | Blindly rerun the full suite | Inspect logs and process state, then split the same test set into independent bounded calls or poll a persistent shell session. |
+
 ## Drive and connector bottlenecks
 
 | Symptom | Proven response |

@@ -20,6 +20,7 @@ graphics-architecture	architecture	current	canonical	no	docs/gpu.md	graphics com
 desktop-session	architecture	current	canonical	no	docs/desktop-session.md	Termux X11 session contract
 operations-index	operations	current	canonical	no	docs/operations/README.md	collaboration tooling and platform router
 chatgpt-web-profile	operations	current	operational	no	docs/operations/platforms/chatgpt-web.md	web-chat transport and tool constraints
+chatgpt-web-limitations	operations	current	operational	no	docs/operations/platforms/chatgpt-web-limitations.tsv	machine-readable web-chat limitation and fallback registry
 operations-collaboration	operations	current	canonical	no	docs/operations/COLLABORATION.md	user agent roles repository transport and artifact exchange
 operations-workflow	operations	current	canonical	no	docs/operations/WORKFLOW.md	bundle-native receive-to-accepted-transition workflow
 operations-execution	operations	current	canonical	no	docs/operations/EXECUTION.md	candidate wrapper test result and acceptance discipline

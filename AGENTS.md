@@ -101,6 +101,22 @@ Use one related `.tar.zst` per exchange. Prefer a full Git bundle when repositor
 - A received result is not accepted until its integrity and semantic meaning are reviewed.
 - An unexecuted stage should be represented explicitly, normally with status `125`.
 
+## Platform-failure stop-loss
+
+A web-chat limitation is an execution boundary, not an invitation to accumulate retries.
+
+```text
+one bounded representative probe
+    -> classify the unavailable capability
+    -> stop repeating the same failing path
+    -> switch to the documented fallback authority
+    -> record a reusable new limitation in the platform registry
+```
+
+When exact external bytes are required but sandbox DNS or outbound access fails, do not keep trying mirrors, proxy tricks, alternate package managers, or repeated clone/download commands. Prepare one self-contained user-Termux acquisition or analyzer wrapper with exact URLs, expected digests, bounded analysis, and one result `.tar.zst`. The user performs the authoritative network/device action; the agent reviews the returned bytes or compact evidence.
+
+The current web-chat limitation registry and fallback matrix are owned by [`docs/operations/platforms/chatgpt-web.md`](docs/operations/platforms/chatgpt-web.md) and [`docs/operations/platforms/chatgpt-web-limitations.tsv`](docs/operations/platforms/chatgpt-web-limitations.tsv).
+
 ## Change discipline
 
 Before authoring:

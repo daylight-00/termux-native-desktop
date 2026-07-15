@@ -60,6 +60,22 @@ MANIFEST.sha256.
 
 Use a Git bundle rather than a patch when ancestry or merge topology must be preserved. Do not use Base64 envelopes or split the wrapper, repository delta, and instructions into separate Drive items.
 
+### Acquisition/analyzer package
+
+When an exact external object or device-only fact is required but the web sandbox cannot acquire or inspect it, the agent prepares one read-only Termux wrapper rather than asking the user to improvise commands.
+
+The wrapper pins the object coordinate and expected digest, downloads only into scratch space, performs the smallest named analysis, and emits one structured result `.tar.zst`. It does not install or activate the object unless that mutation is the explicit task.
+
+```text
+exact bytes needed by agent
+    -> return verified bytes plus manifest
+
+only metadata or ELF/package facts needed
+    -> analyze on Termux and return compact TSV/JSON/status evidence
+```
+
+A sandbox DNS failure is not a reason to weaken identity checks or repeatedly try mirrors. It is a reason to move the network action to the authoritative user environment through a self-contained package.
+
 ### Result archive
 
 The wrapper emits one result `.tar.zst` containing compact structured status, exact Git coordinates, bounded phase metadata, and detailed logs. The result is evidence for review; it is not accepted merely because upload succeeded.

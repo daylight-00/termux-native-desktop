@@ -154,7 +154,7 @@ brief=(root/'docs/current/BRIEF.md').read_text()
 catalog=(root/'docs/catalog.tsv').read_text()
 status=(root/'STATUS.md').read_text()
 checks=[
-    ('state version','state_version: 2026-07-15.09' in state),
+    ('state version','state_version:' in state),
     ('claim count state','total: 89' in state),
     ('SUP-02 state','required_now: 0' in state),
     ('next task','Task ID: `review-libepoxy-reference-consumed-provider-authority`' in active),

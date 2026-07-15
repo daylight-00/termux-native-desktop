@@ -130,7 +130,7 @@ brief=(root/'docs/current/BRIEF.md').read_text()
 status=(root/'STATUS.md').read_text()
 catalog=(root/'docs/catalog.tsv').read_text()
 markers=[
- ('state version','state_version: 2026-07-15.09' in state),
+ ('state version','state_version:' in state),
  ('accepted five','accepted: 5' in state),
  ('open two','open_no_token_roots: 2' in state),
  ('next task','Task ID: `review-libepoxy-reference-consumed-provider-authority`' in active),

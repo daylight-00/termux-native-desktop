@@ -326,6 +326,10 @@ AUTH-009 non-priority generic capabilities; OJ-001 required identity is correcte
 AUTH-010 exact application payload supply, named supplement membership and release execution; launcher source boundary bounded
 ```
 
+## Web-chat capability fallback contract
+
+Known sandbox, connector, network, filesystem, timeout, context, and device-authority limits are recorded in `docs/operations/platforms/chatgpt-web.md` and the machine-readable `chatgpt-web-limitations.tsv`. The operational rule is one representative probe followed by the registered practical fallback; repeated equivalent attempts are prohibited. Exact bytes blocked by web DNS/egress move to a self-contained user-Termux acquisition/analyzer transaction.
+
 ## Next valid state
 
 ```text

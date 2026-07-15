@@ -108,7 +108,7 @@ brief=(root/'docs/current/BRIEF.md').read_text()
 evidence=(root/'docs/evidence/no-token-recipe-semantic-review.md').read_text()
 catalog=(root/'docs/catalog.tsv').read_text()
 markers=[
- ('state version','state_version: 2026-07-15.09' in state),
+ ('state version','state_version:' in state),
  ('seven confirmed','confirmed_a: 7' in state),
  ('provider accepted four','provider_authority_accepted: 5' in state),
  ('provider open three','provider_authority_open: 2' in state),

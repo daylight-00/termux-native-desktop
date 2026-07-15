@@ -46,6 +46,8 @@ require_text docs/operations/platforms/chatgpt-web.md 'Docker is not available' 
 require_text docs/operations/platforms/chatgpt-web.md 'located anywhere under `/mnt/data`' 'web profile records local upload subtree rule'
 require_text docs/operations/platforms/chatgpt-web.md 'blocked on the first assistant turn' 'web profile records first-turn upload constraint'
 require_text docs/operations/platforms/chatgpt-web.md 'not a replacement for the bundle' 'web profile rejects connector-as-clone substitution'
+require_text docs/operations/platforms/chatgpt-web.md 'chatgpt-web-limitations.tsv' 'web profile routes limitation registry'
+require_text docs/operations/platforms/chatgpt-web-limitations.tsv 'WEB-NET-DNS-001' 'limitation registry records DNS fallback'
 require_text docs/history/session-operations-v1/README.md 'Current operational authority is under' 'former session operations are historical'
 require_text docs/handoff/README.md '[`../operations/`](../operations/README.md)' 'handoff archive routes current operations correctly'
 require_text docs/current/STATE.yaml 'operations_surface: docs/operations/README.md' 'semantic state records canonical operations surface'
@@ -70,6 +72,7 @@ expected={
  'operations-checkpoints':('operations','current','canonical','docs/operations/CHECKPOINTS.md'),
  'operations-troubleshooting':('operations','current','operational','docs/operations/TROUBLESHOOTING.md'),
  'chatgpt-web-profile':('operations','current','operational','docs/operations/platforms/chatgpt-web.md'),
+ 'chatgpt-web-limitations':('operations','current','operational','docs/operations/platforms/chatgpt-web-limitations.tsv'),
  'session-operations-history':('history','historical','history','docs/history/session-operations-v1/README.md'),
 }
 for did, want in expected.items():
