@@ -86,7 +86,11 @@ expected_meta={
     'oj001_consumer_binding_result_sha256':'b010695561974c491aa0706600e867ea3a2b8b8abf43f8573c075418a047d92a',
     'oj001_consumer_binding_functional_result':'SIGSEGV_BEFORE_OUTPUT',
     'oj001_consumer_binding_static_missing_symbols':'0',
-    'next_review_tranche':'LIBJPEG_SO_62_GDKPIXBUF_FUNCTIONAL_SIGSEGV_DIAGNOSTIC_MATRIX',
+    'oj001_diagnostic_matrix_review_id':'LIBJPEG-OJ-001-DIAGNOSTIC-001',
+    'oj001_diagnostic_matrix_result_sha256':'29bedb2494b54602e0768cfb27695acb58e55359f115422cfe5777d4917aaae0',
+    'oj001_diagnostic_matrix_classification':'DIRECT_CONTROL_ENVIRONMENT_UNRESOLVED',
+    'oj001_diagnostic_matrix_pass_count':'0',
+    'next_review_tranche':'LIBJPEG_SO_62_GDKPIXBUF_DIRECT_LOADER_ISOLATION_RERUN',
 }
 for key,val in expected_meta.items():
     if metadata.get(key)!=val:
@@ -139,9 +143,9 @@ for rid, source in root_by_id.items():
         if not provider_claim['remaining_gap'].startswith('NONE_FOR_BOUNDED'):
             errors.append(f'{rid}: reviewed provider gap is not closed')
     elif source['recipe_root']=='gpkg/libjpeg-turbo':
-        if provider_claim['classification_state']!='CANDIDATE_IDENTITY_ACCEPTED_CONSUMER_VALIDATION_BLOCKED_SIGSEGV':
+        if provider_claim['classification_state']!='CANDIDATE_IDENTITY_ACCEPTED_FIRST_MATRIX_INVALID_LOADER_ISOLATION_REQUIRED':
             errors.append(f'{rid}: libjpeg provider claim does not retain candidate-only acceptance boundary')
-        if 'FUNCTIONAL_SIGSEGV_ROOT_CAUSE_ISOLATION' not in provider_claim['remaining_gap']:
+        if 'LOADER_ISOLATED_FUNCTIONAL_EQUIVALENCE' not in provider_claim['remaining_gap']:
             errors.append(f'{rid}: libjpeg provider claim lacks consumer-validation gap')
     elif provider_claim['classification_state']!='CLASSIFIED_OPEN_PROVIDER_AUTHORITY_NOT_ACCEPTED':
         errors.append(f'{rid}: unreviewed provider claim is not open')
@@ -180,10 +184,10 @@ checks=[
     ('state version','state_version:' in state),
     ('claim count state','total: 89' in state),
     ('SUP-02 state','required_now: 0' in state),
-    ('next task','Task ID: `diagnose-libjpeg-so-62-gdkpixbuf-functional-segfault`' in active),
+    ('next task','Task ID: `rerun-libjpeg-so-62-gdkpixbuf-with-loader-isolation`' in active),
     ('brief classification','89 separated claims' in brief),
     ('catalog row','provider-claim-classification\tevidence\tcurrent\tcanonical' in catalog),
-    ('status next phase','DIAGNOSE_LIBJPEG_SO_62_GDKPIXBUF_FUNCTIONAL_SIGSEGV' in status),
+    ('status next phase','RERUN_LIBJPEG_SO_62_GDKPIXBUF_WITH_LOADER_ISOLATION' in status),
     ('disposition catalog','libjpeg-so-62-provider-candidate-disposition\tevidence\tcurrent\tcanonical' in catalog),
 ]
 for label,ok in checks:

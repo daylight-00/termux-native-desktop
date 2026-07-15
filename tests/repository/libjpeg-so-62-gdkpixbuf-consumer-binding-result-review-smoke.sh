@@ -28,6 +28,6 @@ restore
 mutate runtime_loader_boundary DEBIAN_ONLY
 if bash "$CHECK" "$FIXTURE" >/dev/null 2>&1; then echo 'gdkpixbuf review smoke: runtime boundary drift accepted' >&2; exit 1; fi
 restore
-sed -i 's/diagnose-libjpeg-so-62-gdkpixbuf-functional-segfault/validate-libjpeg-so-62-compatibility-provider-consumer-binding/' "$FIXTURE/docs/current/ACTIVE_TASK.md"
+sed -i 's/rerun-libjpeg-so-62-gdkpixbuf-with-loader-isolation/validate-libjpeg-so-62-compatibility-provider-consumer-binding/' "$FIXTURE/docs/current/ACTIVE_TASK.md"
 if bash "$CHECK" "$FIXTURE" >/dev/null 2>&1; then echo 'gdkpixbuf review smoke: stale task accepted' >&2; exit 1; fi
 echo 'libjpeg.so.62 GdkPixbuf consumer-binding result review smoke: PASS'

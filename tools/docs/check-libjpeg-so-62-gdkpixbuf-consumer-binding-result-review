@@ -44,9 +44,9 @@ for field,token in [
     if token not in row.get(field,''): errors.append(f'{field} lacks {token}')
 claims={r['claim_id']:r for r in read('provider-claim-classification.tsv')}
 for cid,state,gap in [
-('PCC-LIBJPEG-TURBO-ADAPTATION','CLASS_C_PRODUCING_RECORD_ACCEPTED_FUNCTIONAL_VALIDATION_BLOCKED_SIGSEGV','FUNCTIONAL_SIGSEGV_ROOT_CAUSE_ISOLATION'),
-('PCC-LIBJPEG-TURBO-PROVIDER','CANDIDATE_IDENTITY_ACCEPTED_CONSUMER_VALIDATION_BLOCKED_SIGSEGV','FUNCTIONAL_SIGSEGV_ROOT_CAUSE_ISOLATION'),
-('PCC-GLOBAL-BUILD-PROVENANCE','ACTIVE_CLASS_C_PRODUCING_RECORD_ACCEPTED_FUNCTIONAL_VALIDATION_BLOCKED_SIGSEGV','FUNCTIONAL_SIGSEGV_ROOT_CAUSE_ISOLATION')]:
+('PCC-LIBJPEG-TURBO-ADAPTATION','CLASS_C_PRODUCING_RECORD_ACCEPTED_FIRST_MATRIX_INVALID_LOADER_ISOLATION_REQUIRED','LOADER_ISOLATED_DIRECT_AND_GDKPIXBUF_FUNCTIONAL_EQUIVALENCE'),
+('PCC-LIBJPEG-TURBO-PROVIDER','CANDIDATE_IDENTITY_ACCEPTED_FIRST_MATRIX_INVALID_LOADER_ISOLATION_REQUIRED','LOADER_ISOLATED_FUNCTIONAL_EQUIVALENCE'),
+('PCC-GLOBAL-BUILD-PROVENANCE','ACTIVE_CLASS_C_PRODUCING_RECORD_ACCEPTED_FIRST_MATRIX_INVALID_LOADER_ISOLATION_REQUIRED','LOADER_ISOLATED_DIRECT_AND_GDKPIXBUF_FUNCTIONAL_EQUIVALENCE')]:
     r=claims.get(cid,{})
     if r.get('classification_state')!=state: errors.append(f'{cid}: state {r.get("classification_state")!r}')
     if gap not in r.get('remaining_gap',''): errors.append(f'{cid}: gap missing {gap}')
@@ -56,15 +56,15 @@ for k,v in {
 'oj001_consumer_binding_result_sha256':want['result_archive_sha256'],
 'oj001_consumer_binding_functional_result':'SIGSEGV_BEFORE_OUTPUT',
 'oj001_consumer_binding_static_missing_symbols':'0',
-'next_review_tranche':'LIBJPEG_SO_62_GDKPIXBUF_FUNCTIONAL_SIGSEGV_DIAGNOSTIC_MATRIX'}.items():
+'next_review_tranche':'LIBJPEG_SO_62_GDKPIXBUF_DIRECT_LOADER_ISOLATION_RERUN'}.items():
     if meta.get(k)!=v: errors.append(f'metadata {k}: expected {v}, got {meta.get(k)!r}')
 state=(root/'docs/current/STATE.yaml').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); brief=(root/'docs/current/BRIEF.md').read_text(); status=(root/'STATUS.md').read_text(); doc=(root/'docs/evidence/libjpeg-so-62-gdkpixbuf-consumer-binding-result-review.md').read_text()
 checks=[
-('state version','state_version: 2026-07-15.17' in state),
-('active task','Task ID: `diagnose-libjpeg-so-62-gdkpixbuf-functional-segfault`' in active),
+('state version','state_version: 2026-07-15.18' in state),
+('active task','Task ID: `rerun-libjpeg-so-62-gdkpixbuf-with-loader-isolation`' in active),
 ('state result',want['result_archive_sha256'] in state),
 ('brief SIGSEGV','SIGSEGV' in brief and 'does not yet isolate candidate behavior' in brief),
-('status marker','DIAGNOSE_LIBJPEG_SO_62_GDKPIXBUF_FUNCTIONAL_SIGSEGV' in status),
+('status marker','RERUN_LIBJPEG_SO_62_GDKPIXBUF_WITH_LOADER_ISOLATION' in status),
 ('doc no provider','provider authority: not accepted' in doc),
 ('doc mixed boundary','loader and core libc came from the Termux-glibc prefix' in doc),
 ]

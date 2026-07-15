@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-15.17`
+> Semantic state version: `2026-07-15.18`
 >
 > This is the compact current-state entry point. Exact commit and tree coordinates come from the checked-out full Git bundle, not from self-referential repository text.
 
@@ -82,7 +82,7 @@ target population: blocked
 activation: blocked
 ```
 
-Exact artifact/member identity, adaptation semantics, provider selection, composition, target population, and activation remain separate states. OJ-001 is dispositioned at [`../evidence/libjpeg-so-62-provider-candidate-disposition.md`](../evidence/libjpeg-so-62-provider-candidate-disposition.md), and the rejected first-candidate review is at [`../evidence/libjpeg-so-62-compatibility-provider-candidate-result-review.md`](../evidence/libjpeg-so-62-compatibility-provider-candidate-result-review.md), and the corrected candidate review is at [`../evidence/libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review.md`](../evidence/libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review.md). The claim inventory remains at [`../evidence/provider-claim-classification.md`](../evidence/provider-claim-classification.md).
+Exact artifact/member identity, adaptation semantics, provider selection, composition, target population, and activation remain separate states. OJ-001 is dispositioned at [`../evidence/libjpeg-so-62-provider-candidate-disposition.md`](../evidence/libjpeg-so-62-provider-candidate-disposition.md), and the rejected first-candidate review is at [`../evidence/libjpeg-so-62-compatibility-provider-candidate-result-review.md`](../evidence/libjpeg-so-62-compatibility-provider-candidate-result-review.md), and the corrected candidate review is at [`../evidence/libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review.md`](../evidence/libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review.md). The first diagnostic matrix is reviewed at [`../evidence/libjpeg-so-62-gdkpixbuf-diagnostic-matrix-result-review.md`](../evidence/libjpeg-so-62-gdkpixbuf-diagnostic-matrix-result-review.md); it is non-dispositive because the launcher contaminated the Bionic shell and exposed raw linker-script paths. The claim inventory remains at [`../evidence/provider-claim-classification.md`](../evidence/provider-claim-classification.md).
 
 ## Documentation and web-session state
 

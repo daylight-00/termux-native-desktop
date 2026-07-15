@@ -1,51 +1,40 @@
-# Active task: diagnose the bounded GdkPixbuf JPEG `SIGSEGV`
+# Active task: rerun the libjpeg/GdkPixbuf controls with loader isolation
 
-> Task ID: `diagnose-libjpeg-so-62-gdkpixbuf-functional-segfault`
+> Task ID: `rerun-libjpeg-so-62-gdkpixbuf-with-loader-isolation`
 >
-> Expected state on completion: the functional crash is isolated to candidate-specific behavior, the mixed runtime boundary, or the GdkPixbuf file/API path using read-only controls. Provider authority remains a later repository decision.
+> Expected state on completion: direct candidate/oracle decode is measured through a direct Termux-glibc loader and an ELF-only scratch runtime shim; broader GdkPixbuf controls use the same bounded core world. Provider authority remains a later decision.
 
 ## Objective
 
-Explain the `SIGSEGV` from the first bounded consumer analyzer without weakening the accepted candidate identity or inferring provider authority.
-
-```text
-candidate: libjpeg.so.62.4.0
-candidate SHA-256: a537840ef9da6135cb3284bc3b3e0d1fb4f624180a416c2a3964b94714eb7fe5
-consumer: libgdk_pixbuf-2.0.so.0.4200.12
-consumer SHA-256: 16d15168c69d4ad61862462da9fe811b5be3bef898b940a4023e15b039f5b43c
-failed result SHA-256: b010695561974c491aa0706600e867ea3a2b8b8abf43f8573c075418a047d92a
-```
+Replace the invalid 12-cell launcher environment with a smaller valid comparison that cannot expose glibc paths to a Bionic shell.
 
 ## Why now
 
-The first exact consumer-binding attempt closed identity and static-symbol questions but crashed before it could produce decode or mapped-provider evidence. The smallest safe next step is to isolate the failing boundary with candidate/oracle, API-path, and loader controls rather than infer provider failure or repeat the same broad call.
+The first 12-cell matrix cannot answer the provider question because its launcher started a Bionic shell under a foreign `LD_LIBRARY_PATH` and exposed raw linker-script paths. Repeating the same launcher would only reproduce analyzer defects.
 
 ## Known facts
 
-- Candidate, consumer, SONAME binding and static symbol coverage passed.
-- The consumer requires 22 JPEG symbols and the candidate provides all 22.
-- The fixed decode process exited `139` during `gdk_pixbuf_new_from_file()` before any mapped-path output.
-- The process used the Termux-glibc loader/libc with a Debian GdkPixbuf dependency world.
-- Protected live state was unchanged.
+- Candidate identity `a537840e…` remains accepted.
+- Static GdkPixbuf binding requires 22 JPEG symbols; none are missing.
+- The first functional call exited 139.
+- The first diagnostic matrix also failed for the Debian oracle because its launcher/runtime construction was invalid.
+- Zero matrix passes do not reject the candidate or oracle.
 
 ## In scope
 
-- Direct candidate and Debian-oracle libjpeg decode controls.
-- Candidate-versus-oracle GdkPixbuf controls with identical environment.
-- Memory-loader API versus file API controls.
-- Termux-glibc loader versus Debian-rootfs loader controls when the latter is available and version-compatible.
-- Pre-call loader, libc, dependency and `/proc/self/maps` evidence.
-- Optional `LD_DEBUG` and `strace` diagnostics without requiring extra package installation.
-- One structured failure-or-success result archive.
+- ELF-only scratch shim for the Termux glibc core runtime.
+- Direct loader invocation with `LD_PRELOAD` and `LD_LIBRARY_PATH` unset.
+- Direct `djpeg` candidate/oracle controls without Debian dependency paths.
+- GdkPixbuf candidate/oracle file and memory controls with core-first ordering.
+- Exact loader lists, stage markers, maps and structured classification.
+- One result archive; individual cell crashes remain evidence rows.
 
 ## Out of scope
 
-- Installing or replacing any libjpeg.
-- Mutating the Debian rootfs, Termux glibc prefix, provider store, target or deployment.
-- Accepting or rejecting provider authority from the prior crash alone.
-- Selecting Debian oracle bytes as target authority.
-- Treating `libjpeg.so.8` as compatible.
-- Full Obsidian or GTK runtime composition.
+- Package installation or rootfs mutation.
+- The `glibc-exec` shell wrapper for diagnostic execution.
+- Treating raw `$PREFIX/glibc/lib` as a runtime farm.
+- Provider acceptance, target population, deployment or activation.
 
 ## Required reading
 
@@ -54,27 +43,26 @@ The first exact consumer-binding attempt closed identity and static-symbol quest
 - `docs/decisions/0005-proportional-assurance-depth.md`
 - `docs/evidence/libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review.md`
 - `docs/evidence/libjpeg-so-62-gdkpixbuf-consumer-binding-result-review.md`
-- `docs/operations/COLLABORATION.md`
+- `docs/evidence/libjpeg-so-62-gdkpixbuf-diagnostic-matrix-result-review.md`
 - `docs/operations/EXECUTION.md`
 - `docs/operations/platforms/chatgpt-web.md`
 
 ## Pending external inputs
 
-None. Exact candidate bytes, fixture and retained Debian consumer coordinates are known. The authoritative Termux environment owns the diagnostic execution.
+None.
 
 ## Next valid action
 
-Prepare one self-contained read-only diagnostic matrix. It must preserve candidate/oracle separation, record every control independently, survive individual process crashes, and fail closed without provider acceptance.
+Run one self-contained loader-isolated diagnostic runner. The user-facing command surface is limited to `rclone copyto` and `bash runner.sh`.
 
 ## Stop conditions
 
-Stop if exact candidate, consumer or oracle identity drifts; required loader/dependency coordinates cannot be bounded; protected state changes; or the diagnostic would require installation or rootfs mutation.
+Stop if candidate, oracle, consumer, repository, or protected-state identity drifts; if the core shim contains a non-ELF target; or if the diagnostic would require package installation, rootfs mutation, provider installation, target population, deployment, or activation.
 
 ## Completion criteria
 
-- direct libjpeg candidate/oracle controls are recorded;
-- GdkPixbuf candidate/oracle controls are recorded for memory and file APIs;
-- runtime-loader boundaries are explicit;
-- a crash in one cell does not prevent collection of the remaining cells;
-- the matrix identifies the smallest boundary that changes pass/fail behavior;
-- provider authority remains a separate decision.
+- direct candidate and oracle cells use no Debian library path;
+- no Bionic process starts with a glibc `LD_LIBRARY_PATH`;
+- runtime shim entries resolve only to ELF objects;
+- direct and GdkPixbuf results are independently recorded;
+- provider authority remains separate.

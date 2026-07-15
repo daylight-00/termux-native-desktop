@@ -1,6 +1,6 @@
 # Status
 
-> **State:** bundle-native documentation and operations control planes active; compact constitutional authority installed; ADR 0005 claim classification complete; seven no-token recipes confirmed Class A and all seven bounded provider roots accepted; Pango filename continuity decided; libjpeg.so.62 candidate identity accepted; first GdkPixbuf functional analyzer blocked by SIGSEGV; diagnostic matrix active
+> **State:** bundle-native documentation and operations control planes active; compact constitutional authority installed; ADR 0005 claim classification complete; seven no-token recipes confirmed Class A and all seven bounded provider roots accepted; Pango filename continuity decided; libjpeg.so.62 candidate identity accepted; first GdkPixbuf functional analyzer blocked by SIGSEGV; first matrix invalidated by launcher contamination; loader-isolated rerun active
 > **Updated:** 2026-07-15
 
 ## Repository and deployment consolidation
@@ -11,7 +11,7 @@
 - Direct checkout-to-live symlinks are superseded by immutable materialized repository releases and a stable atomic `current` pointer.
 - `tools/deploy --profile workstation|full` owns managed public leaves; external payloads, selected generations, provider installs, build trees and user state remain outside this cleanup transaction.
 - The provider-authority corpus is classified under ADR 0005: 89 separated claims and 28 historical SUP-02 requests reclassified as 14 narrowed, 7 replaced and 7 unnecessary. Seven exact provider claims are accepted: four X.Org members for bounded selected GTK X11 scope, libtasn1 for bounded external GnuTLS 3.8.9 ASN.1/security scope, libepoxy for bounded GTK 3.24.49 X11 GLX dispatch, and the exact three-member Pango 1.54.0 family for bounded GTK text/FreeType/Fontconfig/Cairo scope with explicit SONAME continuity. No composition, target row or activation is accepted.
-- OJ-001 produced a corrected exact scratch-built `libjpeg.so.62.4.0` AArch64 candidate with SHA-256 `a537840ef9da6135cb3284bc3b3e0d1fb4f624180a416c2a3964b94714eb7fe5`, `DT_SONAME=libjpeg.so.62`, expected symbol versions and no `DT_RPATH`/`DT_RUNPATH`. Candidate identity is accepted. Exact GdkPixbuf identity, `DT_NEEDED`, and 22-symbol coverage passed, but the first fixed JPEG decode exited with `SIGSEGV` before mapped-path evidence. A read-only candidate/oracle, API-path, and loader-boundary diagnostic matrix is active before provider authority.
+- OJ-001 produced a corrected exact scratch-built `libjpeg.so.62.4.0` AArch64 candidate with SHA-256 `a537840ef9da6135cb3284bc3b3e0d1fb4f624180a416c2a3964b94714eb7fe5`, `DT_SONAME=libjpeg.so.62`, expected symbol versions and no `DT_RPATH`/`DT_RUNPATH`. Candidate identity is accepted. Exact GdkPixbuf identity, `DT_NEEDED`, and 22-symbol coverage passed, but the first fixed JPEG decode exited with `SIGSEGV` before mapped-path evidence. The first 12-cell matrix produced zero valid controls because a Bionic shell was started under a glibc/Debian library path and raw linker-script paths were exposed. Candidate identity remains accepted; a direct-loader, ELF-only runtime-shim rerun is active before provider authority.
 
 See `docs/decisions/0004-single-main-and-immutable-release-deployment.md`.
 
@@ -347,13 +347,13 @@ Known sandbox, connector, network, filesystem, timeout, context, and device-auth
 ## Next valid state
 
 ```text
-DIAGNOSE_LIBJPEG_SO_62_GDKPIXBUF_FUNCTIONAL_SIGSEGV
+RERUN_LIBJPEG_SO_62_GDKPIXBUF_WITH_LOADER_ISOLATION
 ```
 
 Active task:
 
 ```text
-DIAGNOSE_LIBJPEG_SO_62_GDKPIXBUF_FUNCTIONAL_SIGSEGV
+RERUN_LIBJPEG_SO_62_GDKPIXBUF_WITH_LOADER_ISOLATION
 ```
 
 Required order:

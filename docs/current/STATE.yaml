@@ -1,5 +1,5 @@
 schema_version: 1
-state_version: 2026-07-15.17
+state_version: 2026-07-15.18
 updated_on: 2026-07-15
 
 project:
@@ -53,8 +53,8 @@ documentation:
   libjpeg_runpath_free_candidate_result_review: docs/evidence/libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review.md
 
 provider_authority:
-  workstream: no-token-provider-review-complete-libjpeg-gdkpixbuf-functional-segfault-diagnostic-active
-  boundary: seven-bounded-providers-accepted-oj-001-candidate-identity-accepted-functional-validation-blocked-sigsegv-provider-open
+  workstream: no-token-provider-review-complete-libjpeg-loader-isolated-functional-diagnostic-active
+  boundary: seven-bounded-providers-accepted-oj-001-candidate-identity-accepted-first-matrix-invalid-loader-isolation-required-provider-open
   claim_inventory:
     total: 89
     class_a: 36
@@ -90,6 +90,8 @@ provider_authority:
     consumer_binding_attempt: static-binding-complete-functional-sigsegv
     consumer_binding_result_sha256: b010695561974c491aa0706600e867ea3a2b8b8abf43f8573c075418a047d92a
     consumer_binding_runtime_boundary: termux-glibc-loader-with-debian-consumer-world
+    diagnostic_matrix_result_sha256: 29bedb2494b54602e0768cfb27695acb58e55359f115422cfe5777d4917aaae0
+    diagnostic_matrix_state: invalid-for-provider-comparison-launcher-contaminated
     provider_authority: not-accepted
   sup_02_disposition:
     still_necessary: 0
@@ -97,7 +99,7 @@ provider_authority:
     replaced: 7
     unnecessary: 7
     required_now: 0
-  next_research_decision: diagnose-libjpeg-so-62-gdkpixbuf-functional-segfault
+  next_research_decision: rerun-libjpeg-so-62-gdkpixbuf-with-loader-isolation
   prohibited_claims:
     - complete-provider-authority
     - complete-runtime-composition
@@ -105,7 +107,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: diagnose-libjpeg-so-62-gdkpixbuf-functional-segfault
+  id: rerun-libjpeg-so-62-gdkpixbuf-with-loader-isolation
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:

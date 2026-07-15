@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT=${1:-$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)}
+python3 - "$ROOT" <<'PY'
+from pathlib import Path
+import csv,sys
+root=Path(sys.argv[1]); review=root/'experiments/glibc/selected-obsidian-provider-authority/review'
+path=review/'libjpeg-so-62-gdkpixbuf-diagnostic-matrix-result-review.tsv'
+errors=[]
+if not path.is_file(): errors.append(f'missing {path.relative_to(root)}'); rows=[]
+else:
+    with path.open(newline='',encoding='utf-8') as f: rows=list(csv.DictReader(f,delimiter='\t'))
+if len(rows)!=1: errors.append(f'expected one diagnostic review row, found {len(rows)}')
+r=rows[0] if rows else {}
+want={
+'review_id':'LIBJPEG-OJ-001-DIAGNOSTIC-001','requirement_id':'OJ-001',
+'result_archive_sha256':'29bedb2494b54602e0768cfb27695acb58e55359f115422cfe5777d4917aaae0',
+'repository_head':'c2d5687373ea975cb47ad371d63c9ed1f0895e9f','repository_tree':'3503d25e6580edabd7da0086ff718d56f17d03f0',
+'matrix_cell_count':'12','matrix_pass_count':'0','matrix_fail_count':'12','matrix_skip_count':'0',
+'diagnostic_classification':'DIRECT_CONTROL_ENVIRONMENT_UNRESOLVED','termux_direct_candidate_exit':'139','termux_direct_oracle_exit':'139','debian_cell_exit':'127',
+'candidate_decision':'IDENTITY_RETAINED_MATRIX_INVALID_FOR_FUNCTIONAL_COMPARISON','provider_authority':'NOT_ACCEPTED'}
+for k,v in want.items():
+    if r.get(k)!=v: errors.append(f'{k}: expected {v}, got {r.get(k)!r}')
+for k,token in {
+'termux_launcher_defect':'BIONIC_GLIBC_EXEC_SCRIPT_STARTED_WITH_GLIBC_AND_DEBIAN_LD_LIBRARY_PATH',
+'termux_loader_list_defect':'RAW_PREFIX_GLIBC_LIB_EXPOSED_LINKER_SCRIPT_LIBC_SO_INVALID_ELF_HEADER',
+'debian_control_defect':'TERMUX_BUILT_PROBES_UNDER_DEBIAN_LOADER_WERE_NOT_DEBIAN_NATIVE_CONTROLS',
+'next_action':'RERUN_TERMUX_DIRECT_LOADER_WITH_CURATED_ELF_RUNTIME_SHIM_AND_NO_BIONIC_LD_LIBRARY_PATH',
+'authority_effect':'NO_PROVIDER_COMPOSITION_TARGET_MATERIALIZATION_OR_ACTIVATION_EFFECT',
+'prohibited_inference':'ZERO_MATRIX_PASSES_DO_NOT_REJECT_CANDIDATE_OR_ORACLE'}.items():
+    if token not in r.get(k,''): errors.append(f'{k} lacks {token}')
+state=(root/'docs/current/STATE.yaml').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); brief=(root/'docs/current/BRIEF.md').read_text()
+for text,token,label in [(state,'diagnostic_matrix_state: invalid-for-provider-comparison-launcher-contaminated','state'),(state,'provider_authority: not-accepted','state'),(active,'Task ID: `rerun-libjpeg-so-62-gdkpixbuf-with-loader-isolation`','active'),(brief,'launcher contaminated the Bionic shell','brief')]:
+    if token not in text: errors.append(f'{label} lacks {token}')
+if errors:
+    for e in errors: print(f'libjpeg-diagnostic-review: FAIL: {e}',file=sys.stderr)
+    raise SystemExit(1)
+print('libjpeg-diagnostic-review: PASS')
+PY
