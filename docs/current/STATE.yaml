@@ -1,9 +1,9 @@
 schema_version: 1
-state_version: 2026-07-15.13
+state_version: 2026-07-15.14
 updated_on: 2026-07-15
 
 project:
-  phase: provider-reference-consumed-provider-review
+  phase: provider-compatibility-candidate-production
   status: active
 
 repository:
@@ -48,10 +48,11 @@ documentation:
   libtasn1_provider_authority_review: docs/evidence/libtasn1-reference-consumed-provider-authority.md
   libepoxy_provider_authority_review: docs/evidence/libepoxy-reference-consumed-provider-authority.md
   pango_provider_authority_review: docs/evidence/pango-reference-consumed-provider-authority-and-filename-continuity.md
+  libjpeg_provider_candidate_disposition: docs/evidence/libjpeg-so-62-provider-candidate-disposition.md
 
 provider_authority:
-  workstream: no-token-reference-consumed-provider-review-complete-libjpeg-object-requirement-correction-active
-  boundary: seven-bounded-providers-accepted-no-no-token-provider-roots-open
+  workstream: no-token-provider-review-complete-libjpeg-compatibility-provider-production-active
+  boundary: seven-bounded-providers-accepted-oj-001-explicit-compatibility-provider-required
   claim_inventory:
     total: 89
     class_a: 36
@@ -75,7 +76,7 @@ provider_authority:
     replaced: 7
     unnecessary: 7
     required_now: 0
-  next_research_decision: resolve-libjpeg-so-62-provider-candidate-gap
+  next_research_decision: produce-libjpeg-so-62-compatibility-provider-candidate
   prohibited_claims:
     - complete-provider-authority
     - complete-runtime-composition
@@ -83,7 +84,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: resolve-libjpeg-so-62-provider-candidate-gap
+  id: produce-libjpeg-so-62-compatibility-provider-candidate
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:

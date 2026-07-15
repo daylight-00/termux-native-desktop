@@ -1,6 +1,6 @@
 # Status
 
-> **State:** bundle-native documentation and operations control planes active; compact constitutional authority installed; ADR 0005 claim classification complete; seven no-token recipes confirmed Class A and all seven bounded provider roots accepted; Pango filename continuity decided; libjpeg.so.62 object-requirement correction active
+> **State:** bundle-native documentation and operations control planes active; compact constitutional authority installed; ADR 0005 claim classification complete; seven no-token recipes confirmed Class A and all seven bounded provider roots accepted; Pango filename continuity decided; libjpeg.so.62 explicit compatibility-provider production active
 > **Updated:** 2026-07-15
 
 ## Repository and deployment consolidation
@@ -111,6 +111,7 @@ See `docs/decisions/0004-single-main-and-immutable-release-deployment.md`.
 - Class distribution is 36 A, 49 B, 1 conditional C and 3 D; the Class C producing-build claim is deferred because no root is currently classified as independently reproduced.
 - All 28 SUP-02 requests remain historical: 14 are narrowed to claim-specific escalation only, 7 are replaced by reference/artifact/semantic integration evidence, and 7 are unnecessary at the current boundary. Zero requests are required now.
 - All seven no-token roots have completed exact pinned-recipe semantic review as Class A and bounded provider review. Four X.Org roots cover selected GTK 3.24.49 X11 features, `libtasn1` covers external GnuTLS 3.8.9 ASN.1/security, `libepoxy` covers GTK X11 GLX dispatch, and the exact Pango 1.54.0 three-member family covers selected GTK text/FreeType/Fontconfig/Cairo capability. Pango CF-001–CF-004 define SONAME alias necessity, bounded successor selection, immutable update review and atomic family rollback. Complete composition, target population and activation remain blocked.
+- The OJ-001 provider-candidate review found no exact repository SONAME-62 artifact, keeps the SONAME-8 family rejected, and requires a scratch-built libjpeg-turbo 3.1.0 v6b compatibility candidate with expected member `libjpeg.so.62.4.0`; no provider or target authority is accepted.
 
 ## Current authority
 
@@ -202,6 +203,7 @@ GENERIC_BUILD_ATTESTATION_ADAPTATION_GAP_EVIDENCE_SUPPLY_BATCH_SUP_02_CUSTODIAN_
 GENERIC_BUILD_ATTESTATION_ADAPTATION_GAP_EVIDENCE_SUPPLY_BATCH_SUP_02_CUSTODIAN_EXPORT_RESPONSE_ACQUISITION_RECEIPT_REVIEW_PASS_BOUNDED
 GENERIC_BUILD_ATTESTATION_ADAPTATION_GAP_EVIDENCE_SUPPLY_BATCH_SUP_02_CUSTODIAN_EXPORT_RESPONSE_PRODUCER_IMPLEMENTED_BOUNDED
 OBJECT_REQUIREMENT_CORRECTION_OJ_001_ACCEPTED_STABLE_SONAME_LIBJPEG_SO_62
+LIBJPEG_SO_62_EXPLICIT_COMPATIBILITY_PROVIDER_BUILD_REQUIRED
 NO_TOKEN_RECIPE_SEMANTIC_REVIEW_CLASS_A_7
 XORG_REFERENCE_CONSUMED_PROVIDER_AUTHORITY_ACCEPTED_BOUNDED_4
 SEMANTIC_FINAL_PROVIDER_AUTHORITY_OPEN

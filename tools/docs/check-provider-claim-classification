@@ -19,6 +19,7 @@ required=(
   experiments/glibc/selected-obsidian-provider-authority/review/libtasn1-reference-consumed-provider-authority.tsv
   experiments/glibc/selected-obsidian-provider-authority/review/libepoxy-reference-consumed-provider-authority.tsv
   experiments/glibc/selected-obsidian-provider-authority/review/pango-reference-consumed-provider-authority.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/libjpeg-so-62-provider-candidate-disposition.tsv
 )
 for rel in "${required[@]}"; do
   [ -f "$ROOT/$rel" ] || { echo "provider-claim-classification: FAIL: missing $rel" >&2; exit 1; }
@@ -70,7 +71,10 @@ expected_meta={
     'no_token_reclassified_b_count':'0','provider_review_count':'7',
     'provider_authority_accepted_count':'7','provider_authority_open_count':'21',
     'authority_effect':'SEVEN_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT',
-    'next_review_tranche':'LIBJPEG_SO_62_OBJECT_REQUIREMENT_CORRECTION',
+    'oj001_disposition':'EXPLICIT_SOURCE_BUILD_COMPATIBILITY_PROVIDER_REQUIRED',
+    'oj001_required_identity':'libjpeg.so.62',
+    'oj001_candidate_state':'NO_EXACT_SONAME_62_PACKAGE_DEFINITION_OR_BOUND_ARTIFACT_FOUND',
+    'next_review_tranche':'LIBJPEG_SO_62_COMPATIBILITY_PROVIDER_CANDIDATE_PRODUCTION',
 }
 for key,val in expected_meta.items():
     if metadata.get(key)!=val:
@@ -122,6 +126,11 @@ for rid, source in root_by_id.items():
             errors.append(f'{rid}: reviewed provider claim is not accepted')
         if not provider_claim['remaining_gap'].startswith('NONE_FOR_BOUNDED'):
             errors.append(f'{rid}: reviewed provider gap is not closed')
+    elif source['recipe_root']=='gpkg/libjpeg-turbo':
+        if provider_claim['classification_state']!='COMPATIBILITY_PROVIDER_SPECIFIED_CANDIDATE_NOT_YET_PRODUCED':
+            errors.append(f'{rid}: libjpeg provider claim does not retain candidate-production boundary')
+        if 'EXACT_COMPATIBILITY_PROVIDER_ARTIFACT_MEMBER_DIGEST_AND_SONAME_NOT_YET_PRODUCED' not in provider_claim['remaining_gap']:
+            errors.append(f'{rid}: libjpeg provider claim lacks exact candidate gap')
     elif provider_claim['classification_state']!='CLASSIFIED_OPEN_PROVIDER_AUTHORITY_NOT_ACCEPTED':
         errors.append(f'{rid}: unreviewed provider claim is not open')
 
@@ -159,10 +168,11 @@ checks=[
     ('state version','state_version:' in state),
     ('claim count state','total: 89' in state),
     ('SUP-02 state','required_now: 0' in state),
-    ('next task','Task ID: `resolve-libjpeg-so-62-provider-candidate-gap`' in active),
+    ('next task','Task ID: `produce-libjpeg-so-62-compatibility-provider-candidate`' in active),
     ('brief classification','89 separated claims' in brief),
     ('catalog row','provider-claim-classification\tevidence\tcurrent\tcanonical' in catalog),
-    ('status next phase','RESOLVE_LIBJPEG_SO_62_PROVIDER_CANDIDATE_GAP' in status),
+    ('status next phase','LIBJPEG_SO_62_EXPLICIT_COMPATIBILITY_PROVIDER_BUILD_REQUIRED' in status),
+    ('disposition catalog','libjpeg-so-62-provider-candidate-disposition\tevidence\tcurrent\tcanonical' in catalog),
 ]
 for label,ok in checks:
     if not ok: errors.append(f'missing current-state marker: {label}')
@@ -171,7 +181,7 @@ if errors:
     for err in errors:
         print('provider-claim-classification: FAIL:',err,file=sys.stderr)
     raise SystemExit(1)
-print('provider-claim-classification: PASS: 89 claims, 7 bounded providers and 28 SUP-02 dispositions are coherent')
+print('provider-claim-classification: PASS: 89 claims, 7 bounded providers, OJ-001 compatibility disposition and 28 SUP-02 dispositions are coherent')
 PY
 
 echo 'provider-claim-classification: all checks passed'

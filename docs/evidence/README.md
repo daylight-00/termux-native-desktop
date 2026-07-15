@@ -42,3 +42,5 @@ The completed seven-root Class A recipe review is in [`no-token-recipe-semantic-
 The bounded libepoxy decision is in [`libepoxy-reference-consumed-provider-authority.md`](libepoxy-reference-consumed-provider-authority.md). Its scope is GTK 3.24.49 X11 GLX dispatch only; EGL is not claimed.
 
 The bounded Pango family and CF-001–CF-004 continuity decisions are in [`pango-reference-consumed-provider-authority-and-filename-continuity.md`](pango-reference-consumed-provider-authority-and-filename-continuity.md).
+
+The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source compatibility-provider production boundary are in [`libjpeg-so-62-provider-candidate-disposition.md`](libjpeg-so-62-provider-candidate-disposition.md).

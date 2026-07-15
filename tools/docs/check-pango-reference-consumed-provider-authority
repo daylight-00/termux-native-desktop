@@ -104,14 +104,14 @@ if p.get('classification_state')!='BOUNDED_PROVIDER_AUTHORITY_ACCEPTED': errors.
 if p.get('remaining_gap')!=expected['remaining_gap']: errors.append('generated Pango provider gap differs')
 if 'pango-reference-consumed-provider-authority.tsv' not in p.get('existing_evidence',''): errors.append('generated Pango provider claim lacks canonical review source')
 if 'CF-001' in a.get('remaining_gap','') or 'CF_001' in a.get('remaining_gap',''): errors.append('Pango adaptation claim retains closed continuity gap')
-want_meta={'provider_review_count':'7','provider_authority_accepted_count':'7','provider_authority_open_count':'21','authority_effect':'SEVEN_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT','next_review_tranche':'LIBJPEG_SO_62_OBJECT_REQUIREMENT_CORRECTION'}
+want_meta={'provider_review_count':'7','provider_authority_accepted_count':'7','provider_authority_open_count':'21','authority_effect':'SEVEN_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT','next_review_tranche':'LIBJPEG_SO_62_COMPATIBILITY_PROVIDER_CANDIDATE_PRODUCTION'}
 for k,v in want_meta.items():
     if meta.get(k)!=v: errors.append(f'metadata {k}: expected {v}, got {meta.get(k)!r}')
 
 state=(root/'docs/current/STATE.yaml').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); brief=(root/'docs/current/BRIEF.md').read_text(); status=(root/'STATUS.md').read_text(); catalog=(root/'docs/catalog.tsv').read_text(); evidence=(root/'docs/evidence/pango-reference-consumed-provider-authority-and-filename-continuity.md').read_text()
 markers=[
- ('state version','state_version: 2026-07-15.13' in state),('state accepted','accepted: 7' in state),('state no-token open','open_no_token_roots: 0' in state),
- ('next task','Task ID: `resolve-libjpeg-so-62-provider-candidate-gap`' in active),('brief accepted','bounded providers accepted: 7' in brief),
+ ('state version','state_version: 2026-07-15.14' in state),('state accepted','accepted: 7' in state),('state no-token open','open_no_token_roots: 0' in state),
+ ('next task','Task ID: `produce-libjpeg-so-62-compatibility-provider-candidate`' in active),('brief accepted','bounded providers accepted: 7' in brief),
  ('status Pango','Bounded Pango provider authority and filename continuity' in status),('catalog','pango-reference-consumed-provider-authority-and-filename-continuity\tevidence\tcurrent\tcanonical' in catalog),
  ('evidence libversion','libversion = 0.5400.0' in evidence),('evidence CF-004','ROLL_BACK_WHOLE_FAMILY_AND_ALIASES_TO_PRIOR_IMMUTABLE_GENERATION' in evidence),
 ]

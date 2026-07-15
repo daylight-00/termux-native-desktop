@@ -119,7 +119,7 @@ expected_meta={
  'provider_authority_accepted_count':'7',
  'provider_authority_open_count':'21',
  'authority_effect':'SEVEN_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT',
- 'next_review_tranche':'LIBJPEG_SO_62_OBJECT_REQUIREMENT_CORRECTION',
+ 'next_review_tranche':'LIBJPEG_SO_62_COMPATIBILITY_PROVIDER_CANDIDATE_PRODUCTION',
 }
 for k,v in expected_meta.items():
     if meta.get(k)!=v: errors.append(f'metadata {k}: expected {v}, got {meta.get(k)!r}')
@@ -133,7 +133,7 @@ markers=[
  ('state version','state_version:' in state),
  ('accepted seven','accepted: 7' in state),
  ('open zero','open_no_token_roots: 0' in state),
- ('next task','Task ID: `resolve-libjpeg-so-62-provider-candidate-gap`' in active),
+ ('next task','Task ID: `produce-libjpeg-so-62-compatibility-provider-candidate`' in active),
  ('brief accepted','bounded providers accepted: 7' in brief),
  ('status accepted','`libtasn1` covers external GnuTLS 3.8.9 ASN.1/security' in status),
  ('catalog','libtasn1-reference-consumed-provider-authority\tevidence\tcurrent\tcanonical' in catalog),

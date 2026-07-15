@@ -1,83 +1,83 @@
-# Active task: resolve the `libjpeg.so.62` provider-candidate gap
+# Active task: produce the `libjpeg.so.62` compatibility-provider candidate
 
-> Task ID: `resolve-libjpeg-so-62-provider-candidate-gap`
+> Task ID: `produce-libjpeg-so-62-compatibility-provider-candidate`
 >
-> Expected state on completion: OJ-001 has an exact required-identity/provider-candidate disposition, or a precise bounded external input request; no provider composition, target population, materialization, or activation is implied.
+> Expected state on completion: one exact scratch-built `libjpeg.so.62` candidate and structured build/ELF evidence are returned from authoritative user Termux, or the build is explicitly blocked with bounded diagnostics; no installation, provider acceptance, target population, materialization or activation is implied.
 
 ## Objective
 
-Resolve the sole T0 object-requirement mismatch:
+Produce and analyze the exact compatibility candidate specified by OJ-001:
 
 ```text
-required lookup identity: libjpeg.so.62
-current rejected candidate family: libjpeg.so.8
-recipe root: gpkg/libjpeg-turbo
+source: libjpeg-turbo 3.1.0
+source SHA-256: 9564c72b1dfd1d6fe6274c5f95a8d989b59854575d4bbee44ade7bc17aa9bc93
+WITH_JPEG7=OFF
+WITH_JPEG8=OFF
+expected member: libjpeg.so.62.4.0
+expected DT_SONAME: libjpeg.so.62
 ```
-
-Determine whether an exact authoritative Termux glibc `libjpeg.so.62` candidate exists, whether the requirement itself must be corrected, or whether the selected capability must remain blocked.
 
 ## Why now
 
-All seven no-token Class A roots now have bounded provider authority. Pango's CF-001–CF-004 continuity policy is explicit. Before beginning broader reference-adapted provider review, the unique T0 provider-candidate mismatch should be resolved so later composition work does not inherit a known identity contradiction.
+OJ-001 is the only remaining T0 identity contradiction. The requirement and production path are now explicit, so the smallest next step is to obtain one real SONAME-62 object before any provider-authority or broader reference-adapted review proceeds.
 
 ## Current accepted decisions
 
-- Seven no-token recipes are Class A for package-specific adaptation.
-- Seven bounded provider claims are accepted: four X.Org roots, `libtasn1`, `libepoxy`, and the three-member Pango family.
-- Pango concrete suffix `5400.0` is accepted for the exact 1.54.0 family; SONAME aliases are the continuity contract, not oracle suffix `5600.3`.
-- All 28 SUP-02 requests remain historical and zero are required now.
-- Composition, target population, materialization, and activation remain blocked.
+- `libjpeg.so.62` is the authoritative stable lookup requirement.
+- Existing Termux and Termux-glibc package recipes enable `WITH_JPEG8` and produce the incompatible `libjpeg.so.8` family.
+- No exact repository SONAME-62 package or artifact is bound.
+- A source-built compatibility provider is required, but no unbuilt object has provider authority.
+- Seven previously bounded providers remain accepted; composition, target population and activation remain blocked.
 
 ## In scope
 
-- Re-read the accepted SUP-01 OJ-001 correction and canonical requirement rows.
-- Inspect exact candidate artifacts and authoritative lookup-name requirements for `libjpeg.so.62`.
-- Distinguish requirement correction, provider discovery, compatibility bridge, and unsupported substitution.
-- Use one bounded Termux acquisition/analyzer package only if exact repository bytes or ELF identity are unavailable in the web runtime.
-- Define update and rollback boundaries without selecting target paths or materializing files.
+- Build one scratch-only shared candidate from the exact pinned source in user Termux.
+- Record source, command, environment/toolchain coordinates and output manifest.
+- Verify source digest, member digest, ELF class/machine and `DT_SONAME`.
+- Return candidate bytes and compact evidence in one result `.tar.zst`.
+- Preserve all package databases, installed files, provider stores, target layouts and selectors.
 
 ## Out of scope
 
-- Accepting `libjpeg.so.8` as a silent substitute for `libjpeg.so.62`.
-- Installing, removing, upgrading, downgrading, copying, or linking packages.
-- Complete GTK/image provider composition.
-- Target paths, alias creation, generation publication, deployment, or activation.
-- Reconstructing all supplier producing-build provenance without a recorded Class C escalation.
+- Installing or packaging the candidate into the live Termux prefix.
+- Creating `libjpeg.so.62` aliases to a SONAME-8 object.
+- Accepting provider authority solely because the build succeeds.
+- Complete JPEG/GTK composition, target paths, population, deployment or activation.
+- Rebuilding unrelated dependencies or fulfilling historical SUP-02 requests.
 
 ## Required reading
 
 - `docs/current/STATE.yaml`
 - `docs/constitution/PRINCIPLES.md`
 - `docs/decisions/0005-proportional-assurance-depth.md`
-- `docs/evidence/provider-claim-classification.md`
-- `docs/evidence/pango-reference-consumed-provider-authority-and-filename-continuity.md`
-- `experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification.tsv`
-- `experiments/glibc/selected-obsidian-provider-authority/review/generic-build-attestation-adaptation-gap-evidence-supply-batch-sup-01-response-review.tsv`
-- `experiments/glibc/selected-obsidian-provider-authority/review/generic-build-attestation-adaptation-object-review-set.tsv`
-
-Do not load historical handoff or refactor records by default.
+- `docs/evidence/libjpeg-so-62-provider-candidate-disposition.md`
+- `docs/operations/COLLABORATION.md`
+- `docs/operations/EXECUTION.md`
+- `docs/operations/platforms/chatgpt-web.md`
+- `experiments/glibc/selected-obsidian-provider-authority/review/libjpeg-so-62-provider-candidate-disposition.tsv`
 
 ## Pending external inputs
 
-None at task start. If exact package bytes are required and sandbox DNS/egress is unavailable, create one self-contained Termux acquisition/analyzer wrapper with exact repository coordinates and expected digests.
+None at task start. The agent must prepare the bounded Termux source-build/analyzer package first.
 
 ## Next valid action
 
-Construct a canonical OJ-001 review surface that compares the authoritative `libjpeg.so.62` requirement with every exact eligible Termux candidate and records one of: exact provider found, requirement corrected, explicit compatibility bridge required, or capability remains blocked.
+Create and sandbox-test one self-contained Termux runner that verifies the exact source, builds only in scratch, analyzes the resulting ELF, emits structured status and archives candidate bytes plus evidence without installation.
 
 ## Stop conditions
 
-Stop without accepting a provider if:
+Stop without accepting a candidate if:
 
-- only a `libjpeg.so.8` candidate is available;
-- consumer binding or required SONAME authority is ambiguous;
-- multiple non-equivalent `libjpeg.so.62` candidates remain unresolved;
-- the decision would create an alias, select a target path, materialize bytes, or activate a generation.
+- the source digest differs;
+- the build produces no `libjpeg.so.62` member or a different `DT_SONAME`;
+- the runner would modify installed packages, the live prefix, provider stores, target layouts or selectors;
+- the toolchain/build boundary cannot be recorded sufficiently to identify the produced object;
+- the only available result remains `libjpeg.so.8`.
 
 ## Completion criteria
 
-- OJ-001 has one explicit canonical disposition;
-- generated claims reproduce deterministically;
-- negative tests reject SONAME-8 substitution and authority broadening;
-- the next reference-adapted provider tranche is named;
-- repository and runtime remain unchanged outside review metadata and tests.
+- one bounded runner package is produced and exact-simulated where possible;
+- the user returns one structured result archive;
+- candidate bytes, member SHA-256, ELF identity, `DT_SONAME`, source digest and build manifest are reviewable;
+- provider authority remains a separate next decision;
+- repository and runtime remain unchanged outside accepted review metadata and tests.

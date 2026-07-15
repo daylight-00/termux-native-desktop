@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-15.13`
+> Semantic state version: `2026-07-15.14`
 >
 > This is the compact current-state entry point. Exact commit and tree coordinates come from the checked-out full Git bundle, not from self-referential repository text.
 
@@ -82,7 +82,7 @@ target population: blocked
 activation: blocked
 ```
 
-Exact artifact/member identity, adaptation semantics, provider selection, composition, target population, and activation remain separate states. The claim inventory remains at [`../evidence/provider-claim-classification.md`](../evidence/provider-claim-classification.md).
+Exact artifact/member identity, adaptation semantics, provider selection, composition, target population, and activation remain separate states. OJ-001 is dispositioned at [`../evidence/libjpeg-so-62-provider-candidate-disposition.md`](../evidence/libjpeg-so-62-provider-candidate-disposition.md); the claim inventory remains at [`../evidence/provider-claim-classification.md`](../evidence/provider-claim-classification.md).
 
 ## Documentation and web-session state
 
@@ -100,9 +100,9 @@ Exact artifact/member identity, adaptation semantics, provider selection, compos
 
 ## Current project phase
 
-The active task is `resolve-libjpeg-so-62-provider-candidate-gap`.
+The active task is `produce-libjpeg-so-62-compatibility-provider-candidate`.
 
-All no-token provider roots are complete. The next phase resolves the sole T0 contradiction between the authoritative `libjpeg.so.62` requirement and the currently rejected `libjpeg.so.8` candidate family before broader reference-adapted provider review. No complete composition, target population, materialization, or activation is allowed in this phase.
+All no-token provider roots are complete. OJ-001 now records that no exact repository SONAME-62 candidate exists and that the `libjpeg.so.8` family remains an invalid substitute. The next phase produces one scratch-built `libjpeg.so.62.4.0` candidate from pinned libjpeg-turbo 3.1.0 with `WITH_JPEG8=OFF`, without installation or provider acceptance. No complete composition, target population, materialization, or activation is allowed in this phase.
 
 ## Current non-goals
 

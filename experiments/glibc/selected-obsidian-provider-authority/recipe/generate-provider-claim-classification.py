@@ -15,6 +15,7 @@ XORG_PROVIDER_REVIEW = Path('experiments/glibc/selected-obsidian-provider-author
 LIBTASN1_PROVIDER_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/libtasn1-reference-consumed-provider-authority.tsv')
 LIBEPOXY_PROVIDER_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/libepoxy-reference-consumed-provider-authority.tsv')
 PANGO_PROVIDER_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/pango-reference-consumed-provider-authority.tsv')
+LIBJPEG_DISPOSITION = Path('experiments/glibc/selected-obsidian-provider-authority/review/libjpeg-so-62-provider-candidate-disposition.tsv')
 
 CLAIM_OUTPUT = Path('experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification.tsv')
 SUP02_OUTPUT = Path('experiments/glibc/selected-obsidian-provider-authority/review/provider-sup-02-request-disposition.tsv')
@@ -116,6 +117,7 @@ def main() -> None:
     libtasn1_provider_reviews = read_tsv(repo / LIBTASN1_PROVIDER_REVIEW)
     libepoxy_provider_reviews = read_tsv(repo / LIBEPOXY_PROVIDER_REVIEW)
     pango_provider_reviews = read_tsv(repo / PANGO_PROVIDER_REVIEW)
+    libjpeg_dispositions = read_tsv(repo / LIBJPEG_DISPOSITION)
     provider_reviews = xorg_provider_reviews + libtasn1_provider_reviews + libepoxy_provider_reviews + pango_provider_reviews
     if len(roots) != 28:
         raise SystemExit(f'expected 28 root rows, found {len(roots)}')
@@ -133,6 +135,13 @@ def main() -> None:
         raise SystemExit(f'expected 1 libepoxy provider review, found {len(libepoxy_provider_reviews)}')
     if len(pango_provider_reviews) != 1:
         raise SystemExit(f'expected 1 Pango provider review, found {len(pango_provider_reviews)}')
+    if len(libjpeg_dispositions) != 1:
+        raise SystemExit(f'expected 1 libjpeg disposition row, found {len(libjpeg_dispositions)}')
+    libjpeg_disposition = libjpeg_dispositions[0]
+    if libjpeg_disposition['requirement_id'] != 'OJ-001' or libjpeg_disposition['required_lookup_identity'] != 'libjpeg.so.62':
+        raise SystemExit('libjpeg disposition does not bind canonical OJ-001 identity')
+    if libjpeg_disposition['disposition'] != 'EXPLICIT_SOURCE_BUILD_COMPATIBILITY_PROVIDER_REQUIRED':
+        raise SystemExit('libjpeg disposition must require explicit compatibility-provider production')
     semantic_by_root = {row['root_review_id']: row for row in semantic_reviews}
     if len(semantic_by_root) != len(semantic_reviews):
         raise SystemExit('duplicate root_review_id in no-token semantic review')
@@ -188,9 +197,10 @@ def main() -> None:
         )
 
         if root['object_correction_requirement_set'] != 'NONE':
-            artifact_gap = 'OJ-001_REQUIRED_SONAME_LIBJPEG_SO_62_HAS_NO_BOUND_PROVIDER_CANDIDATE'
-            artifact_action = 'LOCATE_EXACT_LIBJPEG_SO_62_PROVIDER_OR_REVIEW_AUTHORITATIVE_REQUIREMENT'
-            artifact_state = 'OPEN_REQUIREMENT_CORRECT_PROVIDER_CANDIDATE_ABSENT'
+            artifact_gap = 'OJ-001_EXPLICIT_COMPATIBILITY_PROVIDER_BUILD_REQUIRED_NO_EXACT_REPOSITORY_CANDIDATE'
+            artifact_action = 'PRODUCE_AND_ANALYZE_EXACT_LIBJPEG_SO_62_COMPATIBILITY_PROVIDER_CANDIDATE_FROM_PINNED_SOURCE'
+            artifact_state = 'REQUIREMENT_IDENTITY_DECIDED_COMPATIBILITY_CANDIDATE_NOT_YET_PRODUCED'
+            common_evidence += f';{LIBJPEG_DISPOSITION.name};{libjpeg_disposition["review_id"]}'
         else:
             artifact_gap = 'NONE_FOR_EXACT_CANDIDATE_ARTIFACT_AND_NAMED_MEMBER_IDENTITY'
             artifact_action = 'NONE_RETAIN_EXACT_ARTIFACT_AND_MEMBER_DIGESTS_AT_TRANSFER'
@@ -237,8 +247,9 @@ def main() -> None:
             adaptation_gap += ';CF-001_CF-002_CF-003_CF-004_ALIAS_SUCCESSOR_AND_ROLLBACK_POLICY'
             adaptation_action += ';REVIEW_CONSUMER_ALIAS_BINDING_AND_VERSION_DRIFT_POLICY'
         if root['object_correction_requirement_set'] != 'NONE':
-            adaptation_gap += ';OJ-001_PROVIDER_CANDIDATE_ABSENT'
-            adaptation_action = 'DEFER_ROOT_PROVIDER_REVIEW_UNTIL_OJ-001_EXACT_PROVIDER_CANDIDATE_IS_RESOLVED'
+            adaptation_gap += ';OJ-001_MINIMAL_WITH_JPEG8_OFF_COMPATIBILITY_BUILD_NOT_YET_PRODUCED'
+            adaptation_action = 'PRODUCE_EXACT_COMPATIBILITY_CANDIDATE_THEN_REVIEW_MINIMAL_SOURCE_BUILD_DELTA_AND_OBJECT_IMPACT'
+            adaptation_evidence_suffix += f';{LIBJPEG_DISPOSITION.name};{libjpeg_disposition["review_id"]}'
 
         claims.append({
             'claim_id': f'PCC-{root_slug}-ADAPTATION',
@@ -280,9 +291,14 @@ def main() -> None:
                 f"{common_evidence};authority-coverage-ledger.tsv;generic-source-authority-boundary.tsv;"
                 'selected-object-authority-base.tsv'
             )
-            provider_gap = ('CAPABILITY_NECESSITY_AND_CONSUMER_BINDING;CONFLICT_AND_EXCLUSION_REVIEW;UPDATE_AND_ROLLBACK_BOUNDARY' if semantic_review else 'ADAPTATION_CLASSIFICATION;CAPABILITY_NECESSITY_AND_CONSUMER_BINDING;CONFLICT_AND_EXCLUSION_REVIEW;UPDATE_AND_ROLLBACK_BOUNDARY')
-            provider_action = ('CAPABILITY_LEVEL_PROVIDER_REVIEW_WITH_TARGETED_PASSIVE_CONSUMER_BINDING_ONLY_WHERE_AMBIGUOUS' if semantic_review else 'CAPABILITY_LEVEL_PROVIDER_REVIEW_AFTER_ADAPTATION_CLASSIFICATION_WITH_TARGETED_PASSIVE_CONSUMER_BINDING_ONLY_WHERE_AMBIGUOUS')
-            provider_state = 'CLASSIFIED_OPEN_PROVIDER_AUTHORITY_NOT_ACCEPTED'
+            if root['object_correction_requirement_set'] != 'NONE':
+                provider_gap = 'EXACT_COMPATIBILITY_PROVIDER_ARTIFACT_MEMBER_DIGEST_AND_SONAME_NOT_YET_PRODUCED;ADAPTATION_CLASSIFICATION;CAPABILITY_NECESSITY_AND_CONSUMER_BINDING;CONFLICT_AND_EXCLUSION_REVIEW;UPDATE_AND_ROLLBACK_BOUNDARY'
+                provider_action = 'RUN_BOUNDED_TERMUX_COMPATIBILITY_CANDIDATE_BUILD_AND_ANALYZER_THEN_PERFORM_SEPARATE_PROVIDER_AUTHORITY_REVIEW'
+                provider_state = 'COMPATIBILITY_PROVIDER_SPECIFIED_CANDIDATE_NOT_YET_PRODUCED'
+            else:
+                provider_gap = ('CAPABILITY_NECESSITY_AND_CONSUMER_BINDING;CONFLICT_AND_EXCLUSION_REVIEW;UPDATE_AND_ROLLBACK_BOUNDARY' if semantic_review else 'ADAPTATION_CLASSIFICATION;CAPABILITY_NECESSITY_AND_CONSUMER_BINDING;CONFLICT_AND_EXCLUSION_REVIEW;UPDATE_AND_ROLLBACK_BOUNDARY')
+                provider_action = ('CAPABILITY_LEVEL_PROVIDER_REVIEW_WITH_TARGETED_PASSIVE_CONSUMER_BINDING_ONLY_WHERE_AMBIGUOUS' if semantic_review else 'CAPABILITY_LEVEL_PROVIDER_REVIEW_AFTER_ADAPTATION_CLASSIFICATION_WITH_TARGETED_PASSIVE_CONSUMER_BINDING_ONLY_WHERE_AMBIGUOUS')
+                provider_state = 'CLASSIFIED_OPEN_PROVIDER_AUTHORITY_NOT_ACCEPTED'
             provider_effect = 'NO_PROVIDER_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT'
             provider_prohibited = 'PACKAGE_MEMBER_AND_RECIPE_EVIDENCE_DO_NOT_IMPLY_PROVIDER_AUTHORITY_OR_COMPLETE_RUNTIME_COMPOSITION'
 
@@ -318,12 +334,12 @@ def main() -> None:
         'supplier_or_reference_boundary': 'AUTHORITATIVE_WORKLOAD_OR_REFERENCE_REQUIREMENT',
         'project_owned_changed_boundary': 'PROJECT_INTERPRETATION_OF_THE_REQUIRED_RUNTIME_IDENTITY',
         'risk_modifiers': 'ABI_FAMILY_SUBSTITUTION;GUI_IMAGE_DECODING',
-        'existing_evidence': '0157_SUP-01_RESPONSE;0158_SUP-01_RESPONSE_REVIEW;libjpeg.so.8_SUBSTITUTION_REJECTED',
-        'remaining_gap': 'NO_EXACT_LIBJPEG_SO_62_PROVIDER_CANDIDATE_BOUND',
-        'minimum_closure_action': 'LOCATE_EXACT_CANDIDATE_OR_REVIEW_AUTHORITATIVE_REQUIREMENT_WITHOUT_SUBSTITUTING_LIBJPEG_SO_8',
-        'explicitly_excluded_evidence': 'SUP-02_BUILD_ATTESTATION_FOR_THE_WRONG_ABI_FAMILY',
-        'escalation_trigger': 'EXACT_CANDIDATE_LOCATED_OR_AUTHORITATIVE_REQUIREMENT_CORRECTED',
-        'classification_state': 'REQUIREMENT_CORRECTION_ACCEPTED_PROVIDER_CANDIDATE_OPEN',
+        'existing_evidence': f'0157_SUP-01_RESPONSE;0158_SUP-01_RESPONSE_REVIEW;libjpeg.so.8_SUBSTITUTION_REJECTED;{LIBJPEG_DISPOSITION.name};{libjpeg_disposition["review_id"]}',
+        'remaining_gap': 'EXACT_LIBJPEG_SO_62_COMPATIBILITY_PROVIDER_ARTIFACT_MEMBER_DIGEST_AND_SONAME_NOT_YET_PRODUCED',
+        'minimum_closure_action': 'RUN_BOUNDED_USER_TERMUX_SOURCE_BUILD_AND_ELF_ANALYZER_FOR_PINNED_LIBJPEG_TURBO_3_1_0_WITH_JPEG8_OFF',
+        'explicitly_excluded_evidence': 'SUP-02_BUILD_ATTESTATION_FOR_THE_WRONG_ABI_FAMILY;LIBJPEG_SO_8_ALIAS_OR_SUBSTITUTION',
+        'escalation_trigger': 'COMPATIBILITY_CANDIDATE_OUTPUT_DIFFERS_FROM_EXPECTED_SONAME_OR_SOURCE_BUILD_COORDINATES',
+        'classification_state': 'EXPLICIT_COMPATIBILITY_PROVIDER_BUILD_REQUIRED_CANDIDATE_NOT_YET_PRODUCED',
         'authority_effect': 'NO_PROVIDER_OR_TARGET_EFFECT',
         'prohibited_inference': 'A_BUILD_RECORD_FOR_LIBJPEG_SO_8_CANNOT_SATISFY_A_LIBJPEG_SO_62_REQUIREMENT',
     })
@@ -485,7 +501,10 @@ def main() -> None:
         ('provider_authority_accepted_count', str(sum(1 for row in provider_reviews if row['decision'] == 'ACCEPTED_BOUNDED_PROVIDER'))),
         ('provider_authority_open_count', str(claim_type_counts['PROVIDER_AUTHORITY'] - len(provider_reviews))),
         ('authority_effect', 'SEVEN_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT'),
-        ('next_review_tranche', 'LIBJPEG_SO_62_OBJECT_REQUIREMENT_CORRECTION'),
+        ('oj001_disposition', libjpeg_disposition['disposition']),
+        ('oj001_required_identity', libjpeg_disposition['required_lookup_identity']),
+        ('oj001_candidate_state', libjpeg_disposition['exact_repository_candidate_state']),
+        ('next_review_tranche', 'LIBJPEG_SO_62_COMPATIBILITY_PROVIDER_CANDIDATE_PRODUCTION'),
     ]
 
     write_tsv(out_root / CLAIM_OUTPUT, CLAIM_FIELDS, claims)

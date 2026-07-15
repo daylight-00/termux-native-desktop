@@ -1,0 +1,106 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT=${1:-$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)}
+REVIEW=experiments/glibc/selected-obsidian-provider-authority/review
+required=(
+  docs/evidence/libjpeg-so-62-provider-candidate-disposition.md
+  "$REVIEW/libjpeg-so-62-provider-candidate-disposition.tsv"
+  "$REVIEW/generic-build-attestation-adaptation-object-review-set.tsv"
+  "$REVIEW/generic-build-attestation-adaptation-gap-evidence-supply-batch-sup-01-response-review.tsv"
+  "$REVIEW/generic-recipe-binding-and-drift-target-receipt-review.tsv"
+  "$REVIEW/provider-claim-classification.tsv"
+  "$REVIEW/provider-claim-classification-metadata.tsv"
+)
+for rel in "${required[@]}"; do
+  [ -f "$ROOT/$rel" ] || { echo "libjpeg-so-62-disposition: FAIL: missing $rel" >&2; exit 1; }
+done
+
+python3 - "$ROOT" <<'PY'
+from pathlib import Path
+import csv,sys
+root=Path(sys.argv[1]); review=root/'experiments/glibc/selected-obsidian-provider-authority/review'
+def read(name):
+    with (review/name).open(newline='',encoding='utf-8') as f: return list(csv.DictReader(f,delimiter='\t'))
+errors=[]
+rows=read('libjpeg-so-62-provider-candidate-disposition.tsv')
+objects=read('generic-build-attestation-adaptation-object-review-set.tsv')
+sup01=read('generic-build-attestation-adaptation-gap-evidence-supply-batch-sup-01-response-review.tsv')
+binding=read('generic-recipe-binding-and-drift-target-receipt-review.tsv')
+claims=read('provider-claim-classification.tsv')
+meta={r['key']:r['value'] for r in read('provider-claim-classification-metadata.tsv')}
+if len(rows)!=1: errors.append(f'expected 1 disposition row, found {len(rows)}')
+row=rows[0] if rows else {}
+expected={
+'review_id':'LIBJPEG-OJ-001-DISP-001','requirement_id':'OJ-001',
+'object_review_id':'generic-object-review:fc085dca914b298d1356','evidence_row_id':'selected:a7e42baafca8ed4717e3',
+'required_lookup_identity':'libjpeg.so.62','prior_oracle_concrete_identity':'libjpeg.so.62.3.0',
+'rejected_artifact_id':'generic-artifact:e672a721d7a949048cab','rejected_artifact_package':'libjpeg-turbo-glibc',
+'rejected_artifact_version':'3.1.0','rejected_artifact_sha256':'e672a721d7a949048cab5c7073ef0a0c05f627b8fc691ecc2d0adea6a5a5689e',
+'rejected_recipe_root':'gpkg/libjpeg-turbo','rejected_recipe_tree':'cb58a7c1d7f4a1f89d036e4c80da596c0c61234c',
+'rejected_recipe_configuration':'-DWITH_JPEG8=ON','rejected_observed_family':'libjpeg.so;libjpeg.so.8;libjpeg.so.8.3.2',
+'exact_repository_candidate_state':'NO_EXACT_SONAME_62_PACKAGE_DEFINITION_OR_BOUND_ARTIFACT_FOUND',
+'upstream_source_ref':'libjpeg-turbo/libjpeg-turbo@3.1.0',
+'upstream_source_sha256':'9564c72b1dfd1d6fe6274c5f95a8d989b59854575d4bbee44ade7bc17aa9bc93',
+'expected_compatibility_soname':'libjpeg.so.62','expected_compatibility_concrete_member':'libjpeg.so.62.4.0',
+'disposition':'EXPLICIT_SOURCE_BUILD_COMPATIBILITY_PROVIDER_REQUIRED',
+'authority_effect':'REQUIREMENT_AND_CANDIDATE_PRODUCTION_SPECIFICATION_ONLY_NO_PROVIDER_COMPOSITION_TARGET_MATERIALIZATION_OR_ACTIVATION_EFFECT',
+}
+for k,v in expected.items():
+    if row.get(k)!=v: errors.append(f'{k}: expected {v}, got {row.get(k)!r}')
+for field,token in [
+ ('repository_candidate_search_scope','TERMUX_PACMAN_GLIBC_PACKAGES_PINNED_AND_CURRENT'),
+ ('upstream_default_abi_mode','WITH_JPEG8=OFF'),('upstream_default_abi_mode','SO_AGE=4'),
+ ('required_build_delta','REMOVE_WITH_JPEG8_ON'),('required_build_delta','WITHOUT_INSTALL_ALIAS_CREATION_OR_ACTIVATION'),
+ ('next_action','USER_TERMUX_SOURCE_BUILD_AND_ELF_ANALYZER'),
+ ('prohibited_inference','DOES_NOT_ACCEPT_LIBJPEG_SO_8_AS_SUBSTITUTE'),('prohibited_inference','CREATE_A_SONAME_ALIAS'),
+]:
+    if token not in row.get(field,''): errors.append(f'{field} lacks {token}')
+obj=next((r for r in objects if r['object_review_id']==row.get('object_review_id')),None)
+if not obj: errors.append('canonical object review row missing')
+else:
+    checks={'evidence_row_id':row.get('evidence_row_id'),'artifact_id':row.get('rejected_artifact_id'),'artifact_package':row.get('rejected_artifact_package'),'artifact_version':row.get('rejected_artifact_version'),'artifact_sha256':row.get('rejected_artifact_sha256'),'recipe_root':row.get('rejected_recipe_root'),'recipe_tree':row.get('rejected_recipe_tree')}
+    for k,v in checks.items():
+        if obj.get(k)!=v: errors.append(f'object review {k} differs')
+    if obj.get('object_member_review_state')!='EXPECTED_SONAME_ALIAS_ABSENT_CORRECT_CANDIDATE_REQUIRED': errors.append('object row no longer rejects missing SONAME-62 candidate')
+sr=next((r for r in sup01 if r['requirement_id']=='OJ-001'),None)
+if not sr or sr.get('accepted_required_identity')!='libjpeg.so.62' or sr.get('rejected_substitute_identity')!='libjpeg.so.8': errors.append('SUP-01 accepted requirement boundary differs')
+br=next((r for r in binding if r['evidence_row_id']==row.get('evidence_row_id')),None)
+if not br or br.get('recipe_source_sha256')!=row.get('upstream_source_sha256'): errors.append('pinned source digest differs from canonical recipe binding')
+claim={r['claim_id']:r for r in claims}
+want={
+'PCC-LIBJPEG-TURBO-ARTIFACT':('REQUIREMENT_IDENTITY_DECIDED_COMPATIBILITY_CANDIDATE_NOT_YET_PRODUCED','OJ-001_EXPLICIT_COMPATIBILITY_PROVIDER_BUILD_REQUIRED'),
+'PCC-LIBJPEG-TURBO-PROVIDER':('COMPATIBILITY_PROVIDER_SPECIFIED_CANDIDATE_NOT_YET_PRODUCED','EXACT_COMPATIBILITY_PROVIDER_ARTIFACT_MEMBER_DIGEST_AND_SONAME_NOT_YET_PRODUCED'),
+'PCC-OJ-001-REQUIRED-OBJECT':('EXPLICIT_COMPATIBILITY_PROVIDER_BUILD_REQUIRED_CANDIDATE_NOT_YET_PRODUCED','EXACT_LIBJPEG_SO_62_COMPATIBILITY_PROVIDER_ARTIFACT_MEMBER_DIGEST_AND_SONAME_NOT_YET_PRODUCED'),
+}
+for cid,(state,gap) in want.items():
+    r=claim.get(cid,{})
+    if r.get('classification_state')!=state: errors.append(f'{cid}: state differs')
+    if gap not in r.get('remaining_gap',''): errors.append(f'{cid}: gap differs')
+    if 'libjpeg-so-62-provider-candidate-disposition.tsv' not in r.get('existing_evidence',''): errors.append(f'{cid}: canonical disposition not cited')
+if claim.get('PCC-LIBJPEG-TURBO-PROVIDER',{}).get('authority_effect')!='NO_PROVIDER_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT': errors.append('libjpeg provider authority was broadened')
+want_meta={
+'provider_review_count':'7','provider_authority_accepted_count':'7','provider_authority_open_count':'21',
+'oj001_disposition':'EXPLICIT_SOURCE_BUILD_COMPATIBILITY_PROVIDER_REQUIRED','oj001_required_identity':'libjpeg.so.62',
+'oj001_candidate_state':'NO_EXACT_SONAME_62_PACKAGE_DEFINITION_OR_BOUND_ARTIFACT_FOUND',
+'next_review_tranche':'LIBJPEG_SO_62_COMPATIBILITY_PROVIDER_CANDIDATE_PRODUCTION',
+}
+for k,v in want_meta.items():
+    if meta.get(k)!=v: errors.append(f'metadata {k}: expected {v}, got {meta.get(k)!r}')
+state=(root/'docs/current/STATE.yaml').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); brief=(root/'docs/current/BRIEF.md').read_text(); status=(root/'STATUS.md').read_text(); catalog=(root/'docs/catalog.tsv').read_text(); evidence=(root/'docs/evidence/libjpeg-so-62-provider-candidate-disposition.md').read_text()
+markers=[
+('state version','state_version: 2026-07-15.14' in state),('state task','produce-libjpeg-so-62-compatibility-provider-candidate' in state),
+('active task','Task ID: `produce-libjpeg-so-62-compatibility-provider-candidate`' in active),
+('brief task','produce-libjpeg-so-62-compatibility-provider-candidate' in brief),
+('status disposition','LIBJPEG_SO_62_EXPLICIT_COMPATIBILITY_PROVIDER_BUILD_REQUIRED' in status),
+('catalog','libjpeg-so-62-provider-candidate-disposition\tevidence\tcurrent\tcanonical' in catalog),
+('evidence expected concrete','libjpeg.so.62.4.0' in evidence),('evidence no alias','not an alias bridge' in evidence),
+]
+for label,ok in markers:
+    if not ok: errors.append(f'missing current marker: {label}')
+if errors:
+    for e in errors: print('libjpeg-so-62-disposition: FAIL:',e,file=sys.stderr)
+    raise SystemExit(1)
+print('libjpeg-so-62-disposition: PASS: SONAME-8 substitution rejected and pinned v6b compatibility-provider production is required')
+PY
+
+echo 'libjpeg-so-62-disposition: all checks passed'
