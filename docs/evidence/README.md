@@ -40,3 +40,5 @@ The current provider claim inventory and SUP-02 reclassification are in [`provid
 The completed seven-root Class A recipe review is in [`no-token-recipe-semantic-review.md`](no-token-recipe-semantic-review.md). The four bounded X.Org provider decisions are in [`xorg-reference-consumed-provider-authority.md`](xorg-reference-consumed-provider-authority.md). The bounded libtasn1 decision is in [`libtasn1-reference-consumed-provider-authority.md`](libtasn1-reference-consumed-provider-authority.md).
 
 The bounded libepoxy decision is in [`libepoxy-reference-consumed-provider-authority.md`](libepoxy-reference-consumed-provider-authority.md). Its scope is GTK 3.24.49 X11 GLX dispatch only; EGL is not claimed.
+
+The bounded Pango family and CF-001–CF-004 continuity decisions are in [`pango-reference-consumed-provider-authority-and-filename-continuity.md`](pango-reference-consumed-provider-authority-and-filename-continuity.md).

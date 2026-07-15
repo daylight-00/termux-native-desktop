@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-15.12`
+> Semantic state version: `2026-07-15.13`
 >
 > This is the compact current-state entry point. Exact commit and tree coordinates come from the checked-out full Git bundle, not from self-referential repository text.
 
@@ -71,11 +71,12 @@ replaced:             7
 unnecessary:          7
 ```
 
-The seven no-token recipe roots have completed bounded semantic review: all seven are Class A for package-specific recipe adaptation, with zero Class B reclassifications. The four X.Org roots `libxfixes`, `libxcomposite`, `libxi`, and `libxinerama` have bounded provider authority for their exact Termux members and the selected GTK 3.24.49 X11 capability scope. `libtasn1` has bounded provider authority for its exact Termux member and the selected external GnuTLS 3.8.9 ASN.1/security capability. `libepoxy` has bounded provider authority only for GTK 3.24.49 X11 GLX dispatch; EGL is not claimed. The decisions are recorded in [`../evidence/xorg-reference-consumed-provider-authority.md`](../evidence/xorg-reference-consumed-provider-authority.md), [`../evidence/libtasn1-reference-consumed-provider-authority.md`](../evidence/libtasn1-reference-consumed-provider-authority.md), and [`../evidence/libepoxy-reference-consumed-provider-authority.md`](../evidence/libepoxy-reference-consumed-provider-authority.md).
+The seven no-token recipe roots have completed bounded semantic review and bounded provider selection. The four X.Org roots `libxfixes`, `libxcomposite`, `libxi`, and `libxinerama` are accepted for their exact Termux members and selected GTK 3.24.49 X11 capabilities. `libtasn1` is accepted for the selected external GnuTLS 3.8.9 ASN.1/security capability. `libepoxy` is accepted only for GTK 3.24.49 X11 GLX dispatch; EGL is not claimed. The exact Pango 1.54.0 `libpango`, `libpangoft2`, and `libpangocairo` members are accepted as one GTK text provider family with explicit SONAME successor, update, and rollback continuity. The decisions are recorded in [`../evidence/xorg-reference-consumed-provider-authority.md`](../evidence/xorg-reference-consumed-provider-authority.md), [`../evidence/libtasn1-reference-consumed-provider-authority.md`](../evidence/libtasn1-reference-consumed-provider-authority.md), [`../evidence/libepoxy-reference-consumed-provider-authority.md`](../evidence/libepoxy-reference-consumed-provider-authority.md), and [`../evidence/pango-reference-consumed-provider-authority-and-filename-continuity.md`](../evidence/pango-reference-consumed-provider-authority-and-filename-continuity.md).
 
 ```text
-bounded providers accepted: 6
-remaining no-token provider roots open: 1
+bounded providers accepted: 7
+remaining no-token provider roots open: 0
+provider claims still open: 21
 complete composition: not reached
 target population: blocked
 activation: blocked
@@ -99,16 +100,16 @@ Exact artifact/member identity, adaptation semantics, provider selection, compos
 
 ## Current project phase
 
-The active task is `review-pango-reference-consumed-provider-authority-and-concrete-filename-drift`.
+The active task is `resolve-libjpeg-so-62-provider-candidate-gap`.
 
-It reviews the final no-token Class A root, separating Pango provider capability from CF-001–CF-004 concrete-filename continuity. The exact libepoxy member is now accepted only for GTK 3.24.49 X11 GLX dispatch; EGL remains outside that decision. No complete composition, target population, materialization, or activation is allowed in this phase.
+All no-token provider roots are complete. The next phase resolves the sole T0 contradiction between the authoritative `libjpeg.so.62` requirement and the currently rejected `libjpeg.so.8` candidate family before broader reference-adapted provider review. No complete composition, target population, materialization, or activation is allowed in this phase.
 
 ## Current non-goals
 
 Do not currently:
 
 - issue or fulfill a SUP-02 request without a recorded Class C reclassification or escalation trigger;
-- broaden the six accepted provider rows beyond their exact bounded capability scopes;
+- broaden the seven accepted provider rows beyond their exact bounded capability scopes;
 - populate a provider target layout;
 - activate the selected Obsidian generation;
 - redesign the runtime around Docker or a PRoot application baseline;

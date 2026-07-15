@@ -1,0 +1,126 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT=${1:-$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)}
+REVIEW=experiments/glibc/selected-obsidian-provider-authority/review
+required=(
+  docs/evidence/pango-reference-consumed-provider-authority-and-filename-continuity.md
+  "$REVIEW/pango-reference-consumed-provider-authority.tsv"
+  "$REVIEW/pango-concrete-filename-continuity-policy.tsv"
+  "$REVIEW/generic-artifact-member-inventory-receipt-review.tsv"
+  "$REVIEW/generic-recipe-binding-and-drift-target-receipt-review.tsv"
+  "$REVIEW/no-token-recipe-semantic-review.tsv"
+  "$REVIEW/provider-claim-classification.tsv"
+  "$REVIEW/provider-claim-classification-metadata.tsv"
+)
+for rel in "${required[@]}"; do
+  [ -f "$ROOT/$rel" ] || { echo "pango-provider-authority: FAIL: missing $rel" >&2; exit 1; }
+done
+
+python3 - "$ROOT" <<'PY'
+from pathlib import Path
+import csv, sys
+root=Path(sys.argv[1]); review=root/'experiments/glibc/selected-obsidian-provider-authority/review'
+def read(name):
+    with (review/name).open(newline='',encoding='utf-8') as f: return list(csv.DictReader(f,delimiter='\t'))
+errors=[]
+rows=read('pango-reference-consumed-provider-authority.tsv')
+policies=read('pango-concrete-filename-continuity-policy.tsv')
+bindings=read('generic-recipe-binding-and-drift-target-receipt-review.tsv')
+inventory=read('generic-artifact-member-inventory-receipt-review.tsv')
+semantic=read('no-token-recipe-semantic-review.tsv')
+claims=read('provider-claim-classification.tsv')
+meta={r['key']:r['value'] for r in read('provider-claim-classification-metadata.tsv')}
+if len(rows)!=1: errors.append(f'expected 1 provider row, found {len(rows)}')
+if len(policies)!=4: errors.append(f'expected 4 continuity rows, found {len(policies)}')
+row=rows[0] if rows else {}
+expected={
+'review_id':'PANGO-PROV-001','root_review_id':'generic-root-review:0dacddae106c6bd1006b','recipe_root':'gpkg/pango',
+'recipe_tree':'f9e9e2303e2c91322f7edcf1bc0c3b99f2d1d74a','artifact_id':'generic-artifact:7fdbef58f2a4fff712db',
+'artifact_package':'pango-glibc','artifact_version':'1.54.0','artifact_sha256':'7fdbef58f2a4fff712db62b7fcd0cab0bde91373eb4d1d133e97e947b9f43084',
+'evidence_row_ids':'selected:1ae5e5d5ff7893c87e25;selected:beb2bb532f0a84c2835f;selected:d73a4eb5d9d5ee688632',
+'exact_member_paths':'data/data/com.termux/files/usr/glibc/lib/libpango-1.0.so.0.5400.0;data/data/com.termux/files/usr/glibc/lib/libpangoft2-1.0.so.0.5400.0;data/data/com.termux/files/usr/glibc/lib/libpangocairo-1.0.so.0.5400.0',
+'exact_member_sha256s':'7debdcbc3dec18f7377e53a07a4d14159cde68b4cc07f0ed1c087f9d56268336;d80ef53ee344d7661acfa9b2fc863a61f24a2ff4f4492162eaa1582d62c2b305;c5ac95a46ad20c9536c0d63b38e1ee728f2d71e865e5aad6034e65f89f0ba708',
+'observed_sonames':'libpango-1.0.so.0;libpangoft2-1.0.so.0;libpangocairo-1.0.so.0',
+'observed_alias_targets':'libpango-1.0.so.0.5400.0;libpangoft2-1.0.so.0.5400.0;libpangocairo-1.0.so.0.5400.0',
+'oracle_identity_labels':'libpango-1.0.so.0.5600.3;libpangoft2-1.0.so.0.5600.3;libpangocairo-1.0.so.0.5600.3',
+'capability_scope':'GTK_3_24_49_TEXT_LAYOUT_PANGOFT2_FONTCONFIG_FREETYPE_AND_PANGOCAIRO_RENDERING',
+'concrete_filename_policy_ref':'PANGO-CF-001;PANGO-CF-002;PANGO-CF-003;PANGO-CF-004',
+'decision':'ACCEPTED_BOUNDED_PROVIDER','remaining_gap':'NONE_FOR_BOUNDED_PANGO_PROVIDER_AUTHORITY_AND_CF_001_CF_004_CONTINUITY_POLICY',
+}
+for k,v in expected.items():
+    if row.get(k)!=v: errors.append(f'provider {k}: expected {v}, got {row.get(k)!r}')
+for field, token in [
+ ('necessity_basis','GTK_3_24_49_REQUIRES_PANGO_GE_1_41'),
+ ('consumer_binding_basis','GTK_3_24_49_LINKS_PANGOCAIRO_UNCONDITIONALLY'),
+ ('candidate_conflict_and_exclusion_result','UNVERSIONED_DEVELOPMENT_ALIASES_EXCLUDED'),
+ ('update_boundary','CONCRETE_SUFFIX_CHANGE_ALONE_IS_NOT_REJECTION'),
+ ('rollback_boundary','ALL_THREE_PANGO_OBJECTS_AND_SONAME_ALIASES_ATOMICALLY'),
+ ('authority_effect','NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT'),
+ ('prohibited_inference','PANGOXFT'),
+]:
+    if token not in row.get(field,''): errors.append(f'provider {field}: missing {token}')
+
+# Cross-check exact evidence rows.
+want_ids=set(expected['evidence_row_ids'].split(';'))
+inv={r['evidence_row_id']:r for r in inventory if r['evidence_row_id'] in want_ids}
+bind={r['evidence_row_id']:r for r in bindings if r['evidence_row_id'] in want_ids}
+if set(inv)!=want_ids: errors.append('inventory does not cover exact three Pango evidence rows')
+if set(bind)!=want_ids: errors.append('binding review does not cover exact three Pango evidence rows')
+paths=expected['exact_member_paths'].split(';'); shas=expected['exact_member_sha256s'].split(';'); sonames=expected['observed_sonames'].split(';'); aliases=expected['observed_alias_targets'].split(';'); labels=expected['oracle_identity_labels'].split(';')
+for idx,eid in enumerate(expected['evidence_row_ids'].split(';')):
+    b=bind.get(eid,{})
+    i=inv.get(eid,{})
+    if b.get('drift_target_member_path')!=paths[idx]: errors.append(f'{eid}: member path mismatch')
+    if b.get('drift_target_member_sha256')!=shas[idx]: errors.append(f'{eid}: member SHA mismatch')
+    if b.get('drift_target_observed_soname')!=sonames[idx]: errors.append(f'{eid}: SONAME mismatch')
+    if i.get('alias_link_target')!=aliases[idx]: errors.append(f'{eid}: alias target mismatch')
+    if i.get('identity_label')!=labels[idx]: errors.append(f'{eid}: oracle label mismatch')
+    if i.get('expected_soname_alias')!=sonames[idx]: errors.append(f'{eid}: expected alias mismatch')
+
+policy_expected={
+'PANGO-CF-001':('CF-001','ACCEPT_SONAME_ALIAS_CONTINUITY_REQUIRED','TARGET_PATH_SELECTION_OR_ALIAS_CREATION'),
+'PANGO-CF-002':('CF-002','ACCEPT_EXACT_1_54_0_THREE_MEMBER_FAMILY_AS_BOUNDED_SUCCESSOR','NO_BYTE_EQUIVALENCE_OR_COMPLETE_COMPOSITION_EFFECT'),
+'PANGO-CF-003':('CF-003','REVIEW_NEW_IMMUTABLE_FAMILY_ON_ANY_COORDINATE_CHANGE','NO_AUTOMATIC_SUCCESSOR_PROMOTION'),
+'PANGO-CF-004':('CF-004','ROLL_BACK_WHOLE_FAMILY_AND_ALIASES_TO_PRIOR_IMMUTABLE_GENERATION','NO_SELECTOR_MUTATION_IN_THIS_TRANSACTION'),
+}
+by_policy={r['policy_id']:r for r in policies}
+if set(by_policy)!=set(policy_expected): errors.append('continuity policy IDs do not exactly match CF-001 through CF-004')
+for pid,(issue,decision,effect) in policy_expected.items():
+    r=by_policy.get(pid,{})
+    if r.get('issue_id')!=issue: errors.append(f'{pid}: issue mismatch')
+    if r.get('decision')!=decision: errors.append(f'{pid}: decision mismatch')
+    if effect not in r.get('authority_effect',''): errors.append(f'{pid}: authority effect not bounded')
+    for field in ['required_invariant','update_trigger','rollback_rule','prohibited_inference']:
+        if not r.get(field): errors.append(f'{pid}: empty {field}')
+if 'MIXED_SUFFIX_OR_CROSS_GENERATION_FAMILIES_ARE_REJECTED' not in by_policy.get('PANGO-CF-004',{}).get('required_invariant',''):
+    errors.append('CF-004 does not reject mixed-generation Pango families')
+
+sem=[r for r in semantic if r['recipe_root']=='gpkg/pango']
+if len(sem)!=1 or sem[0]['semantic_result']!='CONFIRMED_A': errors.append('Pango Class A semantic review missing')
+claim={(r['subject_label'],r['claim_type']):r for r in claims}
+p=claim.get(('gpkg/pango','PROVIDER_AUTHORITY'),{})
+a=claim.get(('gpkg/pango','ADAPTATION_SEMANTICS'),{})
+if p.get('classification_state')!='BOUNDED_PROVIDER_AUTHORITY_ACCEPTED': errors.append('generated Pango provider claim is not accepted')
+if p.get('remaining_gap')!=expected['remaining_gap']: errors.append('generated Pango provider gap differs')
+if 'pango-reference-consumed-provider-authority.tsv' not in p.get('existing_evidence',''): errors.append('generated Pango provider claim lacks canonical review source')
+if 'CF-001' in a.get('remaining_gap','') or 'CF_001' in a.get('remaining_gap',''): errors.append('Pango adaptation claim retains closed continuity gap')
+want_meta={'provider_review_count':'7','provider_authority_accepted_count':'7','provider_authority_open_count':'21','authority_effect':'SEVEN_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT','next_review_tranche':'LIBJPEG_SO_62_OBJECT_REQUIREMENT_CORRECTION'}
+for k,v in want_meta.items():
+    if meta.get(k)!=v: errors.append(f'metadata {k}: expected {v}, got {meta.get(k)!r}')
+
+state=(root/'docs/current/STATE.yaml').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); brief=(root/'docs/current/BRIEF.md').read_text(); status=(root/'STATUS.md').read_text(); catalog=(root/'docs/catalog.tsv').read_text(); evidence=(root/'docs/evidence/pango-reference-consumed-provider-authority-and-filename-continuity.md').read_text()
+markers=[
+ ('state version','state_version: 2026-07-15.13' in state),('state accepted','accepted: 7' in state),('state no-token open','open_no_token_roots: 0' in state),
+ ('next task','Task ID: `resolve-libjpeg-so-62-provider-candidate-gap`' in active),('brief accepted','bounded providers accepted: 7' in brief),
+ ('status Pango','Bounded Pango provider authority and filename continuity' in status),('catalog','pango-reference-consumed-provider-authority-and-filename-continuity\tevidence\tcurrent\tcanonical' in catalog),
+ ('evidence libversion','libversion = 0.5400.0' in evidence),('evidence CF-004','ROLL_BACK_WHOLE_FAMILY_AND_ALIASES_TO_PRIOR_IMMUTABLE_GENERATION' in evidence),
+]
+for label,ok in markers:
+    if not ok: errors.append(f'missing current marker: {label}')
+if errors:
+    for e in errors: print('pango-provider-authority: FAIL:',e,file=sys.stderr)
+    raise SystemExit(1)
+print('pango-provider-authority: PASS: exact Pango 1.54.0 three-member family and CF-001 through CF-004 are bounded and coherent')
+PY
+
+echo 'pango-provider-authority: all checks passed'

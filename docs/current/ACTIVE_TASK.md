@@ -1,46 +1,48 @@
-# Active task: review Pango provider authority and concrete-filename drift
+# Active task: resolve the `libjpeg.so.62` provider-candidate gap
 
-> Task ID: `review-pango-reference-consumed-provider-authority-and-concrete-filename-drift`
+> Task ID: `resolve-libjpeg-so-62-provider-candidate-gap`
 >
-> Expected state on completion: `gpkg/pango` has a bounded provider decision and an explicit CF-001–CF-004 continuity policy, or a precise remaining gap; no complete composition, target population, materialization, or activation is implied.
+> Expected state on completion: OJ-001 has an exact required-identity/provider-candidate disposition, or a precise bounded external input request; no provider composition, target population, materialization, or activation is implied.
 
 ## Objective
 
-Review the final no-token Class A root:
+Resolve the sole T0 object-requirement mismatch:
 
 ```text
-gpkg/pango
+required lookup identity: libjpeg.so.62
+current rejected candidate family: libjpeg.so.8
+recipe root: gpkg/libjpeg-turbo
 ```
 
-Separate provider capability from concrete-filename continuity. Decide whether the observed SONAME aliases and drifted concrete members can support the selected GTK 3.24.49 text stack without treating an alias observation as target-path authority.
+Determine whether an exact authoritative Termux glibc `libjpeg.so.62` candidate exists, whether the requirement itself must be corrected, or whether the selected capability must remain blocked.
 
 ## Why now
 
-Six no-token roots now have bounded provider authority: four X.Org providers, `libtasn1`, and `libepoxy`. Pango is the remaining no-token root and the only one with unresolved concrete-filename drift.
+All seven no-token Class A roots now have bounded provider authority. Pango's CF-001–CF-004 continuity policy is explicit. Before beginning broader reference-adapted provider review, the unique T0 provider-candidate mismatch should be resolved so later composition work does not inherit a known identity contradiction.
 
 ## Current accepted decisions
 
-- All seven no-token recipes are Class A for package-specific adaptation.
-- Six exact provider decisions are bounded to named consumer capabilities.
-- `libepoxy.so.0` is accepted only for GTK 3.24.49 X11 GLX dispatch; EGL is not claimed.
-- Pango provider authority and CF-001–CF-004 remain open.
-- Composition, target population, materialization, activation, and blanket SUP-02 execution remain blocked.
+- Seven no-token recipes are Class A for package-specific adaptation.
+- Seven bounded provider claims are accepted: four X.Org roots, `libtasn1`, `libepoxy`, and the three-member Pango family.
+- Pango concrete suffix `5400.0` is accepted for the exact 1.54.0 family; SONAME aliases are the continuity contract, not oracle suffix `5600.3`.
+- All 28 SUP-02 requests remain historical and zero are required now.
+- Composition, target population, materialization, and activation remain blocked.
 
 ## In scope
 
-- Review `pango-glibc` 1.54.0 and its exact artifact identity.
-- Review observed SONAME aliases and drifted concrete filenames for `libpango`, `libpangoft2`, and `libpangocairo`.
-- Bind required capabilities to GTK 3.24.49, Cairo, Fontconfig, FreeType, HarfBuzz, Fribidi, and Xft only as supported by existing evidence.
-- Decide CF-001 alias necessity, CF-002 successor selection, CF-003 update boundary, and CF-004 rollback continuity.
-- Define conflict and exclusion rules without choosing target paths or materializing files.
-- Request a bounded Termux analyzer only when exact target ELF identity or consumer binding cannot be resolved from retained evidence.
+- Re-read the accepted SUP-01 OJ-001 correction and canonical requirement rows.
+- Inspect exact candidate artifacts and authoritative lookup-name requirements for `libjpeg.so.62`.
+- Distinguish requirement correction, provider discovery, compatibility bridge, and unsupported substitution.
+- Use one bounded Termux acquisition/analyzer package only if exact repository bytes or ELF identity are unavailable in the web runtime.
+- Define update and rollback boundaries without selecting target paths or materializing files.
 
 ## Out of scope
 
-- Complete GTK/application runtime composition.
-- Provider extraction, target paths, copying, installation, or alias creation.
-- Runtime launch, selector mutation, deployment, or activation.
-- Reconstructing the supplier producing build without a recorded Class C escalation.
+- Accepting `libjpeg.so.8` as a silent substitute for `libjpeg.so.62`.
+- Installing, removing, upgrading, downgrading, copying, or linking packages.
+- Complete GTK/image provider composition.
+- Target paths, alias creation, generation publication, deployment, or activation.
+- Reconstructing all supplier producing-build provenance without a recorded Class C escalation.
 
 ## Required reading
 
@@ -48,46 +50,34 @@ Six no-token roots now have bounded provider authority: four X.Org providers, `l
 - `docs/constitution/PRINCIPLES.md`
 - `docs/decisions/0005-proportional-assurance-depth.md`
 - `docs/evidence/provider-claim-classification.md`
-- `docs/evidence/no-token-recipe-semantic-review.md`
-- `docs/evidence/libepoxy-reference-consumed-provider-authority.md`
-- `experiments/glibc/selected-obsidian-provider-authority/review/generic-artifact-member-inventory-receipt-review.tsv`
-- `experiments/glibc/selected-obsidian-provider-authority/review/generic-recipe-binding-and-drift-target-receipt-review.tsv`
+- `docs/evidence/pango-reference-consumed-provider-authority-and-filename-continuity.md`
+- `experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification.tsv`
+- `experiments/glibc/selected-obsidian-provider-authority/review/generic-build-attestation-adaptation-gap-evidence-supply-batch-sup-01-response-review.tsv`
+- `experiments/glibc/selected-obsidian-provider-authority/review/generic-build-attestation-adaptation-object-review-set.tsv`
 
 Do not load historical handoff or refactor records by default.
 
-## Known facts
-
-```text
-root review: generic-root-review:0dacddae106c6bd1006b
-recipe tree: f9e9e2303e2c91322f7edcf1bc0c3b99f2d1d74a
-artifact: pango-glibc 1.54.0
-semantic: CONFIRMED_A
-observed state: expected SONAME aliases present, concrete filenames drifted
-open issues: CF-001;CF-002;CF-003;CF-004
-```
-
 ## Pending external inputs
 
-None at task start. Use the registered web-chat stop-loss and create a one-command Termux analyzer only for a named unresolved ELF or consumer-binding fact.
+None at task start. If exact package bytes are required and sandbox DNS/egress is unavailable, create one self-contained Termux acquisition/analyzer wrapper with exact repository coordinates and expected digests.
 
 ## Next valid action
 
-Construct a canonical Pango review surface that separates exact artifact/member evidence, SONAME alias continuity, provider capability, successor policy, update boundary, rollback, and prohibited inference.
+Construct a canonical OJ-001 review surface that compares the authoritative `libjpeg.so.62` requirement with every exact eligible Termux candidate and records one of: exact provider found, requirement corrected, explicit compatibility bridge required, or capability remains blocked.
 
 ## Stop conditions
 
-Stop without accepting provider authority if:
+Stop without accepting a provider if:
 
-- alias targets cannot be bound to exact ELF members and SONAMEs;
-- multiple non-equivalent successors remain unresolved;
-- consumer binding is inferred only from package-wide presence;
-- the decision would choose target paths, create aliases, materialize files, or authorize activation.
+- only a `libjpeg.so.8` candidate is available;
+- consumer binding or required SONAME authority is ambiguous;
+- multiple non-equivalent `libjpeg.so.62` candidates remain unresolved;
+- the decision would create an alias, select a target path, materialize bytes, or activate a generation.
 
 ## Completion criteria
 
-- canonical Pango provider and drift-policy rows exist;
-- CF-001–CF-004 each have an explicit disposition or remaining gap;
+- OJ-001 has one explicit canonical disposition;
 - generated claims reproduce deterministically;
-- negative tests reject alias drift and authority broadening;
-- current state advances beyond the no-token provider tranche;
+- negative tests reject SONAME-8 substitution and authority broadening;
+- the next reference-adapted provider tranche is named;
 - repository and runtime remain unchanged outside review metadata and tests.

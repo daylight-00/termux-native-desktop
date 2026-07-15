@@ -18,6 +18,7 @@ required=(
   experiments/glibc/selected-obsidian-provider-authority/review/xorg-reference-consumed-provider-authority.tsv
   experiments/glibc/selected-obsidian-provider-authority/review/libtasn1-reference-consumed-provider-authority.tsv
   experiments/glibc/selected-obsidian-provider-authority/review/libepoxy-reference-consumed-provider-authority.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/pango-reference-consumed-provider-authority.tsv
 )
 for rel in "${required[@]}"; do
   [ -f "$ROOT/$rel" ] || { echo "provider-claim-classification: FAIL: missing $rel" >&2; exit 1; }
@@ -53,7 +54,7 @@ dispositions = read('provider-sup-02-request-disposition.tsv')
 roots = read('generic-build-attestation-adaptation-root-review-set.tsv')
 requests = read('generic-build-attestation-adaptation-gap-evidence-supply-batch-sup-02-custodian-export-requests.tsv')
 metadata = {row['key']: row['value'] for row in read('provider-claim-classification-metadata.tsv')}
-provider_reviews = read('xorg-reference-consumed-provider-authority.tsv') + read('libtasn1-reference-consumed-provider-authority.tsv') + read('libepoxy-reference-consumed-provider-authority.tsv')
+provider_reviews = read('xorg-reference-consumed-provider-authority.tsv') + read('libtasn1-reference-consumed-provider-authority.tsv') + read('libepoxy-reference-consumed-provider-authority.tsv') + read('pango-reference-consumed-provider-authority.tsv')
 provider_review_by_root = {row['root_review_id']: row for row in provider_reviews}
 
 errors=[]
@@ -66,10 +67,10 @@ expected_meta={
     'sup02_still_necessary_count':'0','sup02_narrowed_count':'14',
     'sup02_replaced_count':'7','sup02_unnecessary_count':'7',
     'no_token_semantic_review_count':'7','no_token_confirmed_a_count':'7',
-    'no_token_reclassified_b_count':'0','provider_review_count':'6',
-    'provider_authority_accepted_count':'6','provider_authority_open_count':'22',
-    'authority_effect':'SIX_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT',
-    'next_review_tranche':'PANGO_REFERENCE_CONSUMED_PROVIDER_AND_FILENAME_DRIFT',
+    'no_token_reclassified_b_count':'0','provider_review_count':'7',
+    'provider_authority_accepted_count':'7','provider_authority_open_count':'21',
+    'authority_effect':'SEVEN_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT',
+    'next_review_tranche':'LIBJPEG_SO_62_OBJECT_REQUIREMENT_CORRECTION',
 }
 for key,val in expected_meta.items():
     if metadata.get(key)!=val:
@@ -158,10 +159,10 @@ checks=[
     ('state version','state_version:' in state),
     ('claim count state','total: 89' in state),
     ('SUP-02 state','required_now: 0' in state),
-    ('next task','Task ID: `review-pango-reference-consumed-provider-authority-and-concrete-filename-drift`' in active),
+    ('next task','Task ID: `resolve-libjpeg-so-62-provider-candidate-gap`' in active),
     ('brief classification','89 separated claims' in brief),
     ('catalog row','provider-claim-classification\tevidence\tcurrent\tcanonical' in catalog),
-    ('status next phase','REVIEW_PANGO_REFERENCE_CONSUMED_PROVIDER_AND_FILENAME_DRIFT' in status),
+    ('status next phase','RESOLVE_LIBJPEG_SO_62_PROVIDER_CANDIDATE_GAP' in status),
 ]
 for label,ok in checks:
     if not ok: errors.append(f'missing current-state marker: {label}')
@@ -170,7 +171,7 @@ if errors:
     for err in errors:
         print('provider-claim-classification: FAIL:',err,file=sys.stderr)
     raise SystemExit(1)
-print('provider-claim-classification: PASS: 89 claims, 6 bounded providers and 28 SUP-02 dispositions are coherent')
+print('provider-claim-classification: PASS: 89 claims, 7 bounded providers and 28 SUP-02 dispositions are coherent')
 PY
 
 echo 'provider-claim-classification: all checks passed'

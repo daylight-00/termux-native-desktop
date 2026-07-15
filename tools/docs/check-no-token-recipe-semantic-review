@@ -77,7 +77,7 @@ for recipe, exp in expected.items():
         errors.append(f'{recipe}: canonical source-binding mismatch')
 
 claim_map={(r['subject_label'],r['claim_type']):r for r in claims}
-accepted_xorg={'gpkg/libxfixes','gpkg/libxcomposite','gpkg/libxi','gpkg/libxinerama','gpkg/libtasn1','gpkg/libepoxy'}
+accepted_xorg={'gpkg/libxfixes','gpkg/libxcomposite','gpkg/libxi','gpkg/libxinerama','gpkg/libtasn1','gpkg/libepoxy','gpkg/pango'}
 for recipe in expected:
     adaptation=claim_map.get((recipe,'ADAPTATION_SEMANTICS'))
     provider=claim_map.get((recipe,'PROVIDER_AUTHORITY'))
@@ -110,10 +110,10 @@ catalog=(root/'docs/catalog.tsv').read_text()
 markers=[
  ('state version','state_version:' in state),
  ('seven confirmed','confirmed_a: 7' in state),
- ('provider accepted six','provider_authority_accepted: 6' in state),
- ('provider open one','provider_authority_open: 1' in state),
- ('next task','Task ID: `review-pango-reference-consumed-provider-authority-and-concrete-filename-drift`' in active),
- ('brief result','all seven are Class A' in brief),
+ ('provider accepted seven','provider_authority_accepted: 7' in state),
+ ('provider open zero','provider_authority_open: 0' in state),
+ ('next task','Task ID: `resolve-libjpeg-so-62-provider-candidate-gap`' in active),
+ ('brief result','All no-token provider roots are complete.' in brief),
  ('evidence status','confirmed Class A: 7' in evidence),
  ('catalog row','no-token-recipe-semantic-review\tevidence\tcurrent\tcanonical' in catalog),
 ]
@@ -122,5 +122,5 @@ for label,ok in markers:
 if errors:
     for err in errors: print('no-token-recipe-semantic-review: FAIL:',err,file=sys.stderr)
     raise SystemExit(1)
-print('no-token-recipe-semantic-review: PASS: 7 roots confirmed Class A; 6 bounded providers accepted and 1 remains open')
+print('no-token-recipe-semantic-review: PASS: 7 roots confirmed Class A and 7 bounded providers accepted')
 PY

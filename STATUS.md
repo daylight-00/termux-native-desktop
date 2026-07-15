@@ -1,6 +1,6 @@
 # Status
 
-> **State:** bundle-native documentation and operations control planes active; compact constitutional authority installed; ADR 0005 claim classification complete; seven no-token recipes confirmed Class A; four X.Org providers, libtasn1, and libepoxy accepted for bounded capability scopes; Pango provider and filename-drift review active
+> **State:** bundle-native documentation and operations control planes active; compact constitutional authority installed; ADR 0005 claim classification complete; seven no-token recipes confirmed Class A and all seven bounded provider roots accepted; Pango filename continuity decided; libjpeg.so.62 object-requirement correction active
 > **Updated:** 2026-07-15
 
 ## Repository and deployment consolidation
@@ -10,7 +10,7 @@
 - Topic branches are deleted only after their tips are verified as ancestors of the pushed `main`.
 - Direct checkout-to-live symlinks are superseded by immutable materialized repository releases and a stable atomic `current` pointer.
 - `tools/deploy --profile workstation|full` owns managed public leaves; external payloads, selected generations, provider installs, build trees and user state remain outside this cleanup transaction.
-- The provider-authority corpus is classified under ADR 0005: 89 separated claims and 28 historical SUP-02 requests reclassified as 14 narrowed, 7 replaced and 7 unnecessary. Six exact provider claims are accepted: four X.Org members for bounded selected GTK X11 scope, libtasn1 for bounded external GnuTLS 3.8.9 ASN.1/security scope, and libepoxy for bounded GTK 3.24.49 X11 GLX dispatch. No composition, target row or activation is accepted.
+- The provider-authority corpus is classified under ADR 0005: 89 separated claims and 28 historical SUP-02 requests reclassified as 14 narrowed, 7 replaced and 7 unnecessary. Seven exact provider claims are accepted: four X.Org members for bounded selected GTK X11 scope, libtasn1 for bounded external GnuTLS 3.8.9 ASN.1/security scope, libepoxy for bounded GTK 3.24.49 X11 GLX dispatch, and the exact three-member Pango 1.54.0 family for bounded GTK text/FreeType/Fontconfig/Cairo scope with explicit SONAME continuity. No composition, target row or activation is accepted.
 
 See `docs/decisions/0004-single-main-and-immutable-release-deployment.md`.
 
@@ -110,7 +110,7 @@ See `docs/decisions/0004-single-main-and-immutable-release-deployment.md`.
 - The ADR 0005 classification now separates 28 artifact-identity claims, 28 adaptation claims, 28 provider-authority claims, OJ-001, conditional build provenance, composition, target population and activation into 89 rows.
 - Class distribution is 36 A, 49 B, 1 conditional C and 3 D; the Class C producing-build claim is deferred because no root is currently classified as independently reproduced.
 - All 28 SUP-02 requests remain historical: 14 are narrowed to claim-specific escalation only, 7 are replaced by reference/artifact/semantic integration evidence, and 7 are unnecessary at the current boundary. Zero requests are required now.
-- All seven no-token roots have completed exact pinned-recipe semantic review as Class A. Four X.Org roots have bounded exact-member provider authority for the selected GTK 3.24.49 X11 feature set, and `libtasn1` has bounded exact-member provider authority for the external GnuTLS 3.8.9 ASN.1/security capability. `libepoxy` is the next single-root provider review; complete composition, target population and activation remain blocked.
+- All seven no-token roots have completed exact pinned-recipe semantic review as Class A and bounded provider review. Four X.Org roots cover selected GTK 3.24.49 X11 features, `libtasn1` covers external GnuTLS 3.8.9 ASN.1/security, `libepoxy` covers GTK X11 GLX dispatch, and the exact Pango 1.54.0 three-member family covers selected GTK text/FreeType/Fontconfig/Cairo capability. Pango CF-001–CF-004 define SONAME alias necessity, bounded successor selection, immutable update review and atomic family rollback. Complete composition, target population and activation remain blocked.
 
 ## Current authority
 
@@ -323,13 +323,19 @@ AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
 AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
-AUTH-009 non-priority generic capabilities; OJ-001 required identity is corrected, the 89-row ADR 0005 claim inventory is complete, all 28 SUP-02 requests are historical with zero currently required, seven no-token recipes are Class A, and six exact providers have bounded authority while the remaining provider and composition claims stay open
+AUTH-009 non-priority generic capabilities; OJ-001 required identity is corrected but the exact libjpeg.so.62 provider candidate remains unresolved, the 89-row ADR 0005 claim inventory is complete, all 28 SUP-02 requests are historical with zero currently required, seven no-token recipes are Class A, and seven exact providers have bounded authority while the remaining provider and composition claims stay open
 AUTH-010 exact application payload supply, named supplement membership and release execution; launcher source boundary bounded
 ```
 
 ## Bounded libepoxy provider authority
 
 The exact `libepoxy.so.0.0.0` member is accepted only for the GTK 3.24.49 X11 GLX dispatch capability. X11 and GLX are required and bound; EGL is explicitly not claimed. The supplier build framework remains a relied-upon boundary because the supplier pipeline fetched a floating `termux-packages` master. This decision authorizes no composition, target membership, materialization, or activation.
+
+## Bounded Pango provider authority and filename continuity
+
+The exact Pango 1.54.0 `libpango-1.0.so.0.5400.0`, `libpangoft2-1.0.so.0.5400.0`, and `libpangocairo-1.0.so.0.5400.0` members are accepted as one bounded provider family for selected GTK 3.24.49 text, FreeType/Fontconfig and Cairo capability. The three observed SONAME aliases match the three ELF SONAMEs. The Debian/oracle `5600.3` labels are reference filenames from a different release and are not target-path authority.
+
+CF-001 through CF-004 require SONAME alias continuity, accept the exact 1.54.0 family as the bounded successor, require a new immutable review on update, and roll back all three objects and aliases atomically. No alias is created and no target path, composition, materialization or activation is accepted.
 
 ## Web-chat capability fallback contract
 
@@ -338,25 +344,25 @@ Known sandbox, connector, network, filesystem, timeout, context, and device-auth
 ## Next valid state
 
 ```text
-REVIEW_PANGO_REFERENCE_CONSUMED_PROVIDER_AND_FILENAME_DRIFT
+RESOLVE_LIBJPEG_SO_62_PROVIDER_CANDIDATE_GAP
 ```
 
 Active task:
 
 ```text
-REVIEW_PANGO_REFERENCE_CONSUMED_PROVIDER_AUTHORITY_AND_CONCRETE_FILENAME_DRIFT
+RESOLVE_LIBJPEG_SO_62_PROVIDER_CANDIDATE_GAP
 ```
 
 Required order:
 
 ```text
 1. preserve the 89-row claim inventory and the separation between identity, adaptation, provider, composition, target and activation;
-2. retain the seven Class A recipe decisions and the six bounded provider rows without broadening their scope;
-3. review Pango exact members, SONAME aliases, concrete-filename successors, consumer binding, conflicts/exclusions and rollback;
-4. request a bounded Termux analyzer only for a named unresolved ELF or consumer-binding fact;
-5. keep all explicit-delta roots and complete composition outside this tranche;
+2. retain the seven Class A recipe decisions and seven bounded provider rows without broadening their scope;
+3. compare the authoritative `libjpeg.so.62` requirement with exact eligible Termux candidates and reject silent SONAME-8 substitution;
+4. use one bounded Termux acquisition/analyzer wrapper only if exact repository bytes or ELF identity are unavailable in the web runtime;
+5. keep broader reference-adapted provider review and complete composition outside this correction tranche;
 6. do not issue SUP-02 without a recorded Class C reclassification or escalation trigger;
-7. do not treat a bounded provider decision as complete security composition, application composition, target membership or activation.
+7. do not treat a bounded provider or requirement-correction decision as complete application composition, target membership or activation.
 ```
 
 ## Stop lines

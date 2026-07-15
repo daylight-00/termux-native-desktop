@@ -1,5 +1,5 @@
 schema_version: 1
-state_version: 2026-07-15.12
+state_version: 2026-07-15.13
 updated_on: 2026-07-15
 
 project:
@@ -47,10 +47,11 @@ documentation:
   xorg_provider_authority_review: docs/evidence/xorg-reference-consumed-provider-authority.md
   libtasn1_provider_authority_review: docs/evidence/libtasn1-reference-consumed-provider-authority.md
   libepoxy_provider_authority_review: docs/evidence/libepoxy-reference-consumed-provider-authority.md
+  pango_provider_authority_review: docs/evidence/pango-reference-consumed-provider-authority-and-filename-continuity.md
 
 provider_authority:
-  workstream: libepoxy-reference-consumed-provider-review-complete-pango-review-active
-  boundary: six-bounded-providers-accepted-one-no-token-provider-root-open
+  workstream: no-token-reference-consumed-provider-review-complete-libjpeg-object-requirement-correction-active
+  boundary: seven-bounded-providers-accepted-no-no-token-provider-roots-open
   claim_inventory:
     total: 89
     class_a: 36
@@ -61,20 +62,20 @@ provider_authority:
     reviewed: 7
     confirmed_a: 7
     reclassified_b: 0
-    provider_authority_accepted: 6
-    provider_authority_open: 1
+    provider_authority_accepted: 7
+    provider_authority_open: 0
   bounded_provider_authority:
-    accepted: 6
+    accepted: 7
     rejected: 0
-    open_no_token_roots: 1
-    accepted_scope: exact-xorg-members-and-selected-gtk-x11-capabilities-plus-exact-libtasn1-external-gnutls-asn1-security-plus-exact-libepoxy-gtk-3-24-49-x11-glx-dispatch
+    open_no_token_roots: 0
+    accepted_scope: exact-xorg-members-and-selected-gtk-x11-capabilities-plus-exact-libtasn1-external-gnutls-asn1-security-plus-exact-libepoxy-gtk-3-24-49-x11-glx-dispatch-plus-exact-pango-three-member-gtk-text-family-and-soname-continuity
   sup_02_disposition:
     still_necessary: 0
     narrowed: 14
     replaced: 7
     unnecessary: 7
     required_now: 0
-  next_research_decision: review-pango-reference-consumed-provider-and-concrete-filename-drift
+  next_research_decision: resolve-libjpeg-so-62-provider-candidate-gap
   prohibited_claims:
     - complete-provider-authority
     - complete-runtime-composition
@@ -82,7 +83,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: review-pango-reference-consumed-provider-authority-and-concrete-filename-drift
+  id: resolve-libjpeg-so-62-provider-candidate-gap
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:

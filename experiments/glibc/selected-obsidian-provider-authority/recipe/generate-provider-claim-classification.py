@@ -14,6 +14,7 @@ SEMANTIC_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/r
 XORG_PROVIDER_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/xorg-reference-consumed-provider-authority.tsv')
 LIBTASN1_PROVIDER_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/libtasn1-reference-consumed-provider-authority.tsv')
 LIBEPOXY_PROVIDER_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/libepoxy-reference-consumed-provider-authority.tsv')
+PANGO_PROVIDER_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/pango-reference-consumed-provider-authority.tsv')
 
 CLAIM_OUTPUT = Path('experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification.tsv')
 SUP02_OUTPUT = Path('experiments/glibc/selected-obsidian-provider-authority/review/provider-sup-02-request-disposition.tsv')
@@ -114,7 +115,8 @@ def main() -> None:
     xorg_provider_reviews = read_tsv(repo / XORG_PROVIDER_REVIEW)
     libtasn1_provider_reviews = read_tsv(repo / LIBTASN1_PROVIDER_REVIEW)
     libepoxy_provider_reviews = read_tsv(repo / LIBEPOXY_PROVIDER_REVIEW)
-    provider_reviews = xorg_provider_reviews + libtasn1_provider_reviews + libepoxy_provider_reviews
+    pango_provider_reviews = read_tsv(repo / PANGO_PROVIDER_REVIEW)
+    provider_reviews = xorg_provider_reviews + libtasn1_provider_reviews + libepoxy_provider_reviews + pango_provider_reviews
     if len(roots) != 28:
         raise SystemExit(f'expected 28 root rows, found {len(roots)}')
     if len(objects) != 37:
@@ -129,6 +131,8 @@ def main() -> None:
         raise SystemExit(f'expected 1 libtasn1 provider review, found {len(libtasn1_provider_reviews)}')
     if len(libepoxy_provider_reviews) != 1:
         raise SystemExit(f'expected 1 libepoxy provider review, found {len(libepoxy_provider_reviews)}')
+    if len(pango_provider_reviews) != 1:
+        raise SystemExit(f'expected 1 Pango provider review, found {len(pango_provider_reviews)}')
     semantic_by_root = {row['root_review_id']: row for row in semantic_reviews}
     if len(semantic_by_root) != len(semantic_reviews):
         raise SystemExit('duplicate root_review_id in no-token semantic review')
@@ -145,6 +149,7 @@ def main() -> None:
     provider_source_by_root = {row['root_review_id']: XORG_PROVIDER_REVIEW.name for row in xorg_provider_reviews}
     provider_source_by_root.update({row['root_review_id']: LIBTASN1_PROVIDER_REVIEW.name for row in libtasn1_provider_reviews})
     provider_source_by_root.update({row['root_review_id']: LIBEPOXY_PROVIDER_REVIEW.name for row in libepoxy_provider_reviews})
+    provider_source_by_root.update({row['root_review_id']: PANGO_PROVIDER_REVIEW.name for row in pango_provider_reviews})
     expected_provider_roots = {
         row['root_review_id'] for row in semantic_reviews
         if row['recipe_root'] in {'gpkg/libxfixes', 'gpkg/libxcomposite', 'gpkg/libxi', 'gpkg/libxinerama'}
@@ -157,6 +162,9 @@ def main() -> None:
     libepoxy_expected = {row['root_review_id'] for row in semantic_reviews if row['recipe_root'] == 'gpkg/libepoxy'}
     if {row['root_review_id'] for row in libepoxy_provider_reviews} != libepoxy_expected:
         raise SystemExit('libepoxy provider review does not cover the canonical root')
+    pango_expected = {row['root_review_id'] for row in semantic_reviews if row['recipe_root'] == 'gpkg/pango'}
+    if {row['root_review_id'] for row in pango_provider_reviews} != pango_expected:
+        raise SystemExit('Pango provider review does not cover the canonical root')
     for row in provider_reviews:
         if row['decision'] != 'ACCEPTED_BOUNDED_PROVIDER':
             raise SystemExit(f"invalid provider decision for {row['root_review_id']}: {row['decision']}")
@@ -211,6 +219,7 @@ def main() -> None:
 
         no_tokens = root['adaptation_evidence_tokens'] == 'NONE_DECLARED'
         semantic_review = semantic_by_root.get(root['root_review_id'])
+        provider_review = provider_by_root.get(root['root_review_id'])
         aclass = semantic_review['adr_class_result'] if semantic_review else adaptation_class(root)
         if no_tokens and semantic_review:
             adaptation_gap = 'NONE_FOR_PACKAGE_SPECIFIC_RECIPE_ADAPTATION_CLASSIFICATION'
@@ -224,7 +233,7 @@ def main() -> None:
             adaptation_state = 'CLASSIFIED_OPEN_REVIEW_REQUIRED'
             adaptation_boundary = 'EXACT_RECIPE_PATCH_HOOK_CONFIGURATION_AND_PACKAGING_DELTAS_RELIED_ON_BY_THE_PROJECT'
             adaptation_evidence_suffix = ''
-        if root['concrete_filename_requirement_set'] != 'NONE':
+        if root['concrete_filename_requirement_set'] != 'NONE' and not provider_review:
             adaptation_gap += ';CF-001_CF-002_CF-003_CF-004_ALIAS_SUCCESSOR_AND_ROLLBACK_POLICY'
             adaptation_action += ';REVIEW_CONSUMER_ALIAS_BINDING_AND_VERSION_DRIFT_POLICY'
         if root['object_correction_requirement_set'] != 'NONE':
@@ -256,7 +265,6 @@ def main() -> None:
             'prohibited_inference': 'RECIPE_TOKEN_PRESENCE_OR_ABSENCE_DOES_NOT_BY_ITSELF_ESTABLISH_PLATFORM_NECESSITY_OR_EQUIVALENCE',
         })
 
-        provider_review = provider_by_root.get(root['root_review_id'])
         if provider_review:
             provider_existing_evidence = (
                 f"{common_evidence};authority-coverage-ledger.tsv;generic-source-authority-boundary.tsv;"
@@ -476,8 +484,8 @@ def main() -> None:
         ('provider_review_count', str(len(provider_reviews))),
         ('provider_authority_accepted_count', str(sum(1 for row in provider_reviews if row['decision'] == 'ACCEPTED_BOUNDED_PROVIDER'))),
         ('provider_authority_open_count', str(claim_type_counts['PROVIDER_AUTHORITY'] - len(provider_reviews))),
-        ('authority_effect', 'SIX_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT'),
-        ('next_review_tranche', 'PANGO_REFERENCE_CONSUMED_PROVIDER_AND_FILENAME_DRIFT'),
+        ('authority_effect', 'SEVEN_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT'),
+        ('next_review_tranche', 'LIBJPEG_SO_62_OBJECT_REQUIREMENT_CORRECTION'),
     ]
 
     write_tsv(out_root / CLAIM_OUTPUT, CLAIM_FIELDS, claims)

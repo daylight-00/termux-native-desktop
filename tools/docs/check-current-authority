@@ -33,7 +33,7 @@ reject_text() {
 
 require_text STATUS.md 'bundle-native documentation and operations control planes active' 'STATUS declares the documentation and operations control planes'
 require_text STATUS.md '89 separated claims' 'STATUS preserves the bounded claim-classification result'
-require_text STATUS.md 'Pango provider and filename-drift review active' 'STATUS names the active Pango provider and drift review task'
+require_text STATUS.md 'libjpeg.so.62 object-requirement correction active' 'STATUS names the active libjpeg.so.62 provider-candidate correction task'
 require_text docs/architecture.md 'immutable releases' 'architecture describes immutable deployment'
 require_text docs/architecture.md 'Repository deployment rollback and provider rollback are separate authority domains.' 'architecture separates rollback authorities'
 require_text docs/glibc-layer.md 'Repository deployment already uses immutable materialized releases and explicit activation.' 'glibc guide describes explicit activation'
@@ -49,7 +49,7 @@ require_text docs/history/README.md 'History is excluded from default onboarding
 require_text docs/operations/WORKFLOW.md 'RECEIVE_FULL_BUNDLE' 'operations workflow begins from a full bundle'
 require_text docs/operations/CHECKPOINTS.md 'Normal accepted work requires no narrative handoff' 'checkpoint contract removes mandatory handoff creation'
 require_text docs/evidence/provider-claim-classification.md 'STILL_NECESSARY: 0' 'provider classification removes blanket mandatory SUP-02 execution'
-require_text docs/current/ACTIVE_TASK.md 'Task ID: `review-pango-reference-consumed-provider-authority-and-concrete-filename-drift`' 'current task is the bounded Pango provider and drift review'
+require_text docs/current/ACTIVE_TASK.md 'Task ID: `resolve-libjpeg-so-62-provider-candidate-gap`' 'current task is the libjpeg.so.62 provider-candidate correction'
 
 reject_text docs/architecture.md 'Current deployment uses source-linked leaves.' 'architecture has no stale source-linked current deployment claim'
 reject_text docs/glibc-layer.md 'Current deployed leaves are source-linked symlinks.' 'glibc guide has no stale source-linked current deployment claim'

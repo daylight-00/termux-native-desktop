@@ -90,9 +90,9 @@ for r in rows:
         if r['review_id'] not in claim['existing_evidence']: errors.append(f"{claim_id}: review evidence not linked")
 
 expected_meta={
- 'provider_review_count':'6','provider_authority_accepted_count':'6','provider_authority_open_count':'22',
- 'authority_effect':'SIX_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT',
- 'next_review_tranche':'PANGO_REFERENCE_CONSUMED_PROVIDER_AND_FILENAME_DRIFT',
+ 'provider_review_count':'7','provider_authority_accepted_count':'7','provider_authority_open_count':'21',
+ 'authority_effect':'SEVEN_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT',
+ 'next_review_tranche':'LIBJPEG_SO_62_OBJECT_REQUIREMENT_CORRECTION',
 }
 for k,v in expected_meta.items():
     if meta.get(k)!=v: errors.append(f'metadata {k}: expected {v}, got {meta.get(k)!r}')
@@ -104,10 +104,10 @@ status=(root/'STATUS.md').read_text()
 catalog=(root/'docs/catalog.tsv').read_text()
 checks=[
  ('state version','state_version:' in state),
- ('state accepted','accepted: 6' in state),
- ('next task','Task ID: `review-pango-reference-consumed-provider-authority-and-concrete-filename-drift`' in active),
- ('brief accepted','bounded providers accepted: 6' in brief),
- ('status accepted','four X.Org providers' in status),
+ ('state accepted','accepted: 7' in state),
+ ('next task','Task ID: `resolve-libjpeg-so-62-provider-candidate-gap`' in active),
+ ('brief accepted','bounded providers accepted: 7' in brief),
+ ('status accepted','Four X.Org roots cover selected GTK 3.24.49 X11 features' in status),
  ('catalog','xorg-reference-consumed-provider-authority\tevidence\tcurrent\tcanonical' in catalog),
 ]
 for label,ok in checks:
