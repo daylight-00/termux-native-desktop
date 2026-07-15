@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-15.06`
+> Semantic state version: `2026-07-15.07`
 >
 > This is the compact current-state entry point. Exact commit and tree coordinates come from the checked-out full Git bundle, not from self-referential repository text.
 
@@ -67,7 +67,9 @@ replaced:             7
 unnecessary:          7
 ```
 
-This classification does not accept provider authority. Exact artifact/member identity, adaptation semantics, provider selection, composition, target population, and activation remain separate states. The current review surface is [`../evidence/provider-claim-classification.md`](../evidence/provider-claim-classification.md).
+The seven no-token recipe roots have now completed bounded semantic review: all seven are confirmed Class A for package-specific recipe adaptation, with zero Class B reclassifications. This closes AD-006 for those roots only; their supplier build framework and all provider-authority claims remain open. The review is recorded in [`../evidence/no-token-recipe-semantic-review.md`](../evidence/no-token-recipe-semantic-review.md).
+
+This classification does not accept provider authority. Exact artifact/member identity, adaptation semantics, provider selection, composition, target population, and activation remain separate states. The claim inventory remains at [`../evidence/provider-claim-classification.md`](../evidence/provider-claim-classification.md).
 
 ## Documentation and web-session state
 
@@ -84,21 +86,18 @@ This classification does not accept provider authority. Exact artifact/member id
 
 ## Current project phase
 
-The active task is `review-no-token-reference-consumed-roots`.
+The active task is `review-xorg-reference-consumed-provider-authority`.
 
-It reviews seven roots whose earlier collector found no explicit adaptation token:
+It reviews the four Class A X.Org recipe roots:
 
 ```text
-libepoxy
-libtasn1
-libxcomposite
 libxfixes
+libxcomposite
 libxi
 libxinerama
-pango
 ```
 
-The exact pinned recipe and upstream baseline must confirm Class A or identify the exact Class B changed boundary. No external evidence request, provider promotion, target population, or activation is allowed in this phase.
+The review decides only bounded provider authority: exact member identity, capability necessity, consumer binding, conflicts/exclusions, update boundary, and rollback. No complete composition, target population, or activation is allowed in this phase.
 
 ## Current non-goals
 

@@ -33,7 +33,7 @@ reject_text() {
 
 require_text STATUS.md 'bundle-native documentation and operations control planes active' 'STATUS declares the documentation and operations control planes'
 require_text STATUS.md '89 separated claims' 'STATUS preserves the bounded claim-classification result'
-require_text STATUS.md 'REVIEW_NO_TOKEN_REFERENCE_CONSUMED_ROOTS' 'STATUS names the active no-token review task'
+require_text STATUS.md 'REVIEW_XORG_REFERENCE_CONSUMED_PROVIDER_AUTHORITY' 'STATUS names the active X.Org provider review task'
 require_text docs/architecture.md 'immutable releases' 'architecture describes immutable deployment'
 require_text docs/architecture.md 'Repository deployment rollback and provider rollback are separate authority domains.' 'architecture separates rollback authorities'
 require_text docs/glibc-layer.md 'Repository deployment already uses immutable materialized releases and explicit activation.' 'glibc guide describes explicit activation'
@@ -49,7 +49,7 @@ require_text docs/history/README.md 'History is excluded from default onboarding
 require_text docs/operations/WORKFLOW.md 'RECEIVE_FULL_BUNDLE' 'operations workflow begins from a full bundle'
 require_text docs/operations/CHECKPOINTS.md 'Normal accepted work requires no narrative handoff' 'checkpoint contract removes mandatory handoff creation'
 require_text docs/evidence/provider-claim-classification.md 'STILL_NECESSARY: 0' 'provider classification removes blanket mandatory SUP-02 execution'
-require_text docs/current/ACTIVE_TASK.md 'Task ID: `review-no-token-reference-consumed-roots`' 'current task is the bounded seven-root review'
+require_text docs/current/ACTIVE_TASK.md 'Task ID: `review-xorg-reference-consumed-provider-authority`' 'current task is the bounded four-root X.Org provider review'
 
 reject_text docs/architecture.md 'Current deployment uses source-linked leaves.' 'architecture has no stale source-linked current deployment claim'
 reject_text docs/glibc-layer.md 'Current deployed leaves are source-linked symlinks.' 'glibc guide has no stale source-linked current deployment claim'

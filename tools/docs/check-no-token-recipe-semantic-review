@@ -1,0 +1,116 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT=${1:-$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)}
+REVIEW=experiments/glibc/selected-obsidian-provider-authority/review
+required=(
+  docs/evidence/no-token-recipe-semantic-review.md
+  "$REVIEW/no-token-recipe-semantic-review.tsv"
+  "$REVIEW/generic-build-attestation-adaptation-root-review-set.tsv"
+  "$REVIEW/generic-recipe-binding-and-drift-target-receipt-review.tsv"
+  "$REVIEW/provider-claim-classification.tsv"
+)
+for rel in "${required[@]}"; do
+  [ -f "$ROOT/$rel" ] || { echo "no-token-recipe-semantic-review: FAIL: missing $rel" >&2; exit 1; }
+done
+
+python3 - "$ROOT" <<'PY'
+from pathlib import Path
+import csv, sys
+root=Path(sys.argv[1])
+review=root/'experiments/glibc/selected-obsidian-provider-authority/review'
+
+def read(name):
+    with (review/name).open(newline='',encoding='utf-8') as f:
+        return list(csv.DictReader(f,delimiter='\t'))
+
+rows=read('no-token-recipe-semantic-review.tsv')
+roots=read('generic-build-attestation-adaptation-root-review-set.tsv')
+bindings=read('generic-recipe-binding-and-drift-target-receipt-review.tsv')
+claims=read('provider-claim-classification.tsv')
+errors=[]
+expected={
+'gpkg/libepoxy':('generic-root-review:2f6c3972ae083cff8dd2','bb827daab0491d4ff49c822f96dd4bbb80102ef0','1.5.10','3ae102c143a964738eca883ec4d80b32f0811c20','a7ced37f4102b745ac86d6a70a9da399cc139ff168ba6b8002b4d8d43c900c15'),
+'gpkg/libtasn1':('generic-root-review:ad4e1b984c7087426ee9','3601f2ed3c9fd4d03c20c0d854d7b3aa05628482','4.20.0','6542cacd656dccd5a1d0c745dd8f15f195e92469','92e0e3bd4c02d4aeee76036b2ddd83f0c732ba4cda5cb71d583272b23587a76c'),
+'gpkg/libxcomposite':('generic-root-review:871a690716276e3765a2','5df15021d34e11560691926e2054272b5d3b6984','0.4.6','dca84ef38d921ab602ab4f8f4caff54e0bb05714','fe40bcf0ae1a09070eba24088a5eb9810efe57453779ec1e20a55080c6dc2c87'),
+'gpkg/libxfixes':('generic-root-review:b2edb795edece4a59650','14916897595c88d8dc9c346884799171c22b4c15','6.0.1','2ab4f202a9821f75fe046c80c31bc369cc80af10','b695f93cd2499421ab02d22744458e650ccc88c1d4c8130d60200213abc02d58'),
+'gpkg/libxi':('generic-root-review:5cde09ffb57ae90a949d','9be86de0575a2ae7c8e904d6724d07bacd96d099','1.8.2','252b53ceb5fad80db059014c8e5fe822e12b7e93','d0e0555e53d6e2114eabfa44226ba162d2708501a25e18d99cfb35c094c6c104'),
+'gpkg/libxinerama':('generic-root-review:8fba4c31866e5ce912d6','0ecad3a5840978f10eb6964f073d0ffb6a1a69c0','1.1.5','cb2015eea71aa7378c1111ee37f0f459cebb1ff5','5094d1f0fcc1828cb1696d0d39d9e866ae32520c54d01f618f1a3c1e30c2085c'),
+'gpkg/pango':('generic-root-review:0dacddae106c6bd1006b','f9e9e2303e2c91322f7edcf1bc0c3b99f2d1d74a','1.54.0','f481d5abd776722d24bba66966ae32f1a23bbc80','317f366bb255282d3e64ccf95b1d57cbea8636578b199c158235e1f257e5167f'),
+}
+if len(rows)!=7: errors.append(f'expected 7 rows, found {len(rows)}')
+by_root={r['recipe_root']:r for r in rows}
+if len(by_root)!=len(rows): errors.append('recipe_root values are not unique')
+if set(by_root)!=set(expected): errors.append('review roots do not exactly match expected seven roots')
+ids=[r['review_id'] for r in rows]
+if len(ids)!=len(set(ids)): errors.append('review_id values are not unique')
+root_map={r['recipe_root']:r for r in roots}
+binding_map={}
+for row in bindings:
+    binding_map.setdefault(row['recipe_root'],row)
+for recipe, exp in expected.items():
+    row=by_root.get(recipe)
+    if not row: continue
+    rid,tree,version,blob,source_sha=exp
+    checks={
+      'root_review_id':rid,'recipe_tree':tree,'recipe_file_count':'1',
+      'recipe_manifest':f'build.sh:100644:{blob}',
+      'recipe_resolved_full_version':version,'source_sha256':source_sha,
+      'semantic_result':'CONFIRMED_A','adr_class_result':'A',
+      'package_specific_patch_or_hook':'NONE','package_specific_build_option':'NONE',
+      'package_specific_install_or_output_transform':'NONE',
+      'authority_effect':'ADAPTATION_CLASSIFICATION_ONLY_NO_PROVIDER_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT',
+    }
+    for field,want in checks.items():
+        if row.get(field)!=want: errors.append(f'{recipe}: {field} expected {want}, got {row.get(field)!r}')
+    if not row.get('project_owned_changed_boundary') or not row.get('supplier_boundary_relied_on') or not row.get('residual_risk'):
+        errors.append(f'{recipe}: missing bounded semantic fields')
+    if recipe=='gpkg/pango':
+        if row['concrete_filename_drift_state']!='OPEN_SEPARATE_CF_001_CF_002_CF_003_CF_004':
+            errors.append('pango: concrete filename drift is not explicitly open and separate')
+    elif row['concrete_filename_drift_state']!='NONE':
+        errors.append(f'{recipe}: unexpected concrete filename drift state')
+    source=root_map.get(recipe)
+    if not source or source['adaptation_evidence_tokens']!='NONE_DECLARED' or source['recipe_tree']!=tree or source['recipe_resolved_full_version']!=version:
+        errors.append(f'{recipe}: canonical root-review binding mismatch')
+    binding=binding_map.get(recipe)
+    if not binding or binding['recipe_tree']!=tree or binding['recipe_source_sha256']!=source_sha:
+        errors.append(f'{recipe}: canonical source-binding mismatch')
+
+claim_map={(r['subject_label'],r['claim_type']):r for r in claims}
+for recipe in expected:
+    adaptation=claim_map.get((recipe,'ADAPTATION_SEMANTICS'))
+    provider=claim_map.get((recipe,'PROVIDER_AUTHORITY'))
+    if not adaptation or not provider:
+        errors.append(f'{recipe}: generated claim pair missing'); continue
+    if adaptation['adr_class']!='A' or adaptation['classification_state']!='CLASS_A_CONFIRMED_RECIPE_SEMANTIC_REVIEW_COMPLETE':
+        errors.append(f'{recipe}: adaptation claim not closed as confirmed Class A')
+    if 'AD-006' in adaptation['remaining_gap'] or adaptation['remaining_gap'].startswith('ADAPTATION_CLASSIFICATION'):
+        errors.append(f'{recipe}: semantic-review gap remains open')
+    if 'ADAPTATION_CLASSIFICATION' in provider['remaining_gap']:
+        errors.append(f'{recipe}: provider claim still depends on adaptation classification')
+    if provider['classification_state']!='CLASSIFIED_OPEN_PROVIDER_AUTHORITY_NOT_ACCEPTED':
+        errors.append(f'{recipe}: provider authority was changed')
+    if 'ACCEPTED' in provider['authority_effect']:
+        errors.append(f'{recipe}: provider authority effect introduced')
+
+state=(root/'docs/current/STATE.yaml').read_text()
+active=(root/'docs/current/ACTIVE_TASK.md').read_text()
+brief=(root/'docs/current/BRIEF.md').read_text()
+evidence=(root/'docs/evidence/no-token-recipe-semantic-review.md').read_text()
+catalog=(root/'docs/catalog.tsv').read_text()
+markers=[
+ ('state version','state_version: 2026-07-15.07' in state),
+ ('seven confirmed','confirmed_a: 7' in state),
+ ('provider accepted zero','provider_authority_accepted: 0' in state),
+ ('next task','Task ID: `review-xorg-reference-consumed-provider-authority`' in active),
+ ('brief result','all seven are confirmed Class A' in brief),
+ ('evidence status','confirmed Class A: 7' in evidence),
+ ('catalog row','no-token-recipe-semantic-review\tevidence\tcurrent\tcanonical' in catalog),
+]
+for label,ok in markers:
+    if not ok: errors.append(f'missing current marker: {label}')
+if errors:
+    for err in errors: print('no-token-recipe-semantic-review: FAIL:',err,file=sys.stderr)
+    raise SystemExit(1)
+print('no-token-recipe-semantic-review: PASS: 7 roots confirmed Class A; provider authority remains open')
+PY

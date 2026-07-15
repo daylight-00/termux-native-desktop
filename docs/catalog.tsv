@@ -40,3 +40,4 @@ handoff-index	history	historical	history	no	docs/handoff/README.md	legacy sessio
 timeline	history	historical	history	no	docs/timeline.md	chronological navigation
 knowledge-index	knowledge	reference	reference	no	docs/knowledge/README.md	reusable systems knowledge router
 provider-claim-classification	evidence	current	canonical	no	docs/evidence/provider-claim-classification.md	ADR 0005 claim inventory and SUP-02 disposition
+no-token-recipe-semantic-review	evidence	current	canonical	no	docs/evidence/no-token-recipe-semantic-review.md	seven-root pinned recipe and upstream semantic review

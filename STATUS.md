@@ -1,6 +1,6 @@
 # Status
 
-> **State:** bundle-native documentation and operations control planes active; compact constitutional authority installed; ADR 0005 provider claim classification complete; seven no-token roots selected for bounded semantic review
+> **State:** bundle-native documentation and operations control planes active; compact constitutional authority installed; ADR 0005 provider claim classification complete; seven no-token recipe roots confirmed Class A; four X.Org provider roots selected for bounded authority review
 > **Updated:** 2026-07-15
 
 ## Repository and deployment consolidation
@@ -320,31 +320,32 @@ AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
 AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
-AUTH-009 non-priority generic capabilities; OJ-001 required identity is corrected, the 89-row ADR 0005 claim inventory is complete, and all 28 SUP-02 requests are historical with zero currently required; seven no-token roots enter bounded semantic review
+AUTH-009 non-priority generic capabilities; OJ-001 required identity is corrected, the 89-row ADR 0005 claim inventory is complete, all 28 SUP-02 requests are historical with zero currently required, and seven no-token recipe roots are confirmed Class A while provider authority remains open
 AUTH-010 exact application payload supply, named supplement membership and release execution; launcher source boundary bounded
 ```
 
 ## Next valid state
 
 ```text
-REVIEW_SEVEN_NO_TOKEN_REFERENCE_CONSUMED_ROOTS
+REVIEW_FOUR_XORG_REFERENCE_CONSUMED_PROVIDER_ROOTS
 ```
 
 Active task:
 
 ```text
-REVIEW_NO_TOKEN_REFERENCE_CONSUMED_ROOTS
+REVIEW_XORG_REFERENCE_CONSUMED_PROVIDER_AUTHORITY
 ```
 
 Required order:
 
 ```text
 1. preserve the 89-row claim inventory and the separation between identity, adaptation, provider, composition, target and activation;
-2. compare the exact pinned recipes for libepoxy, libtasn1, libxcomposite, libxfixes, libxi, libxinerama and pango with their pinned upstream baselines;
-3. confirm Class A only with semantic review, or record the exact Class B changed boundary;
-4. keep pango filename drift separate from recipe adaptation;
-5. do not issue SUP-02 without a recorded Class C reclassification or escalation trigger;
-6. select the next smallest provider-authority or explicit-delta review tranche after the seven-root review.
+2. retain the seven confirmed Class A recipe reviews and their supplier-boundary limitations;
+3. review libxfixes, libxcomposite, libxi and libxinerama exact members, capability necessity, consumer binding, conflicts/exclusions and rollback;
+4. request passive runtime evidence only for a named unresolved consumer-binding ambiguity;
+5. keep Pango filename drift and the remaining provider roots outside this tranche;
+6. do not issue SUP-02 without a recorded Class C reclassification or escalation trigger;
+7. do not treat a bounded provider decision as complete composition, target membership or activation.
 ```
 
 ## Stop lines

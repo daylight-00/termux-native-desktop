@@ -65,7 +65,7 @@ Artifact identity can be sufficiently evidenced while adaptation and provider au
 ```text
 Class A: 36 claims
     28 exact artifact/member identity claims
-     7 no-explicit-delta adaptation claims pending semantic confirmation
+     7 no-explicit-delta adaptation claims confirmed by bounded semantic review
      1 authoritative required-object identity claim
 
 Class B: 49 claims
@@ -138,7 +138,7 @@ This is proportionate to a reference-consumed or reference-adapted claim. It doe
 
 ### Unnecessary — 7 roots
 
-Six T6 no-token roots have no active Class C claim. Their next requirement is a bounded recipe/upstream semantic comparison to confirm Class A or reclassify Class B.
+Six T6 no-token roots have completed bounded recipe/upstream semantic comparison and are confirmed Class A for package-specific adaptation. Their historical SUP-02 requests remain unnecessary.
 
 The `libjpeg-turbo` SUP-02 request is also unnecessary at the current boundary because producing-build evidence for a package that does not provide the required `libjpeg.so.62` identity cannot close OJ-001.
 
@@ -153,31 +153,39 @@ selected-generation activation: BLOCKED
 
 The classification does not authorize extraction, installation, target population, provider promotion, selected-generation mutation, or activation.
 
+## Seven-root semantic-review result
+
+The seven-root no-token semantic review is complete:
+
+```text
+confirmed Class A: 7
+reclassified Class B: 0
+provider authority accepted: 0
+```
+
+Canonical review surface:
+
+```text
+docs/evidence/no-token-recipe-semantic-review.md
+experiments/glibc/selected-obsidian-provider-authority/review/no-token-recipe-semantic-review.tsv
+```
+
+For all seven roots, the pinned recipe contains only source/version identity and dependency/package metadata. No package-specific patch, hook, build option, install transform, or output rewrite was found. The generic Termux glibc cross-build framework and upstream build defaults remain relied-upon supplier boundaries rather than project-owned producing claims.
+
+`pango` concrete-filename drift remains a separate provider-integration and continuity question. It was not closed by the Class A recipe result.
+
 ## Smallest next phase
 
-The next bounded phase is the seven-root no-token semantic review:
+The next bounded phase is the four-root X.Org provider-authority review:
 
 ```text
-gpkg/libepoxy
-gpkg/libtasn1
-gpkg/libxcomposite
 gpkg/libxfixes
+gpkg/libxcomposite
 gpkg/libxi
 gpkg/libxinerama
-gpkg/pango
 ```
 
-For each root, compare the exact pinned recipe with its pinned upstream baseline and decide:
-
-```text
-confirmed Class A reference-consumed
-or
-reclassified Class B with the exact changed boundary
-```
-
-`pango` concrete-filename drift remains a separate provider-integration and continuity question even if its recipe is confirmed Class A.
-
-No external evidence request is needed for this phase.
+Each root remains Class B for provider selection and integration. The review may decide exact capability necessity, consumer binding, conflicts/exclusions, update boundary, and rollback. It must not infer complete composition, target membership, or activation.
 
 ## Stop line
 

@@ -14,6 +14,7 @@ required=(
   experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification.tsv
   experiments/glibc/selected-obsidian-provider-authority/review/provider-sup-02-request-disposition.tsv
   experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification-metadata.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/no-token-recipe-semantic-review.tsv
 )
 for rel in "${required[@]}"; do
   [ -f "$ROOT/$rel" ] || { echo "provider-claim-classification: FAIL: missing $rel" >&2; exit 1; }
@@ -58,8 +59,10 @@ expected_meta={
     'global_claim_count':'4','class_a_claim_count':'36','class_b_claim_count':'49',
     'class_c_claim_count':'1','class_d_claim_count':'3','sup02_request_count':'28',
     'sup02_still_necessary_count':'0','sup02_narrowed_count':'14',
-    'sup02_replaced_count':'7','sup02_unnecessary_count':'7','authority_effect':'NONE',
-    'next_review_tranche':'SEVEN_NO_TOKEN_ROOTS',
+    'sup02_replaced_count':'7','sup02_unnecessary_count':'7',
+    'no_token_semantic_review_count':'7','no_token_confirmed_a_count':'7',
+    'no_token_reclassified_b_count':'0','authority_effect':'NONE',
+    'next_review_tranche':'FOUR_XORG_REFERENCE_CONSUMED_PROVIDER_ROOTS',
 }
 for key,val in expected_meta.items():
     if metadata.get(key)!=val:
@@ -134,13 +137,13 @@ brief=(root/'docs/current/BRIEF.md').read_text()
 catalog=(root/'docs/catalog.tsv').read_text()
 status=(root/'STATUS.md').read_text()
 checks=[
-    ('state version','state_version: 2026-07-15.06' in state),
+    ('state version','state_version: 2026-07-15.07' in state),
     ('claim count state','total: 89' in state),
     ('SUP-02 state','required_now: 0' in state),
-    ('next task','Task ID: `review-no-token-reference-consumed-roots`' in active),
+    ('next task','Task ID: `review-xorg-reference-consumed-provider-authority`' in active),
     ('brief classification','89 separated claims' in brief),
     ('catalog row','provider-claim-classification\tevidence\tcurrent\tcanonical' in catalog),
-    ('status next phase','REVIEW_SEVEN_NO_TOKEN_REFERENCE_CONSUMED_ROOTS' in status),
+    ('status next phase','REVIEW_FOUR_XORG_REFERENCE_CONSUMED_PROVIDER_ROOTS' in status),
 ]
 for label,ok in checks:
     if not ok: errors.append(f'missing current-state marker: {label}')

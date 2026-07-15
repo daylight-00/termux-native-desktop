@@ -18,5 +18,8 @@ sup02_still_necessary_count	0
 sup02_narrowed_count	14
 sup02_replaced_count	7
 sup02_unnecessary_count	7
+no_token_semantic_review_count	7
+no_token_confirmed_a_count	7
+no_token_reclassified_b_count	0
 authority_effect	NONE
-next_review_tranche	SEVEN_NO_TOKEN_ROOTS
+next_review_tranche	FOUR_XORG_REFERENCE_CONSUMED_PROVIDER_ROOTS

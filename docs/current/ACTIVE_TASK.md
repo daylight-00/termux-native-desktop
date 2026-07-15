@@ -1,104 +1,98 @@
-# Active task: review seven no-token roots
+# Active task: review four X.Org reference-consumed provider roots
 
-> Task ID: `review-no-token-reference-consumed-roots`
+> Task ID: `review-xorg-reference-consumed-provider-authority`
 >
-> Expected state on completion: the seven roots with no explicit bounded adaptation token have an exact pinned-recipe/upstream semantic review that either confirms Class A reference-consumed status or reclassifies the exact changed boundary as Class B; no provider authority, target membership, or activation is accepted.
+> Expected state on completion: `libxfixes`, `libxcomposite`, `libxi`, and `libxinerama` each have a bounded provider-authority decision or an explicit remaining gap; no composition, target membership, or activation is implied.
 
 ## Objective
 
-Review the seven no-token roots identified by the ADR 0005 claim classification:
+Review the provider-authority claims for the four Class A X.Org recipe roots:
 
 ```text
-gpkg/libepoxy
-gpkg/libtasn1
-gpkg/libxcomposite
 gpkg/libxfixes
+gpkg/libxcomposite
 gpkg/libxi
 gpkg/libxinerama
-gpkg/pango
 ```
 
-For each root, compare the exact pinned recipe tree and file manifest with the pinned upstream source baseline. Confirm that the relevant claim is reference-consumed Class A, or record the exact recipe behavior that requires Class B treatment.
+Determine whether each exact package member is necessary and suitable as the runtime provider for its declared X11 capability scope. Keep artifact identity, recipe semantics, provider authority, composition, target population, and activation as separate decisions.
 
 ## Why now
 
-The 89-row provider claim inventory is complete. It separates artifact identity, adaptation semantics, provider authority, composition, target population, and activation. The 28 SUP-02 requests are now classified as 14 narrowed, 7 replaced, and 7 unnecessary; none is currently required.
-
-The smallest next phase is therefore an agent-only semantic review of the seven roots whose earlier collector found no explicit adaptation token. This review can reduce uncertainty without external evidence collection or runtime mutation.
+The seven no-token recipe reviews are complete: all seven are confirmed Class A for package-specific recipe adaptation, with no Class B reclassification. The four X.Org roots form the smallest coherent provider chain because they share an authoritative release model, have no package-specific recipe delta, have no concrete-filename drift row, and expose explicit dependency relationships.
 
 ## Current accepted decisions
 
-- Exact artifact and named-member candidate identity is a Class A claim distinct from provider authority.
-- Twenty-one roots have explicit recipe-delta evidence and are Class B for adaptation review.
-- Seven roots have no explicit bounded token and remain Class A only as a hypothesis pending full semantic comparison.
-- Producing-build provenance is a conditional Class C claim, not a blanket prerequisite.
-- Composition, target population, and activation are separate Class D claims.
-- No SUP-02 request is currently required; historical requests remain preserved.
-- OJ-001 confirms the required identity `libjpeg.so.62`, but an exact provider candidate remains open.
+- The seven no-token roots are Class A for package-specific recipe adaptation.
+- Their generic cross-build framework and upstream build semantics remain a relied-upon supplier boundary, not a project reproduction claim.
+- The four X.Org roots still have open Class B provider-authority claims.
+- Pango filename drift remains open and is excluded from this tranche.
+- No SUP-02 request is currently required.
+- Provider acceptance does not imply complete composition, target membership, or activation.
 
 ## In scope
 
-- Read the exact pinned recipe files for the seven roots.
-- Compare recipe behavior with the pinned upstream source/build baseline.
-- Identify implicit patches, generated configuration, environment-sensitive behavior, custom install layout, or packaging hooks not captured by the earlier token collector.
-- Record one row per root with the reviewed files, semantic result, ADR class result, changed boundary, object impact, and residual risk.
-- Keep `pango` concrete-filename drift separate from recipe adaptation classification.
-- Update the provider claim inventory only where this review changes a class or gap.
+- Review exact artifact/member identities and observed SONAMEs for the four roots.
+- Review package dependency edges and capability relationships.
+- Determine capability necessity for the selected Obsidian runtime boundary.
+- Review candidate conflicts, exclusions, update boundaries, and rollback alternatives.
+- Use bounded passive consumer-binding evidence only where the dependency or runtime selection is ambiguous.
+- Record one provider-authority row per root with decision, evidence, remaining gap, and prohibited inference.
 
 ## Out of scope
 
-- Reviewing the other twenty-one explicit-delta roots.
+- Reviewing `libepoxy`, `libtasn1`, or `pango` provider authority.
+- Resolving Pango concrete-filename drift.
+- Reviewing the twenty-one explicit-delta recipe roots.
 - Issuing or fulfilling SUP-02.
-- Collecting device, custodian, builder, or independent-witness evidence.
-- Accepting provider authority.
-- Authoring a composition manifest.
-- Populating a target or activating a selected generation.
-- Inferring equivalence merely from the absence of collector tokens.
+- Materializing a provider target.
+- Authoring a complete composition manifest.
+- Mutating the selected generation or activation selector.
 
 ## Required reading
 
 - `docs/current/STATE.yaml`
 - `docs/constitution/PRINCIPLES.md`
 - `docs/decisions/0005-proportional-assurance-depth.md`
+- `docs/evidence/no-token-recipe-semantic-review.md`
 - `docs/evidence/provider-claim-classification.md`
 - `experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification.tsv`
-- `experiments/glibc/selected-obsidian-provider-authority/review/generic-recipe-binding-and-drift-target-receipt-review.tsv`
-- `experiments/glibc/selected-obsidian-provider-authority/review/generic-build-attestation-adaptation-root-review-set.tsv`
-- `experiments/glibc/selected-obsidian-provider-authority/review/generic-source-authority-boundary.tsv`
+- `experiments/glibc/selected-obsidian-provider-authority/review/generic-artifact-member-comparison-artifacts.tsv`
+- `experiments/glibc/selected-obsidian-provider-authority/review/authority-coverage-ledger.tsv`
 
 ## Known facts
 
-- The classification contains 89 claims: 36 Class A, 49 Class B, 1 conditional Class C, and 3 Class D.
-- The seven roots in this task have `NONE_DECLARED` adaptation tokens.
-- Six are T6 no-token exact roots; `pango` is T5 no-token with concrete-filename drift.
-- Absence of a token is not evidence of upstream equivalence.
-- Exact artifact/member identity is already bounded evidence and does not need producing-build reconstruction for this review.
-- Provider authority remains open even if a root is confirmed Class A.
+- All four recipes are Class A for package-specific adaptation.
+- Artifact/member identity evidence is already bounded, but does not establish provider authority.
+- The roots form a dependency chain around XFixes, Composite, XI, and Xinerama capabilities.
+- No concrete-filename drift is recorded for these four roots.
+- Provider claims remain open for capability necessity, consumer binding, conflicts/exclusions, and update/rollback.
 
 ## Pending external inputs
 
-None. See [`PENDING_ARTIFACTS.yaml`](PENDING_ARTIFACTS.yaml).
+None initially. See [`PENDING_ARTIFACTS.yaml`](PENDING_ARTIFACTS.yaml).
+
+Passive runtime evidence may be requested only if repository evidence cannot resolve an explicit consumer-binding ambiguity.
 
 ## Next valid action
 
-Construct a seven-row semantic-review table from the pinned recipe trees and upstream baselines. Review each recipe file and build/install behavior, then record `CONFIRMED_A` or `RECLASSIFIED_B` with the exact changed boundary and object impact.
+Construct a four-row provider-authority review table from the canonical artifact/member, dependency, capability, and runtime evidence. Decide each row as `ACCEPTED_BOUNDED_PROVIDER`, `REJECTED_PROVIDER`, or `OPEN_EXPLICIT_GAP` without changing composition or target state.
 
 ## Stop conditions
 
-Stop before external evidence collection or provider decision if:
+Stop before provider acceptance if:
 
-- a root is called Class A only because no token was observed;
-- the exact pinned recipe tree or upstream baseline cannot be identified;
-- packaging-only behavior is conflated with runtime semantic adaptation;
-- `pango` filename drift is treated as proof of recipe adaptation or ignored as an integration risk;
-- a semantic review result is used to accept provider authority;
-- a SUP-02 request is reactivated without a recorded Class C or escalation trigger.
+- the exact member or SONAME is ambiguous;
+- capability necessity is inferred only from package presence;
+- multiple non-equivalent provider candidates are not compared;
+- consumer binding remains ambiguous and no bounded passive observation is available;
+- provider acceptance would require resolving a composition-wide conflict;
+- an accepted provider is silently treated as target membership or activation authority.
 
 ## Completion criteria
 
-- All seven roots have a bounded semantic-review row.
-- Every row identifies reviewed files, upstream baseline, semantic result, ADR class, changed boundary, object impact, and residual risk.
-- Any Class B reclassification updates the claim inventory deterministically.
-- Confirmed Class A rows state what supplier boundary is relied upon.
-- No provider, composition, target, or activation state changes by implication.
-- The next active task selects one smallest provider-authority or explicit-delta review tranche.
+- All four roots have an explicit provider-authority review row.
+- Every row states exact member identity, capability scope, necessity basis, conflict/exclusion result, update and rollback boundary, decision, and prohibited inference.
+- Any requested runtime observation is narrow, passive, and claim-specific.
+- No composition, target, or activation state changes by implication.
+- The next active task selects the smallest unresolved provider or explicit-delta tranche.

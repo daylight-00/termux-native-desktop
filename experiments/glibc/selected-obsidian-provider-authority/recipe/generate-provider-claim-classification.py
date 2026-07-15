@@ -10,6 +10,7 @@ from pathlib import Path
 ROOT_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/generic-build-attestation-adaptation-root-review-set.tsv')
 OBJECT_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/generic-build-attestation-adaptation-object-review-set.tsv')
 SUP02_REQUESTS = Path('experiments/glibc/selected-obsidian-provider-authority/review/generic-build-attestation-adaptation-gap-evidence-supply-batch-sup-02-custodian-export-requests.tsv')
+SEMANTIC_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/no-token-recipe-semantic-review.tsv')
 
 CLAIM_OUTPUT = Path('experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification.tsv')
 SUP02_OUTPUT = Path('experiments/glibc/selected-obsidian-provider-authority/review/provider-sup-02-request-disposition.tsv')
@@ -106,12 +107,24 @@ def main() -> None:
     roots = read_tsv(repo / ROOT_REVIEW)
     objects = read_tsv(repo / OBJECT_REVIEW)
     requests = read_tsv(repo / SUP02_REQUESTS)
+    semantic_reviews = read_tsv(repo / SEMANTIC_REVIEW)
     if len(roots) != 28:
         raise SystemExit(f'expected 28 root rows, found {len(roots)}')
     if len(objects) != 37:
         raise SystemExit(f'expected 37 object rows, found {len(objects)}')
     if len(requests) != 28:
         raise SystemExit(f'expected 28 SUP-02 requests, found {len(requests)}')
+    if len(semantic_reviews) != 7:
+        raise SystemExit(f'expected 7 no-token semantic reviews, found {len(semantic_reviews)}')
+    semantic_by_root = {row['root_review_id']: row for row in semantic_reviews}
+    if len(semantic_by_root) != len(semantic_reviews):
+        raise SystemExit('duplicate root_review_id in no-token semantic review')
+    expected_no_token = {row['root_review_id'] for row in roots if row['adaptation_evidence_tokens'] == 'NONE_DECLARED'}
+    if set(semantic_by_root) != expected_no_token:
+        raise SystemExit('no-token semantic reviews do not exactly cover canonical no-token roots')
+    for row in semantic_reviews:
+        if row['semantic_result'] not in {'CONFIRMED_A', 'RECLASSIFIED_B'}:
+            raise SystemExit(f"invalid semantic result for {row['root_review_id']}: {row['semantic_result']}")
 
     objects_by_root: dict[str, list[dict[str, str]]] = defaultdict(list)
     for row in objects:
@@ -161,14 +174,21 @@ def main() -> None:
             'prohibited_inference': 'EXACT_ARTIFACT_IDENTITY_DOES_NOT_IMPLY_ADAPTATION_ACCEPTANCE_PROVIDER_AUTHORITY_OR_TARGET_MEMBERSHIP',
         })
 
-        aclass = adaptation_class(root)
         no_tokens = root['adaptation_evidence_tokens'] == 'NONE_DECLARED'
-        if no_tokens:
-            adaptation_gap = 'AD-006_FULL_PINNED_RECIPE_TO_UPSTREAM_SEMANTIC_COMPARISON'
-            adaptation_action = 'AGENT_REVIEW_PINNED_RECIPE_AGAINST_UPSTREAM_AND_CONFIRM_CLASS_A_OR_RECLASSIFY_CLASS_B'
+        semantic_review = semantic_by_root.get(root['root_review_id'])
+        aclass = semantic_review['adr_class_result'] if semantic_review else adaptation_class(root)
+        if no_tokens and semantic_review:
+            adaptation_gap = 'NONE_FOR_PACKAGE_SPECIFIC_RECIPE_ADAPTATION_CLASSIFICATION'
+            adaptation_action = 'PROCEED_TO_BOUNDED_PROVIDER_AUTHORITY_REVIEW_WITHOUT_SUPPLIER_BUILD_RECONSTRUCTION'
+            adaptation_state = ('CLASS_A_CONFIRMED_RECIPE_SEMANTIC_REVIEW_COMPLETE' if semantic_review['semantic_result'] == 'CONFIRMED_A' else 'CLASS_B_RECLASSIFIED_RECIPE_SEMANTIC_REVIEW_COMPLETE')
+            adaptation_boundary = semantic_review['project_owned_changed_boundary']
+            adaptation_evidence_suffix = f";{SEMANTIC_REVIEW.name};{semantic_review['review_id']}"
         else:
             adaptation_gap = 'AD-001_AD-002_AD-003_AD-004_SEMANTIC_DELTA_NECESSITY_AND_OBJECT_IMPACT_REVIEW'
             adaptation_action = 'AGENT_SEMANTIC_DELTA_REVIEW_WITH_OBJECT_IMPACT_AND_PLATFORM_NECESSITY_CLASSIFICATION'
+            adaptation_state = 'CLASSIFIED_OPEN_REVIEW_REQUIRED'
+            adaptation_boundary = 'EXACT_RECIPE_PATCH_HOOK_CONFIGURATION_AND_PACKAGING_DELTAS_RELIED_ON_BY_THE_PROJECT'
+            adaptation_evidence_suffix = ''
         if root['concrete_filename_requirement_set'] != 'NONE':
             adaptation_gap += ';CF-001_CF-002_CF-003_CF-004_ALIAS_SUCCESSOR_AND_ROLLBACK_POLICY'
             adaptation_action += ';REVIEW_CONSUMER_ALIAS_BINDING_AND_VERSION_DRIFT_POLICY'
@@ -185,19 +205,19 @@ def main() -> None:
             'requested_state': 'REFERENCE_RECIPE_EQUIVALENCE_OR_BOUNDED_TERMUX_ANDROID_ADAPTATION',
             'adr_class': aclass,
             'supplier_or_reference_boundary': 'PINNED_TERMUX_GLIBC_RECIPE_TREE_AND_PINNED_UPSTREAM_SOURCE',
-            'project_owned_changed_boundary': ('PROJECT_RELIANCE_ON_NO_MATERIAL_DELTA_ASSUMPTION' if no_tokens else 'EXACT_RECIPE_PATCH_HOOK_CONFIGURATION_AND_PACKAGING_DELTAS_RELIED_ON_BY_THE_PROJECT'),
+            'project_owned_changed_boundary': adaptation_boundary,
             'risk_modifiers': risks,
             'existing_evidence': (
                 f"{root['root_review_id']};recipe_tree={root['recipe_tree']};tokens={root['adaptation_evidence_tokens']};"
                 'generic-recipe-binding-and-drift-target-receipt-review.tsv;'
-                'generic-build-attestation-adaptation-root-evidence-receipt-review.tsv'
+                'generic-build-attestation-adaptation-root-evidence-receipt-review.tsv' + adaptation_evidence_suffix
             ),
             'remaining_gap': adaptation_gap,
             'minimum_closure_action': adaptation_action,
             'explicitly_excluded_evidence': 'SUP-02_CUSTODIAN_EXPORT_UNLESS_RECLASSIFICATION_OR_ESCALATION_TRIGGER_REQUIRES_CLASS_C_DEPTH',
             'escalation_trigger': 'SEMANTIC_REVIEW_CANNOT_BOUND_GENERATED_OUTPUT;OBSERVED_ARTIFACT_BEHAVIOR_CONFLICTS_WITH_RECIPE;CLAIM_RECLASSIFIED_AS_INDEPENDENT_REPRODUCTION;HIGH_RISK_OUTPUT_REMAINS_OPAQUE',
-            'classification_state': 'CLASSIFIED_OPEN_REVIEW_REQUIRED',
-            'authority_effect': 'REVIEW_PLAN_ONLY_NO_ADAPTATION_OR_PROVIDER_ACCEPTANCE',
+            'classification_state': adaptation_state,
+            'authority_effect': ('ADAPTATION_CLASSIFICATION_ONLY_NO_PROVIDER_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT' if semantic_review else 'REVIEW_PLAN_ONLY_NO_ADAPTATION_OR_PROVIDER_ACCEPTANCE'),
             'prohibited_inference': 'RECIPE_TOKEN_PRESENCE_OR_ABSENCE_DOES_NOT_BY_ITSELF_ESTABLISH_PLATFORM_NECESSITY_OR_EQUIVALENCE',
         })
 
@@ -216,8 +236,8 @@ def main() -> None:
                 f"{common_evidence};authority-coverage-ledger.tsv;generic-source-authority-boundary.tsv;"
                 'selected-object-authority-base.tsv'
             ),
-            'remaining_gap': 'ADAPTATION_CLASSIFICATION;CAPABILITY_NECESSITY_AND_CONSUMER_BINDING;CONFLICT_AND_EXCLUSION_REVIEW;UPDATE_AND_ROLLBACK_BOUNDARY',
-            'minimum_closure_action': 'CAPABILITY_LEVEL_PROVIDER_REVIEW_AFTER_ADAPTATION_CLASSIFICATION_WITH_TARGETED_PASSIVE_CONSUMER_BINDING_ONLY_WHERE_AMBIGUOUS',
+            'remaining_gap': ('CAPABILITY_NECESSITY_AND_CONSUMER_BINDING;CONFLICT_AND_EXCLUSION_REVIEW;UPDATE_AND_ROLLBACK_BOUNDARY' if semantic_review else 'ADAPTATION_CLASSIFICATION;CAPABILITY_NECESSITY_AND_CONSUMER_BINDING;CONFLICT_AND_EXCLUSION_REVIEW;UPDATE_AND_ROLLBACK_BOUNDARY'),
+            'minimum_closure_action': ('CAPABILITY_LEVEL_PROVIDER_REVIEW_WITH_TARGETED_PASSIVE_CONSUMER_BINDING_ONLY_WHERE_AMBIGUOUS' if semantic_review else 'CAPABILITY_LEVEL_PROVIDER_REVIEW_AFTER_ADAPTATION_CLASSIFICATION_WITH_TARGETED_PASSIVE_CONSUMER_BINDING_ONLY_WHERE_AMBIGUOUS'),
             'explicitly_excluded_evidence': 'SUPPLIER_BUILD_PROVENANCE_AS_A_SUBSTITUTE_FOR_PROVIDER_SELECTION_OR_RUNTIME_BINDING',
             'escalation_trigger': 'AMBIGUOUS_CONSUMER_BINDING;ABI_OR_SECURITY_CONFLICT;MULTIPLE_NON_EQUIVALENT_PROVIDER_CANDIDATES;NO_OBSERVABLE_FALLBACK',
             'classification_state': 'CLASSIFIED_OPEN_PROVIDER_AUTHORITY_NOT_ACCEPTED',
@@ -341,13 +361,23 @@ def main() -> None:
             rationale = 'MATERIAL_DELTA_REQUIRES_CLASS_B_REVIEW_BUT_DOES_NOT_BY_ITSELF_CREATE_A_CLASS_C_REPRODUCTION_CLAIM'
             next_action = 'COMPLETE_CLASS_B_SEMANTIC_AND_OBJECT_IMPACT_REVIEW_BEFORE_DECIDING_ANY_NARROWED_CUSTODIAN_EXPORT'
         elif disposition == 'REPLACED':
-            replacement = 'AUTHORITATIVE_ARTIFACT_AND_MEMBER_IDENTITY_PLUS_RECIPE_UPSTREAM_SEMANTIC_REVIEW_AND_INTEGRATION_EVIDENCE'
-            rationale = 'CONFIGURATION_PACKAGING_OR_NO_TOKEN_DRIFT_CLAIM_IS_REFERENCE_CONSUMED_OR_REFERENCE_ADAPTED_NOT_INDEPENDENTLY_REPRODUCED'
-            next_action = 'COMPLETE_AGENT_SEMANTIC_REVIEW_AND_DRIFT_POLICY_WITHOUT_EXTERNAL_CUSTODIAN_EXPORT'
+            if root['root_review_id'] in semantic_by_root:
+                replacement = 'AUTHORITATIVE_ARTIFACT_AND_MEMBER_IDENTITY_PLUS_COMPLETED_CLASS_A_RECIPE_REVIEW_PLUS_SEPARATE_CONCRETE_FILENAME_DRIFT_POLICY'
+                rationale = 'PACKAGE_SPECIFIC_RECIPE_BOUNDARY_IS_CLASS_A_WHILE_FILENAME_DRIFT_REMAINS_A_SEPARATE_PROVIDER_INTEGRATION_CLAIM'
+                next_action = 'KEEP_SUP-02_HISTORICAL_AND_REVIEW_PROVIDER_AUTHORITY_AND_FILENAME_DRIFT_WITHOUT_CUSTODIAN_BUILD_EXPORT'
+            else:
+                replacement = 'AUTHORITATIVE_ARTIFACT_AND_MEMBER_IDENTITY_PLUS_RECIPE_UPSTREAM_SEMANTIC_REVIEW_AND_INTEGRATION_EVIDENCE'
+                rationale = 'CONFIGURATION_OR_PACKAGING_CLAIM_IS_REFERENCE_CONSUMED_OR_REFERENCE_ADAPTED_NOT_INDEPENDENTLY_REPRODUCED'
+                next_action = 'COMPLETE_AGENT_SEMANTIC_REVIEW_AND_DRIFT_POLICY_WITHOUT_EXTERNAL_CUSTODIAN_EXPORT'
         else:
-            replacement = 'NO_SUP-02_ACTION;RESOLVE_NO_TOKEN_EQUIVALENCE_OR_OBJECT_REQUIREMENT_BEFORE_ANY_BUILD_PROVENANCE_ESCALATION'
-            rationale = 'NO_ACTIVE_CLASS_C_CLAIM_OR_THE_REQUIRED_OBJECT_IDENTITY_IS_NOT_YET_SATISFIED'
-            next_action = 'KEEP_REQUEST_HISTORICAL_AND_DO_NOT_FULFILL_UNLESS_A_NEW_RECORDED_ESCALATION_TRIGGER_APPEARS'
+            if root['root_review_id'] in semantic_by_root:
+                replacement = 'NO_SUP-02_ACTION;NO_TOKEN_RECIPE_SEMANTIC_REVIEW_COMPLETE;PROCEED_TO_BOUNDED_PROVIDER_REVIEW'
+                rationale = 'CLASS_A_PACKAGE_SPECIFIC_RECIPE_BOUNDARY_CONFIRMED_WITHOUT_AN_ACTIVE_CLASS_C_CLAIM'
+                next_action = 'KEEP_REQUEST_HISTORICAL_AND_REVIEW_PROVIDER_AUTHORITY_WITHOUT_CUSTODIAN_BUILD_EXPORT'
+            else:
+                replacement = 'NO_SUP-02_ACTION;RESOLVE_OBJECT_REQUIREMENT_BEFORE_ANY_BUILD_PROVENANCE_ESCALATION'
+                rationale = 'THE_REQUIRED_OBJECT_IDENTITY_IS_NOT_YET_SATISFIED_AND_NO_ACTIVE_CLASS_C_CLAIM_EXISTS'
+                next_action = 'KEEP_REQUEST_HISTORICAL_AND_DO_NOT_FULFILL_UNLESS_A_NEW_RECORDED_ESCALATION_TRIGGER_APPEARS'
         dispositions.append({
             'request_id': request['request_id'],
             'root_review_id': root['root_review_id'],
@@ -386,8 +416,11 @@ def main() -> None:
         ('sup02_narrowed_count', str(disposition_counts['NARROWED'])),
         ('sup02_replaced_count', str(disposition_counts['REPLACED'])),
         ('sup02_unnecessary_count', str(disposition_counts['UNNECESSARY'])),
+        ('no_token_semantic_review_count', str(len(semantic_reviews))),
+        ('no_token_confirmed_a_count', str(sum(1 for row in semantic_reviews if row['semantic_result'] == 'CONFIRMED_A'))),
+        ('no_token_reclassified_b_count', str(sum(1 for row in semantic_reviews if row['semantic_result'] == 'RECLASSIFIED_B'))),
         ('authority_effect', 'NONE'),
-        ('next_review_tranche', 'SEVEN_NO_TOKEN_ROOTS'),
+        ('next_review_tranche', 'FOUR_XORG_REFERENCE_CONSUMED_PROVIDER_ROOTS'),
     ]
 
     write_tsv(out_root / CLAIM_OUTPUT, CLAIM_FIELDS, claims)
