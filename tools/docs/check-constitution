@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+FAILURES=0
+
+pass() { printf 'constitution: PASS: %s\n' "$*"; }
+fail() { printf 'constitution: FAIL: %s\n' "$*" >&2; FAILURES=$((FAILURES + 1)); }
+require_text() {
+  local rel=$1 pattern=$2 label=$3
+  grep -Fq -- "$pattern" "$ROOT/$rel" && pass "$label" || fail "$label"
+}
+reject_text() {
+  local rel=$1 pattern=$2 label=$3
+  grep -Fq -- "$pattern" "$ROOT/$rel" && fail "$label" || pass "$label"
+}
+
+for rel in docs/constitution/PROJECT.md docs/constitution/PRINCIPLES.md AGENTS.md; do
+  [ -f "$ROOT/$rel" ] && pass "$rel exists" || fail "$rel missing"
+done
+
+require_text docs/constitution/PROJECT.md '**Status:** canonical constitutional authority' 'project constitution is canonical'
+require_text docs/constitution/PRINCIPLES.md '**Status:** canonical constitutional authority' 'principles constitution is canonical'
+require_text AGENTS.md 'docs/constitution/PROJECT.md' 'agent contract routes project identity'
+require_text AGENTS.md 'docs/constitution/PRINCIPLES.md' 'agent contract routes engineering principles'
+require_text docs/PROJECT_CONTEXT.md '**Lifecycle:** historical project-context provenance.' 'legacy context is historical provenance'
+require_text docs/PROJECT_PRINCIPLES.md '**Lifecycle:** historical evidence-policy provenance.' 'legacy principles are historical provenance'
+require_text docs/system-foundation/README.md 'This series no longer owns current constitutional or execution authority.' 'foundation index relinquishes current authority'
+require_text docs/decisions/0005-proportional-assurance-depth.md '- **Status:** accepted' 'ADR 0005 is accepted'
+require_text docs/decisions/0005-proportional-assurance-depth.md 'The project reviews the boundary it owns:' 'ADR 0005 focuses changed-boundary assurance'
+require_text docs/decisions/0005-proportional-assurance-depth.md 'That blanket requirement is no longer the default policy.' 'ADR 0005 bounds SUP-02 continuation'
+require_text docs/current/STATE.yaml 'assurance_depth_decision: accepted-adr-0005' 'semantic state records accepted assurance policy'
+require_text docs/current/STATE.yaml 'system_foundation_lifecycle: historical-design-provenance' 'semantic state records foundation lifecycle'
+require_text docs/current/ACTIVE_TASK.md 'Task ID: `operations-consolidation-and-historical-surface-cleanup`' 'next active task is installed'
+require_text STATUS.md 'ADR 0005 accepted for risk-proportional assurance' 'STATUS records accepted assurance policy'
+
+reject_text docs/constitution/README.md 'remain canonical' 'constitution router has no temporary legacy-canonical language'
+reject_text docs/system-foundation/README.md '11 and 12 take precedence' 'foundation index has no current precedence claim'
+reject_text docs/current/ACTIVE_TASK.md 'constitution-consolidation-and-assurance-decision' 'completed task is not still active'
+
+for i in $(seq -w 1 12); do
+  rel=$(find "$ROOT/docs/system-foundation" -maxdepth 1 -type f -name "$i-*.md" -printf '%P\n')
+  [ -n "$rel" ] || { fail "foundation $i missing"; continue; }
+  require_text "docs/system-foundation/$rel" '**Lifecycle:** historical system-foundation provenance.' "foundation $i is lifecycle-labeled"
+done
+
+python3 - "$ROOT" <<'PY2'
+from pathlib import Path
+import csv, sys
+root=Path(sys.argv[1])
+rows={r['document_id']:r for r in csv.DictReader((root/'docs/catalog.tsv').open(), delimiter='\t')}
+errors=[]
+expected={
+ 'constitution-project':('current','canonical','docs/constitution/PROJECT.md'),
+ 'constitution-principles':('current','canonical','docs/constitution/PRINCIPLES.md'),
+ 'project-context':('historical','history','docs/PROJECT_CONTEXT.md'),
+ 'project-principles':('historical','history','docs/PROJECT_PRINCIPLES.md'),
+ 'foundation-index':('historical','history','docs/system-foundation/README.md'),
+ 'adr-0005':('accepted','canonical','docs/decisions/0005-proportional-assurance-depth.md'),
+}
+for did,(status,authority,path) in expected.items():
+    row=rows.get(did)
+    if not row:
+        errors.append(f'missing catalog row {did}')
+    elif (row['status'],row['authority'],row['path']) != (status,authority,path):
+        errors.append(f'{did}: unexpected catalog classification {row}')
+if errors:
+    for e in errors: print('constitution: FAIL:',e,file=sys.stderr)
+    raise SystemExit(1)
+print('constitution: PASS: catalog constitutional lifecycle is coherent')
+PY2
+rc=$?
+[ "$rc" -eq 0 ] || FAILURES=$((FAILURES + 1))
+
+[ "$FAILURES" -eq 0 ] || exit 1
+printf 'constitution: all checks passed\n'

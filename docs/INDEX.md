@@ -16,7 +16,7 @@ Use this page to route a question to the smallest authoritative document set. Th
 
 | Question class | Router |
 |---|---|
-| Project purpose, invariants, and durable philosophy | [`constitution/README.md`](constitution/README.md) |
+| Project identity, invariants, and durable philosophy | [`constitution/README.md`](constitution/README.md) |
 | Current integrated system and component contracts | [`architecture/README.md`](architecture/README.md) |
 | User/agent collaboration, tools, and platform behavior | [`operations/README.md`](operations/README.md) |
 | Accepted, proposed, superseded, or historical choices | [`decisions/README.md`](decisions/README.md) |

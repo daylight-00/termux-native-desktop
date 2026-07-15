@@ -16,7 +16,7 @@ mkdir -p "$HOME/gl/build/.venv/bin" "$HOME/gl/build/mesa/src" "$HOME/gl/opt" "$H
 printf 'venv\n' >"$HOME/gl/build/.venv/bin/marker"
 printf 'source\n' >"$HOME/gl/build/mesa/src/marker"
 printf 'cross\n' >"$HOME/gl/build/cross-full.ini"
-for name in mesa-glibc-26.1.4 mesa-glibc-26.1.4-full mesa-bisect; do
+for name in mesa-glibc-26.1.4 mesa-glibc-26.1.4-full mesa-bisect mesa-glibc-debug; do
   mkdir -p "$HOME/gl/opt/$name/lib"
   printf '%s\n' "$name" >"$HOME/gl/opt/$name/lib/marker"
 done
@@ -61,8 +61,11 @@ test -L "$HOME/gl/build/cross-full.ini"
 test -f "$XDG_STATE_HOME/termux-native-desktop/workspaces/mesa/.venv/bin/marker"
 test -f "$XDG_STATE_HOME/termux-native-desktop/workspaces/mesa/mesa/src/marker"
 test -L "$HOME/gl/opt/mesa-glibc-26.1.4-full"
+test -L "$HOME/gl/opt/mesa-glibc-debug"
 test -f "$XDG_STATE_HOME/termux-native-desktop/providers/mesa/candidates/mesa-glibc-26.1.4-full/lib/marker"
+test "$(readlink "$HOME/gl/opt/mesa-glibc")" = "$XDG_STATE_HOME/termux-native-desktop/providers/mesa/current"
 test "$(readlink -f "$HOME/gl/opt/mesa-glibc")" = "$(readlink -f "$XDG_STATE_HOME/termux-native-desktop/providers/mesa/current")"
+test ! -e "$HOME/gl/opt/mesa-glibc.new.$$"
 test ! -L "$HOME/opt/mesa-26-glibc"
 test -f "$HOME/gl/apps/vscode/marker"
 test -f "$HOME/gl/selected/obsidian/marker"

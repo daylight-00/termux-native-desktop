@@ -1,5 +1,5 @@
 schema_version: 1
-state_version: 2026-07-15.03
+state_version: 2026-07-15.04
 updated_on: 2026-07-15
 
 project:
@@ -29,13 +29,18 @@ documentation:
   catalog: docs/catalog.tsv
   default_onboarding_files: 4
   default_history_files: 0
-  physical_reorganization: deferred-until-canonical-consolidation
-  assurance_depth_decision: proposed-adr-0005
+  constitutional_surface:
+    project_identity: docs/constitution/PROJECT.md
+    engineering_principles: docs/constitution/PRINCIPLES.md
+    agent_authority: AGENTS.md
+  system_foundation_lifecycle: historical-design-provenance
+  physical_reorganization: deferred-until-operations-consolidation
+  assurance_depth_decision: accepted-adr-0005
 
 provider_authority:
   workstream: paused
   boundary: sup-02-producer-implemented-no-canonical-response
-  next_research_decision: assurance-depth-policy
+  next_research_decision: classify-provider-claims-under-adr-0005
   prohibited_claims:
     - complete-provider-authority
     - complete-runtime-composition
@@ -43,7 +48,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: constitution-consolidation-and-assurance-decision
+  id: operations-consolidation-and-historical-surface-cleanup
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:

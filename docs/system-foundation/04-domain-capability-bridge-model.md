@@ -1,5 +1,7 @@
 # 4. Domain, Capability, Provider, and Bridge Model
 
+> **Lifecycle:** historical system-foundation provenance. Current constitutional authority is [`../constitution/`](../constitution/README.md); current architecture is [`../architecture/`](../architecture/README.md). Interpret this document in its recorded context; any later status, precedence, or execution-order wording below is historical to that context.
+
 The six-plane architecture becomes implementable when it is expressed through a small object model.
 
 The proposed core objects are:

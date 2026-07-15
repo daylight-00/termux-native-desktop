@@ -1,5 +1,7 @@
 # 2. Principles and Invariants
 
+> **Lifecycle:** historical system-foundation provenance. Current constitutional authority is [`../constitution/`](../constitution/README.md); current architecture is [`../architecture/`](../architecture/README.md). Interpret this document in its recorded context; any later status, precedence, or execution-order wording below is historical to that context.
+
 This document proposes a project constitution: rules that should remain stable even while implementations change.
 
 A useful distinction:

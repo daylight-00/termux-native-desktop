@@ -1,7 +1,9 @@
 # 12. Document Consistency Audit and Execution Order
 
+> **Lifecycle:** historical system-foundation provenance. Current constitutional authority is [`../constitution/`](../constitution/README.md); current architecture is [`../architecture/`](../architecture/README.md). Interpret this document in its recorded context; any later status, precedence, or execution-order wording below is historical to that context.
+
 > **Date:** 2026-07-10
-> **Status:** active consistency index and execution-order guide
+> **Recorded status at authoring:** active consistency index and execution-order guide
 > **Scope:** audits the reasoning chain across the foundation set, reconciles earlier migration tactics with the architecture reassessment, and identifies which conclusions are settled versus still open.
 
 ## 12.1 Purpose

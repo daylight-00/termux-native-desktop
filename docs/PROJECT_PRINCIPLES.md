@@ -1,5 +1,7 @@
 # Project principles
 
+> **Lifecycle:** historical evidence-policy provenance. Current engineering and assurance principles are canonical in [`constitution/PRINCIPLES.md`](constitution/PRINCIPLES.md) and accepted ADRs.
+
 This project is not merely an attempt to make a Linux desktop application launch on Android. It builds an evidence-backed architecture for a conventional Linux/glibc application world hosted beside Termux/Android, with explicit ownership, lifecycle and promotion boundaries.
 
 ## What counts as progress

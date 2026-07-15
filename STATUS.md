@@ -1,6 +1,6 @@
 # Status
 
-> **State:** bundle-native documentation control plane active; current-facing authority synchronized; logical documentation authority model and question routers installed; ADR 0005 proposed for proportional assurance depth; provider-authority workstream paused at the bounded 0165 SUP-02 no-response boundary
+> **State:** bundle-native documentation control plane active; current-facing authority synchronized; compact constitutional authority installed; ADR 0005 accepted for risk-proportional assurance; provider-authority workstream paused at the bounded 0165 SUP-02 no-response boundary
 > **Updated:** 2026-07-15
 
 ## Repository and deployment consolidation
@@ -10,7 +10,7 @@
 - Topic branches are deleted only after their tips are verified as ancestors of the pushed `main`.
 - Direct checkout-to-live symlinks are superseded by immutable materialized repository releases and a stable atomic `current` pointer.
 - `tools/deploy --profile workstation|full` owns managed public leaves; external payloads, selected generations, provider installs, build trees and user state remain outside this cleanup transaction.
-- The provider-authority workstream remains paused at its current bounded evidence boundary pending an assurance-tier decision; branch consolidation does not accept provider authority or populate a target layout.
+- The provider-authority workstream remains paused at its current bounded evidence boundary pending claim-by-claim reclassification under ADR 0005; the assurance decision does not accept provider authority or populate a target layout.
 
 See `docs/decisions/0004-single-main-and-immutable-release-deployment.md`.
 
@@ -108,12 +108,12 @@ See `docs/decisions/0004-single-main-and-immutable-release-deployment.md`.
 ## Current authority
 
 ```text
-main/docs/system-foundation/01-essence.md
-main/docs/system-foundation/02-principles-and-invariants.md
-main/docs/system-foundation/03-system-model-v2.md
-main/docs/system-foundation/05-ideal-target-architecture.md
-main/docs/system-foundation/11-architecture-reassessment-and-hard-refactor-decision.md
-main/docs/system-foundation/12-document-consistency-audit-and-execution-order.md
+main/docs/constitution/PROJECT.md
+main/docs/constitution/PRINCIPLES.md
+main/AGENTS.md
+
+historical design provenance:
+main/docs/system-foundation/README.md
 
 docs/refactor/0112-selected-obsidian-passive-map-selection-diagnostic-pass-and-contract-decision.md
 docs/refactor/0115-proot-oracle-supply-and-baseline-model.md
@@ -321,26 +321,25 @@ AUTH-010 exact application payload supply, named supplement membership and relea
 ## Next valid state
 
 ```text
-CONSOLIDATE_CONSTITUTION_AND_DECIDE_ASSURANCE_DEPTH
+CONSOLIDATE_OPERATIONS_AND_HISTORICAL_SURFACES
 ```
 
 Active task:
 
 ```text
-CONSTITUTION_CONSOLIDATION_AND_ASSURANCE_DECISION
+OPERATIONS_CONSOLIDATION_AND_HISTORICAL_SURFACE_CLEANUP
 ```
 
 Required order:
 
 ```text
-1. keep the installed documentation model, catalog and bundle-native current-state surface authoritative;
-2. consolidate project context, principles, agent invariants and foundation precedence into one compact constitutional surface;
-3. review proposed ADR 0005 and explicitly accept, revise, reject or replace it;
-4. keep system-foundation 06-10 and the numbered work log as historical source material rather than default onboarding;
-5. derive the provider-authority next action from the decided assurance policy;
-6. only then issue or fulfill further evidence requests;
-7. define ApplicationRuntimeComposition only after owning authorities are accepted;
-8. populate target rows and implement materialization only after composition acceptance and intervention-lift review.
+1. keep the compact constitution, accepted ADR 0005 and bundle-native current-state surface authoritative;
+2. consolidate collaboration, transport, runner/result and optional checkpoint rules under one operations surface;
+3. retire or classify legacy session/handoff narratives without losing reusable failure lessons;
+4. classify each paused provider claim under ADR 0005 before requesting more evidence;
+5. issue or fulfill only the bounded evidence required by that classification;
+6. define ApplicationRuntimeComposition only after owning authorities are accepted;
+7. populate target rows and implement materialization only after composition acceptance and intervention-lift review.
 ```
 
 ## Stop lines

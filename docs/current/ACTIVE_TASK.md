@@ -1,70 +1,67 @@
+# Active task: consolidate operations and historical surfaces
 
-# Active task: consolidate the constitution and decide assurance depth
-
-> Task ID: `constitution-consolidation-and-assurance-decision`
+> Task ID: `operations-consolidation-and-historical-surface-cleanup`
 >
-> Expected state on completion: the project has a compact, non-overlapping constitutional surface; the system-foundation lifecycle is explicit; and ADR 0005 is accepted, revised, rejected, or replaced through an explicit decision.
+> Expected state on completion: durable web-chat collaboration rules have one canonical operations surface; legacy session-process and handoff documents are clearly historical or replaced; and a new session can locate operational guidance without reading superseded lifecycle narratives.
 
 ## Objective
 
-Consolidate the durable project identity and invariant documents, then review the proposed proportional assurance-depth policy before any provider-authority evidence campaign resumes.
+Consolidate the progress-independent collaboration, transport, execution-package, result-review, and optional checkpoint rules under `docs/operations/`, then reduce the remaining authority ambiguity in `docs/session-operations/` and `docs/handoff/`.
 
 ## Why now
 
-The logical documentation authority model and question-based routers are in place. The remaining high-value overlap is concentrated among project context, project principles, the system-foundation series, and the agent contract. Leaving those as partially overlapping canonical sources would still force future agents to reconstruct precedence.
+The constitutional surface is compact and ADR 0005 now bounds assurance work. The largest remaining documentation overlap affecting every web-chat session is operational: current rules are split between `AGENTS.md`, the ChatGPT platform profile, and seven legacy `session-operations` documents that evolved from the former mandatory-handoff model.
 
-The paused provider-authority workstream also needs an explicit decision on assurance depth rather than another evidence-producing transaction by inertia.
+This should be resolved before resuming the provider-authority workstream so future sessions inherit one stable execution contract.
 
 ## Current accepted decisions
 
-- Web-chat sessions start from a user-provided full Git bundle and `START_HERE.md`.
-- `docs/current/` owns current semantic state and the active task.
-- `docs/DOCUMENTATION_MODEL.md` defines the logical authority and lifecycle classes.
-- `docs/catalog.tsv` identifies canonical routers and key documents.
-- Historical refactor and handoff records are excluded from default onboarding.
-- `main` is the sole intended long-lived branch.
-- Repository deployment is immutable and explicitly activated.
-- Mesa mutable workspace and provider candidates are owned under XDG state.
-- The provider-authority workstream remains paused at the 0165 no-response boundary.
-- ADR 0005 is proposed, not accepted.
+- Project identity is canonical in `docs/constitution/PROJECT.md`.
+- Engineering, evidence, promotion, and assurance principles are canonical in `docs/constitution/PRINCIPLES.md`.
+- Agent/user authority is canonical in `AGENTS.md`.
+- ADR 0005 is accepted: assurance is proportional to the claim, implementation class, changed boundary, and risk.
+- New web-chat sessions start from a user-provided full Git bundle and `START_HERE.md`.
+- Narrative handoffs are not current authority.
+- The provider-authority workstream remains paused pending object/claim reclassification under ADR 0005.
 
 ## In scope
 
-- Map overlap among `PROJECT_CONTEXT.md`, `PROJECT_PRINCIPLES.md`, `AGENTS.md`, and system-foundation documents 01-05 and 11-12.
-- Define the smallest compact constitutional surface that preserves project purpose, invariants, evidence philosophy, and agent authority.
-- Classify system-foundation 06-10 as historical planning/assessment material without rewriting it.
-- Review ADR 0005 class definitions, risk modifiers, stop rules, and provider-workstream consequences.
-- Accept, revise, reject, or replace ADR 0005 explicitly.
-- Prepare or implement bounded physical moves only with complete link migration and repository checks.
-- Further reduce default and task-specific reading where consolidation makes that possible.
+- Map overlap among `docs/operations/`, `docs/session-operations/`, the ChatGPT platform profile, and legacy handoff procedures.
+- Define one canonical home for collaboration roles, Git/bundle transport, Drive exchange, runner/result lifecycle, troubleshooting, and optional incomplete-work checkpoints.
+- Preserve reusable failure lessons while removing obsolete mandatory-handoff assumptions.
+- Decide whether legacy files should become compact tombstones, move under history, or remain reference sources with explicit lifecycle labels.
+- Keep the web-chat operational surface small enough for task-specific reading.
+- Add mechanical checks preventing reintroduction of narrative handoff authority or unsupported tool capabilities.
 
 ## Out of scope
 
-- Rewriting numbered refactor records or experiment reports.
-- Moving all architecture, operations, evidence, or history documents at once.
-- Resuming SUP-02 acquisition or producing supplier responses.
-- Accepting provider authority, composition, target population, or activation.
-- Device runtime, graphics, or application testing.
+- Resuming SUP-02 or collecting provider evidence.
+- Reclassifying the 28 provider roots under ADR 0005.
+- Moving the numbered refactor corpus.
+- Rewriting experiment reports.
+- Device runtime, deployment, graphics, or application testing.
 - Adopting Codex or Claude Code as the current execution environment.
 
 ## Required reading
 
 - `docs/current/STATE.yaml`
 - `docs/DOCUMENTATION_MODEL.md`
-- `docs/constitution/README.md`
-- `docs/decisions/0005-proportional-assurance-depth.md`
-- `docs/system-foundation/11-architecture-reassessment-and-hard-refactor-decision.md`
-- `docs/system-foundation/12-document-consistency-audit-and-execution-order.md`
+- `docs/operations/README.md`
+- `docs/operations/platforms/chatgpt-web.md`
+- `docs/session-operations/README.md`
+- `docs/session-operations/COLLABORATION.md`
+- `docs/session-operations/AGENT_EXECUTION.md`
 
-Do not read all foundation, refactor, or experiment records. Open an older source only to resolve a specific overlap or provenance question.
+Do not read dated handoffs or the full refactor corpus. Open another legacy operations file only to resolve a named overlap or preserve a reusable failure lesson.
 
 ## Known facts
 
-- Logical routing is complete without moving the historical corpus.
-- The default onboarding set is four files, within the enforced line and word budget.
-- System-foundation 01-05 are durable design sources; 06-10 describe an earlier assessment and plan; 11-12 reinterpret the series after later evidence.
-- ADR 0005 currently has no authority effect.
-- Full Git bundle transport gives the web-chat sandbox ordinary Git objects and a working tree.
+- Accepted repository transitions update current state directly; normal session close produces no handoff.
+- The user may create a full bundle directly from authoritative Termux `main` for the next session.
+- GitHub connector raw-content actions are not a substitute for clone/object transport.
+- Google Drive carries bundles, patches, runners, results, logs, and safety artifacts.
+- New-chat local-path upload rewriting can be unavailable on the first assistant turn.
+- Docker is unavailable and outside the project workflow.
 
 ## Pending external inputs
 
@@ -72,23 +69,23 @@ None. See [`PENDING_ARTIFACTS.yaml`](PENDING_ARTIFACTS.yaml).
 
 ## Next valid action
 
-Review the proposed assurance classes and risk modifiers against the project’s reference-first philosophy, then produce an explicit constitutional target map showing which current sources remain canonical, which are consolidated, and which become historical design provenance.
+Build an overlap map for the current operations documents, then define the smallest canonical operations set before moving or tombstoning any legacy file.
 
 ## Stop conditions
 
 Stop before implementation if:
 
-- the constitutional target would erase important project motivation or evidence principles;
-- ADR 0005 would silently accept or reject a provider rather than define evidence depth;
-- a physical move lacks complete inbound-link migration and a repository-wide link check;
-- the result creates two competing canonical copies;
-- the required-reading set expands rather than contracts without a concrete reason.
+- a reusable operational lesson would be lost;
+- two documents would remain canonical for the same rule;
+- the new surface assumes repository-local capabilities unavailable in web chat;
+- a physical move lacks complete inbound-link migration and repository-wide link validation;
+- the change reintroduces a required session-close handoff.
 
 ## Completion criteria
 
-- Project purpose, invariants, evidence philosophy, and agent authority each have one canonical home.
-- System-foundation lifecycle and precedence are mechanically clear.
-- ADR 0005 has an explicit final status and rationale.
-- The provider-authority next action follows from the accepted policy rather than historical momentum.
-- Default onboarding remains bounded and history-free.
-- The next implementation phase is repository-owned and does not depend on chat memory.
+- Each durable collaboration/tool/exchange rule has one canonical home.
+- Legacy session and handoff narratives are explicitly historical or replaced.
+- The web-chat profile accurately distinguishes sandbox, Drive, GitHub connector, and user Termux authority.
+- Optional checkpointing is defined only for valuable incomplete work.
+- Default onboarding remains four files and history-free.
+- The next active task can apply ADR 0005 to the paused provider claims without relying on chat memory.

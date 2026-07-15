@@ -1,6 +1,8 @@
 # Project Context
 
-> **Status:** active experiment  
+> **Lifecycle:** historical project-context provenance. Current project identity and boundary are canonical in [`constitution/PROJECT.md`](constitution/PROJECT.md). This document preserves the motivation and evolution recorded at its original stage.
+
+> **Recorded status at authoring:** active experiment
 > **Primary target:** Samsung Galaxy S22 Ultra, stock Android kernel, non-root Termux + Termux:X11  
 > **Project start:** 2026-07-04, after pilot work beginning 2026-06-27
 

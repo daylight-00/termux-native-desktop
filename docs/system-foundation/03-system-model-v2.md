@@ -1,5 +1,7 @@
 # 3. System Model v2: Six Architectural Planes
 
+> **Lifecycle:** historical system-foundation provenance. Current constitutional authority is [`../constitution/`](../constitution/README.md); current architecture is [`../architecture/`](../architecture/README.md). Interpret this document in its recorded context; any later status, precedence, or execution-order wording below is historical to that context.
+
 The existing project history is naturally organized into workstreams: desktop/session, glibc applications, and GPU. Those workstreams remain useful as historical and operational categories. For long-term architecture, however, they mix different kinds of concern.
 
 For example:

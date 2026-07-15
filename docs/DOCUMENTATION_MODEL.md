@@ -39,17 +39,20 @@ Exactly one active task is allowed. Current state must be updated in the same ac
 
 ### Constitution
 
-The constitutional class owns stable project identity and engineering invariants:
+The constitutional class has three non-overlapping canonical owners:
 
 ```text
-project purpose and non-goals
-host and ABI authority
-reference-first and minimal-deviation policy
-evidence and promotion principles
-agent/user authority boundary
+docs/constitution/PROJECT.md
+    -> project purpose, identity, system boundary, quality goals and non-goals
+
+docs/constitution/PRINCIPLES.md
+    -> engineering, evidence, promotion and assurance invariants
+
+AGENTS.md
+    -> agent/user authority, context, transport and execution discipline
 ```
 
-Constitutional changes require an explicit durable decision or a clearly recorded correction. They must not be introduced silently through an experiment report or active-task summary.
+Earlier project-context, project-principles, and system-foundation documents are design provenance. Constitutional changes require an explicit accepted decision or a clearly recorded correction. They must not be introduced silently through an experiment report or active-task summary.
 
 ### Architecture
 

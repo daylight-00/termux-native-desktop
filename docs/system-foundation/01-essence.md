@@ -1,5 +1,7 @@
 # 1. The Essence of the Project
 
+> **Lifecycle:** historical system-foundation provenance. Current constitutional authority is [`../constitution/`](../constitution/README.md); current architecture is [`../architecture/`](../architecture/README.md). Interpret this document in its recorded context; any later status, precedence, or execution-order wording below is historical to that context.
+
 ## 1.1 Start from the need, but do not confuse the need with the architecture
 
 The project began from a practical need: a phone had to become a credible workstation for coding, remote development, scientific visualization, data inspection, Git review, and writing.

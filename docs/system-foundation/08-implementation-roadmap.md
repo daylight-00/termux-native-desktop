@@ -1,5 +1,7 @@
 # 8. Implementation Roadmap
 
+> **Lifecycle:** historical system-foundation provenance. Current constitutional authority is [`../constitution/`](../constitution/README.md); current architecture is [`../architecture/`](../architecture/README.md). Interpret this document in its recorded context; any later status, precedence, or execution-order wording below is historical to that context.
+
 This roadmap translates the target architecture into incremental engineering work. It is deliberately ordered to minimize conflict with an active refactor and to avoid replacing working behavior before equivalent validation exists.
 
 The phases are not dates. Advancement is gate-based.

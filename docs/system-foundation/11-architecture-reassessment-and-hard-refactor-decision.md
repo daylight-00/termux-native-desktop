@@ -1,7 +1,9 @@
 # 11. Architecture Reassessment and Hard-Refactor Decision
 
+> **Lifecycle:** historical system-foundation provenance. Current constitutional authority is [`../constitution/`](../constitution/README.md); current architecture is [`../architecture/`](../architecture/README.md). Interpret this document in its recorded context; any later status, precedence, or execution-order wording below is historical to that context.
+
 > **Date:** 2026-07-10
-> **Status:** active architectural direction
+> **Recorded status at authoring:** active architectural direction
 > **Scope:** reconciles the system-foundation model with the concurrent `refactor/module-package-layout` work and the post-refactor glibc/libdbus ABI incident.
 
 ## 11.1 Why this reassessment exists

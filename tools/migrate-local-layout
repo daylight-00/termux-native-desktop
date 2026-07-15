@@ -55,7 +55,7 @@ resolved_or_empty() {
 
 legacy_provider_names() {
   [ -d "$GL/opt" ] || return 0
-  find "$GL/opt" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort
+  find "$GL/opt" -mindepth 1 -maxdepth 1 -type d ! -name mesa-glibc -printf '%f\n' | sort
 }
 
 status_layout() {
@@ -117,6 +117,7 @@ preflight() {
   [ ! -e "$WORKSPACE" ] || fail "workspace destination already exists: $WORKSPACE"
   [ ! -e "$PROVIDER_ROOT" ] || fail "provider destination already exists: $PROVIDER_ROOT"
 
+  [ -L "$GL/opt/mesa-glibc" ] || fail "active Mesa provider selector is not a symlink"
   active_resolved=$(resolved_or_empty "$GL/opt/mesa-glibc")
   [ -n "$active_resolved" ] && [ -d "$active_resolved" ] || fail "active Mesa provider is unresolved"
   active_name=${active_resolved##*/}
@@ -269,8 +270,10 @@ done
 ln -s "$CANDIDATES/$ACTIVE_NAME" "$PROVIDER_ROOT/current.new.$$"
 mv -Tf "$PROVIDER_ROOT/current.new.$$" "$PROVIDER_ROOT/current"
 rm -f "$GL/opt/mesa-glibc"
-ln -s "$PROVIDER_ROOT/current" "$GL/opt/mesa-glibc.new.$$"
-mv -Tf "$GL/opt/mesa-glibc.new.$$" "$GL/opt/mesa-glibc"
+# Do not stage this compatibility selector through mv(1).  The source link
+# points at another symlink whose final target is a directory, and some GNU
+# mv environments dereference that chain during mv -T classification.
+ln -s "$PROVIDER_ROOT/current" "$GL/opt/mesa-glibc"
 printf 'provider-active\t%s/opt/mesa-glibc\t%s/current\n' "$GL" "$PROVIDER_ROOT" >>"$MIGRATION_MANIFEST"
 
 if [ -L "$BROKEN_COMPAT" ] && [ ! -e "$BROKEN_COMPAT" ]; then

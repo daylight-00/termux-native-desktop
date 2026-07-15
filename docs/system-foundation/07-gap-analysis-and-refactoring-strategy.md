@@ -1,5 +1,7 @@
 # 7. Gap Analysis and Refactoring Strategy
 
+> **Lifecycle:** historical system-foundation provenance. Current constitutional authority is [`../constitution/`](../constitution/README.md); current architecture is [`../architecture/`](../architecture/README.md). Interpret this document in its recorded context; any later status, precedence, or execution-order wording below is historical to that context.
+
 The project is being actively refactored. The safest architectural strategy is therefore not a large rename/rewrite, but a sequence that first **freezes semantics, makes contracts visible, adds gates, and then moves implementation behind those contracts**.
 
 This document uses a strangler-style migration: old working paths remain the baseline while new structure takes responsibility gradually.

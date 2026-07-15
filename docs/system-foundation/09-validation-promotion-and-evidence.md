@@ -1,5 +1,7 @@
 # 9. Validation, Promotion, Rollback, and Evidence
 
+> **Lifecycle:** historical system-foundation provenance. Current constitutional authority is [`../constitution/`](../constitution/README.md); current architecture is [`../architecture/`](../architecture/README.md). Interpret this document in its recorded context; any later status, precedence, or execution-order wording below is historical to that context.
+
 A system assembled from several ABI worlds, upstream artifacts, locally built providers, and runtime bridges needs stronger lifecycle discipline than “the command exited zero once.”
 
 This document defines a validation and promotion model.

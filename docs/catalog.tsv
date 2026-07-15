@@ -8,9 +8,11 @@ pending-artifacts	current	current	canonical	no	docs/current/PENDING_ARTIFACTS.ya
 documentation-model	governance	current	canonical	no	docs/DOCUMENTATION_MODEL.md	document authority lifecycle and context budget
 document-index	routing	current	canonical	no	docs/INDEX.md	question-oriented document router
 constitution-index	constitution	current	canonical	no	docs/constitution/README.md	project identity and invariant router
-project-context	constitution	current	canonical	no	docs/PROJECT_CONTEXT.md	project motivation evolution and boundary
-project-principles	constitution	current	canonical	no	docs/PROJECT_PRINCIPLES.md	evidence authority and engineering principles
-foundation-index	constitution	mixed	source-index	no	docs/system-foundation/README.md	foundation source lifecycle and precedence
+constitution-project	constitution	current	canonical	no	docs/constitution/PROJECT.md	project identity boundary quality goals and non-goals
+constitution-principles	constitution	current	canonical	no	docs/constitution/PRINCIPLES.md	engineering evidence promotion and assurance invariants
+project-context	constitution	historical	history	no	docs/PROJECT_CONTEXT.md	historical motivation and project evolution provenance
+project-principles	constitution	historical	history	no	docs/PROJECT_PRINCIPLES.md	earlier evidence doctrine provenance
+foundation-index	history	historical	history	no	docs/system-foundation/README.md	system-foundation design and decision provenance index
 architecture-index	architecture	current	canonical	no	docs/architecture/README.md	current architecture router
 system-architecture	architecture	current	canonical	no	docs/architecture.md	integrated system model
 glibc-architecture	architecture	current	canonical	no	docs/glibc-layer.md	glibc application-world contract
@@ -24,7 +26,7 @@ adr-0001	decisions	accepted	canonical	no	docs/decisions/0001-no-proot-runtime.md
 adr-0002	decisions	superseded	history	no	docs/decisions/0002-glibc-core-from-termux-glibc-repo.md	historical broad sourcing rule
 adr-0003	decisions	accepted	canonical	no	docs/decisions/0003-mesa-kmds-msm-kgsl.md	validated Mesa KMD policy
 adr-0004	decisions	accepted	canonical	no	docs/decisions/0004-single-main-and-immutable-release-deployment.md	main and immutable deployment
-adr-0005	decisions	proposed	review	no	docs/decisions/0005-proportional-assurance-depth.md	proposed assurance-depth policy
+adr-0005	decisions	accepted	canonical	no	docs/decisions/0005-proportional-assurance-depth.md	risk-proportional assurance at project-owned changed boundaries
 evidence-index	evidence	current	canonical	no	docs/evidence/README.md	evidence and receipt routing
 experiments-index	evidence	mixed	source-index	no	experiments/README.md	experiment interpretation contract
 refactor-index	history	historical	history	no	docs/refactor/README.md	transaction-level historical evidence

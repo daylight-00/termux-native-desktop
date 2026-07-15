@@ -1,97 +1,119 @@
-
 # Current project brief
 
-> Semantic state version: `2026-07-15.03`
+> Semantic state version: `2026-07-15.04`
 >
-> This document is the compact current-state entry point. Exact commit and tree coordinates come from the checked-out Git bundle, not from self-referential text in the repository.
+> This is the compact current-state entry point. Exact commit and tree coordinates come from the checked-out full Git bundle, not from self-referential repository text.
 
-## Purpose
+## Purpose and constitutional boundary
 
-`termux-native-desktop` is an active systems-engineering project for turning a stock, non-root Android phone into a practical native Termux research and development workstation. It keeps the Android/Termux host authoritative while composing explicit glibc application worlds, graphics providers, bridges, application domains, and promotion evidence.
+`termux-native-desktop` is a systems-engineering project for turning a stock, non-root Android phone into a practical native Termux research and development workstation.
 
-PRoot and Debian remain useful as oracle, dependency solver, supply source, artifact warehouse, and debugging control. They are excluded from the normal application runtime baseline.
+```text
+Android / Termux native host authority
+    + coherent bionic and glibc execution worlds
+    + explicit bridges and capability providers
+    + application runtime domains
+    + evidence-gated promotion and activation
+```
+
+PRoot and Debian may serve as oracle, supply, reference, or debugging control. They are excluded from the normal promoted application runtime.
+
+Current constitutional authority is deliberately compact:
+
+```text
+docs/constitution/PROJECT.md
+    identity, boundary, quality goals and non-goals
+
+docs/constitution/PRINCIPLES.md
+    engineering, evidence, promotion and assurance invariants
+
+AGENTS.md
+    agent/user authority, context, transport and execution discipline
+```
+
+Former project-context/principles and system-foundation documents are preserved as design provenance.
 
 ## Current structural state
 
 - `main` is the only intended long-lived integration branch.
-- The canonical checkout is `$HOME/projects/termux-native-desktop`.
-- The checkout is authoring state, not live runtime authority.
-- Repository deployment materializes immutable releases under XDG state and activates them through stable `current` and retained `previous` pointers.
+- The user Termux checkout is authoritative for remote Git mutation and device execution.
+- A checkout is authoring state, not live runtime authority.
+- Repository deployment uses immutable releases with explicit `current` activation and retained rollback state.
 - The historical `$HOME/gl/.git` authority is retired and preserved in safety artifacts.
-- Mutable Mesa source/build state and versioned providers are separated under XDG state.
-- Legacy `$HOME/gl/build` and `$HOME/gl/opt` coordinates are compatibility paths, not canonical ownership.
-- VS Code and Obsidian application bodies, selected generations, user data, and provider contents remain outside repository ownership.
+- Mesa mutable work and provider candidates are canonical under XDG state.
+- Legacy `$HOME/gl/build` and `$HOME/gl/opt` are compatibility coordinates only.
+- Application bodies, selected generations, provider contents, and user data remain outside repository ownership.
 
-## Current research boundary
+## Current provider boundary
 
-The provider-authority workstream remains paused:
+The provider-authority workstream remains paused at the 0165 SUP-02 boundary:
 
 ```text
 SUP-02 producer implemented
-all 28 issued requests outstanding
-no canonical supplier response produced
+28 issued requests still without canonical responses
 no build-attestation/adaptation closure accepted
 no provider/composition/target-layout completion accepted
+no selected-generation activation accepted
 ```
 
-The project must decide how much assurance is appropriate for reference-consumed, reference-adapted, independently reproduced, and novel paths before additional evidence production resumes.
+[`../decisions/0005-proportional-assurance-depth.md`](../decisions/0005-proportional-assurance-depth.md) is now accepted policy.
 
-[`../decisions/0005-proportional-assurance-depth.md`](../decisions/0005-proportional-assurance-depth.md) is a proposed policy only. It has no provider, target-population, or activation effect.
-
-## Documentation authority state
-
-The repository now has a canonical logical documentation model:
+Assurance is selected before evidence collection from:
 
 ```text
-current
-constitution
-architecture
-operations
-decisions
-evidence
-history
-knowledge
+exact claim
+    + implementation class
+    + project-owned changed boundary
+    + risk modifiers
 ```
 
-- [`../DOCUMENTATION_MODEL.md`](../DOCUMENTATION_MODEL.md) defines authority, lifecycle, conflict handling, and context budgets.
-- [`../catalog.tsv`](../catalog.tsv) is the machine-readable catalog of canonical routers and key authority documents.
-- Canonical routers exist for constitution, architecture, operations, evidence, and history.
-- The large historical corpus has not been physically moved; its current classification is inherited from its directory indexes.
-- Narrative handoffs remain historical only.
+The previous blanket demand for producing-build custodian exports across all 28 roots is no longer the default. Existing provider claims must be reclassified before further evidence requests. This policy change does not itself accept a provider or target.
 
-Default onboarding remains bounded to four files and loads no history.
+## Documentation and web-session state
+
+- New web-chat sessions receive a user-created full Git bundle and start at `START_HERE.md`.
+- `docs/current/` owns current semantic state, the active task, and pending external artifacts.
+- [`../DOCUMENTATION_MODEL.md`](../DOCUMENTATION_MODEL.md) defines authority and lifecycle by question.
+- [`../catalog.tsv`](../catalog.tsv) is the machine-readable document catalog.
+- Default onboarding is exactly four files and loads no history.
+- Narrative handoffs, numbered refactor records, experiment reports, and system-foundation documents are not default onboarding authority.
+- GitHub connector use is limited to lightweight remote inspection; it is not clone/commit/push transport.
+- Google Drive is the normal exchange path for bundles, patches, runners, results, logs, and safety artifacts.
 
 ## Current project phase
 
-The next bounded task is to consolidate the overlapping constitutional surface and decide the proposed assurance-depth policy.
+The active task is `operations-consolidation-and-historical-surface-cleanup`.
 
 It will:
 
 ```text
-review ADR 0005 without silently accepting it
-consolidate project context, principles, and foundation precedence
-separate durable constitution from historical design assessment
-prepare any physical moves with automated link migration
-keep the provider-authority workstream paused until the policy decision
+consolidate durable collaboration and tool rules under docs/operations
+remove remaining overlap with legacy session-operations documents
+preserve reusable failure lessons
+keep normal accepted sessions handoff-free
+make optional incomplete-work checkpoints explicit and bounded
 ```
+
+The provider-authority workstream stays paused during this task.
 
 ## Current non-goals
 
 Do not currently:
 
-- resume or fulfill additional SUP-02 requests;
-- populate a target provider layout;
+- resume or fulfill SUP-02 requests;
+- infer provider acceptance from ADR 0005;
+- populate a provider target layout;
 - activate the selected Obsidian generation;
 - redesign the runtime around Docker or a PRoot application baseline;
 - reconstruct the repository through raw GitHub connector reads;
-- move or rewrite the entire historical corpus;
-- treat proposed ADR 0005 as accepted.
+- read or move the full historical corpus by default.
 
 ## Start and navigation
 
 - Active task: [`ACTIVE_TASK.md`](ACTIVE_TASK.md)
 - Machine state: [`STATE.yaml`](STATE.yaml)
 - Pending external inputs: [`PENDING_ARTIFACTS.yaml`](PENDING_ARTIFACTS.yaml)
-- Documentation authority model: [`../DOCUMENTATION_MODEL.md`](../DOCUMENTATION_MODEL.md)
+- Documentation model: [`../DOCUMENTATION_MODEL.md`](../DOCUMENTATION_MODEL.md)
 - Documentation router: [`../INDEX.md`](../INDEX.md)
-- Project agent contract: [`../../AGENTS.md`](../../AGENTS.md)
+- Constitution: [`../constitution/README.md`](../constitution/README.md)
+- Agent contract: [`../../AGENTS.md`](../../AGENTS.md)

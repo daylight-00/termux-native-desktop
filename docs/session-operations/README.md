@@ -30,7 +30,7 @@ No narrative handoff is required. The repository commit, current-state documents
 ## Ownership boundary
 
 ```text
-AGENTS.md and PROJECT_PRINCIPLES.md
+AGENTS.md and docs/constitution/PRINCIPLES.md
     durable project and agent contract
 
 docs/current/

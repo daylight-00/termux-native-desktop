@@ -15,8 +15,10 @@ Current paths, launch helpers, environment variables, and the broad farm may rem
 Top-down authority:
 
 ```text
-main: docs/system-foundation/11-architecture-reassessment-and-hard-refactor-decision.md
-main: docs/system-foundation/12-document-consistency-audit-and-execution-order.md
+main: docs/constitution/PROJECT.md
+main: docs/constitution/PRINCIPLES.md
+provenance: docs/system-foundation/11-architecture-reassessment-and-hard-refactor-decision.md
+provenance: docs/system-foundation/12-document-consistency-audit-and-execution-order.md
 ```
 
 Historical post-graphics audit that motivated the current refactor:

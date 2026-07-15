@@ -1,5 +1,7 @@
 # 10. Open Design Questions
 
+> **Lifecycle:** historical system-foundation provenance. Current constitutional authority is [`../constitution/`](../constitution/README.md); current architecture is [`../architecture/`](../architecture/README.md). Interpret this document in its recorded context; any later status, precedence, or execution-order wording below is historical to that context.
+
 Good architecture does not force certainty where evidence is incomplete. This document lists questions that should remain explicit until experiments justify a decision.
 
 ## 10.1 Should passive Debian rootfs runtime dependencies remain?
