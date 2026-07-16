@@ -9,7 +9,7 @@ roots: 28
 objects: 37
 claims: 89
 new evidence collected: 0
-provider authority accepted: 10
+provider authority accepted inside inventory: 12
 composition accepted: 0
 target rows accepted: 0
 activation accepted: 0
@@ -145,14 +145,14 @@ The `libjpeg-turbo` SUP-02 request is also unnecessary at the current boundary b
 ## Current authority states
 
 ```text
-bounded provider authority accepted: 10 roots
-provider authority still open:       17 roots
+bounded provider authority accepted inside inventory: 12 roots
+provider authority still open:                       16 roots
 application runtime composition:     NOT REACHED
 target population:                   BLOCKED
 selected-generation activation:      BLOCKED
 ```
 
-The eleven accepted root rows are `libxfixes`, `libxcomposite`, `libxi`, `libxinerama`, `libtasn1`, `libepoxy`, `pango`, the exact project-built `libjpeg.so.62.4.0`, `glib`, `libpng`, and `util-linux`. The GLib four-member family and libpng shared member are accepted only for the exact GdkPixbuf 2.42.12 JPEG/PNG file and memory decode scope; the exact official libmount/libblkid pair is accepted only for the bounded GdkPixbuf transitive runtime. Each decision remains limited to an exact identity and named consumer capability. The classification still does not authorize extraction, installation, target population, complete composition, selected-generation mutation, or activation.
+The twelve accepted root rows are `libxfixes`, `libxcomposite`, `libxi`, `libxinerama`, `libxcursor`, `libtasn1`, `libepoxy`, `pango`, the exact project-built `libjpeg.so.62.4.0`, `glib`, `libpng`, and `util-linux`. The GLib four-member family and libpng shared member are accepted only for the exact GdkPixbuf 2.42.12 JPEG/PNG file and memory decode scope; the exact official libmount/libblkid pair is accepted only for the bounded GdkPixbuf transitive runtime. Each decision remains limited to an exact identity and named consumer capability. The classification still does not authorize extraction, installation, target population, complete composition, selected-generation mutation, or activation.
 
 ## Seven-root semantic-review result
 
@@ -161,7 +161,7 @@ The seven-root no-token semantic review is complete:
 ```text
 confirmed Class A: 7
 reclassified Class B: 0
-provider authority accepted: 10
+provider authority accepted inside inventory: 12
 ```
 
 Canonical review surface:
@@ -177,22 +177,15 @@ For all seven roots, the pinned recipe contains only source/version identity and
 
 ## Completed bounded provider tranches and smallest next phase
 
-The 28-root inventory now contains eleven accepted provider roots and 17 open root provider claims. Separately, the outside-28 project-built GdkPixbuf object has bounded provider authority for fixed JPEG and PNG file and memory decoding.
+The exact `libXcursor.so.1.0.2` provider is accepted for GTK 3.24.49 X11 cursor theme, image, surface and custom-cursor handling. Its Class B patch only relocates built-in cursor search paths into the Termux prefix. It does not grant cursor-theme data, package-wide surfaces, complete composition, target or activation authority.
 
-The smallest next phase is exact official util-linux binding for the accepted GdkPixbuf stack:
-
-```text
-libXcursor.so.1 exact provider candidate
-fixed GdkPixbuf JPEG/PNG file and memory matrix with exact map assertions
-```
-
-The prior successful probe used scratch util-linux bytes whose digests differ from the official exact package members. This phase reviews only those two object/provider claims. It does not infer complete composition, generate target paths, populate a generation or activate a selector.
+The next smallest phase is the exact `libthai.so.0.3.1` provider review. It must bound `BUILD_IN_SRC` semantics, Pango/GTK Thai-text consumer binding, `libdatrie` and runtime-data dependencies, conflicts, update and rollback. No target paths are generated.
 
 ## Stop line
 
 Do not:
 
-- treat claim classification alone as provider acceptance outside the ten explicit bounded provider review rows;
+- treat claim classification alone as provider acceptance outside the twelve explicit bounded provider review rows;
 - fulfill a SUP-02 request solely because it was historically issued;
 - combine artifact identity, adaptation, provider authority, composition, target population, and activation into one decision;
 - use package metadata or build provenance as a substitute for runtime provider selection;

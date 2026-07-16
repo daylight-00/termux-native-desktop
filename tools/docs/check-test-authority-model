@@ -22,6 +22,8 @@ DURABLE_CHECKERS=(
   tools/docs/check-libjpeg-so-62-loader-isolated-provider-authority
   tools/docs/check-gdkpixbuf-2-42-12-provider-candidate-result-review
   tools/docs/check-gdkpixbuf-reference-dependency-provider-authority
+  tools/docs/check-gdkpixbuf-exact-util-linux-provider-authority
+  tools/docs/check-libxcursor-bounded-provider-authority
 )
 fail(){ printf 'test-authority: FAIL: %s\n' "$*" >&2; exit 1; }
 for rel in "$DOC" "$HISTORY" "$RUNNER"; do [ -f "$ROOT/$rel" ] || fail "missing $rel"; done
@@ -40,6 +42,8 @@ for token in \
   'tests/repository/libjpeg-so-62-loader-isolated-provider-authority-smoke.sh' \
   'tests/repository/gdkpixbuf-2-42-12-provider-candidate-result-review-smoke.sh' \
   'tests/repository/gdkpixbuf-reference-dependency-provider-authority-smoke.sh' \
+  'tests/repository/gdkpixbuf-exact-util-linux-provider-authority-smoke.sh' \
+  'tests/repository/libxcursor-bounded-provider-authority-smoke.sh' \
   'tests/repository/test-authority-model-smoke.sh'
 do
   count=$(grep -Fc "$token" "$ROOT/$RUNNER")

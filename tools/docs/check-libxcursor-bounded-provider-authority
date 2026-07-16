@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+required=(
+  docs/evidence/libxcursor-bounded-provider-authority.md
+  experiments/glibc/selected-obsidian-provider-authority/review/libxcursor-bounded-provider-authority.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/generic-build-attestation-adaptation-root-review-set.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/generic-artifact-member-inventory-receipt-review.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/generic-recipe-binding-and-drift-target-receipt-review.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/generic-artifact-member-comparison-exclusions.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/xorg-reference-consumed-provider-authority.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/selected-object-authority-base.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-composition-members.tsv
+  docs/current/STATE.yaml docs/catalog.tsv STATUS.md
+)
+for rel in "${required[@]}"; do [ -f "$ROOT/$rel" ] || { echo "libxcursor-provider: FAIL: missing $rel" >&2; exit 1; }; done
+python3 - "$ROOT" <<'PY'
+from pathlib import Path
+import csv,sys
+root=Path(sys.argv[1]); review=root/'experiments/glibc/selected-obsidian-provider-authority/review'
+def read(name):
+ with (review/name).open(newline='',encoding='utf-8') as f:return list(csv.DictReader(f,delimiter='\t'))
+errors=[]
+rows=read('libxcursor-bounded-provider-authority.tsv')
+if len(rows)!=1: errors.append(f'expected one review row, got {len(rows)}')
+else:
+ r=rows[0]
+ expected={
+  'review_id':'LIBXCURSOR-PROV-001','root_review_id':'generic-root-review:54ab99c9280e70c43600',
+  'recipe_root':'gpkg/libxcursor','recipe_tree':'bb2495e04b246f60203d48720225ef13fa8a25bf',
+  'build_script_blob_sha':'a0ee9a7131a9ce3a3f8fbce0b1f5f2db88c21c29',
+  'patch_path':'gpkg/libxcursor/src-library.c.patch','patch_blob_sha':'379e15f8152af7a9665b113bc470042f73c3a8a8',
+  'artifact_id':'generic-artifact:7901dd136016df9d694e','artifact_package':'libxcursor-glibc','artifact_version':'1.2.3',
+  'artifact_sha256':'7901dd136016df9d694e38bb17923812f539241475e7ac97935c8dcdfcceb902',
+  'evidence_row_id':'selected:e57423d1cb58b1b78ba4',
+  'exact_member_path':'data/data/com.termux/files/usr/glibc/lib/libXcursor.so.1.0.2',
+  'exact_member_sha256':'86e70b94186edb4c16cf00f2bcea4a03ea09bb486ee6a079dd11d3ef6fffe722',
+  'observed_soname':'libXcursor.so.1','adaptation_adr_class':'B',
+  'adaptation_classification_state':'CLASS_B_BOUNDED_PATH_RELOCATION_SEMANTICS_ACCEPTED',
+  'consumer_source_ref':'GNOME_GTK_TAG_3_24_49','decision':'ACCEPTED_BOUNDED_PROVIDER',
+  'remaining_gap':'NONE_FOR_BOUNDED_GTK_3_24_49_X11_CURSOR_PROVIDER_AUTHORITY',
+ }
+ for k,v in expected.items():
+  if r.get(k)!=v: errors.append(f'{k}: expected {v}, got {r.get(k)!r}')
+ for token in ['TERMUX_PREFIX_CURSOR_THEME_AND_PIXMAP_SEARCH_PATH_RELOCATION_ONLY','NO_ELF_ABI_OR_XCURSOR_CALL_SURFACE_CHANGE']:
+  if token not in r.get('project_owned_adaptation_boundary',''): errors.append(f'missing adaptation token {token}')
+ for token in ['XCURSOR_GET_THEME','LIBRARY_LOAD_IMAGES','SHAPE_LOAD_CURSOR','IMAGE_LOAD_CURSOR']:
+  if token not in r.get('consumer_binding_basis',''): errors.append(f'missing GTK binding token {token}')
+ if 'NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT' not in r.get('authority_effect',''): errors.append('authority effect widened')
+ if 'CURSOR_THEME_DATA' not in r.get('prohibited_inference',''): errors.append('cursor-theme data exclusion missing')
+
+roots={x['root_review_id']:x for x in read('generic-build-attestation-adaptation-root-review-set.tsv')}
+rr=roots.get('generic-root-review:54ab99c9280e70c43600')
+if not rr or rr.get('recipe_tree')!='bb2495e04b246f60203d48720225ef13fa8a25bf' or rr.get('review_tier')!='T2_MATERIAL_DELTA_EXACT' or rr.get('adaptation_evidence_tokens')!='PATCH_FILE;TERMUX_PREFIX_REFERENCE': errors.append('canonical root/recipe classification mismatch')
+inv={x['evidence_row_id']:x for x in read('generic-artifact-member-inventory-receipt-review.tsv')}
+ir=inv.get('selected:e57423d1cb58b1b78ba4')
+if not ir or ir.get('exact_member_sha256')!='86e70b94186edb4c16cf00f2bcea4a03ea09bb486ee6a079dd11d3ef6fffe722' or ir.get('exact_observed_elf_soname')!='libXcursor.so.1': errors.append('canonical member identity mismatch')
+bind={x['evidence_row_id']:x for x in read('generic-recipe-binding-and-drift-target-receipt-review.tsv')}
+br=bind.get('selected:e57423d1cb58b1b78ba4')
+if not br or br.get('recipe_tree')!='bb2495e04b246f60203d48720225ef13fa8a25bf' or br.get('recipe_source_sha256')!='fde9402dd4cfe79da71e2d96bb980afc5e6ff4f8a7d74c159e1966afb2b2c2c0': errors.append('recipe/source binding mismatch')
+if not any(x.get('package')=='libxcursor-glibc-static' and x.get('exclusion_reason')=='STATIC_ONLY_PACKAGE_OUTSIDE_DYNAMIC_MEMBER_SEARCH' for x in read('generic-artifact-member-comparison-exclusions.tsv')): errors.append('static sibling exclusion missing')
+if not any(x.get('recipe_root')=='gpkg/libxfixes' and x.get('decision')=='ACCEPTED_BOUNDED_PROVIDER' for x in read('xorg-reference-consumed-provider-authority.tsv')): errors.append('accepted libXfixes dependency missing')
+if not any(x.get('package')=='libxrender-glibc' and x.get('provider_authority_state')=='ACCEPTED_OBJECT_SCOPED_AUTHORITY' for x in read('selected-object-authority-base.tsv')): errors.append('accepted base libXrender dependency missing')
+claims={x['claim_id']:x for x in read('provider-claim-classification.tsv')}
+if claims.get('PCC-LIBXCURSOR-ADAPTATION',{}).get('classification_state')!='CLASS_B_BOUNDED_PATH_RELOCATION_SEMANTICS_ACCEPTED': errors.append('adaptation claim not accepted')
+if claims.get('PCC-LIBXCURSOR-PROVIDER',{}).get('classification_state')!='BOUNDED_PROVIDER_AUTHORITY_ACCEPTED': errors.append('provider claim not accepted')
+if not any(x.get('member_basename')=='libXcursor.so.1.0.2' and x.get('member_sha256')=='86e70b94186edb4c16cf00f2bcea4a03ea09bb486ee6a079dd11d3ef6fffe722' and x.get('composition_inclusion')=='INCLUDED_SELECTED_GTK_SCOPE' for x in read('selected-provider-composition-members.tsv')): errors.append('composition member missing')
+state=(root/'docs/current/STATE.yaml').read_text(); doc=(root/'docs/evidence/libxcursor-bounded-provider-authority.md').read_text(); catalog=(root/'docs/catalog.tsv').read_text(); status=(root/'STATUS.md').read_text()
+for label,ok in [
+ ('state evidence route','libxcursor_provider_authority_review: docs/evidence/libxcursor-bounded-provider-authority.md' in state),
+ ('state scope','exact-libxcursor-gtk-3-24-49-x11-cursor-theme-image-and-surface' in state),
+ ('doc decision','decision:           ACCEPTED_BOUNDED_PROVIDER' in doc),
+ ('doc no probe','without a device probe' in doc),
+ ('catalog','libxcursor-bounded-provider-authority\tevidence\tcurrent\tcanonical' in catalog),
+ ('status','exact libXcursor accepted for bounded GTK 3.24.49 X11 cursor handling' in status),
+]:
+ if not ok: errors.append(f'missing marker: {label}')
+for forbidden in ['complete composition: ACCEPTED','target population:  accepted','activation:         accepted']:
+ if forbidden in doc: errors.append(f'forbidden widening: {forbidden}')
+if errors:
+ for e in errors: print('libxcursor-provider: FAIL:',e,file=sys.stderr)
+ raise SystemExit(1)
+print('libxcursor-provider: PASS: exact Class B libXcursor member is bounded to GTK 3.24.49 X11 cursor handling')
+PY

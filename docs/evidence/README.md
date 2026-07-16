@@ -48,10 +48,11 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 - [`libjpeg-so-62-gdkpixbuf-diagnostic-matrix-result-review.md`](libjpeg-so-62-gdkpixbuf-diagnostic-matrix-result-review.md) — non-dispositive first diagnostic matrix and corrected loader boundary.
 - [`libjpeg-so-62-loader-isolated-provider-authority.md`](libjpeg-so-62-loader-isolated-provider-authority.md) — exact loader-isolated candidate/oracle controls and bounded GdkPixbuf JPEG provider-authority decision.
 
-- [`selected-obsidian-provider-composition-review.md`](selected-obsidian-provider-composition-review.md) records the first Class D non-materializing composition manifest, exact accepted members, exclusions, collisions and 26 blocking selected GTK identities.
+- [`selected-obsidian-provider-composition-review.md`](selected-obsidian-provider-composition-review.md) records the current Class D non-materializing composition manifest, 19 exact accepted members, exclusions, collisions and 19 blocking selected GTK identities.
 
 - [`gdkpixbuf-core-provider-acquisition-result-review.md`](gdkpixbuf-core-provider-acquisition-result-review.md) binds the exact GLib-family and libpng candidate identities, records the missing Termux GdkPixbuf package/recipe, and routes the upstream 2.42.12 scratch build.
 
 - [`gdkpixbuf-2-42-12-provider-candidate-result-review.md`](gdkpixbuf-2-42-12-provider-candidate-result-review.md) — exact official-source GdkPixbuf object, four-cell JPEG/PNG functional evidence, bounded provider decision, and open reference/transitive dependency boundary.
 
 - [`gdkpixbuf-exact-util-linux-provider-authority.md`](gdkpixbuf-exact-util-linux-provider-authority.md) — exact official libmount/libblkid bounded GDK Pixbuf transitive provider decision.
+- [`libxcursor-bounded-provider-authority.md`](libxcursor-bounded-provider-authority.md) — exact Class B libXcursor provider decision for GTK 3.24.49 X11 cursor handling.
