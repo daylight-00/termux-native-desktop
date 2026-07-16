@@ -1,9 +1,9 @@
 schema_version: 1
-state_version: 2026-07-16.01
+state_version: 2026-07-16.02
 updated_on: 2026-07-15
 
 project:
-  phase: provider-composition-review
+  phase: provider-composition-gap-closure
   status: active
 
 repository:
@@ -52,10 +52,11 @@ documentation:
   libjpeg_first_candidate_result_review: docs/evidence/libjpeg-so-62-compatibility-provider-candidate-result-review.md
   libjpeg_runpath_free_candidate_result_review: docs/evidence/libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review.md
   libjpeg_loader_isolated_provider_authority: docs/evidence/libjpeg-so-62-loader-isolated-provider-authority.md
+  selected_provider_composition_review: docs/evidence/selected-obsidian-provider-composition-review.md
 
 provider_authority:
-  workstream: eight-bounded-providers-accepted-selected-composition-review-active
-  boundary: eight-bounded-providers-accepted-libjpeg-bounded-to-gdkpixbuf-jpeg-composition-target-and-activation-open
+  workstream: selected-composition-reviewed-incomplete-gdkpixbuf-core-gap-closure-active
+  boundary: eight-bounded-providers-retained-composition-reviewed-blocked-by-27-selected-identities-target-and-activation-open
   claim_inventory:
     total: 89
     class_a: 36
@@ -104,7 +105,19 @@ provider_authority:
     replaced: 7
     unnecessary: 7
     required_now: 0
-  next_research_decision: review-selected-obsidian-provider-composition
+  composition_review:
+    decision: reviewed-blocked-incomplete
+    accepted_provider_roots: 8
+    accepted_members: 10
+    included_members: 9
+    deferred_members: 1
+    selected_gtk_identities: 36
+    unresolved_selected_identities: 27
+    accepted_soname_collisions: 0
+    accepted_alias_collisions: 0
+    target_manifest_allowed: false
+    next_tranche: gdkpixbuf-core-provider
+  next_research_decision: review-gdkpixbuf-core-provider-tranche
   prohibited_claims:
     - complete-provider-authority
     - complete-runtime-composition
@@ -112,7 +125,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: review-selected-obsidian-provider-composition
+  id: review-gdkpixbuf-core-provider-tranche
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:

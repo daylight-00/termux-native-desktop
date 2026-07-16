@@ -1,0 +1,17 @@
+key	value
+schema_version	1
+decision_policy	ADR-0005
+selected_gtk_identity_count	36
+accepted_provider_root_count	8
+accepted_member_count	10
+included_member_count	9
+deferred_member_count	1
+unresolved_selected_identity_count	27
+reviewed_root_gap_count	17
+outside_28_root_gap_count	10
+accepted_soname_collision_count	0
+accepted_alias_collision_count	0
+composition_decision	REVIEWED_BLOCKED_INCOMPLETE
+target_manifest_allowed	NO
+next_review_tranche	GDKPIXBUF_CORE_PROVIDER_TRANCHE
+authority_effect	NO_TARGET_POPULATION_MATERIALIZATION_OR_ACTIVATION

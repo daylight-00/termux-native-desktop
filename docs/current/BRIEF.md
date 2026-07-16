@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-16.01`
+> Semantic state version: `2026-07-16.02`
 >
 > This is the compact current-state entry point. Exact commit and tree coordinates come from the checked-out full Git bundle, not from self-referential repository text.
 
@@ -77,7 +77,7 @@ The seven no-token recipe roots have completed bounded semantic review and bound
 bounded providers accepted: 8
 remaining no-token provider roots open: 0
 provider claims still open: 20
-complete composition: not reached
+composition review: reviewed, blocked incomplete (27 selected identity gaps)
 target population: blocked
 activation: blocked
 ```
@@ -100,9 +100,9 @@ Exact artifact/member identity, adaptation semantics, provider selection, compos
 
 ## Current project phase
 
-The active task is `review-selected-obsidian-provider-composition`.
+The active task is `review-gdkpixbuf-core-provider-tranche`.
 
-All no-token provider roots are complete. The corrected OJ-001 candidate `a537840e…` is accepted as a bounded provider for the exact GdkPixbuf 2.42.12 JPEG file and memory decode capability. In the corrected direct-loader matrix, candidate and Debian oracle `djpeg` controls produced the same output digest, and all four GdkPixbuf candidate/oracle file and memory cells reached `09:complete` with exact mapped-provider evidence. The `libjpeg.so.8` family remains an invalid substitute and Debian bytes remain oracle-only. Eight bounded providers are accepted; complete composition, target population, materialization and activation remain open.
+The selected-provider composition review is complete. Ten exact members belong to the eight accepted provider roots; nine are in the selected GTK scope and `libtasn1` is deferred because its GnuTLS/security profile is not selected. The 36-row selected GTK ledger still has 27 provider gaps, so composition is `REVIEWED_BLOCKED_INCOMPLETE` and target-manifest generation remains prohibited. The next bounded tranche is exact GdkPixbuf, the four GLib-family members and libpng. Target population, materialization and activation remain blocked.
 
 ## Current non-goals
 

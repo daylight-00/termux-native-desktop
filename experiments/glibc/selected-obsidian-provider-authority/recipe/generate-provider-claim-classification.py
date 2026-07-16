@@ -434,13 +434,13 @@ def main() -> None:
             'supplier_or_reference_boundary': 'REFERENCE_COMPONENTS_WITH_PROJECT_AUTHORED_COMPOSITION',
             'project_owned_changed_boundary': 'CAPABILITY_COVERAGE_EXCLUSIONS_ORDERING_ALIAS_POLICY_AND_MIXED_WORLD_COMPOSITION',
             'risk_modifiers': 'BROAD_RUNTIME_BLAST_RADIUS;MULTI_PROVIDER_CONFLICT;WEAK_GLOBAL_OBSERVABILITY',
-            'existing_evidence': 'authority-coverage-ledger.tsv;world-lifecycle-authority-boundary.tsv;application-authority-boundary.tsv',
-            'remaining_gap': 'EXPLICIT_COMPOSITION_MANIFEST;CONFLICT_AND_EXCLUSION_REVIEW;CAPABILITY_COMPLETENESS;ROLLBACK_BOUNDARY',
-            'minimum_closure_action': 'AUTHOR_AND_REVIEW_NON_MATERIALIZING_COMPOSITION_MANIFEST_AFTER_PROVIDER_CLAIMS_ARE_DECIDED',
+            'existing_evidence': 'authority-coverage-ledger.tsv;world-lifecycle-authority-boundary.tsv;application-authority-boundary.tsv;selected-provider-composition-members.tsv;selected-provider-composition-gaps.tsv;selected-provider-composition-metadata.tsv',
+            'remaining_gap': '27_SELECTED_GTK_PROVIDER_IDENTITIES_WITHOUT_ACCEPTED_PROVIDER_ROWS;GDKPIXBUF_GLIB_LIBPNG_CORE_TRANCHE;LATER_GTK_RENDERING_ACCESSIBILITY_AND_PLATFORM_TRANCHES',
+            'minimum_closure_action': 'REVIEW_GDKPIXBUF_CORE_PROVIDER_TRANCHE_BEFORE_RECONSIDERING_COMPOSITION_ACCEPTANCE',
             'explicitly_excluded_evidence': 'PACKAGE_WIDE_INFERENCE;SUCCESSFUL_HISTORICAL_LAUNCH;SUPPLIER_BUILD_ATTESTATION_AS_COMPOSITION_PROOF',
             'escalation_trigger': 'PROVIDER_CLAIMS_ACCEPTED_FOR_A_BOUNDED_CAPABILITY_SET',
-            'classification_state': 'CLASSIFIED_OPEN_NOT_REACHED',
-            'authority_effect': 'NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT',
+            'classification_state': 'REVIEWED_BLOCKED_INCOMPLETE',
+            'authority_effect': 'COMPOSITION_REVIEW_COMPLETED_NO_ACCEPTANCE_TARGET_OR_ACTIVATION_EFFECT',
             'prohibited_inference': 'INDIVIDUAL_PROVIDER_ACCEPTANCE_DOES_NOT_IMPLY_COMPLETE_COMPOSITION',
         },
         {
@@ -582,7 +582,7 @@ def main() -> None:
         ('oj001_provider_result_sha256', libjpeg_provider_review['result_archive_sha256']),
         ('oj001_provider_matrix_pass_count', libjpeg_provider_review['matrix_pass_count']),
         ('oj001_provider_decision', libjpeg_provider_review['decision']),
-        ('next_review_tranche', 'SELECTED_OBSIDIAN_PROVIDER_COMPOSITION_REVIEW'),
+        ('next_review_tranche', 'GDKPIXBUF_CORE_PROVIDER_TRANCHE'),
     ]
 
     write_tsv(out_root / CLAIM_OUTPUT, CLAIM_FIELDS, claims)

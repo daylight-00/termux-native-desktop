@@ -47,3 +47,5 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 
 - [`libjpeg-so-62-gdkpixbuf-diagnostic-matrix-result-review.md`](libjpeg-so-62-gdkpixbuf-diagnostic-matrix-result-review.md) — non-dispositive first diagnostic matrix and corrected loader boundary.
 - [`libjpeg-so-62-loader-isolated-provider-authority.md`](libjpeg-so-62-loader-isolated-provider-authority.md) — exact loader-isolated candidate/oracle controls and bounded GdkPixbuf JPEG provider-authority decision.
+
+- [`selected-obsidian-provider-composition-review.md`](selected-obsidian-provider-composition-review.md) records the first Class D non-materializing composition manifest, exact accepted members, exclusions, collisions and 27 blocking selected GTK identities.

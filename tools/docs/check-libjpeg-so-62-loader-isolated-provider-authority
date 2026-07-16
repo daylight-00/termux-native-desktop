@@ -47,11 +47,11 @@ else:
   if claim['remaining_gap']!=r['remaining_gap']: errors.append('generated provider gap mismatch')
   if claim['authority_effect']!=r['authority_effect']: errors.append('generated provider authority effect mismatch')
   if r['review_id'] not in claim['existing_evidence']: errors.append('generated provider evidence missing review row')
-expected_meta={'provider_review_count':'8','provider_authority_accepted_count':'8','provider_authority_open_count':'20','oj001_provider_review_id':'LIBJPEG-PROV-001','oj001_provider_result_sha256':'4e546ac1ef2a92f3301dd51ca2328d6901a05e309da78b6d08b26211d9b621e3','oj001_provider_matrix_pass_count':'6','oj001_provider_decision':'ACCEPTED_BOUNDED_PROVIDER','next_review_tranche':'SELECTED_OBSIDIAN_PROVIDER_COMPOSITION_REVIEW'}
+expected_meta={'provider_review_count':'8','provider_authority_accepted_count':'8','provider_authority_open_count':'20','oj001_provider_review_id':'LIBJPEG-PROV-001','oj001_provider_result_sha256':'4e546ac1ef2a92f3301dd51ca2328d6901a05e309da78b6d08b26211d9b621e3','oj001_provider_matrix_pass_count':'6','oj001_provider_decision':'ACCEPTED_BOUNDED_PROVIDER','next_review_tranche':'GDKPIXBUF_CORE_PROVIDER_TRANCHE'}
 for k,v in expected_meta.items():
  if meta.get(k)!=v: errors.append(f'metadata {k}: expected {v}, got {meta.get(k)!r}')
 state=(root/'docs/current/STATE.yaml').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); brief=(root/'docs/current/BRIEF.md').read_text(); catalog=(root/'docs/catalog.tsv').read_text(); status=(root/'STATUS.md').read_text(); doc=(root/'docs/evidence/libjpeg-so-62-loader-isolated-provider-authority.md').read_text()
-markers=[('state accepted','provider_authority: accepted-bounded-provider' in state),('state count','accepted: 8' in state),('task','Task ID: `review-selected-obsidian-provider-composition`' in active),('brief count','bounded providers accepted: 8' in brief),('catalog','libjpeg-so-62-loader-isolated-provider-authority\tevidence\tcurrent\tcanonical' in catalog),('status','exact libjpeg.so.62 provider accepted for bounded GdkPixbuf JPEG decode' in status),('doc decision','ACCEPTED_BOUNDED_PROVIDER' in doc)]
+markers=[('state accepted','provider_authority: accepted-bounded-provider' in state),('state count','accepted: 8' in state),('task','Task ID: `review-gdkpixbuf-core-provider-tranche`' in active),('brief count','bounded providers accepted: 8' in brief),('catalog','libjpeg-so-62-loader-isolated-provider-authority\tevidence\tcurrent\tcanonical' in catalog),('status','exact libjpeg.so.62 provider accepted for bounded GdkPixbuf JPEG decode' in status),('doc decision','ACCEPTED_BOUNDED_PROVIDER' in doc)]
 for label,ok in markers:
  if not ok: errors.append(f'missing current marker: {label}')
 if errors:

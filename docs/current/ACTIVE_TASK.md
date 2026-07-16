@@ -1,42 +1,43 @@
-# Active task: review the selected Obsidian provider composition
+# Active task: review the GdkPixbuf core provider tranche
 
-> Task ID: `review-selected-obsidian-provider-composition`
+> Task ID: `review-gdkpixbuf-core-provider-tranche`
 >
-> Expected state on completion: one non-materializing composition manifest identifies the exact accepted provider objects required by the bounded Obsidian/GdkPixbuf/GTK scope, records exclusions and unresolved dependencies, and decides whether target-manifest generation may begin. No target population or activation occurs.
+> Expected state on completion: exact GdkPixbuf, GLib-family and libpng provider candidates are either accepted with bounded capability, conflict, update and rollback decisions or remain explicit blockers. No target population or activation occurs.
 
 ## Objective
 
-Move from individually accepted provider rows to an explicit composition decision without inferring completeness from package presence or successful isolated tests.
+Close the smallest composition blocker around the already accepted project `libjpeg.so.62` provider: the exact GdkPixbuf runtime, its GLib family, and the selected PNG provider.
 
 ## Why now
 
-The project-produced `libjpeg.so.62.4.0` candidate now has bounded provider authority for the exact GdkPixbuf 2.42.12 JPEG file and memory decode capability. Together with the seven previously accepted no-token providers, eight provider claims are accepted. Composition remains a separate Class D claim.
+The non-materializing selected-provider composition review is complete and rejected composition acceptance because 27 selected GTK runtime identities lack accepted providers. Six rows form the smallest coherent image-core tranche:
 
-## Known facts
+```text
+libgdk_pixbuf-2.0.so.0
+libglib-2.0.so.0
+libgobject-2.0.so.0
+libgio-2.0.so.0
+libgmodule-2.0.so.0
+libpng16.so.16
+```
 
-- Exact provider candidate: `libjpeg.so.62.4.0`, SHA-256 `a537840e…`, `DT_SONAME=libjpeg.so.62`.
-- The candidate has no `DT_RPATH` or `DT_RUNPATH`.
-- The exact GdkPixbuf consumer requires `libjpeg.so.62`; all 22 unresolved JPEG symbols are supplied.
-- Candidate and Debian oracle direct `djpeg` controls produced the same output digest.
-- Candidate and oracle both passed GdkPixbuf file and memory decode through the direct Termux-glibc loader and ELF-only core shim.
-- Provider authority is accepted only for the bounded GdkPixbuf JPEG capability.
-- Eight bounded provider claims are accepted; complete runtime composition is not.
+The exact `libjpeg.so.62.4.0` provider is already accepted and validated through the selected GdkPixbuf file and memory decode paths.
 
 ## In scope
 
-- Enumerate exact accepted provider members and SONAME aliases required by the selected Obsidian/GdkPixbuf/GTK capability scope.
-- Bind each member to its provider-authority decision and exact digest.
-- Record ordering, collision, exclusion and dependency-provider gaps.
-- Define update and rollback boundaries for the composition as a unit.
-- Produce a non-materializing composition manifest and deterministic checker.
-- Decide whether a dry-run target manifest is the next valid action.
+- Locate or produce exact Termux-glibc provider candidates for the six image-core identities.
+- Bind exact artifact/member digests and ELF SONAMEs.
+- Review the pinned `gpkg/glib` and `gpkg/libpng` adaptation boundaries under ADR 0005.
+- Establish exact GdkPixbuf source/supply authority rather than selecting Debian oracle bytes.
+- Record dependency, conflict, exclusion, update and rollback boundaries.
+- Decide bounded provider authority for this tranche.
 
 ## Out of scope
 
 - Installing or copying provider bytes.
-- Creating target directories or aliases.
-- Selecting Debian oracle bytes as target authority.
-- Treating accepted providers as a complete composition without a manifest.
+- Treating the Debian GdkPixbuf object used by the functional oracle as target authority.
+- Reviewing the remaining GTK, Cairo, font, accessibility, Xcursor/Xdamage or graphics blockers.
+- Generating a target manifest.
 - Target population, deployment, selector mutation or activation.
 
 ## Required reading
@@ -44,29 +45,27 @@ The project-produced `libjpeg.so.62.4.0` candidate now has bounded provider auth
 - `docs/current/STATE.yaml`
 - `docs/constitution/PRINCIPLES.md`
 - `docs/decisions/0005-proportional-assurance-depth.md`
+- `docs/evidence/selected-obsidian-provider-composition-review.md`
 - `docs/evidence/provider-claim-classification.md`
 - `docs/evidence/libjpeg-so-62-loader-isolated-provider-authority.md`
-- `docs/evidence/xorg-reference-consumed-provider-authority.md`
-- `docs/evidence/libepoxy-reference-consumed-provider-authority.md`
-- `docs/evidence/pango-reference-consumed-provider-authority-and-filename-continuity.md`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-composition-gaps.tsv`
 
 ## Pending external inputs
 
-None.
+None. Existing repository indexes and local Termux package/source caches must be inspected before requesting new evidence.
 
 ## Next valid action
 
-Author and review a non-materializing selected-provider composition manifest from the eight accepted bounded provider decisions and the exact selected consumer requirements.
+Inspect existing exact-candidate, artifact-index and recipe evidence for GdkPixbuf, the four GLib-family members and libpng; then define one bounded acquisition or review runner only for missing coordinates.
 
 ## Stop conditions
 
-Stop if an exact provider digest, SONAME, accepted capability, consumer binding, conflict set or dependency requirement cannot be traced to a current provider decision; or if the review would require materialization, installation, target mutation or activation.
+Stop if the work would require installation, live-prefix mutation, target population or Debian oracle selection; or if a candidate cannot be bound to exact source/artifact/member identity without a new explicit evidence request.
 
 ## Completion criteria
 
-- every included member is linked to an accepted provider decision;
-- all required aliases are explicit and ABI-correct;
-- oracle, static, development and incompatible-family exclusions are explicit;
-- unresolved dependency-provider claims remain visible rather than inferred closed;
-- composition authority is decided separately from target population;
-- no live runtime state changes.
+- six required identities are each accepted or explicitly blocked;
+- exact candidate and SONAME conflicts are visible;
+- Debian oracle bytes remain excluded from target authority;
+- composition remains separate from provider decisions;
+- no runtime or target state changes.
