@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+for rel in \
+ docs/evidence/gdkpixbuf-exact-util-linux-provider-authority.md \
+ experiments/glibc/selected-obsidian-provider-authority/review/gdkpixbuf-exact-util-linux-provider-authority.tsv \
+ experiments/glibc/selected-obsidian-provider-authority/review/gdkpixbuf-util-linux-transitive-provider-disposition.tsv \
+ experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-composition-members.tsv \
+ experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-composition-metadata.tsv \
+ experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification.tsv \
+ docs/current/STATE.yaml docs/current/ACTIVE_TASK.md docs/current/BRIEF.md docs/catalog.tsv STATUS.md
+do [ -f "$ROOT/$rel" ] || { echo "util-linux-provider: FAIL: missing $rel" >&2; exit 1; }; done
+python3 - "$ROOT" <<'PY'
+from pathlib import Path
+import csv,sys
+root=Path(sys.argv[1]); review=root/'experiments/glibc/selected-obsidian-provider-authority/review'
+def read(name):
+ with (review/name).open(newline='',encoding='utf-8') as f:return list(csv.DictReader(f,delimiter='\t'))
+rows=read('gdkpixbuf-exact-util-linux-provider-authority.tsv'); disp=read('gdkpixbuf-util-linux-transitive-provider-disposition.tsv'); mem=read('selected-provider-composition-members.tsv'); meta={r['key']:r['value'] for r in read('selected-provider-composition-metadata.tsv')}; claims={r['claim_id']:r for r in read('provider-claim-classification.tsv')}
+errors=[]
+if len(rows)!=1:errors.append(f'expected one review row, got {len(rows)}')
+else:
+ r=rows[0]
+ exp={'review_id':'GDKPIXBUF-UTIL-PROV-001','root_review_id':'generic-root-review:6ea790cafac47e460e89','recipe_tree':'e91a0c476ef4355dbfff46e2bcab23d0085ddd01','result_archive_sha256':'a18426371acf0339731464eea4a6fd1f8c745cc09154629b69e34d1063073c13','artifact_sha256s':'9004e88a9f43b2d5cf74fd8921e4b74146e3ced64c4f94490cc52d9b138b011a;b6692956495dfd59ce70a854db5af86bae5f63791440e2cc5f21c26194b965fe','exact_member_sha256s':'6864b9050ddd5884642c98ea4df07e3ceaf78727324d6e9068d1866594ece1c2;21d47963d42a5b1c4008c88a311c17142f57ee2f19cd30770f0befa364908fb3','decision':'ACCEPTED_BOUNDED_PROVIDER'}
+ for k,v in exp.items():
+  if r.get(k)!=v:errors.append(f'{k}: expected {v}, got {r.get(k)!r}')
+ if r.get('adaptation_adr_class')!='B' or not r.get('adaptation_classification_state','').startswith('CLASS_B_'):errors.append('Class B boundary missing')
+ if 'NO_COMPLETE_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT' not in r.get('authority_effect',''):errors.append('authority effect widened')
+if len(disp)!=2 or any(r.get('decision')!='ACCEPTED_BOUNDED_PROVIDER' for r in disp):errors.append('disposition rows not accepted')
+for name,sha in [('libmount.so.1.1.0','6864b9050ddd5884642c98ea4df07e3ceaf78727324d6e9068d1866594ece1c2'),('libblkid.so.1.1.0','21d47963d42a5b1c4008c88a311c17142f57ee2f19cd30770f0befa364908fb3')]:
+ if not any(x['member_basename']==name and x['member_sha256']==sha and x['composition_inclusion'].startswith('INCLUDED_') for x in mem):errors.append(f'missing composition member {name}')
+claim=claims.get('PCC-UTIL-LINUX-PROVIDER')
+if not claim or claim.get('classification_state')!='BOUNDED_PROVIDER_AUTHORITY_ACCEPTED':errors.append('util-linux provider claim not accepted')
+if meta.get('accepted_provider_root_count')!='12' or meta.get('accepted_member_count')!='18' or meta.get('unresolved_selected_identity_count')!='20':errors.append('composition metadata stale')
+state=(root/'docs/current/STATE.yaml').read_text();active=(root/'docs/current/ACTIVE_TASK.md').read_text();doc=(root/'docs/evidence/gdkpixbuf-exact-util-linux-provider-authority.md').read_text();catalog=(root/'docs/catalog.tsv').read_text()
+for label,ok in [('state accepted','transitive_provider_authority: accepted-bounded-official-libmount-and-libblkid' in state),('active task','Task ID: `review-libxcursor-bounded-provider-authority`' in active),('doc result','a18426371acf0339731464eea4a6fd1f8c745cc09154629b69e34d1063073c13' in doc),('catalog','gdkpixbuf-exact-util-linux-provider-authority\tevidence\tcurrent\tcanonical' in catalog)]:
+ if not ok:errors.append(f'missing marker {label}')
+for forbidden in ['complete composition: ACCEPTED','target manifest allowed: YES','activation: ACCEPTED']:
+ if forbidden in doc:errors.append(f'forbidden widening {forbidden}')
+if errors:
+ for e in errors:print('util-linux-provider: FAIL:',e,file=sys.stderr)
+ raise SystemExit(1)
+print('util-linux-provider: PASS: exact official pair accepted only for bounded GDK Pixbuf transitive runtime')
+PY

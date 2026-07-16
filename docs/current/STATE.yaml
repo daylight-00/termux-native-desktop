@@ -1,5 +1,5 @@
 schema_version: 1
-state_version: 2026-07-16.05
+state_version: 2026-07-16.06
 updated_on: 2026-07-16
 
 project:
@@ -55,10 +55,11 @@ documentation:
   selected_provider_composition_review: docs/evidence/selected-obsidian-provider-composition-review.md
   gdkpixbuf_provider_result_review: docs/evidence/gdkpixbuf-2-42-12-provider-candidate-result-review.md
   gdkpixbuf_reference_dependency_provider_authority: docs/evidence/gdkpixbuf-reference-dependency-provider-authority.md
+  gdkpixbuf_exact_util_linux_provider_authority: docs/evidence/gdkpixbuf-exact-util-linux-provider-authority.md
 
 provider_authority:
-  workstream: gdkpixbuf-reference-dependencies-accepted-util-linux-binding-active
-  boundary: eleven-bounded-providers-retained-exact-gdkpixbuf-glib-libpng-accepted-official-libmount-libblkid-binding-open-composition-target-and-activation-open
+  workstream: gdkpixbuf-util-linux-accepted-libxcursor-review-active
+  boundary: twelve-bounded-providers-retained-exact-gdkpixbuf-glib-libpng-libmount-libblkid-accepted-composition-target-and-activation-open
   claim_inventory:
     total: 89
     class_a: 36
@@ -72,12 +73,12 @@ provider_authority:
     provider_authority_accepted: 7
     provider_authority_open: 0
   bounded_provider_authority:
-    accepted: 11
-    accepted_inside_28_root_inventory: 10
-    open_inside_28_root_inventory: 18
+    accepted: 12
+    accepted_inside_28_root_inventory: 11
+    open_inside_28_root_inventory: 17
     rejected: 0
     open_no_token_roots: 0
-    accepted_scope: exact-xorg-members-and-selected-gtk-x11-capabilities-plus-exact-libtasn1-external-gnutls-asn1-security-plus-exact-libepoxy-gtk-3-24-49-x11-glx-dispatch-plus-exact-pango-three-member-gtk-text-family-and-soname-continuity-plus-exact-project-libjpeg-so-62-gdkpixbuf-jpeg-file-and-memory-decode-plus-exact-project-gdkpixbuf-2-42-12-jpeg-png-file-and-memory-decode-plus-exact-glib-four-member-and-libpng-gdkpixbuf-reference-dependency-scope
+    accepted_scope: exact-xorg-members-and-selected-gtk-x11-capabilities-plus-exact-libtasn1-external-gnutls-asn1-security-plus-exact-libepoxy-gtk-3-24-49-x11-glx-dispatch-plus-exact-pango-three-member-gtk-text-family-and-soname-continuity-plus-exact-project-libjpeg-so-62-gdkpixbuf-jpeg-file-and-memory-decode-plus-exact-project-gdkpixbuf-2-42-12-jpeg-png-file-and-memory-decode-plus-exact-glib-four-member-libpng-and-util-linux-two-member-gdkpixbuf-reference-dependency-scope
   libjpeg_compatibility_candidate:
     first_candidate_state: rejected-rebuild-required-no-runpath
     first_candidate_member: libjpeg.so.62.4.0
@@ -111,16 +112,16 @@ provider_authority:
     required_now: 0
   composition_review:
     decision: reviewed-blocked-incomplete
-    accepted_provider_roots: 11
-    accepted_members: 16
-    included_members: 15
+    accepted_provider_roots: 12
+    accepted_members: 18
+    included_members: 17
     deferred_members: 1
     selected_gtk_identities: 36
-    unresolved_selected_identities: 21
+    unresolved_selected_identities: 20
     accepted_soname_collisions: 0
     accepted_alias_collisions: 0
     target_manifest_allowed: false
-    next_tranche: gdkpixbuf-exact-util-linux-provider-binding
+    next_tranche: libxcursor-bounded-provider-authority
   gdkpixbuf_core_acquisition:
     result_sha256: e96fb0e2d8fa1c16a228e41d60801abac0b8a43584a86b7e63f8adddfc4f5692
     review_state: acquisition-reviewed-partial
@@ -138,9 +139,12 @@ provider_authority:
     candidate_soname: libgdk_pixbuf-2.0.so.0
     functional_matrix: jpeg-file-pass-jpeg-memory-pass-png-file-pass-png-memory-pass
     direct_reference_dependency_authority: accepted-bounded-glib-four-member-and-libpng
-    transitive_provider_authority: open-libmount-and-libblkid
-    next_action: acquire-and-validate-official-libmount-libblkid-pair
-  next_research_decision: acquire-gdkpixbuf-exact-util-linux-provider-binding
+    transitive_provider_authority: accepted-bounded-official-libmount-and-libblkid
+    transitive_result_sha256: a18426371acf0339731464eea4a6fd1f8c745cc09154629b69e34d1063073c13
+    transitive_recipe_tree: e91a0c476ef4355dbfff46e2bcab23d0085ddd01
+    transitive_functional_matrix: jpeg-file-pass-jpeg-memory-pass-png-file-pass-png-memory-pass
+    next_action: review-libxcursor-bounded-provider-authority
+  next_research_decision: review-libxcursor-bounded-provider-authority
   prohibited_claims:
     - complete-provider-authority
     - complete-runtime-composition
@@ -148,7 +152,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: acquire-gdkpixbuf-exact-util-linux-provider-binding
+  id: review-libxcursor-bounded-provider-authority
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:

@@ -4,7 +4,6 @@ ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
 required=(
   docs/evidence/gdkpixbuf-reference-dependency-provider-authority.md
   experiments/glibc/selected-obsidian-provider-authority/review/gdkpixbuf-reference-dependency-provider-authority.tsv
-  experiments/glibc/selected-obsidian-provider-authority/review/gdkpixbuf-util-linux-transitive-provider-disposition.tsv
   experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification.tsv
   experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-composition-members.tsv
   docs/catalog.tsv
@@ -20,7 +19,6 @@ def read(name):
     with (review/name).open(newline='',encoding='utf-8') as f:
         return list(csv.DictReader(f,delimiter='\t'))
 rows=read('gdkpixbuf-reference-dependency-provider-authority.tsv')
-util=read('gdkpixbuf-util-linux-transitive-provider-disposition.tsv')
 claims={r['claim_id']:r for r in read('provider-claim-classification.tsv')}
 members=read('selected-provider-composition-members.tsv')
 errors=[]
@@ -44,11 +42,6 @@ for rid,exp in expected.items():
     if 'NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT' not in r.get('authority_effect',''): errors.append(f'{rid}: authority effect widened')
     for forbidden in ['COMPLETE_COMPOSITION','TARGET_POPULATION_ACCEPTED','ACTIVATION_ACCEPTED']:
         if forbidden in r.get('authority_effect',''): errors.append(f'{rid}: forbidden authority {forbidden}')
-if len(util)!=2: errors.append(f'expected 2 util-linux disposition rows, found {len(util)}')
-for r in util:
-    if r.get('decision')!='OPEN_EXACT_RUNTIME_BINDING_REQUIRED': errors.append(f"{r.get('review_id')}: util-linux decision widened")
-    if r.get('official_member_sha256')==r.get('scratch_member_sha256'): errors.append(f"{r.get('review_id')}: official/scratch mismatch evidence lost")
-    if 'NO_PROVIDER_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT' not in r.get('authority_effect',''): errors.append(f"{r.get('review_id')}: util authority effect widened")
 for cid,rid in [('PCC-GLIB-PROVIDER','GDKPIXBUF-REF-PROV-GLIB-001'),('PCC-LIBPNG-PROVIDER','GDKPIXBUF-REF-PROV-LIBPNG-001')]:
     c=claims.get(cid)
     if not c: errors.append(f'missing generated claim {cid}'); continue
@@ -67,14 +60,13 @@ for name,sha in needed.items():
         errors.append(f'composition member missing or widened: {name}')
 doc=(root/'docs/evidence/gdkpixbuf-reference-dependency-provider-authority.md').read_text()
 catalog=(root/'docs/catalog.tsv').read_text()
-if 'accepted provider roots overall: 11' not in doc: errors.append('document lacks accepted-root boundary')
-if 'unresolved selected identities: 21' not in doc: errors.append('document lacks unresolved-count boundary')
-if 'OPEN_EXACT_RUNTIME_BINDING_REQUIRED' not in doc: errors.append('document lacks util-linux open boundary')
+if 'GLib four-member family: ACCEPTED_BOUNDED_PROVIDER' not in doc: errors.append('document lacks GLib bounded-provider boundary')
+if 'libpng shared member:    ACCEPTED_BOUNDED_PROVIDER' not in doc: errors.append('document lacks libpng bounded-provider boundary')
 if 'gdkpixbuf-reference-dependency-provider-authority\tevidence\tcurrent\tcanonical' not in catalog: errors.append('catalog row missing')
-for forbidden in ['complete composition: ACCEPTED','target manifest allowed: YES','official libmount/libblkid provider authority: ACCEPTED']:
+for forbidden in ['complete composition: ACCEPTED','target manifest allowed: YES']:
     if forbidden in doc: errors.append(f'document authority widened: {forbidden}')
 if errors:
     for e in errors: print('gdkpixbuf-reference-provider: FAIL:',e,file=sys.stderr)
     raise SystemExit(1)
-print('gdkpixbuf-reference-provider: PASS: GLib/libpng bounded providers accepted; exact official util-linux binding remains open')
+print('gdkpixbuf-reference-provider: PASS: exact GLib/libpng bounded providers remain accepted without broader authority')
 PY

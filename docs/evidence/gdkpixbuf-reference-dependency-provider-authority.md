@@ -7,8 +7,8 @@ The exact Termux reference artifacts collected for GLib `2.82.2-2` and libpng `1
 ```text
 GLib four-member family: ACCEPTED_BOUNDED_PROVIDER
 libpng shared member:    ACCEPTED_BOUNDED_PROVIDER
-libmount official pair: OPEN_EXACT_RUNTIME_BINDING_REQUIRED
-libblkid official pair: OPEN_EXACT_RUNTIME_BINDING_REQUIRED
+libmount official pair: ACCEPTED_BOUNDED_PROVIDER
+libblkid official pair: ACCEPTED_BOUNDED_PROVIDER
 ```
 
 This is a provider review, not target population or activation.
@@ -42,26 +42,24 @@ The package recipe uses the pinned upstream `1.6.47` shared-library build. Its p
 
 ## Transitive util-linux boundary
 
-`libgio-2.0.so.0.8200.2` directly needs `libmount.so.1`, and libmount needs `libblkid.so.1`. The successful scratch build mapped scratch util-linux bytes, not the official exact package candidates already recorded by the repository.
+The official exact pair is accepted by [`gdkpixbuf-exact-util-linux-provider-authority.md`](gdkpixbuf-exact-util-linux-provider-authority.md). Signed-index artifacts, exact member digests, Class B recipe semantics, the `libmount.so.1 -> libblkid.so.1` edge, nine exact runtime maps and all four fixed JPEG/PNG cells passed. Scratch util-linux bytes remain excluded.
 
-| Dependency | Official exact member SHA-256 | Scratch mapped SHA-256 | Decision |
-|---|---|---|---|
-| `libmount.so.1.1.0` | `6864b9050ddd5884642c98ea4df07e3ceaf78727324d6e9068d1866594ece1c2` | `951a7e682476045acaa598eb05e2b79adc5f800b6fc34133eac49f797b064b40` | open |
-| `libblkid.so.1.1.0` | `21d47963d42a5b1c4008c88a311c17142f57ee2f19cd30770f0befa364908fb3` | `bd63dcc600487615ee6256b9cfe4d474ebc76899c911f8134d66765810e7db51` | open |
-
-The differing digests prohibit inferring official provider authority from the successful scratch run. The next minimum action is a read-only Termux acquisition/analyzer transaction that verifies the official pair, reviews the pinned util-linux adaptation boundary, reruns the fixed GDK Pixbuf matrix and proves exact `/proc/self/maps` binding.
+| Dependency | Exact member SHA-256 | Decision |
+|---|---|---|
+| `libmount.so.1.1.0` | `6864b9050ddd5884642c98ea4df07e3ceaf78727324d6e9068d1866594ece1c2` | accepted bounded |
+| `libblkid.so.1.1.0` | `21d47963d42a5b1c4008c88a311c17142f57ee2f19cd30770f0befa364908fb3` | accepted bounded |
 
 ## Authority effect
 
 After this decision:
 
 ```text
-accepted provider roots overall: 11
-accepted root claims in the 28-root inventory: 10
-accepted exact members: 16
-included selected members: 15
+accepted provider roots overall: 12
+accepted root claims in the 28-root inventory: 11
+accepted exact members: 18
+included selected members: 17
 deferred members: 1
-unresolved selected identities: 21
+unresolved selected identities: 20
 composition: REVIEWED_BLOCKED_INCOMPLETE
 target manifest allowed: NO
 activation: BLOCKED

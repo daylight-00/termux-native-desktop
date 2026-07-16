@@ -146,13 +146,13 @@ The `libjpeg-turbo` SUP-02 request is also unnecessary at the current boundary b
 
 ```text
 bounded provider authority accepted: 10 roots
-provider authority still open:       18 roots
+provider authority still open:       17 roots
 application runtime composition:     NOT REACHED
 target population:                   BLOCKED
 selected-generation activation:      BLOCKED
 ```
 
-The ten accepted root rows are `libxfixes`, `libxcomposite`, `libxi`, `libxinerama`, `libtasn1`, `libepoxy`, `pango`, the exact project-built `libjpeg.so.62.4.0`, `glib`, and `libpng`. The GLib four-member family and libpng shared member are accepted only for the exact GdkPixbuf 2.42.12 JPEG/PNG file and memory decode scope; official libmount/libblkid runtime binding remains separate and open. Each decision remains limited to an exact identity and named consumer capability. The classification still does not authorize extraction, installation, target population, complete composition, selected-generation mutation, or activation.
+The eleven accepted root rows are `libxfixes`, `libxcomposite`, `libxi`, `libxinerama`, `libtasn1`, `libepoxy`, `pango`, the exact project-built `libjpeg.so.62.4.0`, `glib`, `libpng`, and `util-linux`. The GLib four-member family and libpng shared member are accepted only for the exact GdkPixbuf 2.42.12 JPEG/PNG file and memory decode scope; the exact official libmount/libblkid pair is accepted only for the bounded GdkPixbuf transitive runtime. Each decision remains limited to an exact identity and named consumer capability. The classification still does not authorize extraction, installation, target population, complete composition, selected-generation mutation, or activation.
 
 ## Seven-root semantic-review result
 
@@ -177,13 +177,12 @@ For all seven roots, the pinned recipe contains only source/version identity and
 
 ## Completed bounded provider tranches and smallest next phase
 
-The 28-root inventory now contains ten accepted provider roots and 18 open root provider claims. Separately, the outside-28 project-built GdkPixbuf object has bounded provider authority for fixed JPEG and PNG file and memory decoding.
+The 28-root inventory now contains eleven accepted provider roots and 17 open root provider claims. Separately, the outside-28 project-built GdkPixbuf object has bounded provider authority for fixed JPEG and PNG file and memory decoding.
 
 The smallest next phase is exact official util-linux binding for the accepted GdkPixbuf stack:
 
 ```text
-libmount.so.1 exact official provider candidate
-libblkid.so.1 exact official transitive provider candidate
+libXcursor.so.1 exact provider candidate
 fixed GdkPixbuf JPEG/PNG file and memory matrix with exact map assertions
 ```
 

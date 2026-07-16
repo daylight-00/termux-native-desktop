@@ -53,3 +53,5 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 - [`gdkpixbuf-core-provider-acquisition-result-review.md`](gdkpixbuf-core-provider-acquisition-result-review.md) binds the exact GLib-family and libpng candidate identities, records the missing Termux GdkPixbuf package/recipe, and routes the upstream 2.42.12 scratch build.
 
 - [`gdkpixbuf-2-42-12-provider-candidate-result-review.md`](gdkpixbuf-2-42-12-provider-candidate-result-review.md) — exact official-source GdkPixbuf object, four-cell JPEG/PNG functional evidence, bounded provider decision, and open reference/transitive dependency boundary.
+
+- [`gdkpixbuf-exact-util-linux-provider-authority.md`](gdkpixbuf-exact-util-linux-provider-authority.md) — exact official libmount/libblkid bounded GDK Pixbuf transitive provider decision.

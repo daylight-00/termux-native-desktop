@@ -103,9 +103,9 @@ platform/accessibility dependencies:
     libselinux.so.1
 ```
 
-`libblkid.so.1` is not one of the 36 selected GTK ledger identities, but it is a required transitive dependency of the exact official libmount candidate. The successful GdkPixbuf probe mapped scratch libmount/libblkid bytes whose digests differ from the official exact package members, so the official pair remains an explicit provider-binding prerequisite.
+`libblkid.so.1` is not one of the 36 selected GTK ledger identities, but it is an accepted transitive dependency of the exact official libmount provider. The official pair passed exact map and fixed functional verification; scratch bytes are excluded.
 
-The exact blocker rows and their current root mapping are in `selected-provider-composition-gaps.tsv`. A selected historical Debian member is evidence of runtime demand, not target authority.
+The remaining blocker rows and their current root mapping are in `selected-provider-composition-gaps.tsv`. A selected historical Debian member is evidence of runtime demand, not target authority.
 
 ## Conflict and exclusion policy
 
@@ -149,15 +149,7 @@ REVIEWED_BLOCKED_INCOMPLETE
 
 The review is complete enough to reject target-manifest generation. It is not complete enough to accept composition.
 
-The next smallest closure tranche is exact official util-linux binding for the accepted GdkPixbuf stack:
-
-```text
-libmount.so.1 exact official candidate
-libblkid.so.1 exact official transitive candidate
-fixed GdkPixbuf JPEG/PNG file and memory matrix with exact map assertions
-```
-
-This tranche is selected because the exact project `libjpeg.so.62`, GdkPixbuf, GLib four-member family, and libpng providers are accepted for the fixed decode scope, while the successful probe used non-identical scratch util-linux bytes.
+The next smallest closure tranche is the exact single-member `libXcursor.so.1.0.2` provider review. It must bound Class B patch semantics, selected GTK cursor necessity, dependency binding, conflict/exclusion, update and rollback without materialization.
 
 ## Explicitly prohibited inference
 
@@ -169,5 +161,5 @@ accepted target membership or target paths
 materialization readiness
 selected-generation activation readiness
 security or printing profile inclusion
-provider authority for any of the 21 gap rows
+provider authority for any of the 20 gap rows
 ```
