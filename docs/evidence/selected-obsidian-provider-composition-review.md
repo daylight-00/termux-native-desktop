@@ -3,12 +3,12 @@
 ## Decision
 
 ```text
-accepted bounded provider roots: 8
-accepted exact members:          10
-included in current GTK scope:    9
+accepted bounded provider roots: 9
+accepted exact members:          11
+included in current GTK scope:    10
 deferred profile member:          1
 selected GTK runtime identities: 36
-unresolved selected identities:  27
+unresolved selected identities:  26
 accepted SONAME collisions:       0
 accepted alias collisions:        0
 composition decision:             REVIEWED_BLOCKED_INCOMPLETE
@@ -35,7 +35,7 @@ experiments/glibc/selected-obsidian-provider-authority/recipe/
 
 ## Included accepted members
 
-The current selected GTK/GdkPixbuf/X11 scope can name nine exact accepted members without broadening their provider decisions:
+The current selected GTK/GdkPixbuf/X11 scope can name ten exact accepted members without broadening their provider decisions:
 
 ```text
 libXfixes.so.3.1.0       -> libXfixes.so.3
@@ -47,6 +47,7 @@ libpango-1.0.so.0.5400.0 -> libpango-1.0.so.0
 libpangoft2-1.0.so.0.5400.0 -> libpangoft2-1.0.so.0
 libpangocairo-1.0.so.0.5400.0 -> libpangocairo-1.0.so.0
 libjpeg.so.62.4.0        -> libjpeg.so.62
+libgdk_pixbuf-2.0.so.0.4200.12 -> libgdk_pixbuf-2.0.so.0
 ```
 
 Every proposed alias is the observed ELF SONAME and targets one exact reviewed regular member. No accepted SONAME or alias basename collides with another accepted row.
@@ -61,11 +62,11 @@ This is a composition exclusion-by-scope, not provider revocation.
 
 ## Completeness result
 
-The selected GTK ledger contains 36 runtime identities. Nine are replaced by exact accepted project/Termux provider members in this review. The other 27 remain unresolved.
+The selected GTK ledger contains 36 runtime identities. Ten are replaced by exact accepted project/Termux provider members in this review. The other 26 remain unresolved.
 
 ```text
 open reviewed-root provider gaps: 17
-outside-28 or no accepted Termux candidate: 10
+outside-28 or no accepted Termux candidate: 9
 ```
 
 Representative blockers include:
@@ -77,8 +78,7 @@ GLib family:
     libgio-2.0.so.0
     libgmodule-2.0.so.0
 
-GdkPixbuf/image:
-    libgdk_pixbuf-2.0.so.0
+GdkPixbuf/image dependencies:
     libpng16.so.16
 
 GTK/rendering/text dependencies:
@@ -149,15 +149,15 @@ REVIEWED_BLOCKED_INCOMPLETE
 
 The review is complete enough to reject target-manifest generation. It is not complete enough to accept composition.
 
-The next smallest closure tranche is the GdkPixbuf core:
+The next smallest closure tranche is the GdkPixbuf reference dependency boundary:
 
 ```text
-exact GdkPixbuf provider candidate
 GLib family provider authority
 libpng provider authority
+libmount provider authority and transitive libblkid disposition
 ```
 
-This tranche is selected because the exact project `libjpeg.so.62` provider is already accepted and functionally validated, while its direct GdkPixbuf runtime and core image dependencies remain unresolved.
+This tranche is selected because the exact project `libjpeg.so.62` and GdkPixbuf providers are accepted and functionally validated, while GdkPixbuf direct reference dependencies and the GIO util-linux transitive boundary remain unresolved.
 
 ## Explicitly prohibited inference
 

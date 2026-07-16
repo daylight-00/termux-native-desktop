@@ -5,7 +5,6 @@ root=Path(__file__).resolve().parents[2]
 review=root/'experiments/glibc/selected-obsidian-provider-authority/review/gdkpixbuf-core-provider-acquisition-result-review.tsv'
 meta=root/'experiments/glibc/selected-obsidian-provider-authority/review/gdkpixbuf-core-provider-acquisition-result-review-metadata.tsv'
 doc=root/'docs/evidence/gdkpixbuf-core-provider-acquisition-result-review.md'
-active=(root/'docs/current/ACTIVE_TASK.md').read_text()
 state=(root/'docs/current/STATE.yaml').read_text()
 catalog=(root/'docs/catalog.tsv').read_text()
 errors=[]
@@ -34,9 +33,7 @@ if md.get('exact_candidate_identity_count')!='5' or md.get('expected_identity_co
 if md.get('protected_state_disposition')!='FALSE_POSITIVE_NESTED_GIT_METADATA_MTIME': errors.append('protected-state disposition mismatch')
 if md.get('tracked_repository_mutation')!='NO' or md.get('live_glibc_mutation')!='NO': errors.append('mutation boundary widened')
 markers=[
-('active task','Task ID: `produce-gdkpixbuf-2-42-12-provider-candidate`' in active),
 ('state result','result_sha256: e96fb0e2d8fa1c16a228e41d60801abac0b8a43584a86b7e63f8adddfc4f5692' in state),
-('state authority','provider_authority: open' in state),
 ('catalog','gdkpixbuf-core-provider-acquisition-result-review\tevidence\tcurrent\tcanonical' in catalog),
 ('doc boundary','provider authority accepted:     0' in doc.read_text()),
 ('doc target','target manifest allowed:         NO' in doc.read_text()),

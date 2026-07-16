@@ -176,17 +176,18 @@ For all seven roots, the pinned recipe contains only source/version identity and
 `pango` concrete-filename drift remains a separate provider-integration and continuity question. It was not closed by the Class A recipe result.
 
 ## Completed bounded provider tranches and smallest next phase
-The seven no-token provider tranches are complete. Their canonical rationales are in the X.Org, libtasn1, libepoxy, and Pango provider review documents. The separate Class C libjpeg provider review is recorded in `libjpeg-so-62-loader-isolated-provider-authority.md`.
 
-The smallest next phase is the bounded OJ-001 consumer-validation tranche:
+The 28-root inventory still contains eight accepted provider roots and 20 open root provider claims. Separately, the outside-28 project-built GdkPixbuf object now has bounded provider authority for fixed JPEG and PNG file and memory decoding.
+
+The smallest next phase is the GdkPixbuf reference dependency tranche:
 
 ```text
-candidate: a537840ef9da6135cb3284bc3b3e0d1fb4f624180a416c2a3964b94714eb7fe5
-consumer: libgdk_pixbuf-2.0.so.0.4200.12
-claim: exact SONAME-62 binding and fixed JPEG decode with the scratch candidate mapped
+GLib / GObject / GModule / GIO exact Termux candidates
+libpng exact Termux candidate
+libmount exact provider and transitive libblkid disposition
 ```
 
-It does not install the candidate, accept provider authority, infer complete GTK/image composition, populate a target, or activate a generation.
+This phase reviews provider authority only. It does not infer complete composition, generate target paths, populate a generation or activate a selector.
 
 ## Stop line
 

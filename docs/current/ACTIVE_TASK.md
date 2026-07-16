@@ -1,97 +1,91 @@
-# Active task: produce the GdkPixbuf 2.42.12 provider candidate
+# Active task: review the GdkPixbuf reference dependency providers
 
-> Task ID: `produce-gdkpixbuf-2-42-12-provider-candidate`
+> Task ID: `review-gdkpixbuf-reference-dependency-providers`
 >
-> Expected state on completion: one exact scratch-built `libgdk_pixbuf-2.0.so.0.4200.12` candidate is bound to official source, the five acquired GLib/libpng candidates and the accepted project `libjpeg.so.62`; loader-isolated JPEG and PNG file/memory evidence is returned. No provider authority, target population or activation occurs automatically.
+> Expected state on completion: the exact GLib-family and libpng candidates used by the accepted GdkPixbuf provider are either accepted with bounded provider authority or left open with a precise minimal evidence action; the `libmount`/`libblkid` transitive boundary is explicitly resolved. No target population or activation occurs.
 
 ## Objective
 
-Produce the missing sixth member of the GdkPixbuf core provider tranche without selecting Debian oracle bytes.
+Close the smallest remaining dependency-provider boundary exposed by the accepted GdkPixbuf 2.42.12 object.
 
 ## Why now
 
-The composition review is blocked by 27 identities, and this six-member image-core tranche is the smallest coherent closure unit. The first acquisition bound five exact Termux candidates and proved that no pinned Termux GdkPixbuf package or recipe exists. A project-produced upstream candidate is therefore the only bounded next step that does not select Debian oracle bytes.
+The exact project-built GdkPixbuf object passed JPEG and PNG file and memory decoding and now has bounded provider authority. Its tested runtime still depends on five reference candidates whose provider authority is open:
+
+```text
+libglib-2.0.so.0
+libgobject-2.0.so.0
+libgmodule-2.0.so.0
+libgio-2.0.so.0
+libpng16.so.16
+```
+
+The exact GIO path also mapped scratch `libmount.so.1` and `libblkid.so.1`. Those two objects were diagnostic candidates only and must not be silently absorbed into the accepted composition.
 
 ## In scope
 
-- Verify and unpack official GdkPixbuf 2.42.12 source.
-- Build one exact scratch candidate with the pinned GLib/libpng artifacts and accepted libjpeg provider.
-- Record source, toolchain, build, ELF, dependency and mapped-object coordinates.
-- Run JPEG and PNG file and memory decode controls.
-- Return explicit blockers if tools or dependency closure are insufficient.
+- Review the exact pinned GLib 2.82.2-2 four-member family and libpng 1.6.47 candidate identities.
+- Review their package-specific recipe adaptations under ADR 0005.
+- Bind their necessity to the accepted GdkPixbuf object and exact tested mappings.
+- Identify conflicts, exclusions, update and rollback boundaries.
+- Resolve whether exact Termux `libmount` and `libblkid` candidates can be reviewed from existing evidence or require one bounded acquisition/analyzer action.
+- Update the non-materializing composition review only for accepted provider rows.
 
 ## Established inputs
 
 ```text
-GdkPixbuf source version: 2.42.12
-expected member:          libgdk_pixbuf-2.0.so.0.4200.12
-expected SONAME:          libgdk_pixbuf-2.0.so.0
-official source SHA-256:  b9505b3445b9a7e48ced34760c3bcb73e966df3ac94c95a148cb669ab748e3c7
+accepted GdkPixbuf member:
+    libgdk_pixbuf-2.0.so.0.4200.12
+    SHA-256 0c1404c6854e7674428a5b653b240759dac0374631697fe61ae275898f6a809f
 
-exact GLib artifact:      glib-glibc 2.82.2-2 / d91fe120...
-exact libpng artifact:    libpng-glibc 1.6.47 / b283540...
-accepted libjpeg member:  libjpeg.so.62.4.0 / a537840...
+exact GLib artifact:
+    glib-glibc 2.82.2-2
+    artifact SHA-256 d91fe1202c51f7e59b120d3b475e24cdc2ac2cc28f2804e9bcf4919b775978e6
+
+exact libpng artifact:
+    libpng-glibc 1.6.47
+    artifact SHA-256 b2835404d3b0f54b75eb464a58ad5eb46f2d64d4fe1167a7984031f0e990b33f
+
+observed transitive diagnostic objects:
+    libmount.so.1.1.0 / 951a7e682476045acaa598eb05e2b79adc5f800b6fc34133eac49f797b064b40
+    libblkid.so.1.1.0 / bd63dcc600487615ee6256b9cfe4d474ebc76899c911f8134d66765810e7db51
 ```
-
-The acquisition review is in [`../evidence/gdkpixbuf-core-provider-acquisition-result-review.md`](../evidence/gdkpixbuf-core-provider-acquisition-result-review.md).
-
-## Build boundary
-
-- Build only in `$HOME/.cache` scratch space.
-- Use the existing Termux glibc compiler wrappers.
-- Create a disposable build-tools venv from `packages/gdkpixbuf-glibc/build-env/pyproject.toml` and `uv.lock` with `uv sync --locked --no-python-downloads`; run Meson from that venv.
-- Use the existing native Termux `ninja`; do not install or vendor a PyPI Ninja/CMake executable.
-- Extract exact GLib/libpng artifacts into a scratch prefix; do not install them.
-- Use the accepted project `libjpeg.so.62.4.0` candidate and exact libjpeg-turbo 3.1.0 headers.
-- Build PNG and JPEG loaders into the GdkPixbuf shared library.
-- Disable TIFF, GIF, other loaders, introspection, tests, installed tests, documentation, man pages and GIO sniffing.
-- Require no `DT_RPATH` or `DT_RUNPATH`.
-
-## Required evidence
-
-- official source archive and checksum identity;
-- exact build command, cross file and tool versions;
-- candidate SHA-256, ELF class, machine, SONAME and `DT_NEEDED`;
-- exact mapping of candidate GdkPixbuf, four GLib members, libpng and libjpeg;
-- fixed JPEG and PNG decode through file and memory APIs;
-- unchanged repository HEAD/tree/tracked status and unchanged live provider/deployment paths;
-- result archive and upload digest.
 
 ## Required reading
 
 - `docs/current/STATE.yaml`
 - `docs/constitution/PRINCIPLES.md`
 - `docs/decisions/0005-proportional-assurance-depth.md`
+- `docs/evidence/gdkpixbuf-2-42-12-provider-candidate-result-review.md`
 - `docs/evidence/gdkpixbuf-core-provider-acquisition-result-review.md`
-- `packages/gdkpixbuf-glibc/README.md`
 - `docs/evidence/selected-obsidian-provider-composition-review.md`
-- `docs/evidence/libjpeg-so-62-loader-isolated-provider-authority.md`
 - `experiments/glibc/selected-obsidian-provider-authority/review/gdkpixbuf-core-provider-acquisition-result-review.tsv`
+- `experiments/glibc/selected-obsidian-provider-authority/review/generic-artifact-member-inventory-receipt-review.tsv`
 
 ## Pending external inputs
 
-None. The official source archive is acquired by the bounded runner; exact GLib, libpng and libjpeg bytes are embedded in the runner.
+None for the initial review. Request one bounded Termux acquisition/analyzer package only if the existing exact Termux `libmount`/`libblkid` artifact or ELF evidence is insufficient.
 
 ## Next valid action
 
-Execute the single self-extracting scratch-build runner and return its one final-status block.
+Perform a non-mutating provider-authority review of the GLib family, libpng and the observed util-linux transitive boundary. Do not build or acquire new bytes before identifying the exact remaining evidence gap.
 
 ## Out of scope
 
-- Installing source or candidate bytes.
-- Using Debian GdkPixbuf bytes as target authority.
-- Accepting the six-member tranche before result review.
+- Installing or copying provider bytes.
+- Accepting scratch util-linux objects merely because they enabled the diagnostic run.
 - Generating a target manifest.
 - Population, deployment, selector mutation or activation.
+- Broad GTK provider review outside this dependency tranche.
 
 ## Stop conditions
 
-Stop if official source identity cannot be verified, required build tools are unavailable, the object links to `libjpeg.so.8`, any expected candidate maps from the live prefix instead of scratch, an RPATH/RUNPATH remains, or protected tracked/live state changes.
+Stop if a provider decision would require assuming recipe semantics not yet reviewed, if exact Termux artifact/member identity is missing, if a consumer maps a different object than the proposed provider, or if the transitive closure cannot be separated from unreviewed runtime policy.
 
 ## Completion criteria
 
-- exact GdkPixbuf candidate produced or explicit build blocker returned;
-- six candidate identities and mappings visible;
-- JPEG and PNG file/memory matrix complete;
-- no live or target mutation;
-- provider authority remains a later repository decision.
+- each of the five direct reference candidates has an explicit provider decision or exact minimal blocker;
+- `libmount` and `libblkid` have an explicit authority/disposition state;
+- composition counts reflect only accepted rows;
+- no target or live mutation;
+- the next task is fully repository-owned and does not depend on chat memory.

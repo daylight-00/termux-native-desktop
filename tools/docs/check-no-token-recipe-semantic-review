@@ -103,8 +103,6 @@ for recipe in expected:
             errors.append(f'{recipe}: provider authority effect introduced unexpectedly')
 
 state=(root/'docs/current/STATE.yaml').read_text()
-active=(root/'docs/current/ACTIVE_TASK.md').read_text()
-brief=(root/'docs/current/BRIEF.md').read_text()
 evidence=(root/'docs/evidence/no-token-recipe-semantic-review.md').read_text()
 catalog=(root/'docs/catalog.tsv').read_text()
 markers=[
@@ -112,8 +110,6 @@ markers=[
  ('seven confirmed','confirmed_a: 7' in state),
  ('provider accepted seven','provider_authority_accepted: 7' in state),
  ('provider open zero','provider_authority_open: 0' in state),
- ('next task','Task ID: `produce-libjpeg-so-62-compatibility-provider-candidate`' in active),
- ('brief result','All no-token provider roots are complete.' in brief),
  ('evidence status','confirmed Class A: 7' in evidence),
  ('catalog row','no-token-recipe-semantic-review\tevidence\tcurrent\tcanonical' in catalog),
 ]

@@ -10,7 +10,6 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 PROJECT = ROOT / "packages/gdkpixbuf-glibc/build-env/pyproject.toml"
 LOCK = ROOT / "packages/gdkpixbuf-glibc/build-env/uv.lock"
 README = ROOT / "packages/gdkpixbuf-glibc/README.md"
-ACTIVE = ROOT / "docs/current/ACTIVE_TASK.md"
 
 EXPECTED_WHEEL = (
     "https://files.pythonhosted.org/packages/5e/cd/"
@@ -23,7 +22,7 @@ EXPECTED_HASH = "sha256:9b3a023657e393dbc5335b95c561337d49b7a458f5541e47ec44f2cc
 def fail(message: str) -> None:
     raise SystemExit(f"gdkpixbuf build env: {message}")
 
-for path in (PROJECT, LOCK, README, ACTIVE):
+for path in (PROJECT, LOCK, README):
     if not path.is_file():
         fail(f"missing {path.relative_to(ROOT)}")
 
@@ -75,13 +74,5 @@ for needle in (
 ):
     if needle not in readme:
         fail(f"README missing boundary: {needle}")
-
-active = ACTIVE.read_text()
-for needle in (
-    "uv sync --locked --no-python-downloads",
-    "native Termux `ninja`",
-):
-    if needle not in active:
-        fail(f"active task missing build-env boundary: {needle}")
 
 print("gdkpixbuf build env: PASS")

@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+DOC=docs/operations/TEST_AUTHORITY.md
+HISTORY=tests/history/README.md
+RUNNER=tests/run-repository
+HISTORICAL=(
+  libjpeg-so-62-provider-candidate-disposition-smoke.sh
+  libjpeg-so-62-compatibility-provider-candidate-result-review-smoke.sh
+  libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review-smoke.sh
+  libjpeg-so-62-gdkpixbuf-consumer-binding-result-review-smoke.sh
+  libjpeg-so-62-gdkpixbuf-diagnostic-matrix-result-review-smoke.sh
+)
+DURABLE_CHECKERS=(
+  tools/docs/check-no-token-recipe-semantic-review
+  tools/docs/check-xorg-reference-consumed-provider-authority
+  tools/docs/check-libtasn1-reference-consumed-provider-authority
+  tools/docs/check-libepoxy-reference-consumed-provider-authority
+  tools/docs/check-pango-reference-consumed-provider-authority
+  tools/docs/check-gdkpixbuf-core-provider-acquisition-result-review
+  tools/docs/check-gdkpixbuf-build-env
+)
+fail(){ printf 'test-authority: FAIL: %s\n' "$*" >&2; exit 1; }
+for rel in "$DOC" "$HISTORY" "$RUNNER"; do [ -f "$ROOT/$rel" ] || fail "missing $rel"; done
+for name in "${HISTORICAL[@]}"; do
+  [ -f "$ROOT/tests/history/repository/$name" ] || fail "historical smoke missing: $name"
+  [ ! -e "$ROOT/tests/repository/$name" ] || fail "superseded smoke remains current: $name"
+  ! grep -Fq "tests/repository/$name" "$ROOT/$RUNNER" || fail "current runner includes historical smoke: $name"
+done
+for rel in "${DURABLE_CHECKERS[@]}"; do
+  [ -f "$ROOT/$rel" ] || fail "durable checker missing: $rel"
+  ! grep -Fq 'docs/current/ACTIVE_TASK.md' "$ROOT/$rel" || fail "durable checker owns active task: $rel"
+  ! grep -Fq 'next_review_tranche' "$ROOT/$rel" || fail "durable checker owns next tranche: $rel"
+  ! grep -Fq 'provider_review_count' "$ROOT/$rel" || fail "durable checker owns aggregate provider count: $rel"
+done
+for token in \
+  'tests/repository/libjpeg-so-62-loader-isolated-provider-authority-smoke.sh' \
+  'tests/repository/gdkpixbuf-2-42-12-provider-candidate-result-review-smoke.sh' \
+  'tests/repository/test-authority-model-smoke.sh'
+do
+  count=$(grep -Fc "$token" "$ROOT/$RUNNER")
+  [ "$count" -eq 2 ] || fail "current smoke must appear once in --fast and once in --docs: $token count=$count"
+done
+grep -Fq 'tests/history/' "$ROOT/$DOC" || fail 'test authority document lacks historical route'
+grep -Fq 'must not pin' "$ROOT/$DOC" || fail 'test authority document lacks moving-state prohibition'
+grep -Fq 'tests/history/' "$ROOT/$HISTORY" || fail 'historical test README lacks self-classification'
+grep -Fq 'operations-test-authority' "$ROOT/docs/catalog.tsv" || fail 'catalog lacks test authority row'
+grep -Fq 'TEST_AUTHORITY.md' "$ROOT/docs/operations/README.md" || fail 'operations router lacks test authority document'
+printf 'test-authority: PASS: current suites own live invariants; five superseded libjpeg stage smokes are historical\n'

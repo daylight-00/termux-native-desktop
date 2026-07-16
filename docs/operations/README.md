@@ -9,6 +9,7 @@ This directory is the single current authority for progress-independent web-chat
 | Who does what, and how are artifacts exchanged? | [`COLLABORATION.md`](COLLABORATION.md) |
 | How does one bundle-native work cycle proceed? | [`WORKFLOW.md`](WORKFLOW.md) |
 | How are candidates, wrappers, tests, results, and acceptance handled? | [`EXECUTION.md`](EXECUTION.md) |
+| Which tests may own current state, and how are superseded stage smokes preserved? | [`TEST_AUTHORITY.md`](TEST_AUTHORITY.md) |
 | What happens at a clean boundary or with valuable incomplete work? | [`CHECKPOINTS.md`](CHECKPOINTS.md) |
 | What failures have known operational mitigations? | [`TROUBLESHOOTING.md`](TROUBLESHOOTING.md) |
 | What can the current web-chat sandbox and connectors actually do? | [`platforms/chatgpt-web.md`](platforms/chatgpt-web.md) |

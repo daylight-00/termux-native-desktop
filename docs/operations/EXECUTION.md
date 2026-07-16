@@ -68,6 +68,8 @@ commit.txt
 
 Retain detailed logs, but inspect them only with targeted `grep`, bounded `tail`, or exact member extraction after a structured failure signal.
 
+Structured result members must match their declared format. A `.tsv` file contains real tab delimiters, not escaped `\t` text, and is parser-validated before archival. A formatting defect is recorded explicitly during result review even when independent evidence makes it non-blocking.
+
 ## Review order
 
 ```text

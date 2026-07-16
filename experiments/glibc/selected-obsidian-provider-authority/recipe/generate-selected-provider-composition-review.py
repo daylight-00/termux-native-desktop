@@ -42,27 +42,30 @@ def main():
  # libjpeg
  x=read(review/'libjpeg-so-62-loader-isolated-provider-authority.tsv')[0];member=x['candidate_member'];soname=x['observed_soname']
  rows.append(dict(composition_row_id='COMP-LIBJPEG-PROV-001',provider_review_id=x['review_id'],recipe_root=x['recipe_root'],artifact_package='project-libjpeg-turbo-v6b',artifact_version='3.1.0',member_basename=member,member_sha256=x['candidate_sha256'],soname=soname,alias_basename=soname,alias_target_basename=member,capability_scope=x['capability_scope'],composition_inclusion='INCLUDED_SELECTED_GTK_SCOPE',inclusion_reason='EXACT_GDKPIXBUF_JPEG_FILE_AND_MEMORY_DECODE_PROVIDER_DECISION',collision_state='NO_ACCEPTED_MEMBER_OR_ALIAS_COLLISION_LIBJPEG_SO_8_FAMILY_EXCLUDED',update_boundary=x['update_boundary'],rollback_boundary=x['rollback_boundary'],authority_effect='MEMBER_AND_SONAME_ALIAS_PROPOSED_ONLY_NO_TARGET_POPULATION',prohibited_inference=x['prohibited_inference']))
+ # project-built GdkPixbuf
+ x=read(review/'gdkpixbuf-2-42-12-provider-candidate-result-review.tsv')[0];member=x['candidate_member'];soname=x['observed_soname']
+ rows.append(dict(composition_row_id='COMP-GDKPIXBUF-PROV-001',provider_review_id=x['review_id'],recipe_root='project/upstream-gdk-pixbuf',artifact_package='project-gdk-pixbuf',artifact_version=x['source_version'],member_basename=member,member_sha256=x['candidate_sha256'],soname=soname,alias_basename=soname,alias_target_basename=member,capability_scope=x['capability_scope'],composition_inclusion='INCLUDED_SELECTED_GTK_SCOPE',inclusion_reason='EXACT_FIXED_JPEG_AND_PNG_FILE_AND_MEMORY_DECODE_PROVIDER_DECISION',collision_state='NO_ACCEPTED_MEMBER_OR_ALIAS_COLLISION_DEBIAN_ORACLE_EXCLUDED',update_boundary=x['update_boundary'],rollback_boundary=x['rollback_boundary'],authority_effect='MEMBER_AND_SONAME_ALIAS_PROPOSED_ONLY_NO_TARGET_POPULATION',prohibited_inference=x['prohibited_inference']))
  rows.sort(key=lambda r:r['composition_row_id'])
- if len(rows)!=10:raise SystemExit(f'expected 10 accepted member rows, got {len(rows)}')
- if len({r['soname'] for r in rows})!=10:raise SystemExit('accepted SONAME collision')
- if len({r['alias_basename'] for r in rows})!=10:raise SystemExit('accepted alias collision')
+ if len(rows)!=11:raise SystemExit(f'expected 11 accepted member rows, got {len(rows)}')
+ if len({r['soname'] for r in rows})!=11:raise SystemExit('accepted SONAME collision')
+ if len({r['alias_basename'] for r in rows})!=11:raise SystemExit('accepted alias collision')
 
- accepted_eids={'selected:0802b57eadc2dd33925a','selected:1ae5e5d5ff7893c87e25','selected:beb2bb532f0a84c2835f','selected:d73a4eb5d9d5ee688632','selected:a7e42baafca8ed4717e3','selected:325be465ce7f532f8ff1','selected:83bc985c49ec2d778e60','selected:b869b82b3c70ee88cb30','selected:26a520f7c61bdc61e17c'}
+ accepted_eids={'selected:0802b57eadc2dd33925a','selected:1ae5e5d5ff7893c87e25','selected:beb2bb532f0a84c2835f','selected:d73a4eb5d9d5ee688632','selected:a7e42baafca8ed4717e3','selected:325be465ce7f532f8ff1','selected:83bc985c49ec2d778e60','selected:b869b82b3c70ee88cb30','selected:26a520f7c61bdc61e17c','selected:b577593923c28a50a012'}
  root_map={
   'libcairo-gobject.so.2.11804.4':'gpkg/libcairo','libcairo.so.2.11804.4':'gpkg/libcairo','libcloudproviders.so.0.3.6':'gpkg/libcloudproviders','libdatrie.so.1.4.0':'gpkg/libdatrie','libfontconfig.so.1.12.1':'gpkg/fontconfig','libfreetype.so.6.20.2':'gpkg/freetype','libfribidi.so.0.4.0':'gpkg/fribidi','libgio-2.0.so.0.8400.4':'gpkg/glib','libglib-2.0.so.0.8400.4':'gpkg/glib','libgmodule-2.0.so.0.8400.4':'gpkg/glib','libgobject-2.0.so.0.8400.4':'gpkg/glib','libharfbuzz.so.0.61020.0':'gpkg/harfbuzz','libmount.so.1.1.0':'gpkg/util-linux','libpng16.so.16.48.0':'gpkg/libpng','libthai.so.0.3.1':'gpkg/libthai','libXcursor.so.1.0.2':'gpkg/libxcursor','libxkbcommon.so.0.0.0':'gpkg/libxkbcommon'}
- core={'libgdk_pixbuf-2.0.so.0.4200.12','libgio-2.0.so.0.8400.4','libglib-2.0.so.0.8400.4','libgmodule-2.0.so.0.8400.4','libgobject-2.0.so.0.8400.4','libpng16.so.16.48.0'}
+ core={'libgio-2.0.so.0.8400.4','libglib-2.0.so.0.8400.4','libgmodule-2.0.so.0.8400.4','libgobject-2.0.so.0.8400.4','libpng16.so.16.48.0','libmount.so.1.1.0'}
  gaps=[]
  ledger=read(review/'non-priority-generic-authority-ledger/gtk-gui.tsv')
  for n,r in enumerate([r for r in ledger if r['evidence_row_id'] not in accepted_eids],1):
   ident=r['identity_label'];mapped=root_map.get(ident,'NONE_REVIEWED_ROOT')
   gc='OPEN_REVIEWED_ROOT_PROVIDER_AUTHORITY' if mapped!='NONE_REVIEWED_ROOT' else 'NO_ACCEPTED_TERMUX_PROVIDER_CANDIDATE_OR_OUTSIDE_28_ROOTS'
-  pri='GDKPIXBUF_CORE_PROVIDER_TRANCHE' if ident in core else 'LATER_GTK_COMPOSITION_TRANCHE'
-  action=('ACQUIRE_OR_BIND_EXACT_TERMUX_GDKPIXBUF_CANDIDATE_AND_REVIEW_GLIB_FAMILY_AND_LIBPNG_PROVIDER_AUTHORITY' if pri.startswith('GDK') else 'REVIEW_EXACT_PROVIDER_IDENTITY_ADAPTATION_CONSUMER_BINDING_CONFLICT_UPDATE_AND_ROLLBACK')
+  pri='GDKPIXBUF_REFERENCE_DEPENDENCY_PROVIDER_TRANCHE' if ident in core else 'LATER_GTK_COMPOSITION_TRANCHE'
+  action=('REVIEW_EXACT_GLIB_FAMILY_LIBPNG_AND_LIBMOUNT_PROVIDER_AUTHORITY_AND_RESOLVE_TRANSITIVE_LIBBLKID_BOUNDARY' if pri.startswith('GDK') else 'REVIEW_EXACT_PROVIDER_IDENTITY_ADAPTATION_CONSUMER_BINDING_CONFLICT_UPDATE_AND_ROLLBACK')
   gaps.append(dict(composition_gap_id=f'COMP-GAP-{n:03d}',selected_evidence_row_id=r['evidence_row_id'],identity_label=ident,lookup_name=r['lookup_name'],soname=r['soname'],package_or_source=r['package_or_source'],version=r['version'],root_mapping=mapped,gap_class=gc,priority_tranche=pri,blocker_reason='SELECTED_GTK_RUNTIME_IDENTITY_HAS_NO_ACCEPTED_PROVIDER_ROW_IN_CURRENT_COMPOSITION',minimum_next_action=action,authority_effect='BLOCKS_COMPOSITION_ACCEPTANCE_AND_TARGET_MANIFEST_GENERATION'))
- if len(gaps)!=27:raise SystemExit(f'expected 27 gaps, got {len(gaps)}')
+ if len(gaps)!=26:raise SystemExit(f'expected 26 gaps, got {len(gaps)}')
  reviewed=sum(g['root_mapping']!='NONE_REVIEWED_ROOT' for g in gaps)
  outside=len(gaps)-reviewed
  metadata=[
- ('schema_version','1'),('decision_policy','ADR-0005'),('selected_gtk_identity_count','36'),('accepted_provider_root_count','8'),('accepted_member_count','10'),('included_member_count','9'),('deferred_member_count','1'),('unresolved_selected_identity_count','27'),('reviewed_root_gap_count',str(reviewed)),('outside_28_root_gap_count',str(outside)),('accepted_soname_collision_count','0'),('accepted_alias_collision_count','0'),('composition_decision','REVIEWED_BLOCKED_INCOMPLETE'),('target_manifest_allowed','NO'),('next_review_tranche','GDKPIXBUF_CORE_PROVIDER_TRANCHE'),('authority_effect','NO_TARGET_POPULATION_MATERIALIZATION_OR_ACTIVATION')]
+ ('schema_version','1'),('decision_policy','ADR-0005'),('selected_gtk_identity_count','36'),('accepted_provider_root_count','9'),('accepted_member_count','11'),('included_member_count','10'),('deferred_member_count','1'),('unresolved_selected_identity_count','26'),('reviewed_root_gap_count',str(reviewed)),('outside_28_root_gap_count',str(outside)),('accepted_soname_collision_count','0'),('accepted_alias_collision_count','0'),('composition_decision','REVIEWED_BLOCKED_INCOMPLETE'),('target_manifest_allowed','NO'),('next_review_tranche','GDKPIXBUF_REFERENCE_DEPENDENCY_PROVIDER_TRANCHE'),('authority_effect','NO_TARGET_POPULATION_MATERIALIZATION_OR_ACTIVATION')]
  write(out/MEM,MEM_FIELDS,rows);write(out/GAPS,GAP_FIELDS,gaps);write(out/META,['key','value'],[{'key':k,'value':v} for k,v in metadata])
 if __name__=='__main__':main()

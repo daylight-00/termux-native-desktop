@@ -31,3 +31,17 @@ GdkPixbuf build and is therefore not part of this environment.
 The compilers, linker, archiver, pkg-config and produced binaries remain in
 the explicit Termux glibc toolchain boundary. Managing Meson with uv does not
 change target ABI authority.
+
+## Accepted bounded provider identity
+
+The exact final object produced by the reviewed scratch transaction is:
+
+```text
+libgdk_pixbuf-2.0.so.0.4200.12
+SHA-256 0c1404c6854e7674428a5b653b240759dac0374631697fe61ae275898f6a809f
+DT_SONAME libgdk_pixbuf-2.0.so.0
+```
+
+Its bounded provider decision is in `docs/evidence/gdkpixbuf-2-42-12-provider-candidate-result-review.md`. The accepted identity includes the documented post-link removal of one build-tree search-path tag. Rebuilding, updating, or materializing it requires re-review of source, build environment, options, final digest, dependency set, functional matrix and rollback boundary.
+
+The decision does not accept provider authority for GLib, libpng, libmount or libblkid.

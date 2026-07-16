@@ -9,7 +9,7 @@ git -C "$ROOT" archive HEAD | tar -x -C "$CASE"
 for rel in \
   packages/gdkpixbuf-glibc/build-env/pyproject.toml \
   packages/gdkpixbuf-glibc/build-env/uv.lock \
-  docs/current/ACTIVE_TASK.md; do
+  packages/gdkpixbuf-glibc/README.md; do
   mkdir -p "$BACKUP/$(dirname "$rel")"
   cp "$CASE/$rel" "$BACKUP/$rel"
 done
@@ -35,7 +35,7 @@ expect_fail "binary Ninja added to uv project" packages/gdkpixbuf-glibc/build-en
 sed -i 's/meson-1.11.1-py3-none-any.whl/meson-1.11.1-manylinux_aarch64.whl/' "$CASE/packages/gdkpixbuf-glibc/build-env/uv.lock"
 expect_fail "Meson wheel loses pure-Python tag" packages/gdkpixbuf-glibc/build-env/uv.lock
 
-sed -i 's/native Termux `ninja`/uv-managed `ninja`/' "$CASE/docs/current/ACTIVE_TASK.md"
-expect_fail "active task moves Ninja into uv" docs/current/ACTIVE_TASK.md
+sed -i 's/Ninja remains a native Termux host/Ninja moves into the uv environment/' "$CASE/packages/gdkpixbuf-glibc/README.md"
+expect_fail "package boundary moves Ninja into uv" packages/gdkpixbuf-glibc/README.md
 
 printf 'gdkpixbuf build env smoke: PASS\n'

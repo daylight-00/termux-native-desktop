@@ -16,6 +16,7 @@ case "$MODE" in
       tests/repository/document-model-smoke.sh
       tests/repository/constitution-smoke.sh
       tests/repository/operations-model-smoke.sh
+      tests/repository/test-authority-model-smoke.sh
       tests/repository/web-chat-capability-contract-smoke.sh
       tests/repository/provider-claim-classification-smoke.sh
       tests/repository/no-token-recipe-semantic-review-smoke.sh
@@ -23,13 +24,10 @@ case "$MODE" in
       tests/repository/libtasn1-reference-consumed-provider-authority-smoke.sh
       tests/repository/libepoxy-reference-consumed-provider-authority-smoke.sh
       tests/repository/pango-reference-consumed-provider-authority-smoke.sh
-      tests/repository/libjpeg-so-62-provider-candidate-disposition-smoke.sh
-      tests/repository/libjpeg-so-62-compatibility-provider-candidate-result-review-smoke.sh
-      tests/repository/libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review-smoke.sh
-      tests/repository/libjpeg-so-62-gdkpixbuf-consumer-binding-result-review-smoke.sh
-      tests/repository/libjpeg-so-62-gdkpixbuf-diagnostic-matrix-result-review-smoke.sh
       tests/repository/selected-provider-composition-review-smoke.sh
       tests/repository/gdkpixbuf-core-provider-acquisition-result-review-smoke.sh
+      tests/repository/libjpeg-so-62-loader-isolated-provider-authority-smoke.sh
+      tests/repository/gdkpixbuf-2-42-12-provider-candidate-result-review-smoke.sh
       tests/repository/gdkpixbuf-build-env-smoke.sh
       tests/repository/shell-layout-smoke.sh
       tests/repository/vulkan-policy-scope-smoke.sh
@@ -44,6 +42,7 @@ case "$MODE" in
       tests/repository/document-model-smoke.sh
       tests/repository/constitution-smoke.sh
       tests/repository/operations-model-smoke.sh
+      tests/repository/test-authority-model-smoke.sh
       tests/repository/web-chat-capability-contract-smoke.sh
       tests/repository/provider-claim-classification-smoke.sh
       tests/repository/no-token-recipe-semantic-review-smoke.sh
@@ -51,13 +50,10 @@ case "$MODE" in
       tests/repository/libtasn1-reference-consumed-provider-authority-smoke.sh
       tests/repository/libepoxy-reference-consumed-provider-authority-smoke.sh
       tests/repository/pango-reference-consumed-provider-authority-smoke.sh
-      tests/repository/libjpeg-so-62-provider-candidate-disposition-smoke.sh
-      tests/repository/libjpeg-so-62-compatibility-provider-candidate-result-review-smoke.sh
-      tests/repository/libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review-smoke.sh
-      tests/repository/libjpeg-so-62-gdkpixbuf-consumer-binding-result-review-smoke.sh
-      tests/repository/libjpeg-so-62-gdkpixbuf-diagnostic-matrix-result-review-smoke.sh
       tests/repository/selected-provider-composition-review-smoke.sh
       tests/repository/gdkpixbuf-core-provider-acquisition-result-review-smoke.sh
+      tests/repository/libjpeg-so-62-loader-isolated-provider-authority-smoke.sh
+      tests/repository/gdkpixbuf-2-42-12-provider-candidate-result-review-smoke.sh
       tests/repository/gdkpixbuf-build-env-smoke.sh
     )
     ;;

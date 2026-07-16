@@ -24,6 +24,7 @@ chatgpt-web-limitations	operations	current	operational	no	docs/operations/platfo
 operations-collaboration	operations	current	canonical	no	docs/operations/COLLABORATION.md	user agent roles repository transport and artifact exchange
 operations-workflow	operations	current	canonical	no	docs/operations/WORKFLOW.md	bundle-native receive-to-accepted-transition workflow
 operations-execution	operations	current	canonical	no	docs/operations/EXECUTION.md	candidate wrapper test result and acceptance discipline
+operations-test-authority	operations	current	canonical	no	docs/operations/TEST_AUTHORITY.md	current test ownership and historical stage smoke lifecycle
 operations-checkpoints	operations	current	canonical	no	docs/operations/CHECKPOINTS.md	clean boundary and optional non-authoritative checkpoint contract
 operations-troubleshooting	operations	current	operational	no	docs/operations/TROUBLESHOOTING.md	proven operational failure mitigations
 session-operations-history	history	historical	history	no	docs/history/session-operations-v1/README.md	former session-operations lifecycle and changelog
@@ -52,5 +53,6 @@ libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review	eviden
 libjpeg-so-62-gdkpixbuf-consumer-binding-result-review	evidence	current	canonical	no	docs/evidence/libjpeg-so-62-gdkpixbuf-consumer-binding-result-review.md	first exact GdkPixbuf binding attempt, static success and bounded functional SIGSEGV review
 libjpeg-so-62-gdkpixbuf-diagnostic-matrix-result-review	evidence	current	canonical	no	docs/evidence/libjpeg-so-62-gdkpixbuf-diagnostic-matrix-result-review.md	first matrix invalidation and direct-loader ELF-only rerun boundary
 libjpeg-so-62-loader-isolated-provider-authority	evidence	current	canonical	no	docs/evidence/libjpeg-so-62-loader-isolated-provider-authority.md	loader-isolated six-cell functional equivalence and bounded GdkPixbuf JPEG provider decision
-selected-obsidian-provider-composition-review	evidence	current	canonical	no	docs/evidence/selected-obsidian-provider-composition-review.md	non-materializing accepted-member manifest and 27 selected GTK provider gaps
+selected-obsidian-provider-composition-review	evidence	current	canonical	no	docs/evidence/selected-obsidian-provider-composition-review.md	non-materializing accepted-member manifest and 26 selected GTK provider gaps
 gdkpixbuf-core-provider-acquisition-result-review	evidence	current	canonical	no	docs/evidence/gdkpixbuf-core-provider-acquisition-result-review.md	exact five-member acquisition review, GdkPixbuf source-build blocker and protected-state false-positive disposition
+gdkpixbuf-2-42-12-provider-candidate-result-review	evidence	current	canonical	no	docs/evidence/gdkpixbuf-2-42-12-provider-candidate-result-review.md	exact project GdkPixbuf provider decision and dependency-provider boundary

@@ -89,24 +89,13 @@ for r in rows:
         if claim['authority_effect']!=r['authority_effect']: errors.append(f"{claim_id}: authority effect mismatch")
         if r['review_id'] not in claim['existing_evidence']: errors.append(f"{claim_id}: review evidence not linked")
 
-expected_meta={
- 'provider_review_count':'7','provider_authority_accepted_count':'7','provider_authority_open_count':'21',
- 'authority_effect':'SEVEN_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT',
- 'next_review_tranche':'LIBJPEG_SO_62_COMPATIBILITY_PROVIDER_CANDIDATE_PRODUCTION',
-}
-for k,v in expected_meta.items():
-    if meta.get(k)!=v: errors.append(f'metadata {k}: expected {v}, got {meta.get(k)!r}')
 
 state=(root/'docs/current/STATE.yaml').read_text()
-active=(root/'docs/current/ACTIVE_TASK.md').read_text()
-brief=(root/'docs/current/BRIEF.md').read_text()
 status=(root/'STATUS.md').read_text()
 catalog=(root/'docs/catalog.tsv').read_text()
 checks=[
  ('state version','state_version:' in state),
- ('state accepted','accepted: 7' in state),
- ('next task','Task ID: `produce-libjpeg-so-62-compatibility-provider-candidate`' in active),
- ('brief accepted','bounded providers accepted: 7' in brief),
+
  ('status accepted','Four X.Org roots cover selected GTK 3.24.49 X11 features' in status),
  ('catalog','xorg-reference-consumed-provider-authority\tevidence\tcurrent\tcanonical' in catalog),
 ]
