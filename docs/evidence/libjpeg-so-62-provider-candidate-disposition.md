@@ -11,8 +11,8 @@ first scratch candidate: rejected for colon-only DT_RUNPATH
 corrected scratch candidate: runpath-free identity accepted
 corrected candidate SHA-256:
     a537840ef9da6135cb3284bc3b3e0d1fb4f624180a416c2a3964b94714eb7fe5
-canonical disposition: RUNPATH_FREE_COMPATIBILITY_PROVIDER_CANDIDATE_IDENTITY_ACCEPTED_PROVIDER_REVIEW_REQUIRED
-provider authority: not accepted
+canonical disposition: RUNPATH_FREE_COMPATIBILITY_PROVIDER_ACCEPTED_BOUNDED_GDKPIXBUF_JPEG_SCOPE
+provider authority: accepted for exact GdkPixbuf 2.42.12 JPEG file and memory decode
 composition: not reached
 target population: blocked
 materialization and activation: not performed
@@ -158,3 +158,22 @@ It does not accept provider authority, complete image/GTK composition, a target 
 ## First bounded consumer result
 
 The exact consumer identity, `DT_NEEDED=libjpeg.so.62`, and all 22 required JPEG symbols were verified. The fixed JPEG call then exited with `SIGSEGV` before decode or mapped-path output. This does not revoke candidate identity and does not accept provider authority. The next action is the bounded runtime/API diagnostic matrix recorded in [`libjpeg-so-62-gdkpixbuf-consumer-binding-result-review.md`](libjpeg-so-62-gdkpixbuf-consumer-binding-result-review.md).
+
+## Loader-isolated provider decision
+
+The corrected direct-loader matrix closed the remaining bounded functional gap:
+
+```text
+result archive SHA-256:
+4e546ac1ef2a92f3301dd51ca2328d6901a05e309da78b6d08b26211d9b621e3
+
+direct candidate/oracle output SHA-256:
+8cef10ed9b5f2e4ffde1fdedc4b722d4738d86ac5d204554328c30ef34ecbdc6
+
+GdkPixbuf candidate file:   PASS
+GdkPixbuf candidate memory: PASS
+GdkPixbuf oracle file:      PASS
+GdkPixbuf oracle memory:    PASS
+```
+
+The exact project-produced candidate is therefore accepted as a bounded provider for the selected GdkPixbuf 2.42.12 JPEG file and memory decode capability. See [`libjpeg-so-62-loader-isolated-provider-authority.md`](libjpeg-so-62-loader-isolated-provider-authority.md). This does not decide complete composition, target membership, materialization or activation.

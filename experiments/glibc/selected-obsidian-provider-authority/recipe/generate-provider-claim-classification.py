@@ -20,6 +20,7 @@ LIBJPEG_RESULT_REVIEW = Path('experiments/glibc/selected-obsidian-provider-autho
 LIBJPEG_RUNPATH_FREE_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review.tsv')
 LIBJPEG_CONSUMER_BINDING_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/libjpeg-so-62-gdkpixbuf-consumer-binding-result-review.tsv')
 LIBJPEG_DIAGNOSTIC_MATRIX_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/libjpeg-so-62-gdkpixbuf-diagnostic-matrix-result-review.tsv')
+LIBJPEG_PROVIDER_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/libjpeg-so-62-loader-isolated-provider-authority.tsv')
 
 CLAIM_OUTPUT = Path('experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification.tsv')
 SUP02_OUTPUT = Path('experiments/glibc/selected-obsidian-provider-authority/review/provider-sup-02-request-disposition.tsv')
@@ -126,7 +127,8 @@ def main() -> None:
     libjpeg_runpath_free_reviews = read_tsv(repo / LIBJPEG_RUNPATH_FREE_REVIEW)
     libjpeg_consumer_binding_reviews = read_tsv(repo / LIBJPEG_CONSUMER_BINDING_REVIEW)
     libjpeg_diagnostic_matrix_reviews = read_tsv(repo / LIBJPEG_DIAGNOSTIC_MATRIX_REVIEW)
-    provider_reviews = xorg_provider_reviews + libtasn1_provider_reviews + libepoxy_provider_reviews + pango_provider_reviews
+    libjpeg_provider_reviews = read_tsv(repo / LIBJPEG_PROVIDER_REVIEW)
+    provider_reviews = xorg_provider_reviews + libtasn1_provider_reviews + libepoxy_provider_reviews + pango_provider_reviews + libjpeg_provider_reviews
     if len(roots) != 28:
         raise SystemExit(f'expected 28 root rows, found {len(roots)}')
     if len(objects) != 37:
@@ -153,15 +155,18 @@ def main() -> None:
         raise SystemExit(f'expected 1 libjpeg consumer-binding result review row, found {len(libjpeg_consumer_binding_reviews)}')
     if len(libjpeg_diagnostic_matrix_reviews) != 1:
         raise SystemExit(f'expected 1 libjpeg diagnostic-matrix result review row, found {len(libjpeg_diagnostic_matrix_reviews)}')
+    if len(libjpeg_provider_reviews) != 1:
+        raise SystemExit(f'expected 1 libjpeg provider review row, found {len(libjpeg_provider_reviews)}')
     libjpeg_disposition = libjpeg_dispositions[0]
     libjpeg_result_review = libjpeg_result_reviews[0]
     libjpeg_runpath_free_review = libjpeg_runpath_free_reviews[0]
     libjpeg_consumer_binding_review = libjpeg_consumer_binding_reviews[0]
     libjpeg_diagnostic_matrix_review = libjpeg_diagnostic_matrix_reviews[0]
+    libjpeg_provider_review = libjpeg_provider_reviews[0]
     if libjpeg_disposition['requirement_id'] != 'OJ-001' or libjpeg_disposition['required_lookup_identity'] != 'libjpeg.so.62':
         raise SystemExit('libjpeg disposition does not bind canonical OJ-001 identity')
-    if libjpeg_disposition['disposition'] != 'RUNPATH_FREE_COMPATIBILITY_PROVIDER_CANDIDATE_IDENTITY_ACCEPTED_FUNCTIONAL_DIAGNOSTIC_REQUIRED':
-        raise SystemExit('libjpeg disposition must retain candidate identity and functional diagnostic boundary')
+    if libjpeg_disposition['disposition'] != 'RUNPATH_FREE_COMPATIBILITY_PROVIDER_ACCEPTED_BOUNDED_GDKPIXBUF_JPEG_SCOPE':
+        raise SystemExit('libjpeg disposition must record bounded provider authority')
     if libjpeg_result_review['requirement_id'] != 'OJ-001' or libjpeg_result_review['candidate_decision'] != 'REJECTED_REBUILD_REQUIRED_NO_RUNPATH':
         raise SystemExit('libjpeg result review does not preserve the rejected first-candidate boundary')
     if libjpeg_result_review['dt_runpath_state'] != 'PRESENT_COLON_ONLY_BUILD_TREE_PLACEHOLDER':
@@ -178,6 +183,16 @@ def main() -> None:
         raise SystemExit('libjpeg diagnostic review must preserve unresolved environment and no-provider boundary')
     if libjpeg_diagnostic_matrix_review['matrix_pass_count'] != '0' or libjpeg_diagnostic_matrix_review['candidate_decision'] != 'IDENTITY_RETAINED_MATRIX_INVALID_FOR_FUNCTIONAL_COMPARISON':
         raise SystemExit('libjpeg diagnostic review must retain the invalid zero-pass matrix without rejecting identity')
+    if libjpeg_provider_review['review_id'] != 'LIBJPEG-PROV-001' or libjpeg_provider_review['decision'] != 'ACCEPTED_BOUNDED_PROVIDER':
+        raise SystemExit('libjpeg provider review must accept one bounded provider')
+    if libjpeg_provider_review['result_archive_sha256'] != '4e546ac1ef2a92f3301dd51ca2328d6901a05e309da78b6d08b26211d9b621e3':
+        raise SystemExit('libjpeg provider review result archive drift')
+    if libjpeg_provider_review['matrix_pass_count'] != '6' or libjpeg_provider_review['matrix_fail_count'] != '0':
+        raise SystemExit('libjpeg provider review must retain six passing loader-isolated cells')
+    if libjpeg_provider_review['diagnostic_classification'] != 'CANDIDATE_GDKPIXBUF_FUNCTIONAL_PASS':
+        raise SystemExit('libjpeg provider review classification drift')
+    if libjpeg_provider_review['direct_candidate_output_sha256'] != libjpeg_provider_review['direct_oracle_output_sha256']:
+        raise SystemExit('libjpeg direct candidate/oracle output digests diverge')
     semantic_by_root = {row['root_review_id']: row for row in semantic_reviews}
     if len(semantic_by_root) != len(semantic_reviews):
         raise SystemExit('duplicate root_review_id in no-token semantic review')
@@ -195,6 +210,7 @@ def main() -> None:
     provider_source_by_root.update({row['root_review_id']: LIBTASN1_PROVIDER_REVIEW.name for row in libtasn1_provider_reviews})
     provider_source_by_root.update({row['root_review_id']: LIBEPOXY_PROVIDER_REVIEW.name for row in libepoxy_provider_reviews})
     provider_source_by_root.update({row['root_review_id']: PANGO_PROVIDER_REVIEW.name for row in pango_provider_reviews})
+    provider_source_by_root.update({row['root_review_id']: LIBJPEG_PROVIDER_REVIEW.name for row in libjpeg_provider_reviews})
     expected_provider_roots = {
         row['root_review_id'] for row in semantic_reviews
         if row['recipe_root'] in {'gpkg/libxfixes', 'gpkg/libxcomposite', 'gpkg/libxi', 'gpkg/libxinerama'}
@@ -210,6 +226,9 @@ def main() -> None:
     pango_expected = {row['root_review_id'] for row in semantic_reviews if row['recipe_root'] == 'gpkg/pango'}
     if {row['root_review_id'] for row in pango_provider_reviews} != pango_expected:
         raise SystemExit('Pango provider review does not cover the canonical root')
+    libjpeg_expected = {row['root_review_id'] for row in roots if row['recipe_root'] == 'gpkg/libjpeg-turbo'}
+    if {row['root_review_id'] for row in libjpeg_provider_reviews} != libjpeg_expected:
+        raise SystemExit('libjpeg provider review does not cover the canonical root')
     for row in provider_reviews:
         if row['decision'] != 'ACCEPTED_BOUNDED_PROVIDER':
             raise SystemExit(f"invalid provider decision for {row['root_review_id']}: {row['decision']}")
@@ -236,7 +255,7 @@ def main() -> None:
             artifact_gap = 'NONE_FOR_RUNPATH_FREE_EXACT_COMPATIBILITY_CANDIDATE_IDENTITY'
             artifact_action = 'RETAIN_EXACT_SOURCE_BUILD_MEMBER_DIGEST_SONAME_DYNAMIC_TAG_AND_SYMBOL_VERSION_COORDINATES'
             artifact_state = 'RUNPATH_FREE_COMPATIBILITY_CANDIDATE_IDENTITY_ACCEPTED'
-            common_evidence += f';{LIBJPEG_DISPOSITION.name};{libjpeg_disposition["review_id"]};{LIBJPEG_RESULT_REVIEW.name};{libjpeg_result_review["review_id"]};{LIBJPEG_RUNPATH_FREE_REVIEW.name};{libjpeg_runpath_free_review["review_id"]};{LIBJPEG_CONSUMER_BINDING_REVIEW.name};{libjpeg_consumer_binding_review["review_id"]};{LIBJPEG_DIAGNOSTIC_MATRIX_REVIEW.name};{libjpeg_diagnostic_matrix_review["review_id"]}'
+            common_evidence += f';{LIBJPEG_DISPOSITION.name};{libjpeg_disposition["review_id"]};{LIBJPEG_RESULT_REVIEW.name};{libjpeg_result_review["review_id"]};{LIBJPEG_RUNPATH_FREE_REVIEW.name};{libjpeg_runpath_free_review["review_id"]};{LIBJPEG_CONSUMER_BINDING_REVIEW.name};{libjpeg_consumer_binding_review["review_id"]};{LIBJPEG_DIAGNOSTIC_MATRIX_REVIEW.name};{libjpeg_diagnostic_matrix_review["review_id"]};{LIBJPEG_PROVIDER_REVIEW.name};{libjpeg_provider_review["review_id"]}'
         else:
             artifact_gap = 'NONE_FOR_EXACT_CANDIDATE_ARTIFACT_AND_NAMED_MEMBER_IDENTITY'
             artifact_action = 'NONE_RETAIN_EXACT_ARTIFACT_AND_MEMBER_DIGESTS_AT_TRANSFER'
@@ -283,11 +302,11 @@ def main() -> None:
             adaptation_gap += ';CF-001_CF-002_CF-003_CF-004_ALIAS_SUCCESSOR_AND_ROLLBACK_POLICY'
             adaptation_action += ';REVIEW_CONSUMER_ALIAS_BINDING_AND_VERSION_DRIFT_POLICY'
         if root['object_correction_requirement_set'] != 'NONE':
-            adaptation_gap = 'LOADER_ISOLATED_DIRECT_AND_GDKPIXBUF_FUNCTIONAL_EQUIVALENCE_FOR_PROJECT_PRODUCED_V6B_CANDIDATE'
-            adaptation_action = 'RUN_DIRECT_LOADER_ELF_ONLY_RUNTIME_SHIM_CANDIDATE_ORACLE_CONTROLS'
-            adaptation_state = 'CLASS_C_PRODUCING_RECORD_ACCEPTED_FIRST_MATRIX_INVALID_LOADER_ISOLATION_REQUIRED'
+            adaptation_gap = 'NONE_FOR_BOUNDED_PROJECT_PRODUCED_V6B_ADAPTATION_AND_FUNCTIONAL_EQUIVALENCE'
+            adaptation_action = 'RETAIN_EXACT_PRODUCING_AND_LOADER_ISOLATED_FUNCTIONAL_EVIDENCE'
+            adaptation_state = 'CLASS_C_PRODUCING_RECORD_AND_BOUNDED_FUNCTIONAL_EQUIVALENCE_ACCEPTED'
             adaptation_boundary = 'PROJECT_SELECTED_V6B_ABI_MODE_SHARED_ONLY_BUILD_AND_RPATH_SUPPRESSION_FOR_EXACT_SONAME_62_COMPATIBILITY_PROVIDER'
-            adaptation_evidence_suffix += f';{LIBJPEG_DISPOSITION.name};{libjpeg_disposition["review_id"]};{LIBJPEG_RESULT_REVIEW.name};{libjpeg_result_review["review_id"]};{LIBJPEG_RUNPATH_FREE_REVIEW.name};{libjpeg_runpath_free_review["review_id"]};{LIBJPEG_CONSUMER_BINDING_REVIEW.name};{libjpeg_consumer_binding_review["review_id"]};{LIBJPEG_DIAGNOSTIC_MATRIX_REVIEW.name};{libjpeg_diagnostic_matrix_review["review_id"]}'
+            adaptation_evidence_suffix += f';{LIBJPEG_DISPOSITION.name};{libjpeg_disposition["review_id"]};{LIBJPEG_RESULT_REVIEW.name};{libjpeg_result_review["review_id"]};{LIBJPEG_RUNPATH_FREE_REVIEW.name};{libjpeg_runpath_free_review["review_id"]};{LIBJPEG_CONSUMER_BINDING_REVIEW.name};{libjpeg_consumer_binding_review["review_id"]};{LIBJPEG_DIAGNOSTIC_MATRIX_REVIEW.name};{libjpeg_diagnostic_matrix_review["review_id"]};{LIBJPEG_PROVIDER_REVIEW.name};{libjpeg_provider_review["review_id"]}'
 
         claims.append({
             'claim_id': f'PCC-{root_slug}-ADAPTATION',
@@ -333,7 +352,7 @@ def main() -> None:
                 provider_gap = 'LOADER_ISOLATED_FUNCTIONAL_EQUIVALENCE;EXACT_CONSUMER_BINDING_AND_DECODE;CONFLICT_AND_EXCLUSION_REVIEW;UPDATE_AND_ROLLBACK_BOUNDARY'
                 provider_action = 'RUN_DIRECT_LOADER_ELF_ONLY_RUNTIME_SHIM_CANDIDATE_ORACLE_CONTROLS_THEN_REVIEW_PROVIDER_AUTHORITY'
                 provider_state = 'CANDIDATE_IDENTITY_ACCEPTED_FIRST_MATRIX_INVALID_LOADER_ISOLATION_REQUIRED'
-                provider_existing_evidence += f';{LIBJPEG_RUNPATH_FREE_REVIEW.name};{libjpeg_runpath_free_review["review_id"]};{LIBJPEG_CONSUMER_BINDING_REVIEW.name};{libjpeg_consumer_binding_review["review_id"]};{LIBJPEG_DIAGNOSTIC_MATRIX_REVIEW.name};{libjpeg_diagnostic_matrix_review["review_id"]}'
+                provider_existing_evidence += f';{LIBJPEG_RUNPATH_FREE_REVIEW.name};{libjpeg_runpath_free_review["review_id"]};{LIBJPEG_CONSUMER_BINDING_REVIEW.name};{libjpeg_consumer_binding_review["review_id"]};{LIBJPEG_DIAGNOSTIC_MATRIX_REVIEW.name};{libjpeg_diagnostic_matrix_review["review_id"]};{LIBJPEG_PROVIDER_REVIEW.name};{libjpeg_provider_review["review_id"]}'
             else:
                 provider_gap = ('CAPABILITY_NECESSITY_AND_CONSUMER_BINDING;CONFLICT_AND_EXCLUSION_REVIEW;UPDATE_AND_ROLLBACK_BOUNDARY' if semantic_review else 'ADAPTATION_CLASSIFICATION;CAPABILITY_NECESSITY_AND_CONSUMER_BINDING;CONFLICT_AND_EXCLUSION_REVIEW;UPDATE_AND_ROLLBACK_BOUNDARY')
                 provider_action = ('CAPABILITY_LEVEL_PROVIDER_REVIEW_WITH_TARGETED_PASSIVE_CONSUMER_BINDING_ONLY_WHERE_AMBIGUOUS' if semantic_review else 'CAPABILITY_LEVEL_PROVIDER_REVIEW_AFTER_ADAPTATION_CLASSIFICATION_WITH_TARGETED_PASSIVE_CONSUMER_BINDING_ONLY_WHERE_AMBIGUOUS')
@@ -374,12 +393,12 @@ def main() -> None:
         'project_owned_changed_boundary': 'PROJECT_INTERPRETATION_OF_THE_REQUIRED_RUNTIME_IDENTITY',
         'risk_modifiers': 'ABI_FAMILY_SUBSTITUTION;GUI_IMAGE_DECODING',
         'existing_evidence': f'0157_SUP-01_RESPONSE;0158_SUP-01_RESPONSE_REVIEW;libjpeg.so.8_SUBSTITUTION_REJECTED;{LIBJPEG_DISPOSITION.name};{libjpeg_disposition["review_id"]};{LIBJPEG_RESULT_REVIEW.name};{libjpeg_result_review["review_id"]};{LIBJPEG_RUNPATH_FREE_REVIEW.name};{libjpeg_runpath_free_review["review_id"]};{LIBJPEG_CONSUMER_BINDING_REVIEW.name};{libjpeg_consumer_binding_review["review_id"]};{LIBJPEG_DIAGNOSTIC_MATRIX_REVIEW.name};{libjpeg_diagnostic_matrix_review["review_id"]}',
-        'remaining_gap': 'NONE_FOR_REQUIRED_SONAME_AND_EXACT_RUNPATH_FREE_CANDIDATE_IDENTITY',
-        'minimum_closure_action': 'RETAIN_EXACT_CANDIDATE_IDENTITY_AND_PROCEED_TO_SEPARATE_PROVIDER_REVIEW',
+        'remaining_gap': 'NONE_FOR_REQUIRED_SONAME_EXACT_CANDIDATE_IDENTITY_AND_BOUNDED_PROVIDER_AUTHORITY',
+        'minimum_closure_action': 'RETAIN_EXACT_CANDIDATE_AND_BOUNDED_PROVIDER_DECISION_COORDINATES',
         'explicitly_excluded_evidence': 'SUP-02_BUILD_ATTESTATION_FOR_THE_WRONG_ABI_FAMILY;LIBJPEG_SO_8_ALIAS_OR_SUBSTITUTION',
         'escalation_trigger': 'COMPATIBILITY_CANDIDATE_OUTPUT_DIFFERS_FROM_EXPECTED_SONAME_OR_SOURCE_BUILD_COORDINATES',
-        'classification_state': 'RUNPATH_FREE_EXACT_CANDIDATE_IDENTITY_ACCEPTED',
-        'authority_effect': 'OBJECT_REQUIREMENT_AND_CANDIDATE_IDENTITY_ONLY_NO_PROVIDER_OR_TARGET_EFFECT',
+        'classification_state': 'RUNPATH_FREE_EXACT_CANDIDATE_AND_BOUNDED_PROVIDER_AUTHORITY_ACCEPTED',
+        'authority_effect': 'OBJECT_REQUIREMENT_CANDIDATE_IDENTITY_AND_BOUNDED_GDKPIXBUF_JPEG_PROVIDER_AUTHORITY_ONLY_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT',
         'prohibited_inference': 'A_BUILD_RECORD_FOR_LIBJPEG_SO_8_CANNOT_SATISFY_A_LIBJPEG_SO_62_REQUIREMENT',
     })
 
@@ -396,11 +415,11 @@ def main() -> None:
             'project_owned_changed_boundary': 'EXACT_LIBJPEG_TURBO_3_1_0_V6B_SHARED_BUILD_WITH_RECORDED_TERMUX_GLIBC_TOOLCHAIN_AND_RPATH_SUPPRESSION',
             'risk_modifiers': 'GUI_IMAGE_DECODING;PROJECT_PRODUCED_ARTIFACT;BOUNDED_REVERSIBLE_NON_INSTALLED_CANDIDATE',
             'existing_evidence': f'{LIBJPEG_RUNPATH_FREE_REVIEW.name};{libjpeg_runpath_free_review["review_id"]};{LIBJPEG_CONSUMER_BINDING_REVIEW.name};{libjpeg_consumer_binding_review["review_id"]};{LIBJPEG_DIAGNOSTIC_MATRIX_REVIEW.name};{libjpeg_diagnostic_matrix_review["review_id"]};SOURCE_BUILD_COMMAND_TOOLCHAIN_OUTPUT_MANIFEST_ELF_AND_SYMBOL_VERSION_EVIDENCE',
-            'remaining_gap': 'LOADER_ISOLATED_DIRECT_AND_GDKPIXBUF_FUNCTIONAL_EQUIVALENCE',
-            'minimum_closure_action': 'RUN_DIRECT_LOADER_ELF_ONLY_RUNTIME_SHIM_CANDIDATE_ORACLE_CONTROLS',
+            'remaining_gap': 'NONE_FOR_ACTIVE_LIBJPEG_CLASS_C_PRODUCING_RECORD_AND_BOUNDED_FUNCTIONAL_EQUIVALENCE',
+            'minimum_closure_action': 'RETAIN_EXACT_SOURCE_BUILD_ELF_LOADER_MATRIX_AND_OUTPUT_DIGEST_COORDINATES',
             'explicitly_excluded_evidence': 'BLANKET_CUSTODIAN_EXPORTS_FOR_ALL_REFERENCE_CONSUMED_OR_REFERENCE_ADAPTED_ROOTS',
             'escalation_trigger': 'CLASS_C_RECLASSIFICATION;ARTIFACT_RECIPE_MISMATCH;OPAQUE_HIGH_RISK_GENERATED_OUTPUT;UNRESOLVED_SUPPLIER_CLAIM_REQUIRED_FOR_A_SPECIFIC_PROMOTION',
-            'classification_state': 'ACTIVE_CLASS_C_PRODUCING_RECORD_ACCEPTED_FIRST_MATRIX_INVALID_LOADER_ISOLATION_REQUIRED',
+            'classification_state': 'ACTIVE_CLASS_C_PRODUCING_RECORD_AND_BOUNDED_FUNCTIONAL_EQUIVALENCE_ACCEPTED',
             'authority_effect': 'PRODUCING_RECORD_ONLY_NO_PROVIDER_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT',
             'prohibited_inference': 'IMPLEMENTED_PRODUCER_OR_ISSUED_REQUEST_DOES_NOT_CREATE_A_BUILD_ATTESTATION',
         },
@@ -539,7 +558,7 @@ def main() -> None:
         ('provider_review_count', str(len(provider_reviews))),
         ('provider_authority_accepted_count', str(sum(1 for row in provider_reviews if row['decision'] == 'ACCEPTED_BOUNDED_PROVIDER'))),
         ('provider_authority_open_count', str(claim_type_counts['PROVIDER_AUTHORITY'] - len(provider_reviews))),
-        ('authority_effect', 'SEVEN_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT'),
+        ('authority_effect', 'EIGHT_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT'),
         ('oj001_disposition', libjpeg_disposition['disposition']),
         ('oj001_required_identity', libjpeg_disposition['required_lookup_identity']),
         ('oj001_candidate_state', libjpeg_disposition['exact_repository_candidate_state']),
@@ -559,7 +578,11 @@ def main() -> None:
         ('oj001_diagnostic_matrix_result_sha256', libjpeg_diagnostic_matrix_review['result_archive_sha256']),
         ('oj001_diagnostic_matrix_classification', libjpeg_diagnostic_matrix_review['diagnostic_classification']),
         ('oj001_diagnostic_matrix_pass_count', libjpeg_diagnostic_matrix_review['matrix_pass_count']),
-        ('next_review_tranche', 'LIBJPEG_SO_62_GDKPIXBUF_DIRECT_LOADER_ISOLATION_RERUN'),
+        ('oj001_provider_review_id', libjpeg_provider_review['review_id']),
+        ('oj001_provider_result_sha256', libjpeg_provider_review['result_archive_sha256']),
+        ('oj001_provider_matrix_pass_count', libjpeg_provider_review['matrix_pass_count']),
+        ('oj001_provider_decision', libjpeg_provider_review['decision']),
+        ('next_review_tranche', 'SELECTED_OBSIDIAN_PROVIDER_COMPOSITION_REVIEW'),
     ]
 
     write_tsv(out_root / CLAIM_OUTPUT, CLAIM_FIELDS, claims)

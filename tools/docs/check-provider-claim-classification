@@ -21,6 +21,7 @@ required=(
   experiments/glibc/selected-obsidian-provider-authority/review/pango-reference-consumed-provider-authority.tsv
   experiments/glibc/selected-obsidian-provider-authority/review/libjpeg-so-62-provider-candidate-disposition.tsv
   experiments/glibc/selected-obsidian-provider-authority/review/libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/libjpeg-so-62-loader-isolated-provider-authority.tsv
 )
 for rel in "${required[@]}"; do
   [ -f "$ROOT/$rel" ] || { echo "provider-claim-classification: FAIL: missing $rel" >&2; exit 1; }
@@ -56,7 +57,7 @@ dispositions = read('provider-sup-02-request-disposition.tsv')
 roots = read('generic-build-attestation-adaptation-root-review-set.tsv')
 requests = read('generic-build-attestation-adaptation-gap-evidence-supply-batch-sup-02-custodian-export-requests.tsv')
 metadata = {row['key']: row['value'] for row in read('provider-claim-classification-metadata.tsv')}
-provider_reviews = read('xorg-reference-consumed-provider-authority.tsv') + read('libtasn1-reference-consumed-provider-authority.tsv') + read('libepoxy-reference-consumed-provider-authority.tsv') + read('pango-reference-consumed-provider-authority.tsv')
+provider_reviews = read('xorg-reference-consumed-provider-authority.tsv') + read('libtasn1-reference-consumed-provider-authority.tsv') + read('libepoxy-reference-consumed-provider-authority.tsv') + read('pango-reference-consumed-provider-authority.tsv') + read('libjpeg-so-62-loader-isolated-provider-authority.tsv')
 provider_review_by_root = {row['root_review_id']: row for row in provider_reviews}
 
 errors=[]
@@ -69,12 +70,12 @@ expected_meta={
     'sup02_still_necessary_count':'0','sup02_narrowed_count':'14',
     'sup02_replaced_count':'7','sup02_unnecessary_count':'7',
     'no_token_semantic_review_count':'7','no_token_confirmed_a_count':'7',
-    'no_token_reclassified_b_count':'0','provider_review_count':'7',
-    'provider_authority_accepted_count':'7','provider_authority_open_count':'21',
-    'authority_effect':'SEVEN_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT',
-    'oj001_disposition':'RUNPATH_FREE_COMPATIBILITY_PROVIDER_CANDIDATE_IDENTITY_ACCEPTED_FUNCTIONAL_DIAGNOSTIC_REQUIRED',
+    'no_token_reclassified_b_count':'0','provider_review_count':'8',
+    'provider_authority_accepted_count':'8','provider_authority_open_count':'20',
+    'authority_effect':'EIGHT_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT',
+    'oj001_disposition':'RUNPATH_FREE_COMPATIBILITY_PROVIDER_ACCEPTED_BOUNDED_GDKPIXBUF_JPEG_SCOPE',
     'oj001_required_identity':'libjpeg.so.62',
-    'oj001_candidate_state':'NO_EXACT_REPOSITORY_SONAME_62_ARTIFACT;RUNPATH_FREE_PROJECT_CANDIDATE_IDENTITY_ACCEPTED;FIRST_GDKPIXBUF_FUNCTIONAL_ATTEMPT_SIGSEGV_UNISOLATED',
+    'oj001_candidate_state':'NO_EXACT_REPOSITORY_SONAME_62_ARTIFACT;PROJECT_RUNPATH_FREE_V6B_CANDIDATE_BOUNDED_PROVIDER_AUTHORITY_ACCEPTED',
     'oj001_first_candidate_decision':'REJECTED_REBUILD_REQUIRED_NO_RUNPATH',
     'oj001_first_candidate_sha256':'1d32a4b12ef3a6032626af13b69a64c45a0a0a9bb4090e0b61d9312811208d88',
     'oj001_first_candidate_runpath_state':'PRESENT_COLON_ONLY_BUILD_TREE_PLACEHOLDER',
@@ -90,7 +91,11 @@ expected_meta={
     'oj001_diagnostic_matrix_result_sha256':'29bedb2494b54602e0768cfb27695acb58e55359f115422cfe5777d4917aaae0',
     'oj001_diagnostic_matrix_classification':'DIRECT_CONTROL_ENVIRONMENT_UNRESOLVED',
     'oj001_diagnostic_matrix_pass_count':'0',
-    'next_review_tranche':'LIBJPEG_SO_62_GDKPIXBUF_DIRECT_LOADER_ISOLATION_RERUN',
+    'oj001_provider_review_id':'LIBJPEG-PROV-001',
+    'oj001_provider_result_sha256':'4e546ac1ef2a92f3301dd51ca2328d6901a05e309da78b6d08b26211d9b621e3',
+    'oj001_provider_matrix_pass_count':'6',
+    'oj001_provider_decision':'ACCEPTED_BOUNDED_PROVIDER',
+    'next_review_tranche':'SELECTED_OBSIDIAN_PROVIDER_COMPOSITION_REVIEW',
 }
 for key,val in expected_meta.items():
     if metadata.get(key)!=val:
@@ -142,11 +147,6 @@ for rid, source in root_by_id.items():
             errors.append(f'{rid}: reviewed provider claim is not accepted')
         if not provider_claim['remaining_gap'].startswith('NONE_FOR_BOUNDED'):
             errors.append(f'{rid}: reviewed provider gap is not closed')
-    elif source['recipe_root']=='gpkg/libjpeg-turbo':
-        if provider_claim['classification_state']!='CANDIDATE_IDENTITY_ACCEPTED_FIRST_MATRIX_INVALID_LOADER_ISOLATION_REQUIRED':
-            errors.append(f'{rid}: libjpeg provider claim does not retain candidate-only acceptance boundary')
-        if 'LOADER_ISOLATED_FUNCTIONAL_EQUIVALENCE' not in provider_claim['remaining_gap']:
-            errors.append(f'{rid}: libjpeg provider claim lacks consumer-validation gap')
     elif provider_claim['classification_state']!='CLASSIFIED_OPEN_PROVIDER_AUTHORITY_NOT_ACCEPTED':
         errors.append(f'{rid}: unreviewed provider claim is not open')
 
@@ -184,10 +184,10 @@ checks=[
     ('state version','state_version:' in state),
     ('claim count state','total: 89' in state),
     ('SUP-02 state','required_now: 0' in state),
-    ('next task','Task ID: `rerun-libjpeg-so-62-gdkpixbuf-with-loader-isolation`' in active),
+    ('next task','Task ID: `review-selected-obsidian-provider-composition`' in active),
     ('brief classification','89 separated claims' in brief),
     ('catalog row','provider-claim-classification\tevidence\tcurrent\tcanonical' in catalog),
-    ('status next phase','RERUN_LIBJPEG_SO_62_GDKPIXBUF_WITH_LOADER_ISOLATION' in status),
+    ('status next phase','selected-provider composition review active' in status),
     ('disposition catalog','libjpeg-so-62-provider-candidate-disposition\tevidence\tcurrent\tcanonical' in catalog),
 ]
 for label,ok in checks:
@@ -197,7 +197,7 @@ if errors:
     for err in errors:
         print('provider-claim-classification: FAIL:',err,file=sys.stderr)
     raise SystemExit(1)
-print('provider-claim-classification: PASS: 89 claims, 7 bounded providers, active bounded Class C libjpeg candidate and 28 SUP-02 dispositions are coherent')
+print('provider-claim-classification: PASS: 89 claims, 8 bounded providers, accepted libjpeg Class C boundary and 28 SUP-02 dispositions are coherent')
 PY
 
 echo 'provider-claim-classification: all checks passed'

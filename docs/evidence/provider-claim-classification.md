@@ -145,14 +145,14 @@ The `libjpeg-turbo` SUP-02 request is also unnecessary at the current boundary b
 ## Current authority states
 
 ```text
-bounded provider authority accepted: 7 roots
-provider authority still open:       21 roots
+bounded provider authority accepted: 8 roots
+provider authority still open:       20 roots
 application runtime composition:     NOT REACHED
 target population:                   BLOCKED
 selected-generation activation:      BLOCKED
 ```
 
-The seven accepted rows are `libxfixes`, `libxcomposite`, `libxi`, `libxinerama`, `libtasn1`, `libepoxy`, and `pango`. Each is limited to an exact member and a named consumer capability; libepoxy is restricted to GTK 3.24.49 X11 GLX dispatch and does not claim EGL. The classification still does not authorize extraction, installation, target population, complete composition, selected-generation mutation, or activation.
+The eight accepted rows are `libxfixes`, `libxcomposite`, `libxi`, `libxinerama`, `libtasn1`, `libepoxy`, `pango`, and the exact project-built `libjpeg.so.62.4.0` provider for selected GdkPixbuf 2.42.12 JPEG file and memory decoding. Each decision remains limited to an exact identity and named consumer capability; libepoxy does not claim EGL, and libjpeg does not claim the SONAME-8 family or complete image composition. The classification still does not authorize extraction, installation, target population, complete composition, selected-generation mutation, or activation.
 
 ## Seven-root semantic-review result
 
@@ -161,7 +161,7 @@ The seven-root no-token semantic review is complete:
 ```text
 confirmed Class A: 7
 reclassified Class B: 0
-provider authority accepted: 7
+provider authority accepted: 8
 ```
 
 Canonical review surface:
@@ -176,7 +176,7 @@ For all seven roots, the pinned recipe contains only source/version identity and
 `pango` concrete-filename drift remains a separate provider-integration and continuity question. It was not closed by the Class A recipe result.
 
 ## Completed bounded provider tranches and smallest next phase
-The seven no-token provider tranches are complete. Their canonical rationales are in the X.Org, libtasn1, libepoxy, and Pango provider review documents.
+The seven no-token provider tranches are complete. Their canonical rationales are in the X.Org, libtasn1, libepoxy, and Pango provider review documents. The separate Class C libjpeg provider review is recorded in `libjpeg-so-62-loader-isolated-provider-authority.md`.
 
 The smallest next phase is the bounded OJ-001 consumer-validation tranche:
 

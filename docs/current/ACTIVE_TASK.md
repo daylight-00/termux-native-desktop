@@ -1,51 +1,54 @@
-# Active task: rerun the libjpeg/GdkPixbuf controls with loader isolation
+# Active task: review the selected Obsidian provider composition
 
-> Task ID: `rerun-libjpeg-so-62-gdkpixbuf-with-loader-isolation`
+> Task ID: `review-selected-obsidian-provider-composition`
 >
-> Expected state on completion: direct candidate/oracle decode is measured through a direct Termux-glibc loader and an ELF-only scratch runtime shim; broader GdkPixbuf controls use the same bounded core world. Provider authority remains a later decision.
+> Expected state on completion: one non-materializing composition manifest identifies the exact accepted provider objects required by the bounded Obsidian/GdkPixbuf/GTK scope, records exclusions and unresolved dependencies, and decides whether target-manifest generation may begin. No target population or activation occurs.
 
 ## Objective
 
-Replace the invalid 12-cell launcher environment with a smaller valid comparison that cannot expose glibc paths to a Bionic shell.
+Move from individually accepted provider rows to an explicit composition decision without inferring completeness from package presence or successful isolated tests.
 
 ## Why now
 
-The first 12-cell matrix cannot answer the provider question because its launcher started a Bionic shell under a foreign `LD_LIBRARY_PATH` and exposed raw linker-script paths. Repeating the same launcher would only reproduce analyzer defects.
+The project-produced `libjpeg.so.62.4.0` candidate now has bounded provider authority for the exact GdkPixbuf 2.42.12 JPEG file and memory decode capability. Together with the seven previously accepted no-token providers, eight provider claims are accepted. Composition remains a separate Class D claim.
 
 ## Known facts
 
-- Candidate identity `a537840e…` remains accepted.
-- Static GdkPixbuf binding requires 22 JPEG symbols; none are missing.
-- The first functional call exited 139.
-- The first diagnostic matrix also failed for the Debian oracle because its launcher/runtime construction was invalid.
-- Zero matrix passes do not reject the candidate or oracle.
+- Exact provider candidate: `libjpeg.so.62.4.0`, SHA-256 `a537840e…`, `DT_SONAME=libjpeg.so.62`.
+- The candidate has no `DT_RPATH` or `DT_RUNPATH`.
+- The exact GdkPixbuf consumer requires `libjpeg.so.62`; all 22 unresolved JPEG symbols are supplied.
+- Candidate and Debian oracle direct `djpeg` controls produced the same output digest.
+- Candidate and oracle both passed GdkPixbuf file and memory decode through the direct Termux-glibc loader and ELF-only core shim.
+- Provider authority is accepted only for the bounded GdkPixbuf JPEG capability.
+- Eight bounded provider claims are accepted; complete runtime composition is not.
 
 ## In scope
 
-- ELF-only scratch shim for the Termux glibc core runtime.
-- Direct loader invocation with `LD_PRELOAD` and `LD_LIBRARY_PATH` unset.
-- Direct `djpeg` candidate/oracle controls without Debian dependency paths.
-- GdkPixbuf candidate/oracle file and memory controls with core-first ordering.
-- Exact loader lists, stage markers, maps and structured classification.
-- One result archive; individual cell crashes remain evidence rows.
+- Enumerate exact accepted provider members and SONAME aliases required by the selected Obsidian/GdkPixbuf/GTK capability scope.
+- Bind each member to its provider-authority decision and exact digest.
+- Record ordering, collision, exclusion and dependency-provider gaps.
+- Define update and rollback boundaries for the composition as a unit.
+- Produce a non-materializing composition manifest and deterministic checker.
+- Decide whether a dry-run target manifest is the next valid action.
 
 ## Out of scope
 
-- Package installation or rootfs mutation.
-- The `glibc-exec` shell wrapper for diagnostic execution.
-- Treating raw `$PREFIX/glibc/lib` as a runtime farm.
-- Provider acceptance, target population, deployment or activation.
+- Installing or copying provider bytes.
+- Creating target directories or aliases.
+- Selecting Debian oracle bytes as target authority.
+- Treating accepted providers as a complete composition without a manifest.
+- Target population, deployment, selector mutation or activation.
 
 ## Required reading
 
 - `docs/current/STATE.yaml`
 - `docs/constitution/PRINCIPLES.md`
 - `docs/decisions/0005-proportional-assurance-depth.md`
-- `docs/evidence/libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review.md`
-- `docs/evidence/libjpeg-so-62-gdkpixbuf-consumer-binding-result-review.md`
-- `docs/evidence/libjpeg-so-62-gdkpixbuf-diagnostic-matrix-result-review.md`
-- `docs/operations/EXECUTION.md`
-- `docs/operations/platforms/chatgpt-web.md`
+- `docs/evidence/provider-claim-classification.md`
+- `docs/evidence/libjpeg-so-62-loader-isolated-provider-authority.md`
+- `docs/evidence/xorg-reference-consumed-provider-authority.md`
+- `docs/evidence/libepoxy-reference-consumed-provider-authority.md`
+- `docs/evidence/pango-reference-consumed-provider-authority-and-filename-continuity.md`
 
 ## Pending external inputs
 
@@ -53,16 +56,17 @@ None.
 
 ## Next valid action
 
-Run one self-contained loader-isolated diagnostic runner. The user-facing command surface is limited to `rclone copyto` and `bash runner.sh`.
+Author and review a non-materializing selected-provider composition manifest from the eight accepted bounded provider decisions and the exact selected consumer requirements.
 
 ## Stop conditions
 
-Stop if candidate, oracle, consumer, repository, or protected-state identity drifts; if the core shim contains a non-ELF target; or if the diagnostic would require package installation, rootfs mutation, provider installation, target population, deployment, or activation.
+Stop if an exact provider digest, SONAME, accepted capability, consumer binding, conflict set or dependency requirement cannot be traced to a current provider decision; or if the review would require materialization, installation, target mutation or activation.
 
 ## Completion criteria
 
-- direct candidate and oracle cells use no Debian library path;
-- no Bionic process starts with a glibc `LD_LIBRARY_PATH`;
-- runtime shim entries resolve only to ELF objects;
-- direct and GdkPixbuf results are independently recorded;
-- provider authority remains separate.
+- every included member is linked to an accepted provider decision;
+- all required aliases are explicit and ABI-correct;
+- oracle, static, development and incompatible-family exclusions are explicit;
+- unresolved dependency-provider claims remain visible rather than inferred closed;
+- composition authority is decided separately from target population;
+- no live runtime state changes.

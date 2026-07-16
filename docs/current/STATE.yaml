@@ -1,9 +1,9 @@
 schema_version: 1
-state_version: 2026-07-15.18
+state_version: 2026-07-16.01
 updated_on: 2026-07-15
 
 project:
-  phase: provider-compatibility-functional-diagnostics
+  phase: provider-composition-review
   status: active
 
 repository:
@@ -51,10 +51,11 @@ documentation:
   libjpeg_provider_candidate_disposition: docs/evidence/libjpeg-so-62-provider-candidate-disposition.md
   libjpeg_first_candidate_result_review: docs/evidence/libjpeg-so-62-compatibility-provider-candidate-result-review.md
   libjpeg_runpath_free_candidate_result_review: docs/evidence/libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review.md
+  libjpeg_loader_isolated_provider_authority: docs/evidence/libjpeg-so-62-loader-isolated-provider-authority.md
 
 provider_authority:
-  workstream: no-token-provider-review-complete-libjpeg-loader-isolated-functional-diagnostic-active
-  boundary: seven-bounded-providers-accepted-oj-001-candidate-identity-accepted-first-matrix-invalid-loader-isolation-required-provider-open
+  workstream: eight-bounded-providers-accepted-selected-composition-review-active
+  boundary: eight-bounded-providers-accepted-libjpeg-bounded-to-gdkpixbuf-jpeg-composition-target-and-activation-open
   claim_inventory:
     total: 89
     class_a: 36
@@ -68,10 +69,10 @@ provider_authority:
     provider_authority_accepted: 7
     provider_authority_open: 0
   bounded_provider_authority:
-    accepted: 7
+    accepted: 8
     rejected: 0
     open_no_token_roots: 0
-    accepted_scope: exact-xorg-members-and-selected-gtk-x11-capabilities-plus-exact-libtasn1-external-gnutls-asn1-security-plus-exact-libepoxy-gtk-3-24-49-x11-glx-dispatch-plus-exact-pango-three-member-gtk-text-family-and-soname-continuity
+    accepted_scope: exact-xorg-members-and-selected-gtk-x11-capabilities-plus-exact-libtasn1-external-gnutls-asn1-security-plus-exact-libepoxy-gtk-3-24-49-x11-glx-dispatch-plus-exact-pango-three-member-gtk-text-family-and-soname-continuity-plus-exact-project-libjpeg-so-62-gdkpixbuf-jpeg-file-and-memory-decode
   libjpeg_compatibility_candidate:
     first_candidate_state: rejected-rebuild-required-no-runpath
     first_candidate_member: libjpeg.so.62.4.0
@@ -92,14 +93,18 @@ provider_authority:
     consumer_binding_runtime_boundary: termux-glibc-loader-with-debian-consumer-world
     diagnostic_matrix_result_sha256: 29bedb2494b54602e0768cfb27695acb58e55359f115422cfe5777d4917aaae0
     diagnostic_matrix_state: invalid-for-provider-comparison-launcher-contaminated
-    provider_authority: not-accepted
+    loader_isolated_result_sha256: 4e546ac1ef2a92f3301dd51ca2328d6901a05e309da78b6d08b26211d9b621e3
+    loader_isolated_matrix: 6-pass-0-fail
+    direct_candidate_oracle_output_sha256: 8cef10ed9b5f2e4ffde1fdedc4b722d4738d86ac5d204554328c30ef34ecbdc6
+    functional_scope: exact-gdkpixbuf-2-42-12-jpeg-file-and-memory-decode
+    provider_authority: accepted-bounded-provider
   sup_02_disposition:
     still_necessary: 0
     narrowed: 14
     replaced: 7
     unnecessary: 7
     required_now: 0
-  next_research_decision: rerun-libjpeg-so-62-gdkpixbuf-with-loader-isolation
+  next_research_decision: review-selected-obsidian-provider-composition
   prohibited_claims:
     - complete-provider-authority
     - complete-runtime-composition
@@ -107,7 +112,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: rerun-libjpeg-so-62-gdkpixbuf-with-loader-isolation
+  id: review-selected-obsidian-provider-composition
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:

@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+required=(
+  docs/evidence/libjpeg-so-62-loader-isolated-provider-authority.md
+  experiments/glibc/selected-obsidian-provider-authority/review/libjpeg-so-62-loader-isolated-provider-authority.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification-metadata.tsv
+  docs/current/STATE.yaml docs/current/ACTIVE_TASK.md docs/current/BRIEF.md docs/catalog.tsv STATUS.md
+)
+for rel in "${required[@]}"; do [ -f "$ROOT/$rel" ] || { echo "libjpeg-provider-authority: FAIL: missing $rel" >&2; exit 1; }; done
+python3 - "$ROOT" <<'PY'
+from pathlib import Path
+import csv,sys
+root=Path(sys.argv[1]); review=root/'experiments/glibc/selected-obsidian-provider-authority/review'
+def read(name):
+ with (review/name).open(newline='',encoding='utf-8') as f: return list(csv.DictReader(f,delimiter='\t'))
+rows=read('libjpeg-so-62-loader-isolated-provider-authority.tsv')
+claims={r['claim_id']:r for r in read('provider-claim-classification.tsv')}
+meta={r['key']:r['value'] for r in read('provider-claim-classification-metadata.tsv')}
+errors=[]
+if len(rows)!=1: errors.append(f'expected 1 row, found {len(rows)}')
+else:
+ r=rows[0]
+ expected={
+ 'review_id':'LIBJPEG-PROV-001','requirement_id':'OJ-001','root_review_id':'generic-root-review:59aa2f063b98cf767441','recipe_root':'gpkg/libjpeg-turbo',
+ 'source_sha256':'9564c72b1dfd1d6fe6274c5f95a8d989b59854575d4bbee44ade7bc17aa9bc93','candidate_member':'libjpeg.so.62.4.0',
+ 'candidate_sha256':'a537840ef9da6135cb3284bc3b3e0d1fb4f624180a416c2a3964b94714eb7fe5','observed_soname':'libjpeg.so.62',
+ 'dt_rpath_state':'ABSENT','dt_runpath_state':'ABSENT','result_archive_sha256':'4e546ac1ef2a92f3301dd51ca2328d6901a05e309da78b6d08b26211d9b621e3',
+ 'result_repository_head':'c59c64b6763bfcb467b38eb73787fa61ec14c730','result_repository_tree':'4634ed364bd570cca065f1c49077d7dd495b9395',
+ 'matrix_cell_count':'6','matrix_pass_count':'6','matrix_fail_count':'0','matrix_skip_count':'0','diagnostic_classification':'CANDIDATE_GDKPIXBUF_FUNCTIONAL_PASS',
+ 'direct_candidate_output_sha256':'8cef10ed9b5f2e4ffde1fdedc4b722d4738d86ac5d204554328c30ef34ecbdc6',
+ 'direct_oracle_output_sha256':'8cef10ed9b5f2e4ffde1fdedc4b722d4738d86ac5d204554328c30ef34ecbdc6',
+ 'consumer_member':'libgdk_pixbuf-2.0.so.0.4200.12','consumer_sha256':'16d15168c69d4ad61862462da9fe811b5be3bef898b940a4023e15b039f5b43c',
+ 'consumer_needed_state':'EXACT_LIBJPEG_SO_62','consumer_undefined_jpeg_symbols':'22','missing_jpeg_symbols':'0',
+ 'candidate_file_result':'PASS','candidate_memory_result':'PASS','candidate_file_last_stage':'09:complete','candidate_memory_last_stage':'09:complete',
+ 'oracle_file_result':'PASS','oracle_memory_result':'PASS','decision':'ACCEPTED_BOUNDED_PROVIDER','remaining_gap':'NONE_FOR_BOUNDED_GDKPIXBUF_JPEG_PROVIDER_AUTHORITY'}
+ for k,v in expected.items():
+  if r.get(k)!=v: errors.append(f'{k}: expected {v}, got {r.get(k)!r}')
+ for token in ['PROJECT_V6B_CANDIDATE_ONLY','TERMUX_SONAME_8_FAMILY_EXCLUDED','DEBIAN_ORACLE_BYTES_EXCLUDED_FROM_TARGET_AUTHORITY','NO_LIBJPEG_SO_8_ALIAS','NO_RPATH_OR_RUNPATH']:
+  if token not in r['candidate_conflict_and_exclusion_result']: errors.append(f'missing exclusion token {token}')
+ if 'NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT' not in r['authority_effect']: errors.append('authority effect not bounded')
+ claim=claims.get('PCC-LIBJPEG-TURBO-PROVIDER')
+ if not claim: errors.append('generated libjpeg provider claim missing')
+ else:
+  if claim['classification_state']!='BOUNDED_PROVIDER_AUTHORITY_ACCEPTED': errors.append('generated provider state mismatch')
+  if claim['remaining_gap']!=r['remaining_gap']: errors.append('generated provider gap mismatch')
+  if claim['authority_effect']!=r['authority_effect']: errors.append('generated provider authority effect mismatch')
+  if r['review_id'] not in claim['existing_evidence']: errors.append('generated provider evidence missing review row')
+expected_meta={'provider_review_count':'8','provider_authority_accepted_count':'8','provider_authority_open_count':'20','oj001_provider_review_id':'LIBJPEG-PROV-001','oj001_provider_result_sha256':'4e546ac1ef2a92f3301dd51ca2328d6901a05e309da78b6d08b26211d9b621e3','oj001_provider_matrix_pass_count':'6','oj001_provider_decision':'ACCEPTED_BOUNDED_PROVIDER','next_review_tranche':'SELECTED_OBSIDIAN_PROVIDER_COMPOSITION_REVIEW'}
+for k,v in expected_meta.items():
+ if meta.get(k)!=v: errors.append(f'metadata {k}: expected {v}, got {meta.get(k)!r}')
+state=(root/'docs/current/STATE.yaml').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); brief=(root/'docs/current/BRIEF.md').read_text(); catalog=(root/'docs/catalog.tsv').read_text(); status=(root/'STATUS.md').read_text(); doc=(root/'docs/evidence/libjpeg-so-62-loader-isolated-provider-authority.md').read_text()
+markers=[('state accepted','provider_authority: accepted-bounded-provider' in state),('state count','accepted: 8' in state),('task','Task ID: `review-selected-obsidian-provider-composition`' in active),('brief count','bounded providers accepted: 8' in brief),('catalog','libjpeg-so-62-loader-isolated-provider-authority\tevidence\tcurrent\tcanonical' in catalog),('status','exact libjpeg.so.62 provider accepted for bounded GdkPixbuf JPEG decode' in status),('doc decision','ACCEPTED_BOUNDED_PROVIDER' in doc)]
+for label,ok in markers:
+ if not ok: errors.append(f'missing current marker: {label}')
+if errors:
+ for e in errors: print('libjpeg-provider-authority: FAIL:',e,file=sys.stderr)
+ raise SystemExit(1)
+print('libjpeg-provider-authority: PASS: exact project libjpeg.so.62 accepted for bounded GdkPixbuf JPEG file and memory decode')
+PY

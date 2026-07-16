@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-15.18`
+> Semantic state version: `2026-07-16.01`
 >
 > This is the compact current-state entry point. Exact commit and tree coordinates come from the checked-out full Git bundle, not from self-referential repository text.
 
@@ -74,15 +74,15 @@ unnecessary:          7
 The seven no-token recipe roots have completed bounded semantic review and bounded provider selection. The four X.Org roots `libxfixes`, `libxcomposite`, `libxi`, and `libxinerama` are accepted for their exact Termux members and selected GTK 3.24.49 X11 capabilities. `libtasn1` is accepted for the selected external GnuTLS 3.8.9 ASN.1/security capability. `libepoxy` is accepted only for GTK 3.24.49 X11 GLX dispatch; EGL is not claimed. The exact Pango 1.54.0 `libpango`, `libpangoft2`, and `libpangocairo` members are accepted as one GTK text provider family with explicit SONAME successor, update, and rollback continuity. The decisions are recorded in [`../evidence/xorg-reference-consumed-provider-authority.md`](../evidence/xorg-reference-consumed-provider-authority.md), [`../evidence/libtasn1-reference-consumed-provider-authority.md`](../evidence/libtasn1-reference-consumed-provider-authority.md), [`../evidence/libepoxy-reference-consumed-provider-authority.md`](../evidence/libepoxy-reference-consumed-provider-authority.md), and [`../evidence/pango-reference-consumed-provider-authority-and-filename-continuity.md`](../evidence/pango-reference-consumed-provider-authority-and-filename-continuity.md).
 
 ```text
-bounded providers accepted: 7
+bounded providers accepted: 8
 remaining no-token provider roots open: 0
-provider claims still open: 21
+provider claims still open: 20
 complete composition: not reached
 target population: blocked
 activation: blocked
 ```
 
-Exact artifact/member identity, adaptation semantics, provider selection, composition, target population, and activation remain separate states. OJ-001 is dispositioned at [`../evidence/libjpeg-so-62-provider-candidate-disposition.md`](../evidence/libjpeg-so-62-provider-candidate-disposition.md), and the rejected first-candidate review is at [`../evidence/libjpeg-so-62-compatibility-provider-candidate-result-review.md`](../evidence/libjpeg-so-62-compatibility-provider-candidate-result-review.md), and the corrected candidate review is at [`../evidence/libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review.md`](../evidence/libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review.md). The first diagnostic matrix is reviewed at [`../evidence/libjpeg-so-62-gdkpixbuf-diagnostic-matrix-result-review.md`](../evidence/libjpeg-so-62-gdkpixbuf-diagnostic-matrix-result-review.md); it is non-dispositive because the launcher contaminated the Bionic shell and exposed raw linker-script paths. The claim inventory remains at [`../evidence/provider-claim-classification.md`](../evidence/provider-claim-classification.md).
+Exact artifact/member identity, adaptation semantics, provider selection, composition, target population, and activation remain separate states. OJ-001 is dispositioned at [`../evidence/libjpeg-so-62-provider-candidate-disposition.md`](../evidence/libjpeg-so-62-provider-candidate-disposition.md). The rejected first object, corrected candidate identity, invalid first matrix and final loader-isolated provider decision remain separately traceable. The accepted bounded provider decision is at [`../evidence/libjpeg-so-62-loader-isolated-provider-authority.md`](../evidence/libjpeg-so-62-loader-isolated-provider-authority.md). It accepts only the exact project-built `libjpeg.so.62.4.0` object for the exact GdkPixbuf 2.42.12 JPEG file and memory decode capability. The claim inventory remains at [`../evidence/provider-claim-classification.md`](../evidence/provider-claim-classification.md).
 
 ## Documentation and web-session state
 
@@ -100,16 +100,16 @@ Exact artifact/member identity, adaptation semantics, provider selection, compos
 
 ## Current project phase
 
-The active task is `diagnose-libjpeg-so-62-gdkpixbuf-functional-segfault`.
+The active task is `review-selected-obsidian-provider-composition`.
 
-All no-token provider roots are complete. The corrected OJ-001 candidate `a537840e…` retains accepted identity: exact `libjpeg.so.62.4.0`, `DT_SONAME=libjpeg.so.62`, no dynamic search path and the expected symbol versions. The first GdkPixbuf consumer analyzer verified exact consumer identity, `DT_NEEDED=libjpeg.so.62`, and complete 22-symbol coverage, then exited with `SIGSEGV` during the fixed JPEG file decode before mapped-path evidence. Because that process mixed the Termux-glibc loader/libc with a Debian consumer dependency world, the crash does not yet isolate candidate behavior. The active phase runs direct-libjpeg, candidate-versus-oracle, memory-versus-file API and loader-boundary controls. The `libjpeg.so.8` family remains an invalid substitute, and no provider authority, composition, target population, materialization or activation is accepted.
+All no-token provider roots are complete. The corrected OJ-001 candidate `a537840e…` is accepted as a bounded provider for the exact GdkPixbuf 2.42.12 JPEG file and memory decode capability. In the corrected direct-loader matrix, candidate and Debian oracle `djpeg` controls produced the same output digest, and all four GdkPixbuf candidate/oracle file and memory cells reached `09:complete` with exact mapped-provider evidence. The `libjpeg.so.8` family remains an invalid substitute and Debian bytes remain oracle-only. Eight bounded providers are accepted; complete composition, target population, materialization and activation remain open.
 
 ## Current non-goals
 
 Do not currently:
 
 - issue or fulfill a SUP-02 request without a recorded Class C reclassification or escalation trigger;
-- broaden the seven accepted provider rows beyond their exact bounded capability scopes;
+- broaden the eight accepted provider rows beyond their exact bounded capability scopes;
 - populate a provider target layout;
 - activate the selected Obsidian generation;
 - redesign the runtime around Docker or a PRoot application baseline;
