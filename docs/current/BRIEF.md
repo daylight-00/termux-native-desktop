@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-16.04`
+> Semantic state version: `2026-07-16.05`
 >
 > This is the compact current-state entry point. Exact commit and tree coordinates come from the checked-out full Git bundle, not from self-referential repository text.
 
@@ -74,15 +74,15 @@ unnecessary:          7
 The seven no-token recipe roots have completed bounded semantic review and bounded provider selection. The four X.Org roots `libxfixes`, `libxcomposite`, `libxi`, and `libxinerama` are accepted for their exact Termux members and selected GTK 3.24.49 X11 capabilities. `libtasn1` is accepted for the selected external GnuTLS 3.8.9 ASN.1/security capability. `libepoxy` is accepted only for GTK 3.24.49 X11 GLX dispatch; EGL is not claimed. The exact Pango 1.54.0 `libpango`, `libpangoft2`, and `libpangocairo` members are accepted as one GTK text provider family with explicit SONAME successor, update, and rollback continuity. The decisions are recorded in [`../evidence/xorg-reference-consumed-provider-authority.md`](../evidence/xorg-reference-consumed-provider-authority.md), [`../evidence/libtasn1-reference-consumed-provider-authority.md`](../evidence/libtasn1-reference-consumed-provider-authority.md), [`../evidence/libepoxy-reference-consumed-provider-authority.md`](../evidence/libepoxy-reference-consumed-provider-authority.md), and [`../evidence/pango-reference-consumed-provider-authority-and-filename-continuity.md`](../evidence/pango-reference-consumed-provider-authority-and-filename-continuity.md).
 
 ```text
-bounded providers accepted: 9
+bounded providers accepted: 11
 remaining no-token provider roots open: 0
-provider claims still open inside the 28-root inventory: 20
-composition review: reviewed, blocked incomplete (26 selected identity gaps)
+provider claims still open inside the 28-root inventory: 18
+composition review: reviewed, blocked incomplete (21 selected identity gaps)
 target population: blocked
 activation: blocked
 ```
 
-Exact artifact/member identity, adaptation semantics, provider selection, composition, target population, and activation remain separate states. OJ-001 is dispositioned at [`../evidence/libjpeg-so-62-provider-candidate-disposition.md`](../evidence/libjpeg-so-62-provider-candidate-disposition.md), and the exact project `libjpeg.so.62.4.0` remains accepted only for bounded GdkPixbuf JPEG decode. The exact project-built `libgdk_pixbuf-2.0.so.0.4200.12` candidate is now accepted for fixed JPEG and PNG file and memory decoding in [`../evidence/gdkpixbuf-2-42-12-provider-candidate-result-review.md`](../evidence/gdkpixbuf-2-42-12-provider-candidate-result-review.md). Its GLib/libpng dependencies and transitive `libmount`/`libblkid` providers remain open. The 28-root claim inventory remains at [`../evidence/provider-claim-classification.md`](../evidence/provider-claim-classification.md).
+Exact artifact/member identity, adaptation semantics, provider selection, composition, target population, and activation remain separate states. OJ-001 is dispositioned at [`../evidence/libjpeg-so-62-provider-candidate-disposition.md`](../evidence/libjpeg-so-62-provider-candidate-disposition.md), and the exact project `libjpeg.so.62.4.0` remains accepted only for bounded GdkPixbuf JPEG decode. The exact project-built `libgdk_pixbuf-2.0.so.0.4200.12` candidate is now accepted for fixed JPEG and PNG file and memory decoding in [`../evidence/gdkpixbuf-2-42-12-provider-candidate-result-review.md`](../evidence/gdkpixbuf-2-42-12-provider-candidate-result-review.md). Its exact GLib four-member family and libpng shared member are accepted for that bounded scope. Official exact `libmount`/`libblkid` runtime binding remains open because the successful probe used different scratch bytes. The 28-root claim inventory remains at [`../evidence/provider-claim-classification.md`](../evidence/provider-claim-classification.md).
 
 ## Documentation and web-session state
 
@@ -95,21 +95,20 @@ Exact artifact/member identity, adaptation semantics, provider selection, compos
 - GitHub connector use is limited to lightweight remote inspection; it is not clone/commit/push transport.
 - [`../operations/README.md`](../operations/README.md) is the single current surface for collaboration, bundle transport, execution transactions, result review, checkpoints, troubleshooting, and platform capabilities.
 - The former `docs/session-operations/` surface and narrative handoffs are historical only.
-- Google Drive is the primary exchange path for bundles, patches, runners, results, logs, and safety artifacts.
-- The first connector upload after runtime initialization or reset may block file-reference rewriting even in an existing chat; use a user-visible sandbox link only for that delivery, then attempt Drive first again on the next outbound artifact.
+- Google Drive is the first outbound artifact attempt. A failed attempt ends connector activity for that delivery; expose one identical user-visible artifact, then attempt Drive first again for the next artifact. Network-backed repository clone, pull and push occur only in user Termux. The default Termux download directory is `$HOME/Downloads`.
 
 ## Current project phase
 
-The active task is `review-gdkpixbuf-reference-dependency-providers`.
+The active task is `acquire-gdkpixbuf-exact-util-linux-provider-binding`.
 
-The selected-provider composition review remains `REVIEWED_BLOCKED_INCOMPLETE` with 26 gaps. The exact GdkPixbuf 2.42.12 object is accepted and proposed as the tenth included selected-GTK member, but the tested GLib family and libpng candidates remain open Class B provider decisions. The exact GIO path also exposed `libmount.so.1` and `libblkid.so.1`; the scratch util-linux objects used in the functional matrix are diagnostic only. The active bounded step is a non-mutating review of those direct and transitive dependency-provider boundaries. Target population, materialization and activation remain blocked.
+The selected-provider composition review remains `REVIEWED_BLOCKED_INCOMPLETE` with 21 gaps. The exact GdkPixbuf, GLib four-member family and libpng shared member are accepted as 15 included selected-GTK members, with one deferred provider. The exact GIO path still requires official `libmount.so.1` and `libblkid.so.1` binding; the successful scratch util-linux objects are diagnostic only and differ from the official candidate digests. The active bounded step is one read-only Termux acquisition/analyzer transaction for that exact pair. Target population, materialization and activation remain blocked.
 
 ## Current non-goals
 
 Do not currently:
 
 - issue or fulfill a SUP-02 request without a recorded Class C reclassification or escalation trigger;
-- broaden the nine accepted provider rows beyond their exact bounded capability scopes;
+- broaden the eleven accepted provider rows beyond their exact bounded capability scopes;
 - populate a provider target layout;
 - activate the selected Obsidian generation;
 - redesign the runtime around Docker or a PRoot application baseline;

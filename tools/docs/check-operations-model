@@ -38,7 +38,7 @@ fi
 
 require_text docs/operations/README.md 'single current authority' 'operations router declares single current authority'
 require_text docs/operations/COLLABORATION.md 'full Git bundle' 'collaboration contract declares full-bundle transport'
-require_text docs/operations/COLLABORATION.md 'one raw `.tar.zst`' 'collaboration contract keeps one-package exchange'
+require_text docs/operations/COLLABORATION.md 'exactly one raw `.tar.zst`' 'collaboration contract keeps one-package exchange'
 require_text docs/operations/WORKFLOW.md 'RECEIVE_FULL_BUNDLE' 'workflow begins from full bundle'
 require_text docs/operations/WORKFLOW.md 'there is no handoff action' 'clean accepted workflow has no handoff action'
 require_text docs/operations/EXECUTION.md 'never attempt rollback after a confirmed successful push' 'execution contract preserves successful push boundary'
@@ -47,17 +47,34 @@ require_text docs/operations/TEST_AUTHORITY.md 'tests/history/' 'test authority 
 require_text docs/operations/CHECKPOINTS.md 'explicitly non-authoritative' 'checkpoint contract is non-authoritative'
 require_text docs/operations/platforms/chatgpt-web.md 'Docker is not available' 'web profile prohibits Docker'
 require_text docs/operations/platforms/chatgpt-web.md 'located anywhere under `/mnt/data`' 'web profile records local upload subtree rule'
-require_text docs/operations/platforms/chatgpt-web.md 'first upload after the web-chat runtime is initialized or reset' 'web profile records runtime-first-upload constraint'
+require_text docs/operations/platforms/chatgpt-web.md 'first upload attempt can block local-path-to-file-reference rewriting even in an existing chat' 'web profile records runtime-first-upload constraint'
 require_text docs/operations/platforms/chatgpt-web.md 'not a replacement for the bundle' 'web profile rejects connector-as-clone substitution'
 require_text docs/operations/platforms/chatgpt-web.md 'chatgpt-web-limitations.tsv' 'web profile routes limitation registry'
 require_text docs/operations/platforms/chatgpt-web-limitations.tsv 'WEB-NET-DNS-001' 'limitation registry records DNS fallback'
+require_text AGENTS.md 'network-backed repository clone, pull, and push operations' 'agent contract limits remote Git transport to Termux'
+require_text AGENTS.md 'do not try another connector call' 'agent contract forbids same-delivery connector retries'
+require_text docs/operations/COLLABORATION.md '`$HOME/Downloads`' 'collaboration contract records default download directory'
+require_text docs/operations/COLLABORATION.md 'one user-visible sandbox link and stops' 'collaboration contract defines strict Drive fallback'
+require_text docs/operations/COLLABORATION.md 'one wrapper invocation' 'collaboration contract minimizes user commands'
+require_text docs/operations/EXECUTION.md 'clone, pull, and push only from the user Termux environment' 'execution contract limits remote Git transport'
+require_text docs/operations/platforms/chatgpt-web.md 'first and only connector attempt' 'web profile forbids same-delivery connector retries'
+require_text docs/operations/platforms/chatgpt-web.md '`rclone copyto` command that downloads the package to `$HOME/Downloads`' 'web profile records connector-success download command'
+require_text docs/operations/platforms/chatgpt-web.md 'sandbox may only materialize the attached bundle locally' 'web profile distinguishes bundle materialization from remote clone'
+require_text docs/operations/platforms/chatgpt-web-limitations.tsv 'WEB-REMOTE-GIT-001' 'limitation registry records remote Git authority'
 require_text docs/history/session-operations-v1/README.md 'Current operational authority is under' 'former session operations are historical'
 require_text docs/handoff/README.md '[`../operations/`](../operations/README.md)' 'handoff archive routes current operations correctly'
 require_text docs/current/STATE.yaml 'operations_surface: docs/operations/README.md' 'semantic state records canonical operations surface'
-require_text docs/current/ACTIVE_TASK.md 'Task ID: `review-gdkpixbuf-reference-dependency-providers`' 'next active task is GdkPixbuf reference dependency provider review'
 
-for rel in docs/operations/README.md docs/operations/COLLABORATION.md docs/operations/WORKFLOW.md docs/operations/EXECUTION.md docs/operations/CHECKPOINTS.md docs/operations/platforms/chatgpt-web.md; do
+for rel in AGENTS.md docs/operations/README.md docs/operations/COLLABORATION.md docs/operations/WORKFLOW.md docs/operations/EXECUTION.md docs/operations/CHECKPOINTS.md docs/operations/platforms/chatgpt-web.md; do
   reject_text "$rel" 'mandatory handoff' "$rel has no mandatory-handoff authority"
+done
+
+for forbidden in \
+  'copy the identical bytes to a short ASCII path' \
+  'user rclone for the current delivery'
+do
+  reject_text docs/operations/TROUBLESHOOTING.md "$forbidden" "troubleshooting has no same-delivery alternate upload route: $forbidden"
+  reject_text docs/operations/platforms/chatgpt-web.md "$forbidden" "web profile has no same-delivery alternate upload route: $forbidden"
 done
 
 python3 - "$ROOT" <<'PY'

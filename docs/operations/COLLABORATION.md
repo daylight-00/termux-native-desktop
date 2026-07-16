@@ -25,7 +25,7 @@ Do not shift patch editing, command assembly, broad log analysis, or Git repair 
 
 A new web-chat session normally receives a full Git bundle created directly from the user's clean authoritative Termux checkout. The bundle carries the repository, current-state documents, initialization protocol, and Git objects. No separate bootstrap repository or narrative handoff is required.
 
-The agent verifies and clones the bundle, checks out `main`, and follows `START_HERE.md`. A GitHub URL or repeated connector file reads are not object-based repository transport.
+The agent verifies and materializes the attached bundle into a local sandbox checkout, checks out `main`, and follows `START_HERE.md`. Network-backed repository clone, pull, and push are performed only in the user's authoritative Termux checkout. A GitHub URL or repeated connector file reads are not object-based repository transport.
 
 ## Exchange channel
 
@@ -43,13 +43,13 @@ user-results/    user -> agent results, receipts, and safety material
 handoff/         historical archive only; not an onboarding channel
 ```
 
-Google Drive is the primary exchange path after onboarding for execution packages, results, patches, bundles, logs, and safety artifacts. The agent attempts Drive first for each outbound artifact. If the first upload after runtime initialization or reset is blocked at local-path-to-file-reference rewriting, the current artifact is delivered through an identical user-visible sandbox file; the next outbound artifact returns to Drive-first behavior. Concrete web-chat connector limitations are owned by [`platforms/chatgpt-web.md`](platforms/chatgpt-web.md).
+Google Drive is the primary exchange path after onboarding for execution packages, results, patches, bundles, logs, and safety artifacts. The agent attempts Drive first for every outbound artifact. If that attempt fails, the agent makes no second connector call, path rewrite, filename rewrite, ASCII-copy retry, or user-side upload attempt in the same delivery; it exposes the identical artifact through one user-visible sandbox link and stops. The next outbound artifact starts with Drive again. Concrete web-chat connector limitations are owned by [`platforms/chatgpt-web.md`](platforms/chatgpt-web.md).
 
 ## Artifact classes
 
 ### Execution package
 
-One related user action is delivered as one raw `.tar.zst` containing:
+One related exchange is delivered as exactly one raw `.tar.zst`, regardless of its internal file count, unless the artifacts are genuinely unrelated in purpose. The package contains:
 
 ```text
 one exact repository patch or Git bundle;
@@ -90,7 +90,7 @@ A checkpoint is allowed only for materially valuable incomplete sandbox work and
 
 ## User command and communication
 
-The user command should be one copy-paste block that downloads, verifies, extracts, and runs the package. Prefer:
+The wrapper owns all feasible logic so the user command is minimized. The user's default download directory is `$HOME/Downloads`. When Drive publication succeeds, provide one copy-paste block that downloads to that directory, verifies, extracts, and invokes the wrapper:
 
 ```text
 rclone copyto
@@ -99,7 +99,7 @@ tar --zstd -xf
 one wrapper invocation
 ```
 
-The wrapper ends with a compact block such as:
+When the Drive connector fails and the artifact is exposed through a user-visible sandbox link, do not provide an alternate `rclone` upload/download route in that delivery. The wrapper ends with a compact block such as:
 
 ```text
 ===== final status =====

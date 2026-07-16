@@ -67,11 +67,13 @@ make project-priority and policy decisions
 
 Do not shift patch editing, command assembly, log analysis, or Git repair to the user when the agent can do it safely.
 
+Put all feasible acquisition, verification, extraction, Git gating, testing, publication, result packaging, and upload logic inside the supplied wrapper. The user should normally enter one wrapper invocation. When Drive delivery succeeds, provide the single `rclone copyto` command that downloads the package into `$HOME/Downloads`; when Drive delivery fails and a user-visible artifact is used, do not add an alternate upload or transfer procedure.
+
 ## Git and repository transport
 
-The user's Termux checkout is the authoritative environment for remote Git mutation.
+The user's Termux checkout is the authoritative environment for all network-backed repository clone, pull, and push operations. The sandbox must not clone, pull, or push a remote repository.
 
-For a new web-chat session, the normal repository input is a user-created full Git bundle. Clone it locally and work with ordinary Git objects. Do not reconstruct the repository through repeated raw-file GitHub connector reads.
+For a new web-chat session, the normal repository input is a user-created full Git bundle. The sandbox may materialize that attached bundle into a local checkout and work with its ordinary Git objects; this is local bundle import, not a network clone. Do not reconstruct the repository through repeated raw-file GitHub connector reads.
 
 The GitHub connector is limited to lightweight remote inspection such as metadata, commit confirmation, branch comparison, issues, pull requests, and small targeted file reads. It is not the normal clone, authoring, commit, or push transport.
 
@@ -91,7 +93,7 @@ logs and bounded evidence
 
 Use one related `.tar.zst` per exchange. Prefer a full Git bundle when repository history or topology must cross the environment boundary; use patches or candidate bundles for ordinary bounded changes.
 
-For outbound artifacts, attempt Google Drive connector upload first. The first upload after the web-chat runtime is initialized or reset can have local-path-to-file-reference rewriting blocked, including in an existing chat. If that first attempt fails for this reason, expose the identical artifact through a user-visible sandbox link for the current delivery and do not repeat the blocked call. On the next outbound upload, attempt Drive first again; a persistent runtime is normally warm by then.
+For every outbound artifact, attempt Google Drive connector upload first. If that attempt fails for any connector or local-file-reference reason, do not try another connector call, alternate filename, alternate path, ASCII copy, or user-side upload route during the same delivery. Expose the identical artifact through one user-visible sandbox link and end that delivery. On the next outbound artifact, attempt Google Drive first again.
 
 ## Execution environment restrictions
 

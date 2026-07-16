@@ -1,91 +1,97 @@
-# Active task: review the GdkPixbuf reference dependency providers
+# Active task: acquire exact util-linux binding for the accepted GDK Pixbuf stack
 
-> Task ID: `review-gdkpixbuf-reference-dependency-providers`
+> Task ID: `acquire-gdkpixbuf-exact-util-linux-provider-binding`
 >
-> Expected state on completion: the exact GLib-family and libpng candidates used by the accepted GdkPixbuf provider are either accepted with bounded provider authority or left open with a precise minimal evidence action; the `libmount`/`libblkid` transitive boundary is explicitly resolved. No target population or activation occurs.
+> Expected state on completion: the official exact `libmount-glibc` and `libblkid-glibc` pair is either accepted for the bounded GDK Pixbuf stack or left open with a precise failure boundary. No installation, target population, deployment or activation occurs.
 
 ## Objective
 
-Close the smallest remaining dependency-provider boundary exposed by the accepted GdkPixbuf 2.42.12 object.
+Run one bounded, read-only Termux acquisition/analyzer transaction that replaces the scratch util-linux evidence with exact official package/member and runtime-binding evidence.
 
 ## Why now
 
-The exact project-built GdkPixbuf object passed JPEG and PNG file and memory decoding and now has bounded provider authority. Its tested runtime still depends on five reference candidates whose provider authority is open:
+The exact GLib `2.82.2-2` four-member family and libpng `1.6.47` shared member are accepted for the project-built GDK Pixbuf `2.42.12` fixed JPEG/PNG file and memory decode scope. The successful functional probe mapped scratch `libmount` and `libblkid` bytes whose digests differ from the official exact candidates already recorded by the repository.
 
 ```text
-libglib-2.0.so.0
-libgobject-2.0.so.0
-libgmodule-2.0.so.0
-libgio-2.0.so.0
-libpng16.so.16
+official libmount member SHA-256:
+6864b9050ddd5884642c98ea4df07e3ceaf78727324d6e9068d1866594ece1c2
+
+scratch mapped libmount SHA-256:
+951a7e682476045acaa598eb05e2b79adc5f800b6fc34133eac49f797b064b40
+
+official libblkid member SHA-256:
+21d47963d42a5b1c4008c88a311c17142f57ee2f19cd30770f0befa364908fb3
+
+scratch mapped libblkid SHA-256:
+bd63dcc600487615ee6256b9cfe4d474ebc76899c911f8134d66765810e7db51
 ```
 
-The exact GIO path also mapped scratch `libmount.so.1` and `libblkid.so.1`. Those two objects were diagnostic candidates only and must not be silently absorbed into the accepted composition.
+Scratch success cannot authorize the official pair.
 
 ## In scope
 
-- Review the exact pinned GLib 2.82.2-2 four-member family and libpng 1.6.47 candidate identities.
-- Review their package-specific recipe adaptations under ADR 0005.
-- Bind their necessity to the accepted GdkPixbuf object and exact tested mappings.
-- Identify conflicts, exclusions, update and rollback boundaries.
-- Resolve whether exact Termux `libmount` and `libblkid` candidates can be reviewed from existing evidence or require one bounded acquisition/analyzer action.
-- Update the non-materializing composition review only for accepted provider rows.
+- Package all feasible download, checksum, extraction, recipe collection, ELF inspection, map assertion, functional execution, result packaging and upload logic in one Termux wrapper.
+- Acquire exact `libmount-glibc 2.40.2-1` artifact SHA-256 `9004e88a9f43b2d5cf74fd8921e4b74146e3ced64c4f94490cc52d9b138b011a`.
+- Acquire exact `libblkid-glibc 2.40.2-1` artifact SHA-256 `b6692956495df59ce70a854db5af86bae5f63791440e2cc5f21c26194b965fe`.
+- Verify exact member names, SHA-256, SONAMEs and dependency edge `libmount.so.1 -> libblkid.so.1`.
+- Review the pinned util-linux recipe tree `e91a0c476ef4355dbfff46e2bcab23d0085ddd01` under ADR 0005.
+- Run the accepted exact GDK Pixbuf, GLib, libpng and libjpeg stack with the official pair.
+- Assert exact `/proc/self/maps` identities and rerun JPEG/PNG file and memory cells.
+- Preserve protected repository, provider, selected-generation and user state.
 
-## Established inputs
+## Out of scope
 
-```text
-accepted GdkPixbuf member:
-    libgdk_pixbuf-2.0.so.0.4200.12
-    SHA-256 0c1404c6854e7674428a5b653b240759dac0374631697fe61ae275898f6a809f
-
-exact GLib artifact:
-    glib-glibc 2.82.2-2
-    artifact SHA-256 d91fe1202c51f7e59b120d3b475e24cdc2ac2cc28f2804e9bcf4919b775978e6
-
-exact libpng artifact:
-    libpng-glibc 1.6.47
-    artifact SHA-256 b2835404d3b0f54b75eb464a58ad5eb46f2d64d4fe1167a7984031f0e990b33f
-
-observed transitive diagnostic objects:
-    libmount.so.1.1.0 / 951a7e682476045acaa598eb05e2b79adc5f800b6fc34133eac49f797b064b40
-    libblkid.so.1.1.0 / bd63dcc600487615ee6256b9cfe4d474ebc76899c911f8134d66765810e7db51
-```
+- Installing either package into the live Termux/glibc prefix.
+- Copying any provider into a target layout.
+- Accepting unrelated util-linux libraries, tools or executables.
+- Broad GIO service validation outside the fixed GDK Pixbuf decode scope.
+- Complete composition acceptance, target generation, deployment or activation.
+- SUP-02 evidence collection.
 
 ## Required reading
 
 - `docs/current/STATE.yaml`
 - `docs/constitution/PRINCIPLES.md`
 - `docs/decisions/0005-proportional-assurance-depth.md`
+- `docs/evidence/gdkpixbuf-reference-dependency-provider-authority.md`
 - `docs/evidence/gdkpixbuf-2-42-12-provider-candidate-result-review.md`
-- `docs/evidence/gdkpixbuf-core-provider-acquisition-result-review.md`
 - `docs/evidence/selected-obsidian-provider-composition-review.md`
-- `experiments/glibc/selected-obsidian-provider-authority/review/gdkpixbuf-core-provider-acquisition-result-review.tsv`
+- `experiments/glibc/selected-obsidian-provider-authority/review/gdkpixbuf-util-linux-transitive-provider-disposition.tsv`
 - `experiments/glibc/selected-obsidian-provider-authority/review/generic-artifact-member-inventory-receipt-review.tsv`
+
+## Known facts
+
+- Exact GLib four-member and libpng provider authority is accepted only for the bounded GDK Pixbuf decode scope.
+- Existing pcre2, libffi and zlib object authority remains separate and is not widened by this task.
+- `libmount.so.1` is a direct dependency of exact `libgio-2.0.so.0.8200.2`.
+- `libblkid.so.1` is a direct dependency of libmount and is outside the 36 selected GTK identity rows, but it is required for a coherent exact runtime binding.
+- The successful scratch pair and official exact pair are not byte-identical.
+- Composition has 21 unresolved selected identities and remains `REVIEWED_BLOCKED_INCOMPLETE`.
 
 ## Pending external inputs
 
-None for the initial review. Request one bounded Termux acquisition/analyzer package only if the existing exact Termux `libmount`/`libblkid` artifact or ELF evidence is insufficient.
+None before package construction. See [`PENDING_ARTIFACTS.yaml`](PENDING_ARTIFACTS.yaml).
 
 ## Next valid action
 
-Perform a non-mutating provider-authority review of the GLib family, libpng and the observed util-linux transitive boundary. Do not build or acquire new bytes before identifying the exact remaining evidence gap.
-
-## Out of scope
-
-- Installing or copying provider bytes.
-- Accepting scratch util-linux objects merely because they enabled the diagnostic run.
-- Generating a target manifest.
-- Population, deployment, selector mutation or activation.
-- Broad GTK provider review outside this dependency tranche.
+Construct and simulate one read-only Termux acquisition/analyzer package for the exact official util-linux pair. The package must emit one `.tar.zst` result and must not mutate live provider or target state.
 
 ## Stop conditions
 
-Stop if a provider decision would require assuming recipe semantics not yet reviewed, if exact Termux artifact/member identity is missing, if a consumer maps a different object than the proposed provider, or if the transitive closure cannot be separated from unreviewed runtime policy.
+Stop without accepting provider authority if:
+
+- either package or member digest differs;
+- SONAME or dependency edges differ;
+- the pinned recipe cannot be bounded semantically;
+- the official pair fails exact mapping;
+- any fixed JPEG/PNG functional cell fails;
+- protected state changes;
+- exact accepted GDK Pixbuf, GLib, libpng or libjpeg bytes cannot be bound.
 
 ## Completion criteria
 
-- each of the five direct reference candidates has an explicit provider decision or exact minimal blocker;
-- `libmount` and `libblkid` have an explicit authority/disposition state;
-- composition counts reflect only accepted rows;
-- no target or live mutation;
-- the next task is fully repository-owned and does not depend on chat memory.
+- Exact official package and member identities are verified.
+- util-linux Class B adaptation semantics are reviewed for the bounded objects.
+- The fixed functional matrix and exact map set pass with the official pair, or a precise blocker is recorded.
+- Provider authority remains object- and capability-scoped.
+- Composition, target and activation boundaries remain explicit.

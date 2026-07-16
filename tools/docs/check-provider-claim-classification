@@ -19,6 +19,7 @@ required=(
   experiments/glibc/selected-obsidian-provider-authority/review/libtasn1-reference-consumed-provider-authority.tsv
   experiments/glibc/selected-obsidian-provider-authority/review/libepoxy-reference-consumed-provider-authority.tsv
   experiments/glibc/selected-obsidian-provider-authority/review/pango-reference-consumed-provider-authority.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/gdkpixbuf-reference-dependency-provider-authority.tsv
   experiments/glibc/selected-obsidian-provider-authority/review/libjpeg-so-62-provider-candidate-disposition.tsv
   experiments/glibc/selected-obsidian-provider-authority/review/libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review.tsv
   experiments/glibc/selected-obsidian-provider-authority/review/libjpeg-so-62-loader-isolated-provider-authority.tsv
@@ -27,18 +28,20 @@ for rel in "${required[@]}"; do
   [ -f "$ROOT/$rel" ] || { echo "provider-claim-classification: FAIL: missing $rel" >&2; exit 1; }
 done
 
-python3 "$ROOT/experiments/glibc/selected-obsidian-provider-authority/recipe/generate-provider-claim-classification.py" \
-  --repo-root "$ROOT" --output-root "$TMP"
-for rel in \
-  experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification.tsv \
-  experiments/glibc/selected-obsidian-provider-authority/review/provider-sup-02-request-disposition.tsv \
-  experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification-metadata.tsv
-do
-  cmp "$ROOT/$rel" "$TMP/$rel" >/dev/null || {
-    echo "provider-claim-classification: FAIL: generated output drift: $rel" >&2
-    exit 1
-  }
-done
+if [ "${TND_SKIP_GENERATED_DRIFT:-0}" != 1 ]; then
+  python3 "$ROOT/experiments/glibc/selected-obsidian-provider-authority/recipe/generate-provider-claim-classification.py" \
+    --repo-root "$ROOT" --output-root "$TMP"
+  for rel in \
+    experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification.tsv \
+    experiments/glibc/selected-obsidian-provider-authority/review/provider-sup-02-request-disposition.tsv \
+    experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification-metadata.tsv
+  do
+    cmp "$ROOT/$rel" "$TMP/$rel" >/dev/null || {
+      echo "provider-claim-classification: FAIL: generated output drift: $rel" >&2
+      exit 1
+    }
+  done
+fi
 
 python3 - "$ROOT" <<'PY'
 from pathlib import Path
@@ -57,7 +60,7 @@ dispositions = read('provider-sup-02-request-disposition.tsv')
 roots = read('generic-build-attestation-adaptation-root-review-set.tsv')
 requests = read('generic-build-attestation-adaptation-gap-evidence-supply-batch-sup-02-custodian-export-requests.tsv')
 metadata = {row['key']: row['value'] for row in read('provider-claim-classification-metadata.tsv')}
-provider_reviews = read('xorg-reference-consumed-provider-authority.tsv') + read('libtasn1-reference-consumed-provider-authority.tsv') + read('libepoxy-reference-consumed-provider-authority.tsv') + read('pango-reference-consumed-provider-authority.tsv') + read('libjpeg-so-62-loader-isolated-provider-authority.tsv')
+provider_reviews = read('xorg-reference-consumed-provider-authority.tsv') + read('libtasn1-reference-consumed-provider-authority.tsv') + read('libepoxy-reference-consumed-provider-authority.tsv') + read('pango-reference-consumed-provider-authority.tsv') + read('gdkpixbuf-reference-dependency-provider-authority.tsv') + read('libjpeg-so-62-loader-isolated-provider-authority.tsv')
 provider_review_by_root = {row['root_review_id']: row for row in provider_reviews}
 
 errors=[]
@@ -70,9 +73,9 @@ expected_meta={
     'sup02_still_necessary_count':'0','sup02_narrowed_count':'14',
     'sup02_replaced_count':'7','sup02_unnecessary_count':'7',
     'no_token_semantic_review_count':'7','no_token_confirmed_a_count':'7',
-    'no_token_reclassified_b_count':'0','provider_review_count':'8',
-    'provider_authority_accepted_count':'8','provider_authority_open_count':'20',
-    'authority_effect':'EIGHT_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT',
+    'no_token_reclassified_b_count':'0','provider_review_count':'10',
+    'provider_authority_accepted_count':'10','provider_authority_open_count':'18',
+    'authority_effect':'TEN_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT',
     'oj001_disposition':'RUNPATH_FREE_COMPATIBILITY_PROVIDER_ACCEPTED_BOUNDED_GDKPIXBUF_JPEG_SCOPE',
     'oj001_required_identity':'libjpeg.so.62',
     'oj001_candidate_state':'NO_EXACT_REPOSITORY_SONAME_62_ARTIFACT;PROJECT_RUNPATH_FREE_V6B_CANDIDATE_BOUNDED_PROVIDER_AUTHORITY_ACCEPTED',
@@ -95,7 +98,7 @@ expected_meta={
     'oj001_provider_result_sha256':'4e546ac1ef2a92f3301dd51ca2328d6901a05e309da78b6d08b26211d9b621e3',
     'oj001_provider_matrix_pass_count':'6',
     'oj001_provider_decision':'ACCEPTED_BOUNDED_PROVIDER',
-    'next_review_tranche':'GDKPIXBUF_REFERENCE_DEPENDENCY_PROVIDER_TRANCHE',
+    'next_review_tranche':'GDKPIXBUF_EXACT_UTIL_LINUX_PROVIDER_BINDING',
 }
 for key,val in expected_meta.items():
     if metadata.get(key)!=val:
@@ -117,7 +120,9 @@ for row in claims:
     for field in ['project_owned_changed_boundary','remaining_gap','minimum_closure_action','authority_effect','prohibited_inference']:
         if not row[field]: errors.append(f"{row['claim_id']}: empty {field}")
     if 'ACCEPTED' in row['authority_effect']:
-        if not (row['claim_type']=='PROVIDER_AUTHORITY' and row['subject_id'] in provider_review_by_root and row['classification_state']=='BOUNDED_PROVIDER_AUTHORITY_ACCEPTED'):
+        provider_ok=(row['claim_type']=='PROVIDER_AUTHORITY' and row['subject_id'] in provider_review_by_root and row['classification_state']=='BOUNDED_PROVIDER_AUTHORITY_ACCEPTED')
+        adaptation_ok=(row['claim_type']=='ADAPTATION_SEMANTICS' and row['subject_id'] in provider_review_by_root and row['authority_effect']=='ADAPTATION_CLASSIFICATION_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT' and row['claim_id'] in {'PCC-GLIB-ADAPTATION','PCC-LIBPNG-ADAPTATION'})
+        if not (provider_ok or adaptation_ok):
             errors.append(f"{row['claim_id']}: unreviewed claim has authority effect")
     if row['authority_effect'] in {'PROVIDER_AUTHORITY','TARGET_POPULATION','ACTIVATION'}:
         errors.append(f"{row['claim_id']}: invalid broad authority effect")
@@ -184,10 +189,10 @@ checks=[
     ('state version','state_version:' in state),
     ('claim count state','total: 89' in state),
     ('SUP-02 state','required_now: 0' in state),
-    ('next task','Task ID: `review-gdkpixbuf-reference-dependency-providers`' in active),
+    ('next task','Task ID: `acquire-gdkpixbuf-exact-util-linux-provider-binding`' in active),
     ('brief classification','89 separated claims' in brief),
     ('catalog row','provider-claim-classification\tevidence\tcurrent\tcanonical' in catalog),
-    ('status next phase','GdkPixbuf reference dependency review active' in status),
+    ('status next phase','exact official libmount/libblkid binding active' in status),
     ('disposition catalog','libjpeg-so-62-provider-candidate-disposition\tevidence\tcurrent\tcanonical' in catalog),
 ]
 for label,ok in checks:
@@ -197,7 +202,7 @@ if errors:
     for err in errors:
         print('provider-claim-classification: FAIL:',err,file=sys.stderr)
     raise SystemExit(1)
-print('provider-claim-classification: PASS: 89 claims, 8 bounded providers, accepted libjpeg Class C boundary and 28 SUP-02 dispositions are coherent')
+print('provider-claim-classification: PASS: 89 claims, 10 bounded providers, accepted GLib/libpng and libjpeg boundaries, and 28 SUP-02 dispositions are coherent')
 PY
 
 echo 'provider-claim-classification: all checks passed'

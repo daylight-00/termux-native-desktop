@@ -51,11 +51,11 @@ require_text docs/operations/platforms/chatgpt-web.md 'one user-Termux acquisiti
 require_text docs/operations/platforms/chatgpt-web.md 'no installation unless installation is the explicit task' 'web profile lacks read-only acquisition boundary'
 require_text docs/operations/platforms/chatgpt-web.md 'Every reusable newly observed limitation must be added there' 'web profile lacks future limitation recording rule'
 require_text AGENTS.md 'attempt Google Drive connector upload first' 'AGENTS does not keep Drive as primary outbound path'
-require_text AGENTS.md 'including in an existing chat' 'AGENTS limits runtime-first-upload behavior to new chats'
-require_text AGENTS.md 'On the next outbound upload, attempt Drive first again' 'AGENTS lacks warm-runtime next-upload retry'
-require_text docs/operations/platforms/chatgpt-web.md 'This is a per-runtime warm-up fallback' 'web profile misclassifies first-upload block as permanent'
+require_text AGENTS.md 'do not try another connector call' 'AGENTS lacks same-delivery connector stop rule'
+require_text AGENTS.md 'On the next outbound artifact, attempt Google Drive first again' 'AGENTS lacks next-artifact Drive-first rule'
+require_text docs/operations/platforms/chatgpt-web.md 'Google Drive is the first and only connector attempt for each outbound artifact' 'web profile lacks first-and-only connector rule'
 require_text docs/operations/COLLABORATION.md 'Google Drive is the primary exchange path' 'collaboration contract does not keep Drive primary'
-require_text docs/current/STATE.yaml 'drive_exchange_policy: drive-first-runtime-first-upload-user-visible-fallback-then-drive-first-retry-next-artifact' 'state lacks Drive runtime lifecycle policy'
+require_text docs/current/STATE.yaml 'drive_exchange_policy: one-drive-attempt-then-user-visible-only-current-delivery-drive-first-next-artifact' 'state lacks strict Drive delivery policy'
 
 require_text docs/operations/COLLABORATION.md '### Acquisition/analyzer package' 'collaboration contract lacks acquisition package class'
 require_text docs/operations/COLLABORATION.md 'only metadata or ELF/package facts needed' 'collaboration contract lacks compact-analysis alternative'
@@ -96,7 +96,7 @@ for n,row in enumerate(rows, start=2):
 if len(ids) != len(set(ids)):
     errors.append('duplicate limitation IDs')
 required={
- 'WEB-NET-DNS-001','WEB-GIT-OBJECT-001','WEB-GH-SEARCH-001',
+ 'WEB-NET-DNS-001','WEB-GIT-OBJECT-001','WEB-REMOTE-GIT-001','WEB-GH-SEARCH-001',
  'WEB-DRIVE-UPLOAD-001','WEB-DRIVE-RUNTIME-FIRST-UPLOAD-001','WEB-CONNECTOR-REF-001',
  'WEB-DEVICE-001','WEB-FS-001','WEB-TIMEOUT-001','WEB-DOCKER-001','WEB-CONTEXT-001'
 }
@@ -107,8 +107,9 @@ by_id={r['limitation_id']:r for r in rows}
 checks={
  'WEB-NET-DNS-001': [('do_not','mirrors'),('preferred_fallback','user-Termux'),('preferred_fallback','digest'),('preferred_fallback','tar.zst'),('authority_owner','user-termux')],
  'WEB-GIT-OBJECT-001': [('preferred_fallback','full Git bundle')],
- 'WEB-DRIVE-UPLOAD-001': [('do_not','primary exchange path'),('preferred_fallback','user-visible sandbox link'),('preferred_fallback','attempt Drive first again')],
- 'WEB-DRIVE-RUNTIME-FIRST-UPLOAD-001': [('trigger','runtime is initialized or reset'),('trigger','existing chat'),('do_not','same delivery'),('do_not','non-primary'),('preferred_fallback','user-visible sandbox link'),('preferred_fallback','next outbound upload'),('preferred_fallback','Drive first again'),('preferred_fallback','SHA-256')],
+ 'WEB-REMOTE-GIT-001': [('do_not','remote Git transport from the sandbox'),('preferred_fallback','only in the authoritative user Termux checkout'),('preferred_fallback','attached full bundle locally')],
+ 'WEB-DRIVE-UPLOAD-001': [('do_not','same delivery'),('preferred_fallback','user-visible sandbox artifact'),('preferred_fallback','next outbound artifact')],
+ 'WEB-DRIVE-RUNTIME-FIRST-UPLOAD-001': [('trigger','runtime is initialized or reset'),('trigger','existing chat'),('do_not','same delivery'),('preferred_fallback','user-visible sandbox artifact'),('preferred_fallback','next outbound artifact'),('preferred_fallback','Drive first again')],
  'WEB-DEVICE-001': [('preferred_fallback','Termux runner'),('authority_owner','user-termux')],
  'WEB-FS-001': [('preferred_fallback','local sandbox temporary storage'),('preferred_fallback','Termux')],
  'WEB-TIMEOUT-001': [('preferred_fallback','inspect logs'),('preferred_fallback','split bounded tests')],

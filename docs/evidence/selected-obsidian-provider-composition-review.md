@@ -3,19 +3,19 @@
 ## Decision
 
 ```text
-accepted bounded provider roots: 9
-accepted exact members:          11
-included in current GTK scope:    10
+accepted bounded provider roots: 11
+accepted exact members:          16
+included in current GTK scope:    15
 deferred profile member:          1
 selected GTK runtime identities: 36
-unresolved selected identities:  26
+unresolved selected identities:  21
 accepted SONAME collisions:       0
 accepted alias collisions:        0
 composition decision:             REVIEWED_BLOCKED_INCOMPLETE
 target manifest allowed:          NO
 ```
 
-This is the first explicit Class D composition review after the eight bounded provider decisions. It does not copy, install, extract, alias, populate or activate any provider object.
+This is the current explicit Class D composition review after eleven bounded provider-root decisions. It does not copy, install, extract, alias, populate or activate any provider object.
 
 Canonical machine-readable surfaces:
 
@@ -35,7 +35,7 @@ experiments/glibc/selected-obsidian-provider-authority/recipe/
 
 ## Included accepted members
 
-The current selected GTK/GdkPixbuf/X11 scope can name ten exact accepted members without broadening their provider decisions:
+The current selected GTK/GdkPixbuf/X11 scope can name fifteen exact accepted members without broadening their provider decisions:
 
 ```text
 libXfixes.so.3.1.0       -> libXfixes.so.3
@@ -48,9 +48,16 @@ libpangoft2-1.0.so.0.5400.0 -> libpangoft2-1.0.so.0
 libpangocairo-1.0.so.0.5400.0 -> libpangocairo-1.0.so.0
 libjpeg.so.62.4.0        -> libjpeg.so.62
 libgdk_pixbuf-2.0.so.0.4200.12 -> libgdk_pixbuf-2.0.so.0
+libglib-2.0.so.0.8200.2  -> libglib-2.0.so.0
+libgobject-2.0.so.0.8200.2 -> libgobject-2.0.so.0
+libgmodule-2.0.so.0.8200.2 -> libgmodule-2.0.so.0
+libgio-2.0.so.0.8200.2   -> libgio-2.0.so.0
+libpng16.so.16.47.0      -> libpng16.so.16
 ```
 
 Every proposed alias is the observed ELF SONAME and targets one exact reviewed regular member. No accepted SONAME or alias basename collides with another accepted row.
+
+The GLib family and libpng rows are accepted only for the exact GdkPixbuf 2.42.12 fixed JPEG/PNG file and memory decode scope. They do not authorize broader GIO services, package-wide GLib surfaces, PNG utilities, or the official util-linux pair.
 
 These rows are a non-materializing proposal only. They do not authorize filesystem paths, modes, ownership, copying or target generation.
 
@@ -62,25 +69,16 @@ This is a composition exclusion-by-scope, not provider revocation.
 
 ## Completeness result
 
-The selected GTK ledger contains 36 runtime identities. Ten are replaced by exact accepted project/Termux provider members in this review. The other 26 remain unresolved.
+The selected GTK ledger contains 36 runtime identities. Fifteen are replaced by exact accepted project/Termux provider members in this review. The other 21 remain unresolved.
 
 ```text
-open reviewed-root provider gaps: 17
+open reviewed-root provider gaps: 12
 outside-28 or no accepted Termux candidate: 9
 ```
 
 Representative blockers include:
 
 ```text
-GLib family:
-    libglib-2.0.so.0
-    libgobject-2.0.so.0
-    libgio-2.0.so.0
-    libgmodule-2.0.so.0
-
-GdkPixbuf/image dependencies:
-    libpng16.so.16
-
 GTK/rendering/text dependencies:
     libgtk-3.so.0
     libgdk-3.so.0
@@ -104,6 +102,8 @@ platform/accessibility dependencies:
     libmount.so.1
     libselinux.so.1
 ```
+
+`libblkid.so.1` is not one of the 36 selected GTK ledger identities, but it is a required transitive dependency of the exact official libmount candidate. The successful GdkPixbuf probe mapped scratch libmount/libblkid bytes whose digests differ from the official exact package members, so the official pair remains an explicit provider-binding prerequisite.
 
 The exact blocker rows and their current root mapping are in `selected-provider-composition-gaps.tsv`. A selected historical Debian member is evidence of runtime demand, not target authority.
 
@@ -149,15 +149,15 @@ REVIEWED_BLOCKED_INCOMPLETE
 
 The review is complete enough to reject target-manifest generation. It is not complete enough to accept composition.
 
-The next smallest closure tranche is the GdkPixbuf reference dependency boundary:
+The next smallest closure tranche is exact official util-linux binding for the accepted GdkPixbuf stack:
 
 ```text
-GLib family provider authority
-libpng provider authority
-libmount provider authority and transitive libblkid disposition
+libmount.so.1 exact official candidate
+libblkid.so.1 exact official transitive candidate
+fixed GdkPixbuf JPEG/PNG file and memory matrix with exact map assertions
 ```
 
-This tranche is selected because the exact project `libjpeg.so.62` and GdkPixbuf providers are accepted and functionally validated, while GdkPixbuf direct reference dependencies and the GIO util-linux transitive boundary remain unresolved.
+This tranche is selected because the exact project `libjpeg.so.62`, GdkPixbuf, GLib four-member family, and libpng providers are accepted for the fixed decode scope, while the successful probe used non-identical scratch util-linux bytes.
 
 ## Explicitly prohibited inference
 
@@ -169,5 +169,5 @@ accepted target membership or target paths
 materialization readiness
 selected-generation activation readiness
 security or printing profile inclusion
-provider authority for any of the 27 gap rows
+provider authority for any of the 21 gap rows
 ```

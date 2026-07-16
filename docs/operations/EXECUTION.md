@@ -27,18 +27,18 @@ A prepared package is not an applied repository change.
 
 ## Mutating wrapper contract
 
-Every mutating wrapper should:
+Every mutating wrapper should contain all feasible acquisition, checksum, extraction, repository gating, test, commit, push, verification, archive, and upload logic so the user normally runs one command. It should:
 
 - pin the expected base HEAD and tree;
 - require the intended branch and a clean tracked worktree;
 - preserve unrelated untracked paths;
-- fetch and verify the remote branch before mutation;
+- perform any network-backed repository fetch/pull only in the user's Termux checkout and verify the remote branch before mutation;
 - verify the repository delta checksum and exact changed-path set;
 - run `git diff --check` and bounded tests;
 - use canonical author, committer, and signoff: `daylight-00 <hwjang00@snu.ac.kr>`;
 - commit only after all pre-push gates pass;
 - re-check the remote immediately before push;
-- push from the user Termux environment;
+- perform repository clone, pull, and push only from the user Termux environment;
 - verify the remote after push;
 - create and upload a result archive on success and failure;
 - restore the pinned base only when failure occurs before a successful push;

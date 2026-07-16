@@ -27,30 +27,31 @@ def read(n):
  with (review/n).open(newline='',encoding='utf-8') as f:return list(csv.DictReader(f,delimiter='\t'))
 mem=read('selected-provider-composition-members.tsv'); gaps=read('selected-provider-composition-gaps.tsv'); meta={r['key']:r['value'] for r in read('selected-provider-composition-metadata.tsv')}; claims={r['claim_id']:r for r in read('provider-claim-classification.tsv')}
 errors=[]
-exp={'selected_gtk_identity_count':'36','accepted_provider_root_count':'9','accepted_member_count':'11','included_member_count':'10','deferred_member_count':'1','unresolved_selected_identity_count':'26','reviewed_root_gap_count':'17','outside_28_root_gap_count':'9','accepted_soname_collision_count':'0','accepted_alias_collision_count':'0','composition_decision':'REVIEWED_BLOCKED_INCOMPLETE','target_manifest_allowed':'NO','next_review_tranche':'GDKPIXBUF_REFERENCE_DEPENDENCY_PROVIDER_TRANCHE','authority_effect':'NO_TARGET_POPULATION_MATERIALIZATION_OR_ACTIVATION'}
+exp={'selected_gtk_identity_count':'36','accepted_provider_root_count':'11','accepted_member_count':'16','included_member_count':'15','deferred_member_count':'1','unresolved_selected_identity_count':'21','reviewed_root_gap_count':'12','outside_28_root_gap_count':'9','accepted_soname_collision_count':'0','accepted_alias_collision_count':'0','composition_decision':'REVIEWED_BLOCKED_INCOMPLETE','target_manifest_allowed':'NO','next_review_tranche':'GDKPIXBUF_EXACT_UTIL_LINUX_PROVIDER_BINDING','authority_effect':'NO_TARGET_POPULATION_MATERIALIZATION_OR_ACTIVATION'}
 for k,v in exp.items():
  if meta.get(k)!=v:errors.append(f'metadata {k}: expected {v}, got {meta.get(k)!r}')
-if len(mem)!=11:errors.append(f'member rows {len(mem)}')
-if sum(r['composition_inclusion']=='INCLUDED_SELECTED_GTK_SCOPE' for r in mem)!=10:errors.append('included member count mismatch')
+if len(mem)!=16:errors.append(f'member rows {len(mem)}')
+if sum(r['composition_inclusion']=='INCLUDED_SELECTED_GTK_SCOPE' for r in mem)!=15:errors.append('included member count mismatch')
 if sum(r['composition_inclusion']=='DEFERRED_PROFILE_REQUIREMENT_OPEN' for r in mem)!=1:errors.append('deferred member count mismatch')
-if len({r['soname'] for r in mem})!=11:errors.append('SONAME collision')
-if len({r['alias_basename'] for r in mem})!=11:errors.append('alias collision')
+if len({r['soname'] for r in mem})!=16:errors.append('SONAME collision')
+if len({r['alias_basename'] for r in mem})!=16:errors.append('alias collision')
 if any(r['collision_state'].startswith('NO_') is False for r in mem):errors.append('non-clean accepted collision state')
 if not any(r['recipe_root']=='gpkg/libtasn1' and r['composition_inclusion']=='DEFERRED_PROFILE_REQUIREMENT_OPEN' for r in mem):errors.append('libtasn1 not deferred')
 if not any(r['member_basename']=='libjpeg.so.62.4.0' and r['alias_basename']=='libjpeg.so.62' for r in mem):errors.append('exact libjpeg member/alias missing')
 if not any(r['member_basename']=='libgdk_pixbuf-2.0.so.0.4200.12' and r['member_sha256']=='0c1404c6854e7674428a5b653b240759dac0374631697fe61ae275898f6a809f' and r['alias_basename']=='libgdk_pixbuf-2.0.so.0' for r in mem):errors.append('exact GdkPixbuf member/alias missing')
-if len(gaps)!=26:errors.append(f'gap rows {len(gaps)}')
-if sum(r['priority_tranche']=='GDKPIXBUF_REFERENCE_DEPENDENCY_PROVIDER_TRANCHE' for r in gaps)!=6:errors.append('GdkPixbuf core gap count mismatch')
-for name in ['libmount.so.1.1.0','libglib-2.0.so.0.8400.4','libgobject-2.0.so.0.8400.4','libgio-2.0.so.0.8400.4','libgmodule-2.0.so.0.8400.4','libpng16.so.16.48.0']:
- if not any(r['identity_label']==name and r['priority_tranche']=='GDKPIXBUF_REFERENCE_DEPENDENCY_PROVIDER_TRANCHE' for r in gaps):errors.append(f'core gap missing {name}')
+if len(gaps)!=21:errors.append(f'gap rows {len(gaps)}')
+if sum(r['priority_tranche']=='GDKPIXBUF_EXACT_UTIL_LINUX_PROVIDER_BINDING' for r in gaps)!=1:errors.append('GdkPixbuf util-linux gap count mismatch')
+if not any(r['identity_label']=='libmount.so.1.1.0' and r['priority_tranche']=='GDKPIXBUF_EXACT_UTIL_LINUX_PROVIDER_BINDING' for r in gaps):errors.append('util-linux gap missing libmount')
+for name,sha in [('libglib-2.0.so.0.8200.2','e0504b50e14870623e10490d76b78c7a8d0037a54fe354429e2e3b5ac07ae0d5'),('libgobject-2.0.so.0.8200.2','de13928664709a9cecd61f50dcc4d2294d0c2ff91f147d0827d209cd03af45a6'),('libgmodule-2.0.so.0.8200.2','feaad9c286e9a1af3cff94a78924f543bc0f4d7f8dfc05c9ec13eb1c3d8764bf'),('libgio-2.0.so.0.8200.2','aa9fa8876fac7334570273064be05c3e65ba0f16d30a77a5929f48b12bfe64b3'),('libpng16.so.16.47.0','00c9fd06c139699552c086b60d116a01d067ceddddb29c56600bf9fd3bae746f')]:
+ if not any(r['member_basename']==name and r['member_sha256']==sha and r['composition_inclusion']=='INCLUDED_SELECTED_GTK_SCOPE' for r in mem):errors.append(f'accepted reference dependency missing {name}')
 claim=claims.get('PCC-GLOBAL-COMPOSITION')
 if not claim:errors.append('global composition claim missing')
 else:
  if claim['classification_state']!='REVIEWED_BLOCKED_INCOMPLETE':errors.append('composition claim state widened or stale')
- if '26_SELECTED_GTK_PROVIDER_IDENTITIES' not in claim['remaining_gap']:errors.append('composition gap count absent')
+ if '21_SELECTED_GTK_PROVIDER_IDENTITIES' not in claim['remaining_gap']:errors.append('composition gap count absent')
  if claim['authority_effect']!='COMPOSITION_REVIEW_COMPLETED_NO_ACCEPTANCE_TARGET_OR_ACTIVATION_EFFECT':errors.append('composition authority effect widened')
 state=(root/'docs/current/STATE.yaml').read_text();active=(root/'docs/current/ACTIVE_TASK.md').read_text();brief=(root/'docs/current/BRIEF.md').read_text();catalog=(root/'docs/catalog.tsv').read_text();status=(root/'STATUS.md').read_text();doc=(root/'docs/evidence/selected-obsidian-provider-composition-review.md').read_text()
-markers=[('state decision','decision: reviewed-blocked-incomplete' in state),('state gaps','unresolved_selected_identities: 26' in state),('state target false','target_manifest_allowed: false' in state),('task','Task ID: `review-gdkpixbuf-reference-dependency-providers`' in active),('brief','26 selected identity gaps' in brief),('catalog','selected-obsidian-provider-composition-review\tevidence\tcurrent\tcanonical' in catalog),('status','`REVIEWED_BLOCKED_INCOMPLETE`' in status),('doc decision','REVIEWED_BLOCKED_INCOMPLETE' in doc),('doc target','target manifest allowed:          NO' in doc)]
+markers=[('state decision','decision: reviewed-blocked-incomplete' in state),('state gaps','unresolved_selected_identities: 21' in state),('state target false','target_manifest_allowed: false' in state),('task','Task ID: `acquire-gdkpixbuf-exact-util-linux-provider-binding`' in active),('brief','21 selected identity gaps' in brief),('catalog','selected-obsidian-provider-composition-review\tevidence\tcurrent\tcanonical' in catalog),('status','`REVIEWED_BLOCKED_INCOMPLETE`' in status),('doc decision','REVIEWED_BLOCKED_INCOMPLETE' in doc),('doc target','target manifest allowed:          NO' in doc)]
 for label,ok in markers:
  if not ok:errors.append(f'missing current marker: {label}')
 for forbidden in ['composition decision:             ACCEPTED','target manifest allowed:          YES']:
@@ -58,5 +59,5 @@ for forbidden in ['composition decision:             ACCEPTED','target manifest 
 if errors:
  for e in errors:print('provider-composition: FAIL:',e,file=sys.stderr)
  raise SystemExit(1)
-print('provider-composition: PASS: 11 accepted members, 10 included, 1 deferred and 26 selected GTK gaps block composition and target generation')
+print('provider-composition: PASS: 16 accepted members, 15 included, 1 deferred and 21 selected GTK gaps block composition and target generation')
 PY

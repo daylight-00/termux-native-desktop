@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+required=(
+  docs/evidence/gdkpixbuf-reference-dependency-provider-authority.md
+  experiments/glibc/selected-obsidian-provider-authority/review/gdkpixbuf-reference-dependency-provider-authority.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/gdkpixbuf-util-linux-transitive-provider-disposition.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-composition-members.tsv
+  docs/catalog.tsv
+)
+for rel in "${required[@]}"; do
+  [ -f "$ROOT/$rel" ] || { echo "gdkpixbuf-reference-provider: FAIL: missing $rel" >&2; exit 1; }
+done
+python3 - "$ROOT" <<'PY'
+from pathlib import Path
+import csv,sys
+root=Path(sys.argv[1]); review=root/'experiments/glibc/selected-obsidian-provider-authority/review'
+def read(name):
+    with (review/name).open(newline='',encoding='utf-8') as f:
+        return list(csv.DictReader(f,delimiter='\t'))
+rows=read('gdkpixbuf-reference-dependency-provider-authority.tsv')
+util=read('gdkpixbuf-util-linux-transitive-provider-disposition.tsv')
+claims={r['claim_id']:r for r in read('provider-claim-classification.tsv')}
+members=read('selected-provider-composition-members.tsv')
+errors=[]
+if len(rows)!=2: errors.append(f'expected 2 accepted reference-provider rows, found {len(rows)}')
+by={r['review_id']:r for r in rows}
+expected={
+ 'GDKPIXBUF-REF-PROV-GLIB-001':{
+  'recipe_root':'gpkg/glib','recipe_tree':'de335e6ba82f295978c17dcf3666a38bfd51538f','artifact_sha256':'d91fe1202c51f7e59b120d3b475e24cdc2ac2cc28f2804e9bcf4919b775978e6',
+  'exact_member_sha256s':'e0504b50e14870623e10490d76b78c7a8d0037a54fe354429e2e3b5ac07ae0d5;de13928664709a9cecd61f50dcc4d2294d0c2ff91f147d0827d209cd03af45a6;feaad9c286e9a1af3cff94a78924f543bc0f4d7f8dfc05c9ec13eb1c3d8764bf;aa9fa8876fac7334570273064be05c3e65ba0f16d30a77a5929f48b12bfe64b3',
+  'decision':'ACCEPTED_BOUNDED_PROVIDER'},
+ 'GDKPIXBUF-REF-PROV-LIBPNG-001':{
+  'recipe_root':'gpkg/libpng','recipe_tree':'c28b21ff2f072e880bce82fe81e4022b88945c22','artifact_sha256':'b2835404d3b0f54b75eb464a58ad5eb46f2d64d4fe1167a7984031f0e990b33f',
+  'exact_member_sha256s':'00c9fd06c139699552c086b60d116a01d067ceddddb29c56600bf9fd3bae746f','decision':'ACCEPTED_BOUNDED_PROVIDER'},
+}
+for rid,exp in expected.items():
+    r=by.get(rid)
+    if not r: errors.append(f'missing review row {rid}'); continue
+    for k,v in exp.items():
+        if r.get(k)!=v: errors.append(f'{rid} {k}: expected {v}, got {r.get(k)!r}')
+    if r.get('adaptation_adr_class')!='B': errors.append(f'{rid}: adaptation class not B')
+    if 'NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT' not in r.get('authority_effect',''): errors.append(f'{rid}: authority effect widened')
+    for forbidden in ['COMPLETE_COMPOSITION','TARGET_POPULATION_ACCEPTED','ACTIVATION_ACCEPTED']:
+        if forbidden in r.get('authority_effect',''): errors.append(f'{rid}: forbidden authority {forbidden}')
+if len(util)!=2: errors.append(f'expected 2 util-linux disposition rows, found {len(util)}')
+for r in util:
+    if r.get('decision')!='OPEN_EXACT_RUNTIME_BINDING_REQUIRED': errors.append(f"{r.get('review_id')}: util-linux decision widened")
+    if r.get('official_member_sha256')==r.get('scratch_member_sha256'): errors.append(f"{r.get('review_id')}: official/scratch mismatch evidence lost")
+    if 'NO_PROVIDER_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT' not in r.get('authority_effect',''): errors.append(f"{r.get('review_id')}: util authority effect widened")
+for cid,rid in [('PCC-GLIB-PROVIDER','GDKPIXBUF-REF-PROV-GLIB-001'),('PCC-LIBPNG-PROVIDER','GDKPIXBUF-REF-PROV-LIBPNG-001')]:
+    c=claims.get(cid)
+    if not c: errors.append(f'missing generated claim {cid}'); continue
+    if c.get('classification_state')!='BOUNDED_PROVIDER_AUTHORITY_ACCEPTED': errors.append(f'{cid}: generated state not accepted')
+    if rid not in c.get('existing_evidence',''): errors.append(f'{cid}: generated evidence lacks {rid}')
+    if not c.get('remaining_gap','').startswith('NONE_FOR_BOUNDED'): errors.append(f'{cid}: bounded gap not closed')
+needed={
+ 'libglib-2.0.so.0.8200.2':'e0504b50e14870623e10490d76b78c7a8d0037a54fe354429e2e3b5ac07ae0d5',
+ 'libgobject-2.0.so.0.8200.2':'de13928664709a9cecd61f50dcc4d2294d0c2ff91f147d0827d209cd03af45a6',
+ 'libgmodule-2.0.so.0.8200.2':'feaad9c286e9a1af3cff94a78924f543bc0f4d7f8dfc05c9ec13eb1c3d8764bf',
+ 'libgio-2.0.so.0.8200.2':'aa9fa8876fac7334570273064be05c3e65ba0f16d30a77a5929f48b12bfe64b3',
+ 'libpng16.so.16.47.0':'00c9fd06c139699552c086b60d116a01d067ceddddb29c56600bf9fd3bae746f',
+}
+for name,sha in needed.items():
+    if not any(r.get('member_basename')==name and r.get('member_sha256')==sha and r.get('composition_inclusion')=='INCLUDED_SELECTED_GTK_SCOPE' for r in members):
+        errors.append(f'composition member missing or widened: {name}')
+doc=(root/'docs/evidence/gdkpixbuf-reference-dependency-provider-authority.md').read_text()
+catalog=(root/'docs/catalog.tsv').read_text()
+if 'accepted provider roots overall: 11' not in doc: errors.append('document lacks accepted-root boundary')
+if 'unresolved selected identities: 21' not in doc: errors.append('document lacks unresolved-count boundary')
+if 'OPEN_EXACT_RUNTIME_BINDING_REQUIRED' not in doc: errors.append('document lacks util-linux open boundary')
+if 'gdkpixbuf-reference-dependency-provider-authority\tevidence\tcurrent\tcanonical' not in catalog: errors.append('catalog row missing')
+for forbidden in ['complete composition: ACCEPTED','target manifest allowed: YES','official libmount/libblkid provider authority: ACCEPTED']:
+    if forbidden in doc: errors.append(f'document authority widened: {forbidden}')
+if errors:
+    for e in errors: print('gdkpixbuf-reference-provider: FAIL:',e,file=sys.stderr)
+    raise SystemExit(1)
+print('gdkpixbuf-reference-provider: PASS: GLib/libpng bounded providers accepted; exact official util-linux binding remains open')
+PY

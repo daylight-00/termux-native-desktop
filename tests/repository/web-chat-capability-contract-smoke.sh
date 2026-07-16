@@ -52,11 +52,14 @@ restore_file AGENTS.md
 # Negative: the runtime-first-upload fallback cannot demote Drive for future artifacts.
 python3 - "$FIXTURE/docs/operations/platforms/chatgpt-web-limitations.tsv" <<'PY'
 from pathlib import Path
-p=Path(__import__('sys').argv[1])
-s=p.read_text().replace(
- 'expose the identical artifact through a user-visible sandbox link for the current delivery then attempt Drive first again on the next outbound upload while the runtime persists and verify SHA-256',
- 'use user-visible sandbox links for all current and future artifacts')
-p.write_text(s)
+import csv,sys
+p=Path(sys.argv[1])
+with p.open(newline='',encoding='utf-8') as f: rows=list(csv.DictReader(f,delimiter='\t'))
+for row in rows:
+    if row['limitation_id']=='WEB-DRIVE-RUNTIME-FIRST-UPLOAD-001':
+        row['preferred_fallback']='use user-visible sandbox links for all current and future artifacts'
+with p.open('w',newline='',encoding='utf-8') as f:
+    w=csv.DictWriter(f,fieldnames=rows[0].keys(),delimiter='\t',lineterminator='\n'); w.writeheader(); w.writerows(rows)
 PY
 if run_check 2>/dev/null; then
   echo 'web-chat capability smoke: permanent Drive demotion was accepted' >&2

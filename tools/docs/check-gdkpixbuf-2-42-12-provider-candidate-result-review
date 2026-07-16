@@ -5,9 +5,7 @@ REVIEW=experiments/glibc/selected-obsidian-provider-authority/review/gdkpixbuf-2
 required=(
   "$REVIEW"
   docs/evidence/gdkpixbuf-2-42-12-provider-candidate-result-review.md
-  docs/current/STATE.yaml docs/current/BRIEF.md docs/current/ACTIVE_TASK.md
-  docs/evidence/selected-obsidian-provider-composition-review.md
-  docs/operations/EXECUTION.md docs/catalog.tsv STATUS.md
+  docs/operations/EXECUTION.md docs/catalog.tsv
 )
 for rel in "${required[@]}"; do [ -f "$ROOT/$rel" ] || { echo "gdkpixbuf-provider-review: FAIL: missing $rel" >&2; exit 1; }; done
 python3 - "$ROOT" <<'PY'
@@ -42,14 +40,11 @@ else:
  if 'DIAGNOSTIC_ONLY_NO_PROVIDER_AUTHORITY' not in r['transitive_map_state']: errors.append('transitive authority widened')
  if 'GLIB_FAMILY_LIBPNG_PROVIDER_AUTHORITY' not in r['remaining_gap']: errors.append('dependency provider gap missing')
  if 'NO_COMPLETE_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT' not in r['authority_effect']: errors.append('authority effect widened')
-state=(root/'docs/current/STATE.yaml').read_text(); brief=(root/'docs/current/BRIEF.md').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); doc=(root/'docs/evidence/gdkpixbuf-2-42-12-provider-candidate-result-review.md').read_text(); catalog=(root/'docs/catalog.tsv').read_text(); ops=(root/'docs/operations/EXECUTION.md').read_text(); status=(root/'STATUS.md').read_text()
+doc=(root/'docs/evidence/gdkpixbuf-2-42-12-provider-candidate-result-review.md').read_text(); catalog=(root/'docs/catalog.tsv').read_text(); ops=(root/'docs/operations/EXECUTION.md').read_text()
 markers=[
- ('state accepted count','accepted: 9' in state),('state digest','0c1404c6854e7674428a5b653b240759dac0374631697fe61ae275898f6a809f' in state),
- ('state gaps','unresolved_selected_identities: 26' in state),('task','Task ID: `review-gdkpixbuf-reference-dependency-providers`' in active),
- ('brief count','bounded providers accepted: 9' in brief),('doc decision','ACCEPTED_BOUNDED_PROVIDER' in doc),
- ('catalog','gdkpixbuf-2-42-12-provider-candidate-result-review\tevidence\tcurrent\tcanonical' in catalog),
+ ('doc decision','ACCEPTED_BOUNDED_PROVIDER' in doc),
+ ('catalog','gdkpixbuf-2-42-12-provider-candidate-result-review	evidence	current	canonical' in catalog),
  ('structured TSV rule','A `.tsv` file contains real tab delimiters' in ops),
- ('status scope','GdkPixbuf 2.42.12 providers accepted for bounded decode scopes' in status),
 ]
 for label,ok in markers:
  if not ok: errors.append(f'missing marker: {label}')

@@ -22,8 +22,8 @@ Do not spend a session repeatedly trying mirrors, proxy variants, alternate clon
 
 | Surface | Appropriate use | Not authoritative or unavailable |
 |---|---|---|
-| Session sandbox | clone supplied bundle; inspect and author; local commits; candidate bundles; package construction; shell/static/synthetic tests; selective result review; bounded public HTTP fetch when it actually works | Android runtime; Termux deployment; GPU/device validation; user application data; remote Git mutation; guaranteed DNS or outbound access |
-| User Termux | authoritative fetch/commit/push/`gh`; exact dependency and source acquisition; deployment and local-layout mutation; Android/package/runtime inspection; device tests; `rclone`; future full-bundle creation | delegated broad manual editing or log analysis when the agent can package it |
+| Session sandbox | materialize an attached full Git bundle locally; inspect and author; local commits; candidate bundles; package construction; shell/static/synthetic tests; selective result review; bounded public HTTP fetch when it actually works | network-backed repository clone/pull/push; Android runtime; Termux deployment; GPU/device validation; user application data; guaranteed DNS or outbound access |
+| User Termux | authoritative repository clone/pull/push/commit/`gh`; exact dependency and source acquisition; deployment and local-layout mutation; Android/package/runtime inspection; device tests; `rclone`; future full-bundle creation | delegated broad manual editing or log analysis when the agent can package it |
 | GitHub connector | repository metadata; commit confirmation; comparison; PR/issue reads; exact small file reads at a known path/ref | clone; normal object database; complete code-search recall; context-efficient authoring; authoritative commit/push |
 | Google Drive connector | primary exchange path for packages, results, patches, bundles, logs, safety artifacts, and evidence; attempt it first for each outbound artifact | automatic equivalence between a Drive reference and sandbox path; guaranteed local-path rewrite on the runtime's first upload |
 
@@ -70,17 +70,15 @@ Do not treat a sandbox simulation as Android, loader, package-manager, GPU, file
 
 Use `WEB-DRIVE-UPLOAD-001` or `WEB-DRIVE-RUNTIME-FIRST-UPLOAD-001`.
 
-Google Drive remains the primary outbound exchange path. Attempt connector upload first for each outbound artifact. The first upload after the web-chat runtime is initialized or reset can block local-path-to-file-reference rewriting even when the chat itself is not new.
+Google Drive is the first and only connector attempt for each outbound artifact. If that one attempt fails for runtime warm-up, local-path rewrite, connector-object, filename, path, or action-contract reasons:
 
-When that first-runtime-upload block occurs:
+1. preserve the exact bytes and checksum;
+2. do not make another connector call in the same delivery;
+3. do not retry through another path, filename, ASCII copy, or user-side upload route;
+4. expose the identical artifact through one user-visible sandbox link and end the delivery;
+5. on the next outbound artifact, attempt Drive first again.
 
-1. preserve the artifact bytes and expected digest;
-2. do not repeat the same blocked upload during the current delivery;
-3. expose the identical artifact through a user-visible sandbox link;
-4. on the next outbound upload, attempt Drive first again because the persistent runtime is normally warm;
-5. verify SHA-256 whenever Drive returns an uploaded or fetched object.
-
-This is a per-runtime warm-up fallback, not a reason to demote Drive permanently or default future artifacts to user-visible delivery. For other connector contract failures, inspect the action schema once and use the registered current-delivery fallback without transforming bytes.
+When Drive publication succeeds, provide one `rclone copyto` command that downloads the package to `$HOME/Downloads`. When Drive publication fails, do not add `rclone` as an alternate delivery path in that response.
 
 ### Shared filesystem or execution-budget mismatch
 
@@ -98,22 +96,22 @@ The normal first input is a full Git bundle created by the user from a clean acc
 user Termux main
     -> full Git bundle
     -> chat attachment
-    -> sandbox clone
+    -> sandbox local bundle materialization
     -> START_HERE.md
 ```
 
-A GitHub URL or connector is not a replacement for the bundle. Raw-text file operations consume model context and do not reproduce object-based Git collaboration.
+A GitHub URL or connector is not a replacement for the bundle. Network-backed repository clone, pull, and push occur only in user Termux. The sandbox may only materialize the attached bundle locally. Raw-text file operations consume model context and do not reproduce object-based Git collaboration.
 
 ## Drive-specific constraints
 
 - A local file is upload-eligible only when it is located anywhere under `/mnt/data`; it need not be a direct child.
-- After the web-chat runtime is initialized or reset, its first upload attempt can block local-path-to-file-reference rewriting even in an existing chat. Attempt Drive first, fall back to a user-visible link for that delivery, and attempt Drive first again on the next outbound upload if the runtime persists.
+- After the web-chat runtime is initialized or reset, its first upload attempt can block local-path-to-file-reference rewriting even in an existing chat. Attempt Drive once, expose a user-visible link without another connector/path attempt for that delivery, and attempt Drive first again for the next outbound artifact.
 - An upload action may require a connector file-reference object and reject a raw local path even under `/mnt/data`.
 - A connector file reference is not automatically a local sandbox path.
 - Binary fetches may materialize with a `.bin` suffix; trust byte identity and checksum, not the suffix.
 - Prefer exact folder listing and file IDs over fuzzy binary filename search.
 - Verify size, SHA-256, zstd integrity, safe members, and internal manifest after upload or fetch.
-- When valid bytes are rejected because of path handling, copy the identical bytes to a short ASCII path under `/mnt/data`, publish with the intended name when supported, and verify readback. Do not transform the artifact.
+- When valid bytes are rejected because of connector, path, or filename handling, make no alternate-path or alternate-name retry in the same delivery; expose the identical user-visible artifact and retry Drive first only for the next outbound artifact.
 
 ## Context and continuity
 

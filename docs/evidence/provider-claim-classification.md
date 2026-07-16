@@ -9,7 +9,7 @@ roots: 28
 objects: 37
 claims: 89
 new evidence collected: 0
-provider authority accepted: 6
+provider authority accepted: 10
 composition accepted: 0
 target rows accepted: 0
 activation accepted: 0
@@ -74,7 +74,7 @@ Class B: 49 claims
 
 Class C: 1 active bounded producing claim
     exact libjpeg-turbo 3.1.0 v6b compatibility candidate production
-    producing record accepted; functional equivalence and consumer binding remain open
+    producing record accepted; bounded loader-isolated GdkPixbuf JPEG consumer authority accepted separately
 
 Class D: 3 global project-authored claims
     composition
@@ -82,7 +82,7 @@ Class D: 3 global project-authored claims
     activation
 ```
 
-The single Class C row is now active for the project-produced runpath-free `libjpeg.so.62.4.0` candidate. Source, build invocation, toolchain, output manifest, ELF identity and symbol versions are recorded; bounded GdkPixbuf consumer binding and fixed JPEG decoding remain the minimum closure action.
+The single Class C row records the project-produced runpath-free `libjpeg.so.62.4.0` candidate. Source, build invocation, toolchain, output manifest, ELF identity and symbol versions are recorded. A separate loader-isolated review accepted bounded GdkPixbuf JPEG file and memory decode authority; the Class C row does not imply broader libjpeg family or composition authority.
 
 ## Existing evidence retained
 
@@ -96,7 +96,7 @@ The classification retains the following evidence without overpromoting it:
 - the accepted OJ-001 correction that the required ABI identity is `libjpeg.so.62`, not `libjpeg.so.8`;
 - all historical SUP-02 request, acquisition, receipt, and producer records.
 
-These remain evidence inputs. They do not create final provider authority by themselves. Four provider claims are now accepted only through the separate bounded X.Org provider review.
+These remain evidence inputs. They do not create final provider authority by themselves. Ten root provider claims are accepted only through their separate bounded provider reviews.
 
 ## SUP-02 disposition
 
@@ -145,14 +145,14 @@ The `libjpeg-turbo` SUP-02 request is also unnecessary at the current boundary b
 ## Current authority states
 
 ```text
-bounded provider authority accepted: 8 roots
-provider authority still open:       20 roots
+bounded provider authority accepted: 10 roots
+provider authority still open:       18 roots
 application runtime composition:     NOT REACHED
 target population:                   BLOCKED
 selected-generation activation:      BLOCKED
 ```
 
-The eight accepted rows are `libxfixes`, `libxcomposite`, `libxi`, `libxinerama`, `libtasn1`, `libepoxy`, `pango`, and the exact project-built `libjpeg.so.62.4.0` provider for selected GdkPixbuf 2.42.12 JPEG file and memory decoding. Each decision remains limited to an exact identity and named consumer capability; libepoxy does not claim EGL, and libjpeg does not claim the SONAME-8 family or complete image composition. The classification still does not authorize extraction, installation, target population, complete composition, selected-generation mutation, or activation.
+The ten accepted root rows are `libxfixes`, `libxcomposite`, `libxi`, `libxinerama`, `libtasn1`, `libepoxy`, `pango`, the exact project-built `libjpeg.so.62.4.0`, `glib`, and `libpng`. The GLib four-member family and libpng shared member are accepted only for the exact GdkPixbuf 2.42.12 JPEG/PNG file and memory decode scope; official libmount/libblkid runtime binding remains separate and open. Each decision remains limited to an exact identity and named consumer capability. The classification still does not authorize extraction, installation, target population, complete composition, selected-generation mutation, or activation.
 
 ## Seven-root semantic-review result
 
@@ -161,7 +161,7 @@ The seven-root no-token semantic review is complete:
 ```text
 confirmed Class A: 7
 reclassified Class B: 0
-provider authority accepted: 8
+provider authority accepted: 10
 ```
 
 Canonical review surface:
@@ -177,23 +177,23 @@ For all seven roots, the pinned recipe contains only source/version identity and
 
 ## Completed bounded provider tranches and smallest next phase
 
-The 28-root inventory still contains eight accepted provider roots and 20 open root provider claims. Separately, the outside-28 project-built GdkPixbuf object now has bounded provider authority for fixed JPEG and PNG file and memory decoding.
+The 28-root inventory now contains ten accepted provider roots and 18 open root provider claims. Separately, the outside-28 project-built GdkPixbuf object has bounded provider authority for fixed JPEG and PNG file and memory decoding.
 
-The smallest next phase is the GdkPixbuf reference dependency tranche:
+The smallest next phase is exact official util-linux binding for the accepted GdkPixbuf stack:
 
 ```text
-GLib / GObject / GModule / GIO exact Termux candidates
-libpng exact Termux candidate
-libmount exact provider and transitive libblkid disposition
+libmount.so.1 exact official provider candidate
+libblkid.so.1 exact official transitive provider candidate
+fixed GdkPixbuf JPEG/PNG file and memory matrix with exact map assertions
 ```
 
-This phase reviews provider authority only. It does not infer complete composition, generate target paths, populate a generation or activate a selector.
+The prior successful probe used scratch util-linux bytes whose digests differ from the official exact package members. This phase reviews only those two object/provider claims. It does not infer complete composition, generate target paths, populate a generation or activate a selector.
 
 ## Stop line
 
 Do not:
 
-- treat claim classification alone as provider acceptance outside the six explicit bounded provider review rows;
+- treat claim classification alone as provider acceptance outside the ten explicit bounded provider review rows;
 - fulfill a SUP-02 request solely because it was historically issued;
 - combine artifact identity, adaptation, provider authority, composition, target population, and activation into one decision;
 - use package metadata or build provenance as a substitute for runtime provider selection;

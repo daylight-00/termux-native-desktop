@@ -33,4 +33,25 @@ if bash "$FIXTURE/tools/docs/check-operations-model" >/dev/null 2>&1; then
   exit 1
 fi
 
+# Negative: Drive fallback cannot reintroduce a same-delivery alternate connector/path retry.
+printf '\nRetry with a short ASCII path and another connector call in the same delivery.\n' >> "$FIXTURE/docs/operations/platforms/chatgpt-web.md"
+if bash "$FIXTURE/tools/docs/check-operations-model" >/dev/null 2>&1; then
+  echo 'operations-model smoke: same-delivery alternate Drive retry was accepted' >&2
+  exit 1
+fi
+git -C "$ROOT" show HEAD:docs/operations/platforms/chatgpt-web.md > "$FIXTURE/docs/operations/platforms/chatgpt-web.md"
+
+# Negative: remote clone cannot be assigned to the sandbox.
+python3 - "$FIXTURE/docs/operations/platforms/chatgpt-web.md" <<'PY2'
+from pathlib import Path
+p=Path(__import__('sys').argv[1]); t=p.read_text();
+t=t.replace('network-backed repository clone/pull/push', 'network-backed repository clone/pull/push is allowed')
+t=t.replace('sandbox may only materialize the attached bundle locally', 'sandbox may clone and pull the remote directly')
+p.write_text(t)
+PY2
+if bash "$FIXTURE/tools/docs/check-operations-model" >/dev/null 2>&1; then
+  echo 'operations-model smoke: sandbox remote Git transport was accepted' >&2
+  exit 1
+fi
+
 echo 'operations-model smoke: PASS'
