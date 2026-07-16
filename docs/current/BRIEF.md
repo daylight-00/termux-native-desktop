@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-16.02`
+> Semantic state version: `2026-07-16.03`
 >
 > This is the compact current-state entry point. Exact commit and tree coordinates come from the checked-out full Git bundle, not from self-referential repository text.
 
@@ -100,9 +100,9 @@ Exact artifact/member identity, adaptation semantics, provider selection, compos
 
 ## Current project phase
 
-The active task is `review-gdkpixbuf-core-provider-tranche`.
+The active task is `produce-gdkpixbuf-2-42-12-provider-candidate`.
 
-The selected-provider composition review is complete. Ten exact members belong to the eight accepted provider roots; nine are in the selected GTK scope and `libtasn1` is deferred because its GnuTLS/security profile is not selected. The 36-row selected GTK ledger still has 27 provider gaps, so composition is `REVIEWED_BLOCKED_INCOMPLETE` and target-manifest generation remains prohibited. The next bounded tranche is exact GdkPixbuf, the four GLib-family members and libpng. Target population, materialization and activation remain blocked.
+The selected-provider composition review remains `REVIEWED_BLOCKED_INCOMPLETE` with 27 gaps. The first GdkPixbuf-core acquisition bound exact `glib-glibc 2.82.2-2` members for GLib, GObject, GModule and GIO plus exact `libpng-glibc 1.6.47`; provider authority is still open. No GdkPixbuf package or recipe exists in the pinned Termux source/index evidence. The active bounded step is a scratch-only upstream GdkPixbuf 2.42.12 build against those five candidates and the accepted project `libjpeg.so.62`, followed by exact JPEG/PNG file and memory mapping evidence. Target population, materialization and activation remain blocked. Meson for this build is repository-managed as a pure-Python uv project under `packages/gdkpixbuf-glibc/build-env`; Ninja remains the native Termux host command.
 
 ## Current non-goals
 

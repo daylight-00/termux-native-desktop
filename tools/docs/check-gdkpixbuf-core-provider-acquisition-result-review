@@ -1,0 +1,49 @@
+#!/usr/bin/env python3
+from pathlib import Path
+import csv, sys
+root=Path(__file__).resolve().parents[2]
+review=root/'experiments/glibc/selected-obsidian-provider-authority/review/gdkpixbuf-core-provider-acquisition-result-review.tsv'
+meta=root/'experiments/glibc/selected-obsidian-provider-authority/review/gdkpixbuf-core-provider-acquisition-result-review-metadata.tsv'
+doc=root/'docs/evidence/gdkpixbuf-core-provider-acquisition-result-review.md'
+active=(root/'docs/current/ACTIVE_TASK.md').read_text()
+state=(root/'docs/current/STATE.yaml').read_text()
+catalog=(root/'docs/catalog.tsv').read_text()
+errors=[]
+def read(p):
+    with p.open(newline='',encoding='utf-8') as f:return list(csv.DictReader(f,delimiter='\t'))
+rows=read(review); md={r['key']:r['value'] for r in read(meta)}
+if len(rows)!=6: errors.append(f'expected 6 tranche rows, got {len(rows)}')
+expected={
+'libgdk_pixbuf-2.0.so.0':('-', 'MISSING_SOURCE_BUILD_REQUIRED','OPEN'),
+'libglib-2.0.so.0':('e0504b50e14870623e10490d76b78c7a8d0037a54fe354429e2e3b5ac07ae0d5','EXACT_CANDIDATE_IDENTITY_BOUND','OPEN'),
+'libgobject-2.0.so.0':('de13928664709a9cecd61f50dcc4d2294d0c2ff91f147d0827d209cd03af45a6','EXACT_CANDIDATE_IDENTITY_BOUND','OPEN'),
+'libgmodule-2.0.so.0':('feaad9c286e9a1af3cff94a78924f543bc0f4d7f8dfc05c9ec13eb1c3d8764bf','EXACT_CANDIDATE_IDENTITY_BOUND','OPEN'),
+'libgio-2.0.so.0':('aa9fa8876fac7334570273064be05c3e65ba0f16d30a77a5929f48b12bfe64b3','EXACT_CANDIDATE_IDENTITY_BOUND','OPEN'),
+'libpng16.so.16':('00c9fd06c139699552c086b60d116a01d067ceddddb29c56600bf9fd3bae746f','EXACT_CANDIDATE_IDENTITY_BOUND','OPEN'),
+}
+by={r['identity']:r for r in rows}
+if set(by)!=set(expected): errors.append('identity set mismatch')
+for ident,(sha,candidate,authority) in expected.items():
+    r=by.get(ident,{})
+    if r.get('member_sha256')!=sha: errors.append(f'{ident}: member digest mismatch')
+    if r.get('candidate_state')!=candidate: errors.append(f'{ident}: candidate state mismatch')
+    if r.get('provider_authority')!=authority: errors.append(f'{ident}: authority must remain OPEN')
+    if r.get('dynamic_search_path') not in {'ABSENT','-'}: errors.append(f'{ident}: unexpected dynamic search path')
+if md.get('result_archive_sha256')!='e96fb0e2d8fa1c16a228e41d60801abac0b8a43584a86b7e63f8adddfc4f5692': errors.append('result digest mismatch')
+if md.get('exact_candidate_identity_count')!='5' or md.get('expected_identity_count')!='6': errors.append('candidate counts mismatch')
+if md.get('protected_state_disposition')!='FALSE_POSITIVE_NESTED_GIT_METADATA_MTIME': errors.append('protected-state disposition mismatch')
+if md.get('tracked_repository_mutation')!='NO' or md.get('live_glibc_mutation')!='NO': errors.append('mutation boundary widened')
+markers=[
+('active task','Task ID: `produce-gdkpixbuf-2-42-12-provider-candidate`' in active),
+('state result','result_sha256: e96fb0e2d8fa1c16a228e41d60801abac0b8a43584a86b7e63f8adddfc4f5692' in state),
+('state authority','provider_authority: open' in state),
+('catalog','gdkpixbuf-core-provider-acquisition-result-review\tevidence\tcurrent\tcanonical' in catalog),
+('doc boundary','provider authority accepted:     0' in doc.read_text()),
+('doc target','target manifest allowed:         NO' in doc.read_text()),
+]
+for label,ok in markers:
+    if not ok: errors.append(label)
+if errors:
+    for e in errors: print('gdkpixbuf-core-acquisition: FAIL:',e,file=sys.stderr)
+    raise SystemExit(1)
+print('gdkpixbuf-core-acquisition: PASS: 5 exact candidates, one source-build blocker, no provider authority')

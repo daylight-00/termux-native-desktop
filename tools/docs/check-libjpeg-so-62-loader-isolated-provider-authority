@@ -51,7 +51,7 @@ expected_meta={'provider_review_count':'8','provider_authority_accepted_count':'
 for k,v in expected_meta.items():
  if meta.get(k)!=v: errors.append(f'metadata {k}: expected {v}, got {meta.get(k)!r}')
 state=(root/'docs/current/STATE.yaml').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); brief=(root/'docs/current/BRIEF.md').read_text(); catalog=(root/'docs/catalog.tsv').read_text(); status=(root/'STATUS.md').read_text(); doc=(root/'docs/evidence/libjpeg-so-62-loader-isolated-provider-authority.md').read_text()
-markers=[('state accepted','provider_authority: accepted-bounded-provider' in state),('state count','accepted: 8' in state),('task','Task ID: `review-gdkpixbuf-core-provider-tranche`' in active),('brief count','bounded providers accepted: 8' in brief),('catalog','libjpeg-so-62-loader-isolated-provider-authority\tevidence\tcurrent\tcanonical' in catalog),('status','exact libjpeg.so.62 provider accepted for bounded GdkPixbuf JPEG decode' in status),('doc decision','ACCEPTED_BOUNDED_PROVIDER' in doc)]
+markers=[('state accepted','provider_authority: accepted-bounded-provider' in state),('state count','accepted: 8' in state),('task','Task ID: `produce-gdkpixbuf-2-42-12-provider-candidate`' in active),('brief count','bounded providers accepted: 8' in brief),('catalog','libjpeg-so-62-loader-isolated-provider-authority\tevidence\tcurrent\tcanonical' in catalog),('status','exact libjpeg.so.62 provider accepted for bounded GdkPixbuf JPEG decode' in status),('doc decision','ACCEPTED_BOUNDED_PROVIDER' in doc)]
 for label,ok in markers:
  if not ok: errors.append(f'missing current marker: {label}')
 if errors:

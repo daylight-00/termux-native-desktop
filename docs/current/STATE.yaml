@@ -1,6 +1,6 @@
 schema_version: 1
-state_version: 2026-07-16.02
-updated_on: 2026-07-15
+state_version: 2026-07-16.03
+updated_on: 2026-07-16
 
 project:
   phase: provider-composition-gap-closure
@@ -55,8 +55,8 @@ documentation:
   selected_provider_composition_review: docs/evidence/selected-obsidian-provider-composition-review.md
 
 provider_authority:
-  workstream: selected-composition-reviewed-incomplete-gdkpixbuf-core-gap-closure-active
-  boundary: eight-bounded-providers-retained-composition-reviewed-blocked-by-27-selected-identities-target-and-activation-open
+  workstream: gdkpixbuf-core-acquisition-reviewed-candidate-production-active
+  boundary: eight-bounded-providers-retained-five-gdkpixbuf-core-candidates-bound-sixth-source-build-active-composition-target-and-activation-open
   claim_inventory:
     total: 89
     class_a: 36
@@ -117,7 +117,19 @@ provider_authority:
     accepted_alias_collisions: 0
     target_manifest_allowed: false
     next_tranche: gdkpixbuf-core-provider
-  next_research_decision: review-gdkpixbuf-core-provider-tranche
+  gdkpixbuf_core_acquisition:
+    result_sha256: e96fb0e2d8fa1c16a228e41d60801abac0b8a43584a86b7e63f8adddfc4f5692
+    review_state: acquisition-reviewed-partial
+    exact_candidate_identities: 5
+    expected_identities: 6
+    glib_artifact_sha256: d91fe1202c51f7e59b120d3b475e24cdc2ac2cc28f2804e9bcf4919b775978e6
+    libpng_artifact_sha256: b2835404d3b0f54b75eb464a58ad5eb46f2d64d4fe1167a7984031f0e990b33f
+    gdkpixbuf_termux_package: not-found
+    gdkpixbuf_pinned_recipe: not-found
+    protected_state_report: false-positive-nested-git-metadata-mtime
+    provider_authority: open
+    next_action: scratch-build-upstream-gdkpixbuf-2-42-12
+  next_research_decision: produce-gdkpixbuf-2-42-12-provider-candidate
   prohibited_claims:
     - complete-provider-authority
     - complete-runtime-composition
@@ -125,7 +137,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: review-gdkpixbuf-core-provider-tranche
+  id: produce-gdkpixbuf-2-42-12-provider-candidate
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:

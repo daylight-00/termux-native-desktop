@@ -1,7 +1,7 @@
 # Status
 
-> **State:** bundle-native documentation and operations control planes active; compact constitutional authority installed; ADR 0005 claim classification complete; seven no-token recipes confirmed Class A and all seven bounded provider roots accepted; Pango filename continuity decided; exact libjpeg.so.62 provider accepted for bounded GdkPixbuf JPEG decode; selected-provider composition review active
-> **Updated:** 2026-07-15
+> **State:** bundle-native documentation and operations control planes active; compact constitutional authority installed; ADR 0005 claim classification complete; seven no-token recipes confirmed Class A and all seven bounded provider roots accepted; Pango filename continuity decided; exact libjpeg.so.62 provider accepted for bounded GdkPixbuf JPEG decode; selected-provider composition incomplete; GdkPixbuf 2.42.12 candidate production active
+> **Updated:** 2026-07-16
 
 ## Repository and deployment consolidation
 
@@ -13,6 +13,7 @@
 - The provider-authority corpus is classified under ADR 0005: 89 separated claims and 28 historical SUP-02 requests reclassified as 14 narrowed, 7 replaced and 7 unnecessary. Seven exact provider claims are accepted: four X.Org members for bounded selected GTK X11 scope, libtasn1 for bounded external GnuTLS 3.8.9 ASN.1/security scope, libepoxy for bounded GTK 3.24.49 X11 GLX dispatch, and the exact three-member Pango 1.54.0 family for bounded GTK text/FreeType/Fontconfig/Cairo scope with explicit SONAME continuity. No composition, target row or activation is accepted.
 - OJ-001 produced a corrected exact scratch-built `libjpeg.so.62.4.0` AArch64 candidate with SHA-256 `a537840ef9da6135cb3284bc3b3e0d1fb4f624180a416c2a3964b94714eb7fe5`, `DT_SONAME=libjpeg.so.62`, expected symbol versions and no `DT_RPATH`/`DT_RUNPATH`. The loader-isolated six-cell matrix passed completely: candidate and Debian oracle direct `djpeg` controls produced the same output digest, and candidate/oracle GdkPixbuf file and memory paths all reached completion with exact mapped-provider proof. The exact project candidate now has bounded provider authority for selected GdkPixbuf 2.42.12 JPEG file and memory decode only; composition, target population and activation remain open.
 - The first explicit selected-provider composition review now records 10 exact accepted members, includes 9 in the selected GTK scope, defers libtasn1 until a GnuTLS/security profile is selected, finds zero accepted-member SONAME or alias collisions, and identifies 27 unresolved selected GTK identities. The Class D composition decision is `REVIEWED_BLOCKED_INCOMPLETE`; target-manifest generation, population and activation remain blocked while the GdkPixbuf/GLib/libpng core tranche is reviewed.
+- The first GdkPixbuf-core acquisition bound exact GLib, GObject, GModule, GIO and libpng candidate members from pinned Termux artifacts. No GdkPixbuf package or recipe exists in the pinned Termux source/index evidence, so the next bounded action is an official-source GdkPixbuf 2.42.12 scratch build. The reported repository protected-state drift was a nested `.git` metadata-mtime false positive; tracked repository state and live glibc/provider paths were unchanged.
 
 See `docs/decisions/0004-single-main-and-immutable-release-deployment.md`.
 

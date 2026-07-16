@@ -184,10 +184,10 @@ checks=[
     ('state version','state_version:' in state),
     ('claim count state','total: 89' in state),
     ('SUP-02 state','required_now: 0' in state),
-    ('next task','Task ID: `review-gdkpixbuf-core-provider-tranche`' in active),
+    ('next task','Task ID: `produce-gdkpixbuf-2-42-12-provider-candidate`' in active),
     ('brief classification','89 separated claims' in brief),
     ('catalog row','provider-claim-classification\tevidence\tcurrent\tcanonical' in catalog),
-    ('status next phase','selected-provider composition review active' in status),
+    ('status next phase','GdkPixbuf 2.42.12 candidate production active' in status),
     ('disposition catalog','libjpeg-so-62-provider-candidate-disposition\tevidence\tcurrent\tcanonical' in catalog),
 ]
 for label,ok in checks:

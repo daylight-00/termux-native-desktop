@@ -49,3 +49,5 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 - [`libjpeg-so-62-loader-isolated-provider-authority.md`](libjpeg-so-62-loader-isolated-provider-authority.md) — exact loader-isolated candidate/oracle controls and bounded GdkPixbuf JPEG provider-authority decision.
 
 - [`selected-obsidian-provider-composition-review.md`](selected-obsidian-provider-composition-review.md) records the first Class D non-materializing composition manifest, exact accepted members, exclusions, collisions and 27 blocking selected GTK identities.
+
+- [`gdkpixbuf-core-provider-acquisition-result-review.md`](gdkpixbuf-core-provider-acquisition-result-review.md) binds the exact GLib-family and libpng candidate identities, records the missing Termux GdkPixbuf package/recipe, and routes the upstream 2.42.12 scratch build.

@@ -1,0 +1,87 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import hashlib
+import pathlib
+import sys
+import tomllib
+
+ROOT = pathlib.Path(__file__).resolve().parents[2]
+PROJECT = ROOT / "packages/gdkpixbuf-glibc/build-env/pyproject.toml"
+LOCK = ROOT / "packages/gdkpixbuf-glibc/build-env/uv.lock"
+README = ROOT / "packages/gdkpixbuf-glibc/README.md"
+ACTIVE = ROOT / "docs/current/ACTIVE_TASK.md"
+
+EXPECTED_WHEEL = (
+    "https://files.pythonhosted.org/packages/5e/cd/"
+    "f3a881ff5e601d6bbeff63b38ee2362e1167c47d9cde03eddf8d71a4ffb0/"
+    "meson-1.11.1-py3-none-any.whl"
+)
+EXPECTED_HASH = "sha256:9b3a023657e393dbc5335b95c561337d49b7a458f5541e47ec44f2cc566e0d80"
+
+
+def fail(message: str) -> None:
+    raise SystemExit(f"gdkpixbuf build env: {message}")
+
+for path in (PROJECT, LOCK, README, ACTIVE):
+    if not path.is_file():
+        fail(f"missing {path.relative_to(ROOT)}")
+
+project = tomllib.loads(PROJECT.read_text())
+meta = project.get("project", {})
+if meta.get("name") != "gdkpixbuf-glibc-build":
+    fail("unexpected project name")
+if meta.get("requires-python") != ">=3.14,<3.15":
+    fail("Python boundary must remain >=3.14,<3.15")
+if meta.get("dependencies") != ["meson==1.11.1"]:
+    fail("only exact Meson 1.11.1 may be managed in this uv environment")
+uv = project.get("tool", {}).get("uv", {})
+expected_uv = {
+    "package": False,
+    "python-downloads": "never",
+    "python-preference": "only-system",
+}
+if uv != expected_uv:
+    fail("uv policy must disable packaging and Python downloads")
+
+lock = tomllib.loads(LOCK.read_text())
+if lock.get("version") != 1 or lock.get("revision") != 3:
+    fail("unexpected uv.lock format")
+if lock.get("requires-python") != ">=3.14, <3.15":
+    fail("lock Python boundary mismatch")
+packages = {pkg["name"]: pkg for pkg in lock.get("package", [])}
+if set(packages) != {"gdkpixbuf-glibc-build", "meson"}:
+    fail("lock must contain only virtual project and Meson")
+meson = packages["meson"]
+if meson.get("version") != "1.11.1":
+    fail("Meson lock version mismatch")
+wheels = meson.get("wheels", [])
+if len(wheels) != 1:
+    fail("Meson must have one locked wheel")
+wheel = wheels[0]
+if wheel.get("url") != EXPECTED_WHEEL or wheel.get("hash") != EXPECTED_HASH:
+    fail("Meson pure-Python wheel identity mismatch")
+if "py3-none-any.whl" not in wheel["url"]:
+    fail("Meson wheel must remain platform-independent")
+
+readme = README.read_text()
+for needle in (
+    "Meson is a pure-Python locked dependency",
+    "Ninja remains a native Termux host",
+    "CMake is not required",
+    "UV_PROJECT_ENVIRONMENT",
+    "--locked",
+    "--no-python-downloads",
+):
+    if needle not in readme:
+        fail(f"README missing boundary: {needle}")
+
+active = ACTIVE.read_text()
+for needle in (
+    "uv sync --locked --no-python-downloads",
+    "native Termux `ninja`",
+):
+    if needle not in active:
+        fail(f"active task missing build-env boundary: {needle}")
+
+print("gdkpixbuf build env: PASS")
