@@ -62,3 +62,5 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 - [`libcloudproviders-bounded-provider-authority.md`](libcloudproviders-bounded-provider-authority.md) — exact Class B libcloudproviders provider decision for GTK 3.24.49 PlacesSidebar cloud-account integration; DBus services and accounts remain separate.
 
 - [`fribidi-bounded-provider-authority.md`](fribidi-bounded-provider-authority.md) — exact Class B FriBidi provider decision for Pango 1.54.0 core Unicode bidirectional text processing.
+
+- `freetype-bounded-provider-authority.md` — exact FreeType member, shared-output recipe semantics, PangoFT2 binding and bounded compression-feature closure.

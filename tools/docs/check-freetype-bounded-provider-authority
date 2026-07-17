@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+required=(
+ docs/evidence/freetype-bounded-provider-authority.md
+ experiments/glibc/selected-obsidian-provider-authority/review/freetype-bounded-provider-authority.tsv
+ experiments/glibc/selected-obsidian-provider-authority/review/freetype-transitive-provider-authority.tsv
+ experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification.tsv
+ experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-composition-members.tsv
+)
+for rel in "${required[@]}"; do [ -f "$ROOT/$rel" ] || { echo "freetype-provider: FAIL: missing $rel" >&2; exit 1; }; done
+python3 - "$ROOT" <<'PY'
+from pathlib import Path
+import csv,sys
+root=Path(sys.argv[1]); review=root/'experiments/glibc/selected-obsidian-provider-authority/review'
+def read(n):
+ with (review/n).open(newline='',encoding='utf-8') as f:return list(csv.DictReader(f,delimiter='\t'))
+errors=[]; rows=read('freetype-bounded-provider-authority.tsv')
+if len(rows)!=1: errors.append(f'expected one FreeType row, got {len(rows)}')
+else:
+ r=rows[0]
+ want={'review_id':'FREETYPE-PROV-001','root_review_id':'generic-root-review:af39bbec812180537c5a','recipe_root':'gpkg/freetype','recipe_tree':'3a92f7895a8a4ef5cfe33fcc8b806acccffd0313','build_script_blob_sha':'a2ebf194e945c35b0f8147a4d9f0ed2d2a43fd26','artifact_package':'freetype-glibc','artifact_version':'2.13.3','artifact_sha256':'8e1d9d34f13c6c95aba5e9a5f636facc94e0ca7c073f68cf605858a499a54e7b','evidence_row_id':'selected:654806f659f7b97ba9d1','exact_member_sha256':'04723b724b36bd516936461db4ee32a692f15af7abb99cd52cd287afa36118cf','observed_soname':'libfreetype.so.6','adaptation_adr_class':'B','decision':'ACCEPTED_BOUNDED_PROVIDER'}
+ for k,v in want.items():
+  if r.get(k)!=v: errors.append(f'{k}: expected {v}, got {r.get(k)!r}')
+ joined=';'.join(r.values())
+ for token in ['DELEGATES_EXACTLY_TO_GENERIC_TERMUX_STEP_CONFIGURE_MESON','DEFAULT_LIBRARY_SHARED_ONLY','NO_PACKAGE_SPECIFIC_FEATURE_ABI_SONAME_DATA_OR_PATCH_DELTA','FT_NEW_FACE','FT_SET_TRANSFORM','FT_SET_CHAR_SIZE','FT_GET_KERNING','FT_DONE_FACE','NO_COMPLETE_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT']:
+  if token not in joined: errors.append(f'missing bounded token: {token}')
+trans=read('freetype-transitive-provider-authority.tsv')
+exp={
+'libbrotlicommon.so.1.1.0':'46ae61c88b9a2f32b13dfe81a3353a6aef2c83f3cbacf5270197878c47aab9be',
+'libbrotlidec.so.1.1.0':'8faac8e6d945bf1d5f113d986502bf28883fa0cf7a0feb529840124d2b804a87',
+'libbz2.so.1.0.8':'93de8c4bb245b253dfc357349a9b81e5ed6fb01ac1c9513e0c36fbf5c5a84167',
+'libz.so.1.3.1':'6835963ff1be924f73cdd59f29f2e2521d1705b3ce2d0e90a0c0fd4c5773a070'}
+if len(trans)!=4: errors.append(f'expected four transitive rows, got {len(trans)}')
+for name,sha in exp.items():
+ if not any(Path(r['exact_member_path']).name==name and r['exact_member_sha256']==sha and r['inclusion_state']=='EXACT_CONDITIONAL_OBJECT_AUTHORITY_INCLUDED_TRANSITIVE_FREETYPE_SCOPE' for r in trans): errors.append(f'missing exact transitive row: {name}')
+claims={r['claim_id']:r for r in read('provider-claim-classification.tsv')}
+if claims.get('PCC-FREETYPE-PROVIDER',{}).get('classification_state')!='BOUNDED_PROVIDER_AUTHORITY_ACCEPTED': errors.append('FreeType provider claim not accepted')
+if claims.get('PCC-FREETYPE-ADAPTATION',{}).get('classification_state')!='CLASS_B_BOUNDED_MESON_DELEGATION_AND_SHARED_OUTPUT_SELECTION_SEMANTICS_ACCEPTED': errors.append('FreeType adaptation claim not bounded')
+mem=read('selected-provider-composition-members.tsv')
+if not any(r['member_basename']=='libfreetype.so.6.20.2' and r['composition_inclusion']=='INCLUDED_SELECTED_GTK_SCOPE' for r in mem): errors.append('FreeType composition row missing')
+for name in exp:
+ if not any(r['member_basename']==name and r['composition_inclusion']=='INCLUDED_TRANSITIVE_FREETYPE_SCOPE' for r in mem): errors.append(f'FreeType transitive composition row missing: {name}')
+doc=(root/'docs/evidence/freetype-bounded-provider-authority.md').read_text(); catalog=(root/'docs/catalog.tsv').read_text(); state=(root/'docs/current/STATE.yaml').read_text()
+for label,ok in [('doc decision','libfreetype.so.6.20.2' in doc),('doc exclusions','Brotli encoder' in doc),('catalog','freetype-bounded-provider-authority\tevidence\tcurrent\tcanonical' in catalog),('state route','freetype_provider_authority_review: docs/evidence/freetype-bounded-provider-authority.md' in state)]:
+ if not ok: errors.append(f'missing durable marker: {label}')
+for forbidden in ['target manifest allowed: YES','activation: ACCEPTED','COMPLETE_COMPOSITION_ACCEPTED']:
+ if forbidden in doc: errors.append(f'forbidden widening: {forbidden}')
+if errors:
+ for e in errors: print('freetype-provider: FAIL:',e,file=sys.stderr)
+ raise SystemExit(1)
+print('freetype-provider: PASS: exact FreeType and four exact conditional transitive members are bounded without composition, target, or activation widening')
+PY

@@ -9,7 +9,7 @@ roots: 28
 objects: 37
 claims: 89
 new evidence collected: 0
-provider authority accepted inside inventory: 15
+provider authority accepted inside inventory: 17
 composition accepted: 0
 target rows accepted: 0
 activation accepted: 0
@@ -96,7 +96,7 @@ The classification retains the following evidence without overpromoting it:
 - the accepted OJ-001 correction that the required ABI identity is `libjpeg.so.62`, not `libjpeg.so.8`;
 - all historical SUP-02 request, acquisition, receipt, and producer records.
 
-These remain evidence inputs. They do not create final provider authority by themselves. Fifteen root provider claims are accepted only through their separate bounded provider reviews.
+These remain evidence inputs. They do not create final provider authority by themselves. Seventeen root provider claims are accepted only through their separate bounded provider reviews.
 
 ## SUP-02 disposition
 
@@ -145,14 +145,14 @@ The `libjpeg-turbo` SUP-02 request is also unnecessary at the current boundary b
 ## Current authority states
 
 ```text
-bounded provider authority accepted inside inventory: 15 roots
+bounded provider authority accepted inside inventory: 17 roots
 provider authority still open:                       13 roots
 application runtime composition:     NOT REACHED
 target population:                   BLOCKED
 selected-generation activation:      BLOCKED
 ```
 
-The fifteen accepted root rows are `libxfixes`, `libxcomposite`, `libxi`, `libxinerama`, `libxcursor`, `libtasn1`, `libepoxy`, `pango`, the exact project-built `libjpeg.so.62.4.0`, `glib`, `libpng`, `util-linux`, `libthai`, `libdatrie`, and `libcloudproviders`. The GLib four-member family and libpng shared member are accepted only for the exact GdkPixbuf 2.42.12 JPEG/PNG file and memory decode scope; the exact official libmount/libblkid pair is accepted only for the bounded GdkPixbuf transitive runtime. Each decision remains limited to an exact identity and named consumer capability. The classification still does not authorize extraction, installation, target population, complete composition, selected-generation mutation, or activation.
+The seventeen accepted root rows are `libxfixes`, `libxcomposite`, `libxi`, `libxinerama`, `libxcursor`, `libtasn1`, `libepoxy`, `pango`, the exact project-built `libjpeg.so.62.4.0`, `glib`, `libpng`, `util-linux`, `libthai`, `libdatrie`, `libcloudproviders`, `fribidi`, and `freetype`. The GLib four-member family and libpng shared member are accepted only for the exact GdkPixbuf 2.42.12 JPEG/PNG file and memory decode scope; the exact official libmount/libblkid pair is accepted only for the bounded GdkPixbuf transitive runtime. Each decision remains limited to an exact identity and named consumer capability. The classification still does not authorize extraction, installation, target population, complete composition, selected-generation mutation, or activation.
 
 ## Seven-root semantic-review result
 
@@ -161,7 +161,7 @@ The seven-root no-token semantic review is complete:
 ```text
 confirmed Class A: 7
 reclassified Class B: 0
-provider authority accepted inside inventory: 15
+provider authority accepted inside inventory: 17
 ```
 
 Canonical review surface:
@@ -181,7 +181,7 @@ The exact `libXcursor.so.1.0.2` provider is accepted for GTK 3.24.49 X11 cursor 
 
 The exact `libcloudproviders.so.0.3.6` provider is accepted for selected GTK 3.24.49 PlacesSidebar cloud-account integration. Its Class B delta disables Vala binding generation only; DBus services, accounts and service activation remain separate.
 
-The exact `libfribidi.so.0.4.0` provider is now accepted only for Pango 1.54.0 core Unicode bidirectional text processing. The next smallest phase is exact `libfreetype.so.6.20.2`, bounding its custom step/configuration and selected Pango/GTK rasterization consumer path. No target paths are generated.
+The exact `libfribidi.so.0.4.0` provider remains accepted only for Pango 1.54.0 core Unicode bidirectional processing. Exact `libfreetype.so.6.20.2` is now accepted for the bounded Pango/GTK FT2 font-engine path, with four pre-existing conditional objects included only for its compression-feature closure. The next smallest phase is `libxkbcommon`, including its concrete filename drift review. No target paths are generated.
 
 ## Stop line
 

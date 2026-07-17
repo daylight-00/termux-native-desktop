@@ -1,70 +1,68 @@
-# Active task: review exact FreeType provider authority
+# Active task: review exact libxkbcommon provider authority and filename continuity
 
-> Task ID: `review-freetype-bounded-provider-authority`
+> Task ID: `review-libxkbcommon-bounded-provider-authority`
 >
-> Expected state on completion: exact `libfreetype.so.6.20.2` is either accepted for selected Pango/GTK font rasterization and metrics or left open with a precise Class B custom-step/configuration, consumer-binding, conflict, update or rollback blocker. No target population, deployment or activation occurs.
+> Expected state on completion: the exact Termux candidate `libxkbcommon.so.0.8.0` is either accepted for the selected GTK XKB keyboard/keymap capability while preserving SONAME `libxkbcommon.so.0`, or left open with a precise custom-step, concrete-filename drift, consumer-binding, conflict, update, or rollback blocker. No target population, deployment, or activation occurs.
 
 ## Objective
 
-Review the single-member `gpkg/freetype` root under ADR 0005 using its exact artifact/member identity, pinned recipe tree, custom Termux step and configure semantics, selected Pango/GTK necessity, consumer binding, conflict/exclusion, update and rollback boundaries.
+Review the single-member `gpkg/libxkbcommon` root under ADR 0005, explicitly reconciling the selected/oracle concrete label with the retained exact Termux candidate filename.
 
 ## Why now
 
-The exact FriBidi member is bounded and accepted for Pango 1.54.0 core Unicode bidirectional processing, reducing the selected composition gap count from 16 to 15. FreeType is the remaining reviewed-root, single-member T2 material-delta tranche.
+FreeType and its exact compression-feature closure are bounded and accepted, reducing selected composition gaps from 15 to 14. libxkbcommon is the smallest remaining reviewed-root, single-member Class B tranche.
 
 ## Known coordinates
 
 ```text
-root review:    generic-root-review:af39bbec812180537c5a
-recipe root:    gpkg/freetype
-recipe tree:    3a92f7895a8a4ef5cfe33fcc8b806acccffd0313
-artifact:       freetype-glibc 2.13.3
-artifact SHA:   8e1d9d34f13c6c95aba5e9a5f636facc94e0ca7c073f68cf605858a499a54e7b
-member:         libfreetype.so.6.20.2
-member SHA:     04723b724b36bd516936461db4ee32a692f15af7abb99cd52cd287afa36118cf
-SONAME:         libfreetype.so.6
-selected row:   selected:654806f659f7b97ba9d1
+root review:       generic-root-review:778b62f6da21fd02f1bb
+recipe root:       gpkg/libxkbcommon
+recipe tree:       5fda5da07e6b38230082785d352adc4e6fb9c4da
+artifact:          libxkbcommon-glibc 1.8.0
+artifact SHA:      e58eca6f9c0e0d068d80dabd3b289d6b1b4cdaa25fc91053d21392ecfbf54f97
+selected identity: libxkbcommon.so.0.0.0
+selected row:      selected:0eab80f8c75b58f5c92a
+exact candidate:   libxkbcommon.so.0.8.0
+SONAME:            libxkbcommon.so.0
 ```
 
 ## In scope
 
-- exact member and SONAME identity;
-- Class B custom Termux step and configure semantics;
-- selected Pango/GTK font rasterization and metrics necessity and bounded consumer binding;
-- conflict, exclusion, update and rollback review.
+- exact candidate/member digest and SONAME identity;
+- Class B custom Termux step semantics;
+- concrete filename drift and SONAME-alias continuity;
+- selected GTK XKB keymap/keyboard consumer binding;
+- conflict, exclusion, update, and rollback boundaries.
 
 ## Out of scope
 
-- package tools, documentation and development surfaces;
-- complete font/text or GTK composition acceptance;
-- target generation, installation, materialization, deployment or activation;
-- SUP-02 evidence collection.
+Package tools, development surfaces, complete input/GTK composition, target generation, installation, materialization, deployment, activation, and SUP-02 evidence collection.
 
 ## Required reading
 
 - `docs/current/STATE.yaml`
 - `docs/decisions/0005-proportional-assurance-depth.md`
-- `docs/evidence/fribidi-bounded-provider-authority.md`
+- `docs/evidence/freetype-bounded-provider-authority.md`
 - `docs/evidence/selected-obsidian-provider-composition-review.md`
 - `experiments/glibc/selected-obsidian-provider-authority/review/generic-build-attestation-adaptation-root-review-set.tsv`
 - `experiments/glibc/selected-obsidian-provider-authority/review/generic-artifact-member-inventory-receipt-review.tsv`
 
 ## Pending external inputs
 
-None before static review. Request one bounded Termux probe only if exact consumer or custom-step/configuration impact cannot be resolved from retained evidence.
-
-## Next valid action
-
-Perform a bounded exact-file recipe and Pango consumer review. Request device execution only if static evidence cannot resolve a material ambiguity.
+None before static review. Request one bounded Termux probe only if exact consumer or filename-continuity impact cannot be resolved from retained evidence.
 
 ## Stop conditions
 
-Stop without accepting authority if exact identity, custom-step/configuration semantics, consumer binding, conflict/exclusion, update or rollback boundaries cannot be bounded.
+Stop without accepting authority if exact candidate digest, custom-step semantics, selected identity-to-SONAME continuity, consumer binding, conflict/exclusion, update, or rollback cannot be bounded.
+
+## Next valid action
+
+Perform a bounded exact-file recipe, filename-continuity, and GTK XKB consumer review. Request device execution only if retained static evidence cannot resolve a material ambiguity.
 
 ## Completion criteria
 
-- Exact artifact, member, SONAME and recipe coordinates remain pinned.
-- Class B custom-step/configuration semantics are explicit.
-- Necessity, consumer binding, conflict/exclusion, update and rollback are explicit.
+- Exact artifact, candidate member, SONAME, and recipe coordinates remain pinned.
+- Custom-step semantics and concrete-filename continuity are explicit.
+- Necessity, consumer binding, conflict/exclusion, update, and rollback are explicit.
 - The provider is accepted narrowly or left open with one precise blocker.
-- Composition, target population and activation remain separate.
+- Composition, target population, and activation remain separate.

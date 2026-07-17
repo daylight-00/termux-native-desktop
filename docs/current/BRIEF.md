@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-17.03`
+> Semantic state version: `2026-07-17.04`
 >
 > This is the compact current-state entry point. Exact commit and tree coordinates come from the checked-out full Git bundle, not from self-referential repository text.
 
@@ -34,7 +34,7 @@ accepted exact members: 24
 included current-scope members: 23
 deferred members: 1
 composition review: REVIEWED_BLOCKED_INCOMPLETE
-selected identity gaps: 15
+selected identity gaps: 14
 target population: blocked
 activation: blocked
 ```
@@ -43,6 +43,6 @@ Canonical decisions are under `docs/evidence/`; the current composition review i
 
 ## Current project phase
 
-The active task is `review-freetype-bounded-provider-authority`.
+The active task is `review-libxkbcommon-bounded-provider-authority`.
 
 The next proportional tranche is exact `libfreetype.so.6.20.2`. It must bound the recipe custom step and configure semantics, selected Pango/GTK rasterization and metrics consumer binding, conflicts, update and rollback. No target population, materialization, deployment or activation is allowed.
