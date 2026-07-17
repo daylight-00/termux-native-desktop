@@ -3,12 +3,12 @@
 ## Decision
 
 ```text
-accepted bounded provider roots: 16
-accepted exact members:          22
-included in current GTK scope:    21
+accepted bounded provider roots: 17
+accepted exact members:          23
+included in current GTK scope:    22
 deferred profile member:          1
 selected GTK runtime identities: 36
-unresolved selected identities:  17
+unresolved selected identities:  16
 accepted SONAME collisions:       0
 accepted alias collisions:        0
 composition decision:             REVIEWED_BLOCKED_INCOMPLETE
@@ -19,7 +19,7 @@ This Class D review names accepted members without copying, installing, aliasing
 
 ## Included accepted members
 
-Twenty-one exact members are included in the bounded selected GTK/GdkPixbuf/X11 scope:
+Twenty-two exact members are included in the bounded selected GTK/GdkPixbuf/X11 scope:
 
 ```text
 libXfixes.so.3.1.0       -> libXfixes.so.3
@@ -27,6 +27,7 @@ libXcomposite.so.1.0.0   -> libXcomposite.so.1
 libXi.so.6.1.0           -> libXi.so.6
 libXinerama.so.1.0.0     -> libXinerama.so.1
 libXcursor.so.1.0.2      -> libXcursor.so.1
+libcloudproviders.so.0.3.6 -> libcloudproviders.so.0
 libepoxy.so.0.0.0        -> libepoxy.so.0
 libpango-1.0.so.0.5400.0 -> libpango-1.0.so.0
 libpangoft2-1.0.so.0.5400.0 -> libpangoft2-1.0.so.0
@@ -55,14 +56,14 @@ Every proposed alias is the observed ELF SONAME and targets one exact reviewed m
 
 ## Completeness result
 
-The selected ledger contains 36 identities. Nineteen selected identities have exact included providers, while `libblkid` and `libiconv` are two additional required transitive members. Seventeen selected identities remain unresolved:
+The selected ledger contains 36 identities. Twenty selected identities have exact included providers, while `libblkid` and `libiconv` are two additional required transitive members. Sixteen selected identities remain unresolved:
 
 ```text
-open reviewed-root provider gaps: 8
+open reviewed-root provider gaps: 7
 outside-28 or no accepted Termux candidate: 9
 ```
 
-The next priority gap is exact `libcloudproviders.so.0.3.6`. Other blockers continue to include GTK/GDK, Cairo, Fontconfig, FreeType, HarfBuzz, FriBidi, Pixman, ATK/AT-SPI, Xdamage, xkbcommon and SELinux surfaces. A historical Debian object proves demand only; it never grants target authority.
+The next priority gap is exact `libfribidi.so.0.4.0`. Other blockers continue to include GTK/GDK, Cairo, Fontconfig, FreeType, HarfBuzz, Pixman, ATK/AT-SPI, Xdamage, xkbcommon and SELinux surfaces. A historical Debian object proves demand only; it never grants target authority.
 
 ## Conflict and exclusion policy
 
@@ -78,8 +79,8 @@ Re-review is required on provider scope, member/artifact digest, SONAME/alias, s
 REVIEWED_BLOCKED_INCOMPLETE
 ```
 
-The review is sufficient to reject target-manifest generation, not to accept complete composition. The next smallest tranche is exact `libcloudproviders.so.0.3.6`, with Class B configure semantics, consumer binding, conflict, update and rollback boundaries reviewed before any materialization.
+The review is sufficient to reject target-manifest generation, not to accept complete composition. The next smallest tranche is exact `libfribidi.so.0.4.0`, with Class B custom-step semantics, consumer binding, conflict, update and rollback boundaries reviewed before any materialization.
 
 ## Explicitly prohibited inference
 
-This review does not establish complete runtime composition, target membership or paths, materialization readiness, deployment, activation, cursor-theme data authority, or provider authority for any of the 17 gap rows.
+This review does not establish complete runtime composition, target membership or paths, materialization readiness, deployment, activation, cursor-theme data authority, or provider authority for any of the 16 gap rows.

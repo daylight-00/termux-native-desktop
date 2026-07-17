@@ -58,3 +58,5 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 - [`libxcursor-bounded-provider-authority.md`](libxcursor-bounded-provider-authority.md) — exact Class B libXcursor provider decision for GTK 3.24.49 X11 cursor handling.
 
 - [`libthai-libdatrie-iconv-bounded-provider-authority.md`](libthai-libdatrie-iconv-bounded-provider-authority.md) — exact signed-index libthai/libdatrie/libiconv chain, `thbrk.tri` content and bounded Pango 1.54.0 Thai-break authority.
+
+- [`libcloudproviders-bounded-provider-authority.md`](libcloudproviders-bounded-provider-authority.md) — exact Class B libcloudproviders provider decision for GTK 3.24.49 PlacesSidebar cloud-account integration; DBus services and accounts remain separate.

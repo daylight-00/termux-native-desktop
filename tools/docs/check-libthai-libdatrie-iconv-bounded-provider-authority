@@ -61,7 +61,7 @@ mem=read('selected-provider-composition-members.tsv')
 for name,sha,incl in [('libthai.so.0.3.1','773a629e30546b57d650d9d991d18c64490ef5cf53062fec1e02c69ece66bf9c','INCLUDED_SELECTED_GTK_SCOPE'),('libdatrie.so.1.4.0','8052746b4003c367e811dc26686373455f687e11bf95cbbe8772a2069b86e7dd','INCLUDED_SELECTED_GTK_SCOPE'),('libiconv.so.2.7.0','3d3edba1ecd510ddac243a3c9a5a08341219b62bc4c874241a134bc7d250f5be','INCLUDED_TRANSITIVE_PANGO_THAI_SCOPE')]:
  if not any(r['member_basename']==name and r['member_sha256']==sha and r['composition_inclusion']==incl for r in mem): errors.append(f'composition row missing {name}')
 if any(r['member_basename']=='libcharset.so.1.0.0' for r in mem): errors.append('libcharset silently included')
-state=(root/'docs/current/STATE.yaml').read_text();doc=(root/'docs/evidence/libthai-libdatrie-iconv-bounded-provider-authority.md').read_text();catalog=(root/'docs/catalog.tsv').read_text();status=(root/'STATUS.md').read_text()
+state=(root/'docs/current/STATE.yaml').read_text();doc=(root/'docs/evidence/libthai-libdatrie-iconv-bounded-provider-authority.md').read_text();catalog=(root/'docs/catalog.tsv').read_text()
 for label,ok in [
  ('state route','libthai_libdatrie_iconv_provider_authority_review: docs/evidence/libthai-libdatrie-iconv-bounded-provider-authority.md' in state),
  ('state result','result_sha256: 7789ff1a039e3186b04014e4ddf6a7ba68d77fe31a2f1ef77273590aa97b8e1e' in state),
@@ -69,7 +69,6 @@ for label,ok in [
  ('doc decision','libthai.so.0.3.1:   ACCEPTED_BOUNDED_PROVIDER' in doc),
  ('doc exclusion','libcharset.so.1.0.0: EXCLUDED_NOT_NEEDED_OR_MAPPED' in doc),
  ('catalog','libthai-libdatrie-iconv-bounded-provider-authority\tevidence\tcurrent\tcanonical' in catalog),
- ('status','exact libthai, libdatrie and transitive libiconv accepted for bounded Pango Thai breaking' in status),
 ]:
  if not ok: errors.append(f'missing marker: {label}')
 for forbidden in ['composition:         accepted','target population:   accepted','activation:          accepted']:

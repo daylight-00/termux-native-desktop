@@ -12,6 +12,7 @@ required=(
   experiments/glibc/selected-obsidian-provider-authority/review/libxcursor-bounded-provider-authority.tsv
   experiments/glibc/selected-obsidian-provider-authority/review/libthai-libdatrie-bounded-provider-authority.tsv
   experiments/glibc/selected-obsidian-provider-authority/review/libiconv-transitive-provider-authority.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/libcloudproviders-bounded-provider-authority.tsv
   docs/current/STATE.yaml docs/current/ACTIVE_TASK.md docs/current/BRIEF.md docs/catalog.tsv STATUS.md
 )
 for rel in "${required[@]}"; do [ -f "$ROOT/$rel" ] || { echo "provider-composition: FAIL: missing $rel" >&2; exit 1; }; done
@@ -31,24 +32,25 @@ def read(n):
  with (review/n).open(newline='',encoding='utf-8') as f:return list(csv.DictReader(f,delimiter='\t'))
 mem=read('selected-provider-composition-members.tsv'); gaps=read('selected-provider-composition-gaps.tsv'); meta={r['key']:r['value'] for r in read('selected-provider-composition-metadata.tsv')}; claims={r['claim_id']:r for r in read('provider-claim-classification.tsv')}
 errors=[]
-exp={'selected_gtk_identity_count':'36','accepted_provider_root_count':'16','accepted_member_count':'22','included_member_count':'21','deferred_member_count':'1','unresolved_selected_identity_count':'17','reviewed_root_gap_count':'8','outside_28_root_gap_count':'9','accepted_soname_collision_count':'0','accepted_alias_collision_count':'0','composition_decision':'REVIEWED_BLOCKED_INCOMPLETE','target_manifest_allowed':'NO','next_review_tranche':'LIBCLOUDPROVIDERS_BOUNDED_PROVIDER_AUTHORITY','authority_effect':'NO_TARGET_POPULATION_MATERIALIZATION_OR_ACTIVATION'}
+exp={'selected_gtk_identity_count':'36','accepted_provider_root_count':'17','accepted_member_count':'23','included_member_count':'22','deferred_member_count':'1','unresolved_selected_identity_count':'16','reviewed_root_gap_count':'7','outside_28_root_gap_count':'9','accepted_soname_collision_count':'0','accepted_alias_collision_count':'0','composition_decision':'REVIEWED_BLOCKED_INCOMPLETE','target_manifest_allowed':'NO','next_review_tranche':'FRIBIDI_BOUNDED_PROVIDER_AUTHORITY','authority_effect':'NO_TARGET_POPULATION_MATERIALIZATION_OR_ACTIVATION'}
 for k,v in exp.items():
  if meta.get(k)!=v:errors.append(f'metadata {k}: expected {v}, got {meta.get(k)!r}')
-if len(mem)!=22:errors.append(f'member rows {len(mem)}')
-if sum(r['composition_inclusion'].startswith('INCLUDED_') for r in mem)!=21:errors.append('included member count mismatch')
+if len(mem)!=23:errors.append(f'member rows {len(mem)}')
+if sum(r['composition_inclusion'].startswith('INCLUDED_') for r in mem)!=22:errors.append('included member count mismatch')
 if sum(r['composition_inclusion']=='DEFERRED_PROFILE_REQUIREMENT_OPEN' for r in mem)!=1:errors.append('deferred member count mismatch')
-if len({r['soname'] for r in mem})!=22:errors.append('SONAME collision')
-if len({r['alias_basename'] for r in mem})!=22:errors.append('alias collision')
+if len({r['soname'] for r in mem})!=23:errors.append('SONAME collision')
+if len({r['alias_basename'] for r in mem})!=23:errors.append('alias collision')
 if any(r['collision_state'].startswith('NO_') is False for r in mem):errors.append('non-clean accepted collision state')
 if not any(r['recipe_root']=='gpkg/libtasn1' and r['composition_inclusion']=='DEFERRED_PROFILE_REQUIREMENT_OPEN' for r in mem):errors.append('libtasn1 not deferred')
 if not any(r['member_basename']=='libjpeg.so.62.4.0' and r['alias_basename']=='libjpeg.so.62' for r in mem):errors.append('exact libjpeg member/alias missing')
 if not any(r['member_basename']=='libgdk_pixbuf-2.0.so.0.4200.12' and r['member_sha256']=='0c1404c6854e7674428a5b653b240759dac0374631697fe61ae275898f6a809f' and r['alias_basename']=='libgdk_pixbuf-2.0.so.0' for r in mem):errors.append('exact GdkPixbuf member/alias missing')
-if len(gaps)!=17:errors.append(f'gap rows {len(gaps)}')
-if sum(r['priority_tranche']=='LIBCLOUDPROVIDERS_BOUNDED_PROVIDER_AUTHORITY' for r in gaps)!=1:errors.append('libcloudproviders priority gap count mismatch')
-if not any(r['identity_label']=='libcloudproviders.so.0.3.6' and r['priority_tranche']=='LIBCLOUDPROVIDERS_BOUNDED_PROVIDER_AUTHORITY' for r in gaps):errors.append('libcloudproviders priority gap missing')
+if len(gaps)!=16:errors.append(f'gap rows {len(gaps)}')
+if sum(r['priority_tranche']=='FRIBIDI_BOUNDED_PROVIDER_AUTHORITY' for r in gaps)!=1:errors.append('fribidi priority gap count mismatch')
+if not any(r['identity_label']=='libfribidi.so.0.4.0' and r['priority_tranche']=='FRIBIDI_BOUNDED_PROVIDER_AUTHORITY' for r in gaps):errors.append('fribidi priority gap missing')
 
 for name,sha,inclusion in [('libthai.so.0.3.1','773a629e30546b57d650d9d991d18c64490ef5cf53062fec1e02c69ece66bf9c','INCLUDED_SELECTED_GTK_SCOPE'),('libdatrie.so.1.4.0','8052746b4003c367e811dc26686373455f687e11bf95cbbe8772a2069b86e7dd','INCLUDED_SELECTED_GTK_SCOPE'),('libiconv.so.2.7.0','3d3edba1ecd510ddac243a3c9a5a08341219b62bc4c874241a134bc7d250f5be','INCLUDED_TRANSITIVE_PANGO_THAI_SCOPE')]:
  if not any(r['member_basename']==name and r['member_sha256']==sha and r['composition_inclusion']==inclusion for r in mem):errors.append(f'exact Thai-stack member missing: {name}')
+if not any(r['member_basename']=='libcloudproviders.so.0.3.6' and r['member_sha256']=='54dea7e30b9e02f5626a374e5b62e5e975684a426a940f525a18eb4ce9e4f030' and r['composition_inclusion']=='INCLUDED_SELECTED_GTK_SCOPE' for r in mem):errors.append('exact libcloudproviders member missing')
 if not any(r['member_basename']=='libXcursor.so.1.0.2' and r['member_sha256']=='86e70b94186edb4c16cf00f2bcea4a03ea09bb486ee6a079dd11d3ef6fffe722' and r['composition_inclusion']=='INCLUDED_SELECTED_GTK_SCOPE' for r in mem):errors.append('exact libXcursor member missing')
 for name,sha in [('libmount.so.1.1.0','6864b9050ddd5884642c98ea4df07e3ceaf78727324d6e9068d1866594ece1c2'),('libblkid.so.1.1.0','21d47963d42a5b1c4008c88a311c17142f57ee2f19cd30770f0befa364908fb3')]:
  if not any(r['member_basename']==name and r['member_sha256']==sha and r['composition_inclusion'].startswith('INCLUDED_') for r in mem):errors.append(f'accepted util-linux member missing {name}')
@@ -58,10 +60,10 @@ claim=claims.get('PCC-GLOBAL-COMPOSITION')
 if not claim:errors.append('global composition claim missing')
 else:
  if claim['classification_state']!='REVIEWED_BLOCKED_INCOMPLETE':errors.append('composition claim state widened or stale')
- if '17_SELECTED_GTK_PROVIDER_IDENTITIES' not in claim['remaining_gap']:errors.append('composition gap count absent')
+ if '16_SELECTED_GTK_PROVIDER_IDENTITIES' not in claim['remaining_gap']:errors.append('composition gap count absent')
  if claim['authority_effect']!='COMPOSITION_REVIEW_COMPLETED_NO_ACCEPTANCE_TARGET_OR_ACTIVATION_EFFECT':errors.append('composition authority effect widened')
 state=(root/'docs/current/STATE.yaml').read_text();active=(root/'docs/current/ACTIVE_TASK.md').read_text();brief=(root/'docs/current/BRIEF.md').read_text();catalog=(root/'docs/catalog.tsv').read_text();status=(root/'STATUS.md').read_text();doc=(root/'docs/evidence/selected-obsidian-provider-composition-review.md').read_text()
-markers=[('state decision','decision: reviewed-blocked-incomplete' in state),('state gaps','unresolved_selected_identities: 17' in state),('state target false','target_manifest_allowed: false' in state),('task','Task ID: `review-libcloudproviders-bounded-provider-authority`' in active),('brief','selected identity gaps: 17' in brief),('catalog','selected-obsidian-provider-composition-review\tevidence\tcurrent\tcanonical' in catalog),('status','`REVIEWED_BLOCKED_INCOMPLETE`' in status),('doc decision','REVIEWED_BLOCKED_INCOMPLETE' in doc),('doc target','target manifest allowed:          NO' in doc)]
+markers=[('state decision','decision: reviewed-blocked-incomplete' in state),('state gaps','unresolved_selected_identities: 16' in state),('state target false','target_manifest_allowed: false' in state),('task','Task ID: `review-fribidi-bounded-provider-authority`' in active),('brief','selected identity gaps: 16' in brief),('catalog','selected-obsidian-provider-composition-review\tevidence\tcurrent\tcanonical' in catalog),('status','`REVIEWED_BLOCKED_INCOMPLETE`' in status),('doc decision','REVIEWED_BLOCKED_INCOMPLETE' in doc),('doc target','target manifest allowed:          NO' in doc)]
 for label,ok in markers:
  if not ok:errors.append(f'missing current marker: {label}')
 for forbidden in ['composition decision:             ACCEPTED','target manifest allowed:          YES']:
@@ -69,5 +71,5 @@ for forbidden in ['composition decision:             ACCEPTED','target manifest 
 if errors:
  for e in errors:print('provider-composition: FAIL:',e,file=sys.stderr)
  raise SystemExit(1)
-print('provider-composition: PASS: 22 accepted members, 21 included, 1 deferred and 17 selected GTK gaps block composition and target generation')
+print('provider-composition: PASS: 23 accepted members, 22 included, 1 deferred and 16 selected GTK gaps block composition and target generation')
 PY

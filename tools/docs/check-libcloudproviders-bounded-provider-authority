@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+required=(
+ docs/evidence/libcloudproviders-bounded-provider-authority.md
+ experiments/glibc/selected-obsidian-provider-authority/review/libcloudproviders-bounded-provider-authority.tsv
+ experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification.tsv
+ experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-composition-members.tsv
+ docs/current/STATE.yaml docs/current/ACTIVE_TASK.md docs/catalog.tsv STATUS.md
+)
+for rel in "${required[@]}"; do [ -f "$ROOT/$rel" ] || { echo "libcloudproviders-provider: FAIL: missing $rel" >&2; exit 1; }; done
+python3 - "$ROOT" <<'PY'
+from pathlib import Path
+import csv,sys
+root=Path(sys.argv[1]); review=root/'experiments/glibc/selected-obsidian-provider-authority/review'
+def read(n):
+ with (review/n).open(newline='',encoding='utf-8') as f:return list(csv.DictReader(f,delimiter='\t'))
+errors=[];rows=read('libcloudproviders-bounded-provider-authority.tsv')
+if len(rows)!=1: errors.append(f'expected one review row, got {len(rows)}')
+else:
+ r=rows[0]
+ want={'review_id':'LIBCLOUDPROVIDERS-PROV-001','root_review_id':'generic-root-review:d5acfe552821242c8bec','recipe_root':'gpkg/libcloudproviders','recipe_tree':'ca7597d86cb1610e64f209ff2b84c3ea13c4357a','build_script_blob_sha':'cb073e2018c70bbf92596433da4fda7b8e023c55','artifact_package':'libcloudproviders-glibc','artifact_version':'0.3.6','artifact_sha256':'62b4d4f5263a7750f56e4655fdf91011ec5dc2e137f4e73a08506ddbaa64c1ae','evidence_row_id':'selected:b912b41387c558b52895','exact_member_sha256':'54dea7e30b9e02f5626a374e5b62e5e975684a426a940f525a18eb4ce9e4f030','observed_soname':'libcloudproviders.so.0','adaptation_adr_class':'B','decision':'ACCEPTED_BOUNDED_PROVIDER'}
+ for k,v in want.items():
+  if r.get(k)!=v: errors.append(f'{k}: expected {v}, got {r.get(k)!r}')
+ for token in ['DISABLE_VALA_BINDING_GENERATION_ONLY','CLASS_B_BOUNDED_VAPI_GENERATION_DISABLE','GTK_3_24_49_PLACES_SIDEBAR','SELECTED_DEBIAN_LIBGTK_3_0T64_DIRECTLY_DEPENDS','DBUS_CLIENT_LIBRARY_SESSION_BUS_SERVICE_IMPLEMENTATIONS_AND_ACTUAL_ACCOUNTS_REMAIN_SEPARATE','CLOUD_PROVIDER_SERVERS_SERVICES_ACCOUNTS']:
+  if token not in ';'.join(r.values()): errors.append(f'missing boundary token {token}')
+ if 'NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT' not in r.get('authority_effect',''): errors.append('authority widening')
+claims={r['claim_id']:r for r in read('provider-claim-classification.tsv')}
+if claims.get('PCC-LIBCLOUDPROVIDERS-PROVIDER',{}).get('classification_state')!='BOUNDED_PROVIDER_AUTHORITY_ACCEPTED': errors.append('provider claim not accepted')
+if claims.get('PCC-LIBCLOUDPROVIDERS-ADAPTATION',{}).get('classification_state')!='CLASS_B_BOUNDED_VAPI_GENERATION_DISABLE_SEMANTICS_ACCEPTED': errors.append('adaptation claim not bounded')
+mem=read('selected-provider-composition-members.tsv')
+if not any(r['member_basename']=='libcloudproviders.so.0.3.6' and r['member_sha256']=='54dea7e30b9e02f5626a374e5b62e5e975684a426a940f525a18eb4ce9e4f030' and r['composition_inclusion']=='INCLUDED_SELECTED_GTK_SCOPE' for r in mem): errors.append('composition member missing')
+state=(root/'docs/current/STATE.yaml').read_text();doc=(root/'docs/evidence/libcloudproviders-bounded-provider-authority.md').read_text();catalog=(root/'docs/catalog.tsv').read_text();status=(root/'STATUS.md').read_text();active=(root/'docs/current/ACTIVE_TASK.md').read_text()
+markers=[('state route','libcloudproviders_provider_authority_review: docs/evidence/libcloudproviders-bounded-provider-authority.md' in state),('state accepted','provider_authority: accepted-bounded-provider' in state),('doc decision','ACCEPTED_BOUNDED_PROVIDER' in doc),('doc service boundary','does not accept or require the existence of a session bus' in doc),('catalog','libcloudproviders-bounded-provider-authority\tevidence\tcurrent\tcanonical' in catalog),('status','exact libcloudproviders accepted for bounded GTK PlacesSidebar cloud-account integration' in status),('next task','Task ID: `review-fribidi-bounded-provider-authority`' in active)]
+for label,ok in markers:
+ if not ok: errors.append(f'missing marker: {label}')
+for forbidden in ['service availability: accepted','cloud accounts: accepted','composition: accepted','target population: accepted','activation: accepted']:
+ if forbidden in doc.lower(): errors.append(f'forbidden widening {forbidden}')
+if errors:
+ for e in errors: print('libcloudproviders-provider: FAIL:',e,file=sys.stderr)
+ raise SystemExit(1)
+print('libcloudproviders-provider: PASS: exact library is bounded to GTK PlacesSidebar; Vala surfaces, DBus services, accounts, composition, target and activation remain separate')
+PY
