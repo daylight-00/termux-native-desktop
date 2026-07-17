@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-17.04`
+> Semantic state version: `2026-07-17.05`
 >
 > This is the compact current-state entry point. Exact commit and tree coordinates come from the checked-out full Git bundle, not from self-referential repository text.
 
@@ -22,27 +22,27 @@ Web-chat capability failures follow a stop-loss contract: perform one bounded re
 
 ADR 0005 separates artifact identity, adaptation semantics, provider authority, composition, target population and activation. The claim inventory remains 28 roots, 37 reviewed objects and 89 separated claims: 36 Class A, 49 Class B, one Class C and three Class D.
 
-The exact `libfribidi.so.0.4.0` member is accepted only for Pango 1.54.0 core Unicode bidirectional character classification, bracket handling and paragraph embedding-level resolution used by selected GTK 3.24.49 text processing. The recipe's custom configure hook delegates exactly to the generic Meson configure step and adds no package-specific runtime-object delta. FriBidi CLI and development surfaces remain outside this authority.
+The exact `libxkbcommon.so.0.8.0` member is accepted only for the selected GTK 3.24.49 Wayland XKB context, keymap, keyboard-state, modifier, and keysym translation path. The recipe's custom configure hook delegates exactly to the generic Meson configure step. Upstream 1.8.0 intentionally changed the concrete filename from the older `0.0.0` form to `0.8.0` while preserving SONAME `libxkbcommon.so.0`; the retained SONAME alias targets the exact accepted member.
 
-Other accepted bounded providers remain unchanged, including libcloudproviders for GTK PlacesSidebar, the X.Org base tranche, libXcursor, libtasn1, libepoxy, Pango family, Thai-break libthai/libdatrie/libiconv chain and dictionary content, project libjpeg, project GDK Pixbuf, GLib/libpng and official libmount/libblkid pair.
+XKB configuration data and path policy, `libxkbcommon-x11`, `libxkbregistry`, sibling capabilities, tools and development surfaces remain outside this authority. Other accepted bounded providers remain unchanged, including FreeType and its compression-feature closure, FriBidi, libcloudproviders, the X.Org base tranche, libXcursor, libtasn1, libepoxy, the Pango family, Thai-break chain, project libjpeg, project GDK Pixbuf, GLib/libpng and the official libmount/libblkid pair.
 
 ```text
-bounded provider roots accepted overall: 18
-accepted roots inside the 28-root inventory: 16
-open roots inside the inventory: 12
-accepted exact members: 24
-included current-scope members: 23
+bounded provider roots accepted overall: 23
+accepted roots inside the 28-root inventory: 18
+open roots inside the inventory: 10
+accepted exact members: 30
+included current-scope members: 29
 deferred members: 1
 composition review: REVIEWED_BLOCKED_INCOMPLETE
-selected identity gaps: 14
+selected identity gaps: 13
 target population: blocked
 activation: blocked
 ```
 
-Canonical decisions are under `docs/evidence/`; the current composition review is [`../evidence/selected-obsidian-provider-composition-review.md`](../evidence/selected-obsidian-provider-composition-review.md), and the new provider decision is [`../evidence/fribidi-bounded-provider-authority.md`](../evidence/fribidi-bounded-provider-authority.md).
+Canonical decisions are under `docs/evidence/`; the current composition review is [`../evidence/selected-obsidian-provider-composition-review.md`](../evidence/selected-obsidian-provider-composition-review.md), and the latest provider decision is [`../evidence/libxkbcommon-bounded-provider-authority.md`](../evidence/libxkbcommon-bounded-provider-authority.md).
 
 ## Current project phase
 
-The active task is `review-libxkbcommon-bounded-provider-authority`.
+The active task is `review-harfbuzz-bounded-provider-authority`.
 
-The next proportional tranche is exact `libfreetype.so.6.20.2`. It must bound the recipe custom step and configure semantics, selected Pango/GTK rasterization and metrics consumer binding, conflicts, update and rollback. No target population, materialization, deployment or activation is allowed.
+The next proportional tranche is exact `libharfbuzz.so.0.61010.0`. It must bound the custom configure step, extra configure arguments, patch and subpackage semantics, reconcile selected concrete label `libharfbuzz.so.0.61020.0` with the retained candidate while preserving SONAME `libharfbuzz.so.0`, and prove the selected Pango/GTK shaping consumer boundary. No target population, materialization, deployment or activation is allowed.

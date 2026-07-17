@@ -1,0 +1,82 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+required=(
+  docs/evidence/libxkbcommon-bounded-provider-authority.md
+  experiments/glibc/selected-obsidian-provider-authority/review/libxkbcommon-bounded-provider-authority.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-composition-members.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-composition-gaps.tsv
+  docs/current/STATE.yaml
+  docs/current/ACTIVE_TASK.md
+  docs/catalog.tsv
+)
+for rel in "${required[@]}"; do
+  [ -f "$ROOT/$rel" ] || { echo "libxkbcommon-provider: FAIL: missing $rel" >&2; exit 1; }
+done
+python3 - "$ROOT" <<'PY'
+from pathlib import Path
+import csv,sys
+root=Path(sys.argv[1]); review=root/'experiments/glibc/selected-obsidian-provider-authority/review'
+def read(n):
+ with (review/n).open(newline='',encoding='utf-8') as f:return list(csv.DictReader(f,delimiter='\t'))
+errors=[]; rows=read('libxkbcommon-bounded-provider-authority.tsv')
+if len(rows)!=1: errors.append(f'expected one libxkbcommon row, got {len(rows)}')
+else:
+ r=rows[0]
+ want={
+  'review_id':'LIBXKBCOMMON-PROV-001',
+  'root_review_id':'generic-root-review:778b62f6da21fd02f1bb',
+  'recipe_root':'gpkg/libxkbcommon',
+  'recipe_tree':'5fda5da07e6b38230082785d352adc4e6fb9c4da',
+  'build_script_blob_sha':'cc2f8554e83ee435400d0e5231f3870b8316fc91',
+  'artifact_package':'libxkbcommon-glibc',
+  'artifact_version':'1.8.0',
+  'artifact_sha256':'e58eca6f9c0e0d068d80dabd3b289d6b1b4cdaa25fc91053d21392ecfbf54f97',
+  'evidence_row_id':'selected:0eab80f8c75b58f5c92a',
+  'exact_member_path':'data/data/com.termux/files/usr/glibc/lib/libxkbcommon.so.0.8.0',
+  'exact_member_sha256':'fee84d5d95a085a94d300186040a54b9844a491b599b1156867624af6b4e8ba9',
+  'observed_soname':'libxkbcommon.so.0',
+  'adaptation_adr_class':'B',
+  'project_owned_adaptation_boundary':'CUSTOM_TERMUX_STEP_DELEGATES_EXACTLY_TO_GENERIC_TERMUX_STEP_CONFIGURE_MESON_NO_EXTRA_ARGS_PATCHES_GENERATED_DATA_OR_RUNTIME_OBJECT_SEMANTIC_CHANGE',
+  'adaptation_classification_state':'CLASS_B_BOUNDED_STANDARD_MESON_DELEGATION_SEMANTICS_ACCEPTED',
+  'decision':'ACCEPTED_BOUNDED_PROVIDER',
+ }
+ for k,v in want.items():
+  if r.get(k)!=v: errors.append(f'{k}: expected {v}, got {r.get(k)!r}')
+ joined=';'.join(r.values())
+ for token in [
+  'UPSTREAM_1_8_0_VERSION_POLICY_PRODUCES_LIBXKBCOMMON_SO_0_8_0_WITH_STABLE_SONAME_LIBXKBCOMMON_SO_0',
+  'GDK_WAYLAND_KEYMAP_DIRECTLY_CALLS_XKB_CONTEXT_NEW_XKB_KEYMAP_NEW_FROM_NAMES_XKB_STATE_NEW_XKB_STATE_UPDATE_MASK_XKB_STATE_KEY_GET_ONE_SYM',
+  'SONAME_ALIAS_LIBXKBCOMMON_SO_0_TARGETS_EXACT_0_8_0_MEMBER',
+  'SELECTED_0_0_0_LABEL_IS_REFERENCE_FILENAME_NOT_TARGET_PATH_AUTHORITY',
+  'NO_COMPLETE_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT',
+ ]:
+  if token not in joined: errors.append(f'missing bounded token: {token}')
+claims={r['claim_id']:r for r in read('provider-claim-classification.tsv')}
+if claims.get('PCC-LIBXKBCOMMON-PROVIDER',{}).get('classification_state')!='BOUNDED_PROVIDER_AUTHORITY_ACCEPTED': errors.append('libxkbcommon provider claim not accepted')
+if claims.get('PCC-LIBXKBCOMMON-ADAPTATION',{}).get('classification_state')!='CLASS_B_BOUNDED_STANDARD_MESON_DELEGATION_SEMANTICS_ACCEPTED': errors.append('libxkbcommon adaptation claim not bounded')
+mem=read('selected-provider-composition-members.tsv')
+if not any(r['member_basename']=='libxkbcommon.so.0.8.0' and r['member_sha256']=='fee84d5d95a085a94d300186040a54b9844a491b599b1156867624af6b4e8ba9' and r['soname']=='libxkbcommon.so.0' and r['alias_basename']=='libxkbcommon.so.0' and r['alias_target_basename']=='libxkbcommon.so.0.8.0' and r['composition_inclusion']=='INCLUDED_SELECTED_GTK_SCOPE' for r in mem): errors.append('exact libxkbcommon composition member/alias missing')
+gaps=read('selected-provider-composition-gaps.tsv')
+if any(r['identity_label']=='libxkbcommon.so.0.0.0' for r in gaps): errors.append('accepted libxkbcommon identity remains in composition gaps')
+if not any(r['identity_label']=='libharfbuzz.so.0.61020.0' and r['priority_tranche']=='HARFBUZZ_BOUNDED_PROVIDER_AUTHORITY' for r in gaps): errors.append('next HarfBuzz priority gap missing')
+doc=(root/'docs/evidence/libxkbcommon-bounded-provider-authority.md').read_text(); state=(root/'docs/current/STATE.yaml').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); catalog=(root/'docs/catalog.tsv').read_text()
+markers=[
+ ('doc member','libxkbcommon.so.0.8.0' in doc),
+ ('doc selected label','libxkbcommon.so.0.0.0' in doc),
+ ('doc continuity','libxkbcommon.so.0 -> libxkbcommon.so.0.8.0' in doc),
+ ('state route','libxkbcommon_provider_authority_review: docs/evidence/libxkbcommon-bounded-provider-authority.md' in state),
+ ('state accepted','provider_authority: accepted-bounded-provider' in state and 'libxkbcommon_provider:' in state),
+ ('next task','Task ID: `review-harfbuzz-bounded-provider-authority`' in active),
+ ('catalog','libxkbcommon-bounded-provider-authority\tevidence\tcurrent\tcanonical' in catalog),
+]
+for label,ok in markers:
+ if not ok: errors.append(f'missing durable marker: {label}')
+for forbidden in ['target manifest allowed: YES','activation: ACCEPTED','COMPLETE_COMPOSITION_ACCEPTED','libxkbcommon.so.0.0.0 ->']:
+ if forbidden in doc: errors.append(f'forbidden widening: {forbidden}')
+if errors:
+ for e in errors: print('libxkbcommon-provider: FAIL:',e,file=sys.stderr)
+ raise SystemExit(1)
+print('libxkbcommon-provider: PASS: exact 1.8.0 member, stable SONAME continuity, standard Meson delegation and bounded GTK Wayland XKB binding are accepted without target or activation widening')
+PY

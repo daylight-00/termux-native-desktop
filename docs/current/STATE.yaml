@@ -1,5 +1,5 @@
 schema_version: 1
-state_version: 2026-07-17.04
+state_version: 2026-07-17.05
 updated_on: 2026-07-17
 
 project:
@@ -61,10 +61,11 @@ documentation:
   libcloudproviders_provider_authority_review: docs/evidence/libcloudproviders-bounded-provider-authority.md
   fribidi_provider_authority_review: docs/evidence/fribidi-bounded-provider-authority.md
   freetype_provider_authority_review: docs/evidence/freetype-bounded-provider-authority.md
+  libxkbcommon_provider_authority_review: docs/evidence/libxkbcommon-bounded-provider-authority.md
 
 provider_authority:
-  workstream: freetype-and-exact-compression-closure-accepted-libxkbcommon-review-active
-  boundary: twenty-two-bounded-providers-retained-exact-freetype-pango-gtk-font-engine-and-compression-closure-accepted-composition-target-and-activation-open
+  workstream: libxkbcommon-accepted-harfbuzz-review-active
+  boundary: twenty-three-bounded-providers-retained-exact-libxkbcommon-gtk-wayland-xkb-keymap-and-keyboard-provider-accepted-composition-target-and-activation-open
   claim_inventory:
     total: 89
     class_a: 36
@@ -78,12 +79,12 @@ provider_authority:
     provider_authority_accepted: 7
     provider_authority_open: 0
   bounded_provider_authority:
-    accepted: 18
-    accepted_inside_28_root_inventory: 16
-    open_inside_28_root_inventory: 12
+    accepted: 23
+    accepted_inside_28_root_inventory: 18
+    open_inside_28_root_inventory: 10
     rejected: 0
     open_no_token_roots: 0
-    accepted_scope: exact-xorg-members-and-selected-gtk-x11-capabilities-plus-exact-libxcursor-gtk-3-24-49-x11-cursor-theme-image-and-surface-plus-exact-libtasn1-external-gnutls-asn1-security-plus-exact-libepoxy-gtk-3-24-49-x11-glx-dispatch-plus-exact-pango-three-member-gtk-text-family-and-soname-continuity-plus-exact-project-libjpeg-so-62-gdkpixbuf-jpeg-file-and-memory-decode-plus-exact-project-gdkpixbuf-2-42-12-jpeg-png-file-and-memory-decode-plus-exact-glib-four-member-libpng-and-util-linux-two-member-gdkpixbuf-reference-dependency-scope-plus-exact-libthai-libdatrie-libiconv-and-thbrk-tri-pango-1-54-0-thai-break-scope-plus-exact-libcloudproviders-gtk-3-24-49-places-sidebar-cloud-account-integration-plus-exact-fribidi-pango-1-54-0-core-unicode-bidirectional-text-processing-plus-exact-freetype-pango-1-54-0-gtk-3-24-49-font-engine-and-exact-brotli-bzip2-zlib-transitive-feature-closure
+    accepted_scope: exact-xorg-members-and-selected-gtk-x11-capabilities-plus-exact-libxcursor-gtk-3-24-49-x11-cursor-theme-image-and-surface-plus-exact-libtasn1-external-gnutls-asn1-security-plus-exact-libepoxy-gtk-3-24-49-x11-glx-dispatch-plus-exact-pango-three-member-gtk-text-family-and-soname-continuity-plus-exact-project-libjpeg-so-62-gdkpixbuf-jpeg-file-and-memory-decode-plus-exact-project-gdkpixbuf-2-42-12-jpeg-png-file-and-memory-decode-plus-exact-glib-four-member-libpng-and-util-linux-two-member-gdkpixbuf-reference-dependency-scope-plus-exact-libthai-libdatrie-libiconv-and-thbrk-tri-pango-1-54-0-thai-break-scope-plus-exact-libcloudproviders-gtk-3-24-49-places-sidebar-cloud-account-integration-plus-exact-fribidi-pango-1-54-0-core-unicode-bidirectional-text-processing-plus-exact-freetype-pango-1-54-0-gtk-3-24-49-font-engine-and-exact-brotli-bzip2-zlib-transitive-feature-closure-plus-exact-libxkbcommon-gtk-3-24-49-wayland-xkb-keymap-keyboard-state-modifier-and-keysym-translation
   libjpeg_compatibility_candidate:
     first_candidate_state: rejected-rebuild-required-no-runpath
     first_candidate_member: libjpeg.so.62.4.0
@@ -117,16 +118,16 @@ provider_authority:
     required_now: 0
   composition_review:
     decision: reviewed-blocked-incomplete
-    accepted_provider_roots: 22
-    accepted_members: 29
-    included_members: 28
+    accepted_provider_roots: 23
+    accepted_members: 30
+    included_members: 29
     deferred_members: 1
     selected_gtk_identities: 36
-    unresolved_selected_identities: 14
+    unresolved_selected_identities: 13
     accepted_soname_collisions: 0
     accepted_alias_collisions: 0
     target_manifest_allowed: false
-    next_tranche: libxkbcommon-bounded-provider-authority
+    next_tranche: harfbuzz-bounded-provider-authority
   gdkpixbuf_core_acquisition:
     result_sha256: e96fb0e2d8fa1c16a228e41d60801abac0b8a43584a86b7e63f8adddfc4f5692
     review_state: acquisition-reviewed-partial
@@ -148,7 +149,7 @@ provider_authority:
     transitive_result_sha256: a18426371acf0339731464eea4a6fd1f8c745cc09154629b69e34d1063073c13
     transitive_recipe_tree: e91a0c476ef4355dbfff46e2bcab23d0085ddd01
     transitive_functional_matrix: jpeg-file-pass-jpeg-memory-pass-png-file-pass-png-memory-pass
-    next_action: review-libxkbcommon-bounded-provider-authority
+    next_action: review-harfbuzz-bounded-provider-authority
   thai_break_provider:
     result_sha256: 7789ff1a039e3186b04014e4ddf6a7ba68d77fe31a2f1ef77273590aa97b8e1e
     libthai_member: libthai.so.0.3.1
@@ -174,7 +175,7 @@ provider_authority:
     consumer: gtk-3-24-49-places-sidebar-cloud-account-integration
     service_boundary: dbus-session-services-and-accounts-not-accepted
     provider_authority: accepted-bounded-provider
-  next_research_decision: review-libxkbcommon-bounded-provider-authority
+  next_research_decision: review-harfbuzz-bounded-provider-authority
   fribidi_provider:
     member: libfribidi.so.0.4.0
     member_sha256: 71668fd02e89fa7546446bb7961bb618f6d22e1506f7444bbea6788befbb7895
@@ -194,6 +195,17 @@ provider_authority:
     consumer: pango-1-54-0-and-gtk-3-24-49-font-face-sizing-metrics-kerning-rasterization
     transitive_exact_members: libbrotlicommon.so.1.1.0;libbrotlidec.so.1.1.0;libbz2.so.1.0.8;libz.so.1.3.1
     provider_authority: accepted-bounded-provider
+  libxkbcommon_provider:
+    selected_label: libxkbcommon.so.0.0.0
+    member: libxkbcommon.so.0.8.0
+    member_sha256: fee84d5d95a085a94d300186040a54b9844a491b599b1156867624af6b4e8ba9
+    soname: libxkbcommon.so.0
+    recipe_tree: 5fda5da07e6b38230082785d352adc4e6fb9c4da
+    build_script_blob_sha: cc2f8554e83ee435400d0e5231f3870b8316fc91
+    adaptation: custom-step-standard-meson-delegation-no-runtime-object-delta
+    filename_continuity: upstream-1-8-0-concrete-0-8-0-stable-soname-0
+    consumer: gtk-3-24-49-wayland-xkb-keymap-keyboard-state-modifier-and-keysym-translation
+    provider_authority: accepted-bounded-provider
   prohibited_claims:
     - complete-provider-authority
     - complete-runtime-composition
@@ -201,7 +213,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: review-libxkbcommon-bounded-provider-authority
+  id: review-harfbuzz-bounded-provider-authority
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:
