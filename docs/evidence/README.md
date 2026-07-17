@@ -48,7 +48,7 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 - [`libjpeg-so-62-gdkpixbuf-diagnostic-matrix-result-review.md`](libjpeg-so-62-gdkpixbuf-diagnostic-matrix-result-review.md) — non-dispositive first diagnostic matrix and corrected loader boundary.
 - [`libjpeg-so-62-loader-isolated-provider-authority.md`](libjpeg-so-62-loader-isolated-provider-authority.md) — exact loader-isolated candidate/oracle controls and bounded GdkPixbuf JPEG provider-authority decision.
 
-- [`selected-obsidian-provider-composition-review.md`](selected-obsidian-provider-composition-review.md) records the current Class D non-materializing composition manifest, 22 exact accepted members, exclusions, collisions and 17 blocking selected GTK identities.
+- [`selected-obsidian-provider-composition-review.md`](selected-obsidian-provider-composition-review.md) records the current Class D non-materializing composition manifest, 24 exact accepted members, exclusions, collisions and 15 blocking selected GTK identities.
 
 - [`gdkpixbuf-core-provider-acquisition-result-review.md`](gdkpixbuf-core-provider-acquisition-result-review.md) binds the exact GLib-family and libpng candidate identities, records the missing Termux GdkPixbuf package/recipe, and routes the upstream 2.42.12 scratch build.
 
@@ -60,3 +60,5 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 - [`libthai-libdatrie-iconv-bounded-provider-authority.md`](libthai-libdatrie-iconv-bounded-provider-authority.md) — exact signed-index libthai/libdatrie/libiconv chain, `thbrk.tri` content and bounded Pango 1.54.0 Thai-break authority.
 
 - [`libcloudproviders-bounded-provider-authority.md`](libcloudproviders-bounded-provider-authority.md) — exact Class B libcloudproviders provider decision for GTK 3.24.49 PlacesSidebar cloud-account integration; DBus services and accounts remain separate.
+
+- [`fribidi-bounded-provider-authority.md`](fribidi-bounded-provider-authority.md) — exact Class B FriBidi provider decision for Pango 1.54.0 core Unicode bidirectional text processing.

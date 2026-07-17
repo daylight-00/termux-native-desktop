@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-17.02`
+> Semantic state version: `2026-07-17.03`
 >
 > This is the compact current-state entry point. Exact commit and tree coordinates come from the checked-out full Git bundle, not from self-referential repository text.
 
@@ -22,47 +22,27 @@ Web-chat capability failures follow a stop-loss contract: perform one bounded re
 
 ADR 0005 separates artifact identity, adaptation semantics, provider authority, composition, target population and activation. The claim inventory remains 28 roots, 37 reviewed objects and 89 separated claims: 36 Class A, 49 Class B, one Class C and three Class D.
 
-The exact `libcloudproviders.so.0.3.6` member is accepted only for GTK 3.24.49 `GtkPlacesSidebar` cloud-provider account collection and account name/status/status-details/icon/URI integration. The recipe's `-Dvapigen=false` delta disables Vala binding generation without changing the C shared runtime. DBus session bus availability, provider services, configured accounts, Vala/GIR/development surfaces and service activation remain outside this authority.
+The exact `libfribidi.so.0.4.0` member is accepted only for Pango 1.54.0 core Unicode bidirectional character classification, bracket handling and paragraph embedding-level resolution used by selected GTK 3.24.49 text processing. The recipe's custom configure hook delegates exactly to the generic Meson configure step and adds no package-specific runtime-object delta. FriBidi CLI and development surfaces remain outside this authority.
 
-Other accepted bounded providers remain unchanged, including the X.Org base tranche, libXcursor, libtasn1, libepoxy, Pango family, Thai-break libthai/libdatrie/libiconv chain and dictionary content, project libjpeg, project GDK Pixbuf, GLib/libpng and official libmount/libblkid pair.
+Other accepted bounded providers remain unchanged, including libcloudproviders for GTK PlacesSidebar, the X.Org base tranche, libXcursor, libtasn1, libepoxy, Pango family, Thai-break libthai/libdatrie/libiconv chain and dictionary content, project libjpeg, project GDK Pixbuf, GLib/libpng and official libmount/libblkid pair.
 
 ```text
-bounded provider roots accepted overall: 17
-accepted roots inside the 28-root inventory: 15
-open roots inside the inventory: 13
-accepted exact members: 23
-included current-scope members: 22
+bounded provider roots accepted overall: 18
+accepted roots inside the 28-root inventory: 16
+open roots inside the inventory: 12
+accepted exact members: 24
+included current-scope members: 23
 deferred members: 1
 composition review: REVIEWED_BLOCKED_INCOMPLETE
-selected identity gaps: 16
+selected identity gaps: 15
 target population: blocked
 activation: blocked
 ```
 
-Canonical decisions are under `docs/evidence/`; the current composition review is [`../evidence/selected-obsidian-provider-composition-review.md`](../evidence/selected-obsidian-provider-composition-review.md), and the new provider decision is [`../evidence/libcloudproviders-bounded-provider-authority.md`](../evidence/libcloudproviders-bounded-provider-authority.md).
+Canonical decisions are under `docs/evidence/`; the current composition review is [`../evidence/selected-obsidian-provider-composition-review.md`](../evidence/selected-obsidian-provider-composition-review.md), and the new provider decision is [`../evidence/fribidi-bounded-provider-authority.md`](../evidence/fribidi-bounded-provider-authority.md).
 
 ## Current project phase
 
-The active task is `review-fribidi-bounded-provider-authority`.
+The active task is `review-freetype-bounded-provider-authority`.
 
-The next proportional tranche is exact `libfribidi.so.0.4.0`. It must bound the recipe's custom Termux step, selected Pango/GTK bidirectional-text consumer binding, conflicts, update and rollback. No target population, materialization, deployment or activation is allowed.
-
-## Current non-goals
-
-Do not currently:
-
-- fulfill SUP-02 without explicit Class C reclassification or escalation;
-- broaden any accepted provider beyond its exact capability scope;
-- infer DBus services, cloud accounts or service activation from accepted libcloudproviders client-library authority;
-- populate a provider target or activate a selected generation;
-- use GitHub connector reads as repository reconstruction;
-- use Docker or a PRoot application baseline.
-
-## Start and navigation
-
-- Active task: [`ACTIVE_TASK.md`](ACTIVE_TASK.md)
-- Machine state: [`STATE.yaml`](STATE.yaml)
-- Pending external inputs: [`PENDING_ARTIFACTS.yaml`](PENDING_ARTIFACTS.yaml)
-- Documentation model: [`../DOCUMENTATION_MODEL.md`](../DOCUMENTATION_MODEL.md)
-- Operations: [`../operations/README.md`](../operations/README.md)
-- Evidence: [`../evidence/README.md`](../evidence/README.md)
+The next proportional tranche is exact `libfreetype.so.6.20.2`. It must bound the recipe custom step and configure semantics, selected Pango/GTK rasterization and metrics consumer binding, conflicts, update and rollback. No target population, materialization, deployment or activation is allowed.

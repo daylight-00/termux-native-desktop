@@ -1,5 +1,5 @@
 schema_version: 1
-state_version: 2026-07-17.02
+state_version: 2026-07-17.03
 updated_on: 2026-07-17
 
 project:
@@ -59,10 +59,11 @@ documentation:
   libxcursor_provider_authority_review: docs/evidence/libxcursor-bounded-provider-authority.md
   libthai_libdatrie_iconv_provider_authority_review: docs/evidence/libthai-libdatrie-iconv-bounded-provider-authority.md
   libcloudproviders_provider_authority_review: docs/evidence/libcloudproviders-bounded-provider-authority.md
+  fribidi_provider_authority_review: docs/evidence/fribidi-bounded-provider-authority.md
 
 provider_authority:
-  workstream: libcloudproviders-accepted-fribidi-review-active
-  boundary: seventeen-bounded-providers-retained-exact-libcloudproviders-gtk-places-sidebar-scope-accepted-services-composition-target-and-activation-open
+  workstream: fribidi-accepted-freetype-review-active
+  boundary: eighteen-bounded-providers-retained-exact-fribidi-pango-core-bidi-scope-accepted-composition-target-and-activation-open
   claim_inventory:
     total: 89
     class_a: 36
@@ -76,12 +77,12 @@ provider_authority:
     provider_authority_accepted: 7
     provider_authority_open: 0
   bounded_provider_authority:
-    accepted: 17
-    accepted_inside_28_root_inventory: 15
-    open_inside_28_root_inventory: 13
+    accepted: 18
+    accepted_inside_28_root_inventory: 16
+    open_inside_28_root_inventory: 12
     rejected: 0
     open_no_token_roots: 0
-    accepted_scope: exact-xorg-members-and-selected-gtk-x11-capabilities-plus-exact-libxcursor-gtk-3-24-49-x11-cursor-theme-image-and-surface-plus-exact-libtasn1-external-gnutls-asn1-security-plus-exact-libepoxy-gtk-3-24-49-x11-glx-dispatch-plus-exact-pango-three-member-gtk-text-family-and-soname-continuity-plus-exact-project-libjpeg-so-62-gdkpixbuf-jpeg-file-and-memory-decode-plus-exact-project-gdkpixbuf-2-42-12-jpeg-png-file-and-memory-decode-plus-exact-glib-four-member-libpng-and-util-linux-two-member-gdkpixbuf-reference-dependency-scope-plus-exact-libthai-libdatrie-libiconv-and-thbrk-tri-pango-1-54-0-thai-break-scope-plus-exact-libcloudproviders-gtk-3-24-49-places-sidebar-cloud-account-integration
+    accepted_scope: exact-xorg-members-and-selected-gtk-x11-capabilities-plus-exact-libxcursor-gtk-3-24-49-x11-cursor-theme-image-and-surface-plus-exact-libtasn1-external-gnutls-asn1-security-plus-exact-libepoxy-gtk-3-24-49-x11-glx-dispatch-plus-exact-pango-three-member-gtk-text-family-and-soname-continuity-plus-exact-project-libjpeg-so-62-gdkpixbuf-jpeg-file-and-memory-decode-plus-exact-project-gdkpixbuf-2-42-12-jpeg-png-file-and-memory-decode-plus-exact-glib-four-member-libpng-and-util-linux-two-member-gdkpixbuf-reference-dependency-scope-plus-exact-libthai-libdatrie-libiconv-and-thbrk-tri-pango-1-54-0-thai-break-scope-plus-exact-libcloudproviders-gtk-3-24-49-places-sidebar-cloud-account-integration-plus-exact-fribidi-pango-1-54-0-core-unicode-bidirectional-text-processing
   libjpeg_compatibility_candidate:
     first_candidate_state: rejected-rebuild-required-no-runpath
     first_candidate_member: libjpeg.so.62.4.0
@@ -115,16 +116,16 @@ provider_authority:
     required_now: 0
   composition_review:
     decision: reviewed-blocked-incomplete
-    accepted_provider_roots: 17
-    accepted_members: 23
-    included_members: 22
+    accepted_provider_roots: 18
+    accepted_members: 24
+    included_members: 23
     deferred_members: 1
     selected_gtk_identities: 36
-    unresolved_selected_identities: 16
+    unresolved_selected_identities: 15
     accepted_soname_collisions: 0
     accepted_alias_collisions: 0
     target_manifest_allowed: false
-    next_tranche: fribidi-bounded-provider-authority
+    next_tranche: freetype-bounded-provider-authority
   gdkpixbuf_core_acquisition:
     result_sha256: e96fb0e2d8fa1c16a228e41d60801abac0b8a43584a86b7e63f8adddfc4f5692
     review_state: acquisition-reviewed-partial
@@ -146,7 +147,7 @@ provider_authority:
     transitive_result_sha256: a18426371acf0339731464eea4a6fd1f8c745cc09154629b69e34d1063073c13
     transitive_recipe_tree: e91a0c476ef4355dbfff46e2bcab23d0085ddd01
     transitive_functional_matrix: jpeg-file-pass-jpeg-memory-pass-png-file-pass-png-memory-pass
-    next_action: review-fribidi-bounded-provider-authority
+    next_action: review-freetype-bounded-provider-authority
   thai_break_provider:
     result_sha256: 7789ff1a039e3186b04014e4ddf6a7ba68d77fe31a2f1ef77273590aa97b8e1e
     libthai_member: libthai.so.0.3.1
@@ -172,7 +173,16 @@ provider_authority:
     consumer: gtk-3-24-49-places-sidebar-cloud-account-integration
     service_boundary: dbus-session-services-and-accounts-not-accepted
     provider_authority: accepted-bounded-provider
-  next_research_decision: review-fribidi-bounded-provider-authority
+  next_research_decision: review-freetype-bounded-provider-authority
+  fribidi_provider:
+    member: libfribidi.so.0.4.0
+    member_sha256: 71668fd02e89fa7546446bb7961bb618f6d22e1506f7444bbea6788befbb7895
+    soname: libfribidi.so.0
+    recipe_tree: 41ad596c81980f710112cd74d4f1b428cfbc6d6a
+    build_script_blob_sha: c251a59a3b7464fa5ae6dd5b5b65df62a12f9600
+    adaptation: custom-step-standard-meson-delegation-no-runtime-object-delta
+    consumer: pango-1-54-0-core-unicode-bidirectional-character-bracket-and-embedding-processing
+    provider_authority: accepted-bounded-provider
   prohibited_claims:
     - complete-provider-authority
     - complete-runtime-composition
@@ -180,7 +190,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: review-fribidi-bounded-provider-authority
+  id: review-freetype-bounded-provider-authority
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:

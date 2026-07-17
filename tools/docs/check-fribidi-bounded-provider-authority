@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+required=(
+ docs/evidence/fribidi-bounded-provider-authority.md
+ experiments/glibc/selected-obsidian-provider-authority/review/fribidi-bounded-provider-authority.tsv
+ experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification.tsv
+ experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-composition-members.tsv
+ docs/current/STATE.yaml docs/catalog.tsv
+)
+for rel in "${required[@]}"; do [ -f "$ROOT/$rel" ] || { echo "fribidi-provider: FAIL: missing $rel" >&2; exit 1; }; done
+python3 - "$ROOT" <<'PY2'
+from pathlib import Path
+import csv,sys
+root=Path(sys.argv[1]);review=root/'experiments/glibc/selected-obsidian-provider-authority/review'
+def read(n):
+ with (review/n).open(newline='',encoding='utf-8') as f:return list(csv.DictReader(f,delimiter='	'))
+errors=[];rows=read('fribidi-bounded-provider-authority.tsv')
+if len(rows)!=1:errors.append(f'expected one review row, got {len(rows)}')
+else:
+ r=rows[0]
+ want={'review_id':'FRIBIDI-PROV-001','root_review_id':'generic-root-review:c38f6cb7aef89fe33a48','recipe_root':'gpkg/fribidi','recipe_tree':'41ad596c81980f710112cd74d4f1b428cfbc6d6a','build_script_blob_sha':'c251a59a3b7464fa5ae6dd5b5b65df62a12f9600','artifact_package':'fribidi-glibc','artifact_version':'1.0.16','artifact_sha256':'9e99711a88e10441c0eee7af77c64b9ee1a6c93484b0e16ac381ed242057219f','evidence_row_id':'selected:5d210dfa49b6cf4c1077','exact_member_sha256':'71668fd02e89fa7546446bb7961bb618f6d22e1506f7444bbea6788befbb7895','observed_soname':'libfribidi.so.0','adaptation_adr_class':'B','decision':'ACCEPTED_BOUNDED_PROVIDER'}
+ for k,v in want.items():
+  if r.get(k)!=v:errors.append(f'{k}: expected {v}, got {r.get(k)!r}')
+ allv=';'.join(r.values())
+ for token in ['DELEGATES_EXACTLY_TO_GENERIC_TERMUX_STEP_CONFIGURE_MESON','CLASS_B_BOUNDED_STANDARD_MESON_DELEGATION','PANGO_1_54_0_REQUIRES_FRIBIDI_GE_1_0_6','FRIBIDI_GET_BIDI_TYPE','FRIBIDI_GET_BRACKET','FRIBIDI_GET_PAR_EMBEDDING_LEVELS_EX','NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT']:
+  if token not in allv:errors.append(f'missing boundary token {token}')
+claims={r['claim_id']:r for r in read('provider-claim-classification.tsv')}
+if claims.get('PCC-FRIBIDI-PROVIDER',{}).get('classification_state')!='BOUNDED_PROVIDER_AUTHORITY_ACCEPTED':errors.append('provider claim not accepted')
+if claims.get('PCC-FRIBIDI-ADAPTATION',{}).get('classification_state')!='CLASS_B_BOUNDED_STANDARD_MESON_DELEGATION_SEMANTICS_ACCEPTED':errors.append('adaptation claim not bounded')
+mem=read('selected-provider-composition-members.tsv')
+if not any(r['member_basename']=='libfribidi.so.0.4.0' and r['member_sha256']=='71668fd02e89fa7546446bb7961bb618f6d22e1506f7444bbea6788befbb7895' and r['composition_inclusion']=='INCLUDED_SELECTED_GTK_SCOPE' for r in mem):errors.append('composition member missing')
+state=(root/'docs/current/STATE.yaml').read_text();doc=(root/'docs/evidence/fribidi-bounded-provider-authority.md').read_text();catalog=(root/'docs/catalog.tsv').read_text()
+for label,ok in [('state route','fribidi_provider_authority_review: docs/evidence/fribidi-bounded-provider-authority.md' in state),('state accepted','provider_authority: accepted-bounded-provider' in state),('doc decision','ACCEPTED_BOUNDED_PROVIDER' in doc),('doc meson','standard Meson delegation' in doc),('catalog','fribidi-bounded-provider-authority	evidence	current	canonical' in catalog)]:
+ if not ok:errors.append(f'missing marker: {label}')
+for forbidden in ['complete composition: accepted','target population: accepted','activation: accepted']:
+ if forbidden in doc.lower():errors.append(f'forbidden widening {forbidden}')
+if errors:
+ for e in errors:print('fribidi-provider: FAIL:',e,file=sys.stderr)
+ raise SystemExit(1)
+print('fribidi-provider: PASS: exact FriBidi member is bounded to Pango core Unicode bidi processing; CLI, composition, target and activation remain separate')
+PY2

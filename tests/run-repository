@@ -33,6 +33,7 @@ case "$MODE" in
       tests/repository/libxcursor-bounded-provider-authority-smoke.sh
       tests/repository/libthai-libdatrie-iconv-bounded-provider-authority-smoke.sh
       tests/repository/libcloudproviders-bounded-provider-authority-smoke.sh
+      tests/repository/fribidi-bounded-provider-authority-smoke.sh
       tests/repository/gdkpixbuf-build-env-smoke.sh
       tests/repository/shell-layout-smoke.sh
       tests/repository/vulkan-policy-scope-smoke.sh
@@ -64,6 +65,7 @@ case "$MODE" in
       tests/repository/libxcursor-bounded-provider-authority-smoke.sh
       tests/repository/libthai-libdatrie-iconv-bounded-provider-authority-smoke.sh
       tests/repository/libcloudproviders-bounded-provider-authority-smoke.sh
+      tests/repository/fribidi-bounded-provider-authority-smoke.sh
       tests/repository/gdkpixbuf-build-env-smoke.sh
     )
     ;;

@@ -63,7 +63,7 @@ open reviewed-root provider gaps: 7
 outside-28 or no accepted Termux candidate: 9
 ```
 
-The next priority gap is exact `libfribidi.so.0.4.0`. Other blockers continue to include GTK/GDK, Cairo, Fontconfig, FreeType, HarfBuzz, Pixman, ATK/AT-SPI, Xdamage, xkbcommon and SELinux surfaces. A historical Debian object proves demand only; it never grants target authority.
+The next priority gap is exact `libfreetype.so.6.20.2`. Other blockers continue to include GTK/GDK, Cairo, Fontconfig, FreeType, HarfBuzz, Pixman, ATK/AT-SPI, Xdamage, xkbcommon and SELinux surfaces. A historical Debian object proves demand only; it never grants target authority.
 
 ## Conflict and exclusion policy
 
@@ -79,7 +79,7 @@ Re-review is required on provider scope, member/artifact digest, SONAME/alias, s
 REVIEWED_BLOCKED_INCOMPLETE
 ```
 
-The review is sufficient to reject target-manifest generation, not to accept complete composition. The next smallest tranche is exact `libfribidi.so.0.4.0`, with Class B custom-step semantics, consumer binding, conflict, update and rollback boundaries reviewed before any materialization.
+The review is sufficient to reject target-manifest generation, not to accept complete composition. The next smallest tranche is exact `libfreetype.so.6.20.2`, with Class B custom-step/configuration semantics, Pango consumer binding, conflict, update and rollback boundaries reviewed before any materialization.
 
 ## Explicitly prohibited inference
 

@@ -181,7 +181,7 @@ The exact `libXcursor.so.1.0.2` provider is accepted for GTK 3.24.49 X11 cursor 
 
 The exact `libcloudproviders.so.0.3.6` provider is accepted for selected GTK 3.24.49 PlacesSidebar cloud-account integration. Its Class B delta disables Vala binding generation only; DBus services, accounts and service activation remain separate.
 
-The next smallest phase is the exact `libfribidi.so.0.4.0` provider review. It must bound the custom Termux step, selected Pango/GTK bidirectional-text consumer binding, conflicts, update and rollback. No target paths are generated.
+The exact `libfribidi.so.0.4.0` provider is now accepted only for Pango 1.54.0 core Unicode bidirectional text processing. The next smallest phase is exact `libfreetype.so.6.20.2`, bounding its custom step/configuration and selected Pango/GTK rasterization consumer path. No target paths are generated.
 
 ## Stop line
 
