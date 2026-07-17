@@ -1,6 +1,6 @@
 schema_version: 1
-state_version: 2026-07-16.07
-updated_on: 2026-07-16
+state_version: 2026-07-17.01
+updated_on: 2026-07-17
 
 project:
   phase: provider-composition-gap-closure
@@ -57,10 +57,11 @@ documentation:
   gdkpixbuf_reference_dependency_provider_authority: docs/evidence/gdkpixbuf-reference-dependency-provider-authority.md
   gdkpixbuf_exact_util_linux_provider_authority: docs/evidence/gdkpixbuf-exact-util-linux-provider-authority.md
   libxcursor_provider_authority_review: docs/evidence/libxcursor-bounded-provider-authority.md
+  libthai_libdatrie_iconv_provider_authority_review: docs/evidence/libthai-libdatrie-iconv-bounded-provider-authority.md
 
 provider_authority:
-  workstream: libxcursor-accepted-libthai-review-active
-  boundary: thirteen-bounded-providers-retained-exact-libxcursor-accepted-composition-target-and-activation-open
+  workstream: libthai-libdatrie-iconv-accepted-libcloudproviders-review-active
+  boundary: sixteen-bounded-providers-retained-exact-thai-break-chain-and-dictionary-content-accepted-composition-target-and-activation-open
   claim_inventory:
     total: 89
     class_a: 36
@@ -74,12 +75,12 @@ provider_authority:
     provider_authority_accepted: 7
     provider_authority_open: 0
   bounded_provider_authority:
-    accepted: 13
-    accepted_inside_28_root_inventory: 12
-    open_inside_28_root_inventory: 16
+    accepted: 16
+    accepted_inside_28_root_inventory: 14
+    open_inside_28_root_inventory: 14
     rejected: 0
     open_no_token_roots: 0
-    accepted_scope: exact-xorg-members-and-selected-gtk-x11-capabilities-plus-exact-libxcursor-gtk-3-24-49-x11-cursor-theme-image-and-surface-plus-exact-libtasn1-external-gnutls-asn1-security-plus-exact-libepoxy-gtk-3-24-49-x11-glx-dispatch-plus-exact-pango-three-member-gtk-text-family-and-soname-continuity-plus-exact-project-libjpeg-so-62-gdkpixbuf-jpeg-file-and-memory-decode-plus-exact-project-gdkpixbuf-2-42-12-jpeg-png-file-and-memory-decode-plus-exact-glib-four-member-libpng-and-util-linux-two-member-gdkpixbuf-reference-dependency-scope
+    accepted_scope: exact-xorg-members-and-selected-gtk-x11-capabilities-plus-exact-libxcursor-gtk-3-24-49-x11-cursor-theme-image-and-surface-plus-exact-libtasn1-external-gnutls-asn1-security-plus-exact-libepoxy-gtk-3-24-49-x11-glx-dispatch-plus-exact-pango-three-member-gtk-text-family-and-soname-continuity-plus-exact-project-libjpeg-so-62-gdkpixbuf-jpeg-file-and-memory-decode-plus-exact-project-gdkpixbuf-2-42-12-jpeg-png-file-and-memory-decode-plus-exact-glib-four-member-libpng-and-util-linux-two-member-gdkpixbuf-reference-dependency-scope-plus-exact-libthai-libdatrie-libiconv-and-thbrk-tri-pango-1-54-0-thai-break-scope
   libjpeg_compatibility_candidate:
     first_candidate_state: rejected-rebuild-required-no-runpath
     first_candidate_member: libjpeg.so.62.4.0
@@ -113,16 +114,16 @@ provider_authority:
     required_now: 0
   composition_review:
     decision: reviewed-blocked-incomplete
-    accepted_provider_roots: 13
-    accepted_members: 19
-    included_members: 18
+    accepted_provider_roots: 16
+    accepted_members: 22
+    included_members: 21
     deferred_members: 1
     selected_gtk_identities: 36
-    unresolved_selected_identities: 19
+    unresolved_selected_identities: 17
     accepted_soname_collisions: 0
     accepted_alias_collisions: 0
     target_manifest_allowed: false
-    next_tranche: libthai-bounded-provider-authority
+    next_tranche: libcloudproviders-bounded-provider-authority
   gdkpixbuf_core_acquisition:
     result_sha256: e96fb0e2d8fa1c16a228e41d60801abac0b8a43584a86b7e63f8adddfc4f5692
     review_state: acquisition-reviewed-partial
@@ -144,8 +145,23 @@ provider_authority:
     transitive_result_sha256: a18426371acf0339731464eea4a6fd1f8c745cc09154629b69e34d1063073c13
     transitive_recipe_tree: e91a0c476ef4355dbfff46e2bcab23d0085ddd01
     transitive_functional_matrix: jpeg-file-pass-jpeg-memory-pass-png-file-pass-png-memory-pass
-    next_action: review-libthai-bounded-provider-authority
-  next_research_decision: review-libthai-bounded-provider-authority
+    next_action: review-libcloudproviders-bounded-provider-authority
+  thai_break_provider:
+    result_sha256: 7789ff1a039e3186b04014e4ddf6a7ba68d77fe31a2f1ef77273590aa97b8e1e
+    libthai_member: libthai.so.0.3.1
+    libthai_sha256: 773a629e30546b57d650d9d991d18c64490ef5cf53062fec1e02c69ece66bf9c
+    libdatrie_member: libdatrie.so.1.4.0
+    libdatrie_sha256: 8052746b4003c367e811dc26686373455f687e11bf95cbbe8772a2069b86e7dd
+    libiconv_member: libiconv.so.2.7.0
+    libiconv_sha256: 3d3edba1ecd510ddac243a3c9a5a08341219b62bc4c874241a134bc7d250f5be
+    dictionary_member: share/libthai/thbrk.tri
+    dictionary_sha256: d411879359c81553f3b508f7c27918f88ec2b42b8b249594af0de84e8a79dd25
+    functional_result: missing-dictionary-rejected-exact-dictionary-loaded-breaks-4-7-11
+    exact_map_count: 3
+    libcharset_disposition: excluded-not-needed-or-mapped
+    provider_authority: accepted-bounded-pango-1-54-0-thai-break-scope
+    target_dictionary_path: open-target-population-policy
+  next_research_decision: review-libcloudproviders-bounded-provider-authority
   prohibited_claims:
     - complete-provider-authority
     - complete-runtime-composition
@@ -153,7 +169,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: review-libthai-bounded-provider-authority
+  id: review-libcloudproviders-bounded-provider-authority
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:

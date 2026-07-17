@@ -31,6 +31,7 @@ case "$MODE" in
       tests/repository/gdkpixbuf-reference-dependency-provider-authority-smoke.sh
       tests/repository/gdkpixbuf-exact-util-linux-provider-authority-smoke.sh
       tests/repository/libxcursor-bounded-provider-authority-smoke.sh
+      tests/repository/libthai-libdatrie-iconv-bounded-provider-authority-smoke.sh
       tests/repository/gdkpixbuf-build-env-smoke.sh
       tests/repository/shell-layout-smoke.sh
       tests/repository/vulkan-policy-scope-smoke.sh
@@ -60,6 +61,7 @@ case "$MODE" in
       tests/repository/gdkpixbuf-reference-dependency-provider-authority-smoke.sh
       tests/repository/gdkpixbuf-exact-util-linux-provider-authority-smoke.sh
       tests/repository/libxcursor-bounded-provider-authority-smoke.sh
+      tests/repository/libthai-libdatrie-iconv-bounded-provider-authority-smoke.sh
       tests/repository/gdkpixbuf-build-env-smoke.sh
     )
     ;;

@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-16.07`
+> Semantic state version: `2026-07-17.01`
 >
 > This is the compact current-state entry point. Exact commit and tree coordinates come from the checked-out full Git bundle, not from self-referential repository text.
 
@@ -32,30 +32,30 @@ ADR 0005 separates artifact identity, adaptation semantics, provider authority, 
  3 Class D
 ```
 
-The exact `libXcursor.so.1.0.2` member is now accepted only for GTK 3.24.49 X11 cursor theme, image, surface and custom-cursor handling. The Class B patch relocates built-in cursor-theme and pixmap search paths into the Termux prefix without changing the ELF ABI, SONAME or Xcursor API surface. GTK's X11 backend links `xcursor_dep` and directly invokes the Xcursor theme/image/cursor APIs, so no device probe was needed.
+The signed exact `libthai.so.0.3.1`, `libdatrie.so.1.4.0` and transitive `libiconv.so.2.7.0` members are accepted only for Pango 1.54.0 Thai line and word breaking. Exact `thbrk.tri` content is accepted for that capability; its future target path is not. `libcharset.so.1.0.0`, the libiconv CLI, headers and package-wide surfaces remain excluded.
 
-Other accepted bounded providers remain unchanged, including the X.Org base tranche, libtasn1, libepoxy, Pango family, project libjpeg, project GDK Pixbuf, GLib/libpng and official libmount/libblkid pair.
+Other accepted bounded providers remain unchanged, including the X.Org base tranche, libXcursor, libtasn1, libepoxy, Pango family, project libjpeg, project GDK Pixbuf, GLib/libpng and official libmount/libblkid pair.
 
 ```text
-bounded provider roots accepted overall: 13
-accepted roots inside the 28-root inventory: 12
-open roots inside the inventory: 16
-accepted exact members: 19
-included current-scope members: 18
+bounded provider roots accepted overall: 16
+accepted roots inside the 28-root inventory: 14
+open roots inside the inventory: 14
+accepted exact members: 22
+included current-scope members: 21
 deferred members: 1
 composition review: REVIEWED_BLOCKED_INCOMPLETE
-selected identity gaps: 19
+selected identity gaps: 17
 target population: blocked
 activation: blocked
 ```
 
-Canonical decisions are under `docs/evidence/`; the current composition review is [`../evidence/selected-obsidian-provider-composition-review.md`](../evidence/selected-obsidian-provider-composition-review.md), and the new provider decision is [`../evidence/libxcursor-bounded-provider-authority.md`](../evidence/libxcursor-bounded-provider-authority.md).
+Canonical decisions are under `docs/evidence/`; the current composition review is [`../evidence/selected-obsidian-provider-composition-review.md`](../evidence/selected-obsidian-provider-composition-review.md), and the new provider decision is [`../evidence/libthai-libdatrie-iconv-bounded-provider-authority.md`](../evidence/libthai-libdatrie-iconv-bounded-provider-authority.md).
 
 ## Current project phase
 
-The active task is `review-libthai-bounded-provider-authority`.
+The active task is `review-libcloudproviders-bounded-provider-authority`.
 
-The next proportional tranche is the exact `libthai.so.0.3.1` Class B provider review. It must bound `BUILD_IN_SRC` semantics, selected Pango/GTK Thai text necessity, `libdatrie` and runtime data binding, conflicts, update and rollback. No target population, materialization, deployment or activation is allowed.
+The next proportional tranche is the exact `libcloudproviders.so.0.3.6` Class B provider review. It must bound extra configure semantics, selected GTK cloud-provider integration necessity, consumer binding, conflicts, update and rollback. No target population, materialization, deployment or activation is allowed.
 
 ## Current non-goals
 
@@ -63,7 +63,7 @@ Do not currently:
 
 - fulfill SUP-02 without explicit Class C reclassification or escalation;
 - broaden any accepted provider beyond its exact capability scope;
-- infer cursor-theme data authority from the libXcursor shared-library decision;
+- infer a default dictionary target path from accepted `thbrk.tri` content authority;
 - populate a provider target or activate a selected generation;
 - use GitHub connector reads as repository reconstruction;
 - use Docker or a PRoot application baseline.

@@ -66,14 +66,13 @@ claims={x['claim_id']:x for x in read('provider-claim-classification.tsv')}
 if claims.get('PCC-LIBXCURSOR-ADAPTATION',{}).get('classification_state')!='CLASS_B_BOUNDED_PATH_RELOCATION_SEMANTICS_ACCEPTED': errors.append('adaptation claim not accepted')
 if claims.get('PCC-LIBXCURSOR-PROVIDER',{}).get('classification_state')!='BOUNDED_PROVIDER_AUTHORITY_ACCEPTED': errors.append('provider claim not accepted')
 if not any(x.get('member_basename')=='libXcursor.so.1.0.2' and x.get('member_sha256')=='86e70b94186edb4c16cf00f2bcea4a03ea09bb486ee6a079dd11d3ef6fffe722' and x.get('composition_inclusion')=='INCLUDED_SELECTED_GTK_SCOPE' for x in read('selected-provider-composition-members.tsv')): errors.append('composition member missing')
-state=(root/'docs/current/STATE.yaml').read_text(); doc=(root/'docs/evidence/libxcursor-bounded-provider-authority.md').read_text(); catalog=(root/'docs/catalog.tsv').read_text(); status=(root/'STATUS.md').read_text()
+state=(root/'docs/current/STATE.yaml').read_text(); doc=(root/'docs/evidence/libxcursor-bounded-provider-authority.md').read_text(); catalog=(root/'docs/catalog.tsv').read_text()
 for label,ok in [
  ('state evidence route','libxcursor_provider_authority_review: docs/evidence/libxcursor-bounded-provider-authority.md' in state),
  ('state scope','exact-libxcursor-gtk-3-24-49-x11-cursor-theme-image-and-surface' in state),
  ('doc decision','decision:           ACCEPTED_BOUNDED_PROVIDER' in doc),
  ('doc no probe','without a device probe' in doc),
  ('catalog','libxcursor-bounded-provider-authority\tevidence\tcurrent\tcanonical' in catalog),
- ('status','exact libXcursor accepted for bounded GTK 3.24.49 X11 cursor handling' in status),
 ]:
  if not ok: errors.append(f'missing marker: {label}')
 for forbidden in ['complete composition: ACCEPTED','target population:  accepted','activation:         accepted']:

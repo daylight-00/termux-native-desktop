@@ -3,12 +3,12 @@
 ## Decision
 
 ```text
-accepted bounded provider roots: 13
-accepted exact members:          19
-included in current GTK scope:    18
+accepted bounded provider roots: 16
+accepted exact members:          22
+included in current GTK scope:    21
 deferred profile member:          1
 selected GTK runtime identities: 36
-unresolved selected identities:  19
+unresolved selected identities:  17
 accepted SONAME collisions:       0
 accepted alias collisions:        0
 composition decision:             REVIEWED_BLOCKED_INCOMPLETE
@@ -19,7 +19,7 @@ This Class D review names accepted members without copying, installing, aliasing
 
 ## Included accepted members
 
-Eighteen exact members are included in the bounded selected GTK/GdkPixbuf/X11 scope:
+Twenty-one exact members are included in the bounded selected GTK/GdkPixbuf/X11 scope:
 
 ```text
 libXfixes.so.3.1.0       -> libXfixes.so.3
@@ -40,11 +40,14 @@ libgio-2.0.so.0.8200.2   -> libgio-2.0.so.0
 libpng16.so.16.47.0      -> libpng16.so.16
 libmount.so.1.1.0        -> libmount.so.1
 libblkid.so.1.1.0        -> libblkid.so.1
+libthai.so.0.3.1         -> libthai.so.0
+libdatrie.so.1.4.0       -> libdatrie.so.1
+libiconv.so.2.7.0        -> libiconv.so.2
 ```
 
 Every proposed alias is the observed ELF SONAME and targets one exact reviewed member. No accepted SONAME or alias basename collides. `libblkid` is included as the accepted transitive dependency of exact `libmount`; it is not one of the 36 selected GTK ledger identities.
 
-`libXcursor` is included only for GTK 3.24.49 X11 cursor theme, image, surface and custom-cursor calls. Cursor-theme data, package-wide development surfaces and target paths remain outside its provider decision.
+`libXcursor` remains bounded to GTK X11 cursor handling. The Thai stack is included only for Pango 1.54.0 Thai breaking: exact libthai and libdatrie selected identities, exact transitive libiconv, and separately recorded `thbrk.tri` content. `libcharset`, CLI/header surfaces and the future dictionary target path are excluded.
 
 ## Deferred accepted provider
 
@@ -52,14 +55,14 @@ Every proposed alias is the observed ELF SONAME and targets one exact reviewed m
 
 ## Completeness result
 
-The selected ledger contains 36 identities. Seventeen selected identities have exact included providers, while `libblkid` is one additional required transitive member. Nineteen selected identities remain unresolved:
+The selected ledger contains 36 identities. Nineteen selected identities have exact included providers, while `libblkid` and `libiconv` are two additional required transitive members. Seventeen selected identities remain unresolved:
 
 ```text
-open reviewed-root provider gaps: 10
+open reviewed-root provider gaps: 8
 outside-28 or no accepted Termux candidate: 9
 ```
 
-The next priority gap is exact `libthai.so.0.3.1`. Other blockers continue to include GTK/GDK, Cairo, Fontconfig, FreeType, HarfBuzz, FriBidi, datrie, Pixman, ATK/AT-SPI, Xdamage, xkbcommon and SELinux surfaces. A historical Debian object proves demand only; it never grants target authority.
+The next priority gap is exact `libcloudproviders.so.0.3.6`. Other blockers continue to include GTK/GDK, Cairo, Fontconfig, FreeType, HarfBuzz, FriBidi, Pixman, ATK/AT-SPI, Xdamage, xkbcommon and SELinux surfaces. A historical Debian object proves demand only; it never grants target authority.
 
 ## Conflict and exclusion policy
 
@@ -75,8 +78,8 @@ Re-review is required on provider scope, member/artifact digest, SONAME/alias, s
 REVIEWED_BLOCKED_INCOMPLETE
 ```
 
-The review is sufficient to reject target-manifest generation, not to accept complete composition. The next smallest tranche is exact `libthai.so.0.3.1`, with Class B `BUILD_IN_SRC`, consumer/data/dependency, conflict, update and rollback boundaries reviewed before any materialization.
+The review is sufficient to reject target-manifest generation, not to accept complete composition. The next smallest tranche is exact `libcloudproviders.so.0.3.6`, with Class B configure semantics, consumer binding, conflict, update and rollback boundaries reviewed before any materialization.
 
 ## Explicitly prohibited inference
 
-This review does not establish complete runtime composition, target membership or paths, materialization readiness, deployment, activation, cursor-theme data authority, or provider authority for any of the 19 gap rows.
+This review does not establish complete runtime composition, target membership or paths, materialization readiness, deployment, activation, cursor-theme data authority, or provider authority for any of the 17 gap rows.

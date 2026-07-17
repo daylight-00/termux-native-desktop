@@ -9,7 +9,7 @@ roots: 28
 objects: 37
 claims: 89
 new evidence collected: 0
-provider authority accepted inside inventory: 12
+provider authority accepted inside inventory: 14
 composition accepted: 0
 target rows accepted: 0
 activation accepted: 0
@@ -145,14 +145,14 @@ The `libjpeg-turbo` SUP-02 request is also unnecessary at the current boundary b
 ## Current authority states
 
 ```text
-bounded provider authority accepted inside inventory: 12 roots
-provider authority still open:                       16 roots
+bounded provider authority accepted inside inventory: 14 roots
+provider authority still open:                       14 roots
 application runtime composition:     NOT REACHED
 target population:                   BLOCKED
 selected-generation activation:      BLOCKED
 ```
 
-The twelve accepted root rows are `libxfixes`, `libxcomposite`, `libxi`, `libxinerama`, `libxcursor`, `libtasn1`, `libepoxy`, `pango`, the exact project-built `libjpeg.so.62.4.0`, `glib`, `libpng`, and `util-linux`. The GLib four-member family and libpng shared member are accepted only for the exact GdkPixbuf 2.42.12 JPEG/PNG file and memory decode scope; the exact official libmount/libblkid pair is accepted only for the bounded GdkPixbuf transitive runtime. Each decision remains limited to an exact identity and named consumer capability. The classification still does not authorize extraction, installation, target population, complete composition, selected-generation mutation, or activation.
+The fourteen accepted root rows are `libxfixes`, `libxcomposite`, `libxi`, `libxinerama`, `libxcursor`, `libtasn1`, `libepoxy`, `pango`, the exact project-built `libjpeg.so.62.4.0`, `glib`, `libpng`, `util-linux`, `libthai`, and `libdatrie`. The GLib four-member family and libpng shared member are accepted only for the exact GdkPixbuf 2.42.12 JPEG/PNG file and memory decode scope; the exact official libmount/libblkid pair is accepted only for the bounded GdkPixbuf transitive runtime. Each decision remains limited to an exact identity and named consumer capability. The classification still does not authorize extraction, installation, target population, complete composition, selected-generation mutation, or activation.
 
 ## Seven-root semantic-review result
 
@@ -161,7 +161,7 @@ The seven-root no-token semantic review is complete:
 ```text
 confirmed Class A: 7
 reclassified Class B: 0
-provider authority accepted inside inventory: 12
+provider authority accepted inside inventory: 14
 ```
 
 Canonical review surface:
@@ -179,7 +179,7 @@ For all seven roots, the pinned recipe contains only source/version identity and
 
 The exact `libXcursor.so.1.0.2` provider is accepted for GTK 3.24.49 X11 cursor theme, image, surface and custom-cursor handling. Its Class B patch only relocates built-in cursor search paths into the Termux prefix. It does not grant cursor-theme data, package-wide surfaces, complete composition, target or activation authority.
 
-The next smallest phase is the exact `libthai.so.0.3.1` provider review. It must bound `BUILD_IN_SRC` semantics, Pango/GTK Thai-text consumer binding, `libdatrie` and runtime-data dependencies, conflicts, update and rollback. No target paths are generated.
+The next smallest phase is the exact `libcloudproviders.so.0.3.6` provider review. It must bound Class B configure semantics, selected GTK consumer binding, conflicts, update and rollback. No target paths are generated.
 
 ## Stop line
 

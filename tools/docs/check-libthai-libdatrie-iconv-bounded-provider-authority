@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+required=(
+  docs/evidence/libthai-libdatrie-iconv-bounded-provider-authority.md
+  experiments/glibc/selected-obsidian-provider-authority/review/libthai-libdatrie-bounded-provider-authority.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/libiconv-transitive-provider-authority.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-composition-members.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/generic-build-attestation-adaptation-root-review-set.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/generic-artifact-member-inventory-receipt-review.tsv
+  docs/current/STATE.yaml docs/catalog.tsv STATUS.md
+)
+for rel in "${required[@]}"; do [ -f "$ROOT/$rel" ] || { echo "thai-provider: FAIL: missing $rel" >&2; exit 1; }; done
+python3 - "$ROOT" <<'PY'
+from pathlib import Path
+import csv,sys
+root=Path(sys.argv[1]); review=root/'experiments/glibc/selected-obsidian-provider-authority/review'
+def read(n):
+ with (review/n).open(newline='',encoding='utf-8') as f:return list(csv.DictReader(f,delimiter='\t'))
+errors=[]
+rows=read('libthai-libdatrie-bounded-provider-authority.tsv')
+if len(rows)!=2: errors.append(f'expected two inventory provider rows, got {len(rows)}')
+by={r.get('review_id'):r for r in rows}
+expected={
+ 'LIBTHAI-PROV-001':{
+  'root_review_id':'generic-root-review:88cec59d1ec77cd9f7bd','recipe_root':'gpkg/libthai','recipe_tree':'4943c66ff96eeddc0d6d05a57fb24418fb0cd7d2','build_script_blob_sha':'b3dd11710bea42f07b041f116cac9adc3b98885f','artifact_package':'libthai-glibc','artifact_version':'0.1.29','artifact_sha256':'5aa1d090525e71302abf48532d522049c59f6aae76880b558558ea97b2c73cd8','artifact_index_size':'251444','evidence_row_id':'selected:fec77ea4c45ec1a2990d','exact_member_sha256':'773a629e30546b57d650d9d991d18c64490ef5cf53062fec1e02c69ece66bf9c','observed_soname':'libthai.so.0','runtime_data_sha256':'d411879359c81553f3b508f7c27918f88ec2b42b8b249594af0de84e8a79dd25','decision':'ACCEPTED_BOUNDED_PROVIDER'},
+ 'LIBDATRIE-PROV-001':{
+  'root_review_id':'generic-root-review:7ddd185f55bd2a91009e','recipe_root':'gpkg/libdatrie','recipe_tree':'d773dbb3e0ad7eb29f323f75cb731e30eff66904','build_script_blob_sha':'48d6fa28d1b860f2c33d6b9bc8d4f87d1c4d8f6b','artifact_package':'libdatrie-glibc','artifact_version':'0.2.13','artifact_sha256':'d553cf0a49e324e2595d17903d78aad8b28994a4f878c139f383e34a62592707','artifact_index_size':'112876','evidence_row_id':'selected:5909031aa9e67d50214b','exact_member_sha256':'8052746b4003c367e811dc26686373455f687e11bf95cbbe8772a2069b86e7dd','observed_soname':'libdatrie.so.1','decision':'ACCEPTED_BOUNDED_PROVIDER'}}
+for rid,want in expected.items():
+ r=by.get(rid)
+ if not r: errors.append(f'missing {rid}'); continue
+ for k,v in want.items():
+  if r.get(k)!=v: errors.append(f'{rid} {k}: expected {v}, got {r.get(k)!r}')
+ if r.get('adaptation_adr_class')!='B' or not r.get('adaptation_classification_state','').startswith('CLASS_B_'): errors.append(f'{rid}: Class B boundary missing')
+ tokens=['THAI_BREAK_PASS']
+ if rid=='LIBTHAI-PROV-001': tokens.append('EXACT_LIBTHAI_LIBDATRIE_LIBICONV')
+ else: tokens.append('EXACT_LIBDATRIE_AND_LIBICONV')
+ for token in tokens:
+  if token not in (r.get('functional_result','')+';'+r.get('map_result','')+';'+r.get('consumer_binding_basis','')): errors.append(f'{rid}: missing evidence token {token}')
+ if 'NO_COMPOSITION' not in r.get('authority_effect','') and 'NO_COMPOSITION' not in r.get('prohibited_inference',''): errors.append(f'{rid}: authority widening')
+libthai=by.get('LIBTHAI-PROV-001',{})
+for token in ['MISSING_DICTIONARY_REJECTED','EXACT_THBRK_TRI_LOADED','BREAK_POSITIONS_4_7_11']:
+ if token not in libthai.get('consumer_binding_basis',''): errors.append(f'libthai missing dictionary/function token {token}')
+if 'DEFAULT_TARGET_PATH_NOT_AUTHORIZED' not in libthai.get('runtime_data_binding',''): errors.append('dictionary target-path separation missing')
+iconv_rows=read('libiconv-transitive-provider-authority.tsv')
+if len(iconv_rows)!=1: errors.append(f'expected one iconv row, got {len(iconv_rows)}')
+else:
+ r=iconv_rows[0]
+ want={'review_id':'LIBICONV-TRANSITIVE-PROV-001','inventory_scope':'OUTSIDE_28_ROOT_INVENTORY_TRANSITIVE_PROVIDER','recipe_tree':'aefe8f6314ef18214300550e1bda7648c33327d2','build_script_blob_sha':'68383b0c2bd3f678154659cf935dbf0584c63977','artifact_sha256':'19ca841e1f63f223effac9816b9e993e97c17fbe35874960ef84056bfc2f6d7e','exact_member_sha256':'3d3edba1ecd510ddac243a3c9a5a08341219b62bc4c874241a134bc7d250f5be','observed_soname':'libiconv.so.2','excluded_member_sha256':'182caca6423200b8b272ac9a645c20487c1e89f851113c1ab6bfd86fe7a5219f','decision':'ACCEPTED_BOUNDED_TRANSITIVE_PROVIDER'}
+ for k,v in want.items():
+  if r.get(k)!=v: errors.append(f'iconv {k}: expected {v}, got {r.get(k)!r}')
+ for token in ['LIBCHARSET_PRESENT_BUT_NOT_NEEDED_OR_MAPPED_AND_EXCLUDED','CLI_HEADERS_AND_OTHER_PACKAGE_SURFACES_EXCLUDED']:
+  if token not in r.get('candidate_conflict_and_exclusion_result',''): errors.append(f'iconv exclusion missing {token}')
+claims={r['claim_id']:r for r in read('provider-claim-classification.tsv')}
+for cid in ['PCC-LIBTHAI-PROVIDER','PCC-LIBDATRIE-PROVIDER']:
+ if claims.get(cid,{}).get('classification_state')!='BOUNDED_PROVIDER_AUTHORITY_ACCEPTED': errors.append(f'{cid} not accepted')
+for cid in ['PCC-LIBTHAI-ADAPTATION','PCC-LIBDATRIE-ADAPTATION']:
+ if not claims.get(cid,{}).get('classification_state','').startswith('CLASS_B_'): errors.append(f'{cid} adaptation not bounded')
+mem=read('selected-provider-composition-members.tsv')
+for name,sha,incl in [('libthai.so.0.3.1','773a629e30546b57d650d9d991d18c64490ef5cf53062fec1e02c69ece66bf9c','INCLUDED_SELECTED_GTK_SCOPE'),('libdatrie.so.1.4.0','8052746b4003c367e811dc26686373455f687e11bf95cbbe8772a2069b86e7dd','INCLUDED_SELECTED_GTK_SCOPE'),('libiconv.so.2.7.0','3d3edba1ecd510ddac243a3c9a5a08341219b62bc4c874241a134bc7d250f5be','INCLUDED_TRANSITIVE_PANGO_THAI_SCOPE')]:
+ if not any(r['member_basename']==name and r['member_sha256']==sha and r['composition_inclusion']==incl for r in mem): errors.append(f'composition row missing {name}')
+if any(r['member_basename']=='libcharset.so.1.0.0' for r in mem): errors.append('libcharset silently included')
+state=(root/'docs/current/STATE.yaml').read_text();doc=(root/'docs/evidence/libthai-libdatrie-iconv-bounded-provider-authority.md').read_text();catalog=(root/'docs/catalog.tsv').read_text();status=(root/'STATUS.md').read_text()
+for label,ok in [
+ ('state route','libthai_libdatrie_iconv_provider_authority_review: docs/evidence/libthai-libdatrie-iconv-bounded-provider-authority.md' in state),
+ ('state result','result_sha256: 7789ff1a039e3186b04014e4ddf6a7ba68d77fe31a2f1ef77273590aa97b8e1e' in state),
+ ('state target open','target_dictionary_path: open-target-population-policy' in state),
+ ('doc decision','libthai.so.0.3.1:   ACCEPTED_BOUNDED_PROVIDER' in doc),
+ ('doc exclusion','libcharset.so.1.0.0: EXCLUDED_NOT_NEEDED_OR_MAPPED' in doc),
+ ('catalog','libthai-libdatrie-iconv-bounded-provider-authority\tevidence\tcurrent\tcanonical' in catalog),
+ ('status','exact libthai, libdatrie and transitive libiconv accepted for bounded Pango Thai breaking' in status),
+]:
+ if not ok: errors.append(f'missing marker: {label}')
+for forbidden in ['composition:         accepted','target population:   accepted','activation:          accepted']:
+ if forbidden in doc.lower(): errors.append(f'forbidden widening: {forbidden}')
+if errors:
+ for e in errors: print('thai-provider: FAIL:',e,file=sys.stderr)
+ raise SystemExit(1)
+print('thai-provider: PASS: exact libthai, libdatrie, libiconv and thbrk.tri are bounded to Pango Thai breaking; libcharset and target path remain excluded')
+PY
