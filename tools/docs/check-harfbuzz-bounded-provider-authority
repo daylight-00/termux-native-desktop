@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+required=(
+  docs/evidence/harfbuzz-bounded-provider-authority.md
+  experiments/glibc/selected-obsidian-provider-authority/review/harfbuzz-bounded-provider-authority.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-composition-members.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-composition-gaps.tsv
+  docs/current/STATE.yaml docs/current/ACTIVE_TASK.md docs/catalog.tsv
+)
+for rel in "${required[@]}"; do [ -f "$ROOT/$rel" ] || { echo "harfbuzz-provider: FAIL: missing $rel" >&2; exit 1; }; done
+python3 - "$ROOT" <<'PY'
+from pathlib import Path
+import csv,sys
+root=Path(sys.argv[1]); review=root/'experiments/glibc/selected-obsidian-provider-authority/review'
+def read(n):
+ with (review/n).open(newline='',encoding='utf-8') as f:return list(csv.DictReader(f,delimiter='\t'))
+errors=[]; rows=read('harfbuzz-bounded-provider-authority.tsv')
+if len(rows)!=1: errors.append(f'expected one HarfBuzz row, got {len(rows)}')
+else:
+ r=rows[0]
+ want={
+  'review_id':'HARFBUZZ-PROV-001','root_review_id':'generic-root-review:706bd01fdd0555fcabc9','recipe_root':'gpkg/harfbuzz','recipe_tree':'f353d5f116250f7bcab7ecf062cdb13728b0ecc8','build_script_blob_sha':'904a87a0e4debe61c0c6408178823bf1da34cbff','artifact_package':'harfbuzz-glibc','artifact_version':'10.1.0','artifact_sha256':'d0e4a83180560341dc02fccd3b2df1892338a84c4cecfa4c7f6bc1c2566eacfc','evidence_row_id':'selected:c41cd8cc82847fba1410','exact_member_path':'data/data/com.termux/files/usr/glibc/lib/libharfbuzz.so.0.61010.0','exact_member_sha256':'179133d6e95f6e378f44ad9222255620ecdd39c30c5aedce028d99f2b28470c6','observed_soname':'libharfbuzz.so.0','adaptation_adr_class':'B','adaptation_classification_state':'CLASS_B_BOUNDED_EXACT_ARTIFACT_BUILD_CONFIGURATION_AND_PACKAGING_SEMANTICS_ACCEPTED','decision':'ACCEPTED_BOUNDED_PROVIDER'}
+ for k,v in want.items():
+  if r.get(k)!=v: errors.append(f'{k}: expected {v}, got {r.get(k)!r}')
+ joined=';'.join(r.values())
+ for token in [
+  'CUSTOM_PRECONFIGURE_REMOVES_CONFLICTING_FEXCEPTIONS_AND_CONFIGURE_DELEGATES_TO_STANDARD_MESON',
+  'CXX17_PATCH_CHANGES_COMPILER_DIALECT_ONLY',
+  'UPSTREAM_10_1_0_FORMULA_PRODUCES_LIBHARFBUZZ_SO_0_61010_0_WITH_SOVERSION_0',
+  'PANGO_LINKS_HARFBUZZ_DEP_AND_DIRECTLY_CALLS_HB_SHAPE',
+  'SONAME_ALIAS_LIBHARFBUZZ_SO_0_TARGETS_EXACT_0_61010_0_MEMBER',
+  'SELECTED_0_61020_0_LABEL_IS_REFERENCE_FILENAME_NOT_TARGET_PATH_AUTHORITY',
+  'NO_COMPLETE_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT']:
+  if token not in joined: errors.append(f'missing bounded token: {token}')
+claims={r['claim_id']:r for r in read('provider-claim-classification.tsv')}
+if claims.get('PCC-HARFBUZZ-PROVIDER',{}).get('classification_state')!='BOUNDED_PROVIDER_AUTHORITY_ACCEPTED': errors.append('HarfBuzz provider claim not accepted')
+if claims.get('PCC-HARFBUZZ-ADAPTATION',{}).get('classification_state')!='CLASS_B_BOUNDED_EXACT_ARTIFACT_BUILD_CONFIGURATION_AND_PACKAGING_SEMANTICS_ACCEPTED': errors.append('HarfBuzz adaptation claim not bounded')
+mem=read('selected-provider-composition-members.tsv')
+if not any(r['member_basename']=='libharfbuzz.so.0.61010.0' and r['member_sha256']=='179133d6e95f6e378f44ad9222255620ecdd39c30c5aedce028d99f2b28470c6' and r['soname']=='libharfbuzz.so.0' and r['alias_basename']=='libharfbuzz.so.0' and r['alias_target_basename']=='libharfbuzz.so.0.61010.0' and r['composition_inclusion']=='INCLUDED_SELECTED_GTK_SCOPE' for r in mem): errors.append('exact HarfBuzz composition member/alias missing')
+gaps=read('selected-provider-composition-gaps.tsv')
+if any(r['identity_label']=='libharfbuzz.so.0.61020.0' for r in gaps): errors.append('accepted HarfBuzz identity remains in gaps')
+if not any(r['identity_label']=='libfontconfig.so.1.12.1' and r['priority_tranche']=='FONTCONFIG_BOUNDED_PROVIDER_AUTHORITY' for r in gaps): errors.append('next Fontconfig priority gap missing')
+doc=(root/'docs/evidence/harfbuzz-bounded-provider-authority.md').read_text();state=(root/'docs/current/STATE.yaml').read_text();active=(root/'docs/current/ACTIVE_TASK.md').read_text();catalog=(root/'docs/catalog.tsv').read_text()
+markers=[
+ ('doc member','libharfbuzz.so.0.61010.0' in doc),('doc selected label','libharfbuzz.so.0.61020.0' in doc),('doc continuity','libharfbuzz.so.0 -> libharfbuzz.so.0.61010.0' in doc),('doc no equivalence','does not claim byte equivalence' in doc),('state route','harfbuzz_provider_authority_review: docs/evidence/harfbuzz-bounded-provider-authority.md' in state),('state accepted','harfbuzz_provider:' in state and 'provider_authority: accepted-bounded-provider' in state),('next task','Task ID: `review-fontconfig-bounded-provider-authority`' in active),('catalog','harfbuzz-bounded-provider-authority\tevidence\tcurrent\tcanonical' in catalog)]
+for label,ok in markers:
+ if not ok: errors.append(f'missing durable marker: {label}')
+for forbidden in ['target manifest allowed: YES','activation: ACCEPTED','COMPLETE_COMPOSITION_ACCEPTED','libharfbuzz.so.0.61020.0 ->']:
+ if forbidden in doc: errors.append(f'forbidden widening: {forbidden}')
+if errors:
+ for e in errors: print('harfbuzz-provider: FAIL:',e,file=sys.stderr)
+ raise SystemExit(1)
+print('harfbuzz-provider: PASS: exact 10.1.0 member, stable SONAME continuity, bounded Class B build semantics and Pango shaping binding are accepted without target or activation widening')
+PY

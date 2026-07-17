@@ -4,11 +4,11 @@
 
 ```text
 composition decision:             REVIEWED_BLOCKED_INCOMPLETE
-accepted bounded provider roots:  23
-accepted exact members:           30
-included members:                 29
+accepted bounded provider roots:  24
+accepted exact members:           31
+included members:                 30
 deferred members:                  1
-selected GTK identity gaps:       13
+selected GTK identity gaps:       12
 target manifest allowed:          NO
 activation allowed:               NO
 ```
@@ -17,10 +17,10 @@ The accepted-member table is generated at `selected-provider-composition-members
 
 ## Latest bounded tranche
 
-Exact `libxkbcommon.so.0.8.0` is included only for the selected GTK 3.24.49 Wayland XKB context, keymap, keyboard-state, modifier, and keysym translation path. Its runtime SONAME alias is `libxkbcommon.so.0`; the selected `libxkbcommon.so.0.0.0` label is retained as reference evidence rather than target-path authority.
+Exact `libharfbuzz.so.0.61010.0` is included only for Pango 1.54.0 core OpenType shaping in the selected GTK 3.24.49 text-layout scope. Its runtime SONAME alias is `libharfbuzz.so.0`; the selected `libharfbuzz.so.0.61020.0` label is retained as later-version reference evidence rather than target-path authority.
 
-No package-wide authority follows. XKB configuration data and path policy, `libxkbcommon-x11`, `libxkbregistry`, sibling capabilities, tools, development surfaces, complete input composition, target population, and activation remain outside this decision.
+The accepted Class B boundary covers the exact five-file recipe's exception-flag cleanup, standard Meson delegation, C++17 compiler-dialect patch, disabled documentation, enabled Graphite2/introspection options, and sibling subpackage splits. No package-wide, dependency, sibling-library, complete text-composition, target-population, or activation authority follows.
 
 ## Next tranche
 
-The next reviewed-root tranche is `HARFBUZZ_BOUNDED_PROVIDER_AUTHORITY`. It must reconcile selected identity `libharfbuzz.so.0.61020.0` with retained exact candidate `libharfbuzz.so.0.61010.0`, preserve SONAME `libharfbuzz.so.0`, and bound the custom step, configure arguments, patch, subpackage, and selected Pango/GTK shaping consumer path.
+The next reviewed-root tranche is `FONTCONFIG_BOUNDED_PROVIDER_AUTHORITY`. It must reconcile selected identity `libfontconfig.so.1.12.1` with retained exact candidate `libfontconfig.so.1.14.0`, preserve SONAME `libfontconfig.so.1`, and bound the custom step, configure arguments, package revision, patch, subpackage, Termux-prefix and selected Pango/GTK font-discovery consumer and data-policy boundary.

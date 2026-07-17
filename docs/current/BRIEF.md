@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-17.05`
+> Semantic state version: `2026-07-17.06`
 >
 > This is the compact current-state entry point. Exact commit and tree coordinates come from the checked-out full Git bundle, not from self-referential repository text.
 
@@ -22,27 +22,27 @@ Web-chat capability failures follow a stop-loss contract: perform one bounded re
 
 ADR 0005 separates artifact identity, adaptation semantics, provider authority, composition, target population and activation. The claim inventory remains 28 roots, 37 reviewed objects and 89 separated claims: 36 Class A, 49 Class B, one Class C and three Class D.
 
-The exact `libxkbcommon.so.0.8.0` member is accepted only for the selected GTK 3.24.49 Wayland XKB context, keymap, keyboard-state, modifier, and keysym translation path. The recipe's custom configure hook delegates exactly to the generic Meson configure step. Upstream 1.8.0 intentionally changed the concrete filename from the older `0.0.0` form to `0.8.0` while preserving SONAME `libxkbcommon.so.0`; the retained SONAME alias targets the exact accepted member.
+The exact `libharfbuzz.so.0.61010.0` member is accepted only for Pango 1.54.0 core OpenType shaping in the selected GTK 3.24.49 text-layout scope. The pinned five-file Class B recipe removes a contradictory exception flag, delegates to the standard Meson helper, changes the compiler dialect to C++17, disables docs, enables Graphite2/introspection, and splits Cairo, ICU and utility sibling outputs. These effects are accepted only for the exact artifact; no upstream byte-equivalence or sibling/dependency authority follows.
 
-XKB configuration data and path policy, `libxkbcommon-x11`, `libxkbregistry`, sibling capabilities, tools and development surfaces remain outside this authority. Other accepted bounded providers remain unchanged, including FreeType and its compression-feature closure, FriBidi, libcloudproviders, the X.Org base tranche, libXcursor, libtasn1, libepoxy, the Pango family, Thai-break chain, project libjpeg, project GDK Pixbuf, GLib/libpng and the official libmount/libblkid pair.
+Upstream 10.1.0's version formula produces concrete filename `0.61010.0` with SONAME `libharfbuzz.so.0`. The selected `0.61020.0` label is retained as later-version reference evidence, not target-path authority. Graphite2, ICU, Cairo, GObject/introspection, subset, tools and development surfaces remain separate. Other accepted bounded providers, including libxkbcommon and FreeType, remain unchanged.
 
 ```text
-bounded provider roots accepted overall: 23
-accepted roots inside the 28-root inventory: 18
-open roots inside the inventory: 10
-accepted exact members: 30
-included current-scope members: 29
+bounded provider roots accepted overall: 24
+accepted roots inside the 28-root inventory: 19
+open roots inside the inventory: 9
+accepted exact members: 31
+included current-scope members: 30
 deferred members: 1
 composition review: REVIEWED_BLOCKED_INCOMPLETE
-selected identity gaps: 13
+selected identity gaps: 12
 target population: blocked
 activation: blocked
 ```
 
-Canonical decisions are under `docs/evidence/`; the current composition review is [`../evidence/selected-obsidian-provider-composition-review.md`](../evidence/selected-obsidian-provider-composition-review.md), and the latest provider decision is [`../evidence/libxkbcommon-bounded-provider-authority.md`](../evidence/libxkbcommon-bounded-provider-authority.md).
+Canonical decisions are under `docs/evidence/`; the current composition review is [`../evidence/selected-obsidian-provider-composition-review.md`](../evidence/selected-obsidian-provider-composition-review.md), and the latest provider decision is [`../evidence/harfbuzz-bounded-provider-authority.md`](../evidence/harfbuzz-bounded-provider-authority.md).
 
 ## Current project phase
 
-The active task is `review-harfbuzz-bounded-provider-authority`.
+The active task is `review-fontconfig-bounded-provider-authority`.
 
-The next proportional tranche is exact `libharfbuzz.so.0.61010.0`. It must bound the custom configure step, extra configure arguments, patch and subpackage semantics, reconcile selected concrete label `libharfbuzz.so.0.61020.0` with the retained candidate while preserving SONAME `libharfbuzz.so.0`, and prove the selected Pango/GTK shaping consumer boundary. No target population, materialization, deployment or activation is allowed.
+The next proportional tranche is exact `libfontconfig.so.1.14.0`. It must bound custom-step, configure, revision, patch, subpackage and Termux-prefix semantics, reconcile selected concrete label `libfontconfig.so.1.12.1` with the retained candidate while preserving SONAME `libfontconfig.so.1`, and prove the selected Pango/GTK font-discovery consumer and configuration-data boundary. No target population, materialization, deployment or activation is allowed.
