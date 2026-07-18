@@ -27,6 +27,8 @@ Selected `libXdamage.so.1.1.0` remains `BLOCKED_NO_TERMUX_GLIBC_PROVIDER_CANDIDA
 
 The coupled selected `libatk-bridge-2.0.so.0.0.0`, `libatk-1.0.so.0.25611.1`, and `libatspi.so.0.0.1` family is also `BLOCKED_NO_TERMUX_GLIBC_PROVIDER_CANDIDATE`. The approved `at-spi2-core-glibc` query returned neither policy metadata nor a package stanza. Only ordinary bionic `at-spi2-core`, `atk`, and `at-spi2-atk` entries were observed, and pinned recipe path/search checks found no AT-SPI2/ATK root. This is not authority to copy installed bionic bytes or activate an accessibility service.
 
+The selected `libgdk-3.so.0.2417.32` and `libgtk-3.so.0.2417.32` core pair is likewise `BLOCKED_NO_TERMUX_GLIBC_PROVIDER_CANDIDATE`. All bounded glibc package-name queries returned no policy metadata or package stanza, only ordinary Termux/X11 bionic `gtk3 3.24.52` was observed, and pinned recipe path/search checks found no GTK 3 producing root. This is not authority to copy installed bionic bytes or infer backend, settings, theme, accessibility, input, printing, or service behavior.
+
 ## Next tranche
 
-The next tranche is `GTK3_CORE_PROVIDER_EVIDENCE_ACQUISITION`. The next action is read-only approved-index and pinned-repository inspection for the exact selected GTK 3.24.49 `libgdk-3.so.0` and `libgtk-3.so.0` pair, followed by exact member, SONAME, alias, dependency, recipe-semantics, optional-backend and pair-binding review if a candidate exists.
+The next tranche is `LIBSELINUX_PROVIDER_EVIDENCE_ACQUISITION`. The next action is read-only approved-index and pinned-repository inspection for exact selected `libselinux.so.1`, followed by exact member, SONAME, alias, dependency, recipe-semantics, Android/Termux SELinux-boundary and consumer-binding review if a candidate exists.

@@ -1,5 +1,5 @@
 schema_version: 1
-state_version: 2026-07-18.06
+state_version: 2026-07-18.07
 updated_on: 2026-07-18
 
 project:
@@ -69,10 +69,11 @@ documentation:
   libxdamage_provider_evidence_blocker: docs/evidence/libxdamage-provider-evidence-blocker.md
   graphite2_harfbuzz_prerequisite_provider_authority: docs/evidence/graphite2-harfbuzz-prerequisite-provider-authority.md
   at_spi2_core_provider_evidence_blocker: docs/evidence/at-spi2-core-provider-evidence-blocker.md
+  gtk3_core_provider_evidence_blocker: docs/evidence/gtk3-core-provider-evidence-blocker.md
 
 provider_authority:
-  workstream: graphite2-harfbuzz-prerequisite-authority-accepted-at-spi2-core-open-blocked-gtk3-core-evidence-acquisition-active
-  boundary: twenty-eight-bounded-providers-retained-libxdamage-and-at-spi2-core-open-no-glibc-candidates-gtk3-core-and-later-composition-target-and-activation-open
+  workstream: graphite2-harfbuzz-prerequisite-authority-accepted-at-spi2-core-and-gtk3-core-open-blocked-libselinux-evidence-acquisition-active
+  boundary: twenty-eight-bounded-providers-retained-libxdamage-at-spi2-core-and-gtk3-core-open-no-glibc-candidates-libselinux-and-later-composition-target-and-activation-open
   claim_inventory:
     total: 89
     class_a: 36
@@ -134,7 +135,7 @@ provider_authority:
     accepted_soname_collisions: 0
     accepted_alias_collisions: 0
     target_manifest_allowed: false
-    next_tranche: at-spi2-core-provider-evidence-acquisition
+    next_tranche: libselinux-provider-evidence-acquisition
   gdkpixbuf_core_acquisition:
     result_sha256: e96fb0e2d8fa1c16a228e41d60801abac0b8a43584a86b7e63f8adddfc4f5692
     review_state: acquisition-reviewed-partial
@@ -156,7 +157,7 @@ provider_authority:
     transitive_result_sha256: a18426371acf0339731464eea4a6fd1f8c745cc09154629b69e34d1063073c13
     transitive_recipe_tree: e91a0c476ef4355dbfff46e2bcab23d0085ddd01
     transitive_functional_matrix: jpeg-file-pass-jpeg-memory-pass-png-file-pass-png-memory-pass
-    next_action: acquire-gtk3-core-provider-evidence
+    next_action: acquire-libselinux-provider-evidence
   thai_break_provider:
     result_sha256: 7789ff1a039e3186b04014e4ddf6a7ba68d77fe31a2f1ef77273590aa97b8e1e
     libthai_member: libthai.so.0.3.1
@@ -182,7 +183,7 @@ provider_authority:
     consumer: gtk-3-24-49-places-sidebar-cloud-account-integration
     service_boundary: dbus-session-services-and-accounts-not-accepted
     provider_authority: accepted-bounded-provider
-  next_research_decision: acquire-gtk3-core-provider-evidence
+  next_research_decision: acquire-libselinux-provider-evidence
   fribidi_provider:
     member: libfribidi.so.0.4.0
     member_sha256: 71668fd02e89fa7546446bb7961bb618f6d22e1506f7444bbea6788befbb7895
@@ -308,6 +309,19 @@ provider_authority:
     target_population: blocked
     service_activation: blocked
     reopening_gate: exact-glibc-artifact-three-member-soname-alias-recipe-dependency-gtk-binding-service-lifecycle-collision-update-and-rollback-evidence
+  gtk3_core_provider_blocker:
+    selected_labels: libgdk-3.so.0.2417.32;libgtk-3.so.0.2417.32
+    required_sonames: libgdk-3.so.0;libgtk-3.so.0
+    result_archive_sha256: 26ac394a3808b59d0999a6cc5c4ae1210fa6f6257932b3c51a1056530f568b4d
+    glibc_package_queries: gtk-3-glibc;gtk-glibc;gtk3-glibc;libgtk-3-glibc;libgtk3-glibc
+    glibc_package_state: no-policy-entry-and-no-package-stanza-for-all-queries
+    observed_bionic_packages: gtk3-3.24.52
+    observed_bionic_state: ordinary-termux-x11-package-only
+    glibc_recipe_repository: termux-pacman/glibc-packages@9bdd20c1d36524a0ab016d9b71c748b0cbb20a34
+    glibc_recipe_state: no-gtk3-producing-root-found
+    provider_authority: open-blocked-no-glibc-candidate
+    target_population: blocked
+    reopening_gate: exact-glibc-artifact-two-member-soname-alias-recipe-dependency-optional-backend-pair-binding-collision-update-and-rollback-evidence
   prohibited_claims:
     - complete-provider-authority
     - complete-runtime-composition
@@ -315,7 +329,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: acquire-gtk3-core-provider-evidence
+  id: acquire-libselinux-provider-evidence
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:

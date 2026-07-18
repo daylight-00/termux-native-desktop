@@ -46,4 +46,4 @@ ADR 0005 requires this tranche to stop without authority. Reopening requires an 
 
 Bionic package availability, installed bionic bytes, Debian oracle identities, source-level ABI expectations, or a metapackage relationship are not interchangeable with that evidence.
 
-The next independent composition tranche is exact GTK 3.24.49 core-pair provider evidence acquisition for `libgdk-3.so.0` and `libgtk-3.so.0`.
+The subsequent GTK 3.24.49 core-pair tranche also stopped without a glibc candidate; the next independent composition tranche is exact `libselinux.so.1` provider evidence acquisition.
