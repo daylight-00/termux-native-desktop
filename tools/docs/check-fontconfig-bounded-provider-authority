@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+required=(
+  docs/evidence/fontconfig-bounded-provider-authority.md
+  experiments/glibc/selected-obsidian-provider-authority/review/fontconfig-bounded-provider-authority.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/provider-claim-classification.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-composition-members.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-composition-gaps.tsv
+  docs/current/STATE.yaml docs/current/ACTIVE_TASK.md docs/catalog.tsv
+)
+for rel in "${required[@]}"; do [ -f "$ROOT/$rel" ] || { echo "fontconfig-provider: FAIL: missing $rel" >&2; exit 1; }; done
+python3 - "$ROOT" <<'PY'
+from pathlib import Path
+import csv,sys
+root=Path(sys.argv[1]); review=root/'experiments/glibc/selected-obsidian-provider-authority/review'
+def read(n):
+ with (review/n).open(newline='',encoding='utf-8') as f:return list(csv.DictReader(f,delimiter='\t'))
+errors=[]; rows=read('fontconfig-bounded-provider-authority.tsv')
+if len(rows)!=1: errors.append(f'expected one Fontconfig row, got {len(rows)}')
+else:
+ r=rows[0]
+ want={
+  'review_id':'FONTCONFIG-PROV-001','root_review_id':'generic-root-review:26c46ad7612eb40ca721','recipe_root':'gpkg/fontconfig','recipe_tree':'c5c62dc15d6a897251c88cb7c2306b2a12dd16ba','build_script_blob_sha':'6ab48ee860385da68de98305aec285a39000126c','artifact_package':'fontconfig-glibc','artifact_version':'2.15.0-1','artifact_sha256':'c6bc4c9801ee7a45b506d3cc501f1c73a2fe6f1d4b5690eddede158f2b78aafb','evidence_row_id':'selected:33fe337448a19e2c6f2f','exact_member_path':'data/data/com.termux/files/usr/glibc/lib/libfontconfig.so.1.14.0','exact_member_sha256':'33769b91e5bc82e4453766c957733fecc45cf6d0c696fe52c3cdb4084daa591e','observed_soname':'libfontconfig.so.1','adaptation_adr_class':'B','adaptation_classification_state':'CLASS_B_BOUNDED_EXACT_ARTIFACT_LIBRARY_AND_RECEIPT_OWNED_CONFIG_CACHE_SEPARATION_SEMANTICS_ACCEPTED','decision':'ACCEPTED_BOUNDED_PROVIDER'
+ }
+ for k,v in want.items():
+  if r.get(k)!=v: errors.append(f'{k}: expected {v}, got {r.get(k)!r}')
+ joined=';'.join(r.values())
+ for token in [
+  'CUSTOM_CONFIGURE_DELEGATES_TO_STANDARD_TERMUX_MESON_HELPER',
+  'FCATOMIC_PATCH_FORCES_MKDIR_LOCK_SENTINEL_INSTEAD_OF_HARD_LINK',
+  'UPSTREAM_2_15_0_FORMULA_PRODUCES_LIBFONTCONFIG_SO_1_14_0_WITH_SOVERSION_1',
+  'PANGO_LINKS_FONTCONFIG_AND_PANGOFT2_DIRECTLY_CALLS_FC_PATTERN_BUILD_FC_FONT_MATCH_AND_FC_PATTERN_GET_APIS',
+  'PROJECT_LAUNCH_REQUIRES_EXPLICIT_RECEIPT_OWNED_FONTCONFIG_FILE_PATH_FONT_DIRECTORY_AND_CACHE',
+  'SONAME_ALIAS_LIBFONTCONFIG_SO_1_TARGETS_EXACT_1_14_0_MEMBER',
+  'SELECTED_1_12_1_LABEL_IS_REFERENCE_FILENAME_NOT_TARGET_PATH_AUTHORITY',
+  'NO_CONFIG_POPULATION_COMPLETE_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT']:
+  if token not in joined: errors.append(f'missing bounded token: {token}')
+ for forbidden in ['PACKAGE_GENERATED_FONTS_CONF_ACCEPTED_AS_TARGET_POLICY','GLOBAL_CACHE_ACCEPTED','SYSTEM_FONTS_ACCEPTED','CACHE_REUSE_ACROSS_GENERATIONS_ACCEPTED','UPSTREAM_BYTE_EQUIVALENCE_ACCEPTED']:
+  if forbidden in joined: errors.append(f'forbidden widened row token: {forbidden}')
+claims={r['claim_id']:r for r in read('provider-claim-classification.tsv')}
+if claims.get('PCC-FONTCONFIG-PROVIDER',{}).get('classification_state')!='BOUNDED_PROVIDER_AUTHORITY_ACCEPTED': errors.append('Fontconfig provider claim not accepted')
+if claims.get('PCC-FONTCONFIG-ADAPTATION',{}).get('classification_state')!='CLASS_B_BOUNDED_EXACT_ARTIFACT_LIBRARY_AND_RECEIPT_OWNED_CONFIG_CACHE_SEPARATION_SEMANTICS_ACCEPTED': errors.append('Fontconfig adaptation claim not bounded')
+mem=read('selected-provider-composition-members.tsv')
+if not any(r['member_basename']=='libfontconfig.so.1.14.0' and r['member_sha256']=='33769b91e5bc82e4453766c957733fecc45cf6d0c696fe52c3cdb4084daa591e' and r['soname']=='libfontconfig.so.1' and r['alias_basename']=='libfontconfig.so.1' and r['alias_target_basename']=='libfontconfig.so.1.14.0' and r['composition_inclusion']=='INCLUDED_SELECTED_GTK_SCOPE' for r in mem): errors.append('exact Fontconfig composition member/alias missing')
+gaps=read('selected-provider-composition-gaps.tsv')
+if any(r['identity_label']=='libfontconfig.so.1.12.1' for r in gaps): errors.append('accepted Fontconfig identity remains in gaps')
+for label in ['libcairo.so.2.11804.4','libcairo-gobject.so.2.11804.4']:
+ if not any(r['identity_label']==label and r['priority_tranche']=='CAIRO_BOUNDED_PROVIDER_AUTHORITY' for r in gaps): errors.append(f'next Cairo priority gap missing: {label}')
+doc=(root/'docs/evidence/fontconfig-bounded-provider-authority.md').read_text(); state=(root/'docs/current/STATE.yaml').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); catalog=(root/'docs/catalog.tsv').read_text()
+markers=[
+ ('doc member','libfontconfig.so.1.14.0' in doc),
+ ('doc selected label','libfontconfig.so.1.12.1' in doc),
+ ('doc continuity','libfontconfig.so.1 -> libfontconfig.so.1.14.0' in doc),
+ ('doc receipt config','receipt-owned `FONTCONFIG_FILE`' in doc),
+ ('doc fresh cache','fresh cache when the provider, configuration, or font set changes' in doc),
+ ('state route','fontconfig_provider_authority_review: docs/evidence/fontconfig-bounded-provider-authority.md' in state),
+ ('state accepted','fontconfig_provider:' in state and 'provider_authority: accepted-bounded-provider' in state),
+ ('next task','Task ID: `review-cairo-bounded-provider-authority`' in active),
+ ('catalog','fontconfig-bounded-provider-authority\tevidence\tcurrent\tcanonical' in catalog),
+]
+for label,ok in markers:
+ if not ok: errors.append(f'missing durable marker: {label}')
+for forbidden in ['target manifest allowed: YES','activation: ACCEPTED','COMPLETE_COMPOSITION_ACCEPTED','libfontconfig.so.1.12.1 ->','package-generated `fonts.conf` is accepted','global cache is accepted']:
+ if forbidden in doc: errors.append(f'forbidden widening: {forbidden}')
+if errors:
+ for e in errors: print('fontconfig-provider: FAIL:',e,file=sys.stderr)
+ raise SystemExit(1)
+print('fontconfig-provider: PASS: exact 2.15.0 member, stable SONAME continuity, bounded Class B config/cache semantics and Pango matching binding are accepted without config, target or activation widening')
+PY

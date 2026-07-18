@@ -9,7 +9,7 @@ roots: 28
 objects: 37
 claims: 89
 new evidence collected: 0
-provider authority accepted inside inventory: 19
+provider authority accepted inside inventory: 20
 composition accepted: 0
 target rows accepted: 0
 activation accepted: 0
@@ -96,7 +96,7 @@ The classification retains the following evidence without overpromoting it:
 - the accepted OJ-001 correction that the required ABI identity is `libjpeg.so.62`, not `libjpeg.so.8`;
 - all historical SUP-02 request, acquisition, receipt, and producer records.
 
-These remain evidence inputs. They do not create final provider authority by themselves. Eighteen root provider claims are accepted only through their separate bounded provider reviews.
+These remain evidence inputs. They do not create final provider authority by themselves. Twenty root provider claims are accepted only through their separate bounded provider reviews.
 
 ## SUP-02 disposition
 
@@ -145,14 +145,14 @@ The `libjpeg-turbo` SUP-02 request is also unnecessary at the current boundary b
 ## Current authority states
 
 ```text
-bounded provider authority accepted inside inventory: 19 roots
-provider authority still open:                        9 roots
+bounded provider authority accepted inside inventory: 20 roots
+provider authority still open:                        8 roots
 application runtime composition:     NOT REACHED
 target population:                   BLOCKED
 selected-generation activation:      BLOCKED
 ```
 
-The nineteen accepted root rows are `libxfixes`, `libxcomposite`, `libxi`, `libxinerama`, `libxcursor`, `libtasn1`, `libepoxy`, `pango`, the exact project-built `libjpeg.so.62.4.0`, `glib`, `libpng`, `util-linux`, `libthai`, `libdatrie`, `libcloudproviders`, `fribidi`, `freetype`, `libxkbcommon`, and `harfbuzz`. The GLib four-member family and libpng shared member are accepted only for the exact GdkPixbuf 2.42.12 JPEG/PNG file and memory decode scope; the exact official libmount/libblkid pair is accepted only for the bounded GdkPixbuf transitive runtime. Each decision remains limited to an exact identity and named consumer capability. The classification still does not authorize extraction, installation, target population, complete composition, selected-generation mutation, or activation.
+The twenty accepted root rows are `libxfixes`, `libxcomposite`, `libxi`, `libxinerama`, `libxcursor`, `libtasn1`, `libepoxy`, `pango`, the exact project-built `libjpeg.so.62.4.0`, `glib`, `libpng`, `util-linux`, `libthai`, `libdatrie`, `libcloudproviders`, `fribidi`, `freetype`, `libxkbcommon`, `harfbuzz`, and `fontconfig`. The GLib four-member family and libpng shared member are accepted only for the exact GdkPixbuf 2.42.12 JPEG/PNG file and memory decode scope; the exact official libmount/libblkid pair is accepted only for the bounded GdkPixbuf transitive runtime. Each decision remains limited to an exact identity and named consumer capability. The classification still does not authorize extraction, installation, target population, complete composition, selected-generation mutation, or activation.
 
 ## Seven-root semantic-review result
 
@@ -161,7 +161,7 @@ The seven-root no-token semantic review is complete:
 ```text
 confirmed Class A: 7
 reclassified Class B: 0
-provider authority accepted inside inventory: 19
+provider authority accepted inside inventory: 20
 ```
 
 Canonical review surface:
@@ -181,13 +181,13 @@ The exact `libXcursor.so.1.0.2` provider is accepted for GTK 3.24.49 X11 cursor 
 
 The exact `libcloudproviders.so.0.3.6` provider is accepted for selected GTK 3.24.49 PlacesSidebar cloud-account integration. Its Class B delta disables Vala binding generation only; DBus services, accounts and service activation remain separate.
 
-The exact `libfribidi.so.0.4.0` provider remains accepted only for Pango 1.54.0 core Unicode bidirectional processing. Exact `libfreetype.so.6.20.2` remains accepted for the bounded Pango/GTK FT2 font-engine path, with four pre-existing conditional objects included only for its compression-feature closure. Exact `libxkbcommon.so.0.8.0` remains accepted for the bounded GTK 3.24.49 Wayland XKB path. Exact `libharfbuzz.so.0.61010.0` is now accepted for Pango 1.54.0 core OpenType shaping, with SONAME `libharfbuzz.so.0`, explicit `0.61020.0` reference-to-`0.61010.0` candidate continuity, and bounded exception-flag, Meson, C++17, feature-option and subpackage semantics. The next smallest phase is Fontconfig. No target paths are generated.
+The exact `libfribidi.so.0.4.0` provider remains accepted only for Pango 1.54.0 core Unicode bidirectional processing. Exact `libfreetype.so.6.20.2` remains accepted for the bounded Pango/GTK FT2 font-engine path, with four pre-existing conditional objects included only for its compression-feature closure. Exact `libxkbcommon.so.0.8.0` remains accepted for the bounded GTK 3.24.49 Wayland XKB path. Exact `libharfbuzz.so.0.61010.0` remains accepted for Pango 1.54.0 core OpenType shaping. Exact `libfontconfig.so.1.14.0` is now accepted for Pango 1.54.0 font discovery, matching and pattern-property consumption, with SONAME `libfontconfig.so.1`, explicit `1.12.1` reference-to-`1.14.0` candidate continuity, and bounded Meson, generated-default-policy, package-revision, directory-sentinel cache-lock and utilities-subpackage semantics. Package-generated configuration, system or package font directories, global caches, font population, CLI and development surfaces remain excluded; future activation requires receipt-owned configuration and cache. The next smallest phase is the coupled Cairo/Cairo-GObject root. No target paths are generated.
 
 ## Stop line
 
 Do not:
 
-- treat claim classification alone as provider acceptance outside the nineteen explicit bounded provider review rows;
+- treat claim classification alone as provider acceptance outside the twenty explicit bounded provider review rows;
 - fulfill a SUP-02 request solely because it was historically issued;
 - combine artifact identity, adaptation, provider authority, composition, target population, and activation into one decision;
 - use package metadata or build provenance as a substitute for runtime provider selection;

@@ -4,11 +4,11 @@
 
 ```text
 composition decision:             REVIEWED_BLOCKED_INCOMPLETE
-accepted bounded provider roots:  24
-accepted exact members:           31
-included members:                 30
+accepted bounded provider roots:  25
+accepted exact members:           32
+included members:                 31
 deferred members:                  1
-selected GTK identity gaps:       12
+selected GTK identity gaps:       11
 target manifest allowed:          NO
 activation allowed:               NO
 ```
@@ -17,10 +17,10 @@ The accepted-member table is generated at `selected-provider-composition-members
 
 ## Latest bounded tranche
 
-Exact `libharfbuzz.so.0.61010.0` is included only for Pango 1.54.0 core OpenType shaping in the selected GTK 3.24.49 text-layout scope. Its runtime SONAME alias is `libharfbuzz.so.0`; the selected `libharfbuzz.so.0.61020.0` label is retained as later-version reference evidence rather than target-path authority.
+Exact `libfontconfig.so.1.14.0` is included only for Pango 1.54.0 font discovery, matching, and pattern-property consumption in the selected GTK 3.24.49 text path. Its runtime SONAME alias is `libfontconfig.so.1`; the selected `libfontconfig.so.1.12.1` label is retained as older reference evidence rather than target-path authority.
 
-The accepted Class B boundary covers the exact five-file recipe's exception-flag cleanup, standard Meson delegation, C++17 compiler-dialect patch, disabled documentation, enabled Graphite2/introspection options, and sibling subpackage splits. No package-wide, dependency, sibling-library, complete text-composition, target-population, or activation authority follows.
+The accepted Class B boundary covers the exact three-file recipe, standard Meson delegation, revision-1 source and font-path policy, generated default font-directory/rendering settings, directory-sentinel cache-lock patch, and utilities subpackage split. Package-generated `fonts.conf`, package or system font directories, global caches, font population, CLI tools, development surfaces, complete text composition, target population, and activation remain excluded. Any future runtime must use an explicit receipt-owned configuration, immutable generation font directory, and fresh receipt-local cache.
 
 ## Next tranche
 
-The next reviewed-root tranche is `FONTCONFIG_BOUNDED_PROVIDER_AUTHORITY`. It must reconcile selected identity `libfontconfig.so.1.12.1` with retained exact candidate `libfontconfig.so.1.14.0`, preserve SONAME `libfontconfig.so.1`, and bound the custom step, configure arguments, package revision, patch, subpackage, Termux-prefix and selected Pango/GTK font-discovery consumer and data-policy boundary.
+The next reviewed-root tranche is `CAIRO_BOUNDED_PROVIDER_AUTHORITY`. It must review exact `libcairo.so.2.11802.2` and `libcairo-gobject.so.2.11802.2` as one atomic recipe-root tranche, reconcile the selected `1.18.4` concrete labels with retained `1.18.2` candidates, preserve SONAMEs `libcairo.so.2` and `libcairo-gobject.so.2`, and bound configure, patch, Termux-prefix, dependency, Pango/GTK rendering, GObject consumer, conflict, update, and rollback semantics.

@@ -48,7 +48,7 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 - [`libjpeg-so-62-gdkpixbuf-diagnostic-matrix-result-review.md`](libjpeg-so-62-gdkpixbuf-diagnostic-matrix-result-review.md) — non-dispositive first diagnostic matrix and corrected loader boundary.
 - [`libjpeg-so-62-loader-isolated-provider-authority.md`](libjpeg-so-62-loader-isolated-provider-authority.md) — exact loader-isolated candidate/oracle controls and bounded GdkPixbuf JPEG provider-authority decision.
 
-- [`selected-obsidian-provider-composition-review.md`](selected-obsidian-provider-composition-review.md) records the current Class D non-materializing composition manifest, 31 exact accepted members, exclusions, collisions and 12 blocking selected GTK identities.
+- [`selected-obsidian-provider-composition-review.md`](selected-obsidian-provider-composition-review.md) records the current Class D non-materializing composition manifest, 32 exact accepted members, exclusions, collisions and 11 blocking selected GTK identities.
 
 - [`gdkpixbuf-core-provider-acquisition-result-review.md`](gdkpixbuf-core-provider-acquisition-result-review.md) binds the exact GLib-family and libpng candidate identities, records the missing Termux GdkPixbuf package/recipe, and routes the upstream 2.42.12 scratch build.
 
@@ -68,3 +68,4 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 - [`libxkbcommon-bounded-provider-authority.md`](libxkbcommon-bounded-provider-authority.md) — exact libxkbcommon member, upstream concrete-filename continuity, standard Meson delegation and bounded GTK 3.24.49 Wayland XKB authority.
 
 - [`harfbuzz-bounded-provider-authority.md`](harfbuzz-bounded-provider-authority.md) — exact HarfBuzz member, five-file Class B build/packaging semantics, upstream concrete-version formula and bounded Pango 1.54.0 core OpenType shaping authority.
+- [`fontconfig-bounded-provider-authority.md`](fontconfig-bounded-provider-authority.md) — exact Fontconfig member, three-file Class B recipe/config/cache semantics, stable SONAME continuity, and bounded Pango 1.54.0 font discovery and matching authority.

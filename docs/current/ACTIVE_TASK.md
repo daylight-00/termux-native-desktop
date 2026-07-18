@@ -1,69 +1,74 @@
-# Active task: review exact Fontconfig provider authority and filename continuity
+# Active task: review exact Cairo and Cairo-GObject provider authority and filename continuity
 
-> Task ID: `review-fontconfig-bounded-provider-authority`
+> Task ID: `review-cairo-bounded-provider-authority`
 >
-> Expected state on completion: the exact Termux candidate `libfontconfig.so.1.14.0` is either accepted for a bounded selected Pango/GTK font-discovery and matching capability while preserving SONAME `libfontconfig.so.1`, or left open with a precise custom-step, configure, patch, subpackage, prefix, package-revision, concrete-filename drift, consumer-binding, conflict, update, or rollback blocker. No target population, deployment, or activation occurs.
+> Expected state on completion: the exact Termux candidates `libcairo.so.2.11802.2` and `libcairo-gobject.so.2.11802.2` are either accepted as one bounded root tranche for selected Pango/GTK rendering and GObject integration while preserving SONAMEs `libcairo.so.2` and `libcairo-gobject.so.2`, or left open with a precise configure, patch, prefix, dependency, concrete-filename drift, consumer-binding, conflict, update, or rollback blocker. No target population, deployment, or activation occurs.
 
 ## Objective
 
-Review the single selected member from `gpkg/fontconfig` under ADR 0005, explicitly reconciling the selected concrete label with the retained exact Termux candidate and bounding all recipe adaptation tokens and prefix-dependent policy.
+Review the two selected members from `gpkg/libcairo` under ADR 0005 as one atomic recipe-root tranche, explicitly reconciling both selected concrete labels with the retained exact Termux candidates and bounding all recipe adaptation tokens.
 
 ## Why now
 
-Exact HarfBuzz authority is bounded and accepted, reducing selected composition gaps from 13 to 12. Fontconfig is the next single-member reviewed-root tranche and is directly relevant to the accepted Pango/GTK font path.
+Exact Fontconfig authority is bounded and accepted, reducing selected composition gaps from 12 to 11. Cairo is the remaining reviewed root in the selected GTK gap set and covers two coupled identities from one exact artifact and recipe tree.
 
 ## Known coordinates
 
 ```text
-root review:       generic-root-review:26c46ad7612eb40ca721
-recipe root:       gpkg/fontconfig
-recipe tree:       c5c62dc15d6a897251c88cb7c2306b2a12dd16ba
-artifact:          fontconfig-glibc 2.15.0-1
-artifact SHA:      c6bc4c9801ee7a45b506d3cc501f1c73a2fe6f1d4b5690eddede158f2b78aafb
-selected identity: libfontconfig.so.1.12.1
-selected row:      selected:33fe337448a19e2c6f2f
-exact candidate:   libfontconfig.so.1.14.0
-candidate SHA:     33769b91e5bc82e4453766c957733fecc45cf6d0c696fe52c3cdb4084daa591e
-SONAME:            libfontconfig.so.1
+root review:             generic-root-review:0263d4b55d6a43edad7b
+recipe root:             gpkg/libcairo
+recipe tree:             b80a0990d43609e09f1480394225d2b068ce5881
+artifact:                libcairo-glibc 1.18.2
+artifact SHA:            3250dba4dc3312b4fcaa763c788614c63ba611ee82451224ba10da50622a0db2
+selected cairo identity: libcairo.so.2.11804.4
+selected cairo row:      selected:553839925ebeb658612d
+exact cairo candidate:   libcairo.so.2.11802.2
+cairo candidate SHA:     43cd64f07e1c33e5bd574fe7f50a20062a2ab6836adf80e1b5f4b6846e05264d
+cairo SONAME:            libcairo.so.2
+selected gobject identity: libcairo-gobject.so.2.11804.4
+selected gobject row:      selected:e8ccf42491e69aba6284
+exact gobject candidate:   libcairo-gobject.so.2.11802.2
+gobject candidate SHA:     2440680a9d0c94d58d87d5916d168535b7dc4263648df9aa0b787ef2f7d3a166
+gobject SONAME:            libcairo-gobject.so.2
 ```
 
 ## In scope
 
-- exact candidate/member digest and SONAME identity;
-- custom Termux step, configure arguments, package revision, patch, subpackage, and Termux-prefix semantics;
-- concrete filename drift and SONAME-alias continuity;
-- selected Pango/GTK font discovery and matching consumer binding;
-- configuration/data-path boundary, conflict, exclusion, update, and rollback.
+- both exact candidate/member digests and SONAME identities;
+- configure arguments, patch files, and Termux-prefix semantics;
+- concrete filename drift and both SONAME-alias continuities;
+- selected Pango/GTK Cairo rendering and Cairo-GObject consumer binding;
+- dependency, conflict, exclusion, update, and atomic rollback boundaries.
 
 ## Out of scope
 
-Font cache/configuration population, system fonts, CLI tools, development surfaces, complete text composition, target generation, installation, materialization, deployment, activation, and SUP-02 evidence collection.
+Cairo tools, headers, pkg-config, static and development surfaces, non-selected backends, complete rendering composition, target generation, installation, materialization, deployment, activation, and SUP-02 evidence collection.
 
 ## Required reading
 
 - `docs/current/STATE.yaml`
 - `docs/decisions/0005-proportional-assurance-depth.md`
-- `docs/evidence/harfbuzz-bounded-provider-authority.md`
+- `docs/evidence/fontconfig-bounded-provider-authority.md`
 - `docs/evidence/selected-obsidian-provider-composition-review.md`
 - `experiments/glibc/selected-obsidian-provider-authority/review/generic-build-attestation-adaptation-root-review-set.tsv`
 - `experiments/glibc/selected-obsidian-provider-authority/review/generic-recipe-binding-and-drift-target-receipt-review.tsv`
 
 ## Pending external inputs
 
-None before static review. Request one bounded Termux probe only if exact adaptation impact, consumer binding, filename continuity, or configuration-path semantics cannot be resolved from retained evidence.
+None before static review. Request one bounded Termux probe only if exact adaptation impact, consumer binding, filename continuity, or the two-member atomicity cannot be resolved from retained evidence.
 
 ## Stop conditions
 
-Stop without accepting authority if exact candidate digest, patch/configure/subpackage/prefix semantics, selected identity-to-SONAME continuity, consumer binding, data/configuration boundary, conflict/exclusion, update, or rollback cannot be bounded.
+Stop without accepting authority if either exact candidate digest, configure/patch/prefix semantics, selected identity-to-SONAME continuity, consumer binding, dependency/exclusion boundary, update, or atomic rollback cannot be bounded.
 
 ## Next valid action
 
-Perform a bounded exact-file recipe, patch/configure/subpackage/prefix, filename-continuity, and Pango/GTK font consumer review. Request device execution only if retained static evidence cannot resolve a material ambiguity.
+Perform a bounded exact-file recipe, configure/patch/prefix, two-member filename-continuity, and Pango/GTK rendering consumer review. Request device execution only if retained static evidence cannot resolve a material ambiguity.
 
 ## Completion criteria
 
-- Exact artifact, candidate member, SONAME, and recipe coordinates remain pinned.
-- Every adaptation token, prefix/data boundary, and concrete-filename continuity rule is explicit.
-- Necessity, consumer binding, conflict/exclusion, update, and rollback are explicit.
-- The provider is accepted narrowly or left open with one precise blocker.
+- Exact artifact, both candidate members, SONAMEs, and recipe coordinates remain pinned.
+- Every adaptation token and both concrete-filename continuity rules are explicit.
+- Necessity, consumer binding, conflict/exclusion, update, and atomic rollback are explicit.
+- The two-member provider root is accepted narrowly or left open with one precise blocker.
 - Composition, target population, and activation remain separate.

@@ -24,6 +24,7 @@ FRIBIDI_PROVIDER_REVIEW = Path('experiments/glibc/selected-obsidian-provider-aut
 FREETYPE_PROVIDER_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/freetype-bounded-provider-authority.tsv')
 LIBXKBCOMMON_PROVIDER_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/libxkbcommon-bounded-provider-authority.tsv')
 HARFBUZZ_PROVIDER_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/harfbuzz-bounded-provider-authority.tsv')
+FONTCONFIG_PROVIDER_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/fontconfig-bounded-provider-authority.tsv')
 LIBJPEG_DISPOSITION = Path('experiments/glibc/selected-obsidian-provider-authority/review/libjpeg-so-62-provider-candidate-disposition.tsv')
 LIBJPEG_RESULT_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/libjpeg-so-62-compatibility-provider-candidate-result-review.tsv')
 LIBJPEG_RUNPATH_FREE_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review.tsv')
@@ -140,13 +141,14 @@ def main() -> None:
     freetype_provider_reviews = read_tsv(repo / FREETYPE_PROVIDER_REVIEW)
     libxkbcommon_provider_reviews = read_tsv(repo / LIBXKBCOMMON_PROVIDER_REVIEW)
     harfbuzz_provider_reviews = read_tsv(repo / HARFBUZZ_PROVIDER_REVIEW)
+    fontconfig_provider_reviews = read_tsv(repo / FONTCONFIG_PROVIDER_REVIEW)
     libjpeg_dispositions = read_tsv(repo / LIBJPEG_DISPOSITION)
     libjpeg_result_reviews = read_tsv(repo / LIBJPEG_RESULT_REVIEW)
     libjpeg_runpath_free_reviews = read_tsv(repo / LIBJPEG_RUNPATH_FREE_REVIEW)
     libjpeg_consumer_binding_reviews = read_tsv(repo / LIBJPEG_CONSUMER_BINDING_REVIEW)
     libjpeg_diagnostic_matrix_reviews = read_tsv(repo / LIBJPEG_DIAGNOSTIC_MATRIX_REVIEW)
     libjpeg_provider_reviews = read_tsv(repo / LIBJPEG_PROVIDER_REVIEW)
-    provider_reviews = xorg_provider_reviews + libtasn1_provider_reviews + libepoxy_provider_reviews + pango_provider_reviews + gdkpixbuf_reference_provider_reviews + gdkpixbuf_util_provider_reviews + libxcursor_provider_reviews + libthai_libdatrie_provider_reviews + libcloudproviders_provider_reviews + fribidi_provider_reviews + freetype_provider_reviews + libxkbcommon_provider_reviews + harfbuzz_provider_reviews + libjpeg_provider_reviews
+    provider_reviews = xorg_provider_reviews + libtasn1_provider_reviews + libepoxy_provider_reviews + pango_provider_reviews + gdkpixbuf_reference_provider_reviews + gdkpixbuf_util_provider_reviews + libxcursor_provider_reviews + libthai_libdatrie_provider_reviews + libcloudproviders_provider_reviews + fribidi_provider_reviews + freetype_provider_reviews + libxkbcommon_provider_reviews + harfbuzz_provider_reviews + fontconfig_provider_reviews + libjpeg_provider_reviews
     if len(roots) != 28:
         raise SystemExit(f'expected 28 root rows, found {len(roots)}')
     if len(objects) != 37:
@@ -181,6 +183,8 @@ def main() -> None:
         raise SystemExit(f'expected 1 libxkbcommon provider review, found {len(libxkbcommon_provider_reviews)}')
     if len(harfbuzz_provider_reviews) != 1:
         raise SystemExit(f'expected 1 HarfBuzz provider review, found {len(harfbuzz_provider_reviews)}')
+    if len(fontconfig_provider_reviews) != 1:
+        raise SystemExit(f'expected 1 Fontconfig provider review, found {len(fontconfig_provider_reviews)}')
     if len(libjpeg_dispositions) != 1:
         raise SystemExit(f'expected 1 libjpeg disposition row, found {len(libjpeg_dispositions)}')
     if len(libjpeg_result_reviews) != 1:
@@ -255,6 +259,7 @@ def main() -> None:
     provider_source_by_root.update({row['root_review_id']: FREETYPE_PROVIDER_REVIEW.name for row in freetype_provider_reviews})
     provider_source_by_root.update({row['root_review_id']: LIBXKBCOMMON_PROVIDER_REVIEW.name for row in libxkbcommon_provider_reviews})
     provider_source_by_root.update({row['root_review_id']: HARFBUZZ_PROVIDER_REVIEW.name for row in harfbuzz_provider_reviews})
+    provider_source_by_root.update({row['root_review_id']: FONTCONFIG_PROVIDER_REVIEW.name for row in fontconfig_provider_reviews})
     provider_source_by_root.update({row['root_review_id']: LIBJPEG_PROVIDER_REVIEW.name for row in libjpeg_provider_reviews})
     expected_provider_roots = {
         row['root_review_id'] for row in semantic_reviews
@@ -274,7 +279,7 @@ def main() -> None:
     gdkpixbuf_reference_expected = {row['root_review_id'] for row in roots if row['recipe_root'] in {'gpkg/glib', 'gpkg/libpng'}}
     if {row['root_review_id'] for row in gdkpixbuf_reference_provider_reviews} != gdkpixbuf_reference_expected:
         raise SystemExit('GDK Pixbuf reference dependency provider review does not cover canonical GLib and libpng roots')
-    for row in gdkpixbuf_reference_provider_reviews + gdkpixbuf_util_provider_reviews + libxcursor_provider_reviews + libthai_libdatrie_provider_reviews + libcloudproviders_provider_reviews + fribidi_provider_reviews + freetype_provider_reviews + libxkbcommon_provider_reviews + harfbuzz_provider_reviews:
+    for row in gdkpixbuf_reference_provider_reviews + gdkpixbuf_util_provider_reviews + libxcursor_provider_reviews + libthai_libdatrie_provider_reviews + libcloudproviders_provider_reviews + fribidi_provider_reviews + freetype_provider_reviews + libxkbcommon_provider_reviews + harfbuzz_provider_reviews + fontconfig_provider_reviews:
         if row['adaptation_adr_class'] != 'B' or not row['adaptation_classification_state'].startswith('CLASS_B_'):
             raise SystemExit(f"invalid bounded Class B adaptation review for {row['root_review_id']}")
     libxcursor_expected = {row['root_review_id'] for row in roots if row['recipe_root'] == 'gpkg/libxcursor'}
@@ -286,6 +291,9 @@ def main() -> None:
     harfbuzz_expected = {row['root_review_id'] for row in roots if row['recipe_root'] == 'gpkg/harfbuzz'}
     if {row['root_review_id'] for row in harfbuzz_provider_reviews} != harfbuzz_expected:
         raise SystemExit('HarfBuzz provider review does not cover canonical harfbuzz root')
+    fontconfig_expected = {row['root_review_id'] for row in roots if row['recipe_root'] == 'gpkg/fontconfig'}
+    if {row['root_review_id'] for row in fontconfig_provider_reviews} != fontconfig_expected:
+        raise SystemExit('Fontconfig provider review does not cover canonical fontconfig root')
     fribidi_expected = {row['root_review_id'] for row in roots if row['recipe_root'] == 'gpkg/fribidi'}
     if {row['root_review_id'] for row in fribidi_provider_reviews} != fribidi_expected:
         raise SystemExit('FriBidi provider review does not cover canonical fribidi root')
@@ -511,8 +519,8 @@ def main() -> None:
             'project_owned_changed_boundary': 'CAPABILITY_COVERAGE_EXCLUSIONS_ORDERING_ALIAS_POLICY_AND_MIXED_WORLD_COMPOSITION',
             'risk_modifiers': 'BROAD_RUNTIME_BLAST_RADIUS;MULTI_PROVIDER_CONFLICT;WEAK_GLOBAL_OBSERVABILITY',
             'existing_evidence': 'authority-coverage-ledger.tsv;world-lifecycle-authority-boundary.tsv;application-authority-boundary.tsv;selected-provider-composition-members.tsv;selected-provider-composition-gaps.tsv;selected-provider-composition-metadata.tsv',
-            'remaining_gap': '12_SELECTED_GTK_PROVIDER_IDENTITIES_WITHOUT_ACCEPTED_PROVIDER_ROWS;FONTCONFIG_BOUNDED_PROVIDER_AUTHORITY;LATER_GTK_RENDERING_ACCESSIBILITY_AND_PLATFORM_TRANCHES',
-            'minimum_closure_action': 'REVIEW_EXACT_FONTCONFIG_PROVIDER_AUTHORITY_ADAPTATION_AND_CONCRETE_FILENAME_DRIFT_THEN_CONTINUE_BOUNDED_GTK_TRANCHES_BEFORE_RECONSIDERING_COMPOSITION_ACCEPTANCE',
+            'remaining_gap': '11_SELECTED_GTK_PROVIDER_IDENTITIES_WITHOUT_ACCEPTED_PROVIDER_ROWS;CAIRO_BOUNDED_PROVIDER_AUTHORITY;LATER_GTK_RENDERING_ACCESSIBILITY_AND_PLATFORM_TRANCHES',
+            'minimum_closure_action': 'REVIEW_EXACT_CAIRO_AND_CAIRO_GOBJECT_PROVIDER_AUTHORITY_ADAPTATION_AND_CONCRETE_FILENAME_DRIFT_AS_ONE_ROOT_TRANCHE_THEN_CONTINUE_BOUNDED_GTK_TRANCHES_BEFORE_RECONSIDERING_COMPOSITION_ACCEPTANCE',
             'explicitly_excluded_evidence': 'PACKAGE_WIDE_INFERENCE;SUCCESSFUL_HISTORICAL_LAUNCH;SUPPLIER_BUILD_ATTESTATION_AS_COMPOSITION_PROOF',
             'escalation_trigger': 'PROVIDER_CLAIMS_ACCEPTED_FOR_A_BOUNDED_CAPABILITY_SET',
             'classification_state': 'REVIEWED_BLOCKED_INCOMPLETE',
@@ -634,7 +642,7 @@ def main() -> None:
         ('provider_review_count', str(len(provider_reviews))),
         ('provider_authority_accepted_count', str(sum(1 for row in provider_reviews if row['decision'] == 'ACCEPTED_BOUNDED_PROVIDER'))),
         ('provider_authority_open_count', str(claim_type_counts['PROVIDER_AUTHORITY'] - len(provider_reviews))),
-        ('authority_effect', 'NINETEEN_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT'),
+        ('authority_effect', 'TWENTY_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT'),
         ('oj001_disposition', libjpeg_disposition['disposition']),
         ('oj001_required_identity', libjpeg_disposition['required_lookup_identity']),
         ('oj001_candidate_state', libjpeg_disposition['exact_repository_candidate_state']),
@@ -658,7 +666,7 @@ def main() -> None:
         ('oj001_provider_result_sha256', libjpeg_provider_review['result_archive_sha256']),
         ('oj001_provider_matrix_pass_count', libjpeg_provider_review['matrix_pass_count']),
         ('oj001_provider_decision', libjpeg_provider_review['decision']),
-        ('next_review_tranche', 'FONTCONFIG_BOUNDED_PROVIDER_AUTHORITY'),
+        ('next_review_tranche', 'CAIRO_BOUNDED_PROVIDER_AUTHORITY'),
     ]
 
     write_tsv(out_root / CLAIM_OUTPUT, CLAIM_FIELDS, claims)
