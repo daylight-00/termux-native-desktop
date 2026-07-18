@@ -1,75 +1,64 @@
-# Active task: review exact Cairo and Cairo-GObject provider authority and filename continuity
+# Active task: acquire exact libXdamage provider evidence
 
-> Task ID: `review-cairo-bounded-provider-authority`
+> Task ID: `acquire-libxdamage-provider-evidence`
 >
-> Expected state on completion: the exact Termux candidates `libcairo.so.2.11802.2` and `libcairo-gobject.so.2.11802.2` are either accepted as one bounded root tranche for selected Pango/GTK rendering and GObject integration while preserving SONAMEs `libcairo.so.2` and `libcairo-gobject.so.2`, or left open with a precise configure, patch, prefix, dependency, concrete-filename drift, consumer-binding, conflict, update, or rollback blocker. No target population, deployment, or activation occurs.
+> Expected state on completion: an exact Termux glibc candidate for selected `libXdamage.so.1` is acquired and retained with package, member, SONAME, alias, recipe, dependency, and GTK consumer coordinates, or the identity remains open with one precise repository/candidate blocker. No installation, target population, deployment, or activation occurs.
 
 ## Objective
 
-Review the two selected members from `gpkg/libcairo` under ADR 0005 as one atomic recipe-root tranche, explicitly reconciling both selected concrete labels with the retained exact Termux candidates and bounding all recipe adaptation tokens.
+Close the next selected GTK composition gap by finding an authoritative exact provider candidate for `libXdamage.so.1`, retaining it without installation, and preparing a bounded provider review under ADR 0005.
 
 ## Why now
 
-Exact Fontconfig authority is bounded and accepted. The read-only Cairo/Pixman acquisition probe then established exact `libcairo.so.2.11802.2 -> libpixman-1.so.0` binding and exact Pixman `libpixman-1.so.0.46.4` authority, reducing selected composition gaps from 11 to 10. Cairo remains the coupled reviewed root in the selected GTK gap set and covers two identities from one exact artifact and recipe tree.
+The exact Cairo and Cairo-GObject root is accepted atomically. Eight selected GTK identities remain, all outside the original 28-root provider inventory. `libXdamage.so.1` is the smallest X11 rendering prerequisite gap and has an exact selected SONAME but no retained Termux candidate.
 
 ## Known coordinates
 
 ```text
-root review:             generic-root-review:0263d4b55d6a43edad7b
-recipe root:             gpkg/libcairo
-recipe tree:             b80a0990d43609e09f1480394225d2b068ce5881
-artifact:                libcairo-glibc 1.18.2
-artifact SHA:            3250dba4dc3312b4fcaa763c788614c63ba611ee82451224ba10da50622a0db2
-selected cairo identity: libcairo.so.2.11804.4
-selected cairo row:      selected:553839925ebeb658612d
-exact cairo candidate:   libcairo.so.2.11802.2
-cairo candidate SHA:     43cd64f07e1c33e5bd574fe7f50a20062a2ab6836adf80e1b5f4b6846e05264d
-cairo SONAME:            libcairo.so.2
-selected gobject identity: libcairo-gobject.so.2.11804.4
-selected gobject row:      selected:e8ccf42491e69aba6284
-exact gobject candidate:   libcairo-gobject.so.2.11802.2
-gobject candidate SHA:     2440680a9d0c94d58d87d5916d168535b7dc4263648df9aa0b787ef2f7d3a166
-gobject SONAME:            libcairo-gobject.so.2
+selected identity:      libXdamage.so.1.1.0
+selected row:           selected:b0a8934c10bddecfc8ae
+selected SHA-256:       032523eb33646cf6e1fad0f6c966cd86b33e3979db8c4901647d30854ca2779e
+required lookup/SONAME: libXdamage.so.1
+reference package:      libxdamage1:arm64 1:1.1.6-1+b2
+candidate state:        NO_RETAINED_CANDIDATE
+current root mapping:   NONE_REVIEWED_ROOT
 ```
 
 ## In scope
 
-- both exact candidate/member digests and SONAME identities;
-- configure arguments, patch files, and Termux-prefix semantics;
-- concrete filename drift and both SONAME-alias continuities;
-- selected Pango/GTK Cairo rendering and Cairo-GObject consumer binding;
-- dependency, conflict, exclusion, update, and atomic rollback boundaries.
+- approved-repository package metadata and exact archive acquisition without installation;
+- exact member digest, ELF identity, SONAME and alias chain;
+- pinned Termux recipe root/tree and Class A/B adaptation classification;
+- runtime dependency closure and selected GTK X11 consumer binding;
+- conflict, exclusion, update and rollback boundaries.
 
 ## Out of scope
 
-Cairo tools, headers, pkg-config, static and development surfaces, non-selected backends, complete rendering composition, target generation, installation, materialization, deployment, activation, and SUP-02 evidence collection.
+Installation, package-manager mutation, target generation, materialization, deployment, activation, broad X11 provider ownership, and complete GTK composition.
 
 ## Required reading
 
 - `docs/current/STATE.yaml`
 - `docs/decisions/0005-proportional-assurance-depth.md`
-- `docs/evidence/fontconfig-bounded-provider-authority.md`
-- `docs/evidence/pixman-cairo-prerequisite-provider-authority.md`
+- `docs/evidence/cairo-bounded-provider-authority.md`
 - `docs/evidence/selected-obsidian-provider-composition-review.md`
-- `experiments/glibc/selected-obsidian-provider-authority/review/generic-build-attestation-adaptation-root-review-set.tsv`
-- `experiments/glibc/selected-obsidian-provider-authority/review/generic-recipe-binding-and-drift-target-receipt-review.tsv`
+- `experiments/glibc/selected-obsidian-provider-authority/review/generic-exact-candidate-receipt-review.tsv`
+- `experiments/glibc/selected-obsidian-provider-authority/review/non-priority-generic-authority-ledger/gtk-gui.tsv`
 
 ## Pending external inputs
 
-None. Pixman prerequisite authority is accepted from result archive SHA-256 `3df4f72452b6fb36525ea651f58a0d9d0e551d6ab1f0076653588e767fb1ad9a`; the archive retains both exact Cairo members, the exact Pixman member, aliases, package metadata, and dynamic sections. Request another bounded Termux probe only if a new material ambiguity appears outside this retained evidence.
+None before static repository and approved-index inspection. Request one read-only Termux acquisition probe only if exact package bytes or signed-index coordinates cannot be retained in the sandbox evidence path.
 
 ## Stop conditions
 
-Stop without accepting authority if either exact candidate digest, configure/patch/prefix semantics, selected identity-to-SONAME continuity, Pango/GTK consumer binding, accepted Pixman prerequisite binding, another dependency/exclusion boundary, update, or atomic rollback cannot be bounded.
+Stop without authority if no exact candidate can be acquired, the SONAME or alias does not match, recipe semantics cannot be bounded, runtime closure contains an unresolved provider, GTK consumer binding is ambiguous, or a member/alias collision exists.
 
 ## Next valid action
 
-Perform a bounded exact-file recipe, configure/patch/prefix, two-member filename-continuity, and Pango/GTK rendering consumer review using the retained exact Cairo/Pixman result archive. Request device execution only if this retained evidence cannot resolve a new material ambiguity.
+Inspect the approved Termux glibc package index and pinned recipe history for `libxdamage`, then acquire and extract the exact package without installation if available.
 
 ## Completion criteria
 
-- Exact artifact, both candidate members, SONAMEs, and recipe coordinates remain pinned.
-- Every adaptation token and both concrete-filename continuity rules are explicit.
-- Necessity, consumer binding, conflict/exclusion, update, and atomic rollback are explicit.
-- The two-member provider root is accepted narrowly or left open with one precise blocker.
-- Composition, target population, and activation remain separate.
+- Exact package, member, SHA-256, SONAME, alias, and recipe coordinates are retained, or one precise blocker is recorded.
+- Adaptation, consumer, dependency, conflict, update, and rollback boundaries are explicit.
+- No target, materialization, deployment, or activation occurs.

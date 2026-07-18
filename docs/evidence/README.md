@@ -70,3 +70,5 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 - [`harfbuzz-bounded-provider-authority.md`](harfbuzz-bounded-provider-authority.md) — exact HarfBuzz member, five-file Class B build/packaging semantics, upstream concrete-version formula and bounded Pango 1.54.0 core OpenType shaping authority.
 - [`fontconfig-bounded-provider-authority.md`](fontconfig-bounded-provider-authority.md) — exact Fontconfig member, three-file Class B recipe/config/cache semantics, stable SONAME continuity, and bounded Pango 1.54.0 font discovery and matching authority.
 - [`pixman-cairo-prerequisite-provider-authority.md`](pixman-cairo-prerequisite-provider-authority.md) — exact Pixman 0.46.4 generic implementation, stable SONAME continuity, and direct exact-Cairo prerequisite authority from retained acquisition and ELF evidence.
+
+- [`cairo-bounded-provider-authority.md`](cairo-bounded-provider-authority.md): exact atomic Cairo core and Cairo-GObject provider authority for selected Pango/GTK rendering and GObject integration.

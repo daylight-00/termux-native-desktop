@@ -1,5 +1,5 @@
 schema_version: 1
-state_version: 2026-07-18.02
+state_version: 2026-07-18.03
 updated_on: 2026-07-18
 
 project:
@@ -65,10 +65,11 @@ documentation:
   harfbuzz_provider_authority_review: docs/evidence/harfbuzz-bounded-provider-authority.md
   fontconfig_provider_authority_review: docs/evidence/fontconfig-bounded-provider-authority.md
   pixman_cairo_prerequisite_provider_authority: docs/evidence/pixman-cairo-prerequisite-provider-authority.md
+  cairo_provider_authority_review: docs/evidence/cairo-bounded-provider-authority.md
 
 provider_authority:
-  workstream: pixman-prerequisite-accepted-cairo-review-active
-  boundary: twenty-six-bounded-providers-retained-exact-pixman-cairo-prerequisite-accepted-cairo-root-composition-target-and-activation-open
+  workstream: cairo-atomic-root-accepted-libxdamage-evidence-acquisition-active
+  boundary: twenty-seven-bounded-providers-retained-exact-cairo-core-and-gobject-accepted-libxdamage-and-later-composition-target-and-activation-open
   claim_inventory:
     total: 89
     class_a: 36
@@ -82,12 +83,12 @@ provider_authority:
     provider_authority_accepted: 7
     provider_authority_open: 0
   bounded_provider_authority:
-    accepted: 26
-    accepted_inside_28_root_inventory: 20
-    open_inside_28_root_inventory: 8
+    accepted: 27
+    accepted_inside_28_root_inventory: 21
+    open_inside_28_root_inventory: 7
     rejected: 0
     open_no_token_roots: 0
-    accepted_scope: exact-xorg-members-and-selected-gtk-x11-capabilities-plus-exact-libxcursor-gtk-3-24-49-x11-cursor-theme-image-and-surface-plus-exact-libtasn1-external-gnutls-asn1-security-plus-exact-libepoxy-gtk-3-24-49-x11-glx-dispatch-plus-exact-pango-three-member-gtk-text-family-and-soname-continuity-plus-exact-project-libjpeg-so-62-gdkpixbuf-jpeg-file-and-memory-decode-plus-exact-project-gdkpixbuf-2-42-12-jpeg-png-file-and-memory-decode-plus-exact-glib-four-member-libpng-and-util-linux-two-member-gdkpixbuf-reference-dependency-scope-plus-exact-libthai-libdatrie-libiconv-and-thbrk-tri-pango-1-54-0-thai-break-scope-plus-exact-libcloudproviders-gtk-3-24-49-places-sidebar-cloud-account-integration-plus-exact-fribidi-pango-1-54-0-core-unicode-bidirectional-text-processing-plus-exact-freetype-pango-1-54-0-gtk-3-24-49-font-engine-and-exact-brotli-bzip2-zlib-transitive-feature-closure-plus-exact-libxkbcommon-gtk-3-24-49-wayland-xkb-keymap-keyboard-state-modifier-and-keysym-translation-plus-exact-harfbuzz-pango-1-54-0-core-opentype-text-shaping-plus-exact-fontconfig-pango-1-54-0-font-discovery-matching-and-pattern-properties-with-receipt-owned-config-cache-boundary-plus-exact-pixman-generic-implementation-for-exact-cairo-pixel-compositing-prerequisite
+    accepted_scope: exact-xorg-members-and-selected-gtk-x11-capabilities-plus-exact-libxcursor-gtk-3-24-49-x11-cursor-theme-image-and-surface-plus-exact-libtasn1-external-gnutls-asn1-security-plus-exact-libepoxy-gtk-3-24-49-x11-glx-dispatch-plus-exact-pango-three-member-gtk-text-family-and-soname-continuity-plus-exact-project-libjpeg-so-62-gdkpixbuf-jpeg-file-and-memory-decode-plus-exact-project-gdkpixbuf-2-42-12-jpeg-png-file-and-memory-decode-plus-exact-glib-four-member-libpng-and-util-linux-two-member-gdkpixbuf-reference-dependency-scope-plus-exact-libthai-libdatrie-libiconv-and-thbrk-tri-pango-1-54-0-thai-break-scope-plus-exact-libcloudproviders-gtk-3-24-49-places-sidebar-cloud-account-integration-plus-exact-fribidi-pango-1-54-0-core-unicode-bidirectional-text-processing-plus-exact-freetype-pango-1-54-0-gtk-3-24-49-font-engine-and-exact-brotli-bzip2-zlib-transitive-feature-closure-plus-exact-libxkbcommon-gtk-3-24-49-wayland-xkb-keymap-keyboard-state-modifier-and-keysym-translation-plus-exact-harfbuzz-pango-1-54-0-core-opentype-text-shaping-plus-exact-fontconfig-pango-1-54-0-font-discovery-matching-and-pattern-properties-with-receipt-owned-config-cache-boundary-plus-exact-pixman-generic-implementation-for-exact-cairo-pixel-compositing-prerequisite-plus-exact-cairo-core-and-cairo-gobject-for-pango-1-54-0-and-gtk-3-24-49-rendering-surface-and-gobject-integration
   libjpeg_compatibility_candidate:
     first_candidate_state: rejected-rebuild-required-no-runpath
     first_candidate_member: libjpeg.so.62.4.0
@@ -121,16 +122,16 @@ provider_authority:
     required_now: 0
   composition_review:
     decision: reviewed-blocked-incomplete
-    accepted_provider_roots: 26
-    accepted_members: 33
-    included_members: 32
+    accepted_provider_roots: 27
+    accepted_members: 35
+    included_members: 34
     deferred_members: 1
     selected_gtk_identities: 36
-    unresolved_selected_identities: 10
+    unresolved_selected_identities: 8
     accepted_soname_collisions: 0
     accepted_alias_collisions: 0
     target_manifest_allowed: false
-    next_tranche: cairo-bounded-provider-authority
+    next_tranche: libxdamage-provider-evidence-acquisition
   gdkpixbuf_core_acquisition:
     result_sha256: e96fb0e2d8fa1c16a228e41d60801abac0b8a43584a86b7e63f8adddfc4f5692
     review_state: acquisition-reviewed-partial
@@ -152,7 +153,7 @@ provider_authority:
     transitive_result_sha256: a18426371acf0339731464eea4a6fd1f8c745cc09154629b69e34d1063073c13
     transitive_recipe_tree: e91a0c476ef4355dbfff46e2bcab23d0085ddd01
     transitive_functional_matrix: jpeg-file-pass-jpeg-memory-pass-png-file-pass-png-memory-pass
-    next_action: review-cairo-bounded-provider-authority
+    next_action: acquire-libxdamage-provider-evidence
   thai_break_provider:
     result_sha256: 7789ff1a039e3186b04014e4ddf6a7ba68d77fe31a2f1ef77273590aa97b8e1e
     libthai_member: libthai.so.0.3.1
@@ -178,7 +179,7 @@ provider_authority:
     consumer: gtk-3-24-49-places-sidebar-cloud-account-integration
     service_boundary: dbus-session-services-and-accounts-not-accepted
     provider_authority: accepted-bounded-provider
-  next_research_decision: review-cairo-bounded-provider-authority
+  next_research_decision: acquire-libxdamage-provider-evidence
   fribidi_provider:
     member: libfribidi.so.0.4.0
     member_sha256: 71668fd02e89fa7546446bb7961bb618f6d22e1506f7444bbea6788befbb7895
@@ -234,6 +235,19 @@ provider_authority:
     consumer: exact-libcairo-so-2-11802-2-dt-needed-pixel-compositing-prerequisite
     runtime_dependencies: libm-so-6-libc-so-6-ld-linux-aarch64-so-1
     provider_authority: accepted-bounded-provider
+  cairo_provider:
+    selected_labels: libcairo.so.2.11804.4;libcairo-gobject.so.2.11804.4
+    members: libcairo.so.2.11802.2;libcairo-gobject.so.2.11802.2
+    member_sha256s: 43cd64f07e1c33e5bd574fe7f50a20062a2ab6836adf80e1b5f4b6846e05264d;2440680a9d0c94d58d87d5916d168535b7dc4263648df9aa0b787ef2f7d3a166
+    sonames: libcairo.so.2;libcairo-gobject.so.2
+    artifact_sha256: 3250dba4dc3312b4fcaa763c788614c63ba611ee82451224ba10da50622a0db2
+    result_archive_sha256: 3df4f72452b6fb36525ea651f58a0d9d0e551d6ab1f0076653588e767fb1ad9a
+    recipe_tree: b80a0990d43609e09f1480394225d2b068ce5881
+    build_script_blob_sha: 8b848a1277895bdaf1283626ef37fc1c8ddcb399
+    adaptation: disabled-nonselected-backends-symbol-lookup-and-tests-plus-utility-only-termux-temp-path-patches
+    consumer: pango-1-54-0-cairo-rendering-and-gtk-3-24-49-core-cairo-and-gobject-integration
+    dependency_boundary: exact-accepted-x11-xcb-fontconfig-freetype-png-zlib-pixman-glib-gobject-closure
+    provider_authority: accepted-bounded-provider
   fontconfig_provider:
     selected_label: libfontconfig.so.1.12.1
     member: libfontconfig.so.1.14.0
@@ -254,7 +268,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: review-cairo-bounded-provider-authority
+  id: acquire-libxdamage-provider-evidence
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:

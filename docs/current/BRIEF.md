@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-18.02`
+> Semantic state version: `2026-07-18.03`
 >
 > This is the compact current-state entry point. Exact commit and tree coordinates come from the checked-out full Git bundle, not from self-referential repository text.
 
@@ -22,27 +22,27 @@ Web-chat capability failures follow a stop-loss contract: perform one bounded re
 
 ADR 0005 separates artifact identity, adaptation semantics, provider authority, composition, target population and activation. The canonical claim inventory remains 28 roots, 37 reviewed objects and 89 separated claims: 36 Class A, 49 Class B, one Class C and three Class D.
 
-The exact `libpixman-1.so.0.46.4` member is accepted only as the pixel image compositing prerequisite directly required by exact Cairo `libcairo.so.2.11802.2`. The read-only Termux acquisition evidence binds the approved package SHA-256, exact member digest, SONAME alias, and Cairo `DT_NEEDED` edge. Its Class B recipe selects the generic implementation by disabling architecture-specific SIMD and the GTK helper surface; this does not claim upstream byte or performance equivalence.
+Exact `libcairo.so.2.11802.2` and `libcairo-gobject.so.2.11802.2` are accepted as one atomic root only for Pango 1.54.0 Cairo rendering, GTK 3.24.49 core Cairo drawing/surface use, and Cairo GObject integration. Their exact package, two member digests, stable SONAME aliases, complete accepted dependency closure, and the previously accepted exact Pixman edge are pinned by the retained read-only evidence archive.
 
-The selected `libpixman-1.so.0.44.0` label remains reference evidence rather than target-path authority. Runtime closure is limited to `libm`, `libc`, and the glibc loader. Cairo itself, package-wide Pixman surfaces, development aliases, complete composition, target population and activation remain open. Previously accepted Fontconfig and other bounded providers remain unchanged.
+The Class B recipe disables non-selected DWrite, Spectre, symbol-lookup and test surfaces. Its two Termux-prefix patches touch Cairo-script/FDR utility temporary paths only and do not grant utility authority. Selected `1.18.4` concrete labels remain reference evidence; target authority is the exact `1.18.2` pair and stable SONAME aliases.
 
 ```text
-bounded provider roots accepted overall: 26
-accepted roots inside the 28-root inventory: 20
-open roots inside the inventory: 8
-accepted exact members: 33
-included current-scope members: 32
+bounded provider roots accepted overall: 27
+accepted roots inside the 28-root inventory: 21
+open roots inside the inventory: 7
+accepted exact members: 35
+included current-scope members: 34
 deferred members: 1
 composition review: REVIEWED_BLOCKED_INCOMPLETE
-selected identity gaps: 10
+selected identity gaps: 8
 target population: blocked
 activation: blocked
 ```
 
-Canonical decisions are under `docs/evidence/`; the current composition review is [`../evidence/selected-obsidian-provider-composition-review.md`](../evidence/selected-obsidian-provider-composition-review.md), and the latest provider decision is [`../evidence/pixman-cairo-prerequisite-provider-authority.md`](../evidence/pixman-cairo-prerequisite-provider-authority.md).
+Canonical decisions are under `docs/evidence/`; the current composition review is [`../evidence/selected-obsidian-provider-composition-review.md`](../evidence/selected-obsidian-provider-composition-review.md), and the latest provider decision is [`../evidence/cairo-bounded-provider-authority.md`](../evidence/cairo-bounded-provider-authority.md).
 
 ## Current project phase
 
-The active task is `review-cairo-bounded-provider-authority`.
+The active task is `acquire-libxdamage-provider-evidence`.
 
-The next proportional tranche is the exact coupled Cairo root: `libcairo.so.2.11802.2` and `libcairo-gobject.so.2.11802.2`. Its exact Pixman prerequisite is now accepted. The review must bound configure, patch and Termux-prefix semantics, reconcile both selected `1.18.4` concrete labels with retained `1.18.2` candidates while preserving their SONAMEs, and prove Pango/GTK rendering and Cairo-GObject consumer binding as one atomic root decision. No target population, materialization, deployment or activation is allowed.
+The next proportional tranche is read-only acquisition and review preparation for selected `libXdamage.so.1`. No exact Termux candidate is currently retained. The task must resolve package, member, SONAME, alias, recipe, dependency and GTK X11 consumer coordinates without installation before any provider authority can be considered. No target population, materialization, deployment or activation is allowed.

@@ -4,11 +4,11 @@
 
 ```text
 composition decision:             REVIEWED_BLOCKED_INCOMPLETE
-accepted bounded provider roots:  26
-accepted exact members:           33
-included members:                 32
+accepted bounded provider roots:  27
+accepted exact members:           35
+included members:                 34
 deferred members:                  1
-selected GTK identity gaps:       10
+selected GTK identity gaps:        8
 target manifest allowed:          NO
 activation allowed:               NO
 ```
@@ -17,10 +17,10 @@ The accepted-member table is generated at `selected-provider-composition-members
 
 ## Latest bounded tranche
 
-Exact `libpixman-1.so.0.46.4` is included only as the pixel image compositing prerequisite directly required by exact `libcairo.so.2.11802.2`. Its runtime SONAME alias is `libpixman-1.so.0`; the selected `libpixman-1.so.0.44.0` label is retained as older reference evidence rather than target-path authority.
+Exact `libcairo.so.2.11802.2` and `libcairo-gobject.so.2.11802.2` are included atomically for selected Pango 1.54.0 Cairo rendering, GTK 3.24.49 core Cairo drawing/surface use, and Cairo GObject integration. Their stable runtime aliases are `libcairo.so.2` and `libcairo-gobject.so.2`; the selected `1.18.4` concrete labels remain reference evidence rather than target paths.
 
-The accepted Class B boundary covers the exact approved package and member digests, stable alias, direct Cairo `DT_NEEDED` edge, standard Meson delegation, and generic implementation selected by disabling architecture-specific SIMD and the GTK helper surface. Upstream byte or performance equivalence, acceleration guarantees, package-wide surfaces, development aliases, Cairo provider authority, complete composition, target population, and activation remain excluded.
+The Class B boundary covers the exact package and member digests, stable aliases, non-selected backend/test disablement, utility-only Termux temporary-path patches, exact accepted runtime dependency closure, and the already accepted exact Pixman prerequisite. Cairo-script/FDR utilities, non-selected backends, tools, development surfaces, complete composition, target population, and activation remain excluded.
 
 ## Next tranche
 
-The next reviewed-root tranche is `CAIRO_BOUNDED_PROVIDER_AUTHORITY`. It must review exact `libcairo.so.2.11802.2` and `libcairo-gobject.so.2.11802.2` as one atomic recipe-root tranche, reconcile the selected `1.18.4` concrete labels with retained `1.18.2` candidates, preserve SONAMEs `libcairo.so.2` and `libcairo-gobject.so.2`, and bound configure, patch, Termux-prefix, dependency, Pango/GTK rendering, GObject consumer, conflict, update, and rollback semantics. The exact Pixman prerequisite edge is now accepted and must remain pinned as part of the Cairo dependency boundary.
+The next tranche is `LIBXDAMAGE_PROVIDER_EVIDENCE_ACQUISITION`. Selected `libXdamage.so.1.1.0` has no retained Termux candidate or reviewed root. The next action is read-only approved-index and recipe inspection followed by exact package extraction without installation, so member, digest, SONAME, alias, dependency, GTK X11 consumer, conflict, update and rollback coordinates can be bounded before provider review.
