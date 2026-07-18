@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+required=(
+  docs/evidence/graphite2-harfbuzz-prerequisite-provider-authority.md
+  experiments/glibc/selected-obsidian-provider-authority/review/graphite2-harfbuzz-prerequisite-provider-authority.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-composition-members.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-composition-gaps.tsv
+  docs/current/STATE.yaml docs/current/ACTIVE_TASK.md docs/current/BRIEF.md docs/catalog.tsv STATUS.md
+)
+for rel in "${required[@]}"; do [ -f "$ROOT/$rel" ] || { echo "graphite2-harfbuzz-prerequisite: FAIL: missing $rel" >&2; exit 1; }; done
+python3 - "$ROOT" <<'PY'
+from pathlib import Path
+import csv,sys
+root=Path(sys.argv[1]); review=root/'experiments/glibc/selected-obsidian-provider-authority/review'
+def read(name):
+ with (review/name).open(newline='',encoding='utf-8') as f:return list(csv.DictReader(f,delimiter='\t'))
+errors=[]
+rows=read('graphite2-harfbuzz-prerequisite-provider-authority.tsv')
+if len(rows)!=1:
+ errors.append(f'expected one Graphite2 row, got {len(rows)}')
+else:
+ r=rows[0]
+ want={
+  'review_id':'GRAPHITE2-HARFBUZZ-PREQ-PROV-001',
+  'authority_root_id':'outside-28-root:gpkg/libgraphite',
+  'source_evidence_row_id':'selected:5de74dd687fd1dd5ee3a',
+  'recipe_root':'gpkg/libgraphite',
+  'recipe_tree':'4e3ab8e653cedfa4b31e8de229966af2b28c89a1',
+  'build_script_blob_sha':'1fd081fa93558fd044a053afb26a170a2cef6a09',
+  'artifact_package':'libgraphite-glibc',
+  'artifact_version':'1.3.14',
+  'artifact_sha256':'2144bb899adc6511df6ebf287b518d339c70b864dcfac3e3d31508187c87dfef',
+  'artifact_size':'84252',
+  'result_archive_sha256':'b0ae73019a2b442d96daa148219cfcf21f265b8dec48d82aef74dd95d536f29f',
+  'exact_member_path':'data/data/com.termux/files/usr/glibc/lib/libgraphite2.so.3.2.1',
+  'exact_member_sha256':'6caaa46abe585228b0fa45a60bdbb5e9951384148963856d1ce2e886e5b06e7f',
+  'observed_soname':'libgraphite2.so.3',
+  'observed_alias_path':'data/data/com.termux/files/usr/glibc/lib/libgraphite2.so.3',
+  'observed_alias_target':'libgraphite2.so.3.2.1',
+  'adaptation_adr_class':'B',
+  'decision':'ACCEPTED_BOUNDED_PROVIDER',
+ }
+ for k,v in want.items():
+  if r.get(k)!=v:errors.append(f'{k}: expected {v}, got {r.get(k)!r}')
+ joined=';'.join(r.values())
+ for token in [
+  'INSTALL_RPATH_DISABLED','COMPARE_RENDERER_DISABLED','DIRECT_GRAPHITE_VM_SELECTED',
+  'HARFBUZZ_10_1_0_SRC_MESON_ADDS_HB_GRAPHITE2_CC_AND_GRAPHITE_DEPENDENCIES_TO_CORE_LIBHARFBUZZ_WHEN_HAVE_GRAPHITE2',
+  'HB_GRAPHITE2_CC_CALLS_GR_MAKE_FACE_WITH_OPS_GR_FACE_FEATUREVAL_FOR_LANG_GR_FACE_FIND_FREF_GR_FREF_SET_FEATURE_VALUE_GR_MAKE_SEG_GR_SEG_AND_GR_SLOT_APIS',
+  'EXACT_GRAPHITE2_ELF_NEEDS_LIBC_SO_6_AND_LD_LINUX_AARCH64_SO_1_ONLY',
+  'NO_HARFBUZZ_PROVIDER_WIDENING_COMPLETE_TEXT_OR_GTK_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT',
+ ]:
+  if token not in joined:errors.append(f'missing bounded token: {token}')
+ for forbidden in [
+  'UPSTREAM_BYTE_EQUIVALENCE_ACCEPTED','PERFORMANCE_EQUIVALENCE_ACCEPTED',
+  'ALL_GRAPHITE_FONTS_FUNCTIONALLY_VALIDATED_ACCEPTED','HARFBUZZ_PROVIDER_WIDENING_ACCEPTED',
+  'PACKAGE_WIDE_AUTHORITY_ACCEPTED','TARGET_POPULATION_ACCEPTED','ACTIVATION_ACCEPTED',
+ ]:
+  if forbidden in joined:errors.append(f'forbidden widened token: {forbidden}')
+mem=read('selected-provider-composition-members.tsv')
+if not any(x['member_basename']=='libgraphite2.so.3.2.1' and x['member_sha256']=='6caaa46abe585228b0fa45a60bdbb5e9951384148963856d1ce2e886e5b06e7f' and x['soname']=='libgraphite2.so.3' and x['alias_basename']=='libgraphite2.so.3' and x['alias_target_basename']=='libgraphite2.so.3.2.1' and x['composition_inclusion']=='INCLUDED_SELECTED_GTK_SCOPE' for x in mem):errors.append('exact Graphite2 composition member/alias missing')
+gaps=read('selected-provider-composition-gaps.tsv')
+if any(x['selected_evidence_row_id']=='selected:5de74dd687fd1dd5ee3a' or x['identity_label']=='libgraphite2.so.3.2.1' for x in gaps):errors.append('accepted Graphite2 identity remains in gaps')
+if sum(x['priority_tranche']=='AT_SPI2_CORE_PROVIDER_EVIDENCE_ACQUISITION' for x in gaps)!=3:errors.append('next AT-SPI2 coupled priority gap count mismatch')
+doc=(root/'docs/evidence/graphite2-harfbuzz-prerequisite-provider-authority.md').read_text()
+state=(root/'docs/current/STATE.yaml').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); brief=(root/'docs/current/BRIEF.md').read_text(); catalog=(root/'docs/catalog.tsv').read_text(); status=(root/'STATUS.md').read_text()
+markers=[
+ ('doc exact member','libgraphite2.so.3.2.1' in doc),
+ ('doc stable alias','libgraphite2.so.3 -> libgraphite2.so.3.2.1' in doc),
+ ('doc HarfBuzz binding','gr_make_seg' in doc and 'Graphite-font shaping path inside exact HarfBuzz 10.1.0' in doc),
+ ('doc no widening','does not widen general HarfBuzz provider authority' in doc),
+ ('state route','graphite2_harfbuzz_prerequisite_provider_authority: docs/evidence/graphite2-harfbuzz-prerequisite-provider-authority.md' in state),
+ ('state provider','graphite2_harfbuzz_prerequisite:' in state and 'provider_authority: accepted-bounded-provider' in state),
+ ('state overall count','accepted: 28' in state and 'accepted_inside_28_root_inventory: 21' in state),
+ ('next task','Task ID: `acquire-at-spi2-core-provider-evidence`' in active),
+ ('brief count','bounded provider roots accepted overall: 28' in brief and 'selected identity gaps: 7' in brief),
+ ('catalog','graphite2-harfbuzz-prerequisite-provider-authority\tevidence\tcurrent\tcanonical' in catalog),
+ ('status','exact Graphite2 accepted as bounded HarfBuzz prerequisite' in status),
+]
+for label,ok in markers:
+ if not ok:errors.append(f'missing durable marker: {label}')
+for forbidden in ['target manifest allowed: YES','activation: ACCEPTED','all Graphite fonts are validated','general HarfBuzz provider authority is widened']:
+ if forbidden in doc:errors.append(f'forbidden widening in doc: {forbidden}')
+if errors:
+ for e in errors:print('graphite2-harfbuzz-prerequisite: FAIL:',e,file=sys.stderr)
+ raise SystemExit(1)
+print('graphite2-harfbuzz-prerequisite: PASS: exact Graphite2 1.3.14 is accepted only for the exact HarfBuzz Graphite shaping prerequisite')
+PY

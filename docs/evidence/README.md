@@ -74,3 +74,4 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 - [`cairo-bounded-provider-authority.md`](cairo-bounded-provider-authority.md): exact atomic Cairo core and Cairo-GObject provider authority for selected Pango/GTK rendering and GObject integration.
 
 - [`libxdamage-provider-evidence-blocker.md`](libxdamage-provider-evidence-blocker.md) — exact read-only acquisition failure disposition proving that only a bionic package is indexed, no glibc package or recipe root exists, and libXdamage authority remains open.
+- [`graphite2-harfbuzz-prerequisite-provider-authority.md`](graphite2-harfbuzz-prerequisite-provider-authority.md) — exact Graphite2 1.3.14 member and stable SONAME accepted only for the Graphite shaping path compiled into exact HarfBuzz 10.1.0.

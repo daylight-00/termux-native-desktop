@@ -527,8 +527,8 @@ def main() -> None:
             'project_owned_changed_boundary': 'CAPABILITY_COVERAGE_EXCLUSIONS_ORDERING_ALIAS_POLICY_AND_MIXED_WORLD_COMPOSITION',
             'risk_modifiers': 'BROAD_RUNTIME_BLAST_RADIUS;MULTI_PROVIDER_CONFLICT;WEAK_GLOBAL_OBSERVABILITY',
             'existing_evidence': 'authority-coverage-ledger.tsv;world-lifecycle-authority-boundary.tsv;application-authority-boundary.tsv;selected-provider-composition-members.tsv;selected-provider-composition-gaps.tsv;selected-provider-composition-metadata.tsv',
-            'remaining_gap': '8_SELECTED_GTK_PROVIDER_IDENTITIES_WITHOUT_ACCEPTED_PROVIDER_ROWS;LIBXDAMAGE_BLOCKED_NO_TERMUX_GLIBC_CANDIDATE;GRAPHITE2_PROVIDER_EVIDENCE_ACQUISITION;LATER_GTK_RENDERING_ACCESSIBILITY_AND_PLATFORM_TRANCHES',
-            'minimum_closure_action': 'PROVIDE_AN_EXACT_TERMUX_GLIBC_LIBXDAMAGE_PACKAGE_AND_RECIPE_TO_REOPEN_THAT_GAP;ACQUIRE_AND_REVIEW_EXACT_GRAPHITE2_PROVIDER_EVIDENCE;CONTINUE_BOUNDED_GTK_TRANCHES_BEFORE_RECONSIDERING_COMPOSITION_ACCEPTANCE',
+            'remaining_gap': '7_SELECTED_GTK_PROVIDER_IDENTITIES_WITHOUT_ACCEPTED_PROVIDER_ROWS;LIBXDAMAGE_BLOCKED_NO_TERMUX_GLIBC_CANDIDATE;AT_SPI2_CORE_ACCESSIBILITY_PROVIDER_EVIDENCE_ACQUISITION;LATER_GTK_CORE_AND_PLATFORM_TRANCHES',
+            'minimum_closure_action': 'PROVIDE_AN_EXACT_TERMUX_GLIBC_LIBXDAMAGE_PACKAGE_AND_RECIPE_TO_REOPEN_THAT_GAP;ACQUIRE_AND_REVIEW_EXACT_AT_SPI2_CORE_ATK_AND_BRIDGE_PROVIDER_EVIDENCE;CONTINUE_BOUNDED_GTK_TRANCHES_BEFORE_RECONSIDERING_COMPOSITION_ACCEPTANCE',
             'explicitly_excluded_evidence': 'PACKAGE_WIDE_INFERENCE;SUCCESSFUL_HISTORICAL_LAUNCH;SUPPLIER_BUILD_ATTESTATION_AS_COMPOSITION_PROOF',
             'escalation_trigger': 'PROVIDER_CLAIMS_ACCEPTED_FOR_A_BOUNDED_CAPABILITY_SET',
             'classification_state': 'REVIEWED_BLOCKED_INCOMPLETE',
@@ -674,7 +674,7 @@ def main() -> None:
         ('oj001_provider_result_sha256', libjpeg_provider_review['result_archive_sha256']),
         ('oj001_provider_matrix_pass_count', libjpeg_provider_review['matrix_pass_count']),
         ('oj001_provider_decision', libjpeg_provider_review['decision']),
-        ('next_review_tranche', 'GRAPHITE2_PROVIDER_EVIDENCE_ACQUISITION'),
+        ('next_review_tranche', 'AT_SPI2_CORE_PROVIDER_EVIDENCE_ACQUISITION'),
     ]
 
     write_tsv(out_root / CLAIM_OUTPUT, CLAIM_FIELDS, claims)

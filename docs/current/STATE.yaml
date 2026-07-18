@@ -1,5 +1,5 @@
 schema_version: 1
-state_version: 2026-07-18.04
+state_version: 2026-07-18.05
 updated_on: 2026-07-18
 
 project:
@@ -67,10 +67,11 @@ documentation:
   pixman_cairo_prerequisite_provider_authority: docs/evidence/pixman-cairo-prerequisite-provider-authority.md
   cairo_provider_authority_review: docs/evidence/cairo-bounded-provider-authority.md
   libxdamage_provider_evidence_blocker: docs/evidence/libxdamage-provider-evidence-blocker.md
+  graphite2_harfbuzz_prerequisite_provider_authority: docs/evidence/graphite2-harfbuzz-prerequisite-provider-authority.md
 
 provider_authority:
-  workstream: libxdamage-glibc-candidate-blocker-recorded-graphite2-evidence-acquisition-active
-  boundary: twenty-seven-bounded-providers-retained-libxdamage-open-no-glibc-candidate-graphite2-and-later-composition-target-and-activation-open
+  workstream: graphite2-harfbuzz-prerequisite-authority-accepted-at-spi2-core-evidence-acquisition-active
+  boundary: twenty-eight-bounded-providers-retained-libxdamage-open-no-glibc-candidate-at-spi2-core-and-later-composition-target-and-activation-open
   claim_inventory:
     total: 89
     class_a: 36
@@ -84,12 +85,12 @@ provider_authority:
     provider_authority_accepted: 7
     provider_authority_open: 0
   bounded_provider_authority:
-    accepted: 27
+    accepted: 28
     accepted_inside_28_root_inventory: 21
     open_inside_28_root_inventory: 7
     rejected: 0
     open_no_token_roots: 0
-    accepted_scope: exact-xorg-members-and-selected-gtk-x11-capabilities-plus-exact-libxcursor-gtk-3-24-49-x11-cursor-theme-image-and-surface-plus-exact-libtasn1-external-gnutls-asn1-security-plus-exact-libepoxy-gtk-3-24-49-x11-glx-dispatch-plus-exact-pango-three-member-gtk-text-family-and-soname-continuity-plus-exact-project-libjpeg-so-62-gdkpixbuf-jpeg-file-and-memory-decode-plus-exact-project-gdkpixbuf-2-42-12-jpeg-png-file-and-memory-decode-plus-exact-glib-four-member-libpng-and-util-linux-two-member-gdkpixbuf-reference-dependency-scope-plus-exact-libthai-libdatrie-libiconv-and-thbrk-tri-pango-1-54-0-thai-break-scope-plus-exact-libcloudproviders-gtk-3-24-49-places-sidebar-cloud-account-integration-plus-exact-fribidi-pango-1-54-0-core-unicode-bidirectional-text-processing-plus-exact-freetype-pango-1-54-0-gtk-3-24-49-font-engine-and-exact-brotli-bzip2-zlib-transitive-feature-closure-plus-exact-libxkbcommon-gtk-3-24-49-wayland-xkb-keymap-keyboard-state-modifier-and-keysym-translation-plus-exact-harfbuzz-pango-1-54-0-core-opentype-text-shaping-plus-exact-fontconfig-pango-1-54-0-font-discovery-matching-and-pattern-properties-with-receipt-owned-config-cache-boundary-plus-exact-pixman-generic-implementation-for-exact-cairo-pixel-compositing-prerequisite-plus-exact-cairo-core-and-cairo-gobject-for-pango-1-54-0-and-gtk-3-24-49-rendering-surface-and-gobject-integration
+    accepted_scope: exact-xorg-members-and-selected-gtk-x11-capabilities-plus-exact-libxcursor-gtk-3-24-49-x11-cursor-theme-image-and-surface-plus-exact-libtasn1-external-gnutls-asn1-security-plus-exact-libepoxy-gtk-3-24-49-x11-glx-dispatch-plus-exact-pango-three-member-gtk-text-family-and-soname-continuity-plus-exact-project-libjpeg-so-62-gdkpixbuf-jpeg-file-and-memory-decode-plus-exact-project-gdkpixbuf-2-42-12-jpeg-png-file-and-memory-decode-plus-exact-glib-four-member-libpng-and-util-linux-two-member-gdkpixbuf-reference-dependency-scope-plus-exact-libthai-libdatrie-libiconv-and-thbrk-tri-pango-1-54-0-thai-break-scope-plus-exact-libcloudproviders-gtk-3-24-49-places-sidebar-cloud-account-integration-plus-exact-fribidi-pango-1-54-0-core-unicode-bidirectional-text-processing-plus-exact-freetype-pango-1-54-0-gtk-3-24-49-font-engine-and-exact-brotli-bzip2-zlib-transitive-feature-closure-plus-exact-libxkbcommon-gtk-3-24-49-wayland-xkb-keymap-keyboard-state-modifier-and-keysym-translation-plus-exact-harfbuzz-pango-1-54-0-core-opentype-text-shaping-plus-exact-fontconfig-pango-1-54-0-font-discovery-matching-and-pattern-properties-with-receipt-owned-config-cache-boundary-plus-exact-pixman-generic-implementation-for-exact-cairo-pixel-compositing-prerequisite-plus-exact-cairo-core-and-cairo-gobject-for-pango-1-54-0-and-gtk-3-24-49-rendering-surface-and-gobject-integration-plus-exact-graphite2-for-exact-harfbuzz-10-1-0-graphite-font-feature-shaping-prerequisite
   libjpeg_compatibility_candidate:
     first_candidate_state: rejected-rebuild-required-no-runpath
     first_candidate_member: libjpeg.so.62.4.0
@@ -123,16 +124,16 @@ provider_authority:
     required_now: 0
   composition_review:
     decision: reviewed-blocked-incomplete
-    accepted_provider_roots: 27
-    accepted_members: 35
-    included_members: 34
+    accepted_provider_roots: 28
+    accepted_members: 36
+    included_members: 35
     deferred_members: 1
     selected_gtk_identities: 36
-    unresolved_selected_identities: 8
+    unresolved_selected_identities: 7
     accepted_soname_collisions: 0
     accepted_alias_collisions: 0
     target_manifest_allowed: false
-    next_tranche: graphite2-provider-evidence-acquisition
+    next_tranche: at-spi2-core-provider-evidence-acquisition
   gdkpixbuf_core_acquisition:
     result_sha256: e96fb0e2d8fa1c16a228e41d60801abac0b8a43584a86b7e63f8adddfc4f5692
     review_state: acquisition-reviewed-partial
@@ -154,7 +155,7 @@ provider_authority:
     transitive_result_sha256: a18426371acf0339731464eea4a6fd1f8c745cc09154629b69e34d1063073c13
     transitive_recipe_tree: e91a0c476ef4355dbfff46e2bcab23d0085ddd01
     transitive_functional_matrix: jpeg-file-pass-jpeg-memory-pass-png-file-pass-png-memory-pass
-    next_action: acquire-graphite2-provider-evidence
+    next_action: acquire-at-spi2-core-provider-evidence
   thai_break_provider:
     result_sha256: 7789ff1a039e3186b04014e4ddf6a7ba68d77fe31a2f1ef77273590aa97b8e1e
     libthai_member: libthai.so.0.3.1
@@ -180,7 +181,7 @@ provider_authority:
     consumer: gtk-3-24-49-places-sidebar-cloud-account-integration
     service_boundary: dbus-session-services-and-accounts-not-accepted
     provider_authority: accepted-bounded-provider
-  next_research_decision: acquire-graphite2-provider-evidence
+  next_research_decision: acquire-at-spi2-core-provider-evidence
   fribidi_provider:
     member: libfribidi.so.0.4.0
     member_sha256: 71668fd02e89fa7546446bb7961bb618f6d22e1506f7444bbea6788befbb7895
@@ -221,7 +222,7 @@ provider_authority:
     adaptation: bounded-exception-flag-standard-meson-cxx17-docs-graphite2-introspection-subpackage-semantics
     filename_continuity: upstream-10-1-0-formula-concrete-0-61010-0-stable-soname-0
     consumer: pango-1-54-0-core-opentype-buffer-font-script-language-shaping-and-glyph-positioning
-    sibling_and_dependency_boundary: graphite2-icu-cairo-gobject-introspection-subset-cairo-icu-backends-tools-and-development-surfaces-not-accepted
+    sibling_and_dependency_boundary: graphite2-prerequisite-accepted-separately-icu-cairo-gobject-introspection-subset-cairo-icu-backends-tools-and-development-surfaces-not-accepted
     provider_authority: accepted-bounded-provider
   pixman_cairo_prerequisite:
     selected_label: libpixman-1.so.0.44.0
@@ -262,6 +263,20 @@ provider_authority:
     runtime_policy: explicit-receipt-owned-fontconfig-file-generation-font-directory-and-cache-required
     excluded_policy: package-default-fonts-conf-global-cache-system-fonts-cli-and-development-surfaces-not-accepted
     provider_authority: accepted-bounded-provider
+  graphite2_harfbuzz_prerequisite:
+    selected_label: libgraphite2.so.3.2.1
+    member: libgraphite2.so.3.2.1
+    member_sha256: 6caaa46abe585228b0fa45a60bdbb5e9951384148963856d1ce2e886e5b06e7f
+    soname: libgraphite2.so.3
+    artifact_sha256: 2144bb899adc6511df6ebf287b518d339c70b864dcfac3e3d31508187c87dfef
+    artifact_size: 84252
+    result_archive_sha256: b0ae73019a2b442d96daa148219cfcf21f265b8dec48d82aef74dd95d536f29f
+    recipe_tree: 4e3ab8e653cedfa4b31e8de229966af2b28c89a1
+    build_script_blob_sha: 1fd081fa93558fd044a053afb26a170a2cef6a09
+    adaptation: standard-cmake-install-rpath-off-compare-renderer-off-direct-vm
+    consumer: exact-harfbuzz-10-1-0-graphite-font-feature-shaping-prerequisite
+    runtime_dependencies: libc-so-6-ld-linux-aarch64-so-1
+    provider_authority: accepted-bounded-provider
   libxdamage_provider_blocker:
     selected_label: libXdamage.so.1.1.0
     required_soname: libXdamage.so.1
@@ -285,7 +300,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: acquire-graphite2-provider-evidence
+  id: acquire-at-spi2-core-provider-evidence
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:

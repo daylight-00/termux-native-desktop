@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-18.04`
+> Semantic state version: `2026-07-18.05`
 >
 > This is the compact current-state entry point. Exact commit and tree coordinates come from the checked-out full Git bundle, not from self-referential repository text.
 
@@ -22,27 +22,27 @@ Web-chat capability failures follow a stop-loss contract: perform one bounded re
 
 ADR 0005 separates artifact identity, adaptation semantics, provider authority, composition, target population and activation. The canonical claim inventory remains 28 roots, 37 reviewed objects and 89 separated claims: 36 Class A, 49 Class B, one Class C and three Class D.
 
-Exact `libcairo.so.2.11802.2` and `libcairo-gobject.so.2.11802.2` are accepted as one atomic root only for Pango 1.54.0 Cairo rendering, GTK 3.24.49 core Cairo drawing/surface use, and Cairo GObject integration. Their exact package, two member digests, stable SONAME aliases, complete accepted dependency closure, and the previously accepted exact Pixman edge are pinned by the retained read-only evidence archive.
+Exact `libgraphite2.so.3.2.1` is accepted only as the Graphite shaping-engine prerequisite compiled into exact HarfBuzz 10.1.0 for Graphite-enabled fonts within the selected Pango 1.54.0 and GTK 3.24.49 text scope. The approved `libgraphite-glibc` 1.3.14 archive, exact member digest, stable SONAME alias, one-file recipe tree, direct HarfBuzz integration path, and libc/loader-only runtime closure are pinned by the retained read-only evidence archive.
 
-The Class B recipe disables non-selected DWrite, Spectre, symbol-lookup and test surfaces. Its two Termux-prefix patches touch Cairo-script/FDR utility temporary paths only and do not grant utility authority. Selected `1.18.4` concrete labels remain reference evidence; target authority is the exact `1.18.2` pair and stable SONAME aliases.
+The Class B recipe disables install RPATH and the compare renderer and selects the direct Graphite VM. This does not widen general HarfBuzz authority, accept development surfaces, or claim that every Graphite font and feature set has been functionally validated. Exact Cairo/Cairo-GObject and Pixman decisions remain unchanged.
 
 ```text
-bounded provider roots accepted overall: 27
+bounded provider roots accepted overall: 28
 accepted roots inside the 28-root inventory: 21
 open roots inside the inventory: 7
-accepted exact members: 35
-included current-scope members: 34
+accepted exact members: 36
+included current-scope members: 35
 deferred members: 1
 composition review: REVIEWED_BLOCKED_INCOMPLETE
-selected identity gaps: 8
+selected identity gaps: 7
 target population: blocked
 activation: blocked
 ```
 
-Canonical decisions are under `docs/evidence/`; the current composition review is [`../evidence/selected-obsidian-provider-composition-review.md`](../evidence/selected-obsidian-provider-composition-review.md), the latest accepted provider decision is [`../evidence/cairo-bounded-provider-authority.md`](../evidence/cairo-bounded-provider-authority.md), and the latest gap disposition is [`../evidence/libxdamage-provider-evidence-blocker.md`](../evidence/libxdamage-provider-evidence-blocker.md).
+Canonical decisions are under `docs/evidence/`; the current composition review is [`../evidence/selected-obsidian-provider-composition-review.md`](../evidence/selected-obsidian-provider-composition-review.md), the latest accepted provider decision is [`../evidence/graphite2-harfbuzz-prerequisite-provider-authority.md`](../evidence/graphite2-harfbuzz-prerequisite-provider-authority.md), and the latest gap disposition is [`../evidence/libxdamage-provider-evidence-blocker.md`](../evidence/libxdamage-provider-evidence-blocker.md).
 
 ## Current project phase
 
 The libXdamage acquisition task is complete with `OPEN_BLOCKED_NO_GLIBC_CANDIDATE`: the approved glibc index has no `libxdamage-glibc` package, while the only observed `libxdamage` stanza belongs to the ordinary Termux/X11 bionic repository, and the pinned glibc recipe repository has no libXdamage root. No provider authority or target effect was granted.
 
-The active task is `acquire-graphite2-provider-evidence`. The next proportional tranche is read-only acquisition and review preparation for selected `libgraphite2.so.3`. A pinned `gpkg/libgraphite` 1.3.14 recipe root exists, but no exact artifact/member has yet been retained. No installation, target population, materialization, deployment or activation is allowed.
+The Graphite2 tranche is complete with `ACCEPTED_BOUNDED_PROVIDER`. The active task is `acquire-at-spi2-core-provider-evidence`. The next proportional tranche is read-only approved-index and pinned-recipe inspection for the coupled selected `libatk-bridge-2.0.so.0`, `libatk-1.0.so.0`, and `libatspi.so.0` identities. No installation, target population, materialization, deployment or activation is allowed.

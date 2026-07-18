@@ -67,13 +67,13 @@ Before materialization, rollback is atomic revocation of both Cairo composition 
 ## Composition effect
 
 ```text
-accepted bounded provider roots overall: 27
+accepted bounded provider roots overall: 28
 accepted roots inside 28-root inventory: 21
 open roots inside inventory:              7
-accepted exact members:                  35
-included members:                        34
+accepted exact members:                  36
+included members:                        35
 deferred members:                         1
-unresolved selected identities:           8
+unresolved selected identities:           7
 composition: REVIEWED_BLOCKED_INCOMPLETE
 target manifest allowed: NO
 activation: BLOCKED

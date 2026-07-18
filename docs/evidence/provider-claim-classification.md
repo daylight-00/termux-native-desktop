@@ -9,7 +9,7 @@ roots: 28
 objects: 37
 claims: 89
 new evidence collected: 0
-provider authority accepted inside inventory: 20
+provider authority accepted inside inventory: 21
 composition accepted: 0
 target rows accepted: 0
 activation accepted: 0
@@ -145,14 +145,14 @@ The `libjpeg-turbo` SUP-02 request is also unnecessary at the current boundary b
 ## Current authority states
 
 ```text
-bounded provider authority accepted inside inventory: 20 roots
-provider authority still open:                        8 roots
+bounded provider authority accepted inside inventory: 21 roots
+provider authority still open:                        7 roots
 application runtime composition:     NOT REACHED
 target population:                   BLOCKED
 selected-generation activation:      BLOCKED
 ```
 
-The twenty accepted root rows are `libxfixes`, `libxcomposite`, `libxi`, `libxinerama`, `libxcursor`, `libtasn1`, `libepoxy`, `pango`, the exact project-built `libjpeg.so.62.4.0`, `glib`, `libpng`, `util-linux`, `libthai`, `libdatrie`, `libcloudproviders`, `fribidi`, `freetype`, `libxkbcommon`, `harfbuzz`, and `fontconfig`. Outside this fixed inventory, exact `libpixman-1.so.0.46.4` is additionally accepted as a bounded Cairo prerequisite; it does not add or merge a claim into the 89-row canonical claim inventory. The GLib four-member family and libpng shared member are accepted only for the exact GdkPixbuf 2.42.12 JPEG/PNG file and memory decode scope; the exact official libmount/libblkid pair is accepted only for the bounded GdkPixbuf transitive runtime. Each decision remains limited to an exact identity and named consumer capability. The classification still does not authorize extraction, installation, target population, complete composition, selected-generation mutation, or activation.
+The twenty-one accepted root rows are `libxfixes`, `libxcomposite`, `libxi`, `libxinerama`, `libxcursor`, `libtasn1`, `libepoxy`, `pango`, the exact project-built `libjpeg.so.62.4.0`, `glib`, `libpng`, `util-linux`, `libthai`, `libdatrie`, `libcloudproviders`, `fribidi`, `freetype`, `libxkbcommon`, `harfbuzz`, `fontconfig`, and the atomic `cairo` core/Cairo-GObject root. Outside this fixed inventory, exact `libpixman-1.so.0.46.4` is additionally accepted as a bounded Cairo prerequisite and exact `libgraphite2.so.3.2.1` is accepted as a bounded HarfBuzz Graphite-shaping prerequisite; it does not add or merge a claim into the 89-row canonical claim inventory. The GLib four-member family and libpng shared member are accepted only for the exact GdkPixbuf 2.42.12 JPEG/PNG file and memory decode scope; the exact official libmount/libblkid pair is accepted only for the bounded GdkPixbuf transitive runtime. Each decision remains limited to an exact identity and named consumer capability. The classification still does not authorize extraction, installation, target population, complete composition, selected-generation mutation, or activation.
 
 ## Seven-root semantic-review result
 
@@ -161,7 +161,7 @@ The seven-root no-token semantic review is complete:
 ```text
 confirmed Class A: 7
 reclassified Class B: 0
-provider authority accepted inside inventory: 20
+provider authority accepted inside inventory: 21
 ```
 
 Canonical review surface:
