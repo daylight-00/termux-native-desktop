@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+required=(
+  docs/evidence/pixman-cairo-prerequisite-provider-authority.md
+  experiments/glibc/selected-obsidian-provider-authority/review/pixman-cairo-prerequisite-provider-authority.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-composition-members.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-composition-gaps.tsv
+  docs/current/STATE.yaml docs/current/ACTIVE_TASK.md docs/current/BRIEF.md docs/catalog.tsv STATUS.md
+)
+for rel in "${required[@]}"; do [ -f "$ROOT/$rel" ] || { echo "pixman-cairo-prerequisite: FAIL: missing $rel" >&2; exit 1; }; done
+python3 - "$ROOT" <<'PY'
+from pathlib import Path
+import csv,sys
+root=Path(sys.argv[1]); review=root/'experiments/glibc/selected-obsidian-provider-authority/review'
+def read(n):
+ with (review/n).open(newline='',encoding='utf-8') as f:return list(csv.DictReader(f,delimiter='\t'))
+errors=[]; rows=read('pixman-cairo-prerequisite-provider-authority.tsv')
+if len(rows)!=1: errors.append(f'expected one Pixman row, got {len(rows)}')
+else:
+ r=rows[0]
+ want={
+  'review_id':'PIXMAN-CAIRO-PREQ-PROV-001','authority_root_id':'outside-28-root:gpkg/libpixman','source_evidence_row_id':'selected:84b77925eeb02b53f18e','recipe_root':'gpkg/libpixman','recipe_tree':'ba911214b3339066f757cc85e5c4d339b55a7be4','build_script_blob_sha':'92b295aca84e3f68167a101ced4eceaf019b16ce','artifact_package':'libpixman-glibc','artifact_version':'0.46.4','artifact_sha256':'5becc25134aef71b8b4ed629272bd13b0be7271f01b60a48670ea938f2e83b17','artifact_size':'152856','result_archive_sha256':'3df4f72452b6fb36525ea651f58a0d9d0e551d6ab1f0076653588e767fb1ad9a','exact_member_path':'data/data/com.termux/files/usr/glibc/lib/libpixman-1.so.0.46.4','exact_member_sha256':'cab54c7f8e4c3a5c1980aa7564b9321114418f2d3c6fa37a3c0723f9f22e1eb2','observed_soname':'libpixman-1.so.0','observed_alias_path':'data/data/com.termux/files/usr/glibc/lib/libpixman-1.so.0','observed_alias_target':'libpixman-1.so.0.46.4','adaptation_adr_class':'B','adaptation_classification_state':'CLASS_B_BOUNDED_EXACT_GENERIC_IMPLEMENTATION_AND_STABLE_SONAME_SEMANTICS_ACCEPTED','decision':'ACCEPTED_BOUNDED_PROVIDER'
+ }
+ for k,v in want.items():
+  if r.get(k)!=v: errors.append(f'{k}: expected {v}, got {r.get(k)!r}')
+ joined=';'.join(r.values())
+ for token in ['ALL_ARCHITECTURE_SPECIFIC_SIMD_IMPLEMENTATIONS_DISABLED','EXACT_LIBCAIRO_SO_2_11802_2_DT_NEEDED_CONTAINS_LIBPIXMAN_1_SO_0','EXACT_PIXMAN_ELF_NEEDS_LIBM_SO_6_LIBC_SO_6_AND_LD_LINUX_AARCH64_SO_1_ONLY','SELECTED_LIBPIXMAN_1_SO_0_44_0_IS_REFERENCE_FILENAME','NO_CAIRO_PROVIDER_COMPLETE_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT']:
+  if token not in joined: errors.append(f'missing bounded token: {token}')
+ for forbidden in ['UPSTREAM_BYTE_EQUIVALENCE_ACCEPTED','PERFORMANCE_EQUIVALENCE_ACCEPTED','PACKAGE_WIDE_AUTHORITY_ACCEPTED','CAIRO_PROVIDER_AUTHORITY_ACCEPTED','TARGET_POPULATION_ACCEPTED','ACTIVATION_ACCEPTED']:
+  if forbidden in joined: errors.append(f'forbidden widened token: {forbidden}')
+mem=read('selected-provider-composition-members.tsv')
+if not any(x['member_basename']=='libpixman-1.so.0.46.4' and x['member_sha256']=='cab54c7f8e4c3a5c1980aa7564b9321114418f2d3c6fa37a3c0723f9f22e1eb2' and x['soname']=='libpixman-1.so.0' and x['alias_basename']=='libpixman-1.so.0' and x['alias_target_basename']=='libpixman-1.so.0.46.4' and x['composition_inclusion']=='INCLUDED_SELECTED_GTK_SCOPE' for x in mem): errors.append('exact Pixman composition member/alias missing')
+gaps=read('selected-provider-composition-gaps.tsv')
+if any(x['selected_evidence_row_id']=='selected:84b77925eeb02b53f18e' or x['identity_label']=='libpixman-1.so.0.44.0' for x in gaps): errors.append('accepted Pixman identity remains in gaps')
+for label in ['libcairo.so.2.11804.4','libcairo-gobject.so.2.11804.4']:
+ if not any(x['identity_label']==label and x['priority_tranche']=='CAIRO_BOUNDED_PROVIDER_AUTHORITY' for x in gaps): errors.append(f'Cairo next gap missing: {label}')
+doc=(root/'docs/evidence/pixman-cairo-prerequisite-provider-authority.md').read_text(); state=(root/'docs/current/STATE.yaml').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); brief=(root/'docs/current/BRIEF.md').read_text(); catalog=(root/'docs/catalog.tsv').read_text(); status=(root/'STATUS.md').read_text()
+markers=[
+ ('doc exact member','libpixman-1.so.0.46.4' in doc),('doc direct edge','DT_NEEDED=libpixman-1.so.0' in doc),('doc generic boundary','architecture-specific acceleration claims' in doc),('state route','pixman_cairo_prerequisite_provider_authority: docs/evidence/pixman-cairo-prerequisite-provider-authority.md' in state),('state provider','pixman_cairo_prerequisite:' in state and 'provider_authority: accepted-bounded-provider' in state),('active Cairo','Task ID: `review-cairo-bounded-provider-authority`' in active),('active prerequisite','Pixman prerequisite authority is accepted' in active),('brief count','bounded provider roots accepted overall: 26' in brief),('catalog','pixman-cairo-prerequisite-provider-authority\tevidence\tcurrent\tcanonical' in catalog),('status','exact Pixman accepted as the Cairo pixel-compositing prerequisite' in status)]
+for label,ok in markers:
+ if not ok: errors.append(f'missing durable marker: {label}')
+for forbidden in ['Cairo provider authority is accepted','target manifest allowed: YES','activation: ACCEPTED','performance-equivalent to upstream']:
+ if forbidden in doc: errors.append(f'forbidden widening: {forbidden}')
+if errors:
+ for e in errors: print('pixman-cairo-prerequisite: FAIL:',e,file=sys.stderr)
+ raise SystemExit(1)
+print('pixman-cairo-prerequisite: PASS: exact Pixman 0.46.4 generic implementation and stable SONAME are accepted only for the exact Cairo prerequisite edge')
+PY

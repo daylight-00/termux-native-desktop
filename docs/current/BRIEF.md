@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-18.01`
+> Semantic state version: `2026-07-18.02`
 >
 > This is the compact current-state entry point. Exact commit and tree coordinates come from the checked-out full Git bundle, not from self-referential repository text.
 
@@ -20,29 +20,29 @@ Web-chat capability failures follow a stop-loss contract: perform one bounded re
 
 ## Current provider boundary
 
-ADR 0005 separates artifact identity, adaptation semantics, provider authority, composition, target population and activation. The claim inventory remains 28 roots, 37 reviewed objects and 89 separated claims: 36 Class A, 49 Class B, one Class C and three Class D.
+ADR 0005 separates artifact identity, adaptation semantics, provider authority, composition, target population and activation. The canonical claim inventory remains 28 roots, 37 reviewed objects and 89 separated claims: 36 Class A, 49 Class B, one Class C and three Class D.
 
-The exact `libfontconfig.so.1.14.0` member is accepted only for Pango 1.54.0 font discovery, matching, and pattern-property consumption in the selected GTK 3.24.49 text path. The pinned three-file Class B recipe delegates to the standard Meson helper, binds revision 1 and explicit default font-directory/rendering policy, applies a directory-sentinel cache-lock adaptation, and separates command-line utilities. These effects are accepted only for the exact library artifact and receipt-owned cache boundary; package-generated `fonts.conf`, package or system font directories, global caches, CLI tools, and development surfaces are not promoted.
+The exact `libpixman-1.so.0.46.4` member is accepted only as the pixel image compositing prerequisite directly required by exact Cairo `libcairo.so.2.11802.2`. The read-only Termux acquisition evidence binds the approved package SHA-256, exact member digest, SONAME alias, and Cairo `DT_NEEDED` edge. Its Class B recipe selects the generic implementation by disabling architecture-specific SIMD and the GTK helper surface; this does not claim upstream byte or performance equivalence.
 
-Upstream 2.15.0's version formula produces concrete filename `libfontconfig.so.1.14.0` with SONAME `libfontconfig.so.1`. The selected `libfontconfig.so.1.12.1` label remains reference evidence rather than target-path authority. Future activation must use an explicit receipt-owned `FONTCONFIG_FILE`/`FONTCONFIG_PATH`, an immutable generation font directory, and a fresh receipt-local cache. Other accepted bounded providers remain unchanged.
+The selected `libpixman-1.so.0.44.0` label remains reference evidence rather than target-path authority. Runtime closure is limited to `libm`, `libc`, and the glibc loader. Cairo itself, package-wide Pixman surfaces, development aliases, complete composition, target population and activation remain open. Previously accepted Fontconfig and other bounded providers remain unchanged.
 
 ```text
-bounded provider roots accepted overall: 25
+bounded provider roots accepted overall: 26
 accepted roots inside the 28-root inventory: 20
 open roots inside the inventory: 8
-accepted exact members: 32
-included current-scope members: 31
+accepted exact members: 33
+included current-scope members: 32
 deferred members: 1
 composition review: REVIEWED_BLOCKED_INCOMPLETE
-selected identity gaps: 11
+selected identity gaps: 10
 target population: blocked
 activation: blocked
 ```
 
-Canonical decisions are under `docs/evidence/`; the current composition review is [`../evidence/selected-obsidian-provider-composition-review.md`](../evidence/selected-obsidian-provider-composition-review.md), and the latest provider decision is [`../evidence/fontconfig-bounded-provider-authority.md`](../evidence/fontconfig-bounded-provider-authority.md).
+Canonical decisions are under `docs/evidence/`; the current composition review is [`../evidence/selected-obsidian-provider-composition-review.md`](../evidence/selected-obsidian-provider-composition-review.md), and the latest provider decision is [`../evidence/pixman-cairo-prerequisite-provider-authority.md`](../evidence/pixman-cairo-prerequisite-provider-authority.md).
 
 ## Current project phase
 
 The active task is `review-cairo-bounded-provider-authority`.
 
-The next proportional tranche is the exact coupled Cairo root: `libcairo.so.2.11802.2` and `libcairo-gobject.so.2.11802.2`. It must bound configure, patch and Termux-prefix semantics, reconcile both selected `1.18.4` concrete labels with retained `1.18.2` candidates while preserving their SONAMEs, and prove Pango/GTK rendering and Cairo-GObject consumer binding as one atomic root decision. No target population, materialization, deployment or activation is allowed.
+The next proportional tranche is the exact coupled Cairo root: `libcairo.so.2.11802.2` and `libcairo-gobject.so.2.11802.2`. Its exact Pixman prerequisite is now accepted. The review must bound configure, patch and Termux-prefix semantics, reconcile both selected `1.18.4` concrete labels with retained `1.18.2` candidates while preserving their SONAMEs, and prove Pango/GTK rendering and Cairo-GObject consumer binding as one atomic root decision. No target population, materialization, deployment or activation is allowed.

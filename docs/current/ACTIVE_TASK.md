@@ -10,7 +10,7 @@ Review the two selected members from `gpkg/libcairo` under ADR 0005 as one atomi
 
 ## Why now
 
-Exact Fontconfig authority is bounded and accepted, reducing selected composition gaps from 12 to 11. Cairo is the remaining reviewed root in the selected GTK gap set and covers two coupled identities from one exact artifact and recipe tree.
+Exact Fontconfig authority is bounded and accepted. The read-only Cairo/Pixman acquisition probe then established exact `libcairo.so.2.11802.2 -> libpixman-1.so.0` binding and exact Pixman `libpixman-1.so.0.46.4` authority, reducing selected composition gaps from 11 to 10. Cairo remains the coupled reviewed root in the selected GTK gap set and covers two identities from one exact artifact and recipe tree.
 
 ## Known coordinates
 
@@ -49,21 +49,22 @@ Cairo tools, headers, pkg-config, static and development surfaces, non-selected 
 - `docs/current/STATE.yaml`
 - `docs/decisions/0005-proportional-assurance-depth.md`
 - `docs/evidence/fontconfig-bounded-provider-authority.md`
+- `docs/evidence/pixman-cairo-prerequisite-provider-authority.md`
 - `docs/evidence/selected-obsidian-provider-composition-review.md`
 - `experiments/glibc/selected-obsidian-provider-authority/review/generic-build-attestation-adaptation-root-review-set.tsv`
 - `experiments/glibc/selected-obsidian-provider-authority/review/generic-recipe-binding-and-drift-target-receipt-review.tsv`
 
 ## Pending external inputs
 
-None before static review. Request one bounded Termux probe only if exact adaptation impact, consumer binding, filename continuity, or the two-member atomicity cannot be resolved from retained evidence.
+None. Pixman prerequisite authority is accepted from result archive SHA-256 `3df4f72452b6fb36525ea651f58a0d9d0e551d6ab1f0076653588e767fb1ad9a`; the archive retains both exact Cairo members, the exact Pixman member, aliases, package metadata, and dynamic sections. Request another bounded Termux probe only if a new material ambiguity appears outside this retained evidence.
 
 ## Stop conditions
 
-Stop without accepting authority if either exact candidate digest, configure/patch/prefix semantics, selected identity-to-SONAME continuity, consumer binding, dependency/exclusion boundary, update, or atomic rollback cannot be bounded.
+Stop without accepting authority if either exact candidate digest, configure/patch/prefix semantics, selected identity-to-SONAME continuity, Pango/GTK consumer binding, accepted Pixman prerequisite binding, another dependency/exclusion boundary, update, or atomic rollback cannot be bounded.
 
 ## Next valid action
 
-Perform a bounded exact-file recipe, configure/patch/prefix, two-member filename-continuity, and Pango/GTK rendering consumer review. Request device execution only if retained static evidence cannot resolve a material ambiguity.
+Perform a bounded exact-file recipe, configure/patch/prefix, two-member filename-continuity, and Pango/GTK rendering consumer review using the retained exact Cairo/Pixman result archive. Request device execution only if this retained evidence cannot resolve a new material ambiguity.
 
 ## Completion criteria
 

@@ -202,6 +202,7 @@ checks=[
     ('brief classification','89 separated claims' in brief),
     ('catalog row','provider-claim-classification\tevidence\tcurrent\tcanonical' in catalog),
     ('status next phase','Cairo review active' in status),
+    ('outside inventory Pixman','exact `libpixman-1.so.0.46.4` is additionally accepted as a bounded Cairo prerequisite' in (root/'docs/evidence/provider-claim-classification.md').read_text()),
     ('disposition catalog','libjpeg-so-62-provider-candidate-disposition\tevidence\tcurrent\tcanonical' in catalog),
 ]
 for label,ok in checks:

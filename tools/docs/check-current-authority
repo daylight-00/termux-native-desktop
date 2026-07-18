@@ -33,7 +33,7 @@ reject_text() {
 
 require_text STATUS.md 'bundle-native documentation and operations control planes active' 'STATUS declares the documentation and operations control planes'
 require_text STATUS.md '89 separated claims' 'STATUS preserves the bounded claim-classification result'
-require_text STATUS.md 'exact Fontconfig accepted for bounded Pango font discovery and matching; selected-provider composition incomplete with 11 gaps; Cairo review active' 'STATUS names accepted Fontconfig authority and Cairo review'
+require_text STATUS.md 'exact Pixman accepted as the Cairo pixel-compositing prerequisite; selected-provider composition incomplete with 10 gaps; Cairo review active' 'STATUS names accepted Pixman prerequisite authority and Cairo review'
 require_text docs/architecture.md 'immutable releases' 'architecture describes immutable deployment'
 require_text docs/architecture.md 'Repository deployment rollback and provider rollback are separate authority domains.' 'architecture separates rollback authorities'
 require_text docs/glibc-layer.md 'Repository deployment already uses immutable materialized releases and explicit activation.' 'glibc guide describes explicit activation'
@@ -66,6 +66,7 @@ reject_text docs/system-foundation/REFERENCES.md '../../setup/glibc/' 'foundatio
 reject_text docs/system-foundation/REFERENCES.md '../../scripts/deploy-gl.sh' 'foundation references have no removed deploy script link'
 
 "$ROOT/tools/docs/check-fontconfig-bounded-provider-authority"
+"$ROOT/tools/docs/check-pixman-cairo-prerequisite-provider-authority"
 
 STATE_VERSION=$(awk '$1 == "state_version:" { print $2; exit }' "$ROOT/docs/current/STATE.yaml")
 PENDING_VERSION=$(awk '$1 == "state_version:" { print $2; exit }' "$ROOT/docs/current/PENDING_ARTIFACTS.yaml")
