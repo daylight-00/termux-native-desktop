@@ -33,6 +33,8 @@ Selected `libselinux.so.1` is also `BLOCKED_NO_TERMUX_GLIBC_PROVIDER_CANDIDATE`.
 
 All seven unresolved selected identities are now reviewed blockers. The Class D composition remains incomplete and no target manifest is allowed.
 
-## Next tranche
+## Production-boundary disposition and next tranche
 
-The next tranche is `MISSING_GLIBC_PROVIDER_PRODUCTION_BOUNDARY_DEFINITION`. The next action is a non-mutating comparison of supplier, package-contribution and separately authorized project-production lanes for the four blocker families. It does not authorize source checkout, build, packaging, installation, target population, policy mutation, deployment or activation.
+The missing-provider production boundary is accepted as planning-only. Xdamage is the first admissible lane: a pinned Termux glibc recipe contribution (Class B) and separately produced isolated local candidate evidence (Class C). AT-SPI2/ATK and GTK 3 remain deferred atomic contribution lanes. libSELinux has no build authorization until direct consumer necessity and symbol semantics are proven.
+
+The next tranche is `LIBXDAMAGE_GLIBC_RECIPE_CONTRIBUTION_CANDIDATE_PREPARATION`. It may produce isolated recipe and candidate evidence in a separate transaction. It does not authorize supplier publication, package installation, target population, deployment or activation.

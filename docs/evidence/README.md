@@ -78,3 +78,5 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 - [`at-spi2-core-provider-evidence-blocker.md`](at-spi2-core-provider-evidence-blocker.md) — coupled three-identity blocker proving that the approved index and pinned recipe source contain no Termux glibc AT-SPI2/ATK provider candidate while bionic packages remain non-authoritative.
 - [`gtk3-core-provider-evidence-blocker.md`](gtk3-core-provider-evidence-blocker.md) — exact approved-index and pinned-recipe blocker for the missing Termux glibc GTK 3 GDK/GTK core pair.
 - [`libselinux-provider-evidence-blocker.md`](libselinux-provider-evidence-blocker.md) — exact approved-index and pinned-recipe blocker proving that only bionic/Android SELinux boundary implementations are visible and no Termux glibc libSELinux provider candidate is authorized.
+
+- [`missing-glibc-provider-production-boundary.md`](missing-glibc-provider-production-boundary.md) — planning-only production lane decision: Xdamage first, atomic AT-SPI2/GTK deferred, libSELinux production withheld pending direct consumer proof.

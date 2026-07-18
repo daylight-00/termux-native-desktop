@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-18.08`
+> Semantic state version: `2026-07-18.09`
 >
 > This is the compact current-state entry point. Exact commit and tree coordinates come from the checked-out full Git bundle, not from self-referential repository text.
 
@@ -39,7 +39,7 @@ target population: blocked
 activation: blocked
 ```
 
-Canonical decisions are under `docs/evidence/`; the current composition review is [`../evidence/selected-obsidian-provider-composition-review.md`](../evidence/selected-obsidian-provider-composition-review.md), the latest accepted provider decision is [`../evidence/graphite2-harfbuzz-prerequisite-provider-authority.md`](../evidence/graphite2-harfbuzz-prerequisite-provider-authority.md), and the latest gap disposition is [`../evidence/gtk3-core-provider-evidence-blocker.md`](../evidence/gtk3-core-provider-evidence-blocker.md).
+Canonical decisions are under `docs/evidence/`; the current composition review is [`../evidence/selected-obsidian-provider-composition-review.md`](../evidence/selected-obsidian-provider-composition-review.md), the latest accepted provider decision is [`../evidence/graphite2-harfbuzz-prerequisite-provider-authority.md`](../evidence/graphite2-harfbuzz-prerequisite-provider-authority.md), and the missing-provider lane decision is [`../evidence/missing-glibc-provider-production-boundary.md`](../evidence/missing-glibc-provider-production-boundary.md).
 
 ## Current project phase
 
@@ -51,4 +51,6 @@ The GTK 3 core-pair tranche is complete with `OPEN_BLOCKED_NO_GLIBC_CANDIDATE`: 
 
 The libSELinux tranche is complete with `OPEN_BLOCKED_NO_GLIBC_CANDIDATE`: no approved Termux glibc coordinate or pinned producing recipe root exists, while installed `libandroid-selinux` and Android platform copies remain bionic/platform boundary evidence only. All seven unresolved selected identities are now reviewed blockers.
 
-The active task is `define-missing-glibc-provider-production-boundary`. It is a non-mutating planning tranche for the Xdamage, AT-SPI2/ATK, GTK 3 core and libSELinux families. No source build, package production, installation, policy mutation, target population, materialization, deployment or activation is allowed.
+The production-boundary planning tranche is complete. Xdamage is the first admissible lane: a pinned Class B Termux glibc recipe contribution with a separately produced isolated Class C candidate. AT-SPI2/ATK and GTK 3 remain deferred atomic contribution lanes. libSELinux has no build authorization until direct consumer necessity and symbol semantics are proven.
+
+The active task is `prepare-libxdamage-glibc-recipe-contribution-candidate`. It permits a separate non-installing source/recipe/build evidence runner only; upstream publication, package installation, target population, deployment and activation remain prohibited.

@@ -1,65 +1,74 @@
-# Active task: define the missing glibc provider production boundary
+# Active task: prepare the libXdamage glibc recipe-contribution candidate
 
-> Task ID: `define-missing-glibc-provider-production-boundary`
+> Task ID: `prepare-libxdamage-glibc-recipe-contribution-candidate`
 >
-> Expected state on completion: the four reviewed blocker families have one explicit, non-mutating production/remediation decision record that selects admissible supplier, package-contribution, or project-produced candidate lanes and the assurance class and evidence gates for each. No build, installation, target population, policy mutation, deployment, or activation occurs.
+> Expected state on completion: an isolated Class C `libxdamage-glibc` candidate and a reviewable Class B `gpkg/libxdamage` recipe-contribution diff are captured with exact source, package, member, SONAME, alias, dependency, consumer and rollback evidence. No package repository publication, installation, target population, deployment or activation occurs.
 
 ## Objective
 
-Define the smallest coherent production boundary for the seven selected runtime identities that remain blocked because the approved Termux glibc package index and pinned recipe repository contain no candidate.
+Execute the first lane selected by the accepted missing-provider production-boundary decision: reproduce exact upstream libXdamage 1.1.6 for the Termux glibc world and prepare a minimal upstream recipe contribution.
 
 ## Why now
 
-Read-only discovery is complete. libXdamage, the coupled AT-SPI2/ATK family, the GTK 3 GDK/GTK core pair, and libSELinux all stopped at the same durable boundary: no approved glibc package coordinate and no pinned producing recipe root. Repeating package-name probes cannot close the composition.
+All seven unresolved selected identities have completed read-only candidate discovery and are reviewed blockers. The accepted production-boundary decision selects libXdamage as the lowest-risk first lane because it is one exact leaf member with a small accepted dependency closure and a retained upstream source digest.
 
-## Blocker families
+## Authoritative inputs
 
 ```text
-Xdamage:       libXdamage.so.1
-AT-SPI2/ATK:  libatk-bridge-2.0.so.0; libatk-1.0.so.0; libatspi.so.0
-GTK 3 core:   libgdk-3.so.0; libgtk-3.so.0
-SELinux:      libselinux.so.1
+source:          libXdamage 1.1.6
+source SHA-256:  52733c1f5262fca35f64e7d5060c6fcd81a880ba8e1e65c9621cf0727afb5d11
+expected member: libXdamage.so.1.1.0
+expected SONAME: libXdamage.so.1
+reference recipe: termux/termux-packages@552a825cc8433e3aced966ff4bf5c8ea9255ca7d:x11-packages/libxdamage/build.sh
+candidate recipe destination: termux-pacman/glibc-packages:gpkg/libxdamage
 ```
 
 ## In scope
 
-- compare supplier addition, upstream contribution, pinned Termux glibc recipe contribution, and separately authorized project-produced candidate lanes;
-- classify each proposed production claim under ADR 0005 as reference-adapted or independently reproduced;
-- define exact source, version, recipe-tree, patch/configuration, toolchain, package, member, SONAME, alias, dependency, consumer, collision, update, rollback and functional gates;
-- preserve atomic grouping for AT-SPI2/ATK and GTK/GDK;
-- define ordering and prerequisite closure without executing a build;
-- explicitly retain Android/bionic wrong-world exclusions and SELinux policy/labeling boundaries.
+- verify exact source bytes and hash;
+- derive the smallest glibc recipe from the authoritative upstream source and retained ordinary Termux dependency semantics;
+- record every prefix, toolchain, configure, packaging or path adaptation;
+- build only in an isolated cache/workspace;
+- retain exact package, recipe diff, member, aliases, ELF metadata, `DT_NEEDED`, symbols and build logs;
+- prove direct closure to accepted `libX11.so.6`, `libXfixes.so.3`, libc and loader providers;
+- run bounded load/symbol and GTK 3.24.49 GDK X11 consumer-binding checks that do not require target population;
+- define package removal and rollback.
 
 ## Out of scope
 
-Source checkout, compilation, package creation, repository publication, package-manager mutation, installation, target generation, materialization, policy loading, relabeling, service activation, deployment, or selected-generation activation.
+Publishing or pushing to the upstream recipe repository, installing or upgrading packages, changing configured repositories, copying bionic or Debian bytes, creating a cross-world alias, populating a selected target, deployment, activation or widening GTK authority.
 
 ## Required reading
 
 - `docs/current/STATE.yaml`
 - `docs/decisions/0005-proportional-assurance-depth.md`
+- `docs/evidence/missing-glibc-provider-production-boundary.md`
 - `docs/evidence/libxdamage-provider-evidence-blocker.md`
-- `docs/evidence/at-spi2-core-provider-evidence-blocker.md`
-- `docs/evidence/gtk3-core-provider-evidence-blocker.md`
-- `docs/evidence/libselinux-provider-evidence-blocker.md`
 - `docs/evidence/selected-obsidian-provider-composition-review.md`
-- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-composition-gaps.tsv`
+
+## Claim classes
+
+- Recipe and Termux glibc adaptation: Class B reference-adapted.
+- Locally produced `.deb` and ELF: Class C independently reproduced.
+- Eventual approved-repository artifact: separate Class A/B review only after supplier publication.
 
 ## Pending external inputs
 
-None for the planning tranche. Exact upstream and distribution coordinates may be inspected read-only. Any artifact production or repository mutation requires a separate authorized transaction after the decision record is accepted.
-
-## Stop conditions
-
-Stop without a production recommendation for any family whose source lineage, adaptation necessity, dependency closure, runtime consequence, licensing/distribution boundary, or validation method cannot be bounded. Do not combine the four families into one build merely because they share the same missing-package disposition.
-
-## Next valid action
-
-Author a decision matrix for the four blocker families that selects a preferred production lane, implementation class, exact evidence minimum, atomicity, dependencies, exclusions, stop condition and reopening gate. Do not execute the selected lane in this task.
+None for package authoring. Network-backed source and build-input acquisition occurs only in the user Termux runner. Upstream publication or contribution submission is a later, separately authorized action.
 
 ## Completion criteria
 
-- Every blocker family has one preferred and at least one rejected or deferred production lane with rationale.
-- Class B versus Class C ownership is explicit for each produced claim.
-- Package/member/SONAME/alias/dependency/consumer/update/rollback and functional acceptance gates are explicit.
-- No build, target, policy mutation, deployment, or activation occurs.
+- Exact source hash and reference recipe coordinates are verified.
+- One reviewable `gpkg/libxdamage` recipe diff is retained.
+- One isolated `.deb` and exact `libXdamage.so.1.1.0` member are retained with hashes, AArch64, SONAME, alias and dependency evidence.
+- Class B recipe/adaptation and Class C produced-artifact records are explicit.
+- Bounded load/symbol and GTK GDK X11 consumer-binding checks are recorded.
+- Repository state and configured package state remain unchanged; no installation, target, deployment or activation occurs.
+
+## Stop conditions
+
+Stop without a candidate when source identity, dependency closure, package layout, SONAME/alias contract, absence of RPATH/RUNPATH, consumer binding, license/distribution boundary or rollback cannot be made exact. Do not substitute version 1.1.7 or any bionic artifact for the selected 1.1.6 identity.
+
+## Next valid action
+
+Author a separate exact-base, non-installing Termux runner that acquires the pinned source and required build inputs, produces the isolated candidate and contribution evidence, archives the result, and leaves the repository and configured package state unchanged.

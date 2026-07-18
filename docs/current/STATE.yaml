@@ -1,5 +1,5 @@
 schema_version: 1
-state_version: 2026-07-18.08
+state_version: 2026-07-18.09
 updated_on: 2026-07-18
 
 project:
@@ -71,10 +71,11 @@ documentation:
   at_spi2_core_provider_evidence_blocker: docs/evidence/at-spi2-core-provider-evidence-blocker.md
   gtk3_core_provider_evidence_blocker: docs/evidence/gtk3-core-provider-evidence-blocker.md
   libselinux_provider_evidence_blocker: docs/evidence/libselinux-provider-evidence-blocker.md
+  missing_glibc_provider_production_boundary: docs/evidence/missing-glibc-provider-production-boundary.md
 
 provider_authority:
-  workstream: graphite2-harfbuzz-prerequisite-authority-accepted-all-seven-selected-gaps-reviewed-blocked-production-boundary-definition-active
-  boundary: twenty-eight-bounded-providers-retained-seven-selected-identities-blocked-no-approved-glibc-candidates-production-build-composition-target-policy-and-activation-open
+  workstream: all-seven-selected-gaps-reviewed-blocked-production-boundary-defined-libxdamage-recipe-candidate-preparation-active
+  boundary: twenty-eight-bounded-providers-retained-seven-selected-identities-blocked-production-lanes-defined-first-libxdamage-candidate-not-yet-produced-composition-target-policy-and-activation-open
   claim_inventory:
     total: 89
     class_a: 36
@@ -136,7 +137,7 @@ provider_authority:
     accepted_soname_collisions: 0
     accepted_alias_collisions: 0
     target_manifest_allowed: false
-    next_tranche: missing-glibc-provider-production-boundary-definition
+    next_tranche: libxdamage-glibc-recipe-contribution-candidate-preparation
   gdkpixbuf_core_acquisition:
     result_sha256: e96fb0e2d8fa1c16a228e41d60801abac0b8a43584a86b7e63f8adddfc4f5692
     review_state: acquisition-reviewed-partial
@@ -158,7 +159,7 @@ provider_authority:
     transitive_result_sha256: a18426371acf0339731464eea4a6fd1f8c745cc09154629b69e34d1063073c13
     transitive_recipe_tree: e91a0c476ef4355dbfff46e2bcab23d0085ddd01
     transitive_functional_matrix: jpeg-file-pass-jpeg-memory-pass-png-file-pass-png-memory-pass
-    next_action: define-missing-glibc-provider-production-boundary
+    next_action: prepare-libxdamage-glibc-recipe-contribution-candidate
   thai_break_provider:
     result_sha256: 7789ff1a039e3186b04014e4ddf6a7ba68d77fe31a2f1ef77273590aa97b8e1e
     libthai_member: libthai.so.0.3.1
@@ -184,7 +185,7 @@ provider_authority:
     consumer: gtk-3-24-49-places-sidebar-cloud-account-integration
     service_boundary: dbus-session-services-and-accounts-not-accepted
     provider_authority: accepted-bounded-provider
-  next_research_decision: define-missing-glibc-provider-production-boundary
+  next_research_decision: prepare-libxdamage-glibc-recipe-contribution-candidate
   fribidi_provider:
     member: libfribidi.so.0.4.0
     member_sha256: 71668fd02e89fa7546446bb7961bb618f6d22e1506f7444bbea6788befbb7895
@@ -339,6 +340,22 @@ provider_authority:
     target_population: blocked
     policy_mutation: blocked
     reopening_gate: exact-approved-or-separately-authorized-project-produced-glibc-artifact-member-soname-alias-source-recipe-production-dependency-consumer-policy-labeling-collision-update-and-rollback-evidence
+  missing_glibc_provider_production_boundary:
+    decision: accepted-planning-only
+    reviewed_families: 4
+    reviewed_identities: 7
+    first_lane: pinned-termux-glibc-libxdamage-recipe-contribution
+    first_lane_recipe_class: B
+    first_lane_local_artifact_class: C
+    first_lane_build_state: not-yet-produced
+    at_spi2_atk_lane: deferred-atomic-recipe-contribution-after-libxdamage
+    gtk3_core_lane: deferred-atomic-recipe-contribution-after-libxdamage-and-at-spi2
+    libselinux_lane: no-build-authorization-pending-direct-consumer-necessity
+    version_policy: newer-versions-require-selected-identity-reselection
+    provider_authority_effect: none
+    composition_effect: reviewed-blocked-incomplete-retained
+    target_manifest_allowed: false
+    next_action: prepare-libxdamage-glibc-recipe-contribution-candidate
   prohibited_claims:
     - complete-provider-authority
     - complete-runtime-composition
@@ -346,7 +363,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: define-missing-glibc-provider-production-boundary
+  id: prepare-libxdamage-glibc-recipe-contribution-candidate
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:

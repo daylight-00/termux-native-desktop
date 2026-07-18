@@ -1,0 +1,14 @@
+key	value
+schema_version	1
+decision_policy	ADR-0005
+decision_state	ACCEPTED_PLANNING_ONLY
+reviewed_family_count	4
+reviewed_identity_count	7
+first_production_lane	LIBXDAMAGE_GLIBC_RECIPE_CONTRIBUTION
+first_task	PREPARE_LIBXDAMAGE_GLIBC_RECIPE_CONTRIBUTION_CANDIDATE
+immediate_build_authorized	NO
+libselinux_build_authorized	NO
+provider_authority_effect	NONE
+composition_decision	REVIEWED_BLOCKED_INCOMPLETE
+target_manifest_allowed	NO
+activation_allowed	NO
