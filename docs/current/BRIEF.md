@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-18.05`
+> Semantic state version: `2026-07-18.06`
 >
 > This is the compact current-state entry point. Exact commit and tree coordinates come from the checked-out full Git bundle, not from self-referential repository text.
 
@@ -39,10 +39,12 @@ target population: blocked
 activation: blocked
 ```
 
-Canonical decisions are under `docs/evidence/`; the current composition review is [`../evidence/selected-obsidian-provider-composition-review.md`](../evidence/selected-obsidian-provider-composition-review.md), the latest accepted provider decision is [`../evidence/graphite2-harfbuzz-prerequisite-provider-authority.md`](../evidence/graphite2-harfbuzz-prerequisite-provider-authority.md), and the latest gap disposition is [`../evidence/libxdamage-provider-evidence-blocker.md`](../evidence/libxdamage-provider-evidence-blocker.md).
+Canonical decisions are under `docs/evidence/`; the current composition review is [`../evidence/selected-obsidian-provider-composition-review.md`](../evidence/selected-obsidian-provider-composition-review.md), the latest accepted provider decision is [`../evidence/graphite2-harfbuzz-prerequisite-provider-authority.md`](../evidence/graphite2-harfbuzz-prerequisite-provider-authority.md), and the latest gap disposition is [`../evidence/at-spi2-core-provider-evidence-blocker.md`](../evidence/at-spi2-core-provider-evidence-blocker.md).
 
 ## Current project phase
 
 The libXdamage acquisition task is complete with `OPEN_BLOCKED_NO_GLIBC_CANDIDATE`: the approved glibc index has no `libxdamage-glibc` package, while the only observed `libxdamage` stanza belongs to the ordinary Termux/X11 bionic repository, and the pinned glibc recipe repository has no libXdamage root. No provider authority or target effect was granted.
 
-The Graphite2 tranche is complete with `ACCEPTED_BOUNDED_PROVIDER`. The active task is `acquire-at-spi2-core-provider-evidence`. The next proportional tranche is read-only approved-index and pinned-recipe inspection for the coupled selected `libatk-bridge-2.0.so.0`, `libatk-1.0.so.0`, and `libatspi.so.0` identities. No installation, target population, materialization, deployment or activation is allowed.
+The Graphite2 tranche is complete with `ACCEPTED_BOUNDED_PROVIDER`. The AT-SPI2 core tranche is complete with `OPEN_BLOCKED_NO_GLIBC_CANDIDATE`: the approved index has no `at-spi2-core-glibc` package, only ordinary Termux/bionic `at-spi2-core`, `atk`, and `at-spi2-atk` entries are present, and the pinned glibc recipe source has no AT-SPI2/ATK producing root. No provider or service authority was granted.
+
+The active task is `acquire-gtk3-core-provider-evidence`. The next proportional tranche is read-only approved-index and pinned-recipe inspection for the exact GTK 3.24.49 `libgdk-3.so.0` and `libgtk-3.so.0` pair. No installation, target population, materialization, deployment or activation is allowed.

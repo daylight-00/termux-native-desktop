@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+python3 - "$ROOT" <<'PY2'
+from pathlib import Path
+import csv,sys
+root=Path(sys.argv[1]); review=root/'experiments/glibc/selected-obsidian-provider-authority/review'
+required=[root/'docs/evidence/at-spi2-core-provider-evidence-blocker.md',review/'at-spi2-core-provider-evidence-blocker.tsv',review/'selected-provider-composition-gaps.tsv',root/'docs/current/STATE.yaml',root/'docs/current/ACTIVE_TASK.md',root/'docs/current/BRIEF.md',root/'docs/catalog.tsv',root/'STATUS.md']
+errors=[]
+for p in required:
+ if not p.is_file(): errors.append(f'missing {p.relative_to(root)}')
+def rows(name):
+ with (review/name).open(newline='',encoding='utf-8') as f:return list(csv.DictReader(f,delimiter='	'))
+if not errors:
+ data=rows('at-spi2-core-provider-evidence-blocker.tsv')
+ if len(data)!=1: errors.append(f'blocker rows {len(data)}')
+ else:
+  r=data[0]
+  exp={'review_id':'ATSPI2-BLOCKER-001','selected_evidence_row_ids':'selected:bcc68afe696f548e1b77;selected:292a5f56eeea3bd65c4b;selected:36e7af00d16415ae9efa','result_archive_sha256':'8647eac52880a85bdd0702a1b2e5b64192f4c50d355b7574edf1cd04519a61dc','probe_glibc_query':'at-spi2-core-glibc','probe_glibc_query_result':'NO_POLICY_ENTRY_AND_NO_PACKAGE_STANZA','observed_bionic_packages':'at-spi2-core;atk;at-spi2-atk','glibc_recipe_result':'PATHS_NOT_FOUND_AND_REPOSITORY_SEARCH_NO_AT_SPI2_OR_ATK_ROOT','blocker_class':'NO_APPROVED_TERMUX_GLIBC_PACKAGE_OR_PINNED_RECIPE_CANDIDATE','provider_authority_state':'OPEN_BLOCKED_NO_GLIBC_CANDIDATE','target_population_state':'BLOCKED'}
+  for k,v in exp.items():
+   if r.get(k)!=v: errors.append(f'{k}: expected {v}, got {r.get(k)!r}')
+ gaps=rows('selected-provider-composition-gaps.tsv')
+ ids={'selected:bcc68afe696f548e1b77','selected:292a5f56eeea3bd65c4b','selected:36e7af00d16415ae9efa'}
+ got=[g for g in gaps if g['selected_evidence_row_id'] in ids]
+ if len(got)!=3 or {g['selected_evidence_row_id'] for g in got}!=ids: errors.append('AT-SPI2 composition gaps missing or duplicated')
+ for g in got:
+  if g['gap_class']!='BLOCKED_NO_TERMUX_GLIBC_PROVIDER_CANDIDATE': errors.append(f"{g['selected_evidence_row_id']} gap class widened or stale")
+  if g['priority_tranche']!='BLOCKED_AT_SPI2_CORE_NO_GLIBC_CANDIDATE': errors.append(f"{g['selected_evidence_row_id']} priority disposition stale")
+  if 'WRONG_ABI_WORLD' not in g['blocker_reason']: errors.append(f"{g['selected_evidence_row_id']} bionic/glibc boundary missing")
+ doc=(root/'docs/evidence/at-spi2-core-provider-evidence-blocker.md').read_text(); state=(root/'docs/current/STATE.yaml').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); brief=(root/'docs/current/BRIEF.md').read_text(); catalog=(root/'docs/catalog.tsv').read_text(); status=(root/'STATUS.md').read_text()
+ markers=[('doc decision','OPEN_BLOCKED_NO_GLIBC_CANDIDATE' in doc),('doc no bionic inference','do not supply a Termux glibc archive' in doc),('state blocker','at_spi2_core_provider_blocker:' in state and 'service_activation: blocked' in state),('next task','Task ID: `acquire-gtk3-core-provider-evidence`' in active),('brief blocker','AT-SPI2 core tranche is complete with `OPEN_BLOCKED_NO_GLIBC_CANDIDATE`' in brief),('catalog','at-spi2-core-provider-evidence-blocker	evidence	current	canonical' in catalog),('status','AT-SPI2 core glibc-candidate blockers retained' in status)]
+ for label,ok in markers:
+  if not ok: errors.append(f'missing marker: {label}')
+ for forbidden in ['provider authority:      ACCEPTED','BIONIC_AT_SPI2_ACCEPTED_AS_GLIBC_PROVIDER','service activation:      ALLOWED']:
+  if forbidden in doc: errors.append(f'forbidden widening: {forbidden}')
+if errors:
+ for e in errors: print('at-spi2-core-blocker: FAIL:',e,file=sys.stderr)
+ raise SystemExit(1)
+print('at-spi2-core-blocker: PASS: missing approved glibc package and pinned recipe candidate are recorded; bionic accessibility packages remain non-authoritative and GTK 3 core-pair acquisition is next')
+PY2

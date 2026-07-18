@@ -62,7 +62,8 @@ mem=read('selected-provider-composition-members.tsv')
 if not any(x['member_basename']=='libgraphite2.so.3.2.1' and x['member_sha256']=='6caaa46abe585228b0fa45a60bdbb5e9951384148963856d1ce2e886e5b06e7f' and x['soname']=='libgraphite2.so.3' and x['alias_basename']=='libgraphite2.so.3' and x['alias_target_basename']=='libgraphite2.so.3.2.1' and x['composition_inclusion']=='INCLUDED_SELECTED_GTK_SCOPE' for x in mem):errors.append('exact Graphite2 composition member/alias missing')
 gaps=read('selected-provider-composition-gaps.tsv')
 if any(x['selected_evidence_row_id']=='selected:5de74dd687fd1dd5ee3a' or x['identity_label']=='libgraphite2.so.3.2.1' for x in gaps):errors.append('accepted Graphite2 identity remains in gaps')
-if sum(x['priority_tranche']=='AT_SPI2_CORE_PROVIDER_EVIDENCE_ACQUISITION' for x in gaps)!=3:errors.append('next AT-SPI2 coupled priority gap count mismatch')
+if sum(x['priority_tranche']=='BLOCKED_AT_SPI2_CORE_NO_GLIBC_CANDIDATE' for x in gaps)!=3:errors.append('AT-SPI2 blocker gap count mismatch')
+if sum(x['priority_tranche']=='GTK3_CORE_PROVIDER_EVIDENCE_ACQUISITION' for x in gaps)!=2:errors.append('next GTK3 core-pair priority gap count mismatch')
 doc=(root/'docs/evidence/graphite2-harfbuzz-prerequisite-provider-authority.md').read_text()
 state=(root/'docs/current/STATE.yaml').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); brief=(root/'docs/current/BRIEF.md').read_text(); catalog=(root/'docs/catalog.tsv').read_text(); status=(root/'STATUS.md').read_text()
 markers=[
@@ -73,7 +74,7 @@ markers=[
  ('state route','graphite2_harfbuzz_prerequisite_provider_authority: docs/evidence/graphite2-harfbuzz-prerequisite-provider-authority.md' in state),
  ('state provider','graphite2_harfbuzz_prerequisite:' in state and 'provider_authority: accepted-bounded-provider' in state),
  ('state overall count','accepted: 28' in state and 'accepted_inside_28_root_inventory: 21' in state),
- ('next task','Task ID: `acquire-at-spi2-core-provider-evidence`' in active),
+ ('next task','Task ID: `acquire-gtk3-core-provider-evidence`' in active),
  ('brief count','bounded provider roots accepted overall: 28' in brief and 'selected identity gaps: 7' in brief),
  ('catalog','graphite2-harfbuzz-prerequisite-provider-authority\tevidence\tcurrent\tcanonical' in catalog),
  ('status','exact Graphite2 accepted as bounded HarfBuzz prerequisite' in status),

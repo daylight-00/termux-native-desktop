@@ -114,7 +114,8 @@ def main():
  accepted_eids={'selected:0802b57eadc2dd33925a','selected:1ae5e5d5ff7893c87e25','selected:beb2bb532f0a84c2835f','selected:d73a4eb5d9d5ee688632','selected:a7e42baafca8ed4717e3','selected:325be465ce7f532f8ff1','selected:83bc985c49ec2d778e60','selected:b869b82b3c70ee88cb30','selected:26a520f7c61bdc61e17c','selected:b577593923c28a50a012','selected:1997bce83f1eb5ffef9a','selected:6052b6396205eed6dbb6','selected:6e7f73b2a1ff4758f39a','selected:d8dfbc099c8bd2072e3f','selected:4a768de6fd1891617456','selected:ff6dae6f57afefe0d2b1','selected:e57423d1cb58b1b78ba4','selected:fec77ea4c45ec1a2990d','selected:5909031aa9e67d50214b','selected:b912b41387c558b52895','selected:5d210dfa49b6cf4c1077','selected:654806f659f7b97ba9d1','selected:0eab80f8c75b58f5c92a','selected:c41cd8cc82847fba1410','selected:33fe337448a19e2c6f2f','selected:84b77925eeb02b53f18e','selected:553839925ebeb658612d','selected:e8ccf42491e69aba6284','selected:5de74dd687fd1dd5ee3a'}
  root_map={
   'libcairo-gobject.so.2.11804.4':'gpkg/libcairo','libcairo.so.2.11804.4':'gpkg/libcairo','libcloudproviders.so.0.3.6':'gpkg/libcloudproviders','libdatrie.so.1.4.0':'gpkg/libdatrie','libfontconfig.so.1.12.1':'gpkg/fontconfig','libfreetype.so.6.20.2':'gpkg/freetype','libfribidi.so.0.4.0':'gpkg/fribidi','libgio-2.0.so.0.8400.4':'gpkg/glib','libglib-2.0.so.0.8400.4':'gpkg/glib','libgmodule-2.0.so.0.8400.4':'gpkg/glib','libgobject-2.0.so.0.8400.4':'gpkg/glib','libharfbuzz.so.0.61020.0':'gpkg/harfbuzz','libmount.so.1.1.0':'gpkg/util-linux','libpng16.so.16.48.0':'gpkg/libpng','libthai.so.0.3.1':'gpkg/libthai','libXcursor.so.1.0.2':'gpkg/libxcursor','libxkbcommon.so.0.0.0':'gpkg/libxkbcommon'}
- priority={'libatk-bridge-2.0.so.0.0.0','libatk-1.0.so.0.25611.1','libatspi.so.0.0.1'}
+ atspi={'libatk-bridge-2.0.so.0.0.0','libatk-1.0.so.0.25611.1','libatspi.so.0.0.1'}
+ gtk3={'libgdk-3.so.0.2417.32','libgtk-3.so.0.2417.32'}
  gaps=[]
  ledger=read(review/'non-priority-generic-authority-ledger/gtk-gui.tsv')
  for n,r in enumerate([r for r in ledger if r['evidence_row_id'] not in accepted_eids],1):
@@ -124,16 +125,21 @@ def main():
    pri='BLOCKED_LIBXDAMAGE_NO_GLIBC_CANDIDATE'
    blocker='APPROVED_GLIBC_INDEX_HAS_NO_LIBXDAMAGE_PACKAGE_AND_PINNED_GLIBC_RECIPE_REPOSITORY_HAS_NO_LIBXDAMAGE_ROOT;OBSERVED_BIONIC_PACKAGE_IS_WRONG_ABI_WORLD'
    action='ADD_OR_ACQUIRE_EXACT_TERMUX_GLIBC_LIBXDAMAGE_ARTIFACT_AND_PINNED_RECIPE_THEN_REPEAT_MEMBER_SONAME_ALIAS_DEPENDENCY_AND_GTK_CONSUMER_REVIEW'
+  elif ident in atspi:
+   gc='BLOCKED_NO_TERMUX_GLIBC_PROVIDER_CANDIDATE'
+   pri='BLOCKED_AT_SPI2_CORE_NO_GLIBC_CANDIDATE'
+   blocker='APPROVED_GLIBC_INDEX_HAS_NO_AT_SPI2_CORE_GLIBC_PACKAGE_AND_PINNED_RECIPE_SOURCE_HAS_NO_AT_SPI2_OR_ATK_ROOT;OBSERVED_TERMUX_MAIN_AND_X11_PACKAGES_ARE_BIONIC_WRONG_ABI_WORLD'
+   action='ADD_OR_ACQUIRE_EXACT_APPROVED_TERMUX_GLIBC_AT_SPI2_CORE_ARCHIVE_OR_ARCHIVE_SET_AND_PINNED_RECIPE_THEN_REPEAT_THREE_MEMBER_SONAME_ALIAS_DEPENDENCY_GTK_BINDING_SERVICE_LIFECYCLE_COLLISION_UPDATE_AND_ROLLBACK_REVIEW'
   else:
    gc='OPEN_REVIEWED_ROOT_PROVIDER_AUTHORITY' if mapped!='NONE_REVIEWED_ROOT' else 'NO_ACCEPTED_TERMUX_PROVIDER_CANDIDATE_OR_OUTSIDE_28_ROOTS'
-   pri='AT_SPI2_CORE_PROVIDER_EVIDENCE_ACQUISITION' if ident in priority else 'LATER_GTK_COMPOSITION_TRANCHE'
+   pri='GTK3_CORE_PROVIDER_EVIDENCE_ACQUISITION' if ident in gtk3 else 'LATER_GTK_PLATFORM_TRANCHE'
    blocker='SELECTED_GTK_RUNTIME_IDENTITY_HAS_NO_ACCEPTED_PROVIDER_ROW_IN_CURRENT_COMPOSITION'
-   action=('INSPECT_APPROVED_TERMUX_GLIBC_INDEX_AND_PINNED_RECIPE_REPOSITORY_FOR_AT_SPI2_CORE_ATK_AND_BRIDGE_PACKAGES_THEN_ACQUIRE_EXACT_THREE_MEMBER_SONAME_ALIAS_DEPENDENCY_AND_GTK_ACCESSIBILITY_BINDING_EVIDENCE_WITHOUT_INSTALLATION' if pri.startswith('AT_SPI2') else 'REVIEW_EXACT_PROVIDER_IDENTITY_ADAPTATION_CONSUMER_BINDING_CONFLICT_UPDATE_AND_ROLLBACK')
+   action=('INSPECT_APPROVED_TERMUX_GLIBC_INDEX_AND_PINNED_RECIPE_REPOSITORY_FOR_GTK3_THEN_ACQUIRE_EXACT_GDK_GTK_PAIR_SONAME_ALIAS_DEPENDENCY_OPTIONAL_BACKEND_AND_PAIR_BINDING_EVIDENCE_WITHOUT_INSTALLATION' if pri.startswith('GTK3') else 'REVIEW_EXACT_PROVIDER_IDENTITY_ADAPTATION_CONSUMER_BINDING_CONFLICT_UPDATE_AND_ROLLBACK')
   gaps.append(dict(composition_gap_id=f'COMP-GAP-{n:03d}',selected_evidence_row_id=r['evidence_row_id'],identity_label=ident,lookup_name=r['lookup_name'],soname=r['soname'],package_or_source=r['package_or_source'],version=r['version'],root_mapping=mapped,gap_class=gc,priority_tranche=pri,blocker_reason=blocker,minimum_next_action=action,authority_effect='BLOCKS_COMPOSITION_ACCEPTANCE_AND_TARGET_MANIFEST_GENERATION'))
  if len(gaps)!=7:raise SystemExit(f'expected 7 gaps, got {len(gaps)}')
  reviewed=sum(g['root_mapping']!='NONE_REVIEWED_ROOT' for g in gaps)
  outside=len(gaps)-reviewed
  metadata=[
- ('schema_version','1'),('decision_policy','ADR-0005'),('selected_gtk_identity_count','36'),('accepted_provider_root_count','28'),('accepted_member_count','36'),('included_member_count','35'),('deferred_member_count','1'),('unresolved_selected_identity_count','7'),('reviewed_root_gap_count',str(reviewed)),('outside_28_root_gap_count',str(outside)),('accepted_soname_collision_count','0'),('accepted_alias_collision_count','0'),('composition_decision','REVIEWED_BLOCKED_INCOMPLETE'),('target_manifest_allowed','NO'),('next_review_tranche','AT_SPI2_CORE_PROVIDER_EVIDENCE_ACQUISITION'),('authority_effect','NO_TARGET_POPULATION_MATERIALIZATION_OR_ACTIVATION')]
+ ('schema_version','1'),('decision_policy','ADR-0005'),('selected_gtk_identity_count','36'),('accepted_provider_root_count','28'),('accepted_member_count','36'),('included_member_count','35'),('deferred_member_count','1'),('unresolved_selected_identity_count','7'),('reviewed_root_gap_count',str(reviewed)),('outside_28_root_gap_count',str(outside)),('accepted_soname_collision_count','0'),('accepted_alias_collision_count','0'),('composition_decision','REVIEWED_BLOCKED_INCOMPLETE'),('target_manifest_allowed','NO'),('next_review_tranche','GTK3_CORE_PROVIDER_EVIDENCE_ACQUISITION'),('authority_effect','NO_TARGET_POPULATION_MATERIALIZATION_OR_ACTIVATION')]
  write(out/MEM,MEM_FIELDS,rows);write(out/GAPS,GAP_FIELDS,gaps);write(out/META,['key','value'],[{'key':k,'value':v} for k,v in metadata])
 if __name__=='__main__':main()

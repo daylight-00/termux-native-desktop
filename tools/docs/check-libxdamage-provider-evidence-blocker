@@ -28,7 +28,7 @@ if not errors:
   if g['priority_tranche']!='BLOCKED_LIBXDAMAGE_NO_GLIBC_CANDIDATE': errors.append('libXdamage priority disposition stale')
   if 'WRONG_ABI_WORLD' not in g['blocker_reason']: errors.append('libXdamage bionic/glibc boundary missing')
  doc=(root/'docs/evidence/libxdamage-provider-evidence-blocker.md').read_text(); state=(root/'docs/current/STATE.yaml').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); brief=(root/'docs/current/BRIEF.md').read_text(); catalog=(root/'docs/catalog.tsv').read_text(); status=(root/'STATUS.md').read_text()
- markers=[('doc decision','OPEN_BLOCKED_NO_GLIBC_CANDIDATE' in doc),('doc no bionic inference','bionic artifact' in doc and 'not a valid' in doc),('state blocker','libxdamage_provider_blocker:' in state and 'provider_authority: open-blocked-no-glibc-candidate' in state),('next task','Task ID: `acquire-at-spi2-core-provider-evidence`' in active),('brief blocker','OPEN_BLOCKED_NO_GLIBC_CANDIDATE' in brief),('catalog','libxdamage-provider-evidence-blocker\tevidence\tcurrent\tcanonical' in catalog),('status','libXdamage glibc-candidate blocker retained' in status)]
+ markers=[('doc decision','OPEN_BLOCKED_NO_GLIBC_CANDIDATE' in doc),('doc no bionic inference','bionic artifact' in doc and 'not a valid' in doc),('state blocker','libxdamage_provider_blocker:' in state and 'provider_authority: open-blocked-no-glibc-candidate' in state),('next task','Task ID: `acquire-gtk3-core-provider-evidence`' in active),('brief blocker','OPEN_BLOCKED_NO_GLIBC_CANDIDATE' in brief),('catalog','libxdamage-provider-evidence-blocker\tevidence\tcurrent\tcanonical' in catalog),('status','libXdamage and AT-SPI2 core glibc-candidate blockers retained' in status)]
  for label,ok in markers:
   if not ok: errors.append(f'missing marker: {label}')
  for forbidden in ['provider authority:      ACCEPTED','BIONIC_PACKAGE_ACCEPTED_AS_GLIBC_PROVIDER','target manifest allowed:          YES']:
@@ -36,5 +36,5 @@ if not errors:
 if errors:
  for e in errors: print('libxdamage-blocker: FAIL:',e,file=sys.stderr)
  raise SystemExit(1)
-print('libxdamage-blocker: PASS: missing approved glibc package and recipe root are recorded; bionic bytes remain non-authoritative and AT-SPI2 core acquisition is next')
+print('libxdamage-blocker: PASS: missing approved glibc package and recipe root are recorded; bionic bytes remain non-authoritative and GTK 3 core-pair acquisition is next')
 PY2

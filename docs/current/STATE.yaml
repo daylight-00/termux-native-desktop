@@ -1,5 +1,5 @@
 schema_version: 1
-state_version: 2026-07-18.05
+state_version: 2026-07-18.06
 updated_on: 2026-07-18
 
 project:
@@ -68,10 +68,11 @@ documentation:
   cairo_provider_authority_review: docs/evidence/cairo-bounded-provider-authority.md
   libxdamage_provider_evidence_blocker: docs/evidence/libxdamage-provider-evidence-blocker.md
   graphite2_harfbuzz_prerequisite_provider_authority: docs/evidence/graphite2-harfbuzz-prerequisite-provider-authority.md
+  at_spi2_core_provider_evidence_blocker: docs/evidence/at-spi2-core-provider-evidence-blocker.md
 
 provider_authority:
-  workstream: graphite2-harfbuzz-prerequisite-authority-accepted-at-spi2-core-evidence-acquisition-active
-  boundary: twenty-eight-bounded-providers-retained-libxdamage-open-no-glibc-candidate-at-spi2-core-and-later-composition-target-and-activation-open
+  workstream: graphite2-harfbuzz-prerequisite-authority-accepted-at-spi2-core-open-blocked-gtk3-core-evidence-acquisition-active
+  boundary: twenty-eight-bounded-providers-retained-libxdamage-and-at-spi2-core-open-no-glibc-candidates-gtk3-core-and-later-composition-target-and-activation-open
   claim_inventory:
     total: 89
     class_a: 36
@@ -155,7 +156,7 @@ provider_authority:
     transitive_result_sha256: a18426371acf0339731464eea4a6fd1f8c745cc09154629b69e34d1063073c13
     transitive_recipe_tree: e91a0c476ef4355dbfff46e2bcab23d0085ddd01
     transitive_functional_matrix: jpeg-file-pass-jpeg-memory-pass-png-file-pass-png-memory-pass
-    next_action: acquire-at-spi2-core-provider-evidence
+    next_action: acquire-gtk3-core-provider-evidence
   thai_break_provider:
     result_sha256: 7789ff1a039e3186b04014e4ddf6a7ba68d77fe31a2f1ef77273590aa97b8e1e
     libthai_member: libthai.so.0.3.1
@@ -181,7 +182,7 @@ provider_authority:
     consumer: gtk-3-24-49-places-sidebar-cloud-account-integration
     service_boundary: dbus-session-services-and-accounts-not-accepted
     provider_authority: accepted-bounded-provider
-  next_research_decision: acquire-at-spi2-core-provider-evidence
+  next_research_decision: acquire-gtk3-core-provider-evidence
   fribidi_provider:
     member: libfribidi.so.0.4.0
     member_sha256: 71668fd02e89fa7546446bb7961bb618f6d22e1506f7444bbea6788befbb7895
@@ -293,6 +294,20 @@ provider_authority:
     provider_authority: open-blocked-no-glibc-candidate
     target_population: blocked
     reopening_gate: exact-glibc-artifact-member-soname-alias-recipe-dependency-and-consumer-evidence
+  at_spi2_core_provider_blocker:
+    selected_labels: libatk-bridge-2.0.so.0.0.0;libatk-1.0.so.0.25611.1;libatspi.so.0.0.1
+    required_sonames: libatk-bridge-2.0.so.0;libatk-1.0.so.0;libatspi.so.0
+    result_archive_sha256: 8647eac52880a85bdd0702a1b2e5b64192f4c50d355b7574edf1cd04519a61dc
+    glibc_package_query: at-spi2-core-glibc
+    glibc_package_state: no-policy-entry-and-no-package-stanza
+    observed_bionic_packages: at-spi2-core-2.60.5-1;atk-2.48.0;at-spi2-atk-2.48.0
+    observed_bionic_state: ordinary-termux-main-and-x11-packages-only
+    glibc_recipe_repository: termux-pacman/glibc-packages@9bdd20c1d36524a0ab016d9b71c748b0cbb20a34
+    glibc_recipe_state: no-at-spi2-core-or-atk-producing-root-found
+    provider_authority: open-blocked-no-glibc-candidate
+    target_population: blocked
+    service_activation: blocked
+    reopening_gate: exact-glibc-artifact-three-member-soname-alias-recipe-dependency-gtk-binding-service-lifecycle-collision-update-and-rollback-evidence
   prohibited_claims:
     - complete-provider-authority
     - complete-runtime-composition
@@ -300,7 +315,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: acquire-at-spi2-core-provider-evidence
+  id: acquire-gtk3-core-provider-evidence
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:

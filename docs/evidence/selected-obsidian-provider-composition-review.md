@@ -23,8 +23,10 @@ The Class B boundary covers the approved `libgraphite-glibc` 1.3.14 archive, exa
 
 ## Latest gap disposition
 
-Selected `libXdamage.so.1.1.0` remains open. The approved glibc query `libxdamage-glibc` returned no package, the only observed `libxdamage` stanza belongs to the ordinary Termux/X11 bionic repository, and the pinned glibc recipe repository has no libXdamage root. The recorded HTTP 404 came from combining a bionic repository filename with the glibc base; changing only the URL would still produce the wrong ABI world. This is `BLOCKED_NO_TERMUX_GLIBC_PROVIDER_CANDIDATE`, not a provider rejection and not authority to reuse bionic bytes.
+Selected `libXdamage.so.1.1.0` remains `BLOCKED_NO_TERMUX_GLIBC_PROVIDER_CANDIDATE`; its only observed package is in the ordinary Termux/X11 bionic world and the pinned glibc recipe source has no producing root.
+
+The coupled selected `libatk-bridge-2.0.so.0.0.0`, `libatk-1.0.so.0.25611.1`, and `libatspi.so.0.0.1` family is also `BLOCKED_NO_TERMUX_GLIBC_PROVIDER_CANDIDATE`. The approved `at-spi2-core-glibc` query returned neither policy metadata nor a package stanza. Only ordinary bionic `at-spi2-core`, `atk`, and `at-spi2-atk` entries were observed, and pinned recipe path/search checks found no AT-SPI2/ATK root. This is not authority to copy installed bionic bytes or activate an accessibility service.
 
 ## Next tranche
 
-The next tranche is `AT_SPI2_CORE_PROVIDER_EVIDENCE_ACQUISITION`. Exact Graphite2 1.3.14 is now included only as the bounded prerequisite for the Graphite shaping path compiled into exact HarfBuzz 10.1.0. The next action is read-only approved-index and pinned-repository inspection for the coupled selected ATK bridge, ATK core and AT-SPI identities, followed by exact member, SONAME, alias, dependency, recipe-semantics and GTK accessibility consumer review if candidates exist.
+The next tranche is `GTK3_CORE_PROVIDER_EVIDENCE_ACQUISITION`. The next action is read-only approved-index and pinned-repository inspection for the exact selected GTK 3.24.49 `libgdk-3.so.0` and `libgtk-3.so.0` pair, followed by exact member, SONAME, alias, dependency, recipe-semantics, optional-backend and pair-binding review if a candidate exists.
