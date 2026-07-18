@@ -62,7 +62,7 @@ gaps=read('selected-provider-composition-gaps.tsv')
 if any(r['identity_label']=='libxkbcommon.so.0.0.0' for r in gaps): errors.append('accepted libxkbcommon identity remains in composition gaps')
 if any(r['identity_label']=='libharfbuzz.so.0.61020.0' for r in gaps): errors.append('accepted HarfBuzz identity remains in composition gaps')
 if any(r['identity_label']=='libfontconfig.so.1.12.1' for r in gaps): errors.append('accepted Fontconfig identity remains in gaps')
-if not any(r['identity_label']=='libXdamage.so.1.1.0' and r['priority_tranche']=='LIBXDAMAGE_PROVIDER_EVIDENCE_ACQUISITION' for r in gaps): errors.append('next libXdamage acquisition gap missing')
+if not any(r['identity_label']=='libXdamage.so.1.1.0' and r['priority_tranche']=='BLOCKED_LIBXDAMAGE_NO_GLIBC_CANDIDATE' for r in gaps): errors.append('libXdamage blocker gap missing')
 doc=(root/'docs/evidence/libxkbcommon-bounded-provider-authority.md').read_text(); state=(root/'docs/current/STATE.yaml').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); catalog=(root/'docs/catalog.tsv').read_text()
 markers=[
  ('doc member','libxkbcommon.so.0.8.0' in doc),
@@ -70,7 +70,7 @@ markers=[
  ('doc continuity','libxkbcommon.so.0 -> libxkbcommon.so.0.8.0' in doc),
  ('state route','libxkbcommon_provider_authority_review: docs/evidence/libxkbcommon-bounded-provider-authority.md' in state),
  ('state accepted','provider_authority: accepted-bounded-provider' in state and 'libxkbcommon_provider:' in state),
- ('next task','Task ID: `acquire-libxdamage-provider-evidence`' in active),
+ ('next task','Task ID: `acquire-graphite2-provider-evidence`' in active),
  ('catalog','libxkbcommon-bounded-provider-authority\tevidence\tcurrent\tcanonical' in catalog),
 ]
 for label,ok in markers:

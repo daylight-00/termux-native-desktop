@@ -1,5 +1,5 @@
 schema_version: 1
-state_version: 2026-07-18.03
+state_version: 2026-07-18.04
 updated_on: 2026-07-18
 
 project:
@@ -66,10 +66,11 @@ documentation:
   fontconfig_provider_authority_review: docs/evidence/fontconfig-bounded-provider-authority.md
   pixman_cairo_prerequisite_provider_authority: docs/evidence/pixman-cairo-prerequisite-provider-authority.md
   cairo_provider_authority_review: docs/evidence/cairo-bounded-provider-authority.md
+  libxdamage_provider_evidence_blocker: docs/evidence/libxdamage-provider-evidence-blocker.md
 
 provider_authority:
-  workstream: cairo-atomic-root-accepted-libxdamage-evidence-acquisition-active
-  boundary: twenty-seven-bounded-providers-retained-exact-cairo-core-and-gobject-accepted-libxdamage-and-later-composition-target-and-activation-open
+  workstream: libxdamage-glibc-candidate-blocker-recorded-graphite2-evidence-acquisition-active
+  boundary: twenty-seven-bounded-providers-retained-libxdamage-open-no-glibc-candidate-graphite2-and-later-composition-target-and-activation-open
   claim_inventory:
     total: 89
     class_a: 36
@@ -131,7 +132,7 @@ provider_authority:
     accepted_soname_collisions: 0
     accepted_alias_collisions: 0
     target_manifest_allowed: false
-    next_tranche: libxdamage-provider-evidence-acquisition
+    next_tranche: graphite2-provider-evidence-acquisition
   gdkpixbuf_core_acquisition:
     result_sha256: e96fb0e2d8fa1c16a228e41d60801abac0b8a43584a86b7e63f8adddfc4f5692
     review_state: acquisition-reviewed-partial
@@ -153,7 +154,7 @@ provider_authority:
     transitive_result_sha256: a18426371acf0339731464eea4a6fd1f8c745cc09154629b69e34d1063073c13
     transitive_recipe_tree: e91a0c476ef4355dbfff46e2bcab23d0085ddd01
     transitive_functional_matrix: jpeg-file-pass-jpeg-memory-pass-png-file-pass-png-memory-pass
-    next_action: acquire-libxdamage-provider-evidence
+    next_action: acquire-graphite2-provider-evidence
   thai_break_provider:
     result_sha256: 7789ff1a039e3186b04014e4ddf6a7ba68d77fe31a2f1ef77273590aa97b8e1e
     libthai_member: libthai.so.0.3.1
@@ -179,7 +180,7 @@ provider_authority:
     consumer: gtk-3-24-49-places-sidebar-cloud-account-integration
     service_boundary: dbus-session-services-and-accounts-not-accepted
     provider_authority: accepted-bounded-provider
-  next_research_decision: acquire-libxdamage-provider-evidence
+  next_research_decision: acquire-graphite2-provider-evidence
   fribidi_provider:
     member: libfribidi.so.0.4.0
     member_sha256: 71668fd02e89fa7546446bb7961bb618f6d22e1506f7444bbea6788befbb7895
@@ -261,6 +262,22 @@ provider_authority:
     runtime_policy: explicit-receipt-owned-fontconfig-file-generation-font-directory-and-cache-required
     excluded_policy: package-default-fonts-conf-global-cache-system-fonts-cli-and-development-surfaces-not-accepted
     provider_authority: accepted-bounded-provider
+  libxdamage_provider_blocker:
+    selected_label: libXdamage.so.1.1.0
+    required_soname: libXdamage.so.1
+    result_archive_sha256: 5cb840b494176e8671d57cfc2617142a5d15663275456e102f075bc0796f3f55
+    glibc_package_query: libxdamage-glibc
+    glibc_package_state: not-found
+    observed_bionic_package: libxdamage-1.1.7-aarch64
+    observed_bionic_index_sha256: 2ded05bd7a409cff0dce05942d69028b962921a20d1c3559b302a75711e10c98
+    bionic_filename: pool/main/libx/libxdamage/libxdamage_1.1.7_aarch64.deb
+    wrong_repository_result: http-404-when-bionic-filename-is-combined-with-glibc-base
+    glibc_recipe_repository: termux-pacman/glibc-packages@9bdd20c1d36524a0ab016d9b71c748b0cbb20a34
+    glibc_recipe_state: no-gpkg-libxdamage-root
+    bionic_recipe: termux/termux-packages@552a825cc8433e3aced966ff4bf5c8ea9255ca7d:x11-packages/libxdamage/build.sh
+    provider_authority: open-blocked-no-glibc-candidate
+    target_population: blocked
+    reopening_gate: exact-glibc-artifact-member-soname-alias-recipe-dependency-and-consumer-evidence
   prohibited_claims:
     - complete-provider-authority
     - complete-runtime-composition
@@ -268,7 +285,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: acquire-libxdamage-provider-evidence
+  id: acquire-graphite2-provider-evidence
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:

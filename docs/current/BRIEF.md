@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-18.03`
+> Semantic state version: `2026-07-18.04`
 >
 > This is the compact current-state entry point. Exact commit and tree coordinates come from the checked-out full Git bundle, not from self-referential repository text.
 
@@ -39,10 +39,10 @@ target population: blocked
 activation: blocked
 ```
 
-Canonical decisions are under `docs/evidence/`; the current composition review is [`../evidence/selected-obsidian-provider-composition-review.md`](../evidence/selected-obsidian-provider-composition-review.md), and the latest provider decision is [`../evidence/cairo-bounded-provider-authority.md`](../evidence/cairo-bounded-provider-authority.md).
+Canonical decisions are under `docs/evidence/`; the current composition review is [`../evidence/selected-obsidian-provider-composition-review.md`](../evidence/selected-obsidian-provider-composition-review.md), the latest accepted provider decision is [`../evidence/cairo-bounded-provider-authority.md`](../evidence/cairo-bounded-provider-authority.md), and the latest gap disposition is [`../evidence/libxdamage-provider-evidence-blocker.md`](../evidence/libxdamage-provider-evidence-blocker.md).
 
 ## Current project phase
 
-The active task is `acquire-libxdamage-provider-evidence`.
+The libXdamage acquisition task is complete with `OPEN_BLOCKED_NO_GLIBC_CANDIDATE`: the approved glibc index has no `libxdamage-glibc` package, while the only observed `libxdamage` stanza belongs to the ordinary Termux/X11 bionic repository, and the pinned glibc recipe repository has no libXdamage root. No provider authority or target effect was granted.
 
-The next proportional tranche is read-only acquisition and review preparation for selected `libXdamage.so.1`. No exact Termux candidate is currently retained. The task must resolve package, member, SONAME, alias, recipe, dependency and GTK X11 consumer coordinates without installation before any provider authority can be considered. No target population, materialization, deployment or activation is allowed.
+The active task is `acquire-graphite2-provider-evidence`. The next proportional tranche is read-only acquisition and review preparation for selected `libgraphite2.so.3`. A pinned `gpkg/libgraphite` 1.3.14 recipe root exists, but no exact artifact/member has yet been retained. No installation, target population, materialization, deployment or activation is allowed.

@@ -21,6 +21,10 @@ Exact `libcairo.so.2.11802.2` and `libcairo-gobject.so.2.11802.2` are included a
 
 The Class B boundary covers the exact package and member digests, stable aliases, non-selected backend/test disablement, utility-only Termux temporary-path patches, exact accepted runtime dependency closure, and the already accepted exact Pixman prerequisite. Cairo-script/FDR utilities, non-selected backends, tools, development surfaces, complete composition, target population, and activation remain excluded.
 
+## Latest gap disposition
+
+Selected `libXdamage.so.1.1.0` remains open. The approved glibc query `libxdamage-glibc` returned no package, the only observed `libxdamage` stanza belongs to the ordinary Termux/X11 bionic repository, and the pinned glibc recipe repository has no libXdamage root. The recorded HTTP 404 came from combining a bionic repository filename with the glibc base; changing only the URL would still produce the wrong ABI world. This is `BLOCKED_NO_TERMUX_GLIBC_PROVIDER_CANDIDATE`, not a provider rejection and not authority to reuse bionic bytes.
+
 ## Next tranche
 
-The next tranche is `LIBXDAMAGE_PROVIDER_EVIDENCE_ACQUISITION`. Selected `libXdamage.so.1.1.0` has no retained Termux candidate or reviewed root. The next action is read-only approved-index and recipe inspection followed by exact package extraction without installation, so member, digest, SONAME, alias, dependency, GTK X11 consumer, conflict, update and rollback coordinates can be bounded before provider review.
+The next tranche is `GRAPHITE2_PROVIDER_EVIDENCE_ACQUISITION`. Selected `libgraphite2.so.3.2.1` has a pinned `gpkg/libgraphite` 1.3.14 recipe root but no retained exact glibc artifact/member. The next action is read-only approved-index acquisition and exact member, SONAME, alias, dependency, recipe-semantics and Pango/HarfBuzz consumer review.

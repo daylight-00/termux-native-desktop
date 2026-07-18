@@ -48,7 +48,7 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 - [`libjpeg-so-62-gdkpixbuf-diagnostic-matrix-result-review.md`](libjpeg-so-62-gdkpixbuf-diagnostic-matrix-result-review.md) — non-dispositive first diagnostic matrix and corrected loader boundary.
 - [`libjpeg-so-62-loader-isolated-provider-authority.md`](libjpeg-so-62-loader-isolated-provider-authority.md) — exact loader-isolated candidate/oracle controls and bounded GdkPixbuf JPEG provider-authority decision.
 
-- [`selected-obsidian-provider-composition-review.md`](selected-obsidian-provider-composition-review.md) records the current Class D non-materializing composition manifest, 33 exact accepted members, exclusions, collisions and 10 blocking selected GTK identities.
+- [`selected-obsidian-provider-composition-review.md`](selected-obsidian-provider-composition-review.md) records the current Class D non-materializing composition manifest, 35 exact accepted members, exclusions, collisions and 8 blocking selected GTK identities.
 
 - [`gdkpixbuf-core-provider-acquisition-result-review.md`](gdkpixbuf-core-provider-acquisition-result-review.md) binds the exact GLib-family and libpng candidate identities, records the missing Termux GdkPixbuf package/recipe, and routes the upstream 2.42.12 scratch build.
 
@@ -72,3 +72,5 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 - [`pixman-cairo-prerequisite-provider-authority.md`](pixman-cairo-prerequisite-provider-authority.md) — exact Pixman 0.46.4 generic implementation, stable SONAME continuity, and direct exact-Cairo prerequisite authority from retained acquisition and ELF evidence.
 
 - [`cairo-bounded-provider-authority.md`](cairo-bounded-provider-authority.md): exact atomic Cairo core and Cairo-GObject provider authority for selected Pango/GTK rendering and GObject integration.
+
+- [`libxdamage-provider-evidence-blocker.md`](libxdamage-provider-evidence-blocker.md) — exact read-only acquisition failure disposition proving that only a bionic package is indexed, no glibc package or recipe root exists, and libXdamage authority remains open.
