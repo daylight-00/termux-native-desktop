@@ -64,7 +64,7 @@ gaps=read('selected-provider-composition-gaps.tsv')
 if any(x['selected_evidence_row_id']=='selected:5de74dd687fd1dd5ee3a' or x['identity_label']=='libgraphite2.so.3.2.1' for x in gaps):errors.append('accepted Graphite2 identity remains in gaps')
 if sum(x['priority_tranche']=='BLOCKED_AT_SPI2_CORE_NO_GLIBC_CANDIDATE' for x in gaps)!=3:errors.append('AT-SPI2 blocker gap count mismatch')
 if sum(x['priority_tranche']=='BLOCKED_GTK3_CORE_NO_GLIBC_CANDIDATE' for x in gaps)!=2:errors.append('GTK3 core blocker gap count mismatch')
-if sum(x['priority_tranche']=='LIBSELINUX_PROVIDER_EVIDENCE_ACQUISITION' for x in gaps)!=1:errors.append('next libSELinux priority gap count mismatch')
+if sum(x['priority_tranche']=='BLOCKED_LIBSELINUX_NO_GLIBC_CANDIDATE' for x in gaps)!=1:errors.append('libSELinux blocker gap count mismatch')
 doc=(root/'docs/evidence/graphite2-harfbuzz-prerequisite-provider-authority.md').read_text()
 state=(root/'docs/current/STATE.yaml').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); brief=(root/'docs/current/BRIEF.md').read_text(); catalog=(root/'docs/catalog.tsv').read_text(); status=(root/'STATUS.md').read_text()
 markers=[
@@ -75,7 +75,7 @@ markers=[
  ('state route','graphite2_harfbuzz_prerequisite_provider_authority: docs/evidence/graphite2-harfbuzz-prerequisite-provider-authority.md' in state),
  ('state provider','graphite2_harfbuzz_prerequisite:' in state and 'provider_authority: accepted-bounded-provider' in state),
  ('state overall count','accepted: 28' in state and 'accepted_inside_28_root_inventory: 21' in state),
- ('next task','Task ID: `acquire-libselinux-provider-evidence`' in active),
+ ('next task','Task ID: `define-missing-glibc-provider-production-boundary`' in active),
  ('brief count','bounded provider roots accepted overall: 28' in brief and 'selected identity gaps: 7' in brief),
  ('catalog','graphite2-harfbuzz-prerequisite-provider-authority\tevidence\tcurrent\tcanonical' in catalog),
  ('status','exact Graphite2 accepted as bounded HarfBuzz prerequisite' in status),

@@ -1,5 +1,5 @@
 schema_version: 1
-state_version: 2026-07-18.07
+state_version: 2026-07-18.08
 updated_on: 2026-07-18
 
 project:
@@ -70,10 +70,11 @@ documentation:
   graphite2_harfbuzz_prerequisite_provider_authority: docs/evidence/graphite2-harfbuzz-prerequisite-provider-authority.md
   at_spi2_core_provider_evidence_blocker: docs/evidence/at-spi2-core-provider-evidence-blocker.md
   gtk3_core_provider_evidence_blocker: docs/evidence/gtk3-core-provider-evidence-blocker.md
+  libselinux_provider_evidence_blocker: docs/evidence/libselinux-provider-evidence-blocker.md
 
 provider_authority:
-  workstream: graphite2-harfbuzz-prerequisite-authority-accepted-at-spi2-core-and-gtk3-core-open-blocked-libselinux-evidence-acquisition-active
-  boundary: twenty-eight-bounded-providers-retained-libxdamage-at-spi2-core-and-gtk3-core-open-no-glibc-candidates-libselinux-and-later-composition-target-and-activation-open
+  workstream: graphite2-harfbuzz-prerequisite-authority-accepted-all-seven-selected-gaps-reviewed-blocked-production-boundary-definition-active
+  boundary: twenty-eight-bounded-providers-retained-seven-selected-identities-blocked-no-approved-glibc-candidates-production-build-composition-target-policy-and-activation-open
   claim_inventory:
     total: 89
     class_a: 36
@@ -135,7 +136,7 @@ provider_authority:
     accepted_soname_collisions: 0
     accepted_alias_collisions: 0
     target_manifest_allowed: false
-    next_tranche: libselinux-provider-evidence-acquisition
+    next_tranche: missing-glibc-provider-production-boundary-definition
   gdkpixbuf_core_acquisition:
     result_sha256: e96fb0e2d8fa1c16a228e41d60801abac0b8a43584a86b7e63f8adddfc4f5692
     review_state: acquisition-reviewed-partial
@@ -157,7 +158,7 @@ provider_authority:
     transitive_result_sha256: a18426371acf0339731464eea4a6fd1f8c745cc09154629b69e34d1063073c13
     transitive_recipe_tree: e91a0c476ef4355dbfff46e2bcab23d0085ddd01
     transitive_functional_matrix: jpeg-file-pass-jpeg-memory-pass-png-file-pass-png-memory-pass
-    next_action: acquire-libselinux-provider-evidence
+    next_action: define-missing-glibc-provider-production-boundary
   thai_break_provider:
     result_sha256: 7789ff1a039e3186b04014e4ddf6a7ba68d77fe31a2f1ef77273590aa97b8e1e
     libthai_member: libthai.so.0.3.1
@@ -183,7 +184,7 @@ provider_authority:
     consumer: gtk-3-24-49-places-sidebar-cloud-account-integration
     service_boundary: dbus-session-services-and-accounts-not-accepted
     provider_authority: accepted-bounded-provider
-  next_research_decision: acquire-libselinux-provider-evidence
+  next_research_decision: define-missing-glibc-provider-production-boundary
   fribidi_provider:
     member: libfribidi.so.0.4.0
     member_sha256: 71668fd02e89fa7546446bb7961bb618f6d22e1506f7444bbea6788befbb7895
@@ -322,6 +323,22 @@ provider_authority:
     provider_authority: open-blocked-no-glibc-candidate
     target_population: blocked
     reopening_gate: exact-glibc-artifact-two-member-soname-alias-recipe-dependency-optional-backend-pair-binding-collision-update-and-rollback-evidence
+  libselinux_provider_blocker:
+    selected_label: libselinux.so.1
+    required_soname: libselinux.so.1
+    result_archive_sha256: 319fa617ab9a419118c52a7f72e9e93b535e96821f0e1de71f7e1502f07ac770
+    glibc_package_queries: libselinux;libselinux-glibc;libselinux1;libselinux1-glibc;selinux-glibc
+    glibc_package_state: no-approved-pool-stable-coordinate-for-all-queries
+    observed_bionic_package: libandroid-selinux-14.0.0.11-1
+    observed_bionic_state: installed-ordinary-termux-main-package-only
+    observed_bionic_filename: pool/main/liba/libandroid-selinux/libandroid-selinux_14.0.0.11-1_aarch64.deb
+    android_platform_state: observed-boundary-only-no-glibc-authority
+    glibc_recipe_repository: termux-pacman/glibc-packages@9bdd20c1d36524a0ab016d9b71c748b0cbb20a34
+    glibc_recipe_state: no-libselinux-producing-root-found
+    provider_authority: open-blocked-no-glibc-candidate
+    target_population: blocked
+    policy_mutation: blocked
+    reopening_gate: exact-approved-or-separately-authorized-project-produced-glibc-artifact-member-soname-alias-source-recipe-production-dependency-consumer-policy-labeling-collision-update-and-rollback-evidence
   prohibited_claims:
     - complete-provider-authority
     - complete-runtime-composition
@@ -329,7 +346,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: acquire-libselinux-provider-evidence
+  id: define-missing-glibc-provider-production-boundary
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:

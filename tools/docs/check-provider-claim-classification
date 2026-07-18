@@ -108,7 +108,7 @@ expected_meta={
     'oj001_provider_result_sha256':'4e546ac1ef2a92f3301dd51ca2328d6901a05e309da78b6d08b26211d9b621e3',
     'oj001_provider_matrix_pass_count':'6',
     'oj001_provider_decision':'ACCEPTED_BOUNDED_PROVIDER',
-    'next_review_tranche':'LIBSELINUX_PROVIDER_EVIDENCE_ACQUISITION',
+    'next_review_tranche':'MISSING_GLIBC_PROVIDER_PRODUCTION_BOUNDARY_DEFINITION',
 }
 for key,val in expected_meta.items():
     if metadata.get(key)!=val:
@@ -199,11 +199,12 @@ checks=[
     ('state version','state_version:' in state),
     ('claim count state','total: 89' in state),
     ('SUP-02 state','required_now: 0' in state),
-    ('next task','Task ID: `acquire-libselinux-provider-evidence`' in active),
+    ('next task','Task ID: `define-missing-glibc-provider-production-boundary`' in active),
     ('brief classification','89 separated claims' in brief),
     ('catalog row','provider-claim-classification\tevidence\tcurrent\tcanonical' in catalog),
-    ('status next phase','libXdamage, AT-SPI2 core and GTK 3 core-pair glibc-candidate blockers retained' in status),
+    ('status next phase','libXdamage, AT-SPI2 core, GTK 3 core-pair and libSELinux glibc-candidate blockers retained' in status),
     ('outside inventory prerequisites','exact `libpixman-1.so.0.46.4` is additionally accepted as a bounded Cairo prerequisite' in (root/'docs/evidence/provider-claim-classification.md').read_text() and 'exact `libgraphite2.so.3.2.1` is accepted as a bounded HarfBuzz Graphite-shaping prerequisite' in (root/'docs/evidence/provider-claim-classification.md').read_text()),
+    ('all seven reviewed blockers','ALL_SEVEN_REVIEWED_BLOCKED_NO_TERMUX_GLIBC_PROVIDER_CANDIDATE' in next(r['remaining_gap'] for r in claims if r['claim_id']=='PCC-GLOBAL-COMPOSITION')),
     ('disposition catalog','libjpeg-so-62-provider-candidate-disposition\tevidence\tcurrent\tcanonical' in catalog),
 ]
 for label,ok in checks:

@@ -135,16 +135,21 @@ def main():
    pri='BLOCKED_GTK3_CORE_NO_GLIBC_CANDIDATE'
    blocker='APPROVED_GLIBC_INDEX_HAS_NO_GTK3_GLIBC_PACKAGE_FOR_BOUNDED_CANDIDATE_NAME_SET_AND_PINNED_RECIPE_SOURCE_HAS_NO_GTK3_ROOT;OBSERVED_TERMUX_X11_GTK3_PACKAGE_IS_BIONIC_WRONG_ABI_WORLD'
    action='ADD_OR_ACQUIRE_EXACT_APPROVED_TERMUX_GLIBC_GTK3_ARCHIVE_OR_ARCHIVE_SET_AND_PINNED_RECIPE_THEN_REPEAT_TWO_MEMBER_SONAME_ALIAS_DEPENDENCY_OPTIONAL_BACKEND_PAIR_BINDING_COLLISION_UPDATE_AND_ROLLBACK_REVIEW'
+  elif ident=='libselinux.so.1':
+   gc='BLOCKED_NO_TERMUX_GLIBC_PROVIDER_CANDIDATE'
+   pri='BLOCKED_LIBSELINUX_NO_GLIBC_CANDIDATE'
+   blocker='APPROVED_GLIBC_INDEX_HAS_NO_LIBSELINUX_GLIBC_PACKAGE_FOR_BOUNDED_CANDIDATE_NAME_SET_AND_PINNED_RECIPE_SOURCE_HAS_NO_LIBSELINUX_ROOT;OBSERVED_LIBANDROID_SELINUX_AND_ANDROID_PLATFORM_LIBRARIES_ARE_BIONIC_OR_PLATFORM_WRONG_ABI_WORLD'
+   action='ADD_OR_ACQUIRE_EXACT_APPROVED_OR_SEPARATELY_AUTHORIZED_PROJECT_PRODUCED_TERMUX_GLIBC_LIBSELINUX_CANDIDATE_THEN_REPEAT_MEMBER_SONAME_ALIAS_SOURCE_RECIPE_PRODUCTION_DEPENDENCY_CONSUMER_POLICY_LABELING_COLLISION_UPDATE_AND_ROLLBACK_REVIEW'
   else:
    gc='OPEN_REVIEWED_ROOT_PROVIDER_AUTHORITY' if mapped!='NONE_REVIEWED_ROOT' else 'NO_ACCEPTED_TERMUX_PROVIDER_CANDIDATE_OR_OUTSIDE_28_ROOTS'
-   pri='LIBSELINUX_PROVIDER_EVIDENCE_ACQUISITION' if ident=='libselinux.so.1' else 'LATER_GTK_PLATFORM_TRANCHE'
+   pri='LATER_GTK_PLATFORM_TRANCHE'
    blocker='SELECTED_GTK_RUNTIME_IDENTITY_HAS_NO_ACCEPTED_PROVIDER_ROW_IN_CURRENT_COMPOSITION'
-   action=('INSPECT_APPROVED_TERMUX_GLIBC_INDEX_AND_PINNED_RECIPE_REPOSITORY_FOR_LIBSELINUX_THEN_ACQUIRE_EXACT_MEMBER_SONAME_ALIAS_DEPENDENCY_ANDROID_TERMUX_SELINUX_BOUNDARY_AND_CONSUMER_BINDING_EVIDENCE_WITHOUT_INSTALLATION_OR_POLICY_MUTATION' if pri.startswith('LIBSELINUX') else 'REVIEW_EXACT_PROVIDER_IDENTITY_ADAPTATION_CONSUMER_BINDING_CONFLICT_UPDATE_AND_ROLLBACK')
+   action='REVIEW_EXACT_PROVIDER_IDENTITY_ADAPTATION_CONSUMER_BINDING_CONFLICT_UPDATE_AND_ROLLBACK'
   gaps.append(dict(composition_gap_id=f'COMP-GAP-{n:03d}',selected_evidence_row_id=r['evidence_row_id'],identity_label=ident,lookup_name=r['lookup_name'],soname=r['soname'],package_or_source=r['package_or_source'],version=r['version'],root_mapping=mapped,gap_class=gc,priority_tranche=pri,blocker_reason=blocker,minimum_next_action=action,authority_effect='BLOCKS_COMPOSITION_ACCEPTANCE_AND_TARGET_MANIFEST_GENERATION'))
  if len(gaps)!=7:raise SystemExit(f'expected 7 gaps, got {len(gaps)}')
  reviewed=sum(g['root_mapping']!='NONE_REVIEWED_ROOT' for g in gaps)
  outside=len(gaps)-reviewed
  metadata=[
- ('schema_version','1'),('decision_policy','ADR-0005'),('selected_gtk_identity_count','36'),('accepted_provider_root_count','28'),('accepted_member_count','36'),('included_member_count','35'),('deferred_member_count','1'),('unresolved_selected_identity_count','7'),('reviewed_root_gap_count',str(reviewed)),('outside_28_root_gap_count',str(outside)),('accepted_soname_collision_count','0'),('accepted_alias_collision_count','0'),('composition_decision','REVIEWED_BLOCKED_INCOMPLETE'),('target_manifest_allowed','NO'),('next_review_tranche','LIBSELINUX_PROVIDER_EVIDENCE_ACQUISITION'),('authority_effect','NO_TARGET_POPULATION_MATERIALIZATION_OR_ACTIVATION')]
+ ('schema_version','1'),('decision_policy','ADR-0005'),('selected_gtk_identity_count','36'),('accepted_provider_root_count','28'),('accepted_member_count','36'),('included_member_count','35'),('deferred_member_count','1'),('unresolved_selected_identity_count','7'),('reviewed_root_gap_count',str(reviewed)),('outside_28_root_gap_count',str(outside)),('accepted_soname_collision_count','0'),('accepted_alias_collision_count','0'),('composition_decision','REVIEWED_BLOCKED_INCOMPLETE'),('target_manifest_allowed','NO'),('next_review_tranche','MISSING_GLIBC_PROVIDER_PRODUCTION_BOUNDARY_DEFINITION'),('authority_effect','NO_TARGET_POPULATION_MATERIALIZATION_OR_ACTIVATION')]
  write(out/MEM,MEM_FIELDS,rows);write(out/GAPS,GAP_FIELDS,gaps);write(out/META,['key','value'],[{'key':k,'value':v} for k,v in metadata])
 if __name__=='__main__':main()

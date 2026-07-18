@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-18.07`
+> Semantic state version: `2026-07-18.08`
 >
 > This is the compact current-state entry point. Exact commit and tree coordinates come from the checked-out full Git bundle, not from self-referential repository text.
 
@@ -49,4 +49,6 @@ The Graphite2 tranche is complete with `ACCEPTED_BOUNDED_PROVIDER`. The AT-SPI2 
 
 The GTK 3 core-pair tranche is complete with `OPEN_BLOCKED_NO_GLIBC_CANDIDATE`: all five bounded glibc package-name queries returned no policy entry or package stanza, only ordinary Termux/X11 bionic `gtk3 3.24.52` was observed, and pinned recipe path/search checks found no GTK 3 producing root. No provider, backend, target or activation authority was granted.
 
-The active task is `acquire-libselinux-provider-evidence`. The next proportional tranche is read-only approved-index and pinned-recipe inspection for exact selected `libselinux.so.1`. No installation, policy loading, relabeling, target population, materialization, deployment or activation is allowed.
+The libSELinux tranche is complete with `OPEN_BLOCKED_NO_GLIBC_CANDIDATE`: no approved Termux glibc coordinate or pinned producing recipe root exists, while installed `libandroid-selinux` and Android platform copies remain bionic/platform boundary evidence only. All seven unresolved selected identities are now reviewed blockers.
+
+The active task is `define-missing-glibc-provider-production-boundary`. It is a non-mutating planning tranche for the Xdamage, AT-SPI2/ATK, GTK 3 core and libSELinux families. No source build, package production, installation, policy mutation, target population, materialization, deployment or activation is allowed.
