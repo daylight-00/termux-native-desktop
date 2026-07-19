@@ -1,5 +1,7 @@
 # libXdamage provider evidence blocker
 
+> **Lifecycle:** Superseded as current production state by [`libxdamage-production-recipe-candidate-result-review.md`](libxdamage-production-recipe-candidate-result-review.md). The discovery facts remain historical evidence for the earlier pinned boundary.
+
 ## Decision
 
 ```text

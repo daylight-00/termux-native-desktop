@@ -100,4 +100,4 @@ The order is an evidence and dependency order, not authority inheritance. Comple
 
 Stop a lane when exact source lineage, adaptation necessity, dependency closure, license/distribution boundary, atomicity, functional validation or rollback cannot be bounded. Do not widen the collector or combine families merely to continue execution.
 
-The next task is `prepare-libxdamage-glibc-recipe-contribution-candidate`. It may prepare a recipe diff and isolated Class C build evidence in a separately authorized transaction. It may not publish a package repository, install the candidate, populate a target, deploy, or activate it.
+The first lane has now produced and separated an exact Class B recipe candidate and exact isolated Class C artifact candidate. The next task is `review-libxdamage-production-candidate-bounded-provider-authority`. It may decide bounded provider authority from the retained evidence. It may not publish a package repository, install the candidate, populate a target, deploy, or activate it.

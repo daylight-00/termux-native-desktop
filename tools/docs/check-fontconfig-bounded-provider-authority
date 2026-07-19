@@ -47,7 +47,7 @@ gaps=read('selected-provider-composition-gaps.tsv')
 if any(r['identity_label']=='libfontconfig.so.1.12.1' for r in gaps): errors.append('accepted Fontconfig identity remains in gaps')
 for eid in ['selected:553839925ebeb658612d','selected:e8ccf42491e69aba6284']:
  if any(r['selected_evidence_row_id']==eid for r in gaps): errors.append(f'accepted Cairo identity remains in gaps: {eid}')
-if not any(r['identity_label']=='libXdamage.so.1.1.0' and r['priority_tranche']=='BLOCKED_LIBXDAMAGE_NO_GLIBC_CANDIDATE' for r in gaps): errors.append('libXdamage blocker gap missing')
+if not any(r['identity_label']=='libXdamage.so.1.1.0' and r['priority_tranche']=='LIBXDAMAGE_BOUNDED_PROVIDER_AUTHORITY_REVIEW' for r in gaps): errors.append('libXdamage blocker gap missing')
 doc=(root/'docs/evidence/fontconfig-bounded-provider-authority.md').read_text(); state=(root/'docs/current/STATE.yaml').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); catalog=(root/'docs/catalog.tsv').read_text()
 markers=[
  ('doc member','libfontconfig.so.1.14.0' in doc),
@@ -57,7 +57,7 @@ markers=[
  ('doc fresh cache','fresh cache when the provider, configuration, or font set changes' in doc),
  ('state route','fontconfig_provider_authority_review: docs/evidence/fontconfig-bounded-provider-authority.md' in state),
  ('state accepted','fontconfig_provider:' in state and 'provider_authority: accepted-bounded-provider' in state),
- ('next task','Task ID: `prepare-libxdamage-glibc-recipe-contribution-candidate`' in active),
+ ('next task','Task ID: `review-libxdamage-production-candidate-bounded-provider-authority`' in active),
  ('catalog','fontconfig-bounded-provider-authority\tevidence\tcurrent\tcanonical' in catalog),
 ]
 for label,ok in markers:

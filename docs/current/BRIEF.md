@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-18.09`
+> Semantic state version: `2026-07-19.01`
 >
 > This is the compact current-state entry point. Exact commit and tree coordinates come from the checked-out full Git bundle, not from self-referential repository text.
 
@@ -43,7 +43,7 @@ Canonical decisions are under `docs/evidence/`; the current composition review i
 
 ## Current project phase
 
-The libXdamage acquisition task is complete with `OPEN_BLOCKED_NO_GLIBC_CANDIDATE`: the approved glibc index has no `libxdamage-glibc` package, while the only observed `libxdamage` stanza belongs to the ordinary Termux/X11 bionic repository, and the pinned glibc recipe repository has no libXdamage root. No provider authority or target effect was granted.
+The historical libXdamage discovery blocker is superseded as the current production state. An exact 11-line Class B `gpkg/libxdamage` recipe candidate and exact isolated Class C `libxdamage-glibc 1.1.6` package/member candidate are qualified with stable hashes, zero controlled live-prefix escapes, and unchanged package-database and live-prefix surfaces. Provider authority and target effect remain open.
 
 The Graphite2 tranche is complete with `ACCEPTED_BOUNDED_PROVIDER`. The AT-SPI2 core tranche is complete with `OPEN_BLOCKED_NO_GLIBC_CANDIDATE`: the approved index has no `at-spi2-core-glibc` package, only ordinary Termux/bionic `at-spi2-core`, `atk`, and `at-spi2-atk` entries are present, and the pinned glibc recipe source has no AT-SPI2/ATK producing root. No provider or service authority was granted.
 
@@ -53,4 +53,4 @@ The libSELinux tranche is complete with `OPEN_BLOCKED_NO_GLIBC_CANDIDATE`: no ap
 
 The production-boundary planning tranche is complete. Xdamage is the first admissible lane: a pinned Class B Termux glibc recipe contribution with a separately produced isolated Class C candidate. AT-SPI2/ATK and GTK 3 remain deferred atomic contribution lanes. libSELinux has no build authorization until direct consumer necessity and symbol semantics are proven.
 
-The active task is `prepare-libxdamage-glibc-recipe-contribution-candidate`. It permits a separate non-installing source/recipe/build evidence runner only; upstream publication, package installation, target population, deployment and activation remain prohibited.
+The active task is `review-libxdamage-production-candidate-bounded-provider-authority`. It reviews the retained exact candidate for a bounded GTK GDK X11 provider decision; rebuilding, upstream publication, package installation, target population, deployment and activation are not authorized.

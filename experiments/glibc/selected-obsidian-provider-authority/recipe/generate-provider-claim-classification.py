@@ -527,8 +527,8 @@ def main() -> None:
             'project_owned_changed_boundary': 'CAPABILITY_COVERAGE_EXCLUSIONS_ORDERING_ALIAS_POLICY_AND_MIXED_WORLD_COMPOSITION',
             'risk_modifiers': 'BROAD_RUNTIME_BLAST_RADIUS;MULTI_PROVIDER_CONFLICT;WEAK_GLOBAL_OBSERVABILITY',
             'existing_evidence': 'authority-coverage-ledger.tsv;world-lifecycle-authority-boundary.tsv;application-authority-boundary.tsv;selected-provider-composition-members.tsv;selected-provider-composition-gaps.tsv;selected-provider-composition-metadata.tsv',
-            'remaining_gap': '7_SELECTED_GTK_PROVIDER_IDENTITIES_WITHOUT_ACCEPTED_PROVIDER_ROWS;ALL_SEVEN_REVIEWED_BLOCKED_NO_TERMUX_GLIBC_PROVIDER_CANDIDATE;LIBXDAMAGE_BLOCKED;AT_SPI2_CORE_FAMILY_BLOCKED;GTK3_CORE_PAIR_BLOCKED;LIBSELINUX_BLOCKED',
-            'minimum_closure_action': 'EXECUTE_SEPARATELY_AUTHORIZED_LIBXDAMAGE_CLASS_B_RECIPE_CONTRIBUTION_AND_CLASS_C_LOCAL_CANDIDATE_LANE;THEN_REVIEW_PROVIDER_BEFORE_AT_SPI2_GTK3_OR_CONDITIONAL_LIBSELINUX_LANES',
+            'remaining_gap': '7_SELECTED_GTK_PROVIDER_IDENTITIES_WITHOUT_ACCEPTED_PROVIDER_ROWS;SIX_REVIEWED_NO_TERMUX_GLIBC_CANDIDATE_BLOCKERS;LIBXDAMAGE_QUALIFIED_LOCAL_CANDIDATE_PROVIDER_AUTHORITY_OPEN;AT_SPI2_CORE_FAMILY_BLOCKED;GTK3_CORE_PAIR_BLOCKED;LIBSELINUX_BLOCKED',
+            'minimum_closure_action': 'REVIEW_EXACT_LIBXDAMAGE_CLASS_C_CANDIDATE_FOR_BOUNDED_PROVIDER_AUTHORITY;THEN_PROCEED_TO_AT_SPI2_GTK3_OR_CONDITIONAL_LIBSELINUX_LANES',
             'explicitly_excluded_evidence': 'PACKAGE_WIDE_INFERENCE;SUCCESSFUL_HISTORICAL_LAUNCH;SUPPLIER_BUILD_ATTESTATION_AS_COMPOSITION_PROOF',
             'escalation_trigger': 'PROVIDER_CLAIMS_ACCEPTED_FOR_A_BOUNDED_CAPABILITY_SET',
             'classification_state': 'REVIEWED_BLOCKED_INCOMPLETE',
@@ -674,7 +674,7 @@ def main() -> None:
         ('oj001_provider_result_sha256', libjpeg_provider_review['result_archive_sha256']),
         ('oj001_provider_matrix_pass_count', libjpeg_provider_review['matrix_pass_count']),
         ('oj001_provider_decision', libjpeg_provider_review['decision']),
-        ('next_review_tranche', 'LIBXDAMAGE_GLIBC_RECIPE_CONTRIBUTION_CANDIDATE_PREPARATION'),
+        ('next_review_tranche', 'LIBXDAMAGE_BOUNDED_PROVIDER_AUTHORITY_REVIEW'),
     ]
 
     write_tsv(out_root / CLAIM_OUTPUT, CLAIM_FIELDS, claims)

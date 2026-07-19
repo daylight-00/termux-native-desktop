@@ -73,7 +73,8 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 
 - [`cairo-bounded-provider-authority.md`](cairo-bounded-provider-authority.md): exact atomic Cairo core and Cairo-GObject provider authority for selected Pango/GTK rendering and GObject integration.
 
-- [`libxdamage-provider-evidence-blocker.md`](libxdamage-provider-evidence-blocker.md) — exact read-only acquisition failure disposition proving that only a bionic package is indexed, no glibc package or recipe root exists, and libXdamage authority remains open.
+- [`libxdamage-provider-evidence-blocker.md`](libxdamage-provider-evidence-blocker.md) — superseded discovery-boundary evidence proving that no approved glibc package or recipe root existed at the earlier pinned state.
+- [`libxdamage-production-recipe-candidate-result-review.md`](libxdamage-production-recipe-candidate-result-review.md) — exact separated Class B production recipe candidate and independently reproduced Class C package/member candidate; provider authority remains open.
 - [`graphite2-harfbuzz-prerequisite-provider-authority.md`](graphite2-harfbuzz-prerequisite-provider-authority.md) — exact Graphite2 1.3.14 member and stable SONAME accepted only for the Graphite shaping path compiled into exact HarfBuzz 10.1.0.
 - [`at-spi2-core-provider-evidence-blocker.md`](at-spi2-core-provider-evidence-blocker.md) — coupled three-identity blocker proving that the approved index and pinned recipe source contain no Termux glibc AT-SPI2/ATK provider candidate while bionic packages remain non-authoritative.
 - [`gtk3-core-provider-evidence-blocker.md`](gtk3-core-provider-evidence-blocker.md) — exact approved-index and pinned-recipe blocker for the missing Termux glibc GTK 3 GDK/GTK core pair.

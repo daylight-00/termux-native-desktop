@@ -1,5 +1,5 @@
 schema_version: 1
-state_version: 2026-07-18.09
+state_version: 2026-07-19.01
 updated_on: 2026-07-18
 
 project:
@@ -74,8 +74,8 @@ documentation:
   missing_glibc_provider_production_boundary: docs/evidence/missing-glibc-provider-production-boundary.md
 
 provider_authority:
-  workstream: all-seven-selected-gaps-reviewed-blocked-production-boundary-defined-libxdamage-recipe-candidate-preparation-active
-  boundary: twenty-eight-bounded-providers-retained-seven-selected-identities-blocked-production-lanes-defined-first-libxdamage-candidate-not-yet-produced-composition-target-policy-and-activation-open
+  workstream: seven-selected-gaps-retained-libxdamage-production-candidate-qualified-provider-authority-review-active
+  boundary: twenty-eight-bounded-providers-retained-seven-selected-identities-open-libxdamage-class-b-recipe-and-class-c-artifact-qualified-provider-authority-composition-target-policy-and-activation-open
   claim_inventory:
     total: 89
     class_a: 36
@@ -137,7 +137,7 @@ provider_authority:
     accepted_soname_collisions: 0
     accepted_alias_collisions: 0
     target_manifest_allowed: false
-    next_tranche: libxdamage-glibc-recipe-contribution-candidate-preparation
+    next_tranche: libxdamage-bounded-provider-authority-review
   gdkpixbuf_core_acquisition:
     result_sha256: e96fb0e2d8fa1c16a228e41d60801abac0b8a43584a86b7e63f8adddfc4f5692
     review_state: acquisition-reviewed-partial
@@ -159,7 +159,7 @@ provider_authority:
     transitive_result_sha256: a18426371acf0339731464eea4a6fd1f8c745cc09154629b69e34d1063073c13
     transitive_recipe_tree: e91a0c476ef4355dbfff46e2bcab23d0085ddd01
     transitive_functional_matrix: jpeg-file-pass-jpeg-memory-pass-png-file-pass-png-memory-pass
-    next_action: prepare-libxdamage-glibc-recipe-contribution-candidate
+    next_action: review-libxdamage-production-candidate-bounded-provider-authority
   thai_break_provider:
     result_sha256: 7789ff1a039e3186b04014e4ddf6a7ba68d77fe31a2f1ef77273590aa97b8e1e
     libthai_member: libthai.so.0.3.1
@@ -185,7 +185,7 @@ provider_authority:
     consumer: gtk-3-24-49-places-sidebar-cloud-account-integration
     service_boundary: dbus-session-services-and-accounts-not-accepted
     provider_authority: accepted-bounded-provider
-  next_research_decision: prepare-libxdamage-glibc-recipe-contribution-candidate
+  next_research_decision: review-libxdamage-production-candidate-bounded-provider-authority
   fribidi_provider:
     member: libfribidi.so.0.4.0
     member_sha256: 71668fd02e89fa7546446bb7961bb618f6d22e1506f7444bbea6788befbb7895
@@ -281,7 +281,7 @@ provider_authority:
     consumer: exact-harfbuzz-10-1-0-graphite-font-feature-shaping-prerequisite
     runtime_dependencies: libc-so-6-ld-linux-aarch64-so-1
     provider_authority: accepted-bounded-provider
-  libxdamage_provider_blocker:
+  libxdamage_provider_discovery_blocker:
     selected_label: libXdamage.so.1.1.0
     required_soname: libXdamage.so.1
     result_archive_sha256: 5cb840b494176e8671d57cfc2617142a5d15663275456e102f075bc0796f3f55
@@ -294,9 +294,24 @@ provider_authority:
     glibc_recipe_repository: termux-pacman/glibc-packages@9bdd20c1d36524a0ab016d9b71c748b0cbb20a34
     glibc_recipe_state: no-gpkg-libxdamage-root
     bionic_recipe: termux/termux-packages@552a825cc8433e3aced966ff4bf5c8ea9255ca7d:x11-packages/libxdamage/build.sh
-    provider_authority: open-blocked-no-glibc-candidate
+    provider_authority: superseded-discovery-blocker-candidate-now-qualified
     target_population: blocked
-    reopening_gate: exact-glibc-artifact-member-soname-alias-recipe-dependency-and-consumer-evidence
+    reopening_gate: satisfied-by-qualified-candidate-review
+  libxdamage_production_candidate:
+    result_archive_sha256: 462b613a0d6a2c2e2eefdff6742fd16014311f87606916ab0982220998612f6c
+    evidence_freeze_sha256: f1ee7e091d29783de294d7bd44116e8f13413bbf4ef7a0045ef0307927f8b126
+    recipe_base_head: 9bdd20c1d36524a0ab016d9b71c748b0cbb20a34
+    recipe_candidate_tree: 46fe3064b0537aa7b4327d3cefc6891fa3b2cba5
+    recipe_sha256: 40ed4b7d663d01efd3c61d961094ff63659be67917d977f0543d2449411eb0e1
+    package_sha256: 09062711dd28f7268f3d7f75c85b3b42a55d3e6d70d1644a9853ee0b4c0e7890
+    member: libXdamage.so.1.1.0
+    member_sha256: 391916aff0965656e7b81ece7766e3b22068462867b1dd88a0a051b3db9c2d7c
+    soname: libXdamage.so.1
+    recipe_class: B-reference-adapted
+    artifact_class: C-independently-reproduced
+    qualification_state: qualified-recipe-and-local-artifact-candidate
+    provider_authority: open-bounded-review-required
+    target_population: blocked
   at_spi2_core_provider_blocker:
     selected_labels: libatk-bridge-2.0.so.0.0.0;libatk-1.0.so.0.25611.1;libatspi.so.0.0.1
     required_sonames: libatk-bridge-2.0.so.0;libatk-1.0.so.0;libatspi.so.0
@@ -347,7 +362,7 @@ provider_authority:
     first_lane: pinned-termux-glibc-libxdamage-recipe-contribution
     first_lane_recipe_class: B
     first_lane_local_artifact_class: C
-    first_lane_build_state: not-yet-produced
+    first_lane_build_state: qualified-local-recipe-and-artifact-candidate
     at_spi2_atk_lane: deferred-atomic-recipe-contribution-after-libxdamage
     gtk3_core_lane: deferred-atomic-recipe-contribution-after-libxdamage-and-at-spi2
     libselinux_lane: no-build-authorization-pending-direct-consumer-necessity
@@ -355,7 +370,7 @@ provider_authority:
     provider_authority_effect: none
     composition_effect: reviewed-blocked-incomplete-retained
     target_manifest_allowed: false
-    next_action: prepare-libxdamage-glibc-recipe-contribution-candidate
+    next_action: review-libxdamage-production-candidate-bounded-provider-authority
   prohibited_claims:
     - complete-provider-authority
     - complete-runtime-composition
@@ -363,7 +378,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: prepare-libxdamage-glibc-recipe-contribution-candidate
+  id: review-libxdamage-production-candidate-bounded-provider-authority
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:

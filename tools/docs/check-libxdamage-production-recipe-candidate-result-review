@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+python3 - "$ROOT" <<'PY'
+from pathlib import Path
+import csv,hashlib,subprocess,sys
+root=Path(sys.argv[1]); review=root/'experiments/glibc/selected-obsidian-provider-authority/review'
+paths=[root/'docs/evidence/libxdamage-production-recipe-candidate-result-review.md',review/'libxdamage-production-recipe-candidate-result-review.tsv',root/'experiments/glibc/selected-obsidian-provider-authority/candidates/libxdamage-glibc/gpkg/libxdamage/build.sh',root/'experiments/glibc/selected-obsidian-provider-authority/candidates/libxdamage-glibc/libxdamage-glibc-contribution.patch',root/'docs/current/STATE.yaml',root/'docs/current/ACTIVE_TASK.md',root/'docs/current/BRIEF.md',root/'docs/catalog.tsv',root/'STATUS.md']
+errors=[f'missing {p.relative_to(root)}' for p in paths if not p.is_file()]
+def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
+if not errors:
+ with (review/'libxdamage-production-recipe-candidate-result-review.tsv').open(newline='',encoding='utf-8') as f: rows=list(csv.DictReader(f,delimiter='\t'))
+ if len(rows)!=1: errors.append(f'candidate rows {len(rows)}')
+ else:
+  r=rows[0]
+  exp={'review_id':'LIBXDAMAGE-CANDIDATE-001','result_archive_sha256':'462b613a0d6a2c2e2eefdff6742fd16014311f87606916ab0982220998612f6c','evidence_freeze_sha256':'f1ee7e091d29783de294d7bd44116e8f13413bbf4ef7a0045ef0307927f8b126','recipe_base_head':'9bdd20c1d36524a0ab016d9b71c748b0cbb20a34','recipe_candidate_tree':'46fe3064b0537aa7b4327d3cefc6891fa3b2cba5','recipe_sha256':'40ed4b7d663d01efd3c61d961094ff63659be67917d977f0543d2449411eb0e1','contribution_patch_sha256':'eee51ab2293bd63848a0ae9418dc7c0e402a107a9ee2e9eec48573134079b20f','package_sha256':'09062711dd28f7268f3d7f75c85b3b42a55d3e6d70d1644a9853ee0b4c0e7890','member':'libXdamage.so.1.1.0','member_sha256':'391916aff0965656e7b81ece7766e3b22068462867b1dd88a0a051b3db9c2d7c','soname':'libXdamage.so.1','controlled_live_escape_count':'0','candidate_decision':'QUALIFIED_RECIPE_AND_LOCAL_ARTIFACT_CANDIDATE','provider_authority_state':'OPEN_BOUNDED_PROVIDER_AUTHORITY_REVIEW_REQUIRED'}
+  for k,v in exp.items():
+   if r.get(k)!=v: errors.append(f'{k}: expected {v}, got {r.get(k)!r}')
+ recipe=paths[2]; patch=paths[3]
+ if sha(recipe)!='40ed4b7d663d01efd3c61d961094ff63659be67917d977f0543d2449411eb0e1': errors.append('recipe hash mismatch')
+ if sha(patch)!='eee51ab2293bd63848a0ae9418dc7c0e402a107a9ee2e9eec48573134079b20f': errors.append('patch hash mismatch')
+ text=recipe.read_text()
+ if len(text.splitlines())!=11: errors.append('production recipe is not 11 lines')
+ for forbidden in ['termux_step_pre_configure','TND_ISOLATED_','PKG_CONFIG_SYSROOT_DIR','Scratch-only']:
+  if forbidden in text or forbidden in patch.read_text(): errors.append(f'private harness token leaked: {forbidden}')
+ gaps=list(csv.DictReader((review/'selected-provider-composition-gaps.tsv').open(newline='',encoding='utf-8'),delimiter='\t'))
+ x=[g for g in gaps if g['selected_evidence_row_id']=='selected:b0a8934c10bddecfc8ae']
+ if len(x)!=1: errors.append('libXdamage gap missing or duplicated')
+ elif x[0]['gap_class']!='QUALIFIED_LOCAL_CANDIDATE_PROVIDER_AUTHORITY_OPEN': errors.append('libXdamage gap class not transitioned')
+ doc=paths[0].read_text(); state=(root/'docs/current/STATE.yaml').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); brief=(root/'docs/current/BRIEF.md').read_text(); catalog=(root/'docs/catalog.tsv').read_text(); status=(root/'STATUS.md').read_text()
+ markers=[('doc decision','QUALIFIED_CLASS_B' in doc and 'QUALIFIED_CLASS_C' in doc and 'OPEN_REVIEW_REQUIRED' in doc),('state candidate','libxdamage_production_candidate:' in state and 'provider_authority: open-bounded-review-required' in state),('active task','Task ID: `review-libxdamage-production-candidate-bounded-provider-authority`' in active),('brief','exact 11-line Class B' in brief),('catalog','libxdamage-production-recipe-candidate-result-review\tevidence\tcurrent\tcanonical' in catalog),('status','qualified libXdamage Class B recipe and Class C artifact candidate retained' in status)]
+ for label,ok in markers:
+  if not ok: errors.append(f'missing marker: {label}')
+ for forbidden in ['provider authority:     ACCEPTED','target/activation:      ACCEPTED']:
+  if forbidden in doc: errors.append(f'forbidden widening: {forbidden}')
+if errors:
+ for e in errors: print('libxdamage-candidate-review: FAIL:',e,file=sys.stderr)
+ raise SystemExit(1)
+print('libxdamage-candidate-review: PASS: exact Class B recipe and Class C package/member candidate are frozen; private harness is separated and provider authority remains open')
+PY
