@@ -74,11 +74,11 @@ markers=[
  ('doc no widening','does not widen general HarfBuzz provider authority' in doc),
  ('state route','graphite2_harfbuzz_prerequisite_provider_authority: docs/evidence/graphite2-harfbuzz-prerequisite-provider-authority.md' in state),
  ('state provider','graphite2_harfbuzz_prerequisite:' in state and 'provider_authority: accepted-bounded-provider' in state),
- ('state overall count','accepted: 28' in state and 'accepted_inside_28_root_inventory: 21' in state),
- ('next task','Task ID: `review-libxdamage-production-candidate-bounded-provider-authority`' in active),
- ('brief count','bounded provider roots accepted overall: 28' in brief and 'selected identity gaps: 7' in brief),
+ ('state overall count','accepted: 29' in state and 'accepted_inside_28_root_inventory: 21' in state),
+ ('next task','Task ID: `prepare-at-spi2-core-2-56-2-atomic-glibc-candidate`' in active),
+ ('brief count','bounded provider roots accepted overall: 29' in brief and 'selected identity gaps: 6' in brief),
  ('catalog','graphite2-harfbuzz-prerequisite-provider-authority\tevidence\tcurrent\tcanonical' in catalog),
- ('status','exact Graphite2 accepted as bounded HarfBuzz prerequisite' in status),
+ ('status','Exact Graphite2 is accepted only for the HarfBuzz 10.1.0 Graphite shaping prerequisite' in status),
 ]
 for label,ok in markers:
  if not ok:errors.append(f'missing durable marker: {label}')

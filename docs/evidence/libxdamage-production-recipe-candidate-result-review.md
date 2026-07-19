@@ -5,8 +5,9 @@
 ```text
 recipe candidate:       QUALIFIED_CLASS_B
 local package/member:   QUALIFIED_CLASS_C
-provider authority:     OPEN_REVIEW_REQUIRED
-composition effect:     NONE; one of seven selected gaps remains open
+provider authority here: OPEN_REVIEW_REQUIRED AT QUALIFICATION TIME
+subsequent disposition: ACCEPTED_BOUNDED_PROVIDER by LIBXDAMAGE-PROV-001
+composition effect here: NONE AT QUALIFICATION TIME
 target/activation:      BLOCKED
 ```
 
@@ -59,8 +60,8 @@ Pre/post package-database state, live glibc regular-file surface and live glibc 
 
 The historical `OPEN_BLOCKED_NO_GLIBC_CANDIDATE` discovery result is superseded as the current libXdamage production state: an exact Class B recipe candidate and exact Class C package/member candidate now exist. It remains valid historical evidence that no approved supplier package or recipe root existed at the earlier pinned discovery boundary.
 
-Provider authority is not granted here. The next review must decide whether the exact local Class C member has sufficient capability, necessity, consumer-binding, conflict, update and rollback evidence for bounded provider authority, while preserving the distinction between local candidate bytes and eventual approved-repository publication.
+Provider authority was not granted by this qualification record. The subsequent canonical decision `LIBXDAMAGE-PROV-001`, documented in `libxdamage-bounded-provider-authority.md`, accepts the exact local Class C member only for the bounded GTK 3.24.49 GDK X11 damage-extension capability. The producing record remains Class C and approved-repository publication remains unaccepted.
 
 ## Explicitly prohibited inference
 
-This review does not accept the candidate as a provider, authorize upstream submission or publication, install the package, select target paths, create aliases in a target, populate a generation, deploy or activate the selected composition.
+This qualification review alone does not accept the candidate as a provider. The later bounded provider decision does not authorize upstream submission or supplier publication, installation, target paths, alias creation in a target, generation population, deployment or activation.

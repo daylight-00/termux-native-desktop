@@ -6,10 +6,10 @@
 decision state:                  ACCEPTED_PLANNING_ONLY
 reviewed blocker families:       4
 reviewed blocked identities:     7
-provider authority effect:       NONE
+provider authority effect:       exact libXdamage bounded provider accepted separately
 composition effect:              NONE; REVIEWED_BLOCKED_INCOMPLETE retained
 target/materialization effect:   NONE
-first separately authorized lane: libXdamage recipe-contribution candidate preparation
+first completed production lane:  libXdamage recipe/candidate and bounded provider review
 ```
 
 Read-only package and recipe discovery is complete. The absence of approved Termux glibc packages is not solved by copying ordinary Termux/bionic bytes, Debian oracle bytes, Android platform libraries, or by treating source compatibility as produced-artifact authority. This decision selects bounded production lanes and evidence gates only. It does not build, package, publish, install, populate, deploy, mutate policy, start services, or activate a selected generation.
@@ -88,7 +88,7 @@ Rejected lanes: Android `libandroid-selinux` substitution, `/system` library reu
 ## Production order
 
 ```text
-1. prepare exact libXdamage Class B recipe contribution and isolated Class C candidate evidence
+1. libXdamage Class B recipe, isolated Class C candidate and bounded provider decision — complete
 2. prepare the atomic AT-SPI2/ATK recipe contribution and candidate family
 3. prepare the atomic GTK 3 GDK/GTK recipe contribution and candidate pair
 4. revisit libSELinux only after direct-consumer necessity and symbol semantics are proven
@@ -100,4 +100,4 @@ The order is an evidence and dependency order, not authority inheritance. Comple
 
 Stop a lane when exact source lineage, adaptation necessity, dependency closure, license/distribution boundary, atomicity, functional validation or rollback cannot be bounded. Do not widen the collector or combine families merely to continue execution.
 
-The first lane has now produced and separated an exact Class B recipe candidate and exact isolated Class C artifact candidate. The next task is `review-libxdamage-production-candidate-bounded-provider-authority`. It may decide bounded provider authority from the retained evidence. It may not publish a package repository, install the candidate, populate a target, deploy, or activate it.
+The first lane has produced and separated an exact Class B recipe candidate and exact isolated Class C artifact candidate, and `LIBXDAMAGE-PROV-001` now accepts the exact member for bounded GTK 3.24.49 GDK X11 damage-extension capability only. Supplier publication, installation, target population, deployment and activation remain unaccepted. The next task is `prepare-at-spi2-core-2-56-2-atomic-glibc-candidate`.

@@ -46,4 +46,4 @@ ADR 0005 requires this tranche to stop without authority. Reopening requires an 
 
 Bionic package availability, installed bionic bytes, Debian oracle identities, source-level ABI expectations, or a metapackage relationship are not interchangeable with that evidence.
 
-The subsequent GTK 3.24.49 core-pair tranche also stopped without a glibc candidate; the next independent composition tranche is exact `libselinux.so.1` provider evidence acquisition.
+The subsequent GTK 3.24.49 core-pair and libSELinux tranches also stopped without glibc candidates. After bounded libXdamage acceptance, this three-member AT-SPI2/ATK family is now the active atomic candidate-preparation lane. Candidate preparation does not grant provider or service authority.

@@ -70,10 +70,10 @@ Before materialization, rollback is atomic revocation of both Cairo composition 
 accepted bounded provider roots overall: 28
 accepted roots inside 28-root inventory: 21
 open roots inside inventory:              7
-accepted exact members:                  36
-included members:                        35
+accepted exact members:                  37
+included members:                        36
 deferred members:                         1
-unresolved selected identities:           7
+unresolved selected identities:           6
 composition: REVIEWED_BLOCKED_INCOMPLETE
 target manifest allowed: NO
 activation: BLOCKED

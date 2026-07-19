@@ -59,3 +59,8 @@ dependency closure, and bounded GTK consumer review. A bionic package, source-le
 expectation, or upstream build is not interchangeable with that evidence.
 
 The next independent composition tranche is Graphite2 evidence acquisition.
+
+
+## Lifecycle disposition
+
+This discovery blocker remains historical evidence for the pinned boundary at which no approved package or recipe root existed. It is superseded first by the exact Class B recipe/Class C candidate qualification and then by `LIBXDAMAGE-PROV-001`, which accepts the exact project-produced member for bounded GTK 3.24.49 GDK X11 damage-extension capability only. Approved-supplier publication, package-wide surfaces, composition, target population and activation remain unaccepted.

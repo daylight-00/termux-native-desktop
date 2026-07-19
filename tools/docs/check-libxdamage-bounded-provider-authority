@@ -1,0 +1,126 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+DEFAULT_ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+ROOT=${TND_CHECK_ROOT:-$DEFAULT_ROOT}
+
+python3 - "$ROOT" <<'PY'
+from pathlib import Path
+import csv, sys
+root=Path(sys.argv[1])
+review=root/'experiments/glibc/selected-obsidian-provider-authority/review'
+required=[
+ root/'docs/evidence/libxdamage-bounded-provider-authority.md',
+ root/'docs/evidence/libxdamage-production-recipe-candidate-result-review.md',
+ review/'libxdamage-bounded-provider-authority.tsv',
+ review/'libxdamage-production-recipe-candidate-result-review.tsv',
+ review/'selected-provider-composition-members.tsv',
+ review/'selected-provider-composition-gaps.tsv',
+ review/'selected-provider-composition-metadata.tsv',
+ review/'provider-claim-classification.tsv',
+ review/'provider-claim-classification-metadata.tsv',
+ review/'xorg-reference-consumed-provider-authority.tsv',
+ review/'selected-object-authority-base.tsv',
+ root/'docs/current/STATE.yaml', root/'docs/current/ACTIVE_TASK.md', root/'docs/current/BRIEF.md',
+ root/'docs/catalog.tsv', root/'docs/evidence/README.md', root/'STATUS.md'
+]
+errors=[]
+for p in required:
+    if not p.is_file(): errors.append(f'missing {p.relative_to(root)}')
+def rows(path):
+    with path.open(newline='',encoding='utf-8') as f: return list(csv.DictReader(f,delimiter='\t'))
+def one(path, key, value):
+    got=[r for r in rows(path) if r.get(key)==value]
+    if len(got)!=1:
+        errors.append(f'{path.name}: expected one {key}={value}, found {len(got)}')
+        return None
+    return got[0]
+if not errors:
+    a=one(review/'libxdamage-bounded-provider-authority.tsv','review_id','LIBXDAMAGE-PROV-001')
+    c=one(review/'libxdamage-production-recipe-candidate-result-review.tsv','review_id','LIBXDAMAGE-CANDIDATE-001')
+    exp={
+      'candidate_review_id':'LIBXDAMAGE-CANDIDATE-001','recipe_base_head':'9bdd20c1d36524a0ab016d9b71c748b0cbb20a34',
+      'recipe_candidate_tree':'46fe3064b0537aa7b4327d3cefc6891fa3b2cba5','recipe_path':'gpkg/libxdamage/build.sh',
+      'recipe_sha256':'40ed4b7d663d01efd3c61d961094ff63659be67917d977f0543d2449411eb0e1',
+      'contribution_patch_sha256':'eee51ab2293bd63848a0ae9418dc7c0e402a107a9ee2e9eec48573134079b20f',
+      'source_version':'1.1.6','source_sha256':'52733c1f5262fca35f64e7d5060c6fcd81a880ba8e1e65c9621cf0727afb5d11',
+      'result_archive_sha256':'462b613a0d6a2c2e2eefdff6742fd16014311f87606916ab0982220998612f6c',
+      'evidence_freeze_sha256':'f1ee7e091d29783de294d7bd44116e8f13413bbf4ef7a0045ef0307927f8b126',
+      'artifact_package':'libxdamage-glibc','artifact_version':'1.1.6','artifact_arch':'aarch64',
+      'artifact_sha256':'09062711dd28f7268f3d7f75c85b3b42a55d3e6d70d1644a9853ee0b4c0e7890',
+      'selected_evidence_row_id':'selected:b0a8934c10bddecfc8ae',
+      'exact_member_path':'data/data/com.termux/files/usr/glibc/lib/libXdamage.so.1.1.0',
+      'exact_member_sha256':'391916aff0965656e7b81ece7766e3b22068462867b1dd88a0a051b3db9c2d7c',
+      'observed_soname':'libXdamage.so.1','observed_alias_target':'libXdamage.so.1.1.0','machine':'AArch64',
+      'dt_needed':'libXfixes.so.3;libX11.so.6;libc.so.6;ld-linux-aarch64.so.1',
+      'dt_rpath_state':'ABSENT','dt_runpath_state':'ABSENT','provider_claim_class':'B','producing_claim_class':'C',
+      'decision':'ACCEPTED_BOUNDED_PROVIDER','remaining_gap':'NONE_FOR_BOUNDED_GTK_3_24_49_GDK_X11_LIBXDAMAGE_PROVIDER_AUTHORITY'
+    }
+    if a:
+      for k,v in exp.items():
+        if a.get(k)!=v: errors.append(f'authority {k}: expected {v}, got {a.get(k)!r}')
+      for token in ['XDAMAGE_QUERY_EXTENSION','XDAMAGE_CREATE','XDAMAGE_SUBTRACT']:
+        if token not in a.get('required_symbol_surface',''): errors.append(f'missing symbol surface {token}')
+      for token in ['NO_SUPPLIER_PUBLICATION_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT']:
+        if token not in a.get('authority_effect',''): errors.append(f'authority effect missing {token}')
+    if a and c:
+      bindings={'recipe_base_head':'recipe_base_head','recipe_candidate_tree':'recipe_candidate_tree','recipe_sha256':'recipe_sha256','contribution_patch_sha256':'contribution_patch_sha256','source_version':'source_version','source_sha256':'source_sha256','result_archive_sha256':'result_archive_sha256','evidence_freeze_sha256':'evidence_freeze_sha256','artifact_sha256':'package_sha256','exact_member_sha256':'member_sha256','observed_soname':'soname','machine':'machine','dt_needed':'needed_set','dt_rpath_state':'dt_rpath_state','dt_runpath_state':'dt_runpath_state'}
+      for ak,ck in bindings.items():
+        if a.get(ak)!=c.get(ck): errors.append(f'candidate binding mismatch {ak}/{ck}')
+      if c.get('recipe_harness_separation')!='PRODUCTION_RECIPE_HAS_NO_PRIVATE_HOOK_PRIVATE_FRAMEWORK_ONLY': errors.append('candidate separation contract missing')
+      if c.get('local_artifact_class')!='CLASS_C_INDEPENDENTLY_REPRODUCED': errors.append('candidate Class C record missing')
+    members=rows(review/'selected-provider-composition-members.tsv')
+    m=[r for r in members if r.get('provider_review_id')=='LIBXDAMAGE-PROV-001']
+    if len(m)!=1: errors.append(f'composition libXdamage rows {len(m)}')
+    else:
+      r=m[0]
+      for k,v in {'member_basename':'libXdamage.so.1.1.0','member_sha256':exp['exact_member_sha256'],'soname':'libXdamage.so.1','composition_inclusion':'INCLUDED_SELECTED_GTK_SCOPE'}.items():
+        if r.get(k)!=v: errors.append(f'composition {k}: expected {v}, got {r.get(k)!r}')
+    gaps=rows(review/'selected-provider-composition-gaps.tsv')
+    if any(r.get('selected_evidence_row_id')=='selected:b0a8934c10bddecfc8ae' for r in gaps): errors.append('libXdamage still present in composition gaps')
+    if len(gaps)!=6 or any(r.get('gap_class')!='BLOCKED_NO_TERMUX_GLIBC_PROVIDER_CANDIDATE' for r in gaps): errors.append('expected six no-candidate composition gaps')
+    meta={r['key']:r['value'] for r in rows(review/'selected-provider-composition-metadata.tsv')}
+    for k,v in {'selected_gtk_identity_count':'37','accepted_provider_root_count':'29','accepted_member_count':'37','included_member_count':'36','deferred_member_count':'1','unresolved_selected_identity_count':'6','reviewed_root_gap_count':'0','outside_28_root_gap_count':'6','next_review_tranche':'AT_SPI2_ATK_ATOMIC_CANDIDATE_PREPARATION'}.items():
+      if meta.get(k)!=v: errors.append(f'composition metadata {k}: expected {v}, got {meta.get(k)!r}')
+    claims=rows(review/'provider-claim-classification.tsv')
+    cp=[r for r in claims if r.get('claim_id')=='PCC-LIBXDAMAGE-PROVIDER']
+    cr=[r for r in claims if r.get('claim_id')=='PCC-LIBXDAMAGE-PRODUCING']
+    if len(cp)!=1 or cp[0].get('classification_state')!='BOUNDED_PROVIDER_AUTHORITY_ACCEPTED' or cp[0].get('adr_class')!='B': errors.append('bounded provider claim missing or widened')
+    if len(cr)!=1 or cr[0].get('classification_state')!='ACTIVE_CLASS_C_INDEPENDENT_REPRODUCTION_RECORD_ACCEPTED' or cr[0].get('adr_class')!='C': errors.append('Class C producing claim missing')
+    pmeta={r['key']:r['value'] for r in rows(review/'provider-claim-classification-metadata.tsv')}
+    for k,v in {'claim_count':'91','provider_authority_claim_count':'29','class_b_claim_count':'50','class_c_claim_count':'2','provider_review_count':'22','provider_authority_accepted_count':'22','next_review_tranche':'AT_SPI2_ATK_ATOMIC_CANDIDATE_PREPARATION'}.items():
+      if pmeta.get(k)!=v: errors.append(f'claim metadata {k}: expected {v}, got {pmeta.get(k)!r}')
+    xf=one(review/'xorg-reference-consumed-provider-authority.tsv','review_id','XORG-PROV-001')
+    if not xf or xf.get('exact_member_sha256')!='271e82cbc4aa3db8ff36ad44735552153b6fbaa787bf59b6ec0b20f63d0f386d' or xf.get('decision')!='ACCEPTED_BOUNDED_PROVIDER': errors.append('accepted libXfixes dependency binding missing')
+    x11=one(review/'selected-object-authority-base.tsv','evidence_row_id','selected:af022a205bb264f563c7')
+    if not x11 or x11.get('content_sha256')!='1d28ce6412b7919e6ad7592d327e7ee5fdf72551868657b8d8eecc3f8ac69e04' or x11.get('provider_authority_state')!='ACCEPTED_OBJECT_SCOPED_AUTHORITY': errors.append('accepted libX11 dependency binding missing')
+    # no accepted concrete member or alias collision
+    by_soname={}
+    for r in members:
+      sn=r.get('observed_soname','')
+      if not sn: continue
+      ident=(r.get('exact_member_sha256',''),r.get('observed_alias_target',''))
+      if sn in by_soname and by_soname[sn]!=ident: errors.append(f'accepted SONAME collision: {sn}')
+      by_soname[sn]=ident
+    doc=(root/'docs/evidence/libxdamage-bounded-provider-authority.md').read_text()
+    candoc=(root/'docs/evidence/libxdamage-production-recipe-candidate-result-review.md').read_text()
+    state=(root/'docs/current/STATE.yaml').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); brief=(root/'docs/current/BRIEF.md').read_text(); status=(root/'STATUS.md').read_text(); catalog=(root/'docs/catalog.tsv').read_text(); index=(root/'docs/evidence/README.md').read_text()
+    markers=[
+      ('doc decision','ACCEPTED_BOUNDED_PROVIDER' in doc),('doc Class C','producing evidence remains Class C' in doc),('doc scope','GTK 3.24.49 GDK X11 damage-extension' in doc),
+      ('candidate later disposition','LIBXDAMAGE-PROV-001' in candoc and 'subsequent' in candoc.lower()),
+      ('state provider','provider_authority: accepted-bounded-provider' in state and 'supplier_publication: not-accepted' in state),
+      ('state gaps','unresolved_selected_identities: 6' in state),('active task','Task ID: `prepare-at-spi2-core-2-56-2-atomic-glibc-candidate`' in active),
+      ('brief counts','bounded provider roots accepted overall: 29' in brief and 'selected identity gaps: 6' in brief),
+      ('status accepted','bounded GTK 3.24.49 GDK X11 provider' in status),
+      ('catalog','libxdamage-bounded-provider-authority\tevidence\tcurrent\tcanonical' in catalog),('index','libxdamage-bounded-provider-authority.md' in index)
+    ]
+    for label,ok in markers:
+      if not ok: errors.append(f'missing marker: {label}')
+    forbidden=['approved supplier publication: accepted','supplier publication: accepted','target population:    accepted','activation:           accepted','complete X11 or GTK provider composition: accepted']
+    for token in forbidden:
+      if token in doc: errors.append(f'forbidden widening in authority doc: {token}')
+if errors:
+    for e in errors: print('libxdamage-provider-authority: FAIL:',e,file=sys.stderr)
+    raise SystemExit(1)
+print('libxdamage-provider-authority: PASS: exact Class B selection and retained Class C producing record are bounded to GTK 3.24.49 GDK X11 damage support; six composition gaps remain')
+PY

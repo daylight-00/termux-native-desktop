@@ -40,7 +40,7 @@ Android platform `libselinux.so` observations and the installed bionic `libandro
 
 ## Composition consequence
 
-This completes read-only candidate discovery for all seven unresolved selected identities. Every remaining gap is now a reviewed `BLOCKED_NO_TERMUX_GLIBC_PROVIDER_CANDIDATE` row:
+This completed read-only candidate discovery for the seven identities that were unresolved at that stage. After separate bounded libXdamage acceptance, the six remaining gaps are reviewed `BLOCKED_NO_TERMUX_GLIBC_PROVIDER_CANDIDATE` rows:
 
 ```text
 libXdamage.so.1

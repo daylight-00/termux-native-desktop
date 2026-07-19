@@ -25,10 +25,9 @@ if not errors:
   if forbidden in text or forbidden in patch.read_text(): errors.append(f'private harness token leaked: {forbidden}')
  gaps=list(csv.DictReader((review/'selected-provider-composition-gaps.tsv').open(newline='',encoding='utf-8'),delimiter='\t'))
  x=[g for g in gaps if g['selected_evidence_row_id']=='selected:b0a8934c10bddecfc8ae']
- if len(x)!=1: errors.append('libXdamage gap missing or duplicated')
- elif x[0]['gap_class']!='QUALIFIED_LOCAL_CANDIDATE_PROVIDER_AUTHORITY_OPEN': errors.append('libXdamage gap class not transitioned')
+ if x: errors.append('accepted libXdamage remains in gaps')
  doc=paths[0].read_text(); state=(root/'docs/current/STATE.yaml').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); brief=(root/'docs/current/BRIEF.md').read_text(); catalog=(root/'docs/catalog.tsv').read_text(); status=(root/'STATUS.md').read_text()
- markers=[('doc decision','QUALIFIED_CLASS_B' in doc and 'QUALIFIED_CLASS_C' in doc and 'OPEN_REVIEW_REQUIRED' in doc),('state candidate','libxdamage_production_candidate:' in state and 'provider_authority: open-bounded-review-required' in state),('active task','Task ID: `review-libxdamage-production-candidate-bounded-provider-authority`' in active),('brief','exact 11-line Class B' in brief),('catalog','libxdamage-production-recipe-candidate-result-review\tevidence\tcurrent\tcanonical' in catalog),('status','qualified libXdamage Class B recipe and Class C artifact candidate retained' in status)]
+ markers=[('doc decision','QUALIFIED_CLASS_B' in doc and 'QUALIFIED_CLASS_C' in doc and 'LIBXDAMAGE-PROV-001' in doc),('state candidate','libxdamage_production_candidate:' in state and 'provider_authority: accepted-bounded-provider' in state),('active task','Task ID: `prepare-at-spi2-core-2-56-2-atomic-glibc-candidate`' in active),('brief','exact 11-line Class B' in brief),('catalog','libxdamage-production-recipe-candidate-result-review\tevidence\tcurrent\tcanonical' in catalog),('status','exact libXdamage project candidate accepted as bounded GTK 3.24.49 GDK X11 provider' in status)]
  for label,ok in markers:
   if not ok: errors.append(f'missing marker: {label}')
  for forbidden in ['provider authority:     ACCEPTED','target/activation:      ACCEPTED']:
@@ -36,5 +35,5 @@ if not errors:
 if errors:
  for e in errors: print('libxdamage-candidate-review: FAIL:',e,file=sys.stderr)
  raise SystemExit(1)
-print('libxdamage-candidate-review: PASS: exact Class B recipe and Class C package/member candidate are frozen; private harness is separated and provider authority remains open')
+print('libxdamage-candidate-review: PASS: exact Class B recipe and Class C package/member candidate are frozen; private harness is separated and the later bounded provider decision is recorded separately')
 PY

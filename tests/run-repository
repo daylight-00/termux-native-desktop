@@ -29,6 +29,7 @@ case "$MODE" in
       tests/repository/libjpeg-so-62-loader-isolated-provider-authority-smoke.sh
       tests/repository/gdkpixbuf-2-42-12-provider-candidate-result-review-smoke.sh
       tests/repository/libxdamage-production-recipe-candidate-result-review-smoke.sh
+      tests/repository/libxdamage-bounded-provider-authority-smoke.sh
       tests/repository/gdkpixbuf-reference-dependency-provider-authority-smoke.sh
       tests/repository/gdkpixbuf-exact-util-linux-provider-authority-smoke.sh
       tests/repository/libxcursor-bounded-provider-authority-smoke.sh
@@ -63,6 +64,7 @@ case "$MODE" in
       tests/repository/libjpeg-so-62-loader-isolated-provider-authority-smoke.sh
       tests/repository/gdkpixbuf-2-42-12-provider-candidate-result-review-smoke.sh
       tests/repository/libxdamage-production-recipe-candidate-result-review-smoke.sh
+      tests/repository/libxdamage-bounded-provider-authority-smoke.sh
       tests/repository/gdkpixbuf-reference-dependency-provider-authority-smoke.sh
       tests/repository/gdkpixbuf-exact-util-linux-provider-authority-smoke.sh
       tests/repository/libxcursor-bounded-provider-authority-smoke.sh

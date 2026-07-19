@@ -21,13 +21,9 @@ if not errors:
    if r.get(k)!=v: errors.append(f'{k}: expected {v}, got {r.get(k)!r}')
  gaps=read('selected-provider-composition-gaps.tsv')
  x=[g for g in gaps if g['selected_evidence_row_id']=='selected:b0a8934c10bddecfc8ae']
- if len(x)!=1: errors.append('libXdamage composition gap missing or duplicated')
- else:
-  g=x[0]
-  if g['gap_class']!='QUALIFIED_LOCAL_CANDIDATE_PROVIDER_AUTHORITY_OPEN': errors.append('libXdamage current gap did not transition to qualified candidate authority-open')
-  if g['priority_tranche']!='LIBXDAMAGE_BOUNDED_PROVIDER_AUTHORITY_REVIEW': errors.append('libXdamage priority disposition stale')
+ if x: errors.append('accepted libXdamage remains in current gaps')
  doc=(root/'docs/evidence/libxdamage-provider-evidence-blocker.md').read_text(); state=(root/'docs/current/STATE.yaml').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); brief=(root/'docs/current/BRIEF.md').read_text(); catalog=(root/'docs/catalog.tsv').read_text(); status=(root/'STATUS.md').read_text()
- markers=[('doc decision','OPEN_BLOCKED_NO_GLIBC_CANDIDATE' in doc and 'Lifecycle:' in doc),('doc no bionic inference','bionic artifact' in doc and 'not a valid' in doc),('state historical blocker','libxdamage_provider_discovery_blocker:' in state and 'provider_authority: superseded-discovery-blocker-candidate-now-qualified' in state),('next task','Task ID: `review-libxdamage-production-candidate-bounded-provider-authority`' in active),('brief supersession','historical libXdamage discovery blocker is superseded' in brief),('catalog','libxdamage-provider-evidence-blocker\tevidence\tsuperseded\thistory' in catalog),('status','qualified libXdamage Class B recipe and Class C artifact candidate retained' in status)]
+ markers=[('doc decision','OPEN_BLOCKED_NO_GLIBC_CANDIDATE' in doc and 'Lifecycle:' in doc),('doc no bionic inference','bionic artifact' in doc and 'not a valid' in doc),('state historical blocker','libxdamage_provider_discovery_blocker:' in state and 'provider_authority: superseded-discovery-blocker-candidate-now-qualified' in state),('next task','Task ID: `prepare-at-spi2-core-2-56-2-atomic-glibc-candidate`' in active),('brief supersession','historical libxdamage discovery blocker is superseded' in brief.lower()),('catalog','libxdamage-provider-evidence-blocker\tevidence\tsuperseded\thistory' in catalog),('status','exact libXdamage project candidate accepted as bounded GTK 3.24.49 GDK X11 provider' in status)]
  for label,ok in markers:
   if not ok: errors.append(f'missing marker: {label}')
  for forbidden in ['provider authority:      ACCEPTED','BIONIC_PACKAGE_ACCEPTED_AS_GLIBC_PROVIDER','target manifest allowed:          YES']:
@@ -35,5 +31,5 @@ if not errors:
 if errors:
  for e in errors: print('libxdamage-blocker: FAIL:',e,file=sys.stderr)
  raise SystemExit(1)
-print('libxdamage-blocker: PASS: missing approved glibc package and recipe root are recorded; bionic bytes remain non-authoritative and production boundary is retained and the current production candidate supersedes the discovery blocker without granting provider authority')
+print('libxdamage-blocker: PASS: missing approved glibc package and recipe root are recorded; bionic bytes remain non-authoritative and production boundary is retained and the current production candidate supersedes the discovery blocker with the bounded provider decision recorded separately')
 PY2

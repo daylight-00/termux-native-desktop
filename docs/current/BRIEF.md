@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-19.01`
+> Semantic state version: `2026-07-19.02`
 >
 > This is the compact current-state entry point. Exact commit and tree coordinates come from the checked-out full Git bundle, not from self-referential repository text.
 
@@ -20,37 +20,31 @@ Web-chat capability failures follow a stop-loss contract: perform one bounded re
 
 ## Current provider boundary
 
-ADR 0005 separates artifact identity, adaptation semantics, provider authority, composition, target population and activation. The canonical claim inventory remains 28 roots, 37 reviewed objects and 89 separated claims: 36 Class A, 49 Class B, one Class C and three Class D.
+ADR 0005 separates artifact identity, adaptation semantics, provider authority, composition, target population and activation. The canonical claim inventory is 28 roots, 37 reviewed objects and 91 separated claims: 36 Class A, 50 Class B, two Class C and three Class D.
 
-Exact `libgraphite2.so.3.2.1` is accepted only as the Graphite shaping-engine prerequisite compiled into exact HarfBuzz 10.1.0 for Graphite-enabled fonts within the selected Pango 1.54.0 and GTK 3.24.49 text scope. The approved `libgraphite-glibc` 1.3.14 archive, exact member digest, stable SONAME alias, one-file recipe tree, direct HarfBuzz integration path, and libc/loader-only runtime closure are pinned by the retained read-only evidence archive.
-
-The Class B recipe disables install RPATH and the compare renderer and selects the direct Graphite VM. This does not widen general HarfBuzz authority, accept development surfaces, or claim that every Graphite font and feature set has been functionally validated. Exact Cairo/Cairo-GObject and Pixman decisions remain unchanged.
+Exact project-produced `libXdamage.so.1.1.0` is now accepted as a bounded provider only for GTK 3.24.49 GDK X11 damage-extension linkage and the recorded `XDamageQueryExtension`, `XDamageCreate` and `XDamageSubtract` surface. The provider-selection claim is Class B; the exact local producing record remains Class C because no approved supplier repository has published the package. Supplier publication, package-wide development surfaces, complete X11/GTK composition, target population and activation remain unaccepted.
 
 ```text
-bounded provider roots accepted overall: 28
+bounded provider roots accepted overall: 29
 accepted roots inside the 28-root inventory: 21
 open roots inside the inventory: 7
-accepted exact members: 36
-included current-scope members: 35
+accepted exact members: 37
+included current-scope members: 36
 deferred members: 1
 composition review: REVIEWED_BLOCKED_INCOMPLETE
-selected identity gaps: 7
+selected identity gaps: 6
 target population: blocked
 activation: blocked
 ```
 
-Canonical decisions are under `docs/evidence/`; the current composition review is [`../evidence/selected-obsidian-provider-composition-review.md`](../evidence/selected-obsidian-provider-composition-review.md), the latest accepted provider decision is [`../evidence/graphite2-harfbuzz-prerequisite-provider-authority.md`](../evidence/graphite2-harfbuzz-prerequisite-provider-authority.md), and the missing-provider lane decision is [`../evidence/missing-glibc-provider-production-boundary.md`](../evidence/missing-glibc-provider-production-boundary.md).
+Canonical decisions are under `docs/evidence/`; the current composition review is [`../evidence/selected-obsidian-provider-composition-review.md`](../evidence/selected-obsidian-provider-composition-review.md), the latest provider decision is [`../evidence/libxdamage-bounded-provider-authority.md`](../evidence/libxdamage-bounded-provider-authority.md), and the missing-provider lane decision is [`../evidence/missing-glibc-provider-production-boundary.md`](../evidence/missing-glibc-provider-production-boundary.md).
 
 ## Current project phase
 
-The historical libXdamage discovery blocker is superseded as the current production state. An exact 11-line Class B `gpkg/libxdamage` recipe candidate and exact isolated Class C `libxdamage-glibc 1.1.6` package/member candidate are qualified with stable hashes, zero controlled live-prefix escapes, and unchanged package-database and live-prefix surfaces. Provider authority and target effect remain open.
+The historical libXdamage discovery blocker is superseded. The exact 11-line Class B `gpkg/libxdamage` recipe candidate and isolated Class C `libxdamage-glibc 1.1.6` package/member record remain frozen, and bounded provider authority is accepted for the selected GTK GDK X11 damage-extension capability. No approved-supplier publication, installation, target effect, deployment or activation follows from that decision.
 
-The Graphite2 tranche is complete with `ACCEPTED_BOUNDED_PROVIDER`. The AT-SPI2 core tranche is complete with `OPEN_BLOCKED_NO_GLIBC_CANDIDATE`: the approved index has no `at-spi2-core-glibc` package, only ordinary Termux/bionic `at-spi2-core`, `atk`, and `at-spi2-atk` entries are present, and the pinned glibc recipe source has no AT-SPI2/ATK producing root. No provider or service authority was granted.
+The AT-SPI2 core tranche remains `OPEN_BLOCKED_NO_GLIBC_CANDIDATE`: the approved index has no `at-spi2-core-glibc` package, only ordinary Termux/bionic `at-spi2-core`, `atk`, and `at-spi2-atk` entries are present, and the pinned glibc recipe source has no AT-SPI2/ATK producing root. Its three selected libraries must be treated as one atomic source/update family and its D-Bus/accessibility service lifecycle remains separately unauthorized.
 
-The GTK 3 core-pair tranche is complete with `OPEN_BLOCKED_NO_GLIBC_CANDIDATE`: all five bounded glibc package-name queries returned no policy entry or package stanza, only ordinary Termux/X11 bionic `gtk3 3.24.52` was observed, and pinned recipe path/search checks found no GTK 3 producing root. No provider, backend, target or activation authority was granted.
+The GTK 3 core pair and libSELinux tranches remain reviewed no-candidate blockers. The selected composition therefore has six unresolved identities: the three-member AT-SPI2/ATK family, the two-member GTK 3 core pair and `libselinux.so.1`.
 
-The libSELinux tranche is complete with `OPEN_BLOCKED_NO_GLIBC_CANDIDATE`: no approved Termux glibc coordinate or pinned producing recipe root exists, while installed `libandroid-selinux` and Android platform copies remain bionic/platform boundary evidence only. All seven unresolved selected identities are now reviewed blockers.
-
-The production-boundary planning tranche is complete. Xdamage is the first admissible lane: a pinned Class B Termux glibc recipe contribution with a separately produced isolated Class C candidate. AT-SPI2/ATK and GTK 3 remain deferred atomic contribution lanes. libSELinux has no build authorization until direct consumer necessity and symbol semantics are proven.
-
-The active task is `review-libxdamage-production-candidate-bounded-provider-authority`. It reviews the retained exact candidate for a bounded GTK GDK X11 provider decision; rebuilding, upstream publication, package installation, target population, deployment and activation are not authorized.
+The active task is `prepare-at-spi2-core-2-56-2-atomic-glibc-candidate`. It may produce one pinned Class B recipe candidate and isolated Class C archive/member family, or record a precise blocker. Provider authority, publication, installation, D-Bus activation, accessibility enablement, target population, deployment and selected-generation activation are not authorized.

@@ -27,9 +27,9 @@ if not errors:
   if g['priority_tranche']!='BLOCKED_LIBSELINUX_NO_GLIBC_CANDIDATE': errors.append('libSELinux priority disposition stale')
   if 'WRONG_ABI_WORLD' not in g['blocker_reason']: errors.append('libSELinux bionic/Android glibc boundary missing')
  allg=rows('selected-provider-composition-gaps.tsv')
- if len(allg)!=7 or sum(g['gap_class']=='BLOCKED_NO_TERMUX_GLIBC_PROVIDER_CANDIDATE' for g in allg)!=6 or sum(g['gap_class']=='QUALIFIED_LOCAL_CANDIDATE_PROVIDER_AUTHORITY_OPEN' for g in allg)!=1: errors.append('expected six no-candidate blockers plus one qualified candidate authority-open gap')
+ if len(allg)!=6 or sum(g['gap_class']=='BLOCKED_NO_TERMUX_GLIBC_PROVIDER_CANDIDATE' for g in allg)!=6: errors.append('expected six no-candidate blockers')
  doc=(root/'docs/evidence/libselinux-provider-evidence-blocker.md').read_text(); state=(root/'docs/current/STATE.yaml').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); brief=(root/'docs/current/BRIEF.md').read_text(); catalog=(root/'docs/catalog.tsv').read_text(); status=(root/'STATUS.md').read_text()
- markers=[('doc decision','OPEN_BLOCKED_NO_GLIBC_CANDIDATE' in doc),('doc no bionic inference','different ABI and package world' in doc),('doc all seven','Every remaining gap is now a reviewed' in doc),('state blocker','libselinux_provider_blocker:' in state and 'policy_mutation: blocked' in state),('next task','Task ID: `review-libxdamage-production-candidate-bounded-provider-authority`' in active),('brief blocker','All seven unresolved selected identities are now reviewed blockers' in brief),('catalog','libselinux-provider-evidence-blocker	evidence	current	canonical' in catalog),('status','7 reviewed blocker gaps' in status)]
+ markers=[('doc decision','OPEN_BLOCKED_NO_GLIBC_CANDIDATE' in doc),('doc no bionic inference','different ABI and package world' in doc),('doc remaining blockers','six remaining gaps are reviewed' in doc),('state blocker','libselinux_provider_blocker:' in state and 'policy_mutation: blocked' in state),('next task','Task ID: `prepare-at-spi2-core-2-56-2-atomic-glibc-candidate`' in active),('brief blocker','six unresolved identities' in brief.lower() or 'six selected gaps' in brief.lower()),('catalog','libselinux-provider-evidence-blocker	evidence	current	canonical' in catalog),('status','6 reviewed blocker gaps' in status)]
  for label,ok in markers:
   if not ok: errors.append(f'missing marker: {label}')
  for forbidden in ['provider authority:      ACCEPTED','BIONIC_LIBANDROID_SELINUX_ACCEPTED_AS_GLIBC_PROVIDER','target/policy/activation: ALLOWED']:
@@ -37,5 +37,5 @@ if not errors:
 if errors:
  for e in errors: print('libselinux-blocker: FAIL:',e,file=sys.stderr)
  raise SystemExit(1)
-print('libselinux-blocker: PASS: no approved glibc package or pinned recipe candidate exists; bionic and Android platform SELinux remain boundary-only and all seven gaps are reviewed blockers')
+print('libselinux-blocker: PASS: no approved glibc package or pinned recipe candidate exists; bionic and Android platform SELinux remain boundary-only and all six remaining gaps are reviewed blockers')
 PY2

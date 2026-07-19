@@ -7,9 +7,10 @@ classification: COMPLETE / REVIEWED BOUNDED INVENTORY
 policy: ADR 0005
 roots: 28
 objects: 37
-claims: 89
+claims: 91
 new evidence collected: 0
 provider authority accepted inside inventory: 21
+project-candidate provider authority accepted outside inventory: 1
 composition accepted: 0
 target rows accepted: 0
 activation accepted: 0
@@ -68,13 +69,14 @@ Class A: 36 claims
      7 no-explicit-delta adaptation claims confirmed by bounded semantic review
      1 authoritative required-object identity claim
 
-Class B: 49 claims
+Class B: 50 claims
     21 reference-adapted recipe claims
-    28 project integration/provider-selection claims
+    29 project integration/provider-selection claims
 
-Class C: 1 active bounded producing claim
+Class C: 2 active bounded producing claims
     exact libjpeg-turbo 3.1.0 v6b compatibility candidate production
-    producing record accepted; bounded loader-isolated GdkPixbuf JPEG consumer authority accepted separately
+    exact libXdamage 1.1.6 isolated candidate production
+    each producing record remains distinct from its separately accepted bounded provider claim
 
 Class D: 3 global project-authored claims
     composition
@@ -82,7 +84,7 @@ Class D: 3 global project-authored claims
     activation
 ```
 
-The single Class C row records the project-produced runpath-free `libjpeg.so.62.4.0` candidate. Source, build invocation, toolchain, output manifest, ELF identity and symbol versions are recorded. A separate loader-isolated review accepted bounded GdkPixbuf JPEG file and memory decode authority; the Class C row does not imply broader libjpeg family or composition authority.
+The two Class C rows record the project-produced runpath-free `libjpeg.so.62.4.0` candidate and exact isolated `libXdamage.so.1.1.0` candidate. Source, build invocation, toolchain, output manifest, ELF identity and symbol versions are recorded. A separate loader-isolated review accepted bounded GdkPixbuf JPEG file and memory decode authority; the Class C row does not imply broader libjpeg family or composition authority.
 
 ## Existing evidence retained
 
@@ -96,7 +98,7 @@ The classification retains the following evidence without overpromoting it:
 - the accepted OJ-001 correction that the required ABI identity is `libjpeg.so.62`, not `libjpeg.so.8`;
 - all historical SUP-02 request, acquisition, receipt, and producer records.
 
-These remain evidence inputs. They do not create final provider authority by themselves. Twenty root provider claims are accepted only through their separate bounded provider reviews.
+These remain evidence inputs. They do not create final provider authority by themselves. Twenty-one inventory-root provider claims and one exact project-candidate provider claim are accepted only through their separate bounded provider reviews.
 
 ## SUP-02 disposition
 
@@ -145,7 +147,8 @@ The `libjpeg-turbo` SUP-02 request is also unnecessary at the current boundary b
 ## Current authority states
 
 ```text
-bounded provider authority accepted inside inventory: 21 roots
+bounded provider authority accepted inside inventory: 21
+project-candidate provider authority accepted outside inventory: 1 roots
 provider authority still open:                        7 roots
 application runtime composition:     NOT REACHED
 target population:                   BLOCKED
@@ -162,6 +165,7 @@ The seven-root no-token semantic review is complete:
 confirmed Class A: 7
 reclassified Class B: 0
 provider authority accepted inside inventory: 21
+project-candidate provider authority accepted outside inventory: 1
 ```
 
 Canonical review surface:

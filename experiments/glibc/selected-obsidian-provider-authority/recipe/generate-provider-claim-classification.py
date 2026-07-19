@@ -26,6 +26,7 @@ LIBXKBCOMMON_PROVIDER_REVIEW = Path('experiments/glibc/selected-obsidian-provide
 HARFBUZZ_PROVIDER_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/harfbuzz-bounded-provider-authority.tsv')
 FONTCONFIG_PROVIDER_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/fontconfig-bounded-provider-authority.tsv')
 CAIRO_PROVIDER_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/cairo-bounded-provider-authority.tsv')
+LIBXDAMAGE_PROVIDER_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/libxdamage-bounded-provider-authority.tsv')
 LIBJPEG_DISPOSITION = Path('experiments/glibc/selected-obsidian-provider-authority/review/libjpeg-so-62-provider-candidate-disposition.tsv')
 LIBJPEG_RESULT_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/libjpeg-so-62-compatibility-provider-candidate-result-review.tsv')
 LIBJPEG_RUNPATH_FREE_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review.tsv')
@@ -144,6 +145,7 @@ def main() -> None:
     harfbuzz_provider_reviews = read_tsv(repo / HARFBUZZ_PROVIDER_REVIEW)
     fontconfig_provider_reviews = read_tsv(repo / FONTCONFIG_PROVIDER_REVIEW)
     cairo_provider_reviews = read_tsv(repo / CAIRO_PROVIDER_REVIEW)
+    libxdamage_provider_reviews = read_tsv(repo / LIBXDAMAGE_PROVIDER_REVIEW)
     libjpeg_dispositions = read_tsv(repo / LIBJPEG_DISPOSITION)
     libjpeg_result_reviews = read_tsv(repo / LIBJPEG_RESULT_REVIEW)
     libjpeg_runpath_free_reviews = read_tsv(repo / LIBJPEG_RUNPATH_FREE_REVIEW)
@@ -189,6 +191,8 @@ def main() -> None:
         raise SystemExit(f'expected 1 Fontconfig provider review, found {len(fontconfig_provider_reviews)}')
     if len(cairo_provider_reviews) != 1:
         raise SystemExit(f'expected 1 Cairo provider review, found {len(cairo_provider_reviews)}')
+    if len(libxdamage_provider_reviews) != 1:
+        raise SystemExit(f'expected 1 libXdamage provider review, found {len(libxdamage_provider_reviews)}')
     if len(libjpeg_dispositions) != 1:
         raise SystemExit(f'expected 1 libjpeg disposition row, found {len(libjpeg_dispositions)}')
     if len(libjpeg_result_reviews) != 1:
@@ -207,6 +211,7 @@ def main() -> None:
     libjpeg_consumer_binding_review = libjpeg_consumer_binding_reviews[0]
     libjpeg_diagnostic_matrix_review = libjpeg_diagnostic_matrix_reviews[0]
     libjpeg_provider_review = libjpeg_provider_reviews[0]
+    libxdamage_provider_review = libxdamage_provider_reviews[0]
     if libjpeg_disposition['requirement_id'] != 'OJ-001' or libjpeg_disposition['required_lookup_identity'] != 'libjpeg.so.62':
         raise SystemExit('libjpeg disposition does not bind canonical OJ-001 identity')
     if libjpeg_disposition['disposition'] != 'RUNPATH_FREE_COMPATIBILITY_PROVIDER_ACCEPTED_BOUNDED_GDKPIXBUF_JPEG_SCOPE':
@@ -235,6 +240,10 @@ def main() -> None:
         raise SystemExit('libjpeg provider review must retain six passing loader-isolated cells')
     if libjpeg_provider_review['diagnostic_classification'] != 'CANDIDATE_GDKPIXBUF_FUNCTIONAL_PASS':
         raise SystemExit('libjpeg provider review classification drift')
+    if libxdamage_provider_review['review_id'] != 'LIBXDAMAGE-PROV-001' or libxdamage_provider_review['decision'] != 'ACCEPTED_BOUNDED_PROVIDER':
+        raise SystemExit('libXdamage provider review must accept one bounded provider')
+    if libxdamage_provider_review['exact_member_sha256'] != '391916aff0965656e7b81ece7766e3b22068462867b1dd88a0a051b3db9c2d7c':
+        raise SystemExit('libXdamage provider member identity drift')
     if libjpeg_provider_review['direct_candidate_output_sha256'] != libjpeg_provider_review['direct_oracle_output_sha256']:
         raise SystemExit('libjpeg direct candidate/oracle output digests diverge')
     semantic_by_root = {row['root_review_id']: row for row in semantic_reviews}
@@ -473,6 +482,49 @@ def main() -> None:
             'prohibited_inference': provider_prohibited,
         })
 
+    claims.extend([
+        {
+            'claim_id': 'PCC-LIBXDAMAGE-PRODUCING',
+            'subject_kind': 'PROJECT_CANDIDATE',
+            'subject_id': libxdamage_provider_review['candidate_review_id'],
+            'subject_label': 'libxdamage-glibc 1.1.6 exact local candidate',
+            'claim_type': 'BUILD_PROVENANCE',
+            'requested_state': 'DIGEST_BOUND_INDEPENDENT_REPRODUCTION_CLAIM',
+            'adr_class': 'C',
+            'supplier_or_reference_boundary': 'PINNED_UPSTREAM_SOURCE_AND_EXACT_PROJECT_PRODUCING_RECORD_WITHOUT_APPROVED_SUPPLIER_PUBLICATION',
+            'project_owned_changed_boundary': 'ISOLATED_TERMUX_GLIBC_BUILD_PRIVATE_DEPENDENCY_OVERLAY_PROOT_INSTALL_REDIRECTION_CONFIG_SHELL_AND_HOST_TOOL_SHIMS_SEPARATED_FROM_PRODUCTION_RECIPE',
+            'risk_modifiers': 'GUI_X11_EXTENSION;PROJECT_PRODUCED_ARTIFACT;BOUNDED_REVERSIBLE_NON_INSTALLED_CANDIDATE',
+            'existing_evidence': f'libxdamage-production-recipe-candidate-result-review.tsv;{libxdamage_provider_review["candidate_review_id"]};{LIBXDAMAGE_PROVIDER_REVIEW.name};{libxdamage_provider_review["review_id"]};result_archive_sha256={libxdamage_provider_review["result_archive_sha256"]};evidence_freeze_sha256={libxdamage_provider_review["evidence_freeze_sha256"]}',
+            'remaining_gap': 'NONE_FOR_EXACT_LIBXDAMAGE_CLASS_C_PRODUCING_RECORD',
+            'minimum_closure_action': 'RETAIN_EXACT_SOURCE_RECIPE_PACKAGE_MEMBER_LOADER_PROBE_AND_PROTECTED_STATE_COORDINATES',
+            'explicitly_excluded_evidence': 'APPROVED_SUPPLIER_PUBLICATION;PRODUCING_EQUIVALENCE_BEYOND_RETAINED_EXACT_RECORD',
+            'escalation_trigger': 'SOURCE_RECIPE_PACKAGE_MEMBER_TOOLCHAIN_LOADER_OR_PROTECTED_STATE_EVIDENCE_CHANGE',
+            'classification_state': 'ACTIVE_CLASS_C_INDEPENDENT_REPRODUCTION_RECORD_ACCEPTED',
+            'authority_effect': 'PRODUCING_RECORD_ONLY_NO_SUPPLIER_PUBLICATION_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT',
+            'prohibited_inference': 'SUCCESSFUL_LOCAL_PRODUCTION_DOES_NOT_CREATE_APPROVED_SUPPLIER_OR_PACKAGE_WIDE_AUTHORITY',
+        },
+        {
+            'claim_id': 'PCC-LIBXDAMAGE-PROVIDER',
+            'subject_kind': 'PROJECT_CANDIDATE',
+            'subject_id': libxdamage_provider_review['review_id'],
+            'subject_label': 'exact libXdamage.so.1.1.0 project candidate',
+            'claim_type': 'PROVIDER_AUTHORITY',
+            'requested_state': 'EXACT_PROJECT_CANDIDATE_MEMBER_AUTHORIZED_FOR_BOUNDED_GTK_X11_CAPABILITY',
+            'adr_class': 'B',
+            'supplier_or_reference_boundary': 'PINNED_GTK_CONSUMER_SOURCE_ACCEPTED_DEPENDENCY_PROVIDERS_AND_EXACT_CLASS_C_MEMBER',
+            'project_owned_changed_boundary': 'PROJECT_SELECTION_OF_EXACT_LOCAL_MEMBER_FOR_SELECTED_GTK_3_24_49_GDK_X11_DAMAGE_EXTENSION_CAPABILITY',
+            'risk_modifiers': 'GUI_MULTI_CONSUMER;PROJECT_PRODUCED_ARTIFACT;X11_EXTENSION_BINDING',
+            'existing_evidence': f'libxdamage-production-recipe-candidate-result-review.tsv;{libxdamage_provider_review["candidate_review_id"]};{LIBXDAMAGE_PROVIDER_REVIEW.name};{libxdamage_provider_review["review_id"]};selected-provider-composition-members.tsv',
+            'remaining_gap': libxdamage_provider_review['remaining_gap'],
+            'minimum_closure_action': 'RETAIN_BOUNDED_PROVIDER_AUTHORITY_AND_REVALIDATE_ON_RECORDED_UPDATE_OR_ROLLBACK_TRIGGER',
+            'explicitly_excluded_evidence': 'LOCAL_BUILD_SUCCESS_AS_COMPLETE_COMPOSITION_OR_APPROVED_SUPPLIER_PUBLICATION',
+            'escalation_trigger': 'AMBIGUOUS_CONSUMER_BINDING;ABI_CONFLICT;DEPENDENCY_AUTHORITY_CHANGE;CANDIDATE_MULTIPLICITY;SOURCE_RECIPE_PACKAGE_MEMBER_OR_GTK_BINDING_CHANGE',
+            'classification_state': 'BOUNDED_PROVIDER_AUTHORITY_ACCEPTED',
+            'authority_effect': libxdamage_provider_review['authority_effect'],
+            'prohibited_inference': libxdamage_provider_review['prohibited_inference'],
+        },
+    ])
+
     claims.append({
         'claim_id': 'PCC-OJ-001-REQUIRED-OBJECT',
         'subject_kind': 'OBJECT_REQUIREMENT',
@@ -527,8 +579,8 @@ def main() -> None:
             'project_owned_changed_boundary': 'CAPABILITY_COVERAGE_EXCLUSIONS_ORDERING_ALIAS_POLICY_AND_MIXED_WORLD_COMPOSITION',
             'risk_modifiers': 'BROAD_RUNTIME_BLAST_RADIUS;MULTI_PROVIDER_CONFLICT;WEAK_GLOBAL_OBSERVABILITY',
             'existing_evidence': 'authority-coverage-ledger.tsv;world-lifecycle-authority-boundary.tsv;application-authority-boundary.tsv;selected-provider-composition-members.tsv;selected-provider-composition-gaps.tsv;selected-provider-composition-metadata.tsv',
-            'remaining_gap': '7_SELECTED_GTK_PROVIDER_IDENTITIES_WITHOUT_ACCEPTED_PROVIDER_ROWS;SIX_REVIEWED_NO_TERMUX_GLIBC_CANDIDATE_BLOCKERS;LIBXDAMAGE_QUALIFIED_LOCAL_CANDIDATE_PROVIDER_AUTHORITY_OPEN;AT_SPI2_CORE_FAMILY_BLOCKED;GTK3_CORE_PAIR_BLOCKED;LIBSELINUX_BLOCKED',
-            'minimum_closure_action': 'REVIEW_EXACT_LIBXDAMAGE_CLASS_C_CANDIDATE_FOR_BOUNDED_PROVIDER_AUTHORITY;THEN_PROCEED_TO_AT_SPI2_GTK3_OR_CONDITIONAL_LIBSELINUX_LANES',
+            'remaining_gap': '6_SELECTED_GTK_PROVIDER_IDENTITIES_WITHOUT_ACCEPTED_PROVIDER_ROWS;SIX_REVIEWED_NO_TERMUX_GLIBC_CANDIDATE_BLOCKERS;LIBXDAMAGE_BOUNDED_PROVIDER_AUTHORITY_ACCEPTED;AT_SPI2_CORE_FAMILY_BLOCKED;GTK3_CORE_PAIR_BLOCKED;LIBSELINUX_BLOCKED',
+            'minimum_closure_action': 'PREPARE_ATOMIC_AT_SPI2_ATK_2_56_2_CLASS_B_RECIPE_AND_CLASS_C_CANDIDATE_FAMILY;THEN_PROCEED_TO_GTK3_OR_CONDITIONAL_LIBSELINUX_LANES',
             'explicitly_excluded_evidence': 'PACKAGE_WIDE_INFERENCE;SUCCESSFUL_HISTORICAL_LAUNCH;SUPPLIER_BUILD_ATTESTATION_AS_COMPOSITION_PROOF',
             'escalation_trigger': 'PROVIDER_CLAIMS_ACCEPTED_FOR_A_BOUNDED_CAPABILITY_SET',
             'classification_state': 'REVIEWED_BLOCKED_INCOMPLETE',
@@ -647,10 +699,10 @@ def main() -> None:
         ('no_token_semantic_review_count', str(len(semantic_reviews))),
         ('no_token_confirmed_a_count', str(sum(1 for row in semantic_reviews if row['semantic_result'] == 'CONFIRMED_A'))),
         ('no_token_reclassified_b_count', str(sum(1 for row in semantic_reviews if row['semantic_result'] == 'RECLASSIFIED_B'))),
-        ('provider_review_count', str(len(provider_reviews))),
-        ('provider_authority_accepted_count', str(sum(1 for row in provider_reviews if row['decision'] == 'ACCEPTED_BOUNDED_PROVIDER'))),
-        ('provider_authority_open_count', str(claim_type_counts['PROVIDER_AUTHORITY'] - len(provider_reviews))),
-        ('authority_effect', 'TWENTY_ONE_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT'),
+        ('provider_review_count', str(len(provider_reviews) + len(libxdamage_provider_reviews))),
+        ('provider_authority_accepted_count', str(sum(1 for row in provider_reviews if row['decision'] == 'ACCEPTED_BOUNDED_PROVIDER') + sum(1 for row in libxdamage_provider_reviews if row['decision'] == 'ACCEPTED_BOUNDED_PROVIDER'))),
+        ('provider_authority_open_count', str(claim_type_counts['PROVIDER_AUTHORITY'] - len(provider_reviews) - len(libxdamage_provider_reviews))),
+        ('authority_effect', 'TWENTY_TWO_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_INCLUDING_EXACT_PROJECT_LIBXDAMAGE_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT'),
         ('oj001_disposition', libjpeg_disposition['disposition']),
         ('oj001_required_identity', libjpeg_disposition['required_lookup_identity']),
         ('oj001_candidate_state', libjpeg_disposition['exact_repository_candidate_state']),
@@ -674,7 +726,7 @@ def main() -> None:
         ('oj001_provider_result_sha256', libjpeg_provider_review['result_archive_sha256']),
         ('oj001_provider_matrix_pass_count', libjpeg_provider_review['matrix_pass_count']),
         ('oj001_provider_decision', libjpeg_provider_review['decision']),
-        ('next_review_tranche', 'LIBXDAMAGE_BOUNDED_PROVIDER_AUTHORITY_REVIEW'),
+        ('next_review_tranche', 'AT_SPI2_ATK_ATOMIC_CANDIDATE_PREPARATION'),
     ]
 
     write_tsv(out_root / CLAIM_OUTPUT, CLAIM_FIELDS, claims)

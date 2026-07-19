@@ -33,6 +33,7 @@ required=(
   experiments/glibc/selected-obsidian-provider-authority/review/libjpeg-so-62-provider-candidate-disposition.tsv
   experiments/glibc/selected-obsidian-provider-authority/review/libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review.tsv
   experiments/glibc/selected-obsidian-provider-authority/review/libjpeg-so-62-loader-isolated-provider-authority.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/libxdamage-bounded-provider-authority.tsv
 )
 for rel in "${required[@]}"; do
   [ -f "$ROOT/$rel" ] || { echo "provider-claim-classification: FAIL: missing $rel" >&2; exit 1; }
@@ -70,22 +71,23 @@ dispositions = read('provider-sup-02-request-disposition.tsv')
 roots = read('generic-build-attestation-adaptation-root-review-set.tsv')
 requests = read('generic-build-attestation-adaptation-gap-evidence-supply-batch-sup-02-custodian-export-requests.tsv')
 metadata = {row['key']: row['value'] for row in read('provider-claim-classification-metadata.tsv')}
-provider_reviews = read('xorg-reference-consumed-provider-authority.tsv') + read('libtasn1-reference-consumed-provider-authority.tsv') + read('libepoxy-reference-consumed-provider-authority.tsv') + read('pango-reference-consumed-provider-authority.tsv') + read('gdkpixbuf-reference-dependency-provider-authority.tsv') + read('gdkpixbuf-exact-util-linux-provider-authority.tsv') + read('libxcursor-bounded-provider-authority.tsv') + read('libthai-libdatrie-bounded-provider-authority.tsv') + read('libcloudproviders-bounded-provider-authority.tsv') + read('fribidi-bounded-provider-authority.tsv') + read('freetype-bounded-provider-authority.tsv') + read('libxkbcommon-bounded-provider-authority.tsv') + read('harfbuzz-bounded-provider-authority.tsv') + read('fontconfig-bounded-provider-authority.tsv') + read('cairo-bounded-provider-authority.tsv') + read('libjpeg-so-62-loader-isolated-provider-authority.tsv')
-provider_review_by_root = {row['root_review_id']: row for row in provider_reviews}
+provider_reviews = read('xorg-reference-consumed-provider-authority.tsv') + read('libtasn1-reference-consumed-provider-authority.tsv') + read('libepoxy-reference-consumed-provider-authority.tsv') + read('pango-reference-consumed-provider-authority.tsv') + read('gdkpixbuf-reference-dependency-provider-authority.tsv') + read('gdkpixbuf-exact-util-linux-provider-authority.tsv') + read('libxcursor-bounded-provider-authority.tsv') + read('libthai-libdatrie-bounded-provider-authority.tsv') + read('libcloudproviders-bounded-provider-authority.tsv') + read('fribidi-bounded-provider-authority.tsv') + read('freetype-bounded-provider-authority.tsv') + read('libxkbcommon-bounded-provider-authority.tsv') + read('harfbuzz-bounded-provider-authority.tsv') + read('fontconfig-bounded-provider-authority.tsv') + read('cairo-bounded-provider-authority.tsv') + read('libjpeg-so-62-loader-isolated-provider-authority.tsv') + read('libxdamage-bounded-provider-authority.tsv')
+provider_review_by_root = {row['root_review_id']: row for row in provider_reviews if row.get('root_review_id')}
+provider_review_ids = {row.get('review_id') for row in provider_reviews if row.get('review_id')}
 
 errors=[]
 expected_meta={
-    'root_count':'28','object_count':'37','claim_count':'89',
+    'root_count':'28','object_count':'37','claim_count':'91',
     'artifact_identity_claim_count':'28','adaptation_claim_count':'28',
-    'provider_authority_claim_count':'28','object_requirement_claim_count':'1',
-    'global_claim_count':'4','class_a_claim_count':'36','class_b_claim_count':'49',
-    'class_c_claim_count':'1','class_d_claim_count':'3','sup02_request_count':'28',
+    'provider_authority_claim_count':'29','object_requirement_claim_count':'1',
+    'global_claim_count':'4','class_a_claim_count':'36','class_b_claim_count':'50',
+    'class_c_claim_count':'2','class_d_claim_count':'3','sup02_request_count':'28',
     'sup02_still_necessary_count':'0','sup02_narrowed_count':'14',
     'sup02_replaced_count':'7','sup02_unnecessary_count':'7',
     'no_token_semantic_review_count':'7','no_token_confirmed_a_count':'7',
-    'no_token_reclassified_b_count':'0','provider_review_count':'21',
-    'provider_authority_accepted_count':'21','provider_authority_open_count':'7',
-    'authority_effect':'TWENTY_ONE_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT',
+    'no_token_reclassified_b_count':'0','provider_review_count':'22',
+    'provider_authority_accepted_count':'22','provider_authority_open_count':'7',
+    'authority_effect':'TWENTY_TWO_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_INCLUDING_EXACT_PROJECT_LIBXDAMAGE_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT',
     'oj001_disposition':'RUNPATH_FREE_COMPATIBILITY_PROVIDER_ACCEPTED_BOUNDED_GDKPIXBUF_JPEG_SCOPE',
     'oj001_required_identity':'libjpeg.so.62',
     'oj001_candidate_state':'NO_EXACT_REPOSITORY_SONAME_62_ARTIFACT;PROJECT_RUNPATH_FREE_V6B_CANDIDATE_BOUNDED_PROVIDER_AUTHORITY_ACCEPTED',
@@ -108,7 +110,7 @@ expected_meta={
     'oj001_provider_result_sha256':'4e546ac1ef2a92f3301dd51ca2328d6901a05e309da78b6d08b26211d9b621e3',
     'oj001_provider_matrix_pass_count':'6',
     'oj001_provider_decision':'ACCEPTED_BOUNDED_PROVIDER',
-    'next_review_tranche':'LIBXDAMAGE_BOUNDED_PROVIDER_AUTHORITY_REVIEW',
+    'next_review_tranche':'AT_SPI2_ATK_ATOMIC_CANDIDATE_PREPARATION',
 }
 for key,val in expected_meta.items():
     if metadata.get(key)!=val:
@@ -117,8 +119,8 @@ for key,val in expected_meta.items():
 ids=[row['claim_id'] for row in claims]
 if len(ids)!=len(set(ids)):
     errors.append('claim_id values are not unique')
-if len(claims)!=89:
-    errors.append(f'expected 89 claims, found {len(claims)}')
+if len(claims)!=91:
+    errors.append(f'expected 91 claims, found {len(claims)}')
 
 allowed_types={'ARTIFACT_IDENTITY','ADAPTATION_SEMANTICS','PROVIDER_AUTHORITY','OBJECT_REQUIREMENT_IDENTITY','BUILD_PROVENANCE','COMPOSITION','TARGET_POPULATION','ACTIVATION'}
 allowed_classes={'A','B','C','D'}
@@ -130,8 +132,8 @@ for row in claims:
     for field in ['project_owned_changed_boundary','remaining_gap','minimum_closure_action','authority_effect','prohibited_inference']:
         if not row[field]: errors.append(f"{row['claim_id']}: empty {field}")
     if 'ACCEPTED' in row['authority_effect']:
-        provider_ok=(row['claim_type']=='PROVIDER_AUTHORITY' and row['subject_id'] in provider_review_by_root and row['classification_state']=='BOUNDED_PROVIDER_AUTHORITY_ACCEPTED')
-        adaptation_ok=(row['claim_type']=='ADAPTATION_SEMANTICS' and row['subject_id'] in provider_review_by_root and row['authority_effect']=='ADAPTATION_CLASSIFICATION_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT' and row['claim_id'] in {'PCC-GLIB-ADAPTATION','PCC-LIBPNG-ADAPTATION','PCC-UTIL-LINUX-ADAPTATION','PCC-LIBXCURSOR-ADAPTATION','PCC-LIBTHAI-ADAPTATION','PCC-LIBDATRIE-ADAPTATION','PCC-LIBCLOUDPROVIDERS-ADAPTATION','PCC-FRIBIDI-ADAPTATION','PCC-FREETYPE-ADAPTATION','PCC-LIBXKBCOMMON-ADAPTATION','PCC-HARFBUZZ-ADAPTATION','PCC-FONTCONFIG-ADAPTATION','PCC-LIBCAIRO-ADAPTATION'})
+        provider_ok=(row['claim_type']=='PROVIDER_AUTHORITY' and (row['subject_id'] in provider_review_by_root or row['subject_id'] in provider_review_ids) and row['classification_state']=='BOUNDED_PROVIDER_AUTHORITY_ACCEPTED')
+        adaptation_ok=(row['claim_type']=='ADAPTATION_SEMANTICS' and (row['subject_id'] in provider_review_by_root or row['subject_id'] in provider_review_ids) and row['authority_effect']=='ADAPTATION_CLASSIFICATION_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT' and row['claim_id'] in {'PCC-GLIB-ADAPTATION','PCC-LIBPNG-ADAPTATION','PCC-UTIL-LINUX-ADAPTATION','PCC-LIBXCURSOR-ADAPTATION','PCC-LIBTHAI-ADAPTATION','PCC-LIBDATRIE-ADAPTATION','PCC-LIBCLOUDPROVIDERS-ADAPTATION','PCC-FRIBIDI-ADAPTATION','PCC-FREETYPE-ADAPTATION','PCC-LIBXKBCOMMON-ADAPTATION','PCC-HARFBUZZ-ADAPTATION','PCC-FONTCONFIG-ADAPTATION','PCC-LIBCAIRO-ADAPTATION'})
         if not (provider_ok or adaptation_ok):
             errors.append(f"{row['claim_id']}: unreviewed claim has authority effect")
     if row['authority_effect'] in {'PROVIDER_AUTHORITY','TARGET_POPULATION','ACTIVATION'}:
@@ -166,11 +168,11 @@ for rid, source in root_by_id.items():
         errors.append(f'{rid}: unreviewed provider claim is not open')
 
 ctype=Counter(r['claim_type'] for r in claims)
-want_types={'ARTIFACT_IDENTITY':28,'ADAPTATION_SEMANTICS':28,'PROVIDER_AUTHORITY':28,'OBJECT_REQUIREMENT_IDENTITY':1,'BUILD_PROVENANCE':1,'COMPOSITION':1,'TARGET_POPULATION':1,'ACTIVATION':1}
+want_types={'ARTIFACT_IDENTITY':28,'ADAPTATION_SEMANTICS':28,'PROVIDER_AUTHORITY':29,'OBJECT_REQUIREMENT_IDENTITY':1,'BUILD_PROVENANCE':2,'COMPOSITION':1,'TARGET_POPULATION':1,'ACTIVATION':1}
 if ctype!=Counter(want_types):
     errors.append(f'claim type counts differ: {dict(ctype)}')
 classes=Counter(r['adr_class'] for r in claims)
-if classes!=Counter({'A':36,'B':49,'C':1,'D':3}):
+if classes!=Counter({'A':36,'B':50,'C':2,'D':3}):
     errors.append(f'class counts differ: {dict(classes)}')
 
 request_ids={r['request_id'] for r in requests}
@@ -197,14 +199,14 @@ catalog=(root/'docs/catalog.tsv').read_text()
 status=(root/'STATUS.md').read_text()
 checks=[
     ('state version','state_version:' in state),
-    ('claim count state','total: 89' in state),
+    ('claim count state','total: 91' in state),
     ('SUP-02 state','required_now: 0' in state),
-    ('next task','Task ID: `review-libxdamage-production-candidate-bounded-provider-authority`' in active),
-    ('brief classification','89 separated claims' in brief),
+    ('next task','Task ID: `prepare-at-spi2-core-2-56-2-atomic-glibc-candidate`' in active),
+    ('brief classification','91 separated claims' in brief),
     ('catalog row','provider-claim-classification\tevidence\tcurrent\tcanonical' in catalog),
-    ('status next phase','qualified libXdamage Class B recipe and Class C artifact candidate retained' in status and 'AT-SPI2 core, GTK 3 core-pair and libSELinux glibc-candidate blockers retained' in status),
+    ('status next phase','exact libXdamage project candidate accepted as bounded GTK 3.24.49 GDK X11 provider' in status and 'AT-SPI2/ATK atomic candidate preparation active' in status),
     ('outside inventory prerequisites','exact `libpixman-1.so.0.46.4` is additionally accepted as a bounded Cairo prerequisite' in (root/'docs/evidence/provider-claim-classification.md').read_text() and 'exact `libgraphite2.so.3.2.1` is accepted as a bounded HarfBuzz Graphite-shaping prerequisite' in (root/'docs/evidence/provider-claim-classification.md').read_text()),
-    ('six blockers plus candidate','SIX_REVIEWED_NO_TERMUX_GLIBC_CANDIDATE_BLOCKERS' in next(r['remaining_gap'] for r in claims if r['claim_id']=='PCC-GLOBAL-COMPOSITION') and 'LIBXDAMAGE_QUALIFIED_LOCAL_CANDIDATE_PROVIDER_AUTHORITY_OPEN' in next(r['remaining_gap'] for r in claims if r['claim_id']=='PCC-GLOBAL-COMPOSITION')),
+    ('six blockers after libXdamage acceptance','6_SELECTED_GTK_PROVIDER_IDENTITIES_WITHOUT_ACCEPTED_PROVIDER_ROWS' in next(r['remaining_gap'] for r in claims if r['claim_id']=='PCC-GLOBAL-COMPOSITION') and 'LIBXDAMAGE_BOUNDED_PROVIDER_AUTHORITY_ACCEPTED' in next(r['remaining_gap'] for r in claims if r['claim_id']=='PCC-GLOBAL-COMPOSITION')),
     ('disposition catalog','libjpeg-so-62-provider-candidate-disposition\tevidence\tcurrent\tcanonical' in catalog),
 ]
 for label,ok in checks:
@@ -214,7 +216,7 @@ if errors:
     for err in errors:
         print('provider-claim-classification: FAIL:',err,file=sys.stderr)
     raise SystemExit(1)
-print('provider-claim-classification: PASS: 89 claims, 21 bounded inventory providers including Cairo, and 28 SUP-02 dispositions are coherent')
+print('provider-claim-classification: PASS: 91 claims, 21 bounded inventory providers plus exact project libXdamage, and 28 SUP-02 dispositions are coherent')
 PY
 
 echo 'provider-claim-classification: all checks passed'
