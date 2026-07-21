@@ -9,7 +9,8 @@ selected identities:     libatk-bridge-2.0.so.0.0.0
 required SONAMEs:        libatk-bridge-2.0.so.0
                          libatk-1.0.so.0
                          libatspi.so.0
-provider authority:      OPEN_BLOCKED_NO_GLIBC_CANDIDATE
+historical authority state: OPEN_BLOCKED_NO_GLIBC_CANDIDATE
+current candidate state:    SUPERSEDED_BY_QUALIFIED_ATOMIC_CANDIDATE
 composition effect:      NONE; all three selected identities remain gaps
 target/activation:       BLOCKED
 ```
@@ -46,4 +47,4 @@ ADR 0005 requires this tranche to stop without authority. Reopening requires an 
 
 Bionic package availability, installed bionic bytes, Debian oracle identities, source-level ABI expectations, or a metapackage relationship are not interchangeable with that evidence.
 
-The subsequent GTK 3.24.49 core-pair and libSELinux tranches also stopped without glibc candidates. After bounded libXdamage acceptance, this three-member AT-SPI2/ATK family is now the active atomic candidate-preparation lane. Candidate preparation does not grant provider or service authority.
+The subsequent GTK 3.24.49 core-pair and libSELinux tranches also stopped without glibc candidates. After bounded libXdamage acceptance, this three-member AT-SPI2/ATK family is now the active atomic candidate-preparation lane. Candidate preparation has now produced the exact atomic candidate recorded in `at-spi2-core-production-recipe-candidate-result-review.md`. This blocker remains historical discovery evidence. Provider and service authority remain open and are not granted by the candidate result.

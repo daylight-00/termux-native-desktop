@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+python3 - "$ROOT" <<'PY2'
+from pathlib import Path
+import csv,hashlib,sys
+root=Path(sys.argv[1]); review=root/'experiments/glibc/selected-obsidian-provider-authority/review'; cand=root/'experiments/glibc/selected-obsidian-provider-authority/candidates/at-spi2-core-glibc'
+paths=[root/'docs/evidence/at-spi2-core-production-recipe-candidate-result-review.md',review/'at-spi2-core-production-recipe-candidate-result-review.tsv',cand/'gpkg/at-spi2-core/build.sh',cand/'at-spi2-core-glibc-contribution.patch',root/'docs/current/STATE.yaml',root/'docs/current/ACTIVE_TASK.md',root/'docs/current/BRIEF.md',root/'docs/catalog.tsv',root/'STATUS.md']
+errors=[f'missing {p.relative_to(root)}' for p in paths if not p.is_file()]
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+if not errors:
+ rows=list(csv.DictReader(paths[1].open(newline='',encoding='utf-8'),delimiter='\t'))
+ if len(rows)!=1:errors.append(f'candidate rows {len(rows)}')
+ else:
+  r=rows[0]; exp={'review_id':'ATSPI2-CORE-CANDIDATE-001','result_archive_sha256':'461b24dac879ca71252c209f0013ff17cb8f8ed1a889a32f0376b87372f3d3a4','evidence_freeze_sha256':'b516ed70c10b6bf91fac08e2a461dc55e9f2b5337a4dade5b995e96fa5b4b40d','recipe_candidate_tree':'0f6e255985e5967fe793b8ee3e86f248a430513f','recipe_sha256':'6f727204730b6b0a3496c169f635c5016903cb64b816b7c84ca91fcbc9d4e30d','package_sha256':'9a1395e893448508cfb8fbdee8ef0dd8268b8d21e9ac7bbe792f163dce6c365a','activation_metadata_relocated_count':'7','active_activation_metadata_count':'0','candidate_decision':'QUALIFIED_ATOMIC_RECIPE_AND_LOCAL_ARTIFACT_FAMILY_CANDIDATE','provider_authority_state':'OPEN_BOUNDED_PROVIDER_AUTHORITY_REVIEW_REQUIRED'}
+  for k,v in exp.items():
+   if r.get(k)!=v:errors.append(f'{k}: expected {v}, got {r.get(k)!r}')
+ if sha(paths[2])!='6f727204730b6b0a3496c169f635c5016903cb64b816b7c84ca91fcbc9d4e30d':errors.append('recipe hash mismatch')
+ if sha(paths[3])!='26f6741fbb081c64bffb53d0a467564845df5ef5a0983b09f00e2e924bba6c50':errors.append('patch hash mismatch')
+ text=paths[2].read_text(); patch=paths[3].read_text()
+ for required in ['gcc-libs-glibc','termux_setup_gir','local payload_root=glibc','share/termux-native-desktop/disabled/at-spi2-core']:
+  if required not in text:errors.append(f'missing recipe marker: {required}')
+ for forbidden in ['TND_ISOLATED_','PROOT_PATH','production-private-jq','production-gnupg']:
+  if forbidden in text or forbidden in patch:errors.append(f'private harness token leaked: {forbidden}')
+ gaps=list(csv.DictReader((review/'selected-provider-composition-gaps.tsv').open(newline='',encoding='utf-8'),delimiter='\t'))
+ atspi=[g for g in gaps if g['identity_label'] in {'libatk-bridge-2.0.so.0.0.0','libatk-1.0.so.0.25611.1','libatspi.so.0.0.1'}]
+ if len(atspi)!=3 or any(g['gap_class']!='QUALIFIED_LOCAL_ATOMIC_CANDIDATE_PROVIDER_AUTHORITY_OPEN' for g in atspi):errors.append('AT-SPI2 composition rows are not exactly three candidate-open gaps')
+ doc=paths[0].read_text(); state=paths[4].read_text(); active=paths[5].read_text(); brief=paths[6].read_text(); catalog=paths[7].read_text(); status=paths[8].read_text()
+ checks=[('doc decisions','QUALIFIED_CLASS_B' in doc and 'QUALIFIED_CLASS_C' in doc),('no provider grant','OPEN_BOUNDED_PROVIDER_AUTHORITY_REVIEW_REQUIRED' in doc),('state candidate','at_spi2_core_production_candidate:' in state),('active review task','Task ID: `review-at-spi2-core-2-56-2-atomic-candidate-bounded-provider-authority`' in active),('brief candidate','AT-SPI2 core 2.56.2 atomic candidate lane is now qualified' in brief),('catalog','at-spi2-core-production-recipe-candidate-result-review\tevidence\tcurrent\tcanonical' in catalog),('status','exact atomic AT-SPI2 core 2.56.2 Class B recipe and Class C package/member candidate qualified' in status)]
+ for label,ok in checks:
+  if not ok:errors.append(f'missing marker: {label}')
+ for forbidden in ['provider authority here:       ACCEPTED','target/service activation:     ACCEPTED']:
+  if forbidden in doc:errors.append(f'forbidden widening: {forbidden}')
+if errors:
+ for e in errors:print('atspi2-candidate-review: FAIL:',e,file=sys.stderr)
+ raise SystemExit(1)
+print('atspi2-candidate-review: PASS: exact atomic Class B recipe and Class C package/member family are frozen; provider and service authority remain separate open reviews')
+PY2

@@ -130,10 +130,11 @@ def main():
    blocker='EXACT_CLASS_B_RECIPE_AND_CLASS_C_PACKAGE_MEMBER_CANDIDATE_QUALIFIED_BUT_PROVIDER_AUTHORITY_NOT_YET_DECIDED;APPROVED_SUPPLIER_PACKAGE_STILL_ABSENT'
    action='REVIEW_EXACT_LIBXDAMAGE_CANDIDATE_CAPABILITY_NECESSITY_CONSUMER_BINDING_COLLISION_UPDATE_AND_ROLLBACK_FOR_BOUNDED_PROVIDER_AUTHORITY'
   elif ident in atspi:
-   gc='BLOCKED_NO_TERMUX_GLIBC_PROVIDER_CANDIDATE'
-   pri='BLOCKED_AT_SPI2_CORE_NO_GLIBC_CANDIDATE'
-   blocker='APPROVED_GLIBC_INDEX_HAS_NO_AT_SPI2_CORE_GLIBC_PACKAGE_AND_PINNED_RECIPE_SOURCE_HAS_NO_AT_SPI2_OR_ATK_ROOT;OBSERVED_TERMUX_MAIN_AND_X11_PACKAGES_ARE_BIONIC_WRONG_ABI_WORLD'
-   action='ADD_OR_ACQUIRE_EXACT_APPROVED_TERMUX_GLIBC_AT_SPI2_CORE_ARCHIVE_OR_ARCHIVE_SET_AND_PINNED_RECIPE_THEN_REPEAT_THREE_MEMBER_SONAME_ALIAS_DEPENDENCY_GTK_BINDING_SERVICE_LIFECYCLE_COLLISION_UPDATE_AND_ROLLBACK_REVIEW'
+   mapped='QUALIFIED_LOCAL_ATOMIC_CLASS_C_CANDIDATE_AUTHORITY_OPEN'
+   gc='QUALIFIED_LOCAL_ATOMIC_CANDIDATE_PROVIDER_AUTHORITY_OPEN'
+   pri='AT_SPI2_ATK_ATOMIC_BOUNDED_PROVIDER_AUTHORITY_REVIEW'
+   blocker='EXACT_CLASS_B_RECIPE_AND_CLASS_C_ATOMIC_PACKAGE_THREE_MEMBER_CANDIDATE_QUALIFIED_BUT_PROVIDER_AUTHORITY_NOT_YET_DECIDED;APPROVED_SUPPLIER_PACKAGE_STILL_ABSENT;SERVICE_AUTHORITY_EXCLUDED'
+   action='REVIEW_EXACT_AT_SPI2_ATK_ATOMIC_CANDIDATE_CAPABILITY_CONSUMER_BINDING_DEPENDENCY_COLLISION_SERVICE_LIFECYCLE_UPDATE_AND_ROLLBACK_FOR_BOUNDED_PROVIDER_AUTHORITY'
   elif ident in gtk3:
    gc='BLOCKED_NO_TERMUX_GLIBC_PROVIDER_CANDIDATE'
    pri='BLOCKED_GTK3_CORE_NO_GLIBC_CANDIDATE'
@@ -154,6 +155,6 @@ def main():
  reviewed=sum(g['root_mapping']!='NONE_REVIEWED_ROOT' for g in gaps)
  outside=len(gaps)-reviewed
  metadata=[
- ('schema_version','1'),('decision_policy','ADR-0005'),('selected_gtk_identity_count','37'),('accepted_provider_root_count','29'),('accepted_member_count','37'),('included_member_count','36'),('deferred_member_count','1'),('unresolved_selected_identity_count','6'),('reviewed_root_gap_count',str(reviewed)),('outside_28_root_gap_count',str(outside)),('accepted_soname_collision_count','0'),('accepted_alias_collision_count','0'),('composition_decision','REVIEWED_BLOCKED_INCOMPLETE'),('target_manifest_allowed','NO'),('next_review_tranche','AT_SPI2_ATK_ATOMIC_CANDIDATE_PREPARATION'),('authority_effect','NO_TARGET_POPULATION_MATERIALIZATION_OR_ACTIVATION')]
+ ('schema_version','1'),('decision_policy','ADR-0005'),('selected_gtk_identity_count','37'),('accepted_provider_root_count','29'),('accepted_member_count','37'),('included_member_count','36'),('deferred_member_count','1'),('unresolved_selected_identity_count','6'),('reviewed_root_gap_count',str(reviewed)),('outside_28_root_gap_count',str(outside)),('accepted_soname_collision_count','0'),('accepted_alias_collision_count','0'),('composition_decision','REVIEWED_BLOCKED_INCOMPLETE'),('target_manifest_allowed','NO'),('next_review_tranche','AT_SPI2_ATK_ATOMIC_BOUNDED_PROVIDER_AUTHORITY_REVIEW'),('authority_effect','NO_TARGET_POPULATION_MATERIALIZATION_OR_ACTIVATION')]
  write(out/MEM,MEM_FIELDS,rows);write(out/GAPS,GAP_FIELDS,gaps);write(out/META,['key','value'],[{'key':k,'value':v} for k,v in metadata])
 if __name__=='__main__':main()

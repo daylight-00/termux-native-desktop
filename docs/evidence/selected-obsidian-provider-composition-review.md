@@ -29,8 +29,8 @@ The selected `libgdk-3.so.0.2417.32` and `libgtk-3.so.0.2417.32` pair remains `B
 
 Selected `libselinux.so.1` remains `BLOCKED_NO_TERMUX_GLIBC_PROVIDER_CANDIDATE`. Android and ordinary Termux/bionic SELinux libraries are boundary evidence only and do not authorize a cross-world alias, policy loading, relabeling or glibc compatibility.
 
-All six unresolved selected identities are reviewed no-candidate blockers. The Class D composition remains incomplete and no target manifest is allowed.
+All six selected identities remain unresolved. The three AT-SPI2/ATK identities now have one exact qualified atomic local candidate family with provider authority still open; the GTK 3 core pair and libSELinux remain reviewed no-candidate blockers. The Class D composition remains incomplete and no target manifest is allowed.
 
 ## Production-boundary disposition and next tranche
 
-The libXdamage production and authority lane is complete at the bounded provider layer only. The next tranche is `AT_SPI2_ATK_ATOMIC_CANDIDATE_PREPARATION`: prepare one pinned AT-SPI2 core 2.56.2 Class B recipe candidate and one coherent isolated Class C package/member family for all three selected identities, or stop with a precise source, recipe, dependency, atomicity or service-lifecycle blocker. It does not authorize provider authority, supplier publication, package installation, D-Bus activation, accessibility enablement, target population, deployment or activation.
+The AT-SPI2/ATK production candidate lane is complete at the qualification layer only. The next tranche is `AT_SPI2_ATK_ATOMIC_BOUNDED_PROVIDER_AUTHORITY_REVIEW`: review the exact Class B recipe and coherent Class C three-member family for one narrowly bounded selected GTK accessibility capability, or retain a precise provider blocker. It does not authorize supplier publication, package installation, D-Bus activation, accessibility enablement, target population, deployment, or activation.

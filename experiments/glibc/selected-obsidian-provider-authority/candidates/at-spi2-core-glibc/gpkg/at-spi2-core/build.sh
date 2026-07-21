@@ -1,0 +1,57 @@
+TERMUX_PKG_HOMEPAGE=https://wiki.gnome.org/Accessibility
+TERMUX_PKG_DESCRIPTION="Assistive Technology Service Provider Interface (AT-SPI)"
+TERMUX_PKG_LICENSE="LGPL-2.1"
+TERMUX_PKG_MAINTAINER="@termux-pacman"
+TERMUX_PKG_VERSION=2.56.2
+TERMUX_PKG_SRCURL=https://download.gnome.org/sources/at-spi2-core/${TERMUX_PKG_VERSION%.*}/at-spi2-core-${TERMUX_PKG_VERSION}.tar.xz
+TERMUX_PKG_SHA256=e1b1c9836a8947852f7440c32e23179234c76bd98cd9cc4001f376405f8b783b
+TERMUX_PKG_AUTO_UPDATE=true
+TERMUX_PKG_DEPENDS="dbus-glibc, gcc-libs-glibc, glib-glibc, libx11-glibc, libxi-glibc, libxtst-glibc"
+TERMUX_PKG_BUILD_DEPENDS="gobject-introspection-glibc, libxml2-glibc"
+TERMUX_PKG_PROVIDES="at-spi2-atk-glibc, atk-glibc"
+TERMUX_PKG_REPLACES="at-spi2-atk-glibc (<< 2.46.0), atk-glibc (<< 2.46.0), libatk-glibc"
+TERMUX_PKG_BREAKS="at-spi2-atk-glibc (<< 2.46.0), atk-glibc (<< 2.46.0), libatk-glibc"
+TERMUX_PKG_VERSIONED_GIR=false
+TERMUX_PKG_DISABLE_GIR=false
+TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
+-Ddbus_daemon=$TERMUX_PREFIX/bin/dbus-daemon
+-Dintrospection=enabled
+-Dx11=enabled
+-Dgtk2_atk_adaptor=false
+-Duse_systemd=false
+-Ddefault_bus=dbus-daemon
+-Ddbus_services_dir=$TERMUX_PREFIX/share/dbus-1/services
+-Dsystemd_user_dir=$TERMUX_PREFIX/lib/systemd/user
+-Ddocs=false
+"
+
+termux_step_pre_configure() {
+	termux_setup_gir
+	termux_setup_glib_cross_pkg_config_wrapper
+	termux_setup_python_pip
+	export TERMUX_MESON_ENABLE_SOVERSION=1
+}
+
+termux_step_post_massage() {
+	local payload_root=glibc
+	local disabled_root="$payload_root/share/termux-native-desktop/disabled/at-spi2-core"
+	local rel
+	for rel in \
+		etc/xdg/autostart/at-spi-dbus-bus.desktop \
+		share/dbus-1/services/org.a11y.Bus.service \
+		share/dbus-1/accessibility-services/org.a11y.atspi.Registry.service \
+		share/defaults/at-spi2/accessibility.conf \
+		etc/xdg/Xwayland-session.d/00-at-spi \
+		lib/systemd/user/at-spi-dbus-bus.service \
+		lib/gnome-settings-daemon-3.0/gtk-modules/at-spi2-atk.desktop; do
+		[ -f "$payload_root/$rel" ] || termux_error_exit "AT-SPI2 activation metadata guard failed: $payload_root/$rel"
+		mkdir -p "$disabled_root/$(dirname "$rel")"
+		mv "$payload_root/$rel" "$disabled_root/$rel"
+	done
+	for rel in \
+		lib/libatk-1.0.so.0 \
+		lib/libatk-bridge-2.0.so.0 \
+		lib/libatspi.so.0; do
+		[ -e "$payload_root/$rel" ] || termux_error_exit "AT-SPI2/ATK atomic SOVERSION guard failed: $payload_root/$rel"
+	done
+}

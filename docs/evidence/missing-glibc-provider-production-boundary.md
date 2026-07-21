@@ -89,7 +89,7 @@ Rejected lanes: Android `libandroid-selinux` substitution, `/system` library reu
 
 ```text
 1. libXdamage Class B recipe, isolated Class C candidate and bounded provider decision — complete
-2. prepare the atomic AT-SPI2/ATK recipe contribution and candidate family
+2. AT-SPI2/ATK atomic Class B recipe and Class C candidate family — qualified; bounded provider review active
 3. prepare the atomic GTK 3 GDK/GTK recipe contribution and candidate pair
 4. revisit libSELinux only after direct-consumer necessity and symbol semantics are proven
 ```
@@ -100,4 +100,4 @@ The order is an evidence and dependency order, not authority inheritance. Comple
 
 Stop a lane when exact source lineage, adaptation necessity, dependency closure, license/distribution boundary, atomicity, functional validation or rollback cannot be bounded. Do not widen the collector or combine families merely to continue execution.
 
-The first lane has produced and separated an exact Class B recipe candidate and exact isolated Class C artifact candidate, and `LIBXDAMAGE-PROV-001` now accepts the exact member for bounded GTK 3.24.49 GDK X11 damage-extension capability only. Supplier publication, installation, target population, deployment and activation remain unaccepted. The next task is `prepare-at-spi2-core-2-56-2-atomic-glibc-candidate`.
+The first lane has bounded libXdamage provider authority. The second lane has now produced and separated exact atomic Class B recipe and Class C package/member evidence for AT-SPI2 core 2.56.2, with all service metadata disabled and protected state unchanged. Supplier publication, provider authority, installation, target population, D-Bus/accessibility activation, deployment, and activation remain unaccepted. The next task is `review-at-spi2-core-2-56-2-atomic-candidate-bounded-provider-authority`.

@@ -24,11 +24,11 @@ if not errors:
  got=[g for g in gaps if g['selected_evidence_row_id'] in ids]
  if len(got)!=3 or {g['selected_evidence_row_id'] for g in got}!=ids: errors.append('AT-SPI2 composition gaps missing or duplicated')
  for g in got:
-  if g['gap_class']!='BLOCKED_NO_TERMUX_GLIBC_PROVIDER_CANDIDATE': errors.append(f"{g['selected_evidence_row_id']} gap class widened or stale")
-  if g['priority_tranche']!='BLOCKED_AT_SPI2_CORE_NO_GLIBC_CANDIDATE': errors.append(f"{g['selected_evidence_row_id']} priority disposition stale")
-  if 'WRONG_ABI_WORLD' not in g['blocker_reason']: errors.append(f"{g['selected_evidence_row_id']} bionic/glibc boundary missing")
+  if g['gap_class']!='QUALIFIED_LOCAL_ATOMIC_CANDIDATE_PROVIDER_AUTHORITY_OPEN': errors.append(f"{g['selected_evidence_row_id']} candidate-open gap class missing or stale")
+  if g['priority_tranche']!='AT_SPI2_ATK_ATOMIC_BOUNDED_PROVIDER_AUTHORITY_REVIEW': errors.append(f"{g['selected_evidence_row_id']} priority disposition stale")
+  if 'SERVICE_AUTHORITY_EXCLUDED' not in g['blocker_reason'] or 'PROVIDER_AUTHORITY_NOT_YET_DECIDED' not in g['blocker_reason']: errors.append(f"{g['selected_evidence_row_id']} candidate/provider/service boundary missing")
  doc=(root/'docs/evidence/at-spi2-core-provider-evidence-blocker.md').read_text(); state=(root/'docs/current/STATE.yaml').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); brief=(root/'docs/current/BRIEF.md').read_text(); catalog=(root/'docs/catalog.tsv').read_text(); status=(root/'STATUS.md').read_text()
- markers=[('doc decision','OPEN_BLOCKED_NO_GLIBC_CANDIDATE' in doc),('doc no bionic inference','do not supply a Termux glibc archive' in doc),('state blocker','at_spi2_core_provider_blocker:' in state and 'service_activation: blocked' in state),('next task','Task ID: `prepare-at-spi2-core-2-56-2-atomic-glibc-candidate`' in active),('brief blocker','AT-SPI2 core tranche remains `OPEN_BLOCKED_NO_GLIBC_CANDIDATE`' in brief),('catalog','at-spi2-core-provider-evidence-blocker	evidence	current	canonical' in catalog),('status','AT-SPI2/ATK atomic candidate preparation active' in status)]
+ markers=[('doc historical decision','OPEN_BLOCKED_NO_GLIBC_CANDIDATE' in doc and 'SUPERSEDED_BY_QUALIFIED_ATOMIC_CANDIDATE' in doc),('doc no bionic inference','do not supply a Termux glibc archive' in doc),('state blocker','at_spi2_core_provider_blocker:' in state and 'service_activation: blocked' in state),('next task','Task ID: `review-at-spi2-core-2-56-2-atomic-candidate-bounded-provider-authority`' in active),('brief candidate','AT-SPI2 core 2.56.2 atomic candidate lane is now qualified' in brief),('catalog','at-spi2-core-provider-evidence-blocker	evidence	superseded	history' in catalog),('status','exact atomic AT-SPI2 core 2.56.2 Class B recipe and Class C package/member candidate qualified' in status)]
  for label,ok in markers:
   if not ok: errors.append(f'missing marker: {label}')
  for forbidden in ['provider authority:      ACCEPTED','BIONIC_AT_SPI2_ACCEPTED_AS_GLIBC_PROVIDER','service activation:      ALLOWED']:
@@ -36,5 +36,5 @@ if not errors:
 if errors:
  for e in errors: print('at-spi2-core-blocker: FAIL:',e,file=sys.stderr)
  raise SystemExit(1)
-print('at-spi2-core-blocker: PASS: missing approved glibc package and pinned recipe candidate are recorded; bionic accessibility packages remain non-authoritative and production boundary is retained and atomic AT-SPI2/ATK candidate preparation is active')
+print('at-spi2-core-blocker: PASS: historical missing-candidate evidence is retained; the exact atomic candidate now supersedes the blocker while bounded provider and service authority remain open')
 PY2

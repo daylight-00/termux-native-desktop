@@ -726,7 +726,7 @@ def main() -> None:
         ('oj001_provider_result_sha256', libjpeg_provider_review['result_archive_sha256']),
         ('oj001_provider_matrix_pass_count', libjpeg_provider_review['matrix_pass_count']),
         ('oj001_provider_decision', libjpeg_provider_review['decision']),
-        ('next_review_tranche', 'AT_SPI2_ATK_ATOMIC_CANDIDATE_PREPARATION'),
+        ('next_review_tranche', 'AT_SPI2_ATK_ATOMIC_BOUNDED_PROVIDER_AUTHORITY_REVIEW'),
     ]
 
     write_tsv(out_root / CLAIM_OUTPUT, CLAIM_FIELDS, claims)

@@ -1,7 +1,7 @@
 # Status
 
-bundle-native documentation and operations control planes active; ADR 0005 claim classification complete; exact libXdamage project candidate accepted as bounded GTK 3.24.49 GDK X11 provider while Class C producing and supplier-publication boundaries remain explicit; selected-provider composition incomplete with 6 reviewed blocker gaps; AT-SPI2/ATK atomic candidate preparation active; GTK 3 core-pair and libSELinux blockers retained
-> **Updated:** 2026-07-19
+bundle-native documentation and operations control planes active; ADR 0005 claim classification complete with 91 separated claims; exact libXdamage project candidate accepted as bounded GTK 3.24.49 GDK X11 provider and retained; exact atomic AT-SPI2 core 2.56.2 Class B recipe and Class C package/member candidate qualified with provider authority open; selected-provider composition incomplete with 6 unresolved identities; bounded AT-SPI2/ATK provider review active; GTK 3 core-pair and libSELinux blockers retained
+> **Updated:** 2026-07-21
 
 ## Repository and deployment consolidation
 
@@ -395,3 +395,7 @@ reopen closed graphics gates.
 ## Evidence policy
 
 Prototype validity, oracle validity, exact supply identity, semantic role, platform adaptation, candidate-source comparison, artifact-to-recipe binding, profile necessity, alias necessity, application composition, target ownership, materialization, activation, rollback, and clean reconstruction are separate claims.
+
+## Qualified atomic AT-SPI2 core production candidate
+
+The exact `at-spi2-core-glibc 2.56.2` package and its three selected runtime members are frozen as an atomic Class C producing record under an exact Class B recipe. Four GIR/typelib artifacts are byte-exact, seven activation metadata files are disabled, package/live-prefix/repository invariance passed, and no install or service activation occurred. Provider authority remains open; the active task is the bounded three-member provider review.
