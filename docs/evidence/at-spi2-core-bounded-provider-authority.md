@@ -71,7 +71,7 @@ The provider is atomic. No one- or two-member subset is accepted. The package's 
 
 ## Capability, necessity and consumer binding
 
-GTK 3.24 exposes `GtkAccessible` as an `AtkObject`-derived base for widget accessibility implementations, and the GTK 3 accessibility contract links `atk-bridge` into GTK by default. The selected GTK source coordinate remains commit `7a7e86ecab67e7cf65f066dae2e02ae74d653ced`.
+GTK 3.24 exposes `GtkAccessible` as an `AtkObject`-derived base for widget accessibility implementations, and the GTK 3 accessibility contract links `atk-bridge` into GTK by default. The corrected official GTK 3.24.49 source coordinate is tag object `9003f198803b9b8b1d7def25a2359f8ebb4b25cf` peeled to commit `198aeace1e9e119c77f4d669bd8efdf337828ad1`. Source-coordinate correction `GTK3-SOURCE-COORDINATE-001` revalidates the relation against GTK blobs `08337ec70cf1c006720eb3ab78a8beac32c898f5`, `ea866d8231c2a5fa9b1972c4b11148c35cd228b8`, and `9c2229b3e886b3dd3c8f0c8855d484bdd9f936f1`.
 
 The exact family satisfies three coupled linkage directions:
 

@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-21.02`
+> Semantic state version: `2026-07-22.01`
 >
 > This is the compact current-state entry point. Exact commit and tree coordinates come from the checked-out full Git bundle, not from self-referential repository text.
 
@@ -35,4 +35,4 @@ The AT-SPI2 decision does not authorize D-Bus bus ownership, registry-daemon ope
 
 The selected composition has three unresolved identities: the atomic GTK 3.24.49 GDK/GTK pair and `libselinux.so.1`. The Class D composition remains incomplete, and target-manifest generation is still prohibited.
 
-The active task is `prepare-gtk3-core-3-24-49-atomic-glibc-candidate`. It may produce only a separated Class B recipe candidate and Class C local GDK/GTK pair for later review. It does not grant GTK provider authority or any target, display, service, deployment, or activation effect.
+The active task is `prepare-gtk3-core-3-24-49-atomic-glibc-candidate`. Source lineage is corrected to official tag object `9003f198803b9b8b1d7def25a2359f8ebb4b25cf`, commit `198aeace1e9e119c77f4d669bd8efdf337828ad1`, and archive SHA-256 `a2958d82986c81794e953a3762335fa7c78948706d23cced421f7245ca544cbc`; the next step is production recipe and isolated build design. It may produce only a separated Class B recipe candidate and Class C local GDK/GTK pair for later review. It does not grant GTK provider authority or any target, display, service, deployment, or activation effect.

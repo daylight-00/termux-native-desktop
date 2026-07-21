@@ -75,6 +75,7 @@ reject_text docs/system-foundation/REFERENCES.md '../../scripts/deploy-gl.sh' 'f
 "$ROOT/tools/docs/check-at-spi2-core-production-recipe-candidate-result-review"
 "$ROOT/tools/docs/check-at-spi2-core-bounded-provider-authority"
 "$ROOT/tools/docs/check-gtk3-core-provider-evidence-blocker"
+"$ROOT/tools/docs/check-gtk3-3-24-49-source-coordinate-correction"
 "$ROOT/tools/docs/check-libselinux-provider-evidence-blocker"
 "$ROOT/tools/docs/check-missing-glibc-provider-production-boundary"
 "$ROOT/tools/docs/check-graphite2-harfbuzz-prerequisite-provider-authority"

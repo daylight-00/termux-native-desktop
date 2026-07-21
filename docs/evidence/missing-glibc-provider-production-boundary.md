@@ -71,7 +71,7 @@ Rejected lanes: bionic metapackage reuse, installed-byte copying, service startu
 
 ### 3. GTK 3 core — deferred atomic contribution lane
 
-Preferred lane: one pinned GTK `3.24.49` glibc recipe contribution from exact upstream commit `7a7e86ecab67e7cf65f066dae2e02ae74d653ced`, producing `libgdk-3.so.0.2417.32` and `libgtk-3.so.0.2417.32` atomically. The recipe/configuration claim is Class B; locally produced package bytes are Class C.
+Preferred lane: one pinned GTK `3.24.49` glibc recipe contribution from exact upstream commit `198aeace1e9e119c77f4d669bd8efdf337828ad1`, producing `libgdk-3.so.0.2417.32` and `libgtk-3.so.0.2417.32` atomically. The recipe/configuration claim is Class B; locally produced package bytes are Class C.
 
 The required libXdamage and AT-SPI2/ATK bounded provider decisions are now available, so this lane is authorized for separate candidate preparation. Backend, accessibility, input, printing, portal, theme, settings, module and service choices must be explicit. A changed backend set is an adaptation and cannot be inferred from ordinary Termux GTK. Acceptance requires exact source/recipe/toolchain/output records, both member and alias identities, GTK-to-GDK direct binding, complete dependency closure, controlled load/init and minimal surface tests, collision review and coordinated update/rollback.
 

@@ -43,6 +43,10 @@ The two identities remain one atomic core tranche because `libgtk-3.so.0` direct
 
 Broad GTK package contents, tools, demos, schemas, icon caches, themes, input modules, print backends, Wayland/X11 backend enablement, accessibility integration, D-Bus activation, and package-wide files remain outside this decision.
 
+## Source-coordinate correction
+
+The package/recipe absence decision remains valid, but the previous project-selected GTK commit was not the 3.24.49 release commit. `GTK3-SOURCE-COORDINATE-001` supersedes that source coordinate with official tag object `9003f198803b9b8b1d7def25a2359f8ebb4b25cf`, peeled commit `198aeace1e9e119c77f4d669bd8efdf337828ad1`, and archive SHA-256 `a2958d82986c81794e953a3762335fa7c78948706d23cced421f7245ca544cbc`. Archive/tag byte-manifest equivalence and protected-state invariance passed. This correction does not create a glibc GTK candidate or widen provider authority.
+
 ## Stop condition and reopening gate
 
 ADR 0005 requires this tranche to stop without authority. Reopening requires an exact approved Termux glibc archive or coherent archive set, package digest, both exact member digests and SONAME aliases, pinned recipe tree, runtime dependency closure, GTK-to-GDK direct binding, optional-backend boundary, collision review, update boundary, and rollback boundary.

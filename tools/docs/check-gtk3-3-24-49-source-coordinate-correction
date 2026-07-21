@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+python3 - "$ROOT" <<'PY2'
+from pathlib import Path
+import csv,sys
+root=Path(sys.argv[1]); review=root/'experiments/glibc/selected-obsidian-provider-authority/review'
+paths=[root/'docs/evidence/gtk3-3-24-49-source-coordinate-correction.md',review/'gtk3-3-24-49-source-coordinate-correction.tsv',root/'docs/current/ACTIVE_TASK.md',root/'docs/current/BRIEF.md',root/'docs/current/STATE.yaml',root/'docs/current/PENDING_ARTIFACTS.yaml',root/'docs/evidence/libxdamage-bounded-provider-authority.md',root/'docs/evidence/at-spi2-core-bounded-provider-authority.md',root/'docs/evidence/gtk3-core-provider-evidence-blocker.md',root/'docs/evidence/missing-glibc-provider-production-boundary.md',root/'docs/catalog.tsv',root/'STATUS.md']
+errors=[f'missing {p.relative_to(root)}' for p in paths if not p.is_file()]
+if not errors:
+ rows=list(csv.DictReader(paths[1].open(newline='',encoding='utf-8'),delimiter='	'))
+ if len(rows)!=1: errors.append(f'correction rows {len(rows)}')
+ else:
+  r=rows[0]; exp={'review_id':'GTK3-SOURCE-COORDINATE-001','result_archive_sha256':'782136c4f95bf4cd56dc0b9861743a4e8eb12ebd07227062ed4552b6719ab250','previous_project_commit':'7a7e86ecab67e7cf65f066dae2e02ae74d653ced','official_tag_object':'9003f198803b9b8b1d7def25a2359f8ebb4b25cf','official_tag_commit':'198aeace1e9e119c77f4d669bd8efdf337828ad1','source_archive_sha256':'a2958d82986c81794e953a3762335fa7c78948706d23cced421f7245ca544cbc','source_tree_equivalence':'OFFICIAL_TAG_ARCHIVE_BYTE_MANIFEST_EQUIVALENT','source_coordinate_state':'CORRECTED_TO_OFFICIAL_TAG_COMMIT','existing_provider_authority_effect':'LIBXDAMAGE_AND_ATSPI2_BOUNDED_SCOPES_RETAINED_NOT_WIDENED','composition_effect':'NO_COMPOSITION_EFFECT_THREE_GAPS_RETAINED','target_effect':'BLOCKED'}
+  for k,v in exp.items():
+   if r.get(k)!=v: errors.append(f'{k}: expected {v}, got {r.get(k)!r}')
+ doc=paths[0].read_text(); active=paths[2].read_text(); brief=paths[3].read_text(); state=paths[4].read_text(); pending=paths[5].read_text(); libx=paths[6].read_text(); atspi=paths[7].read_text(); blocker=paths[8].read_text(); boundary=paths[9].read_text(); catalog=paths[10].read_text(); status=paths[11].read_text()
+ checks=[
+ ('official coordinate in doc','9003f198803b9b8b1d7def25a2359f8ebb4b25cf' in doc and '198aeace1e9e119c77f4d669bd8efdf337828ad1' in doc and 'a2958d82986c81794e953a3762335fa7c78948706d23cced421f7245ca544cbc' in doc),
+ ('archive equivalence','byte-manifest equivalence' in doc),
+ ('consumer revalidation','754ae0a6158003385dc3cbfda2fa17c23eb5c347' in doc and '9c2229b3e886b3dd3c8f0c8855d484bdd9f936f1' in doc),
+ ('active task corrected','198aeace1e9e119c77f4d669bd8efdf337828ad1' in active and 'a2958d82986c81794e953a3762335fa7c78948706d23cced421f7245ca544cbc' in active and '7a7e86ecab67e7cf65f066dae2e02ae74d653ced' not in active),
+ ('brief corrected','198aeace1e9e119c77f4d669bd8efdf337828ad1' in brief),
+ ('state corrected','gtk3_source_coordinate:' in state and '198aeace1e9e119c77f4d669bd8efdf337828ad1' in state),
+ ('versions aligned','state_version: 2026-07-22.01' in state and 'state_version: 2026-07-22.01' in pending and 'Semantic state version: `2026-07-22.01`' in brief),
+ ('libx authority corrected','198aeace1e9e119c77f4d669bd8efdf337828ad1' in libx and '7a7e86ecab67e7cf65f066dae2e02ae74d653ced' not in libx),
+ ('atspi authority corrected','198aeace1e9e119c77f4d669bd8efdf337828ad1' in atspi and '7a7e86ecab67e7cf65f066dae2e02ae74d653ced' not in atspi),
+ ('blocker correction retained','GTK3-SOURCE-COORDINATE-001' in blocker),
+ ('production boundary corrected','198aeace1e9e119c77f4d669bd8efdf337828ad1' in boundary and '7a7e86ecab67e7cf65f066dae2e02ae74d653ced' not in boundary),
+ ('catalog current','gtk3-3-24-49-source-coordinate-correction	evidence	current	canonical' in catalog),
+ ('status corrected','official GTK 3.24.49 source coordinate corrected' in status),
+ ]
+ for label,ok in checks:
+  if not ok: errors.append(f'missing marker: {label}')
+ for forbidden in ['provider authority: ACCEPTED','composition: ACCEPTED','target population: ALLOWED','installation: AUTHORIZED']:
+  if forbidden in doc: errors.append(f'forbidden widening: {forbidden}')
+ # Historical blocker TSV retains the old observation; it is not current authority.
+ hist=(review/'libxdamage-provider-evidence-blocker.tsv').read_text()
+ if '7a7e86ecab67e7cf65f066dae2e02ae74d653ced' not in hist: errors.append('historical libxdamage blocker source coordinate unexpectedly rewritten')
+if errors:
+ for e in errors: print('gtk3-source-coordinate: FAIL:',e,file=sys.stderr)
+ raise SystemExit(1)
+print('gtk3-source-coordinate: PASS: official tag object/commit/archive are corrected; consumer bindings are revalidated and provider/composition/target authority is unchanged')
+PY2

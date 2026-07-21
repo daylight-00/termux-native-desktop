@@ -1,6 +1,6 @@
 schema_version: 1
-state_version: 2026-07-21.02
-updated_on: 2026-07-21
+state_version: 2026-07-22.01
+updated_on: 2026-07-22
 
 project:
   phase: provider-composition-gap-closure
@@ -73,6 +73,7 @@ documentation:
   at_spi2_core_production_candidate_review: docs/evidence/at-spi2-core-production-recipe-candidate-result-review.md
   at_spi2_core_provider_authority_review: docs/evidence/at-spi2-core-bounded-provider-authority.md
   gtk3_core_provider_evidence_blocker: docs/evidence/gtk3-core-provider-evidence-blocker.md
+  gtk3_source_coordinate_correction: docs/evidence/gtk3-3-24-49-source-coordinate-correction.md
   libselinux_provider_evidence_blocker: docs/evidence/libselinux-provider-evidence-blocker.md
   missing_glibc_provider_production_boundary: docs/evidence/missing-glibc-provider-production-boundary.md
 
@@ -369,6 +370,24 @@ provider_authority:
     composition_effect: three-at-spi2-gaps-closed-three-total-gaps-remain
     target_population: blocked
     activation: blocked
+  gtk3_source_coordinate:
+    previous_project_commit: 7a7e86ecab67e7cf65f066dae2e02ae74d653ced
+    official_tag_object: 9003f198803b9b8b1d7def25a2359f8ebb4b25cf
+    official_tag_commit: 198aeace1e9e119c77f4d669bd8efdf337828ad1
+    source_archive_sha256: a2958d82986c81794e953a3762335fa7c78948706d23cced421f7245ca544cbc
+    result_archive_sha256: 782136c4f95bf4cd56dc0b9861743a4e8eb12ebd07227062ed4552b6719ab250
+    source_tree_equivalence: official-tag-archive-byte-manifest-equivalent
+    ordinary_termux_recipe_head: 01dfe9d72748ba6f15960ac3d0928e4f0e1c28cf
+    ordinary_termux_recipe_tree: 541a6df7c9fe6d47d569e9aa11654d7d7cdb2df7
+    glibc_recipe_base_head: 9bdd20c1d36524a0ab016d9b71c748b0cbb20a34
+    framework_head: ec0fa2fe2f0176266928c180ee9382224e94c22f
+    framework_repository: termux/termux-packages
+    meson_options: 19
+    backend_options: 6
+    surface_inventory_rows: 1061
+    dependency_no_match_tokens: 4
+    authority_effect: existing-libxdamage-and-at-spi2-bounded-scopes-retained-no-widening
+    next_action: design-gtk3-3-24-49-glibc-production-recipe-and-isolated-build
   gtk3_core_provider_blocker:
     selected_labels: libgdk-3.so.0.2417.32;libgtk-3.so.0.2417.32
     required_sonames: libgdk-3.so.0;libgtk-3.so.0

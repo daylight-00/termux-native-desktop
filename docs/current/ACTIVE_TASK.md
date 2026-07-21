@@ -16,7 +16,9 @@ Exact project-produced libXdamage and the atomic AT-SPI2/ATK three-member family
 
 ```text
 source family:       GTK 3.24.49
-pinned source commit:7a7e86ecab67e7cf65f066dae2e02ae74d653ced
+official tag object: 9003f198803b9b8b1d7def25a2359f8ebb4b25cf
+pinned source commit:198aeace1e9e119c77f4d669bd8efdf337828ad1
+source archive SHA:  a2958d82986c81794e953a3762335fa7c78948706d23cced421f7245ca544cbc
 selected members:    libgdk-3.so.0.2417.32
                      libgtk-3.so.0.2417.32
 required SONAMEs:    libgdk-3.so.0
@@ -63,4 +65,4 @@ Stop if exact GTK 3.24.49 source lineage cannot be pinned, one coherent source/p
 
 ## Next valid action
 
-Design and execute a bounded source-acquisition and production recipe-shape probe for the exact atomic GDK/GTK pair. Do not install ordinary Termux/bionic GTK, copy Debian bytes, populate a target, start display/accessibility services, or widen into libSELinux.
+Design the exact production glibc recipe and isolated build for the atomic GDK/GTK pair using the corrected official tag commit and source archive. Explicitly resolve the backend matrix and four recipe-shape no-match tokens. Do not install ordinary Termux/bionic GTK, copy Debian bytes, populate a target, start display/accessibility/portal/printing services, or widen into libSELinux.

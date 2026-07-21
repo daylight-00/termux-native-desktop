@@ -46,7 +46,9 @@ The package contains the exact SONAME alias `libXdamage.so.1 -> libXdamage.so.1.
 
 ## Capability, necessity and consumer binding
 
-Pinned GTK commit `7a7e86ecab67e7cf65f066dae2e02ae74d653ced` declares `xdamage` whenever the X11 backend is enabled, sets `HAVE_XDAMAGE`, includes it in the X11 package set and links `xdamage_dep` into the GDK X11 static backend. The selected GTK closure requires lookup identity `libXdamage.so.1`.
+Corrected official GTK 3.24.49 tag commit `198aeace1e9e119c77f4d669bd8efdf337828ad1` declares `xdamage` whenever the X11 backend is enabled, sets `HAVE_XDAMAGE`, includes it in the X11 package set and links `xdamage_dep` into the GDK X11 static backend. The selected GTK closure requires lookup identity `libXdamage.so.1`.
+
+Source-coordinate correction `GTK3-SOURCE-COORDINATE-001` revalidates this relation against `meson.build` blob `08337ec70cf1c006720eb3ab78a8beac32c898f5` and `gdk/x11/meson.build` blob `754ae0a6158003385dc3cbfda2fa17c23eb5c347`.
 
 The retained controlled probe establishes the bounded call and load surface:
 

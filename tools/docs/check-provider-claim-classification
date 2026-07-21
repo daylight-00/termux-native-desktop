@@ -205,7 +205,7 @@ checks=[
     ('next task','Task ID: `prepare-gtk3-core-3-24-49-atomic-glibc-candidate`' in active),
     ('brief classification','93 claims' in brief),
     ('catalog row','provider-claim-classification\tevidence\tcurrent\tcanonical' in catalog),
-    ('status next phase','exact libXdamage and atomic AT-SPI2 core project candidates accepted as bounded GTK 3.24.49 providers' in status and 'atomic GTK 3 core candidate preparation active' in status),
+    ('status next phase','exact libXdamage and atomic AT-SPI2 core project candidates accepted as bounded GTK 3.24.49 providers' in status and 'official GTK 3.24.49 source coordinate corrected' in status and 'atomic GTK 3 core recipe/build design active' in status),
     ('outside inventory prerequisites','exact `libpixman-1.so.0.46.4` is additionally accepted as a bounded Cairo prerequisite' in (root/'docs/evidence/provider-claim-classification.md').read_text() and 'exact `libgraphite2.so.3.2.1` is accepted as a bounded HarfBuzz Graphite-shaping prerequisite' in (root/'docs/evidence/provider-claim-classification.md').read_text()),
     ('three blockers after libXdamage and AT-SPI2 acceptance','3_SELECTED_GTK_PROVIDER_IDENTITIES_WITHOUT_ACCEPTED_PROVIDER_ROWS' in next(r['remaining_gap'] for r in claims if r['claim_id']=='PCC-GLOBAL-COMPOSITION') and 'LIBXDAMAGE_AND_AT_SPI2_ATOMIC_BOUNDED_PROVIDER_AUTHORITY_ACCEPTED' in next(r['remaining_gap'] for r in claims if r['claim_id']=='PCC-GLOBAL-COMPOSITION')),
     ('disposition catalog','libjpeg-so-62-provider-candidate-disposition\tevidence\tcurrent\tcanonical' in catalog),

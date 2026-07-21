@@ -31,6 +31,7 @@ case "$MODE" in
       tests/repository/libxdamage-production-recipe-candidate-result-review-smoke.sh
       tests/repository/at-spi2-core-production-recipe-candidate-result-review-smoke.sh
       tests/repository/at-spi2-core-bounded-provider-authority-smoke.sh
+      tests/repository/gtk3-3-24-49-source-coordinate-correction-smoke.sh
       tests/repository/libxdamage-bounded-provider-authority-smoke.sh
       tests/repository/gdkpixbuf-reference-dependency-provider-authority-smoke.sh
       tests/repository/gdkpixbuf-exact-util-linux-provider-authority-smoke.sh
@@ -68,6 +69,7 @@ case "$MODE" in
       tests/repository/libxdamage-production-recipe-candidate-result-review-smoke.sh
       tests/repository/at-spi2-core-production-recipe-candidate-result-review-smoke.sh
       tests/repository/at-spi2-core-bounded-provider-authority-smoke.sh
+      tests/repository/gtk3-3-24-49-source-coordinate-correction-smoke.sh
       tests/repository/libxdamage-bounded-provider-authority-smoke.sh
       tests/repository/gdkpixbuf-reference-dependency-provider-authority-smoke.sh
       tests/repository/gdkpixbuf-exact-util-linux-provider-authority-smoke.sh
