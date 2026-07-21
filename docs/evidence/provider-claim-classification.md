@@ -7,10 +7,10 @@ classification: COMPLETE / REVIEWED BOUNDED INVENTORY
 policy: ADR 0005
 roots: 28
 objects: 37
-claims: 91
+claims: 93
 new evidence collected: 0
 provider authority accepted inside inventory: 21
-project-candidate provider authority accepted outside inventory: 1
+project-candidate provider authority accepted outside inventory: 2
 composition accepted: 0
 target rows accepted: 0
 activation accepted: 0
@@ -69,13 +69,14 @@ Class A: 36 claims
      7 no-explicit-delta adaptation claims confirmed by bounded semantic review
      1 authoritative required-object identity claim
 
-Class B: 50 claims
+Class B: 51 claims
     21 reference-adapted recipe claims
-    29 project integration/provider-selection claims
+    30 project integration/provider-selection claims
 
-Class C: 2 active bounded producing claims
+Class C: 3 active bounded producing claims
     exact libjpeg-turbo 3.1.0 v6b compatibility candidate production
     exact libXdamage 1.1.6 isolated candidate production
+    exact atomic AT-SPI2 core 2.56.2 package and three-member production
     each producing record remains distinct from its separately accepted bounded provider claim
 
 Class D: 3 global project-authored claims
@@ -84,7 +85,7 @@ Class D: 3 global project-authored claims
     activation
 ```
 
-The two Class C rows record the project-produced runpath-free `libjpeg.so.62.4.0` candidate and exact isolated `libXdamage.so.1.1.0` candidate. Source, build invocation, toolchain, output manifest, ELF identity and symbol versions are recorded. A separate loader-isolated review accepted bounded GdkPixbuf JPEG file and memory decode authority; the Class C row does not imply broader libjpeg family or composition authority.
+The three Class C rows record the project-produced runpath-free `libjpeg.so.62.4.0` candidate , exact isolated `libXdamage.so.1.1.0`, and the exact atomic ATK/ATK-bridge/AT-SPI candidate family. Source, build invocation, toolchain, output manifest, ELF identity and symbol versions are recorded. A separate loader-isolated review accepted bounded GdkPixbuf JPEG file and memory decode authority; the Class C row does not imply broader libjpeg family or composition authority.
 
 ## Existing evidence retained
 
@@ -98,7 +99,7 @@ The classification retains the following evidence without overpromoting it:
 - the accepted OJ-001 correction that the required ABI identity is `libjpeg.so.62`, not `libjpeg.so.8`;
 - all historical SUP-02 request, acquisition, receipt, and producer records.
 
-These remain evidence inputs. They do not create final provider authority by themselves. Twenty-one inventory-root provider claims and one exact project-candidate provider claim are accepted only through their separate bounded provider reviews.
+These remain evidence inputs. They do not create final provider authority by themselves. Twenty-one inventory-root provider claims and two exact project-candidate provider claims are accepted only through their separate bounded provider reviews.
 
 ## SUP-02 disposition
 
@@ -148,7 +149,7 @@ The `libjpeg-turbo` SUP-02 request is also unnecessary at the current boundary b
 
 ```text
 bounded provider authority accepted inside inventory: 21
-project-candidate provider authority accepted outside inventory: 1 roots
+project-candidate provider authority accepted outside inventory: 2 roots
 provider authority still open:                        7 roots
 application runtime composition:     NOT REACHED
 target population:                   BLOCKED
@@ -165,7 +166,7 @@ The seven-root no-token semantic review is complete:
 confirmed Class A: 7
 reclassified Class B: 0
 provider authority accepted inside inventory: 21
-project-candidate provider authority accepted outside inventory: 1
+project-candidate provider authority accepted outside inventory: 2
 ```
 
 Canonical review surface:
@@ -185,7 +186,9 @@ The exact `libXcursor.so.1.0.2` provider is accepted for GTK 3.24.49 X11 cursor 
 
 The exact `libcloudproviders.so.0.3.6` provider is accepted for selected GTK 3.24.49 PlacesSidebar cloud-account integration. Its Class B delta disables Vala binding generation only; DBus services, accounts and service activation remain separate.
 
-The exact `libfribidi.so.0.4.0` provider remains accepted only for Pango 1.54.0 core Unicode bidirectional processing. Exact `libfreetype.so.6.20.2` remains accepted for the bounded Pango/GTK FT2 font-engine path, with four pre-existing conditional objects included only for its compression-feature closure. Exact `libxkbcommon.so.0.8.0` remains accepted for the bounded GTK 3.24.49 Wayland XKB path. Exact `libharfbuzz.so.0.61010.0` remains accepted for Pango 1.54.0 core OpenType shaping. Exact `libfontconfig.so.1.14.0` is now accepted for Pango 1.54.0 font discovery, matching and pattern-property consumption, with SONAME `libfontconfig.so.1`, explicit `1.12.1` reference-to-`1.14.0` candidate continuity, and bounded Meson, generated-default-policy, package-revision, directory-sentinel cache-lock and utilities-subpackage semantics. Package-generated configuration, system or package font directories, global caches, font population, CLI and development surfaces remain excluded; future activation requires receipt-owned configuration and cache. The next smallest phase is the coupled Cairo/Cairo-GObject root. No target paths are generated.
+The exact atomic `libatk-1.0.so.0.25611.1`, `libatk-bridge-2.0.so.0.0.0`, and `libatspi.so.0.0.1` family is accepted only for selected GTK 3.24.49 accessibility library linkage. Exactly seven activation metadata files remain disabled, two helpers remain non-executed, and D-Bus bus ownership, registry operation, accessibility enablement, package-wide surfaces, target population and activation remain excluded.
+
+The exact `libfribidi.so.0.4.0` provider remains accepted only for Pango 1.54.0 core Unicode bidirectional processing. Exact `libfreetype.so.6.20.2` remains accepted for the bounded Pango/GTK FT2 font-engine path, with four pre-existing conditional objects included only for its compression-feature closure. Exact `libxkbcommon.so.0.8.0` remains accepted for the bounded GTK 3.24.49 Wayland XKB path. Exact `libharfbuzz.so.0.61010.0` remains accepted for Pango 1.54.0 core OpenType shaping. Exact `libfontconfig.so.1.14.0` is now accepted for Pango 1.54.0 font discovery, matching and pattern-property consumption, with SONAME `libfontconfig.so.1`, explicit `1.12.1` reference-to-`1.14.0` candidate continuity, and bounded Meson, generated-default-policy, package-revision, directory-sentinel cache-lock and utilities-subpackage semantics. Package-generated configuration, system or package font directories, global caches, font population, CLI and development surfaces remain excluded; future activation requires receipt-owned configuration and cache. The next smallest phase is the atomic GTK 3.24.49 GDK/GTK core candidate. No target paths are generated.
 
 ## Stop line
 

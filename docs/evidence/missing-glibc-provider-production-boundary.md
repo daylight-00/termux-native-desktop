@@ -61,11 +61,11 @@ Required acceptance gates:
 
 Rejected as durable lanes: copying the bionic or Debian ELF; creating a cross-world alias; retaining a project-only package indefinitely without first attempting the upstream recipe contribution. A temporary local Class C candidate is allowed only as evidence for the contribution.
 
-### 2. AT-SPI2/ATK — deferred atomic contribution lane
+### 2. AT-SPI2/ATK — bounded atomic provider accepted
 
 Preferred lane: one pinned `at-spi2-core 2.56.2` glibc recipe contribution that produces the three selected libraries as an atomic family. The recipe/adaptation claim is Class B; locally produced archives and members are Class C. Splitting the three members across unrelated source or update lifecycles is rejected.
 
-This lane follows libXdamage and must complete before GTK 3 core production. Its evidence minimum includes exact source digest and tag/commit, complete package file manifest, all three exact members and aliases, direct dependency closure, GTK accessibility binding, D-Bus service/helper file inventory, disabled-by-default service lifecycle, collision review, coordinated update and rollback. Library authority does not imply bus ownership, registry-daemon acceptance, accessibility enablement, schema installation or service activation.
+This lane completed with one exact Class B recipe, one exact Class C package/three-member record, and one separate bounded Class B provider decision. The accepted scope is GTK 3.24.49 accessibility library linkage only. All seven activation metadata files remain disabled and the two helpers remain non-executed. Library authority does not imply bus ownership, registry-daemon acceptance, accessibility enablement, schema installation or service activation.
 
 Rejected lanes: bionic metapackage reuse, installed-byte copying, service startup as functional proof, or accepting only one or two members of the coupled family.
 
@@ -73,7 +73,7 @@ Rejected lanes: bionic metapackage reuse, installed-byte copying, service startu
 
 Preferred lane: one pinned GTK `3.24.49` glibc recipe contribution from exact upstream commit `7a7e86ecab67e7cf65f066dae2e02ae74d653ced`, producing `libgdk-3.so.0.2417.32` and `libgtk-3.so.0.2417.32` atomically. The recipe/configuration claim is Class B; locally produced package bytes are Class C.
 
-This lane starts only after the required Xdamage and AT-SPI2/ATK provider decisions are available. Backend, accessibility, input, printing, portal, theme, settings, module and service choices must be explicit. A changed backend set is an adaptation and cannot be inferred from ordinary Termux GTK. Acceptance requires exact source/recipe/toolchain/output records, both member and alias identities, GTK-to-GDK direct binding, complete dependency closure, controlled load/init and minimal surface tests, collision review and coordinated update/rollback.
+The required libXdamage and AT-SPI2/ATK bounded provider decisions are now available, so this lane is authorized for separate candidate preparation. Backend, accessibility, input, printing, portal, theme, settings, module and service choices must be explicit. A changed backend set is an adaptation and cannot be inferred from ordinary Termux GTK. Acceptance requires exact source/recipe/toolchain/output records, both member and alias identities, GTK-to-GDK direct binding, complete dependency closure, controlled load/init and minimal surface tests, collision review and coordinated update/rollback.
 
 Rejected lanes: separately versioning GDK and GTK; copying bionic or Debian members; accepting successful application launch as package or backend authority; silently disabling or enabling optional backends.
 
@@ -89,7 +89,7 @@ Rejected lanes: Android `libandroid-selinux` substitution, `/system` library reu
 
 ```text
 1. libXdamage Class B recipe, isolated Class C candidate and bounded provider decision — complete
-2. AT-SPI2/ATK atomic Class B recipe and Class C candidate family — qualified; bounded provider review active
+2. AT-SPI2/ATK atomic Class B recipe, Class C candidate family and bounded provider decision — complete; service authority excluded
 3. prepare the atomic GTK 3 GDK/GTK recipe contribution and candidate pair
 4. revisit libSELinux only after direct-consumer necessity and symbol semantics are proven
 ```
@@ -100,4 +100,4 @@ The order is an evidence and dependency order, not authority inheritance. Comple
 
 Stop a lane when exact source lineage, adaptation necessity, dependency closure, license/distribution boundary, atomicity, functional validation or rollback cannot be bounded. Do not widen the collector or combine families merely to continue execution.
 
-The first lane has bounded libXdamage provider authority. The second lane has now produced and separated exact atomic Class B recipe and Class C package/member evidence for AT-SPI2 core 2.56.2, with all service metadata disabled and protected state unchanged. Supplier publication, provider authority, installation, target population, D-Bus/accessibility activation, deployment, and activation remain unaccepted. The next task is `review-at-spi2-core-2-56-2-atomic-candidate-bounded-provider-authority`.
+The first lane has bounded libXdamage provider authority. The second lane now has an exact atomic Class B recipe, retained Class C package/member record, and bounded provider authority for GTK accessibility library linkage only; supplier publication, service authority, installation, target population, D-Bus/accessibility activation, deployment, and activation remain unaccepted. The next task is `prepare-gtk3-core-3-24-49-atomic-glibc-candidate`.

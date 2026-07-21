@@ -51,7 +51,7 @@ if len(dispositions)!=1:
     errors.append(f'expected one disposition row, found {len(dispositions)}')
 else:
     d=dispositions[0]
-    if 'RUNPATH_FREE_COMPATIBILITY_PROVIDER_CANDIDATE_IDENTITY_ACCEPTED_FUNCTIONAL_DIAGNOSTIC_REQUIRED' not in d.get('disposition',''):
+    if 'RUNPATH_FREE_COMPATIBILITY_PROVIDER_ACCEPTED_BOUNDED_GDKPIXBUF_JPEG_SCOPE' not in d.get('disposition',''):
         errors.append('canonical disposition does not preserve corrected candidate progression')
     if row.get('candidate_sha256') in d.get('exact_project_candidate_sha256',''):
         errors.append('first rejected candidate is still selected as exact project candidate')
@@ -70,12 +70,12 @@ for k,v in meta_expected.items():
     if meta.get(k)!=v: errors.append(f'metadata {k}: expected {v}, got {meta.get(k)!r}')
 state=(root/'docs/current/STATE.yaml').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); brief=(root/'docs/current/BRIEF.md').read_text(); evidence=(root/'docs/evidence/libjpeg-so-62-compatibility-provider-candidate-result-review.md').read_text(); catalog=(root/'docs/catalog.tsv').read_text()
 markers=[
- ('state version','state_version: 2026-07-15.17' in state),
+ ('state version','state_version: 2026-07-21.02' in state),
  ('state first rejection','first_candidate_state: rejected-rebuild-required-no-runpath' in state),
  ('state corrected candidate','corrected_candidate_state: runpath-free-candidate-identity-accepted' in state),
- ('active task','Task ID: `diagnose-libjpeg-so-62-gdkpixbuf-functional-segfault`' in active),
- ('brief downstream failure','first GdkPixbuf consumer analyzer' in brief and 'SIGSEGV' in brief),
- ('brief corrected candidate','a537840e' in brief and 'no dynamic search path' in brief),
+ ('active task','Task ID: `prepare-gtk3-core-3-24-49-atomic-glibc-candidate`' in active),
+ ('brief current provider boundary','bounded provider roots accepted overall: 30' in brief),
+ ('state corrected candidate provider','provider_authority: accepted-bounded-provider' in state),
  ('evidence CMake boundary','CMake was installed separately by the user' in evidence),
  ('evidence no in-place patch','does not normalize, strip in place, or accept the first object' in evidence),
  ('evidence corrected build contract','add CMAKE_SKIP_RPATH=ON' in evidence),

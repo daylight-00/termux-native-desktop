@@ -57,7 +57,7 @@ markers=[
  ('doc fresh cache','fresh cache when the provider, configuration, or font set changes' in doc),
  ('state route','fontconfig_provider_authority_review: docs/evidence/fontconfig-bounded-provider-authority.md' in state),
  ('state accepted','fontconfig_provider:' in state and 'provider_authority: accepted-bounded-provider' in state),
- ('next task','Task ID: `review-at-spi2-core-2-56-2-atomic-candidate-bounded-provider-authority`' in active),
+ ('next task','Task ID: `prepare-gtk3-core-3-24-49-atomic-glibc-candidate`' in active),
  ('catalog','fontconfig-bounded-provider-authority\tevidence\tcurrent\tcanonical' in catalog),
 ]
 for label,ok in markers:

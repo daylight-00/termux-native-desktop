@@ -48,7 +48,7 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 - [`libjpeg-so-62-gdkpixbuf-diagnostic-matrix-result-review.md`](libjpeg-so-62-gdkpixbuf-diagnostic-matrix-result-review.md) — non-dispositive first diagnostic matrix and corrected loader boundary.
 - [`libjpeg-so-62-loader-isolated-provider-authority.md`](libjpeg-so-62-loader-isolated-provider-authority.md) — exact loader-isolated candidate/oracle controls and bounded GdkPixbuf JPEG provider-authority decision.
 
-- [`selected-obsidian-provider-composition-review.md`](selected-obsidian-provider-composition-review.md) records the current Class D non-materializing composition manifest, 35 exact accepted members, exclusions, collisions and 8 blocking selected GTK identities.
+- [`selected-obsidian-provider-composition-review.md`](selected-obsidian-provider-composition-review.md) records the current Class D non-materializing composition manifest, 40 exact accepted members, exclusions, collisions and 3 blocking selected GTK identities.
 
 - [`gdkpixbuf-core-provider-acquisition-result-review.md`](gdkpixbuf-core-provider-acquisition-result-review.md) binds the exact GLib-family and libpng candidate identities, records the missing Termux GdkPixbuf package/recipe, and routes the upstream 2.42.12 scratch build.
 
@@ -78,7 +78,8 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 - [`libxdamage-production-recipe-candidate-result-review.md`](libxdamage-production-recipe-candidate-result-review.md) — exact separated Class B production recipe candidate and independently reproduced Class C package/member producing record; subsequent bounded provider authority is recorded separately.
 - [`graphite2-harfbuzz-prerequisite-provider-authority.md`](graphite2-harfbuzz-prerequisite-provider-authority.md) — exact Graphite2 1.3.14 member and stable SONAME accepted only for the Graphite shaping path compiled into exact HarfBuzz 10.1.0.
 - [`at-spi2-core-provider-evidence-blocker.md`](at-spi2-core-provider-evidence-blocker.md) — superseded historical discovery blocker proving that the earlier approved index and pinned recipe source contained no Termux glibc AT-SPI2/ATK provider candidate.
-- [`at-spi2-core-production-recipe-candidate-result-review.md`](at-spi2-core-production-recipe-candidate-result-review.md) — exact atomic Class B recipe and Class C package/three-member producing record with byte-exact GIR and disabled activation metadata; provider authority remains a separate open review.
+- [`at-spi2-core-production-recipe-candidate-result-review.md`](at-spi2-core-production-recipe-candidate-result-review.md) — exact atomic Class B recipe and Class C package/three-member producing record with byte-exact GIR and disabled activation metadata.
+- [`at-spi2-core-bounded-provider-authority.md`](at-spi2-core-bounded-provider-authority.md) — exact atomic ATK, ATK-bridge and AT-SPI family accepted only for selected GTK 3.24.49 accessibility library linkage; D-Bus, helpers, active metadata, accessibility enablement, target population and activation remain excluded.
 - [`gtk3-core-provider-evidence-blocker.md`](gtk3-core-provider-evidence-blocker.md) — exact approved-index and pinned-recipe blocker for the missing Termux glibc GTK 3 GDK/GTK core pair.
 - [`libselinux-provider-evidence-blocker.md`](libselinux-provider-evidence-blocker.md) — exact approved-index and pinned-recipe blocker proving that only bionic/Android SELinux boundary implementations are visible and no Termux glibc libSELinux provider candidate is authorized.
 

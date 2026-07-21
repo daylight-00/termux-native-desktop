@@ -23,6 +23,7 @@ required=(
   experiments/glibc/selected-obsidian-provider-authority/review/cairo-bounded-provider-authority.tsv
   experiments/glibc/selected-obsidian-provider-authority/review/graphite2-harfbuzz-prerequisite-provider-authority.tsv
   experiments/glibc/selected-obsidian-provider-authority/review/libxdamage-bounded-provider-authority.tsv
+  experiments/glibc/selected-obsidian-provider-authority/review/at-spi2-core-bounded-provider-authority.tsv
   experiments/glibc/selected-obsidian-provider-authority/review/libselinux-provider-evidence-blocker.tsv
   docs/evidence/libselinux-provider-evidence-blocker.md
   tools/docs/check-libselinux-provider-evidence-blocker
@@ -45,32 +46,31 @@ def read(n):
  with (review/n).open(newline='',encoding='utf-8') as f:return list(csv.DictReader(f,delimiter='\t'))
 mem=read('selected-provider-composition-members.tsv'); gaps=read('selected-provider-composition-gaps.tsv'); meta={r['key']:r['value'] for r in read('selected-provider-composition-metadata.tsv')}; claims={r['claim_id']:r for r in read('provider-claim-classification.tsv')}
 errors=[]
-exp={'selected_gtk_identity_count':'37','accepted_provider_root_count':'29','accepted_member_count':'37','included_member_count':'36','deferred_member_count':'1','unresolved_selected_identity_count':'6','reviewed_root_gap_count':'3','outside_28_root_gap_count':'3','accepted_soname_collision_count':'0','accepted_alias_collision_count':'0','composition_decision':'REVIEWED_BLOCKED_INCOMPLETE','target_manifest_allowed':'NO','next_review_tranche':'AT_SPI2_ATK_ATOMIC_BOUNDED_PROVIDER_AUTHORITY_REVIEW','authority_effect':'NO_TARGET_POPULATION_MATERIALIZATION_OR_ACTIVATION'}
+exp={'selected_gtk_identity_count':'37','accepted_provider_root_count':'30','accepted_member_count':'40','included_member_count':'39','deferred_member_count':'1','unresolved_selected_identity_count':'3','reviewed_root_gap_count':'0','outside_28_root_gap_count':'3','accepted_soname_collision_count':'0','accepted_alias_collision_count':'0','composition_decision':'REVIEWED_BLOCKED_INCOMPLETE','target_manifest_allowed':'NO','next_review_tranche':'GTK3_CORE_ATOMIC_CANDIDATE_PREPARATION','authority_effect':'NO_TARGET_POPULATION_MATERIALIZATION_OR_ACTIVATION'}
 for k,v in exp.items():
  if meta.get(k)!=v:errors.append(f'metadata {k}: expected {v}, got {meta.get(k)!r}')
-if len(mem)!=37:errors.append(f'member rows {len(mem)}')
-if sum(r['composition_inclusion'].startswith('INCLUDED_') for r in mem)!=36:errors.append('included member count mismatch')
+if len(mem)!=40:errors.append(f'member rows {len(mem)}')
+if sum(r['composition_inclusion'].startswith('INCLUDED_') for r in mem)!=39:errors.append('included member count mismatch')
 if sum(r['composition_inclusion']=='DEFERRED_PROFILE_REQUIREMENT_OPEN' for r in mem)!=1:errors.append('deferred member count mismatch')
-if len({r['soname'] for r in mem})!=37:errors.append('SONAME collision')
-if len({r['alias_basename'] for r in mem})!=37:errors.append('alias collision')
+if len({r['soname'] for r in mem})!=40:errors.append('SONAME collision')
+if len({r['alias_basename'] for r in mem})!=40:errors.append('alias collision')
 if any(r['collision_state'].startswith('NO_') is False for r in mem):errors.append('non-clean accepted collision state')
 if not any(r['recipe_root']=='gpkg/libtasn1' and r['composition_inclusion']=='DEFERRED_PROFILE_REQUIREMENT_OPEN' for r in mem):errors.append('libtasn1 not deferred')
 if not any(r['member_basename']=='libjpeg.so.62.4.0' and r['alias_basename']=='libjpeg.so.62' for r in mem):errors.append('exact libjpeg member/alias missing')
 if not any(r['member_basename']=='libgdk_pixbuf-2.0.so.0.4200.12' and r['member_sha256']=='0c1404c6854e7674428a5b653b240759dac0374631697fe61ae275898f6a809f' and r['alias_basename']=='libgdk_pixbuf-2.0.so.0' for r in mem):errors.append('exact GdkPixbuf member/alias missing')
-if len(gaps)!=6:errors.append(f'gap rows {len(gaps)}')
-if sum(r['priority_tranche']=='AT_SPI2_ATK_ATOMIC_BOUNDED_PROVIDER_AUTHORITY_REVIEW' for r in gaps)!=3:errors.append('AT-SPI2 candidate-open gap count mismatch')
-for label in ['libatk-bridge-2.0.so.0.0.0','libatk-1.0.so.0.25611.1','libatspi.so.0.0.1']:
- if not any(r['identity_label']==label and r['gap_class']=='QUALIFIED_LOCAL_ATOMIC_CANDIDATE_PROVIDER_AUTHORITY_OPEN' and r['priority_tranche']=='AT_SPI2_ATK_ATOMIC_BOUNDED_PROVIDER_AUTHORITY_REVIEW' for r in gaps):errors.append(f'AT-SPI2 precise candidate-open gap missing: {label}')
+if len(gaps)!=3:errors.append(f'gap rows {len(gaps)}')
+if any(r['identity_label'] in {'libatk-bridge-2.0.so.0.0.0','libatk-1.0.so.0.25611.1','libatspi.so.0.0.1'} for r in gaps):errors.append('accepted AT-SPI2 identity remains in gaps')
 if sum(r['priority_tranche']=='BLOCKED_GTK3_CORE_NO_GLIBC_CANDIDATE' for r in gaps)!=2:errors.append('GTK3 core blocker gap count mismatch')
 for label in ['libgdk-3.so.0.2417.32','libgtk-3.so.0.2417.32']:
  if not any(r['identity_label']==label and r['gap_class']=='BLOCKED_NO_TERMUX_GLIBC_PROVIDER_CANDIDATE' and r['priority_tranche']=='BLOCKED_GTK3_CORE_NO_GLIBC_CANDIDATE' for r in gaps):errors.append(f'GTK3 core precise blocker gap missing: {label}')
 if sum(r['priority_tranche']=='BLOCKED_LIBSELINUX_NO_GLIBC_CANDIDATE' for r in gaps)!=1:errors.append('libSELinux blocker gap count mismatch')
 if not any(r['identity_label']=='libselinux.so.1' and r['gap_class']=='BLOCKED_NO_TERMUX_GLIBC_PROVIDER_CANDIDATE' and r['priority_tranche']=='BLOCKED_LIBSELINUX_NO_GLIBC_CANDIDATE' for r in gaps):errors.append('libSELinux precise blocker gap missing')
 if sum(r['gap_class']=='BLOCKED_NO_TERMUX_GLIBC_PROVIDER_CANDIDATE' for r in gaps)!=3:errors.append('expected three remaining no-candidate blockers')
-if sum(r['gap_class']=='QUALIFIED_LOCAL_ATOMIC_CANDIDATE_PROVIDER_AUTHORITY_OPEN' for r in gaps)!=3:errors.append('expected three AT-SPI2 candidate-open gaps')
 if any(r['identity_label']=='libgraphite2.so.3.2.1' for r in gaps):errors.append('accepted Graphite2 identity remains in gaps')
 if any(r['identity_label']=='libXdamage.so.1.1.0' for r in gaps):errors.append('accepted libXdamage remains in gaps')
 if not any(r['member_basename']=='libXdamage.so.1.1.0' and r['member_sha256']=='391916aff0965656e7b81ece7766e3b22068462867b1dd88a0a051b3db9c2d7c' and r['soname']=='libXdamage.so.1' and r['alias_basename']=='libXdamage.so.1' and r['alias_target_basename']=='libXdamage.so.1.1.0' and r['composition_inclusion']=='INCLUDED_SELECTED_GTK_SCOPE' for r in mem):errors.append('exact libXdamage member/alias missing')
+for name,sha,soname in [('libatk-1.0.so.0.25611.1','55c9c8a3767258bcc1d25640223aa8638ca0fc1bf5a310c7c87de14ad66191d7','libatk-1.0.so.0'),('libatk-bridge-2.0.so.0.0.0','cce78fd50cb5b3a19bdc046112c75a2309ad5feda3183e62f538bc1177e72773','libatk-bridge-2.0.so.0'),('libatspi.so.0.0.1','e94f2980cf8580634d7ab3c4f9ad2d8713880a1e3614001aed7a63ba6388c874','libatspi.so.0')]:
+ if not any(r['provider_review_id']=='ATSPI2-CORE-PROV-001' and r['member_basename']==name and r['member_sha256']==sha and r['soname']==soname and r['alias_basename']==soname and r['alias_target_basename']==name and r['composition_inclusion']=='INCLUDED_SELECTED_GTK_SCOPE' for r in mem):errors.append(f'exact AT-SPI2 member/alias missing: {name}')
 
 for name,sha,inclusion in [('libthai.so.0.3.1','773a629e30546b57d650d9d991d18c64490ef5cf53062fec1e02c69ece66bf9c','INCLUDED_SELECTED_GTK_SCOPE'),('libdatrie.so.1.4.0','8052746b4003c367e811dc26686373455f687e11bf95cbbe8772a2069b86e7dd','INCLUDED_SELECTED_GTK_SCOPE'),('libiconv.so.2.7.0','3d3edba1ecd510ddac243a3c9a5a08341219b62bc4c874241a134bc7d250f5be','INCLUDED_TRANSITIVE_PANGO_THAI_SCOPE')]:
  if not any(r['member_basename']==name and r['member_sha256']==sha and r['composition_inclusion']==inclusion for r in mem):errors.append(f'exact Thai-stack member missing: {name}')
@@ -95,10 +95,10 @@ claim=claims.get('PCC-GLOBAL-COMPOSITION')
 if not claim:errors.append('global composition claim missing')
 else:
  if claim['classification_state']!='REVIEWED_BLOCKED_INCOMPLETE':errors.append('composition claim state widened or stale')
- if '6_SELECTED_GTK_PROVIDER_IDENTITIES' not in claim['remaining_gap']:errors.append('composition gap count absent')
+ if '3_SELECTED_GTK_PROVIDER_IDENTITIES' not in claim['remaining_gap']:errors.append('composition gap count absent')
  if claim['authority_effect']!='COMPOSITION_REVIEW_COMPLETED_NO_ACCEPTANCE_TARGET_OR_ACTIVATION_EFFECT':errors.append('composition authority effect widened')
 state=(root/'docs/current/STATE.yaml').read_text();active=(root/'docs/current/ACTIVE_TASK.md').read_text();brief=(root/'docs/current/BRIEF.md').read_text();catalog=(root/'docs/catalog.tsv').read_text();status=(root/'STATUS.md').read_text();doc=(root/'docs/evidence/selected-obsidian-provider-composition-review.md').read_text()
-markers=[('state decision','decision: reviewed-blocked-incomplete' in state),('state gaps','unresolved_selected_identities: 6' in state),('state target false','target_manifest_allowed: false' in state),('task','Task ID: `review-at-spi2-core-2-56-2-atomic-candidate-bounded-provider-authority`' in active),('brief','selected identity gaps: 6' in brief),('catalog','selected-obsidian-provider-composition-review\tevidence\tcurrent\tcanonical' in catalog),('status','`REVIEWED_BLOCKED_INCOMPLETE`' in status),('doc decision','REVIEWED_BLOCKED_INCOMPLETE' in doc),('doc target','target manifest allowed:          NO' in doc)]
+markers=[('state decision','decision: reviewed-blocked-incomplete' in state),('state gaps','unresolved_selected_identities: 3' in state),('state target false','target_manifest_allowed: false' in state),('task','Task ID: `prepare-gtk3-core-3-24-49-atomic-glibc-candidate`' in active),('brief','selected identity gaps: 3' in brief),('catalog','selected-obsidian-provider-composition-review\tevidence\tcurrent\tcanonical' in catalog),('status','`REVIEWED_BLOCKED_INCOMPLETE`' in status),('doc decision','REVIEWED_BLOCKED_INCOMPLETE' in doc),('doc target','target manifest allowed:          NO' in doc)]
 for label,ok in markers:
  if not ok:errors.append(f'missing current marker: {label}')
 for forbidden in ['composition decision:             ACCEPTED','target manifest allowed:          YES']:
@@ -106,5 +106,5 @@ for forbidden in ['composition decision:             ACCEPTED','target manifest 
 if errors:
  for e in errors:print('provider-composition: FAIL:',e,file=sys.stderr)
  raise SystemExit(1)
-print('provider-composition: PASS: 37 accepted members, 36 included, 1 deferred and 6 selected GTK gaps block composition and target generation')
+print('provider-composition: PASS: 40 accepted members, 39 included, 1 deferred and 3 selected GTK gaps block composition and target generation')
 PY

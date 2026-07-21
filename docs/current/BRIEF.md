@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-21.01`
+> Semantic state version: `2026-07-21.02`
 >
 > This is the compact current-state entry point. Exact commit and tree coordinates come from the checked-out full Git bundle, not from self-referential repository text.
 
@@ -12,27 +12,27 @@ Web-chat capability failures follow a stop-loss contract: perform one bounded re
 
 ## Current provider boundary
 
-ADR 0005 keeps artifact identity, adaptation semantics, provider authority, composition, target population, and activation separate. The canonical inventory remains 28 roots, 37 reviewed objects, and 91 claims: 36 Class A, 50 Class B, two Class C, and three Class D. Candidate freeze adds no provider claim and changes none of those counts.
+ADR 0005 keeps artifact identity, adaptation semantics, provider authority, composition, target population, and activation separate. The canonical inventory now has 93 claims: 36 Class A, 51 Class B, three Class C, and three Class D. The new Class C claim retains the exact atomic AT-SPI2 production record; the new Class B claim accepts only its bounded GTK accessibility library-linkage role.
 
 ```text
-bounded provider roots accepted overall: 29
-accepted exact members: 37
-included current-scope members: 36
+bounded provider roots accepted overall: 30
+accepted roots inside the 28-root inventory: 21
+open roots inside the 28-root inventory: 7
+accepted exact members: 40
+included current-scope members: 39
 deferred members: 1
 composition review: REVIEWED_BLOCKED_INCOMPLETE
-selected identity gaps: 6
+selected identity gaps: 3
 target population: blocked
 activation: blocked
 ```
 
-The historical libXdamage discovery blocker is superseded; the exact 11-line Class B libXdamage recipe candidate remains frozen. Exact project-produced `libXdamage.so.1.1.0` retains bounded provider authority for the selected GTK 3.24.49 GDK X11 damage-extension capability.
+Exact project-produced `libXdamage.so.1.1.0` retains bounded authority for GTK 3.24.49 GDK X11 damage support. The exact atomic `libatk-1.0.so.0.25611.1`, `libatk-bridge-2.0.so.0.0.0`, and `libatspi.so.0.0.1` family now has one bounded provider decision for GTK's in-process ATK accessible-object model and linked ATK-bridge/AT-SPI library boundary.
+
+The AT-SPI2 decision does not authorize D-Bus bus ownership, registry-daemon operation, helper execution, active metadata restoration, accessibility enablement, complete assistive-technology behavior, supplier publication, installation, target population, deployment, or activation. Exactly seven activation metadata files remain disabled and both helpers remain non-executed package content.
 
 ## Current project phase
 
-The AT-SPI2 core 2.56.2 atomic candidate lane is now qualified and frozen. One exact Class B `gpkg/at-spi2-core` recipe and one isolated Class C `at-spi2-core-glibc 2.56.2` package coherently produce `libatk-1.0.so.0.25611.1`, `libatk-bridge-2.0.so.0.0.0`, and `libatspi.so.0.0.1`. The package has exact bounded ABI, byte-exact GIR/typelib outputs, seven activation metadata files relocated to a disabled namespace, no maintainer scripts, no active metadata files, and protected-state invariance.
+The selected composition has three unresolved identities: the atomic GTK 3.24.49 GDK/GTK pair and `libselinux.so.1`. The Class D composition remains incomplete, and target-manifest generation is still prohibited.
 
-Candidate qualification grants no provider authority. The selected composition still has six unresolved identities: the three AT-SPI2/ATK rows are now qualified-local-candidate/provider-authority-open gaps, while the GTK 3 core pair and `libselinux.so.1` remain no-candidate blockers.
-
-The GTK 3 core pair and libSELinux tranches remain reviewed no-candidate blockers.
-
-The active task is `review-at-spi2-core-2-56-2-atomic-candidate-bounded-provider-authority`. It may accept the exact three-member family only as one bounded provider for an explicitly demonstrated selected GTK accessibility capability, or retain a precise blocker. Supplier publication, installation, D-Bus/accessibility activation, target population, deployment, and selected-generation activation remain unauthorized.
+The active task is `prepare-gtk3-core-3-24-49-atomic-glibc-candidate`. It may produce only a separated Class B recipe candidate and Class C local GDK/GTK pair for later review. It does not grant GTK provider authority or any target, display, service, deployment, or activation effect.

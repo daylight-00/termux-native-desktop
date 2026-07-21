@@ -1,62 +1,66 @@
-# Active task: review the atomic AT-SPI2/ATK 2.56.2 candidate for bounded provider authority
+# Active task: prepare the atomic GTK 3.24.49 GDK/GTK core glibc candidate
 
-> Task ID: `review-at-spi2-core-2-56-2-atomic-candidate-bounded-provider-authority`
+> Task ID: `prepare-gtk3-core-3-24-49-atomic-glibc-candidate`
 >
-> Expected state on completion: one explicit bounded decision either accepts all three exact local Class C members as one atomic provider family for a narrowly stated selected GTK accessibility capability, or rejects/defers authority with a precise capability, consumer-binding, dependency, collision, service-lifecycle, update, or rollback blocker. No supplier publication, installation, target population, D-Bus activation, accessibility enablement, deployment, or selected-generation activation occurs.
+> Expected state on completion: one exact Class B production recipe candidate and one isolated Class C candidate package/archive set coherently provide `libgdk-3.so.0.2417.32` and `libgtk-3.so.0.2417.32`, or the lane stops with a precise source, recipe, backend, dependency, pair-atomicity, service, or functional blocker. No provider authority, supplier publication, installation, target population, deployment, or selected-generation activation occurs.
 
 ## Objective
 
-Review the frozen Class B recipe and Class C `at-spi2-core-glibc 2.56.2` package/member family without rebuilding or widening it. Decide whether the exact three-member family has bounded provider authority for the selected GTK accessibility linkage while preserving all service and activation boundaries.
+Prepare the third authorized missing-provider production lane as one atomic GTK 3 core pair. Establish exact source lineage, production recipe semantics, configured backend set, package/file surfaces, both ELF identities, complete accepted dependency closure, GTK-to-GDK binding, controlled initialization surfaces, collision state, and coordinated update/rollback without inferring service or activation authority.
 
 ## Why now
 
-The candidate-preparation lane completed with exact package, member, GIR, disabled-service, and protected-state evidence. ADR 0005 requires a separate provider-authority decision before any selected composition effect, so review must occur now without rebuilding or treating successful production as authority.
+Exact project-produced libXdamage and the atomic AT-SPI2/ATK three-member family now have separate bounded provider decisions for the selected GTK 3.24.49 X11 damage and accessibility library-linkage requirements. The accepted production order authorizes GTK 3 core candidate preparation next while composition, target population, and activation remain blocked.
 
-## Frozen candidate coordinates
+## Authoritative selected identities
 
 ```text
-result archive: 461b24dac879ca71252c209f0013ff17cb8f8ed1a889a32f0376b87372f3d3a4
-evidence freeze: b516ed70c10b6bf91fac08e2a461dc55e9f2b5337a4dade5b995e96fa5b4b40d
-recipe:         6f727204730b6b0a3496c169f635c5016903cb64b816b7c84ca91fcbc9d4e30d
-package:        9a1395e893448508cfb8fbdee8ef0dd8268b8d21e9ac7bbe792f163dce6c365a
-member family:  libatk-1.0.so.0.25611.1
-                libatk-bridge-2.0.so.0.0.0
-                libatspi.so.0.0.1
+source family:       GTK 3.24.49
+pinned source commit:7a7e86ecab67e7cf65f066dae2e02ae74d653ced
+selected members:    libgdk-3.so.0.2417.32
+                     libgtk-3.so.0.2417.32
+required SONAMEs:    libgdk-3.so.0
+                     libgtk-3.so.0
+atomicity:           one source and coherent GDK/GTK package pair
 ```
 
 ## In scope
 
-- verify exact capability necessity and GTK consumer bindings for all three members;
-- preserve atomic update and rollback of package, aliases, GIR/typelib files, and disabled activation metadata;
-- review exact direct dependencies including the bounded `gcc-libs-glibc` exception-runtime relation;
-- verify collision and exclusion boundaries against accepted providers and wrong-world bytes;
-- decide whether helper executables and disabled metadata remain package content only, with no service authority;
-- record one machine-readable bounded provider decision or precise blocker.
+- acquire and pin the exact GTK 3.24.49 source commit/archive and SHA-256;
+- derive a production Termux glibc recipe candidate without private evidence-harness logic;
+- record the exact enabled/disabled GDK backends and every Android/Termux adaptation;
+- build only in an isolated workspace with no package-database or live-prefix mutation;
+- retain the complete package manifest, both exact members and aliases;
+- verify GTK's direct binding to GDK and the complete accepted dependency closure;
+- run controlled loader and minimal non-service initialization/symbol surfaces without display or accessibility activation;
+- inventory modules, schemas, settings, themes, printing, input, accessibility, portal and service-related files;
+- define coordinated update, removal and rollback of the GDK/GTK pair.
 
 ## Out of scope
 
-Recipe redesign, rebuilding, accepting only one or two members, supplier publication, package installation, active D-Bus service files, bus ownership, registry-daemon acceptance, accessibility enablement, target layout, materialization, deployment, or activation.
+Provider authority, accepting only GDK or only GTK, approved-supplier publication, package installation, target layout, target population, display-server startup, D-Bus/accessibility activation, settings/schema deployment, printing or portal service activation, full widget rendering acceptance, deployment, or selected-generation activation.
 
 ## Required reading
 
-- `docs/evidence/at-spi2-core-production-recipe-candidate-result-review.md`
-- `docs/evidence/at-spi2-core-provider-evidence-blocker.md`
+- `docs/evidence/at-spi2-core-bounded-provider-authority.md`
+- `docs/evidence/libxdamage-bounded-provider-authority.md`
+- `docs/evidence/gtk3-core-provider-evidence-blocker.md`
 - `docs/evidence/missing-glibc-provider-production-boundary.md`
 - `docs/evidence/selected-obsidian-provider-composition-review.md`
 - `docs/decisions/0005-proportional-assurance-depth.md`
 
 ## Pending external inputs
 
-None. The exact result archive and compact evidence freeze are already retained; this task is a bounded repository review of those frozen coordinates.
+None. Source and recipe acquisition must use the established bounded Termux/network and bundle workflow when execution begins.
 
 ## Completion criteria
 
-The decision binds the exact package, all three member and SONAME identities, capability/consumer scope, dependency closure, GIR relation, seven-file disabled activation namespace, helper non-execution boundary, collision/exclusion state, coordinated update and rollback, and explicit prohibited inference. Candidate qualification alone is not sufficient.
+One machine-readable and narrative candidate review records exact source, recipe, producing environment, package/archive set, both members and aliases, GTK-to-GDK binding, dependency closure, backend contract, modules/settings/service inventory, protected-state invariance, collision/exclusion state, and coordinated update/rollback. Production recipe and private isolation harness must be separated before qualification succeeds.
 
 ## Stop conditions
 
-Stop without authority if one member can be updated independently, a selected consumer edge is absent or ambiguous, required runtime providers are not accepted or exactly bounded, any active service lifecycle is necessary for library validation, collision/exclusion cannot be bounded, or rollback cannot revoke the whole family coherently.
+Stop if exact GTK 3.24.49 source lineage cannot be pinned, one coherent source/package lifecycle cannot produce both identities, the selected backend contract cannot be made explicit, a required dependency lacks accepted authority or an explicitly bounded candidate lane, service or display activation is required merely to validate the libraries, controlled loading escapes into bionic/live state, or protected state changes.
 
 ## Next valid action
 
-Prepare the narrative and machine-readable bounded provider-authority review from the frozen evidence. Do not rebuild, install, restore activation metadata, start services, or widen into GTK 3 core.
+Design and execute a bounded source-acquisition and production recipe-shape probe for the exact atomic GDK/GTK pair. Do not install ordinary Termux/bionic GTK, copy Debian bytes, populate a target, start display/accessibility services, or widen into libSELinux.

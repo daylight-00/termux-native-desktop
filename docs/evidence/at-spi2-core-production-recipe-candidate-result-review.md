@@ -72,7 +72,7 @@ Pre/post package-database queries and status digest, live glibc regular-file and
 
 The historical `OPEN_BLOCKED_NO_GLIBC_CANDIDATE` result remains valid discovery evidence for the earlier pinned package/repository boundary, but is superseded as the current candidate state. An exact atomic Class B recipe and exact Class C package/member family now exist.
 
-This record does **not** grant provider authority. The next task is a separate bounded review of exact capability necessity, three-member atomicity, consumer binding, dependency closure, collision/exclusion state, service lifecycle, update, and rollback. The six selected composition gaps remain unresolved; the three AT-SPI2/ATK rows change only from no-candidate blockers to qualified-local-candidate/provider-authority-open rows.
+This producing record did **not itself** grant provider authority. A subsequent separate review, `ATSPI2-CORE-PROV-001`, accepted the exact three-member family only for bounded GTK 3.24.49 accessibility library linkage while preserving all service and activation prohibitions. The three AT-SPI2/ATK composition gaps are therefore closed by that separate provider decision; the GTK 3 core pair and `libselinux.so.1` remain unresolved.
 
 ## Explicitly prohibited inference
 

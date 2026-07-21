@@ -1,5 +1,5 @@
 schema_version: 1
-state_version: 2026-07-21.01
+state_version: 2026-07-21.02
 updated_on: 2026-07-21
 
 project:
@@ -71,18 +71,19 @@ documentation:
   graphite2_harfbuzz_prerequisite_provider_authority: docs/evidence/graphite2-harfbuzz-prerequisite-provider-authority.md
   at_spi2_core_provider_evidence_blocker: docs/evidence/at-spi2-core-provider-evidence-blocker.md
   at_spi2_core_production_candidate_review: docs/evidence/at-spi2-core-production-recipe-candidate-result-review.md
+  at_spi2_core_provider_authority_review: docs/evidence/at-spi2-core-bounded-provider-authority.md
   gtk3_core_provider_evidence_blocker: docs/evidence/gtk3-core-provider-evidence-blocker.md
   libselinux_provider_evidence_blocker: docs/evidence/libselinux-provider-evidence-blocker.md
   missing_glibc_provider_production_boundary: docs/evidence/missing-glibc-provider-production-boundary.md
 
 provider_authority:
-  workstream: six-selected-gaps-retained-libxdamage-bounded-provider-accepted-at-spi2-atomic-candidate-preparation-active
-  boundary: twenty-nine-bounded-providers-retained-six-selected-identities-open-libxdamage-class-c-member-bounded-provider-accepted-supplier-publication-composition-target-policy-and-activation-open
+  workstream: three-selected-gaps-retained-libxdamage-and-atomic-at-spi2-bounded-providers-accepted-gtk3-core-candidate-preparation-active
+  boundary: thirty-bounded-providers-retained-three-selected-identities-open-at-spi2-class-c-family-bounded-provider-accepted-supplier-publication-composition-target-service-and-activation-open
   claim_inventory:
-    total: 91
+    total: 93
     class_a: 36
-    class_b: 50
-    class_c: 2
+    class_b: 51
+    class_c: 3
     class_d: 3
   no_token_recipe_semantic_review:
     reviewed: 7
@@ -91,12 +92,12 @@ provider_authority:
     provider_authority_accepted: 7
     provider_authority_open: 0
   bounded_provider_authority:
-    accepted: 29
+    accepted: 30
     accepted_inside_28_root_inventory: 21
     open_inside_28_root_inventory: 7
     rejected: 0
     open_no_token_roots: 0
-    accepted_scope: exact-xorg-members-and-selected-gtk-x11-capabilities-plus-exact-libxcursor-gtk-3-24-49-x11-cursor-theme-image-and-surface-plus-exact-libtasn1-external-gnutls-asn1-security-plus-exact-libepoxy-gtk-3-24-49-x11-glx-dispatch-plus-exact-pango-three-member-gtk-text-family-and-soname-continuity-plus-exact-project-libjpeg-so-62-gdkpixbuf-jpeg-file-and-memory-decode-plus-exact-project-gdkpixbuf-2-42-12-jpeg-png-file-and-memory-decode-plus-exact-glib-four-member-libpng-and-util-linux-two-member-gdkpixbuf-reference-dependency-scope-plus-exact-libthai-libdatrie-libiconv-and-thbrk-tri-pango-1-54-0-thai-break-scope-plus-exact-libcloudproviders-gtk-3-24-49-places-sidebar-cloud-account-integration-plus-exact-fribidi-pango-1-54-0-core-unicode-bidirectional-text-processing-plus-exact-freetype-pango-1-54-0-gtk-3-24-49-font-engine-and-exact-brotli-bzip2-zlib-transitive-feature-closure-plus-exact-libxkbcommon-gtk-3-24-49-wayland-xkb-keymap-keyboard-state-modifier-and-keysym-translation-plus-exact-harfbuzz-pango-1-54-0-core-opentype-text-shaping-plus-exact-fontconfig-pango-1-54-0-font-discovery-matching-and-pattern-properties-with-receipt-owned-config-cache-boundary-plus-exact-pixman-generic-implementation-for-exact-cairo-pixel-compositing-prerequisite-plus-exact-cairo-core-and-cairo-gobject-for-pango-1-54-0-and-gtk-3-24-49-rendering-surface-and-gobject-integration-plus-exact-graphite2-for-exact-harfbuzz-10-1-0-graphite-font-feature-shaping-prerequisite-plus-exact-project-produced-libxdamage-1-1-6-for-gtk-3-24-49-gdk-x11-damage-extension-linkage-and-damage-region-capability
+    accepted_scope: exact-xorg-members-and-selected-gtk-x11-capabilities-plus-exact-libxcursor-gtk-3-24-49-x11-cursor-theme-image-and-surface-plus-exact-libtasn1-external-gnutls-asn1-security-plus-exact-libepoxy-gtk-3-24-49-x11-glx-dispatch-plus-exact-pango-three-member-gtk-text-family-and-soname-continuity-plus-exact-project-libjpeg-so-62-gdkpixbuf-jpeg-file-and-memory-decode-plus-exact-project-gdkpixbuf-2-42-12-jpeg-png-file-and-memory-decode-plus-exact-glib-four-member-libpng-and-util-linux-two-member-gdkpixbuf-reference-dependency-scope-plus-exact-libthai-libdatrie-libiconv-and-thbrk-tri-pango-1-54-0-thai-break-scope-plus-exact-libcloudproviders-gtk-3-24-49-places-sidebar-cloud-account-integration-plus-exact-fribidi-pango-1-54-0-core-unicode-bidirectional-text-processing-plus-exact-freetype-pango-1-54-0-gtk-3-24-49-font-engine-and-exact-brotli-bzip2-zlib-transitive-feature-closure-plus-exact-libxkbcommon-gtk-3-24-49-wayland-xkb-keymap-keyboard-state-modifier-and-keysym-translation-plus-exact-harfbuzz-pango-1-54-0-core-opentype-text-shaping-plus-exact-fontconfig-pango-1-54-0-font-discovery-matching-and-pattern-properties-with-receipt-owned-config-cache-boundary-plus-exact-pixman-generic-implementation-for-exact-cairo-pixel-compositing-prerequisite-plus-exact-cairo-core-and-cairo-gobject-for-pango-1-54-0-and-gtk-3-24-49-rendering-surface-and-gobject-integration-plus-exact-graphite2-for-exact-harfbuzz-10-1-0-graphite-font-feature-shaping-prerequisite-plus-exact-project-produced-libxdamage-1-1-6-for-gtk-3-24-49-gdk-x11-damage-extension-linkage-and-damage-region-capability-plus-exact-atomic-atk-atk-bridge-at-spi2-core-2-56-2-family-for-gtk-3-24-49-accessibility-library-linkage
   libjpeg_compatibility_candidate:
     first_candidate_state: rejected-rebuild-required-no-runpath
     first_candidate_member: libjpeg.so.62.4.0
@@ -130,16 +131,16 @@ provider_authority:
     required_now: 0
   composition_review:
     decision: reviewed-blocked-incomplete
-    accepted_provider_roots: 29
-    accepted_members: 37
-    included_members: 36
+    accepted_provider_roots: 30
+    accepted_members: 40
+    included_members: 39
     deferred_members: 1
     selected_gtk_identities: 37
-    unresolved_selected_identities: 6
+    unresolved_selected_identities: 3
     accepted_soname_collisions: 0
     accepted_alias_collisions: 0
     target_manifest_allowed: false
-    next_tranche: at-spi2-atk-2-56-2-bounded-provider-authority-review
+    next_tranche: gtk3-core-3-24-49-atomic-candidate-preparation
   gdkpixbuf_core_acquisition:
     result_sha256: e96fb0e2d8fa1c16a228e41d60801abac0b8a43584a86b7e63f8adddfc4f5692
     review_state: acquisition-reviewed-partial
@@ -161,7 +162,7 @@ provider_authority:
     transitive_result_sha256: a18426371acf0339731464eea4a6fd1f8c745cc09154629b69e34d1063073c13
     transitive_recipe_tree: e91a0c476ef4355dbfff46e2bcab23d0085ddd01
     transitive_functional_matrix: jpeg-file-pass-jpeg-memory-pass-png-file-pass-png-memory-pass
-    next_action: review-at-spi2-core-2-56-2-atomic-candidate-bounded-provider-authority
+    next_action: prepare-gtk3-core-3-24-49-atomic-glibc-candidate
   thai_break_provider:
     result_sha256: 7789ff1a039e3186b04014e4ddf6a7ba68d77fe31a2f1ef77273590aa97b8e1e
     libthai_member: libthai.so.0.3.1
@@ -187,7 +188,7 @@ provider_authority:
     consumer: gtk-3-24-49-places-sidebar-cloud-account-integration
     service_boundary: dbus-session-services-and-accounts-not-accepted
     provider_authority: accepted-bounded-provider
-  next_research_decision: review-at-spi2-core-2-56-2-atomic-candidate-bounded-provider-authority
+  next_research_decision: prepare-gtk3-core-3-24-49-atomic-glibc-candidate
   fribidi_provider:
     member: libfribidi.so.0.4.0
     member_sha256: 71668fd02e89fa7546446bb7961bb618f6d22e1506f7444bbea6788befbb7895
@@ -349,10 +350,25 @@ provider_authority:
     member_sha256s: 55c9c8a3767258bcc1d25640223aa8638ca0fc1bf5a310c7c87de14ad66191d7;cce78fd50cb5b3a19bdc046112c75a2309ad5feda3183e62f538bc1177e72773;e94f2980cf8580634d7ab3c4f9ad2d8713880a1e3614001aed7a63ba6388c874
     gir_equivalence: byte-exact-four-artifacts
     activation_metadata: seven-relocated-zero-active
-    provider_authority: open-bounded-review-required
+    provider_authority: accepted-bounded-atomic-gtk3-accessibility-library-linkage
     supplier_publication: not-accepted
     target_population: blocked
     service_activation: blocked
+  at_spi2_core_provider_authority:
+    review_id: ATSPI2-CORE-PROV-001
+    decision: accepted-bounded-provider
+    capability: selected-gtk-3-24-49-in-process-atk-accessible-object-model-and-linked-atk-bridge-at-spi-library-boundary
+    exact_members: libatk-1.0.so.0.25611.1;libatk-bridge-2.0.so.0.0.0;libatspi.so.0.0.1
+    exact_sonames: libatk-1.0.so.0;libatk-bridge-2.0.so.0;libatspi.so.0
+    atomicity: whole-family-only-no-partial-member-acceptance
+    gir_boundary: exact-four-artifacts-retained-atomic-no-separate-service-authority
+    activation_metadata: seven-relocated-zero-active
+    helpers: two-present-not-executed
+    service_authority: not-accepted
+    supplier_publication: not-accepted
+    composition_effect: three-at-spi2-gaps-closed-three-total-gaps-remain
+    target_population: blocked
+    activation: blocked
   gtk3_core_provider_blocker:
     selected_labels: libgdk-3.so.0.2417.32;libgtk-3.so.0.2417.32
     required_sonames: libgdk-3.so.0;libgtk-3.so.0
@@ -390,14 +406,14 @@ provider_authority:
     first_lane_recipe_class: B
     first_lane_local_artifact_class: C
     first_lane_build_state: qualified-local-recipe-and-artifact-candidate-bounded-provider-accepted
-    at_spi2_atk_lane: qualified-atomic-recipe-and-class-c-family-bounded-provider-authority-review-active
-    gtk3_core_lane: deferred-atomic-recipe-contribution-after-libxdamage-and-at-spi2
+    at_spi2_atk_lane: bounded-atomic-provider-authority-accepted-service-authority-excluded
+    gtk3_core_lane: authorized-atomic-candidate-preparation-after-libxdamage-and-at-spi2
     libselinux_lane: no-build-authorization-pending-direct-consumer-necessity
     version_policy: newer-versions-require-selected-identity-reselection
-    provider_authority_effect: exact-libxdamage-bounded-provider-accepted-only
+    provider_authority_effect: exact-libxdamage-and-atomic-at-spi2-bounded-providers-accepted-no-composition-target-service-or-activation-effect
     composition_effect: reviewed-blocked-incomplete-retained
     target_manifest_allowed: false
-    next_action: review-at-spi2-core-2-56-2-atomic-candidate-bounded-provider-authority
+    next_action: prepare-gtk3-core-3-24-49-atomic-glibc-candidate
   prohibited_claims:
     - complete-provider-authority
     - complete-runtime-composition
@@ -405,7 +421,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: review-at-spi2-core-2-56-2-atomic-candidate-bounded-provider-authority
+  id: prepare-gtk3-core-3-24-49-atomic-glibc-candidate
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:

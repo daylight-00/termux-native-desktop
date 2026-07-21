@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
-python3 - "$ROOT" <<'PY2'
+python3 - "$ROOT" <<'PY'
 from pathlib import Path
 import csv,hashlib,sys
 root=Path(sys.argv[1]); review=root/'experiments/glibc/selected-obsidian-provider-authority/review'; cand=root/'experiments/glibc/selected-obsidian-provider-authority/candidates/at-spi2-core-glibc'
-paths=[root/'docs/evidence/at-spi2-core-production-recipe-candidate-result-review.md',review/'at-spi2-core-production-recipe-candidate-result-review.tsv',cand/'gpkg/at-spi2-core/build.sh',cand/'at-spi2-core-glibc-contribution.patch',root/'docs/current/STATE.yaml',root/'docs/current/ACTIVE_TASK.md',root/'docs/current/BRIEF.md',root/'docs/catalog.tsv',root/'STATUS.md']
+paths=[root/'docs/evidence/at-spi2-core-production-recipe-candidate-result-review.md',review/'at-spi2-core-production-recipe-candidate-result-review.tsv',cand/'gpkg/at-spi2-core/build.sh',cand/'at-spi2-core-glibc-contribution.patch',root/'docs/current/STATE.yaml',root/'docs/current/ACTIVE_TASK.md',root/'docs/current/BRIEF.md',root/'docs/catalog.tsv',root/'STATUS.md',root/'docs/evidence/at-spi2-core-bounded-provider-authority.md',review/'at-spi2-core-bounded-provider-authority.tsv']
 errors=[f'missing {p.relative_to(root)}' for p in paths if not p.is_file()]
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 if not errors:
@@ -17,22 +17,23 @@ if not errors:
    if r.get(k)!=v:errors.append(f'{k}: expected {v}, got {r.get(k)!r}')
  if sha(paths[2])!='6f727204730b6b0a3496c169f635c5016903cb64b816b7c84ca91fcbc9d4e30d':errors.append('recipe hash mismatch')
  if sha(paths[3])!='26f6741fbb081c64bffb53d0a467564845df5ef5a0983b09f00e2e924bba6c50':errors.append('patch hash mismatch')
- text=paths[2].read_text(); patch=paths[3].read_text()
- for required in ['gcc-libs-glibc','termux_setup_gir','local payload_root=glibc','share/termux-native-desktop/disabled/at-spi2-core']:
-  if required not in text:errors.append(f'missing recipe marker: {required}')
- for forbidden in ['TND_ISOLATED_','PROOT_PATH','production-private-jq','production-gnupg']:
-  if forbidden in text or forbidden in patch:errors.append(f'private harness token leaked: {forbidden}')
+ text=paths[2].read_text();patch=paths[3].read_text()
+ for marker in ['gcc-libs-glibc','termux_setup_gir','local payload_root=glibc','share/termux-native-desktop/disabled/at-spi2-core']:
+  if marker not in text:errors.append(f'missing recipe marker: {marker}')
+ for token in ['TND_ISOLATED_','PROOT_PATH','production-private-jq','production-gnupg']:
+  if token in text or token in patch:errors.append(f'private harness token leaked: {token}')
  gaps=list(csv.DictReader((review/'selected-provider-composition-gaps.tsv').open(newline='',encoding='utf-8'),delimiter='\t'))
- atspi=[g for g in gaps if g['identity_label'] in {'libatk-bridge-2.0.so.0.0.0','libatk-1.0.so.0.25611.1','libatspi.so.0.0.1'}]
- if len(atspi)!=3 or any(g['gap_class']!='QUALIFIED_LOCAL_ATOMIC_CANDIDATE_PROVIDER_AUTHORITY_OPEN' for g in atspi):errors.append('AT-SPI2 composition rows are not exactly three candidate-open gaps')
- doc=paths[0].read_text(); state=paths[4].read_text(); active=paths[5].read_text(); brief=paths[6].read_text(); catalog=paths[7].read_text(); status=paths[8].read_text()
- checks=[('doc decisions','QUALIFIED_CLASS_B' in doc and 'QUALIFIED_CLASS_C' in doc),('no provider grant','OPEN_BOUNDED_PROVIDER_AUTHORITY_REVIEW_REQUIRED' in doc),('state candidate','at_spi2_core_production_candidate:' in state),('active review task','Task ID: `review-at-spi2-core-2-56-2-atomic-candidate-bounded-provider-authority`' in active),('brief candidate','AT-SPI2 core 2.56.2 atomic candidate lane is now qualified' in brief),('catalog','at-spi2-core-production-recipe-candidate-result-review\tevidence\tcurrent\tcanonical' in catalog),('status','exact atomic AT-SPI2 core 2.56.2 Class B recipe and Class C package/member candidate qualified' in status)]
+ if any(g['identity_label'] in {'libatk-bridge-2.0.so.0.0.0','libatk-1.0.so.0.25611.1','libatspi.so.0.0.1'} for g in gaps):errors.append('accepted AT-SPI2 identities remain in composition gaps')
+ auth=list(csv.DictReader(paths[10].open(newline='',encoding='utf-8'),delimiter='\t'))
+ if len(auth)!=1 or auth[0].get('decision')!='ACCEPTED_BOUNDED_PROVIDER':errors.append('separate bounded provider decision missing')
+ doc=paths[0].read_text();state=paths[4].read_text();active=paths[5].read_text();brief=paths[6].read_text();catalog=paths[7].read_text();status=paths[8].read_text();authdoc=paths[9].read_text()
+ checks=[('candidate classes','QUALIFIED_CLASS_B' in doc and 'QUALIFIED_CLASS_C' in doc),('candidate-time separation','OPEN_BOUNDED_PROVIDER_AUTHORITY_REVIEW_REQUIRED' in doc),('state candidate','at_spi2_core_production_candidate:' in state),('state current authority','at_spi2_core_provider_authority:' in state),('active GTK task','Task ID: `prepare-gtk3-core-3-24-49-atomic-glibc-candidate`' in active),('brief exact family','exact atomic `libatk-1.0.so.0.25611.1`' in brief),('catalog','at-spi2-core-production-recipe-candidate-result-review\tevidence\tcurrent\tcanonical' in catalog),('status','atomic AT-SPI2 core project candidates accepted as bounded GTK 3.24.49 providers' in status),('separate authority doc','ACCEPTED_BOUNDED_PROVIDER' in authdoc)]
  for label,ok in checks:
   if not ok:errors.append(f'missing marker: {label}')
- for forbidden in ['provider authority here:       ACCEPTED','target/service activation:     ACCEPTED']:
-  if forbidden in doc:errors.append(f'forbidden widening: {forbidden}')
+ for token in ['provider authority here:       ACCEPTED','target/service activation:     ACCEPTED']:
+  if token in doc:errors.append(f'candidate record widened retroactively: {token}')
 if errors:
  for e in errors:print('atspi2-candidate-review: FAIL:',e,file=sys.stderr)
  raise SystemExit(1)
-print('atspi2-candidate-review: PASS: exact atomic Class B recipe and Class C package/member family are frozen; provider and service authority remain separate open reviews')
-PY2
+print('atspi2-candidate-review: PASS: exact atomic Class B recipe and Class C package/member family remain frozen; the later bounded provider decision stays separate and service authority remains excluded')
+PY
