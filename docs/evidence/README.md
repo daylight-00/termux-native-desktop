@@ -100,3 +100,5 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 - [`selected-target-indexed-replacement-member-size-review.md`](selected-target-indexed-replacement-member-size-review.md) — closes all retained-result coordinate/index gaps through indexed replacement and append-only receipts, records 40 exact member sizes, and retains the Pixman size blocker.
 
 - [`selected-target-pixman-size-resource-budget-intervention-review.md`](selected-target-pixman-size-resource-budget-intervention-review.md) — binds exact Pixman member size, deterministic receipt reservation and final resource budget, conditionally opening read-only materializer design review while population remains blocked.
+
+- [`selected-target-materializer-runtime-preflight-design-review.md`](selected-target-materializer-runtime-preflight-design-review.md) — exact non-executing 41-object materializer plan, runtime preflight, verification, publication, rollback and recovery design candidate with separate acceptance and execution gates.

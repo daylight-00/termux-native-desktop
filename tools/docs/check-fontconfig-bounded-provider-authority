@@ -57,7 +57,7 @@ markers=[
  ('doc fresh cache','fresh cache when the provider, configuration, or font set changes' in doc),
  ('state route','fontconfig_provider_authority_review: docs/evidence/fontconfig-bounded-provider-authority.md' in state),
  ('state accepted','fontconfig_provider:' in state and 'provider_authority: accepted-bounded-provider' in state),
- ('next task','Task ID: `design-read-only-selected-provider-materializer-and-runtime-preflight-contract`' in active),
+ ('next task','Task ID: `review-and-accept-read-only-selected-provider-materializer-runtime-preflight-design-boundary`' in active),
  ('catalog','fontconfig-bounded-provider-authority\tevidence\tcurrent\tcanonical' in catalog),
 ]
 for label,ok in markers:

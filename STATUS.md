@@ -421,3 +421,9 @@ All retained-result coordinate and result-index gaps are closed as metadata evid
 ## Pixman size, final budget and design-review intervention decision
 
 Exact retained Pixman evidence records `libpixman-1.so.0.46.4` as 460,920 bytes at the already accepted member digest. All 41 member sizes total 29,047,112 bytes. A 44,332-byte canonical verification-receipt prototype produces a deterministic 1,048,576-byte reservation and a final resource preflight of 59,142,800 bytes. The intervention is conditionally lifted only for read-only materializer design review; byte acquisition, root creation, population, publication, deployment and activation remain blocked.
+
+## Read-only selected-provider materializer/runtime-preflight design candidate
+
+`SELECTED-PROVIDER-MATERIALIZER-DESIGN-REVIEW-001` qualifies a deterministic non-executing candidate: 41 exact object rows, 20 states, 24 ordered operations, 20 runtime-preflight checks, 18 publication-blocking verification checks and 11 publication/recovery contracts. It specifies content-addressed objects, same-device hardlinks with no copy fallback, regular-before-alias ordering, atomic-family barriers, canonical receipt overflow abort, immutable generation publication, previous-before-current selector ordering, rollback, idempotent resume and orphan reporting.
+
+The candidate remains `SELECTED-PROVIDER-MATERIALIZER-DESIGN-ACCEPTANCE-OPEN`. Execution authorization, a local supply map, provider-byte reads, generation-root creation, target population, materialization, publication, deployment and activation remain blocked.

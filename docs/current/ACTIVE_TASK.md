@@ -1,54 +1,55 @@
-# Active task: design a read-only selected-provider materializer and runtime preflight contract
+# Active task: review and accept the read-only materializer/runtime-preflight design boundary
 
-> Task ID: `design-read-only-selected-provider-materializer-and-runtime-preflight-contract`
+> Task ID: `review-and-accept-read-only-selected-provider-materializer-runtime-preflight-design-boundary`
 >
-> Expected state on completion: a non-executing design specifies exact input bindings, content-addressed object handling, staging order, verification, receipt generation, publication preflight, rollback and failure cleanup. No provider byte is acquired and no filesystem root or target node is created.
+> Expected state on completion: the exact non-executing design candidate is separately accepted or rejected as a bounded design authority record. Acceptance must preserve `execution_authorized=NO` and may not localize supply bytes, create the generation root or populate any target.
 
 ## Objective
 
-Translate the accepted 82-row target policy, complete 41-member size census, 59,142,800-byte resource budget and seven generation contracts into an auditable materializer/preflight design without implementing or running it.
+Review the exact `SELECTED-PROVIDER-MATERIALIZER-DESIGN-REVIEW-001` candidate, its source locks, 41-row object plan, state machine, operation ordering, runtime preflight, verification, publication, rollback and recovery contracts. Decide only whether the design boundary is internally complete and authority-safe.
 
 ## Why now
 
-The exact Pixman member size is 460,920 bytes, all 41 member sizes are exact, and the deterministic receipt reservation closes the final resource-budget blocker. The intervention is conditionally lifted only for read-only design review.
+The v112 candidate translates the accepted 82-row target policy, complete supply/index evidence, 41 exact member sizes, 59,142,800-byte runtime budget and seven generation contracts into a deterministic non-executing design. A separate acceptance record is required before any implementation or execution review.
 
 ## In scope
 
-- define immutable input and result interfaces;
-- define content-addressed object-store and staging algorithms;
-- define regular-file and relative SONAME-alias ordering;
-- define hash, ELF, SONAME, dependency, collision and loader verification ordering;
-- define receipt serialization and 1 MiB overflow abort behavior;
-- define statvfs, owner, mode, same-device and symlink preflight;
-- define publication, selector rollback, idempotent resume and orphan reporting;
-- prove that every mutating operation remains behind a separate future authorization gate.
+- verify all nine generated candidate artifacts and their digests;
+- verify 41 exact regular-object and alias plans;
+- verify the future execution-authorization gate precedes every mutating state;
+- verify hardlink-only object reuse and no copy fallback;
+- verify regular-before-alias and atomic-family barriers;
+- verify the 20 runtime-preflight and 18 verification checks;
+- verify receipt overflow, generation publication, selector ordering, rollback, resume and orphan handling;
+- accept or reject the design without broadening runtime authority.
 
 ## Out of scope
 
-Downloading or extracting provider bytes, creating the generation root, directories, files or symlinks, package installation, running a materializer, generating a live receipt, publishing selectors, target population, deployment or activation.
+Localizing, downloading, reading or extracting provider bytes; creating the generation base, object store, staging tree, generation, receipt, lock, hardlink or symlink; implementing or running a materializer; publishing selectors; target population; deployment; activation.
 
 ## Required reading
 
-- `docs/evidence/selected-target-pixman-size-resource-budget-intervention-review.md`
-- `experiments/glibc/selected-obsidian-provider-authority/review/selected-target-resource-budget-metadata.tsv`
-- `experiments/glibc/selected-obsidian-provider-authority/review/selected-target-population-intervention-lift-review.tsv`
-- `experiments/glibc/selected-obsidian-provider-authority/review/selected-target-generation-root-contract-review.tsv`
-- `experiments/glibc/selected-obsidian-provider-authority/review/selected-target-manifest-boundary-acceptance.tsv`
+- `docs/evidence/selected-target-materializer-runtime-preflight-design-review.md`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-target-materializer-design-metadata.tsv`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-target-materializer-runtime-preflight-design.json`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-target-materializer-object-plan.tsv`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-target-materializer-state-machine.tsv`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-target-runtime-preflight-contract.tsv`
 
 ## Pending external inputs
 
-None for read-only design. Any operation requiring provider or filesystem bytes remains a separate blocked authority decision.
+None for design acceptance. A future execution review will require a separate 41-row local supply-localization contract and explicit execution authorization.
 
 ## Stop conditions
 
-Stop if the design begins acquiring bytes, creating paths, relaxing exact digest checks, allowing partial atomic families, publishing selectors, or treating design approval as population authority.
+Stop if acceptance would authorize execution, byte acquisition, local supply reads, root creation, object or generation writes, copy fallback, partial atomic-family handling, selector publication, population, deployment or activation.
 
 ## Completion criteria
 
-A separate machine-readable and narrative design covers inputs, ordering, preflight, verification, receipt, publication, rollback and cleanup; negative tests reject mutation and authority widening. Population remains unauthorized.
+A separate acceptance record binds the exact candidate digests and either accepts or rejects the design. Even accepted design authority remains non-executing; all filesystem and byte effects stay blocked.
 
 ## Next valid action
 
-Design and review only. Do not acquire, extract, create, copy, install, populate, publish, deploy or activate.
+Review and accept or reject the exact design boundary only. Do not implement, localize, acquire, extract, create, link, populate, publish, deploy or activate.
 
 Do not acquire or populate provider bytes.

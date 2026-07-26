@@ -1,0 +1,113 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import csv
+import hashlib
+import json
+import subprocess
+import sys
+import tempfile
+from collections import Counter
+from pathlib import Path
+
+root = Path(__file__).resolve().parents[2]
+review = root / 'experiments/glibc/selected-obsidian-provider-authority/review'
+recipe = root / 'experiments/glibc/selected-obsidian-provider-authority/recipe/generate-selected-target-materializer-runtime-preflight-design.py'
+files = [
+    'selected-target-materializer-object-plan.tsv',
+    'selected-target-materializer-input-contract.tsv',
+    'selected-target-materializer-state-machine.tsv',
+    'selected-target-materializer-operation-contract.tsv',
+    'selected-target-runtime-preflight-contract.tsv',
+    'selected-target-materializer-verification-contract.tsv',
+    'selected-target-materializer-publication-recovery-contract.tsv',
+    'selected-target-materializer-runtime-preflight-design.json',
+    'selected-target-materializer-design-metadata.tsv',
+]
+
+def read_tsv(name: str) -> list[dict[str, str]]:
+    with (review / name).open(newline='', encoding='utf-8') as fh:
+        return list(csv.DictReader(fh, delimiter='\t'))
+
+with tempfile.TemporaryDirectory() as td:
+    subprocess.run(['python3', str(recipe), '--repo-root', str(root), '--output-root', td], check=True)
+    generated = Path(td) / 'experiments/glibc/selected-obsidian-provider-authority/review'
+    for name in files:
+        if (review / name).read_bytes() != (generated / name).read_bytes():
+            raise SystemExit(f'generated drift: {name}')
+
+objects = read_tsv('selected-target-materializer-object-plan.tsv')
+inputs = read_tsv('selected-target-materializer-input-contract.tsv')
+states = read_tsv('selected-target-materializer-state-machine.tsv')
+operations = read_tsv('selected-target-materializer-operation-contract.tsv')
+preflight = read_tsv('selected-target-runtime-preflight-contract.tsv')
+verification = read_tsv('selected-target-materializer-verification-contract.tsv')
+recovery = read_tsv('selected-target-materializer-publication-recovery-contract.tsv')
+meta = {r['key']: r['value'] for r in read_tsv('selected-target-materializer-design-metadata.tsv')}
+design_bytes = (review / 'selected-target-materializer-runtime-preflight-design.json').read_bytes()
+design = json.loads(design_bytes)
+
+atomic_counts = Counter(r['atomic_family_id'] for r in objects if r['atomic_family_id'].startswith('ATOMIC-'))
+closure_counts = Counter(r['supply_closure_kind'] for r in objects)
+state_by_name = {r['state_name']: r for r in states}
+op_by_name = {r['operation']: r for r in operations}
+pref_by_id = {r['check_id']: r for r in preflight}
+
+checks = {
+    'object_count': len(objects) == 41,
+    'object_sequence': [int(r['sequence']) for r in objects] == list(range(1, 42)),
+    'object_unique_sha': len({r['member_sha256'] for r in objects}) == 41,
+    'object_unique_regular': len({r['generation_regular_relative_path'] for r in objects}) == 41,
+    'object_unique_alias': len({r['generation_alias_relative_path'] for r in objects}) == 41,
+    'object_bytes': sum(int(r['member_size_bytes']) for r in objects) == 29_047_112,
+    'object_store_paths': all(r['object_store_relative_path'] == f"objects/sha256/{r['member_sha256'][:2]}/{r['member_sha256']}" for r in objects),
+    'object_design_only': all(r['design_state'] == 'QUALIFIED_NON_EXECUTING_PLAN_ROW' and 'NO_LOCALIZATION_EXTRACTION' in r['authority_effect'] for r in objects),
+    'closure_split': closure_counts == Counter({'V101_INDEXED_REPLACEMENT': 23, 'EXISTING_DIGEST_BOUND_UNCHANGED': 14, 'APPEND_ONLY_LEGACY_INDEX_UPGRADE': 4}),
+    'atomic_families': atomic_counts == Counter({'ATOMIC-ATSPI2-3': 3, 'ATOMIC-CAIRO-2': 2, 'ATOMIC-PANGO-3': 3, 'ATOMIC-GDK-GTK-2': 2}),
+    'input_count': len(inputs) == 13,
+    'input_sha_locks': all(len(r['source_sha256']) == 64 and r['consumption_mode'].startswith('READ_ONLY_CANONICAL_INPUT_LOCKED') for r in inputs),
+    'state_count': len(states) == 20,
+    'state_gate_order': int(state_by_name['EXECUTION_AUTHORIZATION_REQUIRED']['phase_order']) < int(state_by_name['EXCLUSIVE_LOCK_HELD']['phase_order']),
+    'state_execution_no': all(r['current_authority_state'] in {'QUALIFIED_CANDIDATE_ACCEPTANCE_OPEN', 'OPEN_NOT_ACCEPTED', 'NOT_AUTHORIZED', 'NO_AUTHORITY'} for r in states),
+    'operation_count': len(operations) == 24,
+    'operation_future_gate': all(r['authorization_gate'] == 'FUTURE_SEPARATE_EXECUTION_AUTHORIZATION_REQUIRED' for r in operations),
+    'operation_execution_no': all(r['current_authority_state'] == 'NOT_AUTHORIZED_DESIGN_ROW_ONLY' for r in operations),
+    'hardlink_only': op_by_name['HARDLINK_REGULAR_TARGETS']['verification'].startswith('HARDLINK_ONLY_NO_COPY_FALLBACK'),
+    'selector_order': int(op_by_name['PUBLISH_PREVIOUS_SELECTOR']['sequence']) < int(op_by_name['PUBLISH_CURRENT_SELECTOR']['sequence']),
+    'preflight_count': len(preflight) == 20,
+    'preflight_budget': str(59_142_800) in pref_by_id['MAT-PREF-007']['required_rule'],
+    'preflight_receipt_cap': str(1_048_576) in pref_by_id['MAT-PREF-017']['required_rule'],
+    'preflight_not_run': all(r['current_execution_state'] == 'NOT_RUN_DESIGN_ONLY' for r in preflight),
+    'verification_count': len(verification) == 18,
+    'verification_blocking': all(r['publication_blocking'] == 'YES' and r['current_execution_state'] == 'NOT_RUN_DESIGN_ONLY' for r in verification),
+    'recovery_count': len(recovery) == 11,
+    'recovery_no_delete': all(any(token in r['deletion_policy'] for token in ['NO_DELETE', 'NO_AUTOMATIC_DELETE', 'NEVER_DELETE', 'TEMP_SELECTOR_ONLY', 'EXACT_TX_TEMP_ONLY', 'NO_PROTECTED_PATH_MUTATION']) for r in recovery),
+    'metadata_identity': meta.get('design_review_id') == 'SELECTED-PROVIDER-MATERIALIZER-DESIGN-REVIEW-001' and meta.get('candidate_state') == 'QUALIFIED_NON_EXECUTING_READ_ONLY_DESIGN_CANDIDATE',
+    'metadata_counts': meta.get('object_plan_row_count') == '41' and meta.get('state_machine_row_count') == '20' and meta.get('operation_contract_row_count') == '24' and meta.get('runtime_preflight_row_count') == '20' and meta.get('verification_contract_row_count') == '18' and meta.get('publication_recovery_row_count') == '11',
+    'metadata_budget': meta.get('exact_member_bytes') == '29047112' and meta.get('receipt_reservation_bytes') == '1048576' and meta.get('final_resource_preflight_bytes') == '59142800',
+    'metadata_acceptance_open': meta.get('design_acceptance_state') == 'OPEN_SEPARATE_ACCEPTANCE_REQUIRED',
+    'metadata_runtime_no': all(meta.get(k) == 'NO' for k in ['execution_authorized', 'target_population_authorized', 'byte_acquisition_authorized', 'generation_root_creation_authorized', 'materialization_authorized', 'publication_authorized', 'deployment_authorized', 'activation_authorized']),
+    'metadata_next': meta.get('next_action') == 'review-and-accept-read-only-selected-provider-materializer-runtime-preflight-design-boundary',
+    'design_sha': hashlib.sha256(design_bytes).hexdigest() == meta.get('design_json_sha256') == '323d834e58397364561a4b89f4b344a9633e4f3c472728e75e5b620017db44be',
+    'design_size': len(design_bytes) == int(meta['design_json_bytes']) == 195_029,
+    'design_boundary': design.get('authority_boundary', '').startswith('READ_ONLY_DESIGN_CANDIDATE_ONLY_NO_BYTE_ACQUISITION'),
+    'design_inputs': len(design.get('source_locks', {})) == 13 and len(design.get('object_plan', [])) == 41,
+}
+
+texts = '\n'.join((root / p).read_text(encoding='utf-8') for p in [
+    'docs/current/ACTIVE_TASK.md', 'docs/current/BRIEF.md', 'docs/current/STATE.yaml',
+    'docs/current/PENDING_ARTIFACTS.yaml', 'STATUS.md',
+    'docs/evidence/selected-target-materializer-runtime-preflight-design-review.md',
+])
+checks.update({
+    'current_task': 'Task ID: `review-and-accept-read-only-selected-provider-materializer-runtime-preflight-design-boundary`' in texts,
+    'current_candidate': 'QUALIFIED_NON_EXECUTING_READ_ONLY_DESIGN_CANDIDATE' in texts,
+    'current_population_no': not any(s in texts for s in ['target population authorized: YES', 'execution authorized: YES', 'materialization authorized: YES', 'publication authorized: YES']),
+    'doc_design_sha': '323d834e58397364561a4b89f4b344a9633e4f3c472728e75e5b620017db44be' in texts,
+})
+
+failed = {k: v for k, v in checks.items() if not v}
+if failed:
+    print(failed, file=sys.stderr)
+    raise SystemExit(1)
+print('selected-provider materializer/runtime-preflight design review: PASS: 41-row object plan, 20-state machine, 24 ordered operations, 20 preflight checks, 18 verification checks, 11 recovery contracts, execution authority NO')
