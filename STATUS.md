@@ -433,3 +433,10 @@ The candidate remains `SELECTED-PROVIDER-MATERIALIZER-DESIGN-ACCEPTANCE-OPEN`. E
 `SELECTED-PROVIDER-MATERIALIZER-DESIGN-ACCEPT-001` accepts the exact v112 nine-artifact design boundary: 41 object-plan rows, 20 states, 24 operations, 20 runtime-preflight checks, 18 publication-blocking checks and 11 recovery contracts. The candidate remains frozen as historical review evidence. No local supply map is produced and execution, provider-byte reads, generation-root creation, target population, materialization, publication, deployment and activation remain unauthorized.
 
 bounded non-executing selected-provider materializer/runtime-preflight design accepted
+
+
+## Non-mutating selected-provider local-supply-map contract candidate
+
+`SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-CONTRACT-REVIEW-001` qualifies an exact 41-row contract and 24 validation rules bound one-to-one to the accepted materializer object plan. The candidate freezes result, index, container/member, size, SHA-256, ELF and SONAME expectations, defines no-follow regular-file ownership/mode/stability checks, and provides a canonical fail-closed receipt schema. All 41 local path fields are empty. Contract acceptance, actual localization, execution, generation-root creation, population, materialization, publication, deployment and activation remain separate and blocked.
+
+non-mutating 41-row selected-provider local-supply-map contract candidate qualified

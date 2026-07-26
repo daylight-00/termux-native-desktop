@@ -112,7 +112,7 @@ expected_meta={
     'oj001_provider_result_sha256':'4e546ac1ef2a92f3301dd51ca2328d6901a05e309da78b6d08b26211d9b621e3',
     'oj001_provider_matrix_pass_count':'6',
     'oj001_provider_decision':'ACCEPTED_BOUNDED_PROVIDER',
-    'next_review_tranche':'NON_MUTATING_SELECTED_PROVIDER_LOCAL_SUPPLY_MAP_CONTRACT_REVIEW',
+    'next_review_tranche':'NON_MUTATING_SELECTED_PROVIDER_LOCAL_SUPPLY_MAP_CONTRACT_ACCEPTANCE_REVIEW',
 }
 for key,val in expected_meta.items():
     if metadata.get(key)!=val:
@@ -205,7 +205,7 @@ checks=[
     ('state version','state_version:' in state),
     ('claim count state','total: 95' in state),
     ('SUP-02 state','required_now: 0' in state),
-    ('next task','Task ID: `generate-and-review-non-mutating-selected-provider-local-supply-map-contract`' in active),
+    ('next task','Task ID: `review-and-accept-non-mutating-selected-provider-local-supply-map-contract-boundary`' in active),
     ('brief classification','claims:' in brief and '95' in brief),
     ('catalog row','provider-claim-classification\tevidence\tcurrent\tcanonical' in catalog),
     ('status next phase','bounded selected provider composition accepted' in status and '`QUALIFIED_NON_MUTATING_SELECTED_TARGET_MANIFEST`' in status),

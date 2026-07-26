@@ -104,3 +104,5 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 - [`selected-target-materializer-runtime-preflight-design-review.md`](selected-target-materializer-runtime-preflight-design-review.md) — exact non-executing 41-object materializer plan, runtime preflight, verification, publication, rollback and recovery design candidate with separate acceptance and execution gates.
 
 - [`selected-target-materializer-runtime-preflight-design-boundary-acceptance.md`](selected-target-materializer-runtime-preflight-design-boundary-acceptance.md) — exact nine-artifact non-executing design acceptance; local supply mapping, execution, population and publication remain blocked.
+
+- [`selected-provider-local-supply-map-contract-review.md`](selected-provider-local-supply-map-contract-review.md) — deterministic 41-row local-supply-map contract and 24 fail-closed validation rules with zero populated paths and no byte-read or execution authority.

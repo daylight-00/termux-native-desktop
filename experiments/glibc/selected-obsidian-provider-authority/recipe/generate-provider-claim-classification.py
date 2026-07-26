@@ -708,14 +708,14 @@ def main() -> None:
             'supplier_or_reference_boundary': 'ACCEPTED_PROVIDER_AND_COMPOSITION_INPUTS',
             'project_owned_changed_boundary': 'PROJECT_AUTHORED_TARGET_PATH_ALIAS_COLLISION_AND_MATERIALIZATION_POLICY',
             'risk_modifiers': 'FILESYSTEM_COLLISION;ABI_ALIAS_DRIFT;ROLLBACK_AND_REPRODUCIBILITY',
-            'existing_evidence': 'selected-target-manifest.tsv;selected-target-manifest-boundary-acceptance.tsv;selected-target-materializer-runtime-preflight-design.json;selected-target-materializer-runtime-preflight-design-boundary-acceptance.tsv;SELECTED-PROVIDER-MATERIALIZER-DESIGN-ACCEPT-001',
-            'remaining_gap': 'NON_MUTATING_LOCAL_SUPPLY_MAP_CONTRACT;LOCAL_SUPPLY_MAP_EVIDENCE;EXPLICIT_EXECUTION_AUTHORIZATION;POPULATION_BLOCKED',
-            'minimum_closure_action': 'GENERATE_AND_REVIEW_NON_MUTATING_41_ROW_LOCAL_SUPPLY_MAP_CONTRACT_WITHOUT_BYTE_SEARCH_READ_ACQUISITION_EXTRACTION_OR_POPULATION',
+            'existing_evidence': 'selected-target-manifest.tsv;selected-target-manifest-boundary-acceptance.tsv;selected-target-materializer-runtime-preflight-design-boundary-acceptance.tsv;selected-provider-local-supply-map-contract.tsv;selected-provider-local-supply-map-validation-contract.tsv;selected-provider-local-supply-map-receipt-schema.json;SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-CONTRACT-REVIEW-001',
+            'remaining_gap': 'NON_MUTATING_LOCAL_SUPPLY_MAP_CONTRACT_ACCEPTANCE;LOCAL_SUPPLY_MAP_EVIDENCE;EXPLICIT_EXECUTION_AUTHORIZATION;POPULATION_BLOCKED',
+            'minimum_closure_action': 'REVIEW_AND_ACCEPT_EXACT_NON_MUTATING_41_ROW_LOCAL_SUPPLY_MAP_CONTRACT_WITHOUT_PATH_POPULATION_BYTE_SEARCH_READ_ACQUISITION_EXTRACTION_OR_EXECUTION',
             'explicitly_excluded_evidence': 'DIRECT_EXTRACTION_OR_COPY_BEFORE_TARGET_REVIEW',
-            'escalation_trigger': 'BOUNDED_NON_EXECUTING_MATERIALIZER_DESIGN_ACCEPTED',
-            'classification_state': 'BOUNDED_TARGET_POLICY_AND_NON_EXECUTING_MATERIALIZER_DESIGN_ACCEPTED_LOCAL_SUPPLY_AND_EXECUTION_BLOCKED',
-            'authority_effect': 'BOUNDED_NON_EXECUTING_DESIGN_AUTHORITY_ONLY_NO_LOCAL_SUPPLY_EXECUTION_POPULATION_PUBLICATION_OR_ACTIVATION_EFFECT',
-            'prohibited_inference': 'DESIGN_ACCEPTANCE_DOES_NOT_PRODUCE_LOCAL_SUPPLY_MAP_AUTHORIZE_EXECUTION_IMPLEMENTATION_OR_POPULATE_TARGET_PATHS',
+            'escalation_trigger': 'NON_MUTATING_LOCAL_SUPPLY_MAP_CONTRACT_CANDIDATE_QUALIFIED',
+            'classification_state': 'BOUNDED_DESIGN_ACCEPTED_LOCAL_SUPPLY_MAP_CONTRACT_CANDIDATE_QUALIFIED_ACCEPTANCE_LOCALIZATION_AND_EXECUTION_BLOCKED',
+            'authority_effect': 'NON_MUTATING_LOCAL_SUPPLY_MAP_CONTRACT_CANDIDATE_ONLY_NO_LOCAL_PATH_BYTE_READ_EXECUTION_POPULATION_PUBLICATION_OR_ACTIVATION_EFFECT',
+            'prohibited_inference': 'CONTRACT_QUALIFICATION_DOES_NOT_PRODUCE_OR_ACCEPT_A_LOCAL_MAP_AUTHORIZE_PATH_DISCOVERY_BYTE_READ_EXECUTION_IMPLEMENTATION_OR_POPULATE_TARGET_PATHS',
         },
         {
             'claim_id': 'PCC-GLOBAL-ACTIVATION',
@@ -836,7 +836,7 @@ def main() -> None:
         ('oj001_provider_result_sha256', libjpeg_provider_review['result_archive_sha256']),
         ('oj001_provider_matrix_pass_count', libjpeg_provider_review['matrix_pass_count']),
         ('oj001_provider_decision', libjpeg_provider_review['decision']),
-        ('next_review_tranche', 'NON_MUTATING_SELECTED_PROVIDER_LOCAL_SUPPLY_MAP_CONTRACT_REVIEW'),
+        ('next_review_tranche', 'NON_MUTATING_SELECTED_PROVIDER_LOCAL_SUPPLY_MAP_CONTRACT_ACCEPTANCE_REVIEW'),
     ]
 
     write_tsv(out_root / CLAIM_OUTPUT, CLAIM_FIELDS, claims)

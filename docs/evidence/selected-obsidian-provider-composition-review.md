@@ -51,5 +51,5 @@ The next transaction may generate and review proposed target rows under the exis
 Current next review tranche:
 
 ```text
-NON_MUTATING_SELECTED_PROVIDER_LOCAL_SUPPLY_MAP_CONTRACT_REVIEW
+NON_MUTATING_SELECTED_PROVIDER_LOCAL_SUPPLY_MAP_CONTRACT_ACCEPTANCE_REVIEW
 ```

@@ -1,0 +1,40 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+import csv,hashlib,json,subprocess,sys,tempfile
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[2]
+BASE=Path('experiments/glibc/selected-obsidian-provider-authority')
+REVIEW=BASE/'review'
+FILES=['selected-provider-local-supply-map-contract.tsv','selected-provider-local-supply-map-validation-contract.tsv','selected-provider-local-supply-map-receipt-schema.json','selected-provider-local-supply-map-contract-metadata.tsv']
+def rows(p):
+ with p.open(newline='',encoding='utf-8') as f:return list(csv.DictReader(f,delimiter='\t'))
+def fail(m):raise SystemExit(m)
+with tempfile.TemporaryDirectory(prefix='local-supply-contract-') as td:
+ subprocess.run([sys.executable,str(ROOT/BASE/'recipe/generate-selected-provider-local-supply-map-contract.py'),'--repo-root',str(ROOT),'--output-root',td],check=True)
+ for n in FILES:
+  if (ROOT/REVIEW/n).read_bytes()!=(Path(td)/REVIEW/n).read_bytes():fail('local supply contract generated drift: '+n)
+contract=rows(ROOT/REVIEW/FILES[0]);valid=rows(ROOT/REVIEW/FILES[1]);schema=json.loads((ROOT/REVIEW/FILES[2]).read_text());meta={r['key']:r['value'] for r in rows(ROOT/REVIEW/FILES[3])};plan=rows(ROOT/REVIEW/'selected-target-materializer-object-plan.tsv')
+if len(contract)!=41 or len(valid)!=24 or len(plan)!=41:fail('local supply contract cardinality mismatch')
+if [r['materializer_plan_row_id'] for r in contract] != [r['plan_row_id'] for r in plan]:fail('plan row order/bijection mismatch')
+if len({r['contract_row_id'] for r in contract})!=41 or len({r['provider_object_id'] for r in contract})!=41 or len({r['expected_member_sha256'] for r in contract})!=41:fail('contract identity duplicate')
+if any(r['local_regular_file_path'] or r['local_path_binding_state']!='UNBOUND_CONTRACT_ONLY' for r in contract):fail('candidate contains populated local path')
+counts={k:sum(r['result_index_contract_kind']==k for r in contract) for k in ['RESULT_INDEX_SHA256','APPEND_ONLY_INDEX_RECEIPT_SHA256','EXISTING_AUTHORITY_DIGEST_SENTINEL']}
+if counts != {'RESULT_INDEX_SHA256':23,'APPEND_ONLY_INDEX_RECEIPT_SHA256':4,'EXISTING_AUTHORITY_DIGEST_SENTINEL':14}:fail('index contract split mismatch')
+for r,p in zip(contract,plan):
+ exact=[('provider_object_id','provider_object_id'),('provider_review_id','provider_review_id'),('artifact_package','artifact_package'),('artifact_version','artifact_version'),('member_basename','member_basename'),('expected_member_sha256','member_sha256'),('expected_member_size_bytes','member_size_bytes'),('expected_soname','soname'),('expected_result_sha256','supply_result_sha256'),('expected_container_locator','artifact_evidence_path'),('expected_member_locator','member_evidence_path'),('expected_object_store_relative_path','object_store_relative_path'),('expected_generation_regular_relative_path','generation_regular_relative_path'),('expected_generation_alias_relative_path','generation_alias_relative_path')]
+ for a,b in exact:
+  if r[a]!=p[b]:fail(f'object plan drift {r["contract_row_id"]} {a}')
+ if r['future_map_row_state']!='SCHEMA_QUALIFIED_NOT_POPULATED' or r['acceptance_gate']!='SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-CONTRACT-ACCEPTANCE-OPEN':fail('contract state widening')
+expected_meta={'contract_review_id':'SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-CONTRACT-REVIEW-001','candidate_state':'QUALIFIED_NON_MUTATING_LOCAL_SUPPLY_MAP_CONTRACT_CANDIDATE','acceptance_gate':'SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-CONTRACT-ACCEPTANCE-OPEN','contract_row_count':'41','validation_rule_count':'24','current_populated_local_path_count':'0','result_index_sha256_row_count':'23','append_only_index_receipt_row_count':'4','existing_authority_digest_sentinel_row_count':'14','local_supply_map_contract_state':'QUALIFIED_CANDIDATE_ACCEPTANCE_OPEN','local_supply_map_state':'NOT_PRODUCED_NOT_AUTHORIZED','local_path_discovery_authorized':'NO','byte_read_authorized':'NO','execution_authorized':'NO','generation_root_creation_authorized':'NO','target_population_authorized':'NO','materialization_authorized':'NO','publication_authorized':'NO','deployment_authorized':'NO','activation_authorized':'NO','next_action':'review-and-accept-non-mutating-selected-provider-local-supply-map-contract-boundary'}
+for k,v in expected_meta.items():
+ if meta.get(k)!=v:fail(f'metadata mismatch {k}: {meta.get(k)!r}')
+if schema.get('current_populated_row_count')!=0 or schema.get('current_rows')!=[] or schema.get('required_future_row_count')!=41:fail('receipt schema population state mismatch')
+if len(schema.get('validation_order',[]))!=24 or schema.get('path_authority')!='NONE_SCHEMA_ONLY' or schema.get('byte_read_authority')!='NONE_SCHEMA_ONLY':fail('receipt schema authority mismatch')
+doc=(ROOT/'docs/evidence/selected-provider-local-supply-map-contract-review.md').read_text();state=(ROOT/'docs/current/STATE.yaml').read_text();brief=(ROOT/'docs/current/BRIEF.md').read_text();active=(ROOT/'docs/current/ACTIVE_TASK.md').read_text();pending=(ROOT/'docs/current/PENDING_ARTIFACTS.yaml').read_text();status=(ROOT/'STATUS.md').read_text();catalog=(ROOT/'docs/catalog.tsv').read_text()
+checks=[('doc decision','QUALIFIED_NON_MUTATING_LOCAL_SUPPLY_MAP_CONTRACT_CANDIDATE' in doc),('doc zero','populated local paths:           0' in doc),('state candidate','local_supply_map_contract_review: qualified-non-mutating-candidate-acceptance-open' in state),('state no map','local_supply_map_produced: false' in state and 'execution_authorized: false' in state),('brief','local supply map contract:     QUALIFIED_NON_MUTATING_CANDIDATE_ACCEPTANCE_OPEN' in brief),('active','Task ID: `review-and-accept-non-mutating-selected-provider-local-supply-map-contract-boundary`' in active),('pending','local-supply-map-contract-acceptance' in pending and 'local-supply-map-evidence' in pending),('status','non-mutating 41-row selected-provider local-supply-map contract candidate qualified' in status),('catalog','selected-provider-local-supply-map-contract-review\tevidence\tcurrent\tcanonical' in catalog)]
+for n,ok in checks:
+ if not ok:fail('missing current marker: '+n)
+texts='\n'.join([doc,state,brief,active,pending,status,(ROOT/REVIEW/FILES[0]).read_text(),(ROOT/REVIEW/FILES[2]).read_text()])
+for forbidden in ['local_supply_map_produced: true','execution_authorized: true','target_population_authorized: true','LOCAL_SUPPLY_MAP_PRODUCED','BYTE_READ_AUTHORIZED','GENERATION_ROOT_CREATED']:
+ if forbidden in texts:fail('authority widening: '+forbidden)
+print('local supply map contract: PASS: 41 exact unbound rows, 24 validation rules, zero populated paths; acceptance, localization and execution remain separate')

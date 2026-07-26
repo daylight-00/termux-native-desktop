@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-26.11`
+> Semantic state version: `2026-07-26.12`
 
 ## Purpose and operational boundary
 
@@ -32,7 +32,10 @@ publication/recovery contracts:   11
 materializer design candidate: QUALIFIED_NON_EXECUTING_READ_ONLY_DESIGN_CANDIDATE
 materializer design acceptance: ACCEPTED_BOUNDED_READ_ONLY_DESIGN_AUTHORITY
 intervention: prior retained; conditionally lifted for read-only design review only
-local supply map contract:     NOT_GENERATED_NOT_REVIEWED
+local supply map contract:     QUALIFIED_NON_MUTATING_CANDIDATE_ACCEPTANCE_OPEN
+local supply contract rows:       41
+local supply validation rules:    24
+local supply populated paths:      0
 local supply map:              NOT_PRODUCED_NOT_AUTHORIZED
 execution authorization:       NO
 population state:              UNPOPULATED_SCHEMA_ONLY
@@ -46,4 +49,6 @@ Design acceptance is non-executing. It creates no local supply map, reads no pro
 
 ## Current phase
 
-The active task is `generate-and-review-non-mutating-selected-provider-local-supply-map-contract`. It may define a deterministic 41-row schema and validation rules only. It may not search, acquire, read, extract or localize provider bytes.
+`SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-CONTRACT-REVIEW-001` qualifies a deterministic 41-row contract, 24 validation rules and a canonical empty receipt schema. The candidate contains zero local paths and grants no path-discovery or byte-read authority.
+
+The active task is `review-and-accept-non-mutating-selected-provider-local-supply-map-contract-boundary`. It may freeze and accept the exact contract artifacts only. It may not search, acquire, read, extract or localize provider bytes.
