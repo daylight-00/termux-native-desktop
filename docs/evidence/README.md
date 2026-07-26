@@ -102,3 +102,5 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 - [`selected-target-pixman-size-resource-budget-intervention-review.md`](selected-target-pixman-size-resource-budget-intervention-review.md) — binds exact Pixman member size, deterministic receipt reservation and final resource budget, conditionally opening read-only materializer design review while population remains blocked.
 
 - [`selected-target-materializer-runtime-preflight-design-review.md`](selected-target-materializer-runtime-preflight-design-review.md) — exact non-executing 41-object materializer plan, runtime preflight, verification, publication, rollback and recovery design candidate with separate acceptance and execution gates.
+
+- [`selected-target-materializer-runtime-preflight-design-boundary-acceptance.md`](selected-target-materializer-runtime-preflight-design-boundary-acceptance.md) — exact nine-artifact non-executing design acceptance; local supply mapping, execution, population and publication remain blocked.

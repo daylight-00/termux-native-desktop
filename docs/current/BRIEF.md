@@ -1,10 +1,10 @@
 # Current project brief
 
-> Semantic state version: `2026-07-26.10`
+> Semantic state version: `2026-07-26.11`
 
 ## Purpose and operational boundary
 
-`termux-native-desktop` develops a native Termux/glibc workstation while separating provider authority, composition, target policy, supply evidence, materializer design, design acceptance, execution authorization, population and activation. User Termux remains authoritative for execution and remote mutation.
+`termux-native-desktop` develops a native Termux/glibc workstation while separating provider authority, composition, target policy, supply evidence, materializer design, design acceptance, local-supply mapping, execution authorization, population and activation. User Termux remains authoritative for execution and remote mutation.
 
 ## Current boundary
 
@@ -19,7 +19,7 @@ indexed v101 replacements:         23
 append-only legacy index upgrades:  4
 supply coordinate/index gaps:     0
 exact member sizes:              41
-open member sizes:               0
+open member sizes:                0
 exact member bytes:      29,047,112
 receipt reservation:      1,048,576
 final resource preflight: 59,142,800
@@ -30,18 +30,20 @@ runtime preflight checks:         20
 verification checks:              18
 publication/recovery contracts:   11
 materializer design candidate: QUALIFIED_NON_EXECUTING_READ_ONLY_DESIGN_CANDIDATE
+materializer design acceptance: ACCEPTED_BOUNDED_READ_ONLY_DESIGN_AUTHORITY
 intervention: prior retained; conditionally lifted for read-only design review only
-design acceptance:             OPEN
+local supply map contract:     NOT_GENERATED_NOT_REVIEWED
+local supply map:              NOT_PRODUCED_NOT_AUTHORIZED
 execution authorization:       NO
 population state:              UNPOPULATED_SCHEMA_ONLY
 materialization/publication:   blocked / blocked
 activation:                    blocked
 ```
 
-The candidate design uses a content-addressed object store, same-device hardlinks with no copy fallback, regular-file completion before relative SONAME aliases, four atomic-family barriers, a 1 MiB receipt cap, immutable generation rename, and `previous`-before-`current` selector publication.
+`SELECTED-PROVIDER-MATERIALIZER-DESIGN-ACCEPT-001` freezes the exact nine v112 candidate artifacts. Accepted invariants include content-addressed objects, hardlink-only reuse with no copy fallback, regular-before-alias ordering, four atomic-family barriers, a 1 MiB receipt cap, immutable generation publication, `previous`-before-`current` selector ordering, rollback, resume and orphan-reporting contracts.
 
-A future execution must first provide a separate accepted authorization and a 41-row local read-only supply map. The design candidate itself creates no runtime path and reads no provider bytes.
+Design acceptance is non-executing. It creates no local supply map, reads no provider bytes and does not authorize the generation root, object writes, population, materialization, publication, deployment or activation.
 
 ## Current phase
 
-The active task is `review-and-accept-read-only-selected-provider-materializer-runtime-preflight-design-boundary`. Only the exact design candidate may be accepted or rejected. Execution, localization, byte acquisition, root creation, population, publication, deployment and activation remain unauthorized.
+The active task is `generate-and-review-non-mutating-selected-provider-local-supply-map-contract`. It may define a deterministic 41-row schema and validation rules only. It may not search, acquire, read, extract or localize provider bytes.

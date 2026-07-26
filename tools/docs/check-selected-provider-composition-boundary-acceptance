@@ -75,7 +75,7 @@ for key, value in {
     'composition_decision': 'ACCEPTED_BOUNDED_COMPLETE_SELECTED_PROVIDER_COMPOSITION',
     'target_manifest_generated': 'NO',
     'target_manifest_allowed': 'NO',
-    'next_review_tranche': 'NON_MUTATING_SELECTED_TARGET_MANIFEST_GENERATION_AND_REVIEW',
+    'next_review_tranche': 'NON_MUTATING_SELECTED_PROVIDER_LOCAL_SUPPLY_MAP_CONTRACT_REVIEW',
 }.items():
     if metadata.get(key) != value:
         errors.append(f'metadata {key}: {metadata.get(key)!r}')
@@ -91,7 +91,7 @@ checks = [
     ('doc target no', 'target manifest generated:     NO' in doc),
     ('state accepted', 'decision: accepted-bounded-complete-selected-provider-composition' in state),
     ('state target false', 'target_manifest_allowed: false' in state),
-    ('active task', 'Task ID: `review-and-accept-read-only-selected-provider-materializer-runtime-preflight-design-boundary`' in active),
+    ('active task', 'Task ID: `generate-and-review-non-mutating-selected-provider-local-supply-map-contract`' in active),
     ('brief', 'accepted provider decision rows:' in brief and '42' in brief and 'current-scope concrete members:' in brief and '41' in brief),
     ('status', 'bounded selected provider composition accepted' in status),
     ('catalog', 'selected-obsidian-provider-composition-boundary-acceptance\tevidence\tcurrent\tcanonical' in catalog),

@@ -427,3 +427,9 @@ Exact retained Pixman evidence records `libpixman-1.so.0.46.4` as 460,920 bytes 
 `SELECTED-PROVIDER-MATERIALIZER-DESIGN-REVIEW-001` qualifies a deterministic non-executing candidate: 41 exact object rows, 20 states, 24 ordered operations, 20 runtime-preflight checks, 18 publication-blocking verification checks and 11 publication/recovery contracts. It specifies content-addressed objects, same-device hardlinks with no copy fallback, regular-before-alias ordering, atomic-family barriers, canonical receipt overflow abort, immutable generation publication, previous-before-current selector ordering, rollback, idempotent resume and orphan reporting.
 
 The candidate remains `SELECTED-PROVIDER-MATERIALIZER-DESIGN-ACCEPTANCE-OPEN`. Execution authorization, a local supply map, provider-byte reads, generation-root creation, target population, materialization, publication, deployment and activation remain blocked.
+
+## Bounded non-executing selected-provider materializer/runtime-preflight design accepted
+
+`SELECTED-PROVIDER-MATERIALIZER-DESIGN-ACCEPT-001` accepts the exact v112 nine-artifact design boundary: 41 object-plan rows, 20 states, 24 operations, 20 runtime-preflight checks, 18 publication-blocking checks and 11 recovery contracts. The candidate remains frozen as historical review evidence. No local supply map is produced and execution, provider-byte reads, generation-root creation, target population, materialization, publication, deployment and activation remain unauthorized.
+
+bounded non-executing selected-provider materializer/runtime-preflight design accepted

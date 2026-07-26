@@ -1,0 +1,28 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+import csv,subprocess,sys,tempfile
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[2];BASE=Path('experiments/glibc/selected-obsidian-provider-authority');REVIEW=BASE/'review';NAME='selected-target-materializer-runtime-preflight-design-boundary-acceptance.tsv'
+def rows(p):
+ with p.open(newline='',encoding='utf-8') as f:return list(csv.DictReader(f,delimiter='\t'))
+def fail(m):raise SystemExit(m)
+with tempfile.TemporaryDirectory(prefix='materializer-design-acceptance-') as td:
+ subprocess.run([sys.executable,str(ROOT/BASE/'recipe/generate-selected-target-materializer-runtime-preflight-design-boundary-acceptance.py'),'--repo-root',str(ROOT),'--output-root',td],check=True)
+ if (ROOT/REVIEW/NAME).read_bytes()!=(Path(td)/REVIEW/NAME).read_bytes():fail('materializer design acceptance generated drift')
+r=rows(ROOT/REVIEW/NAME)
+if len(r)!=1:fail('acceptance row count')
+r=r[0]
+expected={'acceptance_id':'SELECTED-PROVIDER-MATERIALIZER-DESIGN-ACCEPT-001','decision':'ACCEPTED_BOUNDED_NON_EXECUTING_READ_ONLY_MATERIALIZER_RUNTIME_PREFLIGHT_DESIGN','candidate_review_id':'SELECTED-PROVIDER-MATERIALIZER-DESIGN-REVIEW-001','accepted_input_count':'13','accepted_object_plan_row_count':'41','accepted_state_machine_row_count':'20','accepted_operation_contract_row_count':'24','accepted_runtime_preflight_row_count':'20','accepted_verification_contract_row_count':'18','accepted_publication_recovery_row_count':'11','accepted_target_row_count':'82','accepted_regular_object_count':'41','accepted_alias_count':'41','accepted_atomic_family_count':'4','accepted_exact_member_bytes':'29047112','accepted_receipt_reservation_bytes':'1048576','accepted_final_resource_preflight_bytes':'59142800','accepted_copy_policy':'HARDLINK_ONLY_FROM_VERIFIED_CONTENT_ADDRESS_STORE_NO_COPY_FALLBACK','candidate_issue_closed':'SELECTED-PROVIDER-MATERIALIZER-DESIGN-ACCEPTANCE-OPEN','accepted_authority_state':'ACCEPTED_BOUNDED_READ_ONLY_DESIGN_AUTHORITY','execution_authorization_state':'NOT_AUTHORIZED_SEPARATE_EXPLICIT_DECISION_REQUIRED','local_supply_map_state':'NOT_PRODUCED_NOT_AUTHORIZED_SEPARATE_REVIEW_REQUIRED','byte_acquisition_state':'NOT_AUTHORIZED','generation_root_state':'NOT_CREATED_NOT_AUTHORIZED','target_population_state':'NOT_AUTHORIZED_UNPOPULATED_SCHEMA_ONLY','materialization_state':'NOT_AUTHORIZED','publication_state':'NOT_AUTHORIZED','deployment_state':'NOT_AUTHORIZED','activation_state':'NOT_AUTHORIZED','next_action':'generate-and-review-non-mutating-selected-provider-local-supply-map-contract'}
+for k,v in expected.items():
+ if r.get(k)!=v:fail(f'acceptance mismatch {k}: {r.get(k)!r}')
+meta={x['key']:x['value'] for x in rows(ROOT/REVIEW/'selected-target-materializer-design-metadata.tsv')}
+for k,v in {'candidate_state':'QUALIFIED_NON_EXECUTING_READ_ONLY_DESIGN_CANDIDATE','acceptance_gate':'SELECTED-PROVIDER-MATERIALIZER-DESIGN-ACCEPTANCE-OPEN','execution_authorized':'NO','target_population_authorized':'NO','byte_acquisition_authorized':'NO','generation_root_creation_authorized':'NO','materialization_authorized':'NO','publication_authorized':'NO','deployment_authorized':'NO','activation_authorized':'NO'}.items():
+ if meta.get(k)!=v:fail(f'frozen candidate widened {k}: {meta.get(k)!r}')
+doc=(ROOT/'docs/evidence/selected-target-materializer-runtime-preflight-design-boundary-acceptance.md').read_text();state=(ROOT/'docs/current/STATE.yaml').read_text();brief=(ROOT/'docs/current/BRIEF.md').read_text();active=(ROOT/'docs/current/ACTIVE_TASK.md').read_text();status=(ROOT/'STATUS.md').read_text();catalog=(ROOT/'docs/catalog.tsv').read_text();pending=(ROOT/'docs/current/PENDING_ARTIFACTS.yaml').read_text()
+checks=[('doc decision','ACCEPTED_BOUNDED_NON_EXECUTING_READ_ONLY_MATERIALIZER_RUNTIME_PREFLIGHT_DESIGN' in doc),('doc execution no','execution authorized: NO' in doc),('state accepted','materializer_design_acceptance: accepted-bounded-non-executing-read-only-design' in state),('state execution no','execution_authorized: false' in state and 'target_population_authorized: false' in state),('brief','materializer design acceptance: ACCEPTED_BOUNDED_READ_ONLY_DESIGN_AUTHORITY' in brief),('active','Task ID: `generate-and-review-non-mutating-selected-provider-local-supply-map-contract`' in active),('status','bounded non-executing selected-provider materializer/runtime-preflight design accepted' in status),('catalog','selected-target-materializer-runtime-preflight-design-boundary-acceptance\tevidence\tcurrent\tcanonical' in catalog),('pending','local-supply-map-contract' in pending and 'execution-authorization' in pending)]
+for n,ok in checks:
+ if not ok:fail('missing current marker: '+n)
+for text in [doc,state,brief,active,status,pending,(ROOT/REVIEW/NAME).read_text()]:
+ for forbidden in ['execution_authorized: true','target_population_authorized: true','materialization_authorized: true','publication_authorized: true','EXECUTION_AUTHORIZED_YES','LOCAL_SUPPLY_MAP_PRODUCED']:
+  if forbidden in text:fail('authority widening: '+forbidden)
+print('materializer design acceptance: PASS: exact nine-artifact non-executing design accepted; local supply map, execution, population and publication remain blocked')

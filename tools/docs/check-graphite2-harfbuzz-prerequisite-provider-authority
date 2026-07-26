@@ -75,7 +75,7 @@ markers=[
  ('state route','graphite2_harfbuzz_prerequisite_provider_authority: docs/evidence/graphite2-harfbuzz-prerequisite-provider-authority.md' in state),
  ('state provider','graphite2_harfbuzz_prerequisite:' in state and 'provider_authority: accepted-bounded-provider' in state),
  ('state overall count','accepted: 31' in state and 'accepted_inside_28_root_inventory: 21' in state),
- ('next task','Task ID: `review-and-accept-read-only-selected-provider-materializer-runtime-preflight-design-boundary`' in active),
+ ('next task','Task ID: `generate-and-review-non-mutating-selected-provider-local-supply-map-contract`' in active),
  ('brief count','bounded provider roots:' in brief and '31' in brief and 'accepted target-policy rows:' in brief and '82' in brief and 'supply coordinate/index gaps:' in brief and '0' in brief),
  ('catalog','graphite2-harfbuzz-prerequisite-provider-authority\tevidence\tcurrent\tcanonical' in catalog),
  ('status','Graphite2' in status and 'HarfBuzz' in status),

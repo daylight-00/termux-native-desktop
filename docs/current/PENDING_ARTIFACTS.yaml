@@ -1,12 +1,15 @@
 schema_version: 1
-state_version: 2026-07-26.10
+state_version: 2026-07-26.11
 
 blocking:
-  - id: read-only-materializer-runtime-preflight-design-acceptance
-    state: candidate-qualified-separate-acceptance-open
-    note: The exact non-executing design candidate is complete, but a separate acceptance record is required. Acceptance may not authorize execution, supply localization, filesystem mutation or population.
-  - id: future-execution-authorization-and-local-supply-map
+  - id: local-supply-map-contract
+    state: not-generated-not-reviewed
+    note: The accepted design requires a separate 41-row non-mutating contract before any actual local supply map may be produced.
+  - id: local-supply-map-evidence
+    state: not-produced-not-authorized
+    note: No local provider/result path has been searched, read, localized or bound. A later read-only evidence transaction is required.
+  - id: execution-authorization
     state: not-reviewed-not-authorized
-    note: Any later execution requires a separate explicit authorization and a 41-row local read-only supply-localization receipt. Neither is in scope for design acceptance.
+    note: Design acceptance and a future local supply map do not themselves authorize execution or runtime mutation.
 
 non_blocking: []

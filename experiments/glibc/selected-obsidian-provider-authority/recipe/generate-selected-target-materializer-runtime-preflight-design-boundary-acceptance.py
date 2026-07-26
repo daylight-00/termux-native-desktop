@@ -1,0 +1,39 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+import argparse,csv,hashlib,json
+from pathlib import Path
+FILES={
+ 'selected-target-materializer-runtime-preflight-design.json':'323d834e58397364561a4b89f4b344a9633e4f3c472728e75e5b620017db44be',
+ 'selected-target-materializer-design-metadata.tsv':'dac9fe85533f73fab95eca51db85cf4148e0e94a9e2767ad852e5b174b99fc72',
+ 'selected-target-materializer-input-contract.tsv':'70feee05112fee4f0f98dfa6132a10550a87e11ac6569a86e258a47f5e7b94c4',
+ 'selected-target-materializer-object-plan.tsv':'759102d4a209a39119b7bd5a92f1995993e7c302149b11f174d11cd0dd08b0f7',
+ 'selected-target-materializer-state-machine.tsv':'8d9e97c43d5bee1db3cd0632e1fe3be2a7d69fa5e2f9b2e9327ddced7d4b0408',
+ 'selected-target-materializer-operation-contract.tsv':'76f2f779ee9aea8eb01bcb3f0a3d2d8fdd44fe7f63680ee2ce95f2ae795be755',
+ 'selected-target-runtime-preflight-contract.tsv':'2a68a1543b058b035387b86eb4dd1c5e3e7e6cdedc18af2c5fe146f45f3fd14d',
+ 'selected-target-materializer-verification-contract.tsv':'0d3c354fdaf395985569e6f203625b49dbd2256491f118d5717eeaa901b3cb0e',
+ 'selected-target-materializer-publication-recovery-contract.tsv':'786a036d23b90b61d43965bcd6ced36caffadcd1563c6d02cd25078e5d012304',
+}
+FIELDS=['acceptance_id','decision','candidate_review_id','source_design_json_sha256','source_metadata_sha256','source_input_contract_sha256','source_object_plan_sha256','source_state_machine_sha256','source_operation_contract_sha256','source_runtime_preflight_sha256','source_verification_contract_sha256','source_publication_recovery_sha256','accepted_input_count','accepted_object_plan_row_count','accepted_state_machine_row_count','accepted_operation_contract_row_count','accepted_runtime_preflight_row_count','accepted_verification_contract_row_count','accepted_publication_recovery_row_count','accepted_target_row_count','accepted_regular_object_count','accepted_alias_count','accepted_atomic_family_count','accepted_exact_member_bytes','accepted_receipt_reservation_bytes','accepted_final_resource_preflight_bytes','accepted_copy_policy','candidate_issue_closed','accepted_authority_state','execution_authorization_state','local_supply_map_state','byte_acquisition_state','generation_root_state','target_population_state','materialization_state','publication_state','deployment_state','activation_state','update_boundary','rollback_boundary','next_action','authority_effect','prohibited_inference']
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+def rows(p):
+ with p.open(newline='',encoding='utf-8') as f:return list(csv.DictReader(f,delimiter='\t'))
+def main():
+ ap=argparse.ArgumentParser();ap.add_argument('--repo-root',type=Path,default=Path('.'));ap.add_argument('--output-root',type=Path,default=Path('.'));a=ap.parse_args()
+ r=a.repo_root.resolve()/'experiments/glibc/selected-obsidian-provider-authority/review'
+ for name,digest in FILES.items():
+  if sha(r/name)!=digest:raise SystemExit(f'frozen design candidate digest mismatch: {name}')
+ meta={x['key']:x['value'] for x in rows(r/'selected-target-materializer-design-metadata.tsv')}
+ design=json.loads((r/'selected-target-materializer-runtime-preflight-design.json').read_text())
+ required={'design_review_id':'SELECTED-PROVIDER-MATERIALIZER-DESIGN-REVIEW-001','candidate_state':'QUALIFIED_NON_EXECUTING_READ_ONLY_DESIGN_CANDIDATE','acceptance_gate':'SELECTED-PROVIDER-MATERIALIZER-DESIGN-ACCEPTANCE-OPEN','object_plan_row_count':'41','state_machine_row_count':'20','operation_contract_row_count':'24','runtime_preflight_row_count':'20','verification_contract_row_count':'18','publication_recovery_row_count':'11','execution_authorized':'NO','target_population_authorized':'NO','byte_acquisition_authorized':'NO','generation_root_creation_authorized':'NO','materialization_authorized':'NO','publication_authorized':'NO','deployment_authorized':'NO','activation_authorized':'NO'}
+ for k,v in required.items():
+  if meta.get(k)!=v:raise SystemExit(f'candidate metadata mismatch {k}: {meta.get(k)!r}')
+ if design.get('copy_policy')!='HARDLINK_ONLY_FROM_VERIFIED_CONTENT_ADDRESS_STORE_NO_COPY_FALLBACK':raise SystemExit('copy policy drift')
+ row={
+  'acceptance_id':'SELECTED-PROVIDER-MATERIALIZER-DESIGN-ACCEPT-001','decision':'ACCEPTED_BOUNDED_NON_EXECUTING_READ_ONLY_MATERIALIZER_RUNTIME_PREFLIGHT_DESIGN','candidate_review_id':'SELECTED-PROVIDER-MATERIALIZER-DESIGN-REVIEW-001',
+  'source_design_json_sha256':FILES['selected-target-materializer-runtime-preflight-design.json'],'source_metadata_sha256':FILES['selected-target-materializer-design-metadata.tsv'],'source_input_contract_sha256':FILES['selected-target-materializer-input-contract.tsv'],'source_object_plan_sha256':FILES['selected-target-materializer-object-plan.tsv'],'source_state_machine_sha256':FILES['selected-target-materializer-state-machine.tsv'],'source_operation_contract_sha256':FILES['selected-target-materializer-operation-contract.tsv'],'source_runtime_preflight_sha256':FILES['selected-target-runtime-preflight-contract.tsv'],'source_verification_contract_sha256':FILES['selected-target-materializer-verification-contract.tsv'],'source_publication_recovery_sha256':FILES['selected-target-materializer-publication-recovery-contract.tsv'],
+  'accepted_input_count':'13','accepted_object_plan_row_count':'41','accepted_state_machine_row_count':'20','accepted_operation_contract_row_count':'24','accepted_runtime_preflight_row_count':'20','accepted_verification_contract_row_count':'18','accepted_publication_recovery_row_count':'11','accepted_target_row_count':'82','accepted_regular_object_count':'41','accepted_alias_count':'41','accepted_atomic_family_count':'4','accepted_exact_member_bytes':'29047112','accepted_receipt_reservation_bytes':'1048576','accepted_final_resource_preflight_bytes':'59142800','accepted_copy_policy':'HARDLINK_ONLY_FROM_VERIFIED_CONTENT_ADDRESS_STORE_NO_COPY_FALLBACK',
+  'candidate_issue_closed':'SELECTED-PROVIDER-MATERIALIZER-DESIGN-ACCEPTANCE-OPEN','accepted_authority_state':'ACCEPTED_BOUNDED_READ_ONLY_DESIGN_AUTHORITY','execution_authorization_state':'NOT_AUTHORIZED_SEPARATE_EXPLICIT_DECISION_REQUIRED','local_supply_map_state':'NOT_PRODUCED_NOT_AUTHORIZED_SEPARATE_REVIEW_REQUIRED','byte_acquisition_state':'NOT_AUTHORIZED','generation_root_state':'NOT_CREATED_NOT_AUTHORIZED','target_population_state':'NOT_AUTHORIZED_UNPOPULATED_SCHEMA_ONLY','materialization_state':'NOT_AUTHORIZED','publication_state':'NOT_AUTHORIZED','deployment_state':'NOT_AUTHORIZED','activation_state':'NOT_AUTHORIZED',
+  'update_boundary':'ANY_SOURCE_DIGEST_OBJECT_PLAN_STATE_OPERATION_PREFLIGHT_VERIFICATION_RECOVERY_BUDGET_COPY_POLICY_ATOMIC_FAMILY_SELECTOR_OR_AUTHORITY_CHANGE_REQUIRES_NEW_CLASS_D_DESIGN_REVIEW','rollback_boundary':'BEFORE_IMPLEMENTATION_REVOKE_DESIGN_ACCEPTANCE_DIRECTLY;AFTER_FUTURE_EXECUTION_AUTHORITY_REVOKE_AUTHORIZATION_WITHOUT_MUTATING_ANY_EXISTING_GENERATION','next_action':'generate-and-review-non-mutating-selected-provider-local-supply-map-contract','authority_effect':'EXACT_NON_EXECUTING_MATERIALIZER_AND_RUNTIME_PREFLIGHT_DESIGN_ACCEPTED_NO_LOCALIZATION_BYTE_READ_ROOT_CREATION_IMPLEMENTATION_POPULATION_MATERIALIZATION_PUBLICATION_DEPLOYMENT_OR_ACTIVATION','prohibited_inference':'DESIGN_ACCEPTANCE_DOES_NOT_AUTHORIZE_EXECUTION_LOCAL_SUPPLY_DISCOVERY_OR_READ_ARCHIVE_DOWNLOAD_EXTRACTION_OBJECT_OR_GENERATION_WRITE_HARDLINK_SYMLINK_RECEIPT_SELECTOR_POPULATION_PUBLICATION_DEPLOYMENT_OR_ACTIVATION'}
+ out=a.output_root/'experiments/glibc/selected-obsidian-provider-authority/review/selected-target-materializer-runtime-preflight-design-boundary-acceptance.tsv';out.parent.mkdir(parents=True,exist_ok=True)
+ with out.open('w',newline='',encoding='utf-8') as f:w=csv.DictWriter(f,fieldnames=FIELDS,delimiter='\t',lineterminator='\n');w.writeheader();w.writerow(row)
+if __name__=='__main__':main()
