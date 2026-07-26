@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT=${TND_CHECK_ROOT:-$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)}
+python3 - "$ROOT" <<'PY'
+from pathlib import Path
+import csv,hashlib,sys
+root=Path(sys.argv[1]); review=root/'experiments/glibc/selected-obsidian-provider-authority/review'; cand=root/'experiments/glibc/selected-obsidian-provider-authority/candidates/gtk3-glibc'
+paths=[root/'docs/evidence/gtk3-core-production-recipe-candidate-result-review.md',review/'gtk3-core-production-recipe-candidate-result-review.tsv',cand/'gpkg/gtk3/build.sh',cand/'gtk3-glibc-contribution.patch',root/'docs/evidence/gtk3-core-bounded-provider-authority.md',review/'gtk3-core-bounded-provider-authority.tsv']
+errors=[f'missing {p.relative_to(root)}' for p in paths if not p.is_file()]
+def rows(p):
+ with p.open(newline='',encoding='utf-8') as f:return list(csv.DictReader(f,delimiter='\t'))
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+if not errors:
+ rws=rows(paths[1])
+ if len(rws)!=1:errors.append(f'candidate rows {len(rws)}')
+ else:
+  r=rws[0]; exp={'review_id':'GTK3-CORE-CANDIDATE-001','source_version':'3.24.49','result_archive_sha256':'ba0fa0e31cfea2a31f8065ecaccf998a49901c12aa5f62af978728ddd8f10b3a','recipe_sha256':'dd25427cfdbe418d5d9c6df182bab7f457fd8efd13931509a8d8e2053ffacf5e','package_sha256':'89dd7d0427932d85b439e18aa05021aca623ed876854a875837be87de1b90262','member_sha256s':'a237c3070ff1704f119cc318b6b837a9430a350648476123c1be75ba768d415d;0404b91acdaa3a2558e3a11214918692f64d0ba3cebaae4722e3aa4a61f31bc6','sonames':'libgdk-3.so.0;libgtk-3.so.0','machine':'AArch64','dt_rpath_state':'ABSENT_BOTH','dt_runpath_state':'ABSENT_BOTH','loader_probe_state':'PASS_CANONICAL_GLIBC_LOADER_CANDIDATE_GTK_GDK_PRIVATE_PANGO_PRIVATE_LIBJPEG62_ZERO_CLASSICAL_MAPPINGS','loader_probe_runtime_output':'3.24.49 GdkDisplay','package_installation':'FALSE','candidate_decision':'QUALIFIED_ATOMIC_RECIPE_AND_LOCAL_GDK_GTK_PAIR_CANDIDATE','provider_authority_state':'ACCEPTED_SEPARATELY_BY_GTK3_CORE_PROV_001','target_effect':'BLOCKED'}
+  for k,v in exp.items():
+   if r.get(k)!=v:errors.append(f'{k}: expected {v}, got {r.get(k)!r}')
+ if sha(paths[2])!='dd25427cfdbe418d5d9c6df182bab7f457fd8efd13931509a8d8e2053ffacf5e':errors.append('recipe hash mismatch')
+ if sha(paths[3])!='b3b92eb0b5e4d57f7c63af4a1693fd48959ba06da0814823dda696ba9512e770':errors.append('patch hash mismatch')
+ text=paths[2].read_text();patch=paths[3].read_text();doc=paths[0].read_text()
+ for marker in ['termux_setup_gir','-Dx11_backend=true','-Dwayland_backend=true','-Dbroadway_backend=true','-Dintrospection=true']:
+  if marker not in text:errors.append(f'missing recipe marker: {marker}')
+ for token in ['TND_ISOLATED_','private-ldd','compiler-env-filter','LD_PRELOAD=']:
+  if token in text or token in patch:errors.append(f'qualification harness token leaked: {token}')
+ for marker in ['QUALIFIED_CLASS_B','QUALIFIED_CLASS_C','3.24.49 GdkDisplay','Gdk-3.0.typelib','Gtk-3.0.typelib']:
+  if marker not in doc:errors.append
+ if 'package-wide' not in doc.lower():errors.append(f'missing doc marker: {marker}')
+ auth=rows(paths[5])
+ if len(auth)!=1 or auth[0].get('decision')!='ACCEPTED_BOUNDED_PROVIDER':errors.append('separate bounded provider decision missing')
+if errors:
+ for e in errors:print('gtk3-core-candidate-review: FAIL:',e,file=sys.stderr)
+ raise SystemExit(1)
+print('gtk3-core-candidate-review: PASS: exact GTK 3.24.49 Class B recipe and Class C atomic GDK/GTK package remain frozen; the bounded provider decision stays separate and package-wide execution authority remains excluded')
+PY

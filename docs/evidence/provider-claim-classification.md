@@ -1,109 +1,47 @@
 # Provider claim classification under ADR 0005
 
+The exact `libpixman-1.so.0.46.4` is additionally accepted as a bounded Cairo prerequisite. The exact `libgraphite2.so.3.2.1` is accepted as a bounded HarfBuzz Graphite-shaping prerequisite. These outside-inventory prerequisites do not widen complete composition, target, or activation authority.
+
 ## Status
 
 ```text
 classification: COMPLETE / REVIEWED BOUNDED INVENTORY
-policy: ADR 0005
 roots: 28
 objects: 37
-claims: 93
-new evidence collected: 0
-provider authority accepted inside inventory: 21
-project-candidate provider authority accepted outside inventory: 2
+claims: 95
+Class A: 36
+Class B: 52
+Class C: 4
+Class D: 3
+provider authority claims: 31
+provider reviews accepted: 24
+provider authority still open: 7
 composition accepted: 0
 target rows accepted: 0
 activation accepted: 0
 ```
 
-This document is the current review surface for the provider-authority decision boundary accumulated in records 0118–0165. It replaces the former assumption that every root must complete the same producing-build evidence campaign before any claim can be reviewed.
-
-The classification is generated from the current canonical review tables by:
-
-```text
-experiments/glibc/selected-obsidian-provider-authority/recipe/
-    generate-provider-claim-classification.py
-```
-
-Canonical outputs:
-
-```text
-experiments/glibc/selected-obsidian-provider-authority/review/
-    provider-claim-classification.tsv
-    provider-sup-02-request-disposition.tsv
-    provider-claim-classification-metadata.tsv
-```
+The generator is `experiments/glibc/selected-obsidian-provider-authority/recipe/generate-provider-claim-classification.py`; canonical outputs are the provider claim, SUP-02 disposition and metadata TSVs.
 
 ## Claim separation
 
-The classification does not permit one package or root row to stand for every authority state. Each of the 28 roots has three distinct claims:
+Each root retains separate artifact-identity, adaptation-semantics and provider-authority claims. OJ-001 required identity, producing provenance, composition, target population and activation remain separate global/object claims.
+
+## Latest claim additions
+
+The exact GTK 3.24.49 production result adds:
 
 ```text
-ARTIFACT_IDENTITY
-    exact reference artifact and named-member candidate identity
+PCC-GTK3-CORE-PRODUCING  Class C
+    exact independently reproduced atomic package and GDK/GTK member record
 
-ADAPTATION_SEMANTICS
-    whether the pinned recipe is unchanged for the claim or contains bounded Termux/Android adaptation
-
-PROVIDER_AUTHORITY
-    whether the exact member may be selected as the runtime provider for its capability scope
+PCC-GTK3-CORE-PROVIDER   Class B
+    exact atomic two-member provider decision for selected GTK core library linkage
 ```
 
-The inventory also records separately:
-
-```text
-OJ-001 required-object identity
-supplier producing-build provenance
-application runtime composition
-target population
-selected-generation activation
-```
-
-Artifact identity can be sufficiently evidenced while adaptation and provider authority remain open. Provider authority can later be accepted without implying complete composition, target membership, or activation.
-
-## ADR class result
-
-```text
-Class A: 36 claims
-    28 exact artifact/member identity claims
-     7 no-explicit-delta adaptation claims confirmed by bounded semantic review
-     1 authoritative required-object identity claim
-
-Class B: 51 claims
-    21 reference-adapted recipe claims
-    30 project integration/provider-selection claims
-
-Class C: 3 active bounded producing claims
-    exact libjpeg-turbo 3.1.0 v6b compatibility candidate production
-    exact libXdamage 1.1.6 isolated candidate production
-    exact atomic AT-SPI2 core 2.56.2 package and three-member production
-    each producing record remains distinct from its separately accepted bounded provider claim
-
-Class D: 3 global project-authored claims
-    composition
-    target population
-    activation
-```
-
-The three Class C rows record the project-produced runpath-free `libjpeg.so.62.4.0` candidate , exact isolated `libXdamage.so.1.1.0`, and the exact atomic ATK/ATK-bridge/AT-SPI candidate family. Source, build invocation, toolchain, output manifest, ELF identity and symbol versions are recorded. A separate loader-isolated review accepted bounded GdkPixbuf JPEG file and memory decode authority; the Class C row does not imply broader libjpeg family or composition authority.
-
-## Existing evidence retained
-
-The classification retains the following evidence without overpromoting it:
-
-- exact package metadata and artifact SHA-256;
-- stream-inspected artifact members, member digests, and observed SONAMEs;
-- pinned recipe root, recipe tree, upstream source locator and source digest;
-- recipe-file inventory and bounded adaptation tokens;
-- selected/reference runtime evidence and capability coverage;
-- the accepted OJ-001 correction that the required ABI identity is `libjpeg.so.62`, not `libjpeg.so.8`;
-- all historical SUP-02 request, acquisition, receipt, and producer records.
-
-These remain evidence inputs. They do not create final provider authority by themselves. Twenty-one inventory-root provider claims and two exact project-candidate provider claims are accepted only through their separate bounded provider reviews.
+The Class C row retains source, recipe, patch, package, ELF, GIR/typelib, dependency, loader and protected-state evidence. The Class B row accepts only `libgdk-3.so.0.2417.32` and `libgtk-3.so.0.2417.32` plus their SONAME aliases. It does not authorize package-wide tools, modules, schemas, printing, display/service operation, target population, deployment or activation.
 
 ## SUP-02 disposition
-
-All 28 issued requests remain historical records, but none is currently required for execution.
 
 ```text
 STILL_NECESSARY: 0
@@ -112,91 +50,14 @@ REPLACED:        7
 UNNECESSARY:     7
 ```
 
-### Narrowed — 14 roots
+All requests remain historical. None is required now without a new explicit Class C reclassification or recorded escalation trigger.
 
-The T1 and T2 material-delta roots remain Class B. They require semantic recipe review, platform-necessity classification, and object-impact review first.
+## Current authority state
 
-A custodian export is retained only as an escalation path for a claim-specific field when:
+Twenty-one provider roots inside the fixed 28-root inventory remain accepted. Three exact project-produced roots outside that inventory—libXdamage, atomic AT-SPI2/ATK, and atomic GTK 3 core—have separate bounded provider decisions. Exact Pixman and Graphite2 remain bounded prerequisites outside the claim inventory.
 
-```text
-recipe semantics cannot bound generated output;
-an observed artifact conflicts with the pinned recipe;
-the claim is explicitly reclassified as Class C;
-a high-consequence output remains opaque after bounded review.
-```
-
-The original three-record export for every root is not the default next action.
-
-### Replaced — 7 roots
-
-T4 configuration/packaging roots and the T5 no-token-with-drift root use:
-
-```text
-authoritative artifact/member identity
-    + pinned recipe/upstream semantic review
-    + project integration and drift-policy evidence
-```
-
-This is proportionate to a reference-consumed or reference-adapted claim. It does not require independent reproduction by default.
-
-### Unnecessary — 7 roots
-
-Six T6 no-token roots have completed bounded recipe/upstream semantic comparison and are confirmed Class A for package-specific adaptation. Their historical SUP-02 requests remain unnecessary.
-
-The `libjpeg-turbo` SUP-02 request is also unnecessary at the current boundary because producing-build evidence for a package that does not provide the required `libjpeg.so.62` identity cannot close OJ-001.
-
-## Current authority states
-
-```text
-bounded provider authority accepted inside inventory: 21
-project-candidate provider authority accepted outside inventory: 2 roots
-provider authority still open:                        7 roots
-application runtime composition:     NOT REACHED
-target population:                   BLOCKED
-selected-generation activation:      BLOCKED
-```
-
-The twenty-one accepted root rows are `libxfixes`, `libxcomposite`, `libxi`, `libxinerama`, `libxcursor`, `libtasn1`, `libepoxy`, `pango`, the exact project-built `libjpeg.so.62.4.0`, `glib`, `libpng`, `util-linux`, `libthai`, `libdatrie`, `libcloudproviders`, `fribidi`, `freetype`, `libxkbcommon`, `harfbuzz`, `fontconfig`, and the atomic `cairo` core/Cairo-GObject root. Outside this fixed inventory, exact `libpixman-1.so.0.46.4` is additionally accepted as a bounded Cairo prerequisite and exact `libgraphite2.so.3.2.1` is accepted as a bounded HarfBuzz Graphite-shaping prerequisite; it does not add or merge a claim into the 89-row canonical claim inventory. The GLib four-member family and libpng shared member are accepted only for the exact GdkPixbuf 2.42.12 JPEG/PNG file and memory decode scope; the exact official libmount/libblkid pair is accepted only for the bounded GdkPixbuf transitive runtime. Each decision remains limited to an exact identity and named consumer capability. The classification still does not authorize extraction, installation, target population, complete composition, selected-generation mutation, or activation.
-
-## Seven-root semantic-review result
-
-The seven-root no-token semantic review is complete:
-
-```text
-confirmed Class A: 7
-reclassified Class B: 0
-provider authority accepted inside inventory: 21
-project-candidate provider authority accepted outside inventory: 2
-```
-
-Canonical review surface:
-
-```text
-docs/evidence/no-token-recipe-semantic-review.md
-experiments/glibc/selected-obsidian-provider-authority/review/no-token-recipe-semantic-review.tsv
-```
-
-For all seven roots, the pinned recipe contains only source/version identity and dependency/package metadata. No package-specific patch, hook, build option, install transform, or output rewrite was found. The generic Termux glibc cross-build framework and upstream build defaults remain relied-upon supplier boundaries rather than project-owned producing claims.
-
-`pango` concrete-filename drift remains a separate provider-integration and continuity question. It was not closed by the Class A recipe result.
-
-## Completed bounded provider tranches and smallest next phase
-
-The exact `libXcursor.so.1.0.2` provider is accepted for GTK 3.24.49 X11 cursor theme, image, surface and custom-cursor handling. Its Class B patch only relocates built-in cursor search paths into the Termux prefix. It does not grant cursor-theme data, package-wide surfaces, complete composition, target or activation authority.
-
-The exact `libcloudproviders.so.0.3.6` provider is accepted for selected GTK 3.24.49 PlacesSidebar cloud-account integration. Its Class B delta disables Vala binding generation only; DBus services, accounts and service activation remain separate.
-
-The exact atomic `libatk-1.0.so.0.25611.1`, `libatk-bridge-2.0.so.0.0.0`, and `libatspi.so.0.0.1` family is accepted only for selected GTK 3.24.49 accessibility library linkage. Exactly seven activation metadata files remain disabled, two helpers remain non-executed, and D-Bus bus ownership, registry operation, accessibility enablement, package-wide surfaces, target population and activation remain excluded.
-
-The exact `libfribidi.so.0.4.0` provider remains accepted only for Pango 1.54.0 core Unicode bidirectional processing. Exact `libfreetype.so.6.20.2` remains accepted for the bounded Pango/GTK FT2 font-engine path, with four pre-existing conditional objects included only for its compression-feature closure. Exact `libxkbcommon.so.0.8.0` remains accepted for the bounded GTK 3.24.49 Wayland XKB path. Exact `libharfbuzz.so.0.61010.0` remains accepted for Pango 1.54.0 core OpenType shaping. Exact `libfontconfig.so.1.14.0` is now accepted for Pango 1.54.0 font discovery, matching and pattern-property consumption, with SONAME `libfontconfig.so.1`, explicit `1.12.1` reference-to-`1.14.0` candidate continuity, and bounded Meson, generated-default-policy, package-revision, directory-sentinel cache-lock and utilities-subpackage semantics. Package-generated configuration, system or package font directories, global caches, font population, CLI and development surfaces remain excluded; future activation requires receipt-owned configuration and cache. The next smallest phase is the atomic GTK 3.24.49 GDK/GTK core candidate. No target paths are generated.
+The selected composition has one unresolved identity, `libselinux.so.1`. The next review is direct-consumer necessity and security semantics only. Target population and activation remain blocked.
 
 ## Stop line
 
-Do not:
-
-- treat claim classification alone as provider acceptance outside the twenty explicit bounded provider review rows;
-- fulfill a SUP-02 request solely because it was historically issued;
-- combine artifact identity, adaptation, provider authority, composition, target population, and activation into one decision;
-- use package metadata or build provenance as a substitute for runtime provider selection;
-- use successful launch as proof of complete composition;
-- populate or activate a target before the corresponding Class D claim is reviewed.
+Do not combine artifact identity, adaptation, producing provenance, provider authority, composition, target population or activation; do not infer package-wide or execution authority from the GTK build; and do not authorize libSELinux production from the remaining gap alone.

@@ -4,39 +4,32 @@
 
 ```text
 composition decision:             REVIEWED_BLOCKED_INCOMPLETE
-accepted bounded provider roots:  30
-accepted exact members:           40
-included members:                 39
+accepted bounded provider roots:  31
+accepted exact members:           42
+included members:                 41
 deferred members:                  1
-selected GTK identity gaps:        3
+selected GTK identity gaps:        1
 target manifest allowed:          NO
 activation allowed:               NO
 ```
 
-The accepted-member table is generated at `selected-provider-composition-members.tsv`; remaining selected identities are generated at `selected-provider-composition-gaps.tsv`. The review is non-materializing and does not authorize target paths, aliases, copies, installation, deployment, service operation, or activation.
+The generated accepted-member table is `selected-provider-composition-members.tsv`; the sole gap is in `selected-provider-composition-gaps.tsv`. This review is non-materializing.
 
-## Latest bounded tranche
+## Latest bounded tranche: atomic GTK 3 core
 
-The exact atomic AT-SPI2 core family is included only for the selected GTK 3.24.49 accessibility library-linkage boundary:
+The exact GTK 3.24.49 pair is included atomically:
 
 ```text
-libatk-1.0.so.0.25611.1       -> libatk-1.0.so.0
-libatk-bridge-2.0.so.0.0.0    -> libatk-bridge-2.0.so.0
-libatspi.so.0.0.1             -> libatspi.so.0
+libgdk-3.so.0.2417.32 -> libgdk-3.so.0
+libgtk-3.so.0.2417.32 -> libgtk-3.so.0
 ```
 
-The bridge directly binds the accepted ATK and AT-SPI sibling SONAMEs. The family remains one atomic lifecycle with its exact GIR/typelib artifacts. Exactly seven activation metadata files stay in the disabled namespace; no service, helper, D-Bus bus, registry daemon, accessibility enablement, target population, or activation authority is accepted.
+Both members come from one official source, one Class B production recipe, one independently reproduced Class C package, and one update/rollback lifecycle. GTK directly `DT_NEEDED`-binds GDK. The canonical-loader probe returned `3.24.49 GdkDisplay` with accepted private dependencies and exact private `libjpeg.so.62`, and no `$HOME/gl` or bionic mapping.
 
-The exact Class B recipe remains separated from the retained Class C producing record. Approved-supplier publication is absent and not inferred. Ordinary Termux/bionic packages and Debian oracle members remain excluded as provider bytes.
+Only these two versioned runtime members and SONAME aliases are included. Unversioned aliases, headers, pkg-config, GAIL, helper tools, `broadwayd`, input modules, print backends, schemas, GIR/typelib target membership, data and documentation remain excluded. X11, Wayland and Broadway configuration does not authorize display or daemon operation. No module, cache, schema, printing, D-Bus, accessibility, portal, target, deployment or activation authority is accepted.
 
-## Remaining gaps
+## Remaining gap
 
-The selected `libgdk-3.so.0.2417.32` and `libgtk-3.so.0.2417.32` pair remains `BLOCKED_NO_TERMUX_GLIBC_PROVIDER_CANDIDATE`. Ordinary bionic GTK does not authorize glibc provider bytes or infer backend, settings, theme, accessibility, input, printing, portal, or service behavior.
+`libselinux.so.1` is the only unresolved selected identity. Android platform and ordinary Termux/bionic SELinux implementations remain wrong-ABI-world boundary evidence. No glibc candidate or build authorization exists.
 
-Selected `libselinux.so.1` remains `BLOCKED_NO_TERMUX_GLIBC_PROVIDER_CANDIDATE`. Android and ordinary Termux/bionic SELinux libraries are boundary evidence only and do not authorize a cross-world alias, policy loading, relabeling, or glibc compatibility.
-
-All three remaining selected identities lack accepted provider rows. The Class D composition therefore remains incomplete and no target manifest is allowed.
-
-## Production-boundary disposition and next tranche
-
-The next tranche is `GTK3_CORE_ATOMIC_CANDIDATE_PREPARATION`: prepare one exact Class B GTK 3.24.49 recipe candidate and one isolated Class C GDK/GTK pair, or retain a precise source, backend, dependency, pair-atomicity, or service blocker. It does not authorize provider authority, supplier publication, package installation, target population, display/accessibility service activation, deployment, or activation.
+The next tranche is `LIBSELINUX_DIRECT_CONSUMER_NECESSITY_REVIEW`: identify exact direct consumers, imported symbols, configuration cause, elimination/reselection feasibility, and security/policy semantics. This does not authorize candidate production.

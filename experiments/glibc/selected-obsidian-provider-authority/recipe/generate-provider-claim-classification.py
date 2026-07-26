@@ -28,6 +28,7 @@ FONTCONFIG_PROVIDER_REVIEW = Path('experiments/glibc/selected-obsidian-provider-
 CAIRO_PROVIDER_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/cairo-bounded-provider-authority.tsv')
 LIBXDAMAGE_PROVIDER_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/libxdamage-bounded-provider-authority.tsv')
 ATSPI2_PROVIDER_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/at-spi2-core-bounded-provider-authority.tsv')
+GTK3_CORE_PROVIDER_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/gtk3-core-bounded-provider-authority.tsv')
 LIBJPEG_DISPOSITION = Path('experiments/glibc/selected-obsidian-provider-authority/review/libjpeg-so-62-provider-candidate-disposition.tsv')
 LIBJPEG_RESULT_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/libjpeg-so-62-compatibility-provider-candidate-result-review.tsv')
 LIBJPEG_RUNPATH_FREE_REVIEW = Path('experiments/glibc/selected-obsidian-provider-authority/review/libjpeg-so-62-runpath-free-compatibility-provider-candidate-result-review.tsv')
@@ -148,6 +149,7 @@ def main() -> None:
     cairo_provider_reviews = read_tsv(repo / CAIRO_PROVIDER_REVIEW)
     libxdamage_provider_reviews = read_tsv(repo / LIBXDAMAGE_PROVIDER_REVIEW)
     atspi2_provider_reviews = read_tsv(repo / ATSPI2_PROVIDER_REVIEW)
+    gtk3_core_provider_reviews = read_tsv(repo / GTK3_CORE_PROVIDER_REVIEW)
     libjpeg_dispositions = read_tsv(repo / LIBJPEG_DISPOSITION)
     libjpeg_result_reviews = read_tsv(repo / LIBJPEG_RESULT_REVIEW)
     libjpeg_runpath_free_reviews = read_tsv(repo / LIBJPEG_RUNPATH_FREE_REVIEW)
@@ -197,6 +199,8 @@ def main() -> None:
         raise SystemExit(f'expected 1 libXdamage provider review, found {len(libxdamage_provider_reviews)}')
     if len(atspi2_provider_reviews) != 1:
         raise SystemExit(f'expected 1 AT-SPI2 provider review, found {len(atspi2_provider_reviews)}')
+    if len(gtk3_core_provider_reviews) != 1:
+        raise SystemExit(f'expected 1 GTK3 core provider review, found {len(gtk3_core_provider_reviews)}')
     if len(libjpeg_dispositions) != 1:
         raise SystemExit(f'expected 1 libjpeg disposition row, found {len(libjpeg_dispositions)}')
     if len(libjpeg_result_reviews) != 1:
@@ -217,6 +221,7 @@ def main() -> None:
     libjpeg_provider_review = libjpeg_provider_reviews[0]
     libxdamage_provider_review = libxdamage_provider_reviews[0]
     atspi2_provider_review = atspi2_provider_reviews[0]
+    gtk3_core_provider_review = gtk3_core_provider_reviews[0]
     if libjpeg_disposition['requirement_id'] != 'OJ-001' or libjpeg_disposition['required_lookup_identity'] != 'libjpeg.so.62':
         raise SystemExit('libjpeg disposition does not bind canonical OJ-001 identity')
     if libjpeg_disposition['disposition'] != 'RUNPATH_FREE_COMPATIBILITY_PROVIDER_ACCEPTED_BOUNDED_GDKPIXBUF_JPEG_SCOPE':
@@ -255,6 +260,14 @@ def main() -> None:
         raise SystemExit('AT-SPI2 provider package identity drift')
     if atspi2_provider_review['exact_member_sha256s'] != '55c9c8a3767258bcc1d25640223aa8638ca0fc1bf5a310c7c87de14ad66191d7;cce78fd50cb5b3a19bdc046112c75a2309ad5feda3183e62f538bc1177e72773;e94f2980cf8580634d7ab3c4f9ad2d8713880a1e3614001aed7a63ba6388c874':
         raise SystemExit('AT-SPI2 provider member identity drift')
+    if gtk3_core_provider_review['review_id'] != 'GTK3-CORE-PROV-001' or gtk3_core_provider_review['decision'] != 'ACCEPTED_BOUNDED_PROVIDER':
+        raise SystemExit('GTK3 core provider review must accept one bounded atomic provider pair')
+    if gtk3_core_provider_review['artifact_sha256'] != '89dd7d0427932d85b439e18aa05021aca623ed876854a875837be87de1b90262':
+        raise SystemExit('GTK3 core provider package identity drift')
+    if gtk3_core_provider_review['exact_member_sha256s'] != 'a237c3070ff1704f119cc318b6b837a9430a350648476123c1be75ba768d415d;0404b91acdaa3a2558e3a11214918692f64d0ba3cebaae4722e3aa4a61f31bc6':
+        raise SystemExit('GTK3 core provider member identity drift')
+    if gtk3_core_provider_review['observed_sonames'] != 'libgdk-3.so.0;libgtk-3.so.0':
+        raise SystemExit('GTK3 core provider SONAME pair drift')
     if libjpeg_provider_review['direct_candidate_output_sha256'] != libjpeg_provider_review['direct_oracle_output_sha256']:
         raise SystemExit('libjpeg direct candidate/oracle output digests diverge')
     semantic_by_root = {row['root_review_id']: row for row in semantic_reviews}
@@ -579,6 +592,49 @@ def main() -> None:
         },
     ])
 
+    claims.extend([
+        {
+            'claim_id': 'PCC-GTK3-CORE-PRODUCING',
+            'subject_kind': 'PROJECT_CANDIDATE',
+            'subject_id': gtk3_core_provider_review['candidate_review_id'],
+            'subject_label': 'gtk3-glibc 3.24.49 exact atomic local GDK/GTK candidate',
+            'claim_type': 'BUILD_PROVENANCE',
+            'requested_state': 'EXACT_ATOMIC_CLASS_C_PACKAGE_AND_TWO_MEMBER_PRODUCING_RECORD_RETAINED',
+            'adr_class': 'C',
+            'supplier_or_reference_boundary': 'OFFICIAL_GTK_SOURCE_PINNED_CLASS_B_RECIPE_AND_RETAINED_INDEPENDENT_PRODUCTION_RESULT',
+            'project_owned_changed_boundary': 'PROJECT_PRODUCED_PACKAGE_ATOMIC_GDK_GTK_MEMBERS_GIR_TYPELIB_BACKEND_MATRIX_LOADER_CLOSURE_AND_PACKAGE_BYTES',
+            'risk_modifiers': 'PROJECT_PRODUCED_ARTIFACT;ATOMIC_TWO_MEMBER_GUI_CORE;MULTI_BACKEND_BUILD;MODULE_SERVICE_AND_SCHEMA_BOUNDARIES',
+            'existing_evidence': f'gtk3-core-production-recipe-candidate-result-review.tsv;{gtk3_core_provider_review["candidate_review_id"]};{GTK3_CORE_PROVIDER_REVIEW.name};{gtk3_core_provider_review["review_id"]};result_archive_sha256={gtk3_core_provider_review["result_archive_sha256"]};artifact_sha256={gtk3_core_provider_review["artifact_sha256"]}',
+            'remaining_gap': 'NONE_FOR_EXACT_RETAINED_ATOMIC_GDK_GTK_CLASS_C_PRODUCING_RECORD',
+            'minimum_closure_action': 'RETAIN_EXACT_SOURCE_RECIPE_PATCH_PACKAGE_MEMBER_GIR_TYPELIB_LOADER_DEPENDENCY_AND_PROTECTED_STATE_COORDINATES',
+            'explicitly_excluded_evidence': 'SUCCESSFUL_BUILD_AS_APPROVED_SUPPLIER_PACKAGE_WIDE_PROVIDER_COMPLETE_COMPOSITION_TARGET_DISPLAY_SERVICE_MODULE_SCHEMA_PRINT_OR_ACTIVATION_AUTHORITY',
+            'escalation_trigger': 'SOURCE_RECIPE_PATCH_PACKAGE_MEMBER_GIR_TYPELIB_BACKEND_DEPENDENCY_LOADER_TOOLCHAIN_OR_PROTECTED_STATE_COORDINATE_CHANGE',
+            'classification_state': 'ACTIVE_CLASS_C_INDEPENDENT_ATOMIC_REPRODUCTION_RECORD_ACCEPTED',
+            'authority_effect': 'PRODUCING_RECORD_ONLY_NO_SUPPLIER_PUBLICATION_COMPLETE_COMPOSITION_TARGET_DISPLAY_SERVICE_MODULE_SCHEMA_PRINT_DEPLOYMENT_OR_ACTIVATION_EFFECT',
+            'prohibited_inference': 'SUCCESSFUL_LOCAL_GTK_PRODUCTION_DOES_NOT_CREATE_APPROVED_SUPPLIER_PACKAGE_WIDE_OR_EXECUTION_AUTHORITY',
+        },
+        {
+            'claim_id': 'PCC-GTK3-CORE-PROVIDER',
+            'subject_kind': 'PROJECT_CANDIDATE',
+            'subject_id': gtk3_core_provider_review['review_id'],
+            'subject_label': 'exact atomic libgdk-3.so.0 and libgtk-3.so.0 project candidate pair',
+            'claim_type': 'PROVIDER_AUTHORITY',
+            'requested_state': 'EXACT_ATOMIC_TWO_MEMBER_PAIR_AUTHORIZED_FOR_BOUNDED_SELECTED_GTK3_CORE_LIBRARY_LINKAGE',
+            'adr_class': 'B',
+            'supplier_or_reference_boundary': 'PINNED_GTK_SOURCE_SELECTED_RUNTIME_IDENTITIES_ACCEPTED_DEPENDENCY_PROVIDERS_EXACT_CLASS_B_RECIPE_AND_CLASS_C_PAIR',
+            'project_owned_changed_boundary': 'PROJECT_SELECTION_OF_EXACT_LOCAL_ATOMIC_PAIR_FOR_SELECTED_GTK_3_24_49_GDK_DISPLAY_INPUT_ABSTRACTION_AND_GTK_WIDGET_TOOLKIT_CORE_LIBRARY_LINKAGE',
+            'risk_modifiers': 'GUI_MULTI_CONSUMER;PROJECT_PRODUCED_ARTIFACT;ATOMIC_TWO_MEMBER_PAIR;X11_WAYLAND_BROADWAY_MODULE_SERVICE_AND_SCHEMA_BOUNDARIES',
+            'existing_evidence': f'gtk3-core-production-recipe-candidate-result-review.tsv;{gtk3_core_provider_review["candidate_review_id"]};{GTK3_CORE_PROVIDER_REVIEW.name};{gtk3_core_provider_review["review_id"]};selected-provider-composition-members.tsv',
+            'remaining_gap': gtk3_core_provider_review['remaining_gap'],
+            'minimum_closure_action': 'RETAIN_BOUNDED_ATOMIC_PROVIDER_AUTHORITY_AND_REVALIDATE_ON_RECORDED_UPDATE_OR_ROLLBACK_TRIGGER',
+            'explicitly_excluded_evidence': 'LOCAL_BUILD_SUCCESS_AS_APPROVED_SUPPLIER_PUBLICATION_PACKAGE_WIDE_AUTHORITY_COMPLETE_COMPOSITION_TARGET_DISPLAY_SERVICE_MODULE_SCHEMA_PRINT_DEPLOYMENT_OR_ACTIVATION_AUTHORITY',
+            'escalation_trigger': 'AMBIGUOUS_SELECTED_CONSUMER_BINDING;PARTIAL_PAIR;ABI_OR_DEPENDENCY_CONFLICT;BACKEND_OR_PACKAGE_SURFACE_BOUNDARY_CHANGE;CANDIDATE_MULTIPLICITY;SOURCE_RECIPE_PATCH_PACKAGE_MEMBER_GIR_TYPELIB_LOADER_OR_PROTECTED_STATE_CHANGE',
+            'classification_state': 'BOUNDED_PROVIDER_AUTHORITY_ACCEPTED',
+            'authority_effect': gtk3_core_provider_review['authority_effect'],
+            'prohibited_inference': gtk3_core_provider_review['prohibited_inference'],
+        },
+    ])
+
     claims.append({
         'claim_id': 'PCC-OJ-001-REQUIRED-OBJECT',
         'subject_kind': 'OBJECT_REQUIREMENT',
@@ -633,8 +689,8 @@ def main() -> None:
             'project_owned_changed_boundary': 'CAPABILITY_COVERAGE_EXCLUSIONS_ORDERING_ALIAS_POLICY_AND_MIXED_WORLD_COMPOSITION',
             'risk_modifiers': 'BROAD_RUNTIME_BLAST_RADIUS;MULTI_PROVIDER_CONFLICT;WEAK_GLOBAL_OBSERVABILITY',
             'existing_evidence': 'authority-coverage-ledger.tsv;world-lifecycle-authority-boundary.tsv;application-authority-boundary.tsv;selected-provider-composition-members.tsv;selected-provider-composition-gaps.tsv;selected-provider-composition-metadata.tsv',
-            'remaining_gap': '3_SELECTED_GTK_PROVIDER_IDENTITIES_WITHOUT_ACCEPTED_PROVIDER_ROWS;THREE_NO_TERMUX_GLIBC_CANDIDATE_BLOCKERS;LIBXDAMAGE_AND_AT_SPI2_ATOMIC_BOUNDED_PROVIDER_AUTHORITY_ACCEPTED;GTK3_CORE_PAIR_BLOCKED;LIBSELINUX_BLOCKED',
-            'minimum_closure_action': 'PREPARE_ATOMIC_GTK3_CORE_3_24_49_CLASS_B_RECIPE_AND_CLASS_C_CANDIDATE_PAIR;RETAIN_CONDITIONAL_LIBSELINUX_LANE',
+            'remaining_gap': '1_SELECTED_GTK_PROVIDER_IDENTITY_WITHOUT_ACCEPTED_PROVIDER_ROW;GTK3_CORE_ATOMIC_PAIR_ACCEPTED;LIBSELINUX_DIRECT_CONSUMER_NECESSITY_AND_SECURITY_POLICY_SEMANTICS_UNRESOLVED',
+            'minimum_closure_action': 'REVIEW_LIBSELINUX_DIRECT_CONSUMER_NECESSITY_AND_SECURITY_POLICY_SEMANTICS_WITHOUT_BUILD_AUTHORIZATION',
             'explicitly_excluded_evidence': 'PACKAGE_WIDE_INFERENCE;SUCCESSFUL_HISTORICAL_LAUNCH;SUPPLIER_BUILD_ATTESTATION_AS_COMPOSITION_PROOF',
             'escalation_trigger': 'PROVIDER_CLAIMS_ACCEPTED_FOR_A_BOUNDED_CAPABILITY_SET',
             'classification_state': 'REVIEWED_BLOCKED_INCOMPLETE',
@@ -753,10 +809,10 @@ def main() -> None:
         ('no_token_semantic_review_count', str(len(semantic_reviews))),
         ('no_token_confirmed_a_count', str(sum(1 for row in semantic_reviews if row['semantic_result'] == 'CONFIRMED_A'))),
         ('no_token_reclassified_b_count', str(sum(1 for row in semantic_reviews if row['semantic_result'] == 'RECLASSIFIED_B'))),
-        ('provider_review_count', str(len(provider_reviews) + len(libxdamage_provider_reviews) + len(atspi2_provider_reviews))),
-        ('provider_authority_accepted_count', str(sum(1 for row in provider_reviews if row['decision'] == 'ACCEPTED_BOUNDED_PROVIDER') + sum(1 for row in libxdamage_provider_reviews if row['decision'] == 'ACCEPTED_BOUNDED_PROVIDER') + sum(1 for row in atspi2_provider_reviews if row['decision'] == 'ACCEPTED_BOUNDED_PROVIDER'))),
-        ('provider_authority_open_count', str(claim_type_counts['PROVIDER_AUTHORITY'] - len(provider_reviews) - len(libxdamage_provider_reviews) - len(atspi2_provider_reviews))),
-        ('authority_effect', 'TWENTY_THREE_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_INCLUDING_EXACT_PROJECT_LIBXDAMAGE_AND_AT_SPI2_ATOMIC_FAMILY_NO_COMPOSITION_TARGET_SERVICE_OR_ACTIVATION_EFFECT'),
+        ('provider_review_count', str(len(provider_reviews) + len(libxdamage_provider_reviews) + len(atspi2_provider_reviews) + len(gtk3_core_provider_reviews))),
+        ('provider_authority_accepted_count', str(sum(1 for row in provider_reviews if row['decision'] == 'ACCEPTED_BOUNDED_PROVIDER') + sum(1 for row in libxdamage_provider_reviews if row['decision'] == 'ACCEPTED_BOUNDED_PROVIDER') + sum(1 for row in atspi2_provider_reviews if row['decision'] == 'ACCEPTED_BOUNDED_PROVIDER') + sum(1 for row in gtk3_core_provider_reviews if row['decision'] == 'ACCEPTED_BOUNDED_PROVIDER'))),
+        ('provider_authority_open_count', str(claim_type_counts['PROVIDER_AUTHORITY'] - len(provider_reviews) - len(libxdamage_provider_reviews) - len(atspi2_provider_reviews) - len(gtk3_core_provider_reviews))),
+        ('authority_effect', 'TWENTY_FOUR_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_INCLUDING_EXACT_PROJECT_LIBXDAMAGE_AT_SPI2_ATOMIC_FAMILY_AND_GTK3_CORE_ATOMIC_PAIR_NO_COMPLETE_COMPOSITION_TARGET_DISPLAY_SERVICE_MODULE_SCHEMA_PRINT_OR_ACTIVATION_EFFECT'),
         ('oj001_disposition', libjpeg_disposition['disposition']),
         ('oj001_required_identity', libjpeg_disposition['required_lookup_identity']),
         ('oj001_candidate_state', libjpeg_disposition['exact_repository_candidate_state']),
@@ -780,7 +836,7 @@ def main() -> None:
         ('oj001_provider_result_sha256', libjpeg_provider_review['result_archive_sha256']),
         ('oj001_provider_matrix_pass_count', libjpeg_provider_review['matrix_pass_count']),
         ('oj001_provider_decision', libjpeg_provider_review['decision']),
-        ('next_review_tranche', 'GTK3_CORE_ATOMIC_CANDIDATE_PREPARATION'),
+        ('next_review_tranche', 'LIBSELINUX_DIRECT_CONSUMER_NECESSITY_REVIEW'),
     ]
 
     write_tsv(out_root / CLAIM_OUTPUT, CLAIM_FIELDS, claims)

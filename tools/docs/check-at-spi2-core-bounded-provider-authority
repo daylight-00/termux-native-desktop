@@ -41,17 +41,17 @@ if not errors:
   matches=[r for r in mem if r['provider_review_id']=='ATSPI2-CORE-PROV-001' and r['member_basename']==name and r['member_sha256']==sha and r['composition_inclusion']=='INCLUDED_SELECTED_GTK_SCOPE']
   if len(matches)!=1:errors.append(f'accepted composition member missing or duplicated: {name}')
  if any(g['identity_label'] in wanted for g in gaps):errors.append('accepted AT-SPI2 identity remains in gaps')
- expmeta={'accepted_provider_root_count':'30','accepted_member_count':'40','included_member_count':'39','unresolved_selected_identity_count':'3','next_review_tranche':'GTK3_CORE_ATOMIC_CANDIDATE_PREPARATION','target_manifest_allowed':'NO'}
+ expmeta={'accepted_provider_root_count':'31','accepted_member_count':'42','included_member_count':'41','unresolved_selected_identity_count':'1','next_review_tranche':'LIBSELINUX_DIRECT_CONSUMER_NECESSITY_REVIEW','target_manifest_allowed':'NO'}
  for k,v in expmeta.items():
   if meta.get(k)!=v:errors.append(f'composition metadata {k}: expected {v}, got {meta.get(k)!r}')
  for cid,cls in [('PCC-ATSPI2-CORE-PRODUCING','C'),('PCC-ATSPI2-CORE-PROVIDER','B')]:
   r=claims.get(cid)
   if not r or r['adr_class']!=cls:errors.append(f'claim missing or class mismatch: {cid}')
  if claims.get('PCC-ATSPI2-CORE-PROVIDER',{}).get('classification_state')!='BOUNDED_PROVIDER_AUTHORITY_ACCEPTED':errors.append('provider claim not accepted')
- for k,v in {'claim_count':'93','class_b_claim_count':'51','class_c_claim_count':'3','provider_review_count':'23','provider_authority_accepted_count':'23','provider_authority_open_count':'7','next_review_tranche':'GTK3_CORE_ATOMIC_CANDIDATE_PREPARATION'}.items():
+ for k,v in {'claim_count':'95','class_b_claim_count':'52','class_c_claim_count':'4','provider_review_count':'24','provider_authority_accepted_count':'24','provider_authority_open_count':'7','next_review_tranche':'LIBSELINUX_DIRECT_CONSUMER_NECESSITY_REVIEW'}.items():
   if cmeta.get(k)!=v:errors.append(f'claim metadata {k}: expected {v}, got {cmeta.get(k)!r}')
  doc=required[0].read_text();state=required[8].read_text();active=required[9].read_text();brief=required[10].read_text();catalog=required[11].read_text();index=required[12].read_text();status=required[13].read_text()
- markers=[('decision','ACCEPTED_BOUNDED_PROVIDER' in doc),('atomicity','No one- or two-member subset is accepted' in doc),('service','Exactly seven D-Bus' in doc and 'helpers remain non-executed' in doc),('state','at_spi2_core_provider_authority:' in state),('task','Task ID: `prepare-gtk3-core-3-24-49-atomic-glibc-candidate`' in active),('brief','selected identity gaps: 3' in brief),('catalog','at-spi2-core-bounded-provider-authority\tevidence\tcurrent\tcanonical' in catalog),('index','at-spi2-core-bounded-provider-authority.md' in index),('status','atomic AT-SPI2 core project candidates accepted as bounded GTK 3.24.49 providers' in status)]
+ markers=[('decision','ACCEPTED_BOUNDED_PROVIDER' in doc),('atomicity','No one- or two-member subset is accepted' in doc),('service','Exactly seven D-Bus' in doc and 'helpers remain non-executed' in doc),('state','at_spi2_core_provider_authority:' in state),('task','Task ID: `review-libselinux-direct-consumer-necessity-and-security-boundary`' in active),('brief','selected identity gaps: 1' in brief),('catalog','at-spi2-core-bounded-provider-authority\tevidence\tcurrent\tcanonical' in catalog),('index','at-spi2-core-bounded-provider-authority.md' in index),('status','exact libXdamage, atomic AT-SPI2 core, and atomic GTK 3.24.49 GDK/GTK project candidates accepted as bounded providers' in status)]
  for label,ok in markers:
   if not ok:errors.append(f'missing marker: {label}')
  for token in ['service authority:        accepted','target population:        accepted','activation:               accepted','approved supplier publication: accepted']:
@@ -59,5 +59,5 @@ if not errors:
 if errors:
  for e in errors:print('atspi2-provider-authority: FAIL:',e,file=sys.stderr)
  raise SystemExit(1)
-print('atspi2-provider-authority: PASS: exact atomic Class B selection and retained Class C producing record are bounded to GTK 3.24.49 accessibility library linkage; three composition gaps remain and service authority is excluded')
+print('atspi2-provider-authority: PASS: exact atomic Class B selection and retained Class C producing record are bounded to GTK 3.24.49 accessibility library linkage; only the libSELinux composition gap remains and service authority is excluded')
 PY

@@ -40,17 +40,7 @@ Android platform `libselinux.so` observations and the installed bionic `libandro
 
 ## Composition consequence
 
-This completed read-only candidate discovery for the seven identities that were unresolved at that stage. After separate bounded libXdamage acceptance, the six remaining gaps are reviewed `BLOCKED_NO_TERMUX_GLIBC_PROVIDER_CANDIDATE` rows:
-
-```text
-libXdamage.so.1
-libatk-bridge-2.0.so.0
-libatk-1.0.so.0
-libatspi.so.0
-libgdk-3.so.0
-libgtk-3.so.0
-libselinux.so.1
-```
+At discovery time, this result was one of seven unresolved identity findings. Subsequent separate bounded decisions accepted libXdamage, the atomic AT-SPI2/ATK family and the atomic GTK 3 core pair. `libselinux.so.1` is now the sole remaining `BLOCKED_NO_TERMUX_GLIBC_PROVIDER_CANDIDATE` row.
 
 The composition decision remains `REVIEWED_BLOCKED_INCOMPLETE`. No target manifest, population, materialization, deployment, policy mutation, service activation, or selected-generation activation is allowed.
 
@@ -60,4 +50,4 @@ ADR 0005 requires this tranche to stop without authority. Reopening requires an 
 
 Bionic package availability, Android platform bytes, Debian oracle identity, source-level ABI expectations, or upstream release metadata are not interchangeable with that evidence.
 
-The next task is non-mutating definition of the missing glibc provider production boundary across the four blocker families. It authorizes planning only, not a build.
+The current task is a non-mutating direct-consumer necessity and security-semantics review for `libselinux.so.1`. It authorizes review only, not acquisition, production, policy loading, relabeling, target population, deployment or activation.

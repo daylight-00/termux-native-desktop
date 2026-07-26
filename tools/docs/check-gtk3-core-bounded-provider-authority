@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT=${TND_CHECK_ROOT:-$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)}
+python3 - "$ROOT" <<'PY'
+from pathlib import Path
+import csv,sys
+root=Path(sys.argv[1]); review=root/'experiments/glibc/selected-obsidian-provider-authority/review'
+required=[root/'docs/evidence/gtk3-core-bounded-provider-authority.md',review/'gtk3-core-bounded-provider-authority.tsv',review/'gtk3-core-production-recipe-candidate-result-review.tsv',review/'selected-provider-composition-members.tsv',review/'selected-provider-composition-gaps.tsv',review/'selected-provider-composition-metadata.tsv',review/'provider-claim-classification.tsv',review/'provider-claim-classification-metadata.tsv',root/'docs/current/STATE.yaml',root/'docs/current/ACTIVE_TASK.md',root/'docs/current/BRIEF.md',root/'docs/catalog.tsv',root/'docs/evidence/README.md',root/'STATUS.md']
+errors=[f'missing {p.relative_to(root)}' for p in required if not p.is_file()]
+def rows(p):
+ with p.open(newline='',encoding='utf-8') as f:return list(csv.DictReader(f,delimiter='\t'))
+if not errors:
+ auth=rows(required[1]); cand=rows(required[2]); mem=rows(required[3]); gaps=rows(required[4]); meta={r['key']:r['value'] for r in rows(required[5])}; claims={r['claim_id']:r for r in rows(required[6])}; cmeta={r['key']:r['value'] for r in rows(required[7])}
+ if len(auth)!=1:errors.append(f'authority rows {len(auth)}')
+ else:
+  a=auth[0]; exp={'review_id':'GTK3-CORE-PROV-001','candidate_review_id':'GTK3-CORE-CANDIDATE-001','decision':'ACCEPTED_BOUNDED_PROVIDER','result_archive_sha256':'ba0fa0e31cfea2a31f8065ecaccf998a49901c12aa5f62af978728ddd8f10b3a','artifact_sha256':'89dd7d0427932d85b439e18aa05021aca623ed876854a875837be87de1b90262','exact_member_sha256s':'a237c3070ff1704f119cc318b6b837a9430a350648476123c1be75ba768d415d;0404b91acdaa3a2558e3a11214918692f64d0ba3cebaae4722e3aa4a61f31bc6','observed_sonames':'libgdk-3.so.0;libgtk-3.so.0','machine':'AArch64','dt_rpath_state':'ABSENT_BOTH','dt_runpath_state':'ABSENT_BOTH','provider_claim_class':'B','producing_claim_class':'C'}
+  for k,v in exp.items():
+   if a.get(k)!=v:errors.append(f'{k}: expected {v}, got {a.get(k)!r}')
+  for token in ['ONLY_TWO_RUNTIME_MEMBERS_AND_SONAME_ALIASES_ACCEPTED','GIR_TYPELIB_BYTE_IDENTITIES_RETAINED_AS_ATOMIC_REVIEW_EVIDENCE','PARTIAL_GDK_OR_GTK_ACCEPTANCE_PROHIBITED']:
+   if token not in '\t'.join(a.values()):errors.append(f'authority boundary missing: {token}')
+ if len(cand)!=1 or cand[0].get('candidate_decision')!='QUALIFIED_ATOMIC_RECIPE_AND_LOCAL_GDK_GTK_PAIR_CANDIDATE':errors.append('candidate review not retained')
+ wanted={'libgdk-3.so.0.2417.32':'a237c3070ff1704f119cc318b6b837a9430a350648476123c1be75ba768d415d','libgtk-3.so.0.2417.32':'0404b91acdaa3a2558e3a11214918692f64d0ba3cebaae4722e3aa4a61f31bc6'}
+ for name,sha in wanted.items():
+  matches=[r for r in mem if r['provider_review_id']=='GTK3-CORE-PROV-001' and r['member_basename']==name and r['member_sha256']==sha and r['composition_inclusion']=='INCLUDED_SELECTED_GTK_SCOPE']
+  if len(matches)!=1:errors.append(f'accepted composition member missing or duplicated: {name}')
+ if any(g['identity_label'] in wanted for g in gaps):errors.append('accepted GTK3 core identity remains in gaps')
+ if [g['identity_label'] for g in gaps]!=['libselinux.so.1']:errors.append(f'unexpected remaining gaps: {[g["identity_label"] for g in gaps]}')
+ for k,v in {'accepted_provider_root_count':'31','accepted_member_count':'42','included_member_count':'41','deferred_member_count':'1','unresolved_selected_identity_count':'1','next_review_tranche':'LIBSELINUX_DIRECT_CONSUMER_NECESSITY_REVIEW','target_manifest_allowed':'NO'}.items():
+  if meta.get(k)!=v:errors.append(f'composition metadata {k}: expected {v}, got {meta.get(k)!r}')
+ for cid,cls in [('PCC-GTK3-CORE-PRODUCING','C'),('PCC-GTK3-CORE-PROVIDER','B')]:
+  r=claims.get(cid)
+  if not r or r['adr_class']!=cls:errors.append(f'claim missing or class mismatch: {cid}')
+ if claims.get('PCC-GTK3-CORE-PROVIDER',{}).get('classification_state')!='BOUNDED_PROVIDER_AUTHORITY_ACCEPTED':errors.append('provider claim not accepted')
+ for k,v in {'claim_count':'95','class_b_claim_count':'52','class_c_claim_count':'4','provider_authority_claim_count':'31','provider_review_count':'24','provider_authority_accepted_count':'24','provider_authority_open_count':'7','next_review_tranche':'LIBSELINUX_DIRECT_CONSUMER_NECESSITY_REVIEW'}.items():
+  if cmeta.get(k)!=v:errors.append(f'claim metadata {k}: expected {v}, got {cmeta.get(k)!r}')
+ doc=required[0].read_text();state=required[8].read_text();active=required[9].read_text();brief=required[10].read_text();catalog=required[11].read_text();index=required[12].read_text();status=required[13].read_text()
+ markers=[('decision','ACCEPTED_BOUNDED_PROVIDER' in doc),('atomicity','Partial GDK-only or GTK-only acceptance is prohibited' in doc),('package exclusion','package-wide tools/modules/data/development surfaces excluded' in doc.lower() and 'unversioned development aliases are outside this provider decision' in doc.lower()),('state','gtk3_core_provider_authority:' in state),('task','libselinux' in active.lower() and 'build authorization' in active.lower()),('brief','selected identity gaps: 1' in brief),('catalog','gtk3-core-bounded-provider-authority\tevidence\tcurrent\tcanonical' in catalog),('index','gtk3-core-bounded-provider-authority.md' in index),('status','GTK 3.24.49' in status and 'libselinux.so.1' in status)]
+ for label,ok in markers:
+  if not ok:errors.append(f'missing marker: {label}')
+ for token in ['target population: accepted','activation: accepted','service authority: accepted','approved supplier publication: accepted']:
+  if token in doc.lower():errors.append(f'forbidden widening: {token}')
+if errors:
+ for e in errors:print('gtk3-core-provider-authority: FAIL:',e,file=sys.stderr)
+ raise SystemExit(1)
+print('gtk3-core-provider-authority: PASS: exact atomic GDK/GTK runtime pair is bounded to selected GTK 3.24.49 core linkage; libselinux remains the only composition gap and target, service, module, schema, printing, deployment, and activation authority remain excluded')
+PY

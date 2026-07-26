@@ -1,68 +1,50 @@
-# Active task: prepare the atomic GTK 3.24.49 GDK/GTK core glibc candidate
+# Active task: review libSELinux direct-consumer necessity and security boundary
 
-> Task ID: `prepare-gtk3-core-3-24-49-atomic-glibc-candidate`
+> Task ID: `review-libselinux-direct-consumer-necessity-and-security-boundary`
 >
-> Expected state on completion: one exact Class B production recipe candidate and one isolated Class C candidate package/archive set coherently provide `libgdk-3.so.0.2417.32` and `libgtk-3.so.0.2417.32`, or the lane stops with a precise source, recipe, backend, dependency, pair-atomicity, service, or functional blocker. No provider authority, supplier publication, installation, target population, deployment, or selected-generation activation occurs.
+> Expected state on completion: the exact selected consumer edge to `libselinux.so.1`, required symbols, and SELinux policy/filesystem-context semantics are either bounded sufficiently for a separate future candidate-authorization decision or the dependency is removed/reselected. **This task grants no build authorization.**
 
 ## Objective
 
-Prepare the third authorized missing-provider production lane as one atomic GTK 3 core pair. Establish exact source lineage, production recipe semantics, configured backend set, package/file surfaces, both ELF identities, complete accepted dependency closure, GTK-to-GDK binding, controlled initialization surfaces, collision state, and coordinated update/rollback without inferring service or activation authority.
+Determine why the selected runtime requires `libselinux.so.1`, which exact ELF directly declares it, which imported symbols are actually used, and whether the dependency can be eliminated without changing the selected application contract. Bound all security-sensitive behavior before any production lane is considered.
 
 ## Why now
 
-Exact project-produced libXdamage and the atomic AT-SPI2/ATK three-member family now have separate bounded provider decisions for the selected GTK 3.24.49 X11 damage and accessibility library-linkage requirements. The accepted production order authorizes GTK 3 core candidate preparation next while composition, target population, and activation remain blocked.
-
-## Authoritative selected identities
-
-```text
-source family:       GTK 3.24.49
-official tag object: 9003f198803b9b8b1d7def25a2359f8ebb4b25cf
-pinned source commit:198aeace1e9e119c77f4d669bd8efdf337828ad1
-source archive SHA:  a2958d82986c81794e953a3762335fa7c78948706d23cced421f7245ca544cbc
-selected members:    libgdk-3.so.0.2417.32
-                     libgtk-3.so.0.2417.32
-required SONAMEs:    libgdk-3.so.0
-                     libgtk-3.so.0
-atomicity:           one source and coherent GDK/GTK package pair
-```
+The exact GTK 3.24.49 atomic `libgdk-3.so.0`/`libgtk-3.so.0` pair now has bounded provider authority. The selected composition has one unresolved identity, `libselinux.so.1`. Target-manifest generation, population, deployment, and activation remain blocked.
 
 ## In scope
 
-- acquire and pin the exact GTK 3.24.49 source commit/archive and SHA-256;
-- derive a production Termux glibc recipe candidate without private evidence-harness logic;
-- record the exact enabled/disabled GDK backends and every Android/Termux adaptation;
-- build only in an isolated workspace with no package-database or live-prefix mutation;
-- retain the complete package manifest, both exact members and aliases;
-- verify GTK's direct binding to GDK and the complete accepted dependency closure;
-- run controlled loader and minimal non-service initialization/symbol surfaces without display or accessibility activation;
-- inventory modules, schemas, settings, themes, printing, input, accessibility, portal and service-related files;
-- define coordinated update, removal and rollback of the GDK/GTK pair.
+- identify every exact selected direct consumer of `libselinux.so.1`;
+- record exact `DT_NEEDED`, imported symbol, call-site, package/source and configuration evidence;
+- distinguish essential runtime behavior from optional SELinux feature linkage;
+- review libsepol, PCRE2, policy-store, file-context, labeling and Android policy-path assumptions;
+- prefer dependency elimination or consumer reselection when compatible with the selected contract;
+- define the minimum evidence required for a separate high-risk Class B recipe/Class C candidate authorization, if necessity is proven.
 
 ## Out of scope
 
-Provider authority, accepting only GDK or only GTK, approved-supplier publication, package installation, target layout, target population, display-server startup, D-Bus/accessibility activation, settings/schema deployment, printing or portal service activation, full widget rendering acceptance, deployment, or selected-generation activation.
+Building or acquiring libSELinux, using Android or bionic SELinux libraries, creating cross-world aliases or shims, loading policy, relabeling files, changing enforcing state, touching Android policy stores, package installation, target population, deployment, service activation, or selected-generation activation.
 
 ## Required reading
 
-- `docs/evidence/at-spi2-core-bounded-provider-authority.md`
-- `docs/evidence/libxdamage-bounded-provider-authority.md`
-- `docs/evidence/gtk3-core-provider-evidence-blocker.md`
+- `docs/evidence/libselinux-provider-evidence-blocker.md`
 - `docs/evidence/missing-glibc-provider-production-boundary.md`
 - `docs/evidence/selected-obsidian-provider-composition-review.md`
+- `docs/evidence/gtk3-core-bounded-provider-authority.md`
 - `docs/decisions/0005-proportional-assurance-depth.md`
 
 ## Pending external inputs
 
-None. Source and recipe acquisition must use the established bounded Termux/network and bundle workflow when execution begins.
+None. This task uses the retained selected/runtime evidence and repository/source metadata only. Any later candidate production requires a separate authorization decision.
 
 ## Completion criteria
 
-One machine-readable and narrative candidate review records exact source, recipe, producing environment, package/archive set, both members and aliases, GTK-to-GDK binding, dependency closure, backend contract, modules/settings/service inventory, protected-state invariance, collision/exclusion state, and coordinated update/rollback. Production recipe and private isolation harness must be separated before qualification succeeds.
+A machine-readable and narrative review records exact direct consumers, required symbols, source/configuration cause, removal/reselection feasibility, security semantics, prohibited operations, dependency closure, and a decision of either `DEPENDENCY_ELIMINATION_OR_RESELECTION` or `SEPARATE_HIGH_RISK_CANDIDATE_AUTHORIZATION_REVIEW_REQUIRED`. Neither outcome itself authorizes a build.
 
 ## Stop conditions
 
-Stop if exact GTK 3.24.49 source lineage cannot be pinned, one coherent source/package lifecycle cannot produce both identities, the selected backend contract cannot be made explicit, a required dependency lacks accepted authority or an explicitly bounded candidate lane, service or display activation is required merely to validate the libraries, controlled loading escapes into bionic/live state, or protected state changes.
+Stop if consumer identity or symbol use cannot be made exact, if validation would require policy mutation or Android platform state access, or if the review begins to infer glibc compatibility from bionic/Android libraries.
 
 ## Next valid action
 
-Design the exact production glibc recipe and isolated build for the atomic GDK/GTK pair using the corrected official tag commit and source archive. Explicitly resolve the backend matrix and four recipe-shape no-match tokens. Do not install ordinary Termux/bionic GTK, copy Debian bytes, populate a target, start display/accessibility/portal/printing services, or widen into libSELinux.
+Perform a read-only direct-consumer and imported-symbol census for `libselinux.so.1`. Do not build, install, alias, load policy, relabel, populate a target, deploy, or activate.

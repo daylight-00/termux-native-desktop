@@ -54,3 +54,8 @@ ADR 0005 requires this tranche to stop without authority. Reopening requires an 
 Bionic package availability, installed bionic bytes, Debian oracle identities, source-level ABI expectations, or an upstream release version are not interchangeable with that evidence.
 
 The next independent composition tranche is exact `libselinux.so.1` provider evidence acquisition.
+
+
+## Current disposition
+
+The blocker is historical and superseded for current GTK core candidate/provider status by `gtk3-core-production-recipe-candidate-result-review.md` and `gtk3-core-bounded-provider-authority.md`. It remains evidence that no approved supplier package or recipe existed at the discovery coordinate.

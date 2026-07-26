@@ -39,3 +39,8 @@ The next valid action is to design the exact GTK 3.24.49 glibc production recipe
 ## Prohibited inference
 
 This correction does not qualify a recipe or package, grant GTK provider authority, accept one member independently, authorize publication or installation, restore schemas or modules to active paths, start display/D-Bus/accessibility/portal/printing services, populate a target, deploy, or activate a selected generation.
+
+
+## Current disposition
+
+The corrected coordinate was consumed by the exact GTK 3.24.49 Class B recipe and Class C atomic candidate. The later bounded provider decision remains separate and does not widen this source-correction record.

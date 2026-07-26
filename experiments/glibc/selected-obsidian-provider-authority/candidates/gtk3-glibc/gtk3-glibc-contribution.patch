@@ -1,0 +1,72 @@
+diff --git a/gpkg/gtk3/build.sh b/gpkg/gtk3/build.sh
+new file mode 100644
+index 0000000..37e4459
+--- /dev/null
++++ b/gpkg/gtk3/build.sh
+@@ -0,0 +1,66 @@
++TERMUX_PKG_HOMEPAGE=https://www.gtk.org/
++TERMUX_PKG_DESCRIPTION="GObject-based multi-platform GUI toolkit"
++TERMUX_PKG_LICENSE="LGPL-2.0"
++TERMUX_PKG_MAINTAINER="@termux-pacman"
++TERMUX_PKG_VERSION="3.24.49"
++TERMUX_PKG_SRCURL="https://gitlab.gnome.org/GNOME/gtk/-/archive/${TERMUX_PKG_VERSION}/gtk-${TERMUX_PKG_VERSION}.tar.gz"
++TERMUX_PKG_SHA256=a2958d82986c81794e953a3762335fa7c78948706d23cced421f7245ca544cbc
++TERMUX_PKG_AUTO_UPDATE=false
++TERMUX_PKG_VERSIONED_GIR=false
++TERMUX_PKG_DISABLE_GIR=false
++
++# Runtime coordinates are kept production-shaped. Exact project-produced
++# GdkPixbuf, libXdamage and AT-SPI2 package inputs are supplied only by the
++# private isolated qualification harness until an approved supplier publishes
++# equivalent packages.
++TERMUX_PKG_DEPENDS="at-spi2-core-glibc, fontconfig-glibc, fribidi-glibc, gdk-pixbuf-glibc, glib-glibc, harfbuzz-glibc, libcairo-glibc, libcloudproviders-glibc, libepoxy-glibc, libwayland-glibc, libxcomposite-glibc, libxcursor-glibc, libxdamage-glibc, libxfixes-glibc, libxi-glibc, libxinerama-glibc, libxkbcommon-glibc, libxrandr-glibc, pango-glibc, zlib-glibc"
++TERMUX_PKG_BUILD_DEPENDS="gobject-introspection-glibc, libwayland-protocols-glibc, xorgproto-glibc"
++TERMUX_PKG_CONFLICTS="libgtk3-glibc"
++TERMUX_PKG_REPLACES="libgtk3-glibc"
++
++TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
++-Dbroadway_backend=true
++-Dbuiltin_immodules=none
++-Dcloudproviders=true
++-Dcolord=no
++-Ddemos=false
++-Dexamples=false
++-Dgtk_doc=false
++-Dinstalled_tests=false
++-Dintrospection=true
++-Dman=false
++-Dprint_backends=file,lpr
++-Dprofiler=false
++-Dtests=false
++-Dtracker3=false
++-Dwayland_backend=true
++-Dx11_backend=true
++-Dxinerama=yes
++"
++
++termux_step_pre_configure() {
++	termux_setup_cmake
++	termux_setup_gir
++	termux_setup_ninja
++	termux_setup_glib_cross_pkg_config_wrapper
++	termux_setup_wayland_cross_pkg_config_wrapper
++	termux_setup_python_pip
++	export TERMUX_MESON_ENABLE_SOVERSION=1
++}
++
++termux_step_post_massage() {
++	local gdk_member="${TERMUX_PKG_MASSAGEDIR}${TERMUX_PREFIX}/lib/libgdk-3.so.0.2417.32"
++	local gtk_member="${TERMUX_PKG_MASSAGEDIR}${TERMUX_PREFIX}/lib/libgtk-3.so.0.2417.32"
++	local gdk_alias="${TERMUX_PKG_MASSAGEDIR}${TERMUX_PREFIX}/lib/libgdk-3.so.0"
++	local gtk_alias="${TERMUX_PKG_MASSAGEDIR}${TERMUX_PREFIX}/lib/libgtk-3.so.0"
++
++	[[ -f "$gdk_member" ]] || termux_error_exit "missing atomic GDK member: $gdk_member"
++	[[ -f "$gtk_member" ]] || termux_error_exit "missing atomic GTK member: $gtk_member"
++	[[ -L "$gdk_alias" ]] || termux_error_exit "missing GDK SONAME alias: $gdk_alias"
++	[[ -L "$gtk_alias" ]] || termux_error_exit "missing GTK SONAME alias: $gtk_alias"
++	[[ "$(readlink "$gdk_alias")" == "libgdk-3.so.0.2417.32" ]] || termux_error_exit "unexpected GDK alias target"
++	[[ "$(readlink "$gtk_alias")" == "libgtk-3.so.0.2417.32" ]] || termux_error_exit "unexpected GTK alias target"
++
++	# Qualification must not install cache-maintenance hooks or triggers.
++	[[ ! -e "${TERMUX_PKG_MASSAGEDIR}/.INSTALL" ]] || termux_error_exit "unexpected activation script"
++}

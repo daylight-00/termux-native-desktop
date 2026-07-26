@@ -48,7 +48,7 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 - [`libjpeg-so-62-gdkpixbuf-diagnostic-matrix-result-review.md`](libjpeg-so-62-gdkpixbuf-diagnostic-matrix-result-review.md) — non-dispositive first diagnostic matrix and corrected loader boundary.
 - [`libjpeg-so-62-loader-isolated-provider-authority.md`](libjpeg-so-62-loader-isolated-provider-authority.md) — exact loader-isolated candidate/oracle controls and bounded GdkPixbuf JPEG provider-authority decision.
 
-- [`selected-obsidian-provider-composition-review.md`](selected-obsidian-provider-composition-review.md) records the current Class D non-materializing composition manifest, 40 exact accepted members, exclusions, collisions and 3 blocking selected GTK identities.
+- [`selected-obsidian-provider-composition-review.md`](selected-obsidian-provider-composition-review.md) records the current Class D non-materializing composition manifest, 42 exact accepted members, exclusions, collisions and the sole remaining `libselinux.so.1` gap.
 
 - [`gdkpixbuf-core-provider-acquisition-result-review.md`](gdkpixbuf-core-provider-acquisition-result-review.md) binds the exact GLib-family and libpng candidate identities, records the missing Termux GdkPixbuf package/recipe, and routes the upstream 2.42.12 scratch build.
 
@@ -80,8 +80,10 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 - [`at-spi2-core-provider-evidence-blocker.md`](at-spi2-core-provider-evidence-blocker.md) — superseded historical discovery blocker proving that the earlier approved index and pinned recipe source contained no Termux glibc AT-SPI2/ATK provider candidate.
 - [`at-spi2-core-production-recipe-candidate-result-review.md`](at-spi2-core-production-recipe-candidate-result-review.md) — exact atomic Class B recipe and Class C package/three-member producing record with byte-exact GIR and disabled activation metadata.
 - [`at-spi2-core-bounded-provider-authority.md`](at-spi2-core-bounded-provider-authority.md) — exact atomic ATK, ATK-bridge and AT-SPI family accepted only for selected GTK 3.24.49 accessibility library linkage; D-Bus, helpers, active metadata, accessibility enablement, target population and activation remain excluded.
-- [`gtk3-core-provider-evidence-blocker.md`](gtk3-core-provider-evidence-blocker.md) — exact approved-index and pinned-recipe blocker for the missing Termux glibc GTK 3 GDK/GTK core pair.
+- [`gtk3-core-provider-evidence-blocker.md`](gtk3-core-provider-evidence-blocker.md) — superseded historical approved-index and pinned-recipe blocker for GTK 3 core.
+- [`gtk3-core-production-recipe-candidate-result-review.md`](gtk3-core-production-recipe-candidate-result-review.md) — exact GTK 3.24.49 Class B recipe, Class C atomic GDK/GTK package, GIR/typelib and display-free loader evidence.
+- [`gtk3-core-bounded-provider-authority.md`](gtk3-core-bounded-provider-authority.md) — exact atomic GDK/GTK runtime pair accepted only for selected GTK 3 core library linkage; package-wide, display, service, module, schema, print, target and activation authority remain excluded.
 - [`gtk3-3-24-49-source-coordinate-correction.md`](gtk3-3-24-49-source-coordinate-correction.md) — official tag object/commit and archive correction with archive/tag equivalence, consumer-binding revalidation, and no authority widening.
 - [`libselinux-provider-evidence-blocker.md`](libselinux-provider-evidence-blocker.md) — exact approved-index and pinned-recipe blocker proving that only bionic/Android SELinux boundary implementations are visible and no Termux glibc libSELinux provider candidate is authorized.
 
-- [`missing-glibc-provider-production-boundary.md`](missing-glibc-provider-production-boundary.md) — planning-only production lane decision: Xdamage first, atomic AT-SPI2/GTK deferred, libSELinux production withheld pending direct consumer proof.
+- [`missing-glibc-provider-production-boundary.md`](missing-glibc-provider-production-boundary.md) — planning-only production boundary recording completed libXdamage, atomic AT-SPI2/ATK and atomic GTK 3 core lanes, with libSELinux production still withheld pending direct-consumer necessity and security review.

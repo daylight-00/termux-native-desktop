@@ -1,6 +1,6 @@
 schema_version: 1
-state_version: 2026-07-22.01
-updated_on: 2026-07-22
+state_version: 2026-07-26.01
+updated_on: 2026-07-26
 
 project:
   phase: provider-composition-gap-closure
@@ -74,17 +74,19 @@ documentation:
   at_spi2_core_provider_authority_review: docs/evidence/at-spi2-core-bounded-provider-authority.md
   gtk3_core_provider_evidence_blocker: docs/evidence/gtk3-core-provider-evidence-blocker.md
   gtk3_source_coordinate_correction: docs/evidence/gtk3-3-24-49-source-coordinate-correction.md
+  gtk3_core_production_candidate_review: docs/evidence/gtk3-core-production-recipe-candidate-result-review.md
+  gtk3_core_provider_authority_review: docs/evidence/gtk3-core-bounded-provider-authority.md
   libselinux_provider_evidence_blocker: docs/evidence/libselinux-provider-evidence-blocker.md
   missing_glibc_provider_production_boundary: docs/evidence/missing-glibc-provider-production-boundary.md
 
 provider_authority:
-  workstream: three-selected-gaps-retained-libxdamage-and-atomic-at-spi2-bounded-providers-accepted-gtk3-core-candidate-preparation-active
-  boundary: thirty-bounded-providers-retained-three-selected-identities-open-at-spi2-class-c-family-bounded-provider-accepted-supplier-publication-composition-target-service-and-activation-open
+  workstream: one-selected-gap-retained-libxdamage-at-spi2-and-gtk3-core-bounded-providers-accepted-libselinux-necessity-review-active
+  boundary: thirty-one-bounded-provider-roots-retained-one-selected-identity-open-gtk3-core-class-c-pair-and-bounded-provider-accepted-supplier-publication-composition-target-display-service-module-schema-print-and-activation-open
   claim_inventory:
-    total: 93
+    total: 95
     class_a: 36
-    class_b: 51
-    class_c: 3
+    class_b: 52
+    class_c: 4
     class_d: 3
   no_token_recipe_semantic_review:
     reviewed: 7
@@ -93,12 +95,12 @@ provider_authority:
     provider_authority_accepted: 7
     provider_authority_open: 0
   bounded_provider_authority:
-    accepted: 30
+    accepted: 31
     accepted_inside_28_root_inventory: 21
     open_inside_28_root_inventory: 7
     rejected: 0
     open_no_token_roots: 0
-    accepted_scope: exact-xorg-members-and-selected-gtk-x11-capabilities-plus-exact-libxcursor-gtk-3-24-49-x11-cursor-theme-image-and-surface-plus-exact-libtasn1-external-gnutls-asn1-security-plus-exact-libepoxy-gtk-3-24-49-x11-glx-dispatch-plus-exact-pango-three-member-gtk-text-family-and-soname-continuity-plus-exact-project-libjpeg-so-62-gdkpixbuf-jpeg-file-and-memory-decode-plus-exact-project-gdkpixbuf-2-42-12-jpeg-png-file-and-memory-decode-plus-exact-glib-four-member-libpng-and-util-linux-two-member-gdkpixbuf-reference-dependency-scope-plus-exact-libthai-libdatrie-libiconv-and-thbrk-tri-pango-1-54-0-thai-break-scope-plus-exact-libcloudproviders-gtk-3-24-49-places-sidebar-cloud-account-integration-plus-exact-fribidi-pango-1-54-0-core-unicode-bidirectional-text-processing-plus-exact-freetype-pango-1-54-0-gtk-3-24-49-font-engine-and-exact-brotli-bzip2-zlib-transitive-feature-closure-plus-exact-libxkbcommon-gtk-3-24-49-wayland-xkb-keymap-keyboard-state-modifier-and-keysym-translation-plus-exact-harfbuzz-pango-1-54-0-core-opentype-text-shaping-plus-exact-fontconfig-pango-1-54-0-font-discovery-matching-and-pattern-properties-with-receipt-owned-config-cache-boundary-plus-exact-pixman-generic-implementation-for-exact-cairo-pixel-compositing-prerequisite-plus-exact-cairo-core-and-cairo-gobject-for-pango-1-54-0-and-gtk-3-24-49-rendering-surface-and-gobject-integration-plus-exact-graphite2-for-exact-harfbuzz-10-1-0-graphite-font-feature-shaping-prerequisite-plus-exact-project-produced-libxdamage-1-1-6-for-gtk-3-24-49-gdk-x11-damage-extension-linkage-and-damage-region-capability-plus-exact-atomic-atk-atk-bridge-at-spi2-core-2-56-2-family-for-gtk-3-24-49-accessibility-library-linkage
+    accepted_scope: exact-xorg-members-and-selected-gtk-x11-capabilities-plus-exact-libxcursor-gtk-3-24-49-x11-cursor-theme-image-and-surface-plus-exact-libtasn1-external-gnutls-asn1-security-plus-exact-libepoxy-gtk-3-24-49-x11-glx-dispatch-plus-exact-pango-three-member-gtk-text-family-and-soname-continuity-plus-exact-project-libjpeg-so-62-gdkpixbuf-jpeg-file-and-memory-decode-plus-exact-project-gdkpixbuf-2-42-12-jpeg-png-file-and-memory-decode-plus-exact-glib-four-member-libpng-and-util-linux-two-member-gdkpixbuf-reference-dependency-scope-plus-exact-libthai-libdatrie-libiconv-and-thbrk-tri-pango-1-54-0-thai-break-scope-plus-exact-libcloudproviders-gtk-3-24-49-places-sidebar-cloud-account-integration-plus-exact-fribidi-pango-1-54-0-core-unicode-bidirectional-text-processing-plus-exact-freetype-pango-1-54-0-gtk-3-24-49-font-engine-and-exact-brotli-bzip2-zlib-transitive-feature-closure-plus-exact-libxkbcommon-gtk-3-24-49-wayland-xkb-keymap-keyboard-state-modifier-and-keysym-translation-plus-exact-harfbuzz-pango-1-54-0-core-opentype-text-shaping-plus-exact-fontconfig-pango-1-54-0-font-discovery-matching-and-pattern-properties-with-receipt-owned-config-cache-boundary-plus-exact-pixman-generic-implementation-for-exact-cairo-pixel-compositing-prerequisite-plus-exact-cairo-core-and-cairo-gobject-for-pango-1-54-0-and-gtk-3-24-49-rendering-surface-and-gobject-integration-plus-exact-graphite2-for-exact-harfbuzz-10-1-0-graphite-font-feature-shaping-prerequisite-plus-exact-project-produced-libxdamage-1-1-6-for-gtk-3-24-49-gdk-x11-damage-extension-linkage-and-damage-region-capability-plus-exact-atomic-atk-atk-bridge-at-spi2-core-2-56-2-family-for-gtk-3-24-49-accessibility-library-linkage-plus-exact-atomic-gtk-3-24-49-gdk-and-gtk-core-two-member-pair-for-selected-gdk-display-input-abstraction-and-gtk-widget-toolkit-core-library-linkage
   libjpeg_compatibility_candidate:
     first_candidate_state: rejected-rebuild-required-no-runpath
     first_candidate_member: libjpeg.so.62.4.0
@@ -132,16 +134,16 @@ provider_authority:
     required_now: 0
   composition_review:
     decision: reviewed-blocked-incomplete
-    accepted_provider_roots: 30
-    accepted_members: 40
-    included_members: 39
+    accepted_provider_roots: 31
+    accepted_members: 42
+    included_members: 41
     deferred_members: 1
     selected_gtk_identities: 37
-    unresolved_selected_identities: 3
+    unresolved_selected_identities: 1
     accepted_soname_collisions: 0
     accepted_alias_collisions: 0
     target_manifest_allowed: false
-    next_tranche: gtk3-core-3-24-49-atomic-candidate-preparation
+    next_tranche: libselinux-direct-consumer-necessity-review
   gdkpixbuf_core_acquisition:
     result_sha256: e96fb0e2d8fa1c16a228e41d60801abac0b8a43584a86b7e63f8adddfc4f5692
     review_state: acquisition-reviewed-partial
@@ -163,7 +165,7 @@ provider_authority:
     transitive_result_sha256: a18426371acf0339731464eea4a6fd1f8c745cc09154629b69e34d1063073c13
     transitive_recipe_tree: e91a0c476ef4355dbfff46e2bcab23d0085ddd01
     transitive_functional_matrix: jpeg-file-pass-jpeg-memory-pass-png-file-pass-png-memory-pass
-    next_action: prepare-gtk3-core-3-24-49-atomic-glibc-candidate
+    next_action: review-libselinux-direct-consumer-necessity-and-security-boundary
   thai_break_provider:
     result_sha256: 7789ff1a039e3186b04014e4ddf6a7ba68d77fe31a2f1ef77273590aa97b8e1e
     libthai_member: libthai.so.0.3.1
@@ -189,7 +191,7 @@ provider_authority:
     consumer: gtk-3-24-49-places-sidebar-cloud-account-integration
     service_boundary: dbus-session-services-and-accounts-not-accepted
     provider_authority: accepted-bounded-provider
-  next_research_decision: prepare-gtk3-core-3-24-49-atomic-glibc-candidate
+  next_research_decision: review-libselinux-direct-consumer-necessity-and-security-boundary
   fribidi_provider:
     member: libfribidi.so.0.4.0
     member_sha256: 71668fd02e89fa7546446bb7961bb618f6d22e1506f7444bbea6788befbb7895
@@ -367,7 +369,7 @@ provider_authority:
     helpers: two-present-not-executed
     service_authority: not-accepted
     supplier_publication: not-accepted
-    composition_effect: three-at-spi2-gaps-closed-three-total-gaps-remain
+    composition_effect: three-at-spi2-gaps-closed-three-total-gaps-remain-before-gtk3-core-acceptance
     target_population: blocked
     activation: blocked
   gtk3_source_coordinate:
@@ -386,8 +388,42 @@ provider_authority:
     backend_options: 6
     surface_inventory_rows: 1061
     dependency_no_match_tokens: 4
-    authority_effect: existing-libxdamage-and-at-spi2-bounded-scopes-retained-no-widening
-    next_action: design-gtk3-3-24-49-glibc-production-recipe-and-isolated-build
+    authority_effect: source-coordinate-only-record-consumed-by-separate-gtk3-candidate-and-provider-decisions-no-retroactive-widening
+    next_action: retained-historical-coordinate-review-complete
+  gtk3_core_production_candidate:
+    review_id: GTK3-CORE-CANDIDATE-001
+    result_archive_sha256: ba0fa0e31cfea2a31f8065ecaccf998a49901c12aa5f62af978728ddd8f10b3a
+    source_version: 3.24.49
+    official_tag_object: 9003f198803b9b8b1d7def25a2359f8ebb4b25cf
+    source_commit: 198aeace1e9e119c77f4d669bd8efdf337828ad1
+    source_archive_sha256: a2958d82986c81794e953a3762335fa7c78948706d23cced421f7245ca544cbc
+    recipe_base_head: 9bdd20c1d36524a0ab016d9b71c748b0cbb20a34
+    recipe_sha256: dd25427cfdbe418d5d9c6df182bab7f457fd8efd13931509a8d8e2053ffacf5e
+    package: gtk3-glibc-3.24.49-aarch64
+    package_sha256: 89dd7d0427932d85b439e18aa05021aca623ed876854a875837be87de1b90262
+    exact_members: libgdk-3.so.0.2417.32;libgtk-3.so.0.2417.32
+    member_sha256s: a237c3070ff1704f119cc318b6b837a9430a350648476123c1be75ba768d415d;0404b91acdaa3a2558e3a11214918692f64d0ba3cebaae4722e3aa4a61f31bc6
+    exact_sonames: libgdk-3.so.0;libgtk-3.so.0
+    gir_typelib_boundary: exact-gdk-and-gtk-gir-typelib-retained-as-review-evidence-only
+    loader_probe: canonical-glibc-loader-display-free-3-24-49-gdkdisplay-zero-classical-or-bionic-mappings
+    provider_authority: accepted-separately-bounded-atomic-pair
+    supplier_publication: not-accepted
+    target_population: blocked
+    display_service_module_schema_print_activation: blocked
+  gtk3_core_provider_authority:
+    review_id: GTK3-CORE-PROV-001
+    decision: accepted-bounded-provider
+    capability: selected-gtk-3-24-49-gdk-display-input-abstraction-and-gtk-widget-toolkit-core-library-linkage
+    exact_members: libgdk-3.so.0.2417.32;libgtk-3.so.0.2417.32
+    exact_sonames: libgdk-3.so.0;libgtk-3.so.0
+    atomicity: whole-pair-only-no-partial-gdk-or-gtk-acceptance
+    package_surface: only-two-versioned-runtime-members-and-soname-aliases
+    gir_typelib_boundary: retained-review-evidence-no-target-membership-or-registration-authority
+    backend_boundary: x11-wayland-broadway-configured-no-display-or-daemon-authority
+    package_wide_authority: not-accepted
+    composition_effect: two-gtk3-gaps-closed-one-libselinux-gap-remains
+    target_population: blocked
+    activation: blocked
   gtk3_core_provider_blocker:
     selected_labels: libgdk-3.so.0.2417.32;libgtk-3.so.0.2417.32
     required_sonames: libgdk-3.so.0;libgtk-3.so.0
@@ -398,9 +434,9 @@ provider_authority:
     observed_bionic_state: ordinary-termux-x11-package-only
     glibc_recipe_repository: termux-pacman/glibc-packages@9bdd20c1d36524a0ab016d9b71c748b0cbb20a34
     glibc_recipe_state: no-gtk3-producing-root-found
-    provider_authority: open-blocked-no-glibc-candidate
+    provider_authority: superseded-discovery-blocker-exact-candidate-and-bounded-provider-now-accepted
     target_population: blocked
-    reopening_gate: exact-glibc-artifact-two-member-soname-alias-recipe-dependency-optional-backend-pair-binding-collision-update-and-rollback-evidence
+    reopening_gate: satisfied-by-gtk3-core-candidate-and-bounded-provider-reviews
   libselinux_provider_blocker:
     selected_label: libselinux.so.1
     required_soname: libselinux.so.1
@@ -413,7 +449,7 @@ provider_authority:
     android_platform_state: observed-boundary-only-no-glibc-authority
     glibc_recipe_repository: termux-pacman/glibc-packages@9bdd20c1d36524a0ab016d9b71c748b0cbb20a34
     glibc_recipe_state: no-libselinux-producing-root-found
-    provider_authority: open-blocked-no-glibc-candidate
+    provider_authority: superseded-discovery-blocker-exact-candidate-and-bounded-provider-now-accepted
     target_population: blocked
     policy_mutation: blocked
     reopening_gate: exact-approved-or-separately-authorized-project-produced-glibc-artifact-member-soname-alias-source-recipe-production-dependency-consumer-policy-labeling-collision-update-and-rollback-evidence
@@ -426,13 +462,13 @@ provider_authority:
     first_lane_local_artifact_class: C
     first_lane_build_state: qualified-local-recipe-and-artifact-candidate-bounded-provider-accepted
     at_spi2_atk_lane: bounded-atomic-provider-authority-accepted-service-authority-excluded
-    gtk3_core_lane: authorized-atomic-candidate-preparation-after-libxdamage-and-at-spi2
+    gtk3_core_lane: bounded-atomic-provider-authority-accepted-package-wide-execution-authority-excluded
     libselinux_lane: no-build-authorization-pending-direct-consumer-necessity
     version_policy: newer-versions-require-selected-identity-reselection
-    provider_authority_effect: exact-libxdamage-and-atomic-at-spi2-bounded-providers-accepted-no-composition-target-service-or-activation-effect
+    provider_authority_effect: exact-libxdamage-atomic-at-spi2-and-atomic-gtk3-core-bounded-providers-accepted-no-complete-composition-target-display-service-module-schema-print-or-activation-effect
     composition_effect: reviewed-blocked-incomplete-retained
     target_manifest_allowed: false
-    next_action: prepare-gtk3-core-3-24-49-atomic-glibc-candidate
+    next_action: review-libselinux-direct-consumer-necessity-and-security-boundary
   prohibited_claims:
     - complete-provider-authority
     - complete-runtime-composition
@@ -440,7 +476,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: prepare-gtk3-core-3-24-49-atomic-glibc-candidate
+  id: review-libselinux-direct-consumer-necessity-and-security-boundary
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:

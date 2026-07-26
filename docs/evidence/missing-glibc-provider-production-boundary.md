@@ -3,101 +3,28 @@
 ## Decision
 
 ```text
-decision state:                  ACCEPTED_PLANNING_ONLY
-reviewed blocker families:       4
-reviewed blocked identities:     7
-provider authority effect:       exact libXdamage bounded provider accepted separately
-composition effect:              NONE; REVIEWED_BLOCKED_INCOMPLETE retained
-target/materialization effect:   NONE
-first completed production lane:  libXdamage recipe/candidate and bounded provider review
+planning decision:             ACCEPTED_PLANNING_ONLY
+reviewed families:             4
+completed production lanes:    libXdamage, atomic AT-SPI2/ATK, atomic GTK 3 core
+remaining family:              libSELinux necessity review only
+immediate build authorized:    NO
+libSELinux build authorized:   NO
+composition:                   REVIEWED_BLOCKED_INCOMPLETE
+target/activation:             blocked
 ```
 
-Read-only package and recipe discovery is complete. The absence of approved Termux glibc packages is not solved by copying ordinary Termux/bionic bytes, Debian oracle bytes, Android platform libraries, or by treating source compatibility as produced-artifact authority. This decision selects bounded production lanes and evidence gates only. It does not build, package, publish, install, populate, deploy, mutate policy, start services, or activate a selected generation.
+The absence of an approved package never authorizes copying bionic, Debian-oracle or Android platform bytes. Production recipes and local artifacts remain Class B and Class C claims respectively until separately reviewed.
 
-## Claim layering under ADR 0005
+## Completed lanes
 
-Every production lane has two distinct claims:
+1. Exact project-produced `libXdamage.so.1.1.0` has bounded GTK 3.24.49 GDK X11 damage-extension authority.
+2. Exact atomic ATK/ATK-bridge/AT-SPI 2.56.2 family has bounded GTK accessibility library-linkage authority; service metadata and helpers remain inactive.
+3. Exact atomic GTK 3.24.49 `libgdk-3.so.0.2417.32`/`libgtk-3.so.0.2417.32` pair has bounded core library authority. Package-wide development, executable, module, schema, print, display and service surfaces remain excluded.
 
-```text
-recipe and platform adaptation contract
-    -> Class B reference-adapted when official source is retained and deviations are narrow and explicit
+Each lane retains exact source, recipe, producing, package/member, dependency, loader, update and rollback coordinates. Completion does not inherit authority to the next family or to composition/target/activation.
 
-locally produced package and ELF bytes
-    -> Class C independently reproduced until an authoritative upstream glibc repository publishes and signs the exact package
-```
+## Remaining libSELinux boundary
 
-If an accepted upstream Termux glibc repository later publishes the exact package from the reviewed contribution, consumption may be reassessed as Class A or Class B. A local Class C candidate never becomes reference-consumed merely because its recipe was proposed upstream. The selected runtime composition remains Class D and blocked until every provider is separately accepted.
+Do not produce a glibc `libselinux.so.1` candidate until exact direct consumers and imported symbols are identified and the feature cannot be removed or reselected. A separate necessity/security review must cover libsepol/PCRE2 closure, policy stores, filesystem contexts, absent Android policy paths, and proof that validation does not load policy, relabel filesystems, change enforcing state or mutate Android state.
 
-## Version and identity policy
-
-The current selected composition is version-locked. A candidate closes an existing row only when it preserves the selected source/member contract:
-
-```text
-libXdamage:  1.1.6 / libXdamage.so.1.1.0 / libXdamage.so.1
-AT-SPI2:    2.56.2 / three selected ATK bridge, ATK and AT-SPI members
-GTK 3:      3.24.49 / libgdk-3.so.0.2417.32 and libgtk-3.so.0.2417.32
-libSELinux: 3.8.1 / libselinux.so.1
-```
-
-A newer upstream or ordinary Termux package is a reselection input, not a drop-in closure. It requires regenerating the selected identity set and repeating dependency, collision and consumer review.
-
-## Family decisions
-
-### 1. libXdamage — first admissible production lane
-
-Preferred lane: contribute a pinned `gpkg/libxdamage` recipe to the approved Termux glibc recipe project, using upstream `libXdamage 1.1.6` and the retained source SHA-256 `52733c1f5262fca35f64e7d5060c6fcd81a880ba8e1e65c9621cf0727afb5d11`. The ordinary Termux 1.1.6 recipe is reference evidence for source and dependency semantics only.
-
-The recipe/adaptation claim is Class B. Any locally built `.deb` and `libXdamage.so.1.1.0` are Class C until published by the approved supplier. This is the first production lane because it is a single leaf member with a small accepted closure: exact `libX11.so.6`, exact `libXfixes.so.3`, libc/loader, and build-only X.Org protocol data.
-
-Required acceptance gates:
-
-- exact source digest, recipe tree and complete adaptation diff;
-- recorded toolchain, environment, producing invocation and package manifest;
-- exact package/member digest, AArch64 machine, SONAME and alias chain;
-- direct `DT_NEEDED` closure to accepted providers only;
-- no RPATH/RUNPATH or cross-world path;
-- bounded symbol/load test and GTK 3.24.49 GDK X11 consumer-binding review;
-- package update, removal and rollback contract.
-
-Rejected as durable lanes: copying the bionic or Debian ELF; creating a cross-world alias; retaining a project-only package indefinitely without first attempting the upstream recipe contribution. A temporary local Class C candidate is allowed only as evidence for the contribution.
-
-### 2. AT-SPI2/ATK — bounded atomic provider accepted
-
-Preferred lane: one pinned `at-spi2-core 2.56.2` glibc recipe contribution that produces the three selected libraries as an atomic family. The recipe/adaptation claim is Class B; locally produced archives and members are Class C. Splitting the three members across unrelated source or update lifecycles is rejected.
-
-This lane completed with one exact Class B recipe, one exact Class C package/three-member record, and one separate bounded Class B provider decision. The accepted scope is GTK 3.24.49 accessibility library linkage only. All seven activation metadata files remain disabled and the two helpers remain non-executed. Library authority does not imply bus ownership, registry-daemon acceptance, accessibility enablement, schema installation or service activation.
-
-Rejected lanes: bionic metapackage reuse, installed-byte copying, service startup as functional proof, or accepting only one or two members of the coupled family.
-
-### 3. GTK 3 core — deferred atomic contribution lane
-
-Preferred lane: one pinned GTK `3.24.49` glibc recipe contribution from exact upstream commit `198aeace1e9e119c77f4d669bd8efdf337828ad1`, producing `libgdk-3.so.0.2417.32` and `libgtk-3.so.0.2417.32` atomically. The recipe/configuration claim is Class B; locally produced package bytes are Class C.
-
-The required libXdamage and AT-SPI2/ATK bounded provider decisions are now available, so this lane is authorized for separate candidate preparation. Backend, accessibility, input, printing, portal, theme, settings, module and service choices must be explicit. A changed backend set is an adaptation and cannot be inferred from ordinary Termux GTK. Acceptance requires exact source/recipe/toolchain/output records, both member and alias identities, GTK-to-GDK direct binding, complete dependency closure, controlled load/init and minimal surface tests, collision review and coordinated update/rollback.
-
-Rejected lanes: separately versioning GDK and GTK; copying bionic or Debian members; accepting successful application launch as package or backend authority; silently disabling or enabling optional backends.
-
-### 4. libSELinux — production deferred pending necessity proof
-
-Preferred disposition: do not produce a glibc libSELinux candidate until the exact selected consumer edge and required symbol/semantic surface are identified. If the dependency is removable by reselection or rebuilding the consumer without SELinux support, that narrower path is preferred.
-
-Only after direct necessity is proven may a separate decision authorize a pinned `libselinux 3.8.1` recipe contribution based on authoritative SELinux userspace source and the exact selected Debian source lineage. The recipe/adaptation claim would be Class B; every locally produced member would remain Class C. The gate must include libsepol/PCRE2 closure, policy-store and filesystem-context assumptions, behavior when Android policy paths are absent, exact consumer calls, and proof that tests do not load policy, relabel filesystems, change enforcing state or mutate Android platform state.
-
-Rejected lanes: Android `libandroid-selinux` substitution, `/system` library reuse, a cross-world alias, a custom compatibility shim, or broad SELinux functionality claims without consumer-bounded evidence. This family has no build authorization from this decision.
-
-## Production order
-
-```text
-1. libXdamage Class B recipe, isolated Class C candidate and bounded provider decision — complete
-2. AT-SPI2/ATK atomic Class B recipe, Class C candidate family and bounded provider decision — complete; service authority excluded
-3. prepare the atomic GTK 3 GDK/GTK recipe contribution and candidate pair
-4. revisit libSELinux only after direct-consumer necessity and symbol semantics are proven
-```
-
-The order is an evidence and dependency order, not authority inheritance. Completion of one lane does not accept the next lane or the composition.
-
-## Stop and reopening rules
-
-Stop a lane when exact source lineage, adaptation necessity, dependency closure, license/distribution boundary, atomicity, functional validation or rollback cannot be bounded. Do not widen the collector or combine families merely to continue execution.
-
-The first lane has bounded libXdamage provider authority. The second lane now has an exact atomic Class B recipe, retained Class C package/member record, and bounded provider authority for GTK accessibility library linkage only; supplier publication, service authority, installation, target population, D-Bus/accessibility activation, deployment, and activation remain unaccepted. The next task is `prepare-gtk3-core-3-24-49-atomic-glibc-candidate`.
+Android `libandroid-selinux`, `/system` libraries, cross-world aliases and compatibility shims are rejected. The next task is `review-libselinux-direct-consumer-necessity-and-security-boundary`; it grants no build authorization.
