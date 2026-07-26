@@ -1,47 +1,47 @@
-# Active task: close three missing coordinates, upgrade legacy result indexes and census member sizes
+# Active task: close exact Pixman member size and review the population intervention-lift gate
 
-> Task ID: `close-three-missing-result-coordinates-upgrade-legacy-indexes-and-census-member-sizes`
+> Task ID: `close-exact-pixman-member-size-and-review-population-intervention-lift-gate`
 >
-> Expected state on completion: Fontconfig, HarfBuzz and libxkbcommon have immutable retained-result coordinates; all twenty-four legacy authority archives have a digest-index upgrade or explicit replacement receipt; and all 41 concrete members have exact byte sizes. No provider bytes are acquired or populated.
+> Expected state on completion: the exact selected `libpixman-1.so.0.46.4` member size and receipt overhead are bound, the final resource budget is calculated, and the intervention-lift prerequisites are reviewed without creating a generation root or populating a target.
 
 ## Objective
 
-Close the remaining verification blockers after `RETAINED-SUPPLY-COORDINATE-GENERATION-CONTRACT-001`. Preserve the seven accepted generation contracts while upgrading supply evidence only.
+Close the sole remaining member-size gap after all retained-result coordinate and result-index gaps have been closed. Re-evaluate the intervention only from exact size, budget and generation-contract evidence.
 
 ## Why now
 
-Twenty-four formerly blocked objects now have exact Drive file IDs and outer SHA-256 values, but their legacy transaction archives lack `result-index.sha256`. Three provider families still lack a retained result coordinate. The generation-root, publication, receipt, rollback and cleanup contracts are now bounded, but exact object-size input is still missing.
+Fourteen bindings retain existing digest authority, twenty-three use the indexed v101 replacement result, and four FreeType transitive rows use an append-only legacy index receipt. Forty exact member sizes sum to 28,586,192 bytes. Pixman alone remains open, so the final resource budget is not yet valid.
 
 ## In scope
 
-- locate immutable Fontconfig, HarfBuzz and libxkbcommon result coordinates;
-- define a non-mutating index-upgrade receipt for each legacy archive or bind a newer indexed replacement result;
-- record exact size for all 41 concrete members from trusted artifact/member evidence;
-- recompute the resource preflight budget without creating the generation root.
+- locate exact size evidence for selected `libpixman-1.so.0.46.4` bound to SHA-256 `cab54c7f8e4c3a5c1980aa7564b9321114418f2d3c6fa37a3c0723f9f22e1eb2`;
+- census receipt overhead;
+- calculate exact generation preflight bytes with the accepted 100% margin;
+- review all intervention-lift prerequisites and decide whether materializer design review may begin.
 
 ## Out of scope
 
-Provider-byte download or extraction, directory or symlink creation, materializer implementation, package installation, target population, selector publication, deployment, loader mutation, service/module/schema/cache generation, display execution or activation.
+Using package size as member size, using Pixman 0.44.2 as the selected 0.46.4 member, downloading or extracting provider bytes, creating directories or symlinks, writing a materializer, package installation, target population, selector publication, deployment or activation.
 
 ## Required reading
 
+- `docs/evidence/selected-target-indexed-replacement-member-size-review.md`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-target-member-size-census.tsv`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-target-indexed-replacement-review.tsv`
 - `docs/evidence/selected-target-retained-result-coordinate-generation-contract-review.md`
-- `experiments/glibc/selected-obsidian-provider-authority/review/selected-target-retained-result-coordinate-review.tsv`
-- `experiments/glibc/selected-obsidian-provider-authority/review/selected-target-generation-root-contract-review.tsv`
-- `docs/evidence/selected-target-population-intervention-supply-binding-review.md`
 
 ## Pending external inputs
 
-None for bounded coordinate search and metadata review. A missing immutable result remains a blocker and never creates acquisition or reproduction authority.
+Exact selected Pixman member-size evidence. Absence remains a blocker and does not authorize artifact acquisition or reproduction.
 
 ## Stop conditions
 
-Stop if an archive digest cannot be verified, if an index upgrade would rewrite historical evidence, if size evidence is not bound to the exact member digest, or if any step would create or modify target/runtime state.
+Stop if Pixman evidence is for another version or digest, if package/archive size is substituted for member size, if receipt overhead is guessed, or if validation would mutate target/runtime state.
 
 ## Completion criteria
 
-A separate read-only review records three coordinates or explicit terminal blockers, twenty-four append-only index-upgrade receipts or indexed replacements, and exact 41-member sizes. Population and materializer design remain separate decisions.
+The exact 41-member byte sum, receipt overhead and final margin budget are recorded, and a separate decision retains or conditionally lifts the intervention for materializer design only. No target is populated.
 
 ## Next valid action
 
-Perform metadata-only coordinate, index-upgrade and size census work. Do not acquire or populate provider bytes.
+Perform a read-only exact Pixman-size and final-budget review. Do not acquire or populate provider bytes.

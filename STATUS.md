@@ -411,3 +411,8 @@ The exact 82-row non-mutating target policy remains accepted and unpopulated. A 
 
 
 Current supply-evidence status: 14 existing digest-bound results, 24 legacy Drive coordinates with outer SHA verified but result-index upgrades open, and 3 missing coordinates. Seven non-live generation contracts are defined; population and materializer design remain blocked.
+
+
+## Indexed supply replacement and member-size review
+
+All retained-result coordinate and result-index gaps are closed as metadata evidence: 14 existing digest-bound inputs, 23 indexed v101 replacements and 4 append-only FreeType legacy index upgrades. Forty exact member sizes sum to 28,586,192 bytes. Exact selected Pixman size and receipt overhead remain open, so intervention, population and materializer design remain blocked.

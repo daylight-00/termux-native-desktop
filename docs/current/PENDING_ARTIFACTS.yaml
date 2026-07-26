@@ -1,15 +1,12 @@
 schema_version: 1
-state_version: 2026-07-26.07
+state_version: 2026-07-26.08
 
 blocking:
-  - id: missing-retained-result-coordinates
-    state: open
-    note: Fontconfig, HarfBuzz and libxkbcommon lack immutable retained-result coordinates.
-  - id: legacy-result-index-upgrades
-    state: open
-    note: Twenty-four coordinate-bound legacy authority archives lack result-index.sha256 and require append-only upgrade receipts or indexed replacements.
-  - id: selected-member-size-census
-    state: open
-    note: Exact byte sizes for all 41 concrete members are required before the resource preflight budget can be computed.
+  - id: exact-selected-pixman-member-size
+    state: exact-member-size-evidence-missing
+    note: Exact size for libpixman-1.so.0.46.4 with SHA-256 cab54c7f8e4c3a5c1980aa7564b9321114418f2d3c6fa37a3c0723f9f22e1eb2 is required. Package or archive size is not a substitute.
+  - id: generation-receipt-overhead-census
+    state: not-yet-censused
+    note: Final resource budget remains blocked until receipt and index overhead is exact.
 
 non_blocking: []

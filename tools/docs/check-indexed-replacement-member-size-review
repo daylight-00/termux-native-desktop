@@ -1,0 +1,21 @@
+#!/usr/bin/env python3
+from pathlib import Path
+import csv,subprocess,tempfile,sys,hashlib
+root=Path(__file__).resolve().parents[2];review=root/'experiments/glibc/selected-obsidian-provider-authority/review'
+def read(p):
+ with p.open(newline='',encoding='utf-8') as f:return list(csv.DictReader(f,delimiter='\t'))
+with tempfile.TemporaryDirectory() as td:
+ subprocess.run(['python3',str(root/'experiments/glibc/selected-obsidian-provider-authority/recipe/generate-indexed-replacement-member-size-review.py'),'--repo-root',str(root),'--output-root',td],check=True)
+ for n in ['selected-target-indexed-replacement-review.tsv','selected-target-member-size-census.tsv','selected-target-index-size-review-metadata.tsv','freetype-legacy-result-index-upgrade.tsv']:
+  if (review/n).read_bytes()!=(Path(td)/'experiments/glibc/selected-obsidian-provider-authority/review'/n).read_bytes():raise SystemExit('generated drift '+n)
+idx=read(review/'selected-target-indexed-replacement-review.tsv');sizes=read(review/'selected-target-member-size-census.tsv');meta={r['key']:r['value'] for r in read(review/'selected-target-index-size-review-metadata.tsv')}
+checks={
+ 'index_rows_41':len(idx)==41,'existing_14':sum(r['closure_kind']=='EXISTING_DIGEST_BOUND_UNCHANGED' for r in idx)==14,'v101_23':sum(r['closure_kind']=='V101_INDEXED_REPLACEMENT' for r in idx)==23,'append_4':sum(r['closure_kind']=='APPEND_ONLY_LEGACY_INDEX_UPGRADE' for r in idx)==4,
+ 'all_coordinate_index_closed':all(r['coordinate_state']=='CLOSED' and r['index_state'].startswith('CLOSED_') for r in idx),'status_defect_explicit':all('OUTER_TRANSACTION_RC_1_STATUS_SURFACE_DEFECT_RECORDED' in r['status_surface_boundary'] for r in idx if r['closure_kind']=='V101_INDEXED_REPLACEMENT'),
+ 'sizes_41':len(sizes)==41,'exact_40':sum(r['size_state']=='EXACT' for r in sizes)==40,'pixman_open_only':[r['provider_review_id'] for r in sizes if r['size_state']!='EXACT']==['PIXMAN-CAIRO-PREQ-PROV-001'],'known_sum':sum(int(r['member_size']) for r in sizes if r['size_state']=='EXACT')==28586192,
+ 'meta_counts':meta.get('remaining_coordinate_gap_count')=='0' and meta.get('remaining_result_index_gap_count')=='0' and meta.get('exact_member_size_count')=='40' and meta.get('open_member_size_count')=='1','all_authority_no':all(meta.get(k)=='NO' for k in ['population_authorized','materializer_design_authorized','byte_acquisition_authorized','generation_root_creation_authorized']),'intervention_retained':meta.get('intervention_state')=='RETAINED','next_action':meta.get('next_action')=='close-exact-pixman-member-size-and-review-population-intervention-lift-gate',
+ 'receipt_digest':hashlib.sha256((review/'freetype-legacy-result-index-upgrade.tsv').read_bytes()).hexdigest()=='eed95221332a7dd309788b72e651ccb7c40ca91ffe6f7f3ea231433804b787f7'}
+texts='\n'.join((root/p).read_text() for p in ['docs/current/ACTIVE_TASK.md','docs/current/BRIEF.md','docs/current/STATE.yaml','STATUS.md','docs/evidence/selected-target-indexed-replacement-member-size-review.md'])
+checks['no_widening']=not any(x in texts for x in ['population authorized:          YES','materializer design authorized: YES','byte acquisition authorized:    YES'])
+if not all(checks.values()):print({k:v for k,v in checks.items() if not v},file=sys.stderr);raise SystemExit(1)
+print('indexed replacement and member-size review: PASS: 14 existing, 23 indexed replacements, 4 append-only upgrades, 40 exact sizes, Pixman open, intervention retained')
