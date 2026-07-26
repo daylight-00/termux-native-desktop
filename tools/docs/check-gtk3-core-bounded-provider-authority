@@ -24,17 +24,17 @@ if not errors:
   matches=[r for r in mem if r['provider_review_id']=='GTK3-CORE-PROV-001' and r['member_basename']==name and r['member_sha256']==sha and r['composition_inclusion']=='INCLUDED_SELECTED_GTK_SCOPE']
   if len(matches)!=1:errors.append(f'accepted composition member missing or duplicated: {name}')
  if any(g['identity_label'] in wanted for g in gaps):errors.append('accepted GTK3 core identity remains in gaps')
- if [g['identity_label'] for g in gaps]!=['libselinux.so.1']:errors.append(f'unexpected remaining gaps: {[g["identity_label"] for g in gaps]}')
- for k,v in {'accepted_provider_root_count':'31','accepted_member_count':'42','included_member_count':'41','deferred_member_count':'1','unresolved_selected_identity_count':'0','next_review_tranche':'COMPLETE_SELECTED_PROVIDER_COMPOSITION_BOUNDARY_ACCEPTANCE_REVIEW','target_manifest_allowed':'NO'}.items():
+ if gaps:errors.append(f'unexpected remaining gaps: {[g["identity_label"] for g in gaps]}')
+ for k,v in {'accepted_provider_root_count':'31','accepted_member_count':'42','included_member_count':'41','deferred_member_count':'1','unresolved_selected_identity_count':'0','next_review_tranche':'NON_MUTATING_SELECTED_TARGET_MANIFEST_GENERATION_AND_REVIEW','target_manifest_allowed':'NO'}.items():
   if meta.get(k)!=v:errors.append(f'composition metadata {k}: expected {v}, got {meta.get(k)!r}')
  for cid,cls in [('PCC-GTK3-CORE-PRODUCING','C'),('PCC-GTK3-CORE-PROVIDER','B')]:
   r=claims.get(cid)
   if not r or r['adr_class']!=cls:errors.append(f'claim missing or class mismatch: {cid}')
  if claims.get('PCC-GTK3-CORE-PROVIDER',{}).get('classification_state')!='BOUNDED_PROVIDER_AUTHORITY_ACCEPTED':errors.append('provider claim not accepted')
- for k,v in {'claim_count':'95','class_b_claim_count':'52','class_c_claim_count':'4','provider_authority_claim_count':'31','provider_review_count':'24','provider_authority_accepted_count':'24','provider_authority_open_count':'7','next_review_tranche':'COMPLETE_SELECTED_PROVIDER_COMPOSITION_BOUNDARY_ACCEPTANCE_REVIEW'}.items():
+ for k,v in {'claim_count':'95','class_b_claim_count':'52','class_c_claim_count':'4','provider_authority_claim_count':'31','provider_review_count':'24','provider_authority_accepted_count':'24','provider_authority_open_count':'7','next_review_tranche':'NON_MUTATING_SELECTED_TARGET_MANIFEST_GENERATION_AND_REVIEW'}.items():
   if cmeta.get(k)!=v:errors.append(f'claim metadata {k}: expected {v}, got {cmeta.get(k)!r}')
  doc=required[0].read_text();state=required[8].read_text();active=required[9].read_text();brief=required[10].read_text();catalog=required[11].read_text();index=required[12].read_text();status=required[13].read_text()
- markers=[('decision','ACCEPTED_BOUNDED_PROVIDER' in doc),('atomicity','Partial GDK-only or GTK-only acceptance is prohibited' in doc),('package exclusion','package-wide tools/modules/data/development surfaces excluded' in doc.lower() and 'unversioned development aliases are outside this provider decision' in doc.lower()),('state','gtk3_core_provider_authority:' in state),('task','libselinux' in active.lower() and 'build authorization' in active.lower()),('brief','selected identity gaps: 0' in brief),('catalog','gtk3-core-bounded-provider-authority\tevidence\tcurrent\tcanonical' in catalog),('index','gtk3-core-bounded-provider-authority.md' in index),('status','GTK 3.24.49' in status and 'libselinux.so.1' in status)]
+ markers=[('decision','ACCEPTED_BOUNDED_PROVIDER' in doc),('atomicity','Partial GDK-only or GTK-only acceptance is prohibited' in doc),('package exclusion','package-wide tools/modules/data/development surfaces excluded' in doc.lower() and 'unversioned development aliases are outside this provider decision' in doc.lower()),('state','gtk3_core_provider_authority:' in state),('task','Task ID: `generate-and-review-non-mutating-selected-target-manifest`' in active and 'does not accept target population' in active.lower()),('brief','selected identity gaps: 0' in brief),('catalog','gtk3-core-bounded-provider-authority\tevidence\tcurrent\tcanonical' in catalog),('index','gtk3-core-bounded-provider-authority.md' in index),('status','GTK 3.24.49' in status and 'libselinux.so.1' in status)]
  for label,ok in markers:
   if not ok:errors.append(f'missing marker: {label}')
  for token in ['target population: accepted','activation: accepted','service authority: accepted','approved supplier publication: accepted']:
@@ -42,5 +42,5 @@ if not errors:
 if errors:
  for e in errors:print('gtk3-core-provider-authority: FAIL:',e,file=sys.stderr)
  raise SystemExit(1)
-print('gtk3-core-provider-authority: PASS: exact atomic GDK/GTK runtime pair is bounded to selected GTK 3.24.49 core linkage; libselinux remains the only composition gap and target, service, module, schema, printing, deployment, and activation authority remain excluded')
+print('gtk3-core-provider-authority: PASS: exact atomic GDK/GTK runtime pair is bounded to selected GTK 3.24.49 core linkage; the libselinux oracle edge remains eliminated and target, service, module, schema, printing, deployment, and activation authority remain excluded')
 PY

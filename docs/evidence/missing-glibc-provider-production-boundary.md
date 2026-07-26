@@ -9,7 +9,7 @@ completed production lanes:    libXdamage, atomic AT-SPI2/ATK, atomic GTK 3 core
 remaining family:              libSELinux necessity review only
 immediate build authorized:    NO
 libSELinux build authorized:   NO
-composition:                   REVIEWED_COMPLETE_PROVIDER_SET_TARGET_MANIFEST_NOT_ACCEPTED
+composition:                   ACCEPTED_BOUNDED_COMPLETE_SELECTED_PROVIDER_COMPOSITION
 target/activation:             blocked
 ```
 
@@ -27,7 +27,7 @@ Each lane retains exact source, recipe, producing, package/member, dependency, l
 
 Do not produce a glibc `libselinux.so.1` candidate until exact direct consumers and imported symbols are identified and the feature cannot be removed or reselected. A separate necessity/security review must cover libsepol/PCRE2 closure, policy stores, filesystem contexts, absent Android policy paths, and proof that validation does not load policy, relabel filesystems, change enforcing state or mutate Android state.
 
-Android `libandroid-selinux`, `/system` libraries, cross-world aliases and compatibility shims are rejected. The libSELinux lane was closed by dependency elimination through exact libmount consumer reselection. The next task is `review-and-accept-complete-selected-provider-composition-boundary`; it grants no target-manifest or population authority.
+Android `libandroid-selinux`, `/system` libraries, cross-world aliases and compatibility shims are rejected. The libSELinux lane was closed by dependency elimination through exact libmount consumer reselection. The bounded composition is now accepted by `SELECTED-COMPOSITION-ACCEPT-001`. The next task is `generate-and-review-non-mutating-selected-target-manifest`; it grants no target-population or activation authority.
 
 
 ## libSELinux lane disposition

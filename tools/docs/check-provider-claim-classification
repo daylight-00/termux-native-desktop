@@ -89,7 +89,7 @@ expected_meta={
     'no_token_semantic_review_count':'7','no_token_confirmed_a_count':'7',
     'no_token_reclassified_b_count':'0','provider_review_count':'24',
     'provider_authority_accepted_count':'24','provider_authority_open_count':'7',
-    'authority_effect':'TWENTY_FOUR_BOUNDED_PROVIDER_CLAIMS_ACCEPTED_INCLUDING_EXACT_PROJECT_LIBXDAMAGE_AT_SPI2_ATOMIC_FAMILY_AND_GTK3_CORE_ATOMIC_PAIR_NO_COMPLETE_COMPOSITION_TARGET_DISPLAY_SERVICE_MODULE_SCHEMA_PRINT_OR_ACTIVATION_EFFECT',
+    'authority_effect':'TWENTY_FOUR_BOUNDED_PROVIDER_CLAIMS_AND_ONE_BOUNDED_APPLICATION_RUNTIME_COMPOSITION_ACCEPTED_NO_TARGET_DISPLAY_SERVICE_MODULE_SCHEMA_PRINT_POPULATION_OR_ACTIVATION_EFFECT',
     'oj001_disposition':'RUNPATH_FREE_COMPATIBILITY_PROVIDER_ACCEPTED_BOUNDED_GDKPIXBUF_JPEG_SCOPE',
     'oj001_required_identity':'libjpeg.so.62',
     'oj001_candidate_state':'NO_EXACT_REPOSITORY_SONAME_62_ARTIFACT;PROJECT_RUNPATH_FREE_V6B_CANDIDATE_BOUNDED_PROVIDER_AUTHORITY_ACCEPTED',
@@ -112,7 +112,7 @@ expected_meta={
     'oj001_provider_result_sha256':'4e546ac1ef2a92f3301dd51ca2328d6901a05e309da78b6d08b26211d9b621e3',
     'oj001_provider_matrix_pass_count':'6',
     'oj001_provider_decision':'ACCEPTED_BOUNDED_PROVIDER',
-    'next_review_tranche':'COMPLETE_SELECTED_PROVIDER_COMPOSITION_BOUNDARY_ACCEPTANCE_REVIEW',
+    'next_review_tranche':'NON_MUTATING_SELECTED_TARGET_MANIFEST_GENERATION_AND_REVIEW',
 }
 for key,val in expected_meta.items():
     if metadata.get(key)!=val:
@@ -136,7 +136,8 @@ for row in claims:
     if 'ACCEPTED' in row['authority_effect']:
         provider_ok=(row['claim_type']=='PROVIDER_AUTHORITY' and (row['subject_id'] in provider_review_by_root or row['subject_id'] in provider_review_ids) and row['classification_state']=='BOUNDED_PROVIDER_AUTHORITY_ACCEPTED')
         adaptation_ok=(row['claim_type']=='ADAPTATION_SEMANTICS' and (row['subject_id'] in provider_review_by_root or row['subject_id'] in provider_review_ids) and row['authority_effect']=='ADAPTATION_CLASSIFICATION_ACCEPTED_NO_COMPOSITION_TARGET_OR_ACTIVATION_EFFECT' and row['claim_id'] in {'PCC-GLIB-ADAPTATION','PCC-LIBPNG-ADAPTATION','PCC-UTIL-LINUX-ADAPTATION','PCC-LIBXCURSOR-ADAPTATION','PCC-LIBTHAI-ADAPTATION','PCC-LIBDATRIE-ADAPTATION','PCC-LIBCLOUDPROVIDERS-ADAPTATION','PCC-FRIBIDI-ADAPTATION','PCC-FREETYPE-ADAPTATION','PCC-LIBXKBCOMMON-ADAPTATION','PCC-HARFBUZZ-ADAPTATION','PCC-FONTCONFIG-ADAPTATION','PCC-LIBCAIRO-ADAPTATION'})
-        if not (provider_ok or adaptation_ok):
+        composition_ok=(row['claim_id']=='PCC-GLOBAL-COMPOSITION' and row['claim_type']=='COMPOSITION' and row['classification_state']=='BOUNDED_COMPOSITION_ACCEPTED_TARGET_MANIFEST_NOT_GENERATED' and row['authority_effect']=='BOUNDED_APPLICATION_RUNTIME_COMPOSITION_ACCEPTED_NO_TARGET_POPULATION_OR_ACTIVATION_EFFECT')
+        if not (provider_ok or adaptation_ok or composition_ok):
             errors.append(f"{row['claim_id']}: unreviewed claim has authority effect")
     if row['authority_effect'] in {'PROVIDER_AUTHORITY','TARGET_POPULATION','ACTIVATION'}:
         errors.append(f"{row['claim_id']}: invalid broad authority effect")
@@ -203,12 +204,12 @@ checks=[
     ('state version','state_version:' in state),
     ('claim count state','total: 95' in state),
     ('SUP-02 state','required_now: 0' in state),
-    ('next task','Task ID: `review-and-accept-complete-selected-provider-composition-boundary`' in active),
-    ('brief classification','95 claims' in brief),
+    ('next task','Task ID: `generate-and-review-non-mutating-selected-target-manifest`' in active),
+    ('brief classification','claims: 95' in brief),
     ('catalog row','provider-claim-classification\tevidence\tcurrent\tcanonical' in catalog),
-    ('status next phase','exact libXdamage, atomic AT-SPI2 core, and atomic GTK 3.24.49 GDK/GTK project candidates accepted as bounded providers' in status and 'libselinux.so.1' in status),
+    ('status next phase','bounded selected provider composition accepted' in status and 'target manifest not generated' in status),
     ('outside inventory prerequisites','exact `libpixman-1.so.0.46.4` is additionally accepted as a bounded Cairo prerequisite' in (root/'docs/evidence/provider-claim-classification.md').read_text() and 'exact `libgraphite2.so.3.2.1` is accepted as a bounded HarfBuzz Graphite-shaping prerequisite' in (root/'docs/evidence/provider-claim-classification.md').read_text()),
-    ('zero gaps and composition acceptance pending','ZERO_SELECTED_PROVIDER_IDENTITY_GAPS' in next(r['remaining_gap'] for r in claims if r['claim_id']=='PCC-GLOBAL-COMPOSITION') and 'LIBSELINUX_ORACLE_EDGE_ELIMINATED' in next(r['remaining_gap'] for r in claims if r['claim_id']=='PCC-GLOBAL-COMPOSITION') and 'COMPOSITION_ACCEPTANCE_NOT_YET_GRANTED' in next(r['remaining_gap'] for r in claims if r['claim_id']=='PCC-GLOBAL-COMPOSITION')),
+    ('zero gaps and bounded composition accepted','ZERO_SELECTED_PROVIDER_IDENTITY_GAPS' in next(r['remaining_gap'] for r in claims if r['claim_id']=='PCC-GLOBAL-COMPOSITION') and 'LIBSELINUX_ORACLE_EDGE_ELIMINATED' in next(r['remaining_gap'] for r in claims if r['claim_id']=='PCC-GLOBAL-COMPOSITION') and 'BOUNDED_COMPOSITION_ACCEPTED' in next(r['remaining_gap'] for r in claims if r['claim_id']=='PCC-GLOBAL-COMPOSITION') and 'TARGET_MANIFEST_NOT_GENERATED' in next(r['remaining_gap'] for r in claims if r['claim_id']=='PCC-GLOBAL-COMPOSITION')),
     ('disposition catalog','libjpeg-so-62-provider-candidate-disposition\tevidence\tcurrent\tcanonical' in catalog),
 ]
 for label,ok in checks:

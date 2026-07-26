@@ -1,24 +1,27 @@
 #!/usr/bin/env bash
 set -euo pipefail
 ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
-TMP_BASE=${TND_TEST_TMPDIR:-${TMPDIR:-$ROOT/.tmp}}; mkdir -p "$TMP_BASE"; FIXTURE=$(mktemp -d "$TMP_BASE/provider-composition.XXXXXX")
-cleanup(){ chmod -R u+w "$FIXTURE" 2>/dev/null || true; rm -rf "$FIXTURE"; }; trap cleanup EXIT HUP INT TERM
+TMP_BASE=${TND_TEST_TMPDIR:-${TMPDIR:-$ROOT/.tmp}}
+mkdir -p "$TMP_BASE"
+FIXTURE=$(mktemp -d "$TMP_BASE/provider-composition.XXXXXX")
+cleanup(){ chmod -R u+w "$FIXTURE" 2>/dev/null || true; rm -rf "$FIXTURE"; }
+trap cleanup EXIT HUP INT TERM
 git -C "$ROOT" archive HEAD | tar -xf - -C "$FIXTURE"
 bash "$FIXTURE/tools/docs/check-selected-provider-composition-review" >/dev/null
 META=experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-composition-metadata.tsv
 restore(){ git -C "$ROOT" show HEAD:"$META" > "$FIXTURE/$META"; }
-python3 - "$FIXTURE/$META" <<'PY'
+python3 - "$FIXTURE/$META" <<'PY1'
 from pathlib import Path
 import sys
-p=Path(sys.argv[1]);s=p.read_text().replace('composition_decision\tREVIEWED_COMPLETE_PROVIDER_SET_TARGET_MANIFEST_NOT_ACCEPTED','composition_decision\tACCEPTED');p.write_text(s)
-PY
-if bash "$FIXTURE/tools/docs/check-selected-provider-composition-review" >/dev/null 2>&1; then echo 'composition smoke: incomplete set accepted' >&2; exit 1; fi
+p=Path(sys.argv[1]);p.write_text(p.read_text().replace('composition_decision\tACCEPTED_BOUNDED_COMPLETE_SELECTED_PROVIDER_COMPOSITION','composition_decision\tREVIEWED_COMPLETE_PROVIDER_SET_TARGET_MANIFEST_NOT_ACCEPTED'))
+PY1
+if bash "$FIXTURE/tools/docs/check-selected-provider-composition-review" >/dev/null 2>&1; then echo 'composition smoke: acceptance removed' >&2; exit 1; fi
 restore
-python3 - "$FIXTURE/$META" <<'PY'
+python3 - "$FIXTURE/$META" <<'PY2'
 from pathlib import Path
 import sys
-p=Path(sys.argv[1]);s=p.read_text().replace('target_manifest_allowed\tNO','target_manifest_allowed\tYES');p.write_text(s)
-PY
+p=Path(sys.argv[1]);p.write_text(p.read_text().replace('target_manifest_allowed\tNO','target_manifest_allowed\tYES'))
+PY2
 if bash "$FIXTURE/tools/docs/check-selected-provider-composition-review" >/dev/null 2>&1; then echo 'composition smoke: target generation widened' >&2; exit 1; fi
 restore
 GAPS=experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-composition-gaps.tsv

@@ -48,7 +48,9 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 - [`libjpeg-so-62-gdkpixbuf-diagnostic-matrix-result-review.md`](libjpeg-so-62-gdkpixbuf-diagnostic-matrix-result-review.md) — non-dispositive first diagnostic matrix and corrected loader boundary.
 - [`libjpeg-so-62-loader-isolated-provider-authority.md`](libjpeg-so-62-loader-isolated-provider-authority.md) — exact loader-isolated candidate/oracle controls and bounded GdkPixbuf JPEG provider-authority decision.
 
-- [`selected-obsidian-provider-composition-review.md`](selected-obsidian-provider-composition-review.md) records the current Class D non-materializing composition manifest, 42 exact accepted members, exclusions, collisions and the sole remaining `libselinux.so.1` gap.
+- [`selected-obsidian-provider-composition-review.md`](selected-obsidian-provider-composition-review.md) records the exact zero-gap 42-row review set, 41 included current-scope members, one deferred libtasn1 member, exclusions and collision results.
+
+- [`selected-obsidian-provider-composition-boundary-acceptance.md`](selected-obsidian-provider-composition-boundary-acceptance.md) accepts that exact review set as a bounded Class D application-runtime composition while target paths, population and activation remain blocked.
 
 - [`gdkpixbuf-core-provider-acquisition-result-review.md`](gdkpixbuf-core-provider-acquisition-result-review.md) binds the exact GLib-family and libpng candidate identities, records the missing Termux GdkPixbuf package/recipe, and routes the upstream 2.42.12 scratch build.
 
@@ -86,6 +88,6 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 - [`gtk3-3-24-49-source-coordinate-correction.md`](gtk3-3-24-49-source-coordinate-correction.md) — official tag object/commit and archive correction with archive/tag equivalence, consumer-binding revalidation, and no authority widening.
 - [`libselinux-provider-evidence-blocker.md`](libselinux-provider-evidence-blocker.md) — exact approved-index and pinned-recipe blocker proving that only bionic/Android SELinux boundary implementations are visible and no Termux glibc libSELinux provider candidate is authorized.
 
-- [`missing-glibc-provider-production-boundary.md`](missing-glibc-provider-production-boundary.md) — planning-only production boundary recording completed libXdamage, atomic AT-SPI2/ATK and atomic GTK 3 core lanes, with libSELinux production still withheld pending direct-consumer necessity and security review.
+- [`missing-glibc-provider-production-boundary.md`](missing-glibc-provider-production-boundary.md) — planning-only production boundary recording completed libXdamage, atomic AT-SPI2/ATK and atomic GTK 3 core lanes, and the libSELinux lane closed by exact consumer reselection without production.
 
 - `libselinux-direct-consumer-necessity-review.md`: exact oracle libmount SELinux edge and dependency-elimination-by-selected-consumer-reselection decision.

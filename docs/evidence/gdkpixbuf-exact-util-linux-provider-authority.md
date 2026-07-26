@@ -28,7 +28,7 @@ accepted exact members: 18
 included composition members: 17
 deferred members: 1
 unresolved selected identities: 20
-composition: REVIEWED_COMPLETE_PROVIDER_SET_TARGET_MANIFEST_NOT_ACCEPTED
+composition: ACCEPTED_BOUNDED_COMPLETE_SELECTED_PROVIDER_COMPOSITION
 target manifest allowed: NO
 activation: BLOCKED
 ```

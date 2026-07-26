@@ -31,10 +31,10 @@ if not errors:
     exp={
       'decision_state':'ACCEPTED_PLANNING_ONLY','reviewed_family_count':'4','reviewed_identity_count':'7',
       'first_production_lane':'NONE_ALL_THREE_AUTHORIZED_PRODUCTION_LANES_COMPLETE',
-      'first_task':'REVIEW_AND_ACCEPT_COMPLETE_SELECTED_PROVIDER_COMPOSITION_BOUNDARY',
+      'first_task':'GENERATE_AND_REVIEW_NON_MUTATING_SELECTED_TARGET_MANIFEST',
       'immediate_build_authorized':'NO','libselinux_build_authorized':'NO',
-      'provider_authority_effect':'LIBXDAMAGE_AT_SPI2_ATK_AND_GTK3_CORE_BOUNDED_PROVIDERS_ACCEPTED_LIBSELINUX_ORACLE_EDGE_ELIMINATED_BY_CONSUMER_RESELECTION_NO_COMPOSITION_ACCEPTANCE_TARGET_DISPLAY_SERVICE_MODULE_SCHEMA_PRINT_OR_ACTIVATION_EFFECT',
-      'composition_decision':'REVIEWED_COMPLETE_PROVIDER_SET_TARGET_MANIFEST_NOT_ACCEPTED','target_manifest_allowed':'NO','activation_allowed':'NO'}
+      'provider_authority_effect':'LIBXDAMAGE_AT_SPI2_ATK_AND_GTK3_CORE_BOUNDED_PROVIDERS_AND_BOUNDED_APPLICATION_RUNTIME_COMPOSITION_ACCEPTED_LIBSELINUX_ORACLE_EDGE_ELIMINATED_NO_TARGET_DISPLAY_SERVICE_MODULE_SCHEMA_PRINT_POPULATION_OR_ACTIVATION_EFFECT',
+      'composition_decision':'ACCEPTED_BOUNDED_COMPLETE_SELECTED_PROVIDER_COMPOSITION','target_manifest_allowed':'NO','activation_allowed':'NO'}
     for k,v in exp.items():
         if meta.get(k)!=v: errors.append(f'metadata {k}: expected {v}, got {meta.get(k)!r}')
     doc=(root/'docs/evidence/missing-glibc-provider-production-boundary.md').read_text(); state=(root/'docs/current/STATE.yaml').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); brief=(root/'docs/current/BRIEF.md').read_text(); comp=(root/'docs/evidence/selected-obsidian-provider-composition-review.md').read_text(); catalog=(root/'docs/catalog.tsv').read_text(); status=(root/'STATUS.md').read_text()
@@ -46,11 +46,11 @@ if not errors:
       ('libSELinux no build','`libselinux_build_authorized` remains `NO`' in doc),
       ('state route','missing_glibc_provider_production_boundary:' in state),
       ('state GTK lane','gtk3_core_lane: bounded-atomic-provider-authority-accepted-package-wide-execution-authority-excluded' in state),
-      ('active task','Task ID: `review-and-accept-complete-selected-provider-composition-boundary`' in active),
+      ('active task','Task ID: `generate-and-review-non-mutating-selected-target-manifest`' in active),
       ('brief decision','selected identity gaps: 0' in brief and 'libselinux.so.1' in brief),
-      ('composition next','COMPLETE_SELECTED_PROVIDER_COMPOSITION_BOUNDARY_ACCEPTANCE_REVIEW' in comp),
+      ('composition next','NON_MUTATING_SELECTED_TARGET_MANIFEST_GENERATION_AND_REVIEW' in comp),
       ('catalog','missing-glibc-provider-production-boundary\tevidence\tcurrent\tcanonical' in catalog),
-      ('status','atomic GTK 3.24.49 GDK/GTK project candidates accepted as bounded providers' in status and 'libselinux.so.1' in status)]
+      ('status','atomic GTK 3.24.49 GDK/GTK project candidates accepted as bounded providers' in status and 'libselinux.so.1' in status and 'target manifest not generated' in status)]
     for label,ok in markers:
         if not ok: errors.append(f'missing marker: {label}')
     for forbidden in ['target/materialization effect:   ALLOWED','libselinux_build_authorized\tYES','activation_allowed\tYES']:

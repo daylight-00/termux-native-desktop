@@ -62,4 +62,4 @@ The historical oracle identity remains in provenance ledgers but is no longer an
 
 ## Next valid action
 
-`review-and-accept-complete-selected-provider-composition-boundary`
+`generate-and-review-non-mutating-selected-target-manifest`

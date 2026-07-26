@@ -93,7 +93,7 @@ included selected GTK members: 9 -> 10
 unresolved selected identities:27 -> 26
 ```
 
-At candidate-review time, composition remained `REVIEWED_BLOCKED_INCOMPLETE`; current composition state is `REVIEWED_COMPLETE_PROVIDER_SET_TARGET_MANIFEST_NOT_ACCEPTED`. The next bounded tranche is the exact GLib-family, libpng and transitive libmount/libblkid provider boundary.
+At candidate-review time, composition remained `REVIEWED_BLOCKED_INCOMPLETE`; current composition state is `ACCEPTED_BOUNDED_COMPLETE_SELECTED_PROVIDER_COMPOSITION`. The next bounded tranche is the exact GLib-family, libpng and transitive libmount/libblkid provider boundary.
 
 ## Update and rollback boundary
 

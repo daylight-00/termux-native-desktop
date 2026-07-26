@@ -1,0 +1,118 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+TMP_BASE=${TND_TEST_TMPDIR:-${TMPDIR:-$ROOT/.tmp}}
+mkdir -p "$TMP_BASE"
+TMP=$(mktemp -d "$TMP_BASE/composition-acceptance.XXXXXX")
+trap 'rm -rf "$TMP"' EXIT
+
+python3 "$ROOT/experiments/glibc/selected-obsidian-provider-authority/recipe/generate-selected-provider-composition-boundary-acceptance.py" \
+  --repo-root "$ROOT" --output-root "$TMP"
+REL=experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-composition-boundary-acceptance.tsv
+cmp "$ROOT/$REL" "$TMP/$REL" >/dev/null || {
+  echo 'composition-acceptance: FAIL: generated drift' >&2
+  exit 1
+}
+
+python3 - "$ROOT" <<'PYCHECK'
+from pathlib import Path
+import csv
+import hashlib
+import sys
+
+root = Path(sys.argv[1])
+review = root / 'experiments/glibc/selected-obsidian-provider-authority/review'
+
+def read(path):
+    with path.open(newline='', encoding='utf-8') as handle:
+        return list(csv.DictReader(handle, delimiter='\t'))
+
+rows = read(review / 'selected-provider-composition-boundary-acceptance.tsv')
+errors = []
+if len(rows) != 1:
+    errors.append(f'acceptance rows {len(rows)}')
+else:
+    row = rows[0]
+    expected = {
+        'review_id': 'SELECTED-COMPOSITION-ACCEPT-001',
+        'decision': 'ACCEPTED_BOUNDED_COMPLETE_SELECTED_PROVIDER_COMPOSITION',
+        'accepted_provider_root_count': '31',
+        'accepted_member_count': '42',
+        'included_member_count': '41',
+        'deferred_member_count': '1',
+        'active_gap_count': '0',
+        'accepted_soname_collision_count': '0',
+        'accepted_alias_collision_count': '0',
+        'target_manifest_state': 'NOT_GENERATED_SEPARATE_NON_MUTATING_REVIEW_REQUIRED',
+        'target_population_state': 'NOT_AUTHORIZED',
+        'materialization_state': 'NOT_AUTHORIZED',
+        'deployment_state': 'NOT_AUTHORIZED',
+        'activation_state': 'NOT_AUTHORIZED',
+        'next_action': 'generate-and-review-non-mutating-selected-target-manifest',
+        'authority_effect': 'BOUNDED_APPLICATION_RUNTIME_COMPOSITION_ACCEPTED_NO_TARGET_MEMBERSHIP_PATH_POPULATION_MATERIALIZATION_DEPLOYMENT_OR_ACTIVATION',
+    }
+    for key, value in expected.items():
+        if row.get(key) != value:
+            errors.append(f'{key}: expected {value}, got {row.get(key)!r}')
+    if 'libtasn1' not in row['deferred_scope'].lower():
+        errors.append('deferred libtasn1 boundary missing')
+    if 'NO_FILESYSTEM_COPY_ORDER' not in row['ordering_boundary']:
+        errors.append('copy-order exclusion missing')
+    if 'AT_SPI2_THREE_MEMBER' not in row['atomic_family_boundary'] or 'GDK_GTK_TWO_MEMBER' not in row['atomic_family_boundary']:
+        errors.append('atomic family boundary missing')
+
+members = review / 'selected-provider-composition-members.tsv'
+gaps = review / 'selected-provider-composition-gaps.tsv'
+if hashlib.sha256(members.read_bytes()).hexdigest() != 'ce60f71248db0568f52a1230b086f6af272555fff6187a3ca1a76c83014e2e70':
+    errors.append('frozen member digest drift')
+if hashlib.sha256(gaps.read_bytes()).hexdigest() != '14568107bbe4f28f101a31488b93db1920365c1893edc6d47d4d6530aff86673':
+    errors.append('frozen gap digest drift')
+
+metadata = {row['key']: row['value'] for row in read(review / 'selected-provider-composition-metadata.tsv')}
+for key, value in {
+    'composition_acceptance_review_id': 'SELECTED-COMPOSITION-ACCEPT-001',
+    'composition_accepted': 'YES',
+    'composition_decision': 'ACCEPTED_BOUNDED_COMPLETE_SELECTED_PROVIDER_COMPOSITION',
+    'target_manifest_generated': 'NO',
+    'target_manifest_allowed': 'NO',
+    'next_review_tranche': 'NON_MUTATING_SELECTED_TARGET_MANIFEST_GENERATION_AND_REVIEW',
+}.items():
+    if metadata.get(key) != value:
+        errors.append(f'metadata {key}: {metadata.get(key)!r}')
+
+doc = (root / 'docs/evidence/selected-obsidian-provider-composition-boundary-acceptance.md').read_text()
+state = (root / 'docs/current/STATE.yaml').read_text()
+active = (root / 'docs/current/ACTIVE_TASK.md').read_text()
+brief = (root / 'docs/current/BRIEF.md').read_text()
+status = (root / 'STATUS.md').read_text()
+catalog = (root / 'docs/catalog.tsv').read_text()
+checks = [
+    ('doc decision', 'ACCEPTED_BOUNDED_COMPLETE_SELECTED_PROVIDER_COMPOSITION' in doc),
+    ('doc target no', 'target manifest generated:     NO' in doc),
+    ('state accepted', 'decision: accepted-bounded-complete-selected-provider-composition' in state),
+    ('state target false', 'target_manifest_allowed: false' in state),
+    ('active task', 'Task ID: `generate-and-review-non-mutating-selected-target-manifest`' in active),
+    ('brief', 'composition: accepted-bounded-complete-selected-provider-composition' in brief),
+    ('status', 'bounded selected provider composition accepted' in status),
+    ('catalog', 'selected-obsidian-provider-composition-boundary-acceptance\tevidence\tcurrent\tcanonical' in catalog),
+]
+for label, ok in checks:
+    if not ok:
+        errors.append(f'missing current marker: {label}')
+
+for forbidden in [
+    'target_manifest_allowed\tYES',
+    'target population authorized:  YES',
+    'activation authorized:         YES',
+    'COPY_OR_INSTALL_AUTHORIZED',
+]:
+    if forbidden in (review / 'selected-provider-composition-boundary-acceptance.tsv').read_text() + doc:
+        errors.append(f'forbidden widening: {forbidden}')
+
+if errors:
+    for error in errors:
+        print('composition-acceptance: FAIL:', error, file=sys.stderr)
+    raise SystemExit(1)
+
+print('composition-acceptance: PASS: exact 42-row boundary accepted, 41 included/1 deferred, target manifest and population remain blocked')
+PYCHECK

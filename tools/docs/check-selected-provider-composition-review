@@ -50,7 +50,7 @@ def read(n):
  with (review/n).open(newline='',encoding='utf-8') as f:return list(csv.DictReader(f,delimiter='\t'))
 mem=read('selected-provider-composition-members.tsv'); gaps=read('selected-provider-composition-gaps.tsv'); meta={r['key']:r['value'] for r in read('selected-provider-composition-metadata.tsv')}; claims={r['claim_id']:r for r in read('provider-claim-classification.tsv')}
 errors=[]
-exp={'selected_gtk_identity_count':'37','accepted_provider_root_count':'31','accepted_member_count':'42','included_member_count':'41','deferred_member_count':'1','unresolved_selected_identity_count':'0','reviewed_root_gap_count':'0','outside_28_root_gap_count':'0','accepted_soname_collision_count':'0','accepted_alias_collision_count':'0','composition_decision':'REVIEWED_COMPLETE_PROVIDER_SET_TARGET_MANIFEST_NOT_ACCEPTED','target_manifest_allowed':'NO','next_review_tranche':'COMPLETE_SELECTED_PROVIDER_COMPOSITION_BOUNDARY_ACCEPTANCE_REVIEW','authority_effect':'NO_COMPOSITION_ACCEPTANCE_TARGET_POPULATION_MATERIALIZATION_OR_ACTIVATION'}
+exp={'selected_gtk_identity_count':'37','accepted_provider_root_count':'31','accepted_member_count':'42','included_member_count':'41','deferred_member_count':'1','unresolved_selected_identity_count':'0','reviewed_root_gap_count':'0','outside_28_root_gap_count':'0','accepted_soname_collision_count':'0','accepted_alias_collision_count':'0','composition_acceptance_review_id':'SELECTED-COMPOSITION-ACCEPT-001','composition_accepted':'YES','composition_decision':'ACCEPTED_BOUNDED_COMPLETE_SELECTED_PROVIDER_COMPOSITION','target_manifest_generated':'NO','target_manifest_allowed':'NO','next_review_tranche':'NON_MUTATING_SELECTED_TARGET_MANIFEST_GENERATION_AND_REVIEW','authority_effect':'BOUNDED_APPLICATION_RUNTIME_COMPOSITION_ACCEPTED_NO_TARGET_MANIFEST_POPULATION_MATERIALIZATION_DEPLOYMENT_OR_ACTIVATION'}
 for k,v in exp.items():
  if meta.get(k)!=v:errors.append(f'metadata {k}: expected {v}, got {meta.get(k)!r}')
 if len(mem)!=42:errors.append(f'member rows {len(mem)}')
@@ -95,17 +95,17 @@ for name,sha,soname in [('libcairo.so.2.11802.2','43cd64f07e1c33e5bd574fe7f50a20
 claim=claims.get('PCC-GLOBAL-COMPOSITION')
 if not claim:errors.append('global composition claim missing')
 else:
- if claim['classification_state']!='REVIEWED_COMPLETE_PROVIDER_SET_TARGET_MANIFEST_NOT_ACCEPTED':errors.append('composition claim state widened or stale')
- if 'ZERO_SELECTED_PROVIDER_IDENTITY_GAPS' not in claim['remaining_gap'] or 'COMPOSITION_ACCEPTANCE_NOT_YET_GRANTED' not in claim['remaining_gap']:errors.append('zero-gap or acceptance-pending marker absent')
- if claim['authority_effect']!='COMPOSITION_REVIEW_COMPLETED_NO_ACCEPTANCE_TARGET_OR_ACTIVATION_EFFECT':errors.append('composition authority effect widened')
+ if claim['classification_state']!='BOUNDED_COMPOSITION_ACCEPTED_TARGET_MANIFEST_NOT_GENERATED':errors.append('composition claim state widened or stale')
+ if 'ZERO_SELECTED_PROVIDER_IDENTITY_GAPS' not in claim['remaining_gap'] or 'BOUNDED_COMPOSITION_ACCEPTED' not in claim['remaining_gap'] or 'TARGET_MANIFEST_NOT_GENERATED' not in claim['remaining_gap']:errors.append('accepted composition or target-manifest-pending marker absent')
+ if claim['authority_effect']!='BOUNDED_APPLICATION_RUNTIME_COMPOSITION_ACCEPTED_NO_TARGET_POPULATION_OR_ACTIVATION_EFFECT':errors.append('composition authority effect stale or widened')
 state=(root/'docs/current/STATE.yaml').read_text();active=(root/'docs/current/ACTIVE_TASK.md').read_text();brief=(root/'docs/current/BRIEF.md').read_text();catalog=(root/'docs/catalog.tsv').read_text();status=(root/'STATUS.md').read_text();doc=(root/'docs/evidence/selected-obsidian-provider-composition-review.md').read_text()
-markers=[('state decision','decision: reviewed-complete-provider-set-target-manifest-not-accepted' in state),('state gaps','unresolved_selected_identities: 0' in state),('state target false','target_manifest_allowed: false' in state),('task','Task ID: `review-and-accept-complete-selected-provider-composition-boundary`' in active),('brief','selected identity gaps: 0' in brief),('catalog','selected-obsidian-provider-composition-review\tevidence\tcurrent\tcanonical' in catalog),('status','`REVIEWED_COMPLETE_PROVIDER_SET_TARGET_MANIFEST_NOT_ACCEPTED`' in status),('doc decision','REVIEWED_COMPLETE_PROVIDER_SET_TARGET_MANIFEST_NOT_ACCEPTED' in doc),('doc target','target manifest allowed:          NO' in doc)]
+markers=[('state decision','decision: accepted-bounded-complete-selected-provider-composition' in state),('state gaps','unresolved_selected_identities: 0' in state),('state target false','target_manifest_allowed: false' in state),('task','Task ID: `generate-and-review-non-mutating-selected-target-manifest`' in active),('brief','selected identity gaps: 0' in brief),('catalog','selected-obsidian-provider-composition-review\tevidence\tcurrent\tcanonical' in catalog),('status','`ACCEPTED_BOUNDED_COMPLETE_SELECTED_PROVIDER_COMPOSITION`' in status),('doc decision','ACCEPTED_BOUNDED_COMPLETE_SELECTED_PROVIDER_COMPOSITION' in doc),('doc target','target manifest allowed:          NO' in doc)]
 for label,ok in markers:
  if not ok:errors.append(f'missing current marker: {label}')
-for forbidden in ['composition decision:             ACCEPTED','target manifest allowed:          YES']:
+for forbidden in ['target manifest allowed:          YES','target manifest generated:        YES']:
  if forbidden in doc:errors.append(f'forbidden widening: {forbidden}')
 if errors:
  for e in errors:print('provider-composition: FAIL:',e,file=sys.stderr)
  raise SystemExit(1)
-print('provider-composition: PASS: 42 accepted members, 41 included, 1 deferred, zero active identity gaps; composition acceptance and target generation remain separate')
+print('provider-composition: PASS: exact 42-row bounded composition accepted; 41 included, 1 deferred, target manifest not generated')
 PY
