@@ -689,13 +689,13 @@ def main() -> None:
             'project_owned_changed_boundary': 'CAPABILITY_COVERAGE_EXCLUSIONS_ORDERING_ALIAS_POLICY_AND_MIXED_WORLD_COMPOSITION',
             'risk_modifiers': 'BROAD_RUNTIME_BLAST_RADIUS;MULTI_PROVIDER_CONFLICT;WEAK_GLOBAL_OBSERVABILITY',
             'existing_evidence': 'authority-coverage-ledger.tsv;world-lifecycle-authority-boundary.tsv;application-authority-boundary.tsv;selected-provider-composition-members.tsv;selected-provider-composition-gaps.tsv;selected-provider-composition-metadata.tsv',
-            'remaining_gap': '1_SELECTED_GTK_PROVIDER_IDENTITY_WITHOUT_ACCEPTED_PROVIDER_ROW;GTK3_CORE_ATOMIC_PAIR_ACCEPTED;LIBSELINUX_DIRECT_CONSUMER_NECESSITY_AND_SECURITY_POLICY_SEMANTICS_UNRESOLVED',
-            'minimum_closure_action': 'REVIEW_LIBSELINUX_DIRECT_CONSUMER_NECESSITY_AND_SECURITY_POLICY_SEMANTICS_WITHOUT_BUILD_AUTHORIZATION',
+            'remaining_gap': 'ZERO_SELECTED_PROVIDER_IDENTITY_GAPS;LIBSELINUX_ORACLE_EDGE_ELIMINATED_BY_EXACT_LIBMOUNT_CONSUMER_RESELECTION;COMPOSITION_ACCEPTANCE_NOT_YET_GRANTED',
+            'minimum_closure_action': 'REVIEW_COMPLETE_SELECTED_PROVIDER_COMPOSITION_BOUNDARY_FOR_ACCEPTANCE_WITHOUT_TARGET_POPULATION',
             'explicitly_excluded_evidence': 'PACKAGE_WIDE_INFERENCE;SUCCESSFUL_HISTORICAL_LAUNCH;SUPPLIER_BUILD_ATTESTATION_AS_COMPOSITION_PROOF',
             'escalation_trigger': 'PROVIDER_CLAIMS_ACCEPTED_FOR_A_BOUNDED_CAPABILITY_SET',
-            'classification_state': 'REVIEWED_BLOCKED_INCOMPLETE',
+            'classification_state': 'REVIEWED_COMPLETE_PROVIDER_SET_TARGET_MANIFEST_NOT_ACCEPTED',
             'authority_effect': 'COMPOSITION_REVIEW_COMPLETED_NO_ACCEPTANCE_TARGET_OR_ACTIVATION_EFFECT',
-            'prohibited_inference': 'INDIVIDUAL_PROVIDER_ACCEPTANCE_DOES_NOT_IMPLY_COMPLETE_COMPOSITION',
+            'prohibited_inference': 'ZERO_IDENTITY_GAPS_DOES_NOT_ITSELF_ACCEPT_COMPOSITION_OR_AUTHORIZE_TARGET_POPULATION',
         },
         {
             'claim_id': 'PCC-GLOBAL-TARGET',
@@ -836,7 +836,7 @@ def main() -> None:
         ('oj001_provider_result_sha256', libjpeg_provider_review['result_archive_sha256']),
         ('oj001_provider_matrix_pass_count', libjpeg_provider_review['matrix_pass_count']),
         ('oj001_provider_decision', libjpeg_provider_review['decision']),
-        ('next_review_tranche', 'LIBSELINUX_DIRECT_CONSUMER_NECESSITY_REVIEW'),
+        ('next_review_tranche', 'COMPLETE_SELECTED_PROVIDER_COMPOSITION_BOUNDARY_ACCEPTANCE_REVIEW'),
     ]
 
     write_tsv(out_root / CLAIM_OUTPUT, CLAIM_FIELDS, claims)

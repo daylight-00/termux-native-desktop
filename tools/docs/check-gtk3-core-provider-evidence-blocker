@@ -23,9 +23,9 @@ if not errors:
  ids={'selected:3b13f088b32606984a58','selected:7bf9d7a4d1980f5e0a95'}
  got=[g for g in gaps if g['selected_evidence_row_id'] in ids]
  if got: errors.append('accepted GTK3 core identities remain in composition gaps')
- if len(gaps)!=1 or gaps[0].get('identity_label')!='libselinux.so.1': errors.append('sole current composition gap is not libSELinux')
+ if len(gaps)!=0: errors.append('expected zero active composition gaps after libmount consumer reselection')
  doc=(root/'docs/evidence/gtk3-core-provider-evidence-blocker.md').read_text(); state=(root/'docs/current/STATE.yaml').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); brief=(root/'docs/current/BRIEF.md').read_text(); catalog=(root/'docs/catalog.tsv').read_text(); status=(root/'STATUS.md').read_text()
- markers=[('doc historical decision','OPEN_BLOCKED_NO_GLIBC_CANDIDATE' in doc and 'historical and superseded' in doc),('doc no bionic inference','does not supply a Termux glibc archive' in doc),('state blocker superseded','gtk3_core_provider_blocker:' in state and 'provider_authority: superseded-discovery-blocker-exact-candidate-and-bounded-provider-now-accepted' in state),('state authority current','gtk3_core_provider_authority:' in state and 'decision: accepted-bounded-provider' in state),('next task','Task ID: `review-libselinux-direct-consumer-necessity-and-security-boundary`' in active),('brief authority','exact project-produced GTK 3.24.49 pair' in brief and 'libselinux.so.1' in brief),('catalog','gtk3-core-provider-evidence-blocker\tevidence\tsuperseded\thistory' in catalog),('status','atomic GTK 3.24.49 GDK/GTK project candidates accepted as bounded providers' in status and 'libselinux.so.1' in status)]
+ markers=[('doc historical decision','OPEN_BLOCKED_NO_GLIBC_CANDIDATE' in doc and 'historical and superseded' in doc),('doc no bionic inference','does not supply a Termux glibc archive' in doc),('state blocker superseded','gtk3_core_provider_blocker:' in state and 'provider_authority: superseded-discovery-blocker-exact-candidate-and-bounded-provider-now-accepted' in state),('state authority current','gtk3_core_provider_authority:' in state and 'decision: accepted-bounded-provider' in state),('next task','Task ID: `review-and-accept-complete-selected-provider-composition-boundary`' in active),('brief authority','exact project-produced GTK 3.24.49 pair' in brief and 'libselinux.so.1' in brief),('catalog','gtk3-core-provider-evidence-blocker\tevidence\tsuperseded\thistory' in catalog),('status','atomic GTK 3.24.49 GDK/GTK project candidates accepted as bounded providers' in status and 'libselinux.so.1' in status)]
  for label,ok in markers:
   if not ok: errors.append(f'missing marker: {label}')
  for forbidden in ['provider authority:      ACCEPTED','BIONIC_GTK3_ACCEPTED_AS_GLIBC_PROVIDER','target/activation:       ALLOWED']:
@@ -33,5 +33,5 @@ if not errors:
 if errors:
  for e in errors: print('gtk3-core-blocker: FAIL:',e,file=sys.stderr)
  raise SystemExit(1)
-print('gtk3-core-blocker: PASS: historical no-candidate evidence remains immutable while separate atomic GTK3 candidate and bounded provider decisions close both GTK gaps; libSELinux remains sole gap')
+print('gtk3-core-blocker: PASS: historical no-candidate evidence remains immutable while separate atomic GTK3 candidate and bounded provider decisions close both GTK gaps; libSELinux oracle edge is eliminated and composition acceptance remains separate')
 PY2

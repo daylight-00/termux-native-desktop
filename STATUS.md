@@ -1,6 +1,6 @@
 # Status
 
-bundle-native documentation and operations control planes active; ADR 0005 claim classification complete with 95 separated claims; exact libXdamage, atomic AT-SPI2 core, and atomic GTK 3.24.49 GDK/GTK project candidates accepted as bounded providers; selected-provider composition `REVIEWED_BLOCKED_INCOMPLETE` with one unresolved identity, libselinux.so.1; target and activation blocked; libSELinux direct-consumer necessity review active with no build authorization
+bundle-native documentation and operations control planes active; ADR 0005 claim classification complete with 95 separated claims; exact libXdamage, atomic AT-SPI2 core, and atomic GTK 3.24.49 GDK/GTK project candidates accepted as bounded providers; selected-provider composition `REVIEWED_COMPLETE_PROVIDER_SET_TARGET_MANIFEST_NOT_ACCEPTED` with zero unresolved selected identities; the libselinux.so.1 oracle edge is eliminated by exact libmount consumer reselection; target and activation blocked; libSELinux direct-consumer necessity review active with no build authorization
 > **Updated:** 2026-07-26
 
 ## Repository and deployment consolidation

@@ -112,7 +112,7 @@ expected_meta={
     'oj001_provider_result_sha256':'4e546ac1ef2a92f3301dd51ca2328d6901a05e309da78b6d08b26211d9b621e3',
     'oj001_provider_matrix_pass_count':'6',
     'oj001_provider_decision':'ACCEPTED_BOUNDED_PROVIDER',
-    'next_review_tranche':'LIBSELINUX_DIRECT_CONSUMER_NECESSITY_REVIEW',
+    'next_review_tranche':'COMPLETE_SELECTED_PROVIDER_COMPOSITION_BOUNDARY_ACCEPTANCE_REVIEW',
 }
 for key,val in expected_meta.items():
     if metadata.get(key)!=val:
@@ -203,12 +203,12 @@ checks=[
     ('state version','state_version:' in state),
     ('claim count state','total: 95' in state),
     ('SUP-02 state','required_now: 0' in state),
-    ('next task','Task ID: `review-libselinux-direct-consumer-necessity-and-security-boundary`' in active),
+    ('next task','Task ID: `review-and-accept-complete-selected-provider-composition-boundary`' in active),
     ('brief classification','95 claims' in brief),
     ('catalog row','provider-claim-classification\tevidence\tcurrent\tcanonical' in catalog),
     ('status next phase','exact libXdamage, atomic AT-SPI2 core, and atomic GTK 3.24.49 GDK/GTK project candidates accepted as bounded providers' in status and 'libselinux.so.1' in status),
     ('outside inventory prerequisites','exact `libpixman-1.so.0.46.4` is additionally accepted as a bounded Cairo prerequisite' in (root/'docs/evidence/provider-claim-classification.md').read_text() and 'exact `libgraphite2.so.3.2.1` is accepted as a bounded HarfBuzz Graphite-shaping prerequisite' in (root/'docs/evidence/provider-claim-classification.md').read_text()),
-    ('one blocker after GTK3 core acceptance','1_SELECTED_GTK_PROVIDER_IDENTITY_WITHOUT_ACCEPTED_PROVIDER_ROW' in next(r['remaining_gap'] for r in claims if r['claim_id']=='PCC-GLOBAL-COMPOSITION') and 'GTK3_CORE_ATOMIC_PAIR_ACCEPTED' in next(r['remaining_gap'] for r in claims if r['claim_id']=='PCC-GLOBAL-COMPOSITION') and 'LIBSELINUX_DIRECT_CONSUMER_NECESSITY' in next(r['remaining_gap'] for r in claims if r['claim_id']=='PCC-GLOBAL-COMPOSITION')),
+    ('zero gaps and composition acceptance pending','ZERO_SELECTED_PROVIDER_IDENTITY_GAPS' in next(r['remaining_gap'] for r in claims if r['claim_id']=='PCC-GLOBAL-COMPOSITION') and 'LIBSELINUX_ORACLE_EDGE_ELIMINATED' in next(r['remaining_gap'] for r in claims if r['claim_id']=='PCC-GLOBAL-COMPOSITION') and 'COMPOSITION_ACCEPTANCE_NOT_YET_GRANTED' in next(r['remaining_gap'] for r in claims if r['claim_id']=='PCC-GLOBAL-COMPOSITION')),
     ('disposition catalog','libjpeg-so-62-provider-candidate-disposition\tevidence\tcurrent\tcanonical' in catalog),
 ]
 for label,ok in checks:

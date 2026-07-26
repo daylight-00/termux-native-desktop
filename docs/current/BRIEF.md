@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-26.01`
+> Semantic state version: `2026-07-26.02`
 
 ## Purpose and operational boundary
 
@@ -17,8 +17,8 @@ open roots inside the 28-root inventory: 7
 accepted exact members: 42
 included current-scope members: 41
 deferred members: 1
-composition review: REVIEWED_BLOCKED_INCOMPLETE
-selected identity gaps: 1
+composition review: REVIEWED_COMPLETE_PROVIDER_SET_TARGET_MANIFEST_NOT_ACCEPTED
+selected identity gaps: 0
 target population: blocked
 activation: blocked
 ```
@@ -41,4 +41,6 @@ Exact project-produced `libXdamage.so.1.1.0` retains bounded authority for GTK 3
 
 ## Current project phase
 
-`libselinux.so.1` is the only unresolved selected identity. The active task is `review-libselinux-direct-consumer-necessity-and-security-boundary`. It is a read-only necessity and security-semantics review. No libSELinux build, acquisition, alias, policy load, relabeling, target population, deployment, or activation is authorized.
+The last oracle-only `libselinux.so.1` edge was eliminated by exact consumer reselection. Debian `libmount1 2.41-5` carried optional SELinux-enabled hooks, while selected `libmount-glibc 2.40.2-1` has no libSELinux `DT_NEEDED` entry or imports and completed v101 without a provider. No libSELinux build is authorized.
+
+The active task is `review-and-accept-complete-selected-provider-composition-boundary`. The provider set is zero-gap but not yet composition-accepted; target-manifest generation, population, deployment and activation remain blocked.

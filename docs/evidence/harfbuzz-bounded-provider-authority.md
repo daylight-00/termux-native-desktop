@@ -71,7 +71,7 @@ accepted exact members:                  31
 included members:                        30
 deferred members:                         1
 unresolved selected identities:          12
-composition: REVIEWED_BLOCKED_INCOMPLETE
+composition: REVIEWED_COMPLETE_PROVIDER_SET_TARGET_MANIFEST_NOT_ACCEPTED
 target manifest allowed: NO
 activation: BLOCKED
 ```

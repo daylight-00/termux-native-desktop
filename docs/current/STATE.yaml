@@ -1,5 +1,5 @@
 schema_version: 1
-state_version: 2026-07-26.01
+state_version: 2026-07-26.02
 updated_on: 2026-07-26
 
 project:
@@ -80,7 +80,7 @@ documentation:
   missing_glibc_provider_production_boundary: docs/evidence/missing-glibc-provider-production-boundary.md
 
 provider_authority:
-  workstream: one-selected-gap-retained-libxdamage-at-spi2-and-gtk3-core-bounded-providers-accepted-libselinux-necessity-review-active
+  workstream: zero-selected-gaps-complete-provider-set-composition-acceptance-review-active
   boundary: thirty-one-bounded-provider-roots-retained-one-selected-identity-open-gtk3-core-class-c-pair-and-bounded-provider-accepted-supplier-publication-composition-target-display-service-module-schema-print-and-activation-open
   claim_inventory:
     total: 95
@@ -133,17 +133,17 @@ provider_authority:
     unnecessary: 7
     required_now: 0
   composition_review:
-    decision: reviewed-blocked-incomplete
+    decision: reviewed-complete-provider-set-target-manifest-not-accepted
     accepted_provider_roots: 31
     accepted_members: 42
     included_members: 41
     deferred_members: 1
     selected_gtk_identities: 37
-    unresolved_selected_identities: 1
+    unresolved_selected_identities: 0
     accepted_soname_collisions: 0
     accepted_alias_collisions: 0
     target_manifest_allowed: false
-    next_tranche: libselinux-direct-consumer-necessity-review
+    next_tranche: complete-selected-provider-composition-boundary-acceptance-review
   gdkpixbuf_core_acquisition:
     result_sha256: e96fb0e2d8fa1c16a228e41d60801abac0b8a43584a86b7e63f8adddfc4f5692
     review_state: acquisition-reviewed-partial
@@ -165,7 +165,7 @@ provider_authority:
     transitive_result_sha256: a18426371acf0339731464eea4a6fd1f8c745cc09154629b69e34d1063073c13
     transitive_recipe_tree: e91a0c476ef4355dbfff46e2bcab23d0085ddd01
     transitive_functional_matrix: jpeg-file-pass-jpeg-memory-pass-png-file-pass-png-memory-pass
-    next_action: review-libselinux-direct-consumer-necessity-and-security-boundary
+    next_action: review-and-accept-complete-selected-provider-composition-boundary
   thai_break_provider:
     result_sha256: 7789ff1a039e3186b04014e4ddf6a7ba68d77fe31a2f1ef77273590aa97b8e1e
     libthai_member: libthai.so.0.3.1
@@ -191,7 +191,7 @@ provider_authority:
     consumer: gtk-3-24-49-places-sidebar-cloud-account-integration
     service_boundary: dbus-session-services-and-accounts-not-accepted
     provider_authority: accepted-bounded-provider
-  next_research_decision: review-libselinux-direct-consumer-necessity-and-security-boundary
+  next_research_decision: review-and-accept-complete-selected-provider-composition-boundary
   fribidi_provider:
     member: libfribidi.so.0.4.0
     member_sha256: 71668fd02e89fa7546446bb7961bb618f6d22e1506f7444bbea6788befbb7895
@@ -421,7 +421,7 @@ provider_authority:
     gir_typelib_boundary: retained-review-evidence-no-target-membership-or-registration-authority
     backend_boundary: x11-wayland-broadway-configured-no-display-or-daemon-authority
     package_wide_authority: not-accepted
-    composition_effect: two-gtk3-gaps-closed-one-libselinux-gap-remains
+    composition_effect: final-libselinux-oracle-edge-eliminated-zero-selected-gaps-composition-acceptance-pending
     target_population: blocked
     activation: blocked
   gtk3_core_provider_blocker:
@@ -437,6 +437,16 @@ provider_authority:
     provider_authority: superseded-discovery-blocker-exact-candidate-and-bounded-provider-now-accepted
     target_population: blocked
     reopening_gate: satisfied-by-gtk3-core-candidate-and-bounded-provider-reviews
+  libselinux_consumer_necessity_review:
+    review_id: LIBSELINUX-CONSUMER-NECESSITY-001
+    decision: dependency-elimination-or-reselection
+    oracle_direct_consumer: libmount1:arm64-2.41-5/libmount.so.1.1.0
+    selected_replacement: libmount-glibc-2.40.2-1/libmount.so.1.1.0
+    selected_libselinux_needed: false
+    selected_selinux_import_count: 0
+    provider_build_authorized: false
+    security_policy_mutation: blocked
+    composition_effect: zero-active-selected-provider-gaps-composition-acceptance-pending
   libselinux_provider_blocker:
     selected_label: libselinux.so.1
     required_soname: libselinux.so.1
@@ -463,12 +473,12 @@ provider_authority:
     first_lane_build_state: qualified-local-recipe-and-artifact-candidate-bounded-provider-accepted
     at_spi2_atk_lane: bounded-atomic-provider-authority-accepted-service-authority-excluded
     gtk3_core_lane: bounded-atomic-provider-authority-accepted-package-wide-execution-authority-excluded
-    libselinux_lane: no-build-authorization-pending-direct-consumer-necessity
+    libselinux_lane: dependency-eliminated-by-exact-libmount-consumer-reselection-no-build-authorization
     version_policy: newer-versions-require-selected-identity-reselection
     provider_authority_effect: exact-libxdamage-atomic-at-spi2-and-atomic-gtk3-core-bounded-providers-accepted-no-complete-composition-target-display-service-module-schema-print-or-activation-effect
     composition_effect: reviewed-blocked-incomplete-retained
     target_manifest_allowed: false
-    next_action: review-libselinux-direct-consumer-necessity-and-security-boundary
+    next_action: review-and-accept-complete-selected-provider-composition-boundary
   prohibited_claims:
     - complete-provider-authority
     - complete-runtime-composition
@@ -476,7 +486,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: review-libselinux-direct-consumer-necessity-and-security-boundary
+  id: review-and-accept-complete-selected-provider-composition-boundary
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:

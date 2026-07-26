@@ -9,7 +9,7 @@ completed production lanes:    libXdamage, atomic AT-SPI2/ATK, atomic GTK 3 core
 remaining family:              libSELinux necessity review only
 immediate build authorized:    NO
 libSELinux build authorized:   NO
-composition:                   REVIEWED_BLOCKED_INCOMPLETE
+composition:                   REVIEWED_COMPLETE_PROVIDER_SET_TARGET_MANIFEST_NOT_ACCEPTED
 target/activation:             blocked
 ```
 
@@ -27,4 +27,9 @@ Each lane retains exact source, recipe, producing, package/member, dependency, l
 
 Do not produce a glibc `libselinux.so.1` candidate until exact direct consumers and imported symbols are identified and the feature cannot be removed or reselected. A separate necessity/security review must cover libsepol/PCRE2 closure, policy stores, filesystem contexts, absent Android policy paths, and proof that validation does not load policy, relabel filesystems, change enforcing state or mutate Android state.
 
-Android `libandroid-selinux`, `/system` libraries, cross-world aliases and compatibility shims are rejected. The next task is `review-libselinux-direct-consumer-necessity-and-security-boundary`; it grants no build authorization.
+Android `libandroid-selinux`, `/system` libraries, cross-world aliases and compatibility shims are rejected. The libSELinux lane was closed by dependency elimination through exact libmount consumer reselection. The next task is `review-and-accept-complete-selected-provider-composition-boundary`; it grants no target-manifest or population authority.
+
+
+## libSELinux lane disposition
+
+The libSELinux production lane is closed without production. Exact consumer review selected `DEPENDENCY_ELIMINATION_OR_RESELECTION`: the accepted `gpkg/util-linux` libmount member removes the Debian oracle's optional SELinux linkage. `libselinux_build_authorized` remains `NO`. Android/bionic substitution, policy mutation, target population and activation remain prohibited.

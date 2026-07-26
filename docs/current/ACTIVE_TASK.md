@@ -1,50 +1,50 @@
-# Active task: review libSELinux direct-consumer necessity and security boundary
+# Active task: review and accept the complete selected provider composition boundary
 
-> Task ID: `review-libselinux-direct-consumer-necessity-and-security-boundary`
+> Task ID: `review-and-accept-complete-selected-provider-composition-boundary`
 >
-> Expected state on completion: the exact selected consumer edge to `libselinux.so.1`, required symbols, and SELinux policy/filesystem-context semantics are either bounded sufficiently for a separate future candidate-authorization decision or the dependency is removed/reselected. **This task grants no build authorization.**
+> Expected state on completion: decide whether the zero-gap, 42-member reviewed provider set is accepted as one bounded application-runtime composition. This task does not authorize target-manifest generation, population, deployment, or activation.
 
 ## Objective
 
-Determine why the selected runtime requires `libselinux.so.1`, which exact ELF directly declares it, which imported symbols are actually used, and whether the dependency can be eliminated without changing the selected application contract. Bound all security-sensitive behavior before any production lane is considered.
+Review the complete selected provider composition as a Class D project-owned ordering, exclusion, alias, collision, update, and rollback decision.
 
 ## Why now
 
-The exact GTK 3.24.49 atomic `libgdk-3.so.0`/`libgtk-3.so.0` pair now has bounded provider authority. The selected composition has one unresolved identity, `libselinux.so.1`. Target-manifest generation, population, deployment, and activation remain blocked.
+`LIBSELINUX-CONSUMER-NECESSITY-001` eliminated the last active selected identity gap by exact libmount consumer reselection. The provider set contains 42 accepted exact members, 41 included current-scope members, one deferred libtasn1 member, zero unresolved identities, and zero SONAME or alias collisions.
 
 ## In scope
 
-- identify every exact selected direct consumer of `libselinux.so.1`;
-- record exact `DT_NEEDED`, imported symbol, call-site, package/source and configuration evidence;
-- distinguish essential runtime behavior from optional SELinux feature linkage;
-- review libsepol, PCRE2, policy-store, file-context, labeling and Android policy-path assumptions;
-- prefer dependency elimination or consumer reselection when compatible with the selected contract;
-- define the minimum evidence required for a separate high-risk Class B recipe/Class C candidate authorization, if necessity is proven.
+- verify included and deferred members against bounded provider decisions;
+- verify zero active selected identity gaps;
+- review ordering, alias uniqueness, capability exclusions, atomic-family constraints, update and rollback boundaries;
+- decide whether to accept the complete selected application-runtime provider composition;
+- preserve a separate gate for non-mutating target-manifest generation.
 
 ## Out of scope
 
-Building or acquiring libSELinux, using Android or bionic SELinux libraries, creating cross-world aliases or shims, loading policy, relabeling files, changing enforcing state, touching Android policy stores, package installation, target population, deployment, service activation, or selected-generation activation.
+This completed disposition grants no libSELinux build authorization.
+
+Generating or applying a target manifest, copying libraries, installing packages, widening package authority, enabling modules or services, schema/cache generation, deployment, display execution, or activation.
 
 ## Required reading
 
-- `docs/evidence/libselinux-provider-evidence-blocker.md`
-- `docs/evidence/missing-glibc-provider-production-boundary.md`
+- `docs/evidence/libselinux-direct-consumer-necessity-review.md`
 - `docs/evidence/selected-obsidian-provider-composition-review.md`
-- `docs/evidence/gtk3-core-bounded-provider-authority.md`
+- `docs/evidence/missing-glibc-provider-production-boundary.md`
 - `docs/decisions/0005-proportional-assurance-depth.md`
 
 ## Pending external inputs
 
-None. This task uses the retained selected/runtime evidence and repository/source metadata only. Any later candidate production requires a separate authorization decision.
-
-## Completion criteria
-
-A machine-readable and narrative review records exact direct consumers, required symbols, source/configuration cause, removal/reselection feasibility, security semantics, prohibited operations, dependency closure, and a decision of either `DEPENDENCY_ELIMINATION_OR_RESELECTION` or `SEPARATE_HIGH_RISK_CANDIDATE_AUTHORIZATION_REVIEW_REQUIRED`. Neither outcome itself authorizes a build.
+None. The exact v69/v101 retained package bytes and repository oracle/source coordinates are sufficient for this review.
 
 ## Stop conditions
 
-Stop if consumer identity or symbol use cannot be made exact, if validation would require policy mutation or Android platform state access, or if the review begins to infer glibc compatibility from bionic/Android libraries.
+Stop if composition acceptance would require changing any provider member, alias, capability scope, service/module/schema boundary, or target path. Such a finding requires a new bounded provider or composition-repair transaction rather than widening this task.
+
+## Completion criteria
+
+A repository decision accepts the exact zero-gap composition boundary or records a precise conflict. Acceptance must still leave target-manifest generation, population, deployment, and activation blocked for separate transactions.
 
 ## Next valid action
 
-Perform a read-only direct-consumer and imported-symbol census for `libselinux.so.1`. Do not build, install, alias, load policy, relabel, populate a target, deploy, or activate.
+Perform the bounded composition-acceptance review only. Do not generate or populate a target.

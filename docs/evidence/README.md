@@ -87,3 +87,5 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 - [`libselinux-provider-evidence-blocker.md`](libselinux-provider-evidence-blocker.md) — exact approved-index and pinned-recipe blocker proving that only bionic/Android SELinux boundary implementations are visible and no Termux glibc libSELinux provider candidate is authorized.
 
 - [`missing-glibc-provider-production-boundary.md`](missing-glibc-provider-production-boundary.md) — planning-only production boundary recording completed libXdamage, atomic AT-SPI2/ATK and atomic GTK 3 core lanes, with libSELinux production still withheld pending direct-consumer necessity and security review.
+
+- `libselinux-direct-consumer-necessity-review.md`: exact oracle libmount SELinux edge and dependency-elimination-by-selected-consumer-reselection decision.

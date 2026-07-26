@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+python3 - "$ROOT" <<'PY_CHECK'
+from pathlib import Path
+import csv,sys
+root=Path(sys.argv[1]); review=root/'experiments/glibc/selected-obsidian-provider-authority/review'; errors=[]
+def rows(name):
+ with (review/name).open(newline='',encoding='utf-8') as f:return list(csv.DictReader(f,delimiter='\t'))
+for rel in ('docs/evidence/libselinux-direct-consumer-necessity-review.md','experiments/glibc/selected-obsidian-provider-authority/review/libselinux-direct-consumer-necessity-review.tsv','experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-composition-gaps.tsv','experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-composition-metadata.tsv','docs/current/ACTIVE_TASK.md','docs/current/BRIEF.md','STATUS.md'):
+ if not (root/rel).is_file():errors.append(f'missing {rel}')
+if not errors:
+ d=rows('libselinux-direct-consumer-necessity-review.tsv')
+ if len(d)!=1:errors.append(f'review rows {len(d)}')
+ else:
+  r=d[0]
+  exp={'review_id':'LIBSELINUX-CONSUMER-NECESSITY-001','decision':'DEPENDENCY_ELIMINATION_OR_RESELECTION','oracle_direct_consumer_row_id':'selected:ff6dae6f57afefe0d2b1','oracle_package':'libmount1:arm64','oracle_version':'2.41-5','reselected_provider_review_id':'GDKPIXBUF-UTIL-LINUX-PROV-001','reselected_package':'libmount-glibc','reselected_version':'2.40.2-1','reselected_package_sha256':'9004e88a9f43b2d5cf74fd8921e4b74146e3ced64c4f94490cc52d9b138b011a','reselected_member_sha256':'6864b9050ddd5884642c98ea4df07e3ceaf78727324d6e9068d1866594ece1c2','reselected_selinux_needed':'NO','reselected_selinux_import_count':'0','provider_build_authorized':'NO'}
+  for k,v in exp.items():
+   if r.get(k)!=v:errors.append(f'{k}: expected {v}, got {r.get(k)!r}')
+  for sym in ('getfilecon_raw','freecon','is_selinux_enabled','selinux_trans_to_raw_context'):
+   if sym not in r.get('oracle_imported_symbols',''):errors.append(f'missing oracle symbol {sym}')
+ if rows('selected-provider-composition-gaps.tsv'):errors.append('active composition gaps remain')
+ meta={r['key']:r['value'] for r in rows('selected-provider-composition-metadata.tsv')}
+ for k,v in {'unresolved_selected_identity_count':'0','composition_decision':'REVIEWED_COMPLETE_PROVIDER_SET_TARGET_MANIFEST_NOT_ACCEPTED','target_manifest_allowed':'NO','next_review_tranche':'COMPLETE_SELECTED_PROVIDER_COMPOSITION_BOUNDARY_ACCEPTANCE_REVIEW'}.items():
+  if meta.get(k)!=v:errors.append(f'metadata {k}: {meta.get(k)!r}')
+ doc=(root/'docs/evidence/libselinux-direct-consumer-necessity-review.md').read_text(); active=(root/'docs/current/ACTIVE_TASK.md').read_text(); brief=(root/'docs/current/BRIEF.md').read_text(); status=(root/'STATUS.md').read_text()
+ for label,ok in [('decision','DEPENDENCY_ELIMINATION_OR_RESELECTION' in doc),('no build','provider build authorized:    NO' in doc),('guard','HAVE_LIBSELINUX' in doc),('next task','Task ID: `review-and-accept-complete-selected-provider-composition-boundary`' in active),('zero gap','selected identity gaps: 0' in brief),('status zero','zero unresolved selected identities' in status)]:
+  if not ok:errors.append(f'missing marker {label}')
+if errors:
+ for e in errors:print('libselinux-consumer-review: FAIL:',e,file=sys.stderr)
+ raise SystemExit(1)
+print('libselinux-consumer-review: PASS: optional Debian libmount SELinux edge eliminated by exact selected libmount reselection; no provider build or target authority')
+PY_CHECK
