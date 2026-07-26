@@ -1,9 +1,9 @@
 schema_version: 1
-state_version: 2026-07-26.03
+state_version: 2026-07-26.04
 updated_on: 2026-07-26
 
 project:
-  phase: non-mutating-target-manifest-review
+  phase: non-mutating-target-manifest-boundary-acceptance
   status: active
 
 repository:
@@ -54,6 +54,7 @@ documentation:
   libjpeg_loader_isolated_provider_authority: docs/evidence/libjpeg-so-62-loader-isolated-provider-authority.md
   selected_provider_composition_review: docs/evidence/selected-obsidian-provider-composition-review.md
   selected_provider_composition_acceptance: docs/evidence/selected-obsidian-provider-composition-boundary-acceptance.md
+  selected_target_manifest_review: docs/evidence/selected-obsidian-target-manifest-review.md
   gdkpixbuf_provider_result_review: docs/evidence/gdkpixbuf-2-42-12-provider-candidate-result-review.md
   gdkpixbuf_reference_dependency_provider_authority: docs/evidence/gdkpixbuf-reference-dependency-provider-authority.md
   gdkpixbuf_exact_util_linux_provider_authority: docs/evidence/gdkpixbuf-exact-util-linux-provider-authority.md
@@ -81,8 +82,8 @@ documentation:
   missing_glibc_provider_production_boundary: docs/evidence/missing-glibc-provider-production-boundary.md
 
 provider_authority:
-  workstream: bounded-composition-accepted-non-mutating-target-manifest-review-active
-  boundary: thirty-one-bounded-provider-roots-and-exact-forty-two-row-class-d-composition-accepted-forty-one-current-members-one-libtasn1-deferred-target-path-population-display-service-module-schema-print-deployment-and-activation-open
+  workstream: non-mutating-target-manifest-qualified-boundary-acceptance-active
+  boundary: thirty-one-bounded-provider-roots-exact-forty-two-row-composition-accepted-and-eighty-two-row-target-candidate-qualified-forty-one-concrete-forty-one-soname-alias-zero-collisions-population-materialization-deployment-and-activation-blocked
   claim_inventory:
     total: 95
     class_a: 36
@@ -144,9 +145,16 @@ provider_authority:
     accepted_soname_collisions: 0
     accepted_alias_collisions: 0
     acceptance_review_id: SELECTED-COMPOSITION-ACCEPT-001
-    target_manifest_generated: false
+    target_manifest_generated: true
+    target_manifest_reviewed: qualified-non-mutating-selected-target-manifest
+    target_manifest_review_id: SELECTED-TARGET-MANIFEST-REVIEW-001
+    target_manifest_rows: 82
+    target_manifest_regular_rows: 41
+    target_manifest_alias_rows: 41
+    target_manifest_collisions: 0
     target_manifest_allowed: false
-    next_tranche: non-mutating-selected-target-manifest-generation-and-review
+    target_population_authorized: false
+    next_tranche: non-mutating-selected-target-manifest-boundary-acceptance
   gdkpixbuf_core_acquisition:
     result_sha256: e96fb0e2d8fa1c16a228e41d60801abac0b8a43584a86b7e63f8adddfc4f5692
     review_state: acquisition-reviewed-partial

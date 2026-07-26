@@ -46,11 +46,11 @@ if not errors:
       ('libSELinux no build','`libselinux_build_authorized` remains `NO`' in doc),
       ('state route','missing_glibc_provider_production_boundary:' in state),
       ('state GTK lane','gtk3_core_lane: bounded-atomic-provider-authority-accepted-package-wide-execution-authority-excluded' in state),
-      ('active task','Task ID: `generate-and-review-non-mutating-selected-target-manifest`' in active),
+      ('active task','Task ID: `review-and-accept-non-mutating-selected-target-manifest-boundary`' in active),
       ('brief decision','selected identity gaps: 0' in brief and 'libselinux.so.1' in brief),
       ('composition next','NON_MUTATING_SELECTED_TARGET_MANIFEST_GENERATION_AND_REVIEW' in comp),
       ('catalog','missing-glibc-provider-production-boundary\tevidence\tcurrent\tcanonical' in catalog),
-      ('status','atomic GTK 3.24.49 GDK/GTK project candidates accepted as bounded providers' in status and 'libselinux.so.1' in status and 'target manifest not generated' in status)]
+      ('status','atomic GTK 3.24.49 GDK/GTK project candidates accepted as bounded providers' in status and 'libselinux.so.1' in status and '`QUALIFIED_NON_MUTATING_SELECTED_TARGET_MANIFEST`' in status)]
     for label,ok in markers:
         if not ok: errors.append(f'missing marker: {label}')
     for forbidden in ['target/materialization effect:   ALLOWED','libselinux_build_authorized\tYES','activation_allowed\tYES']:

@@ -1,0 +1,215 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import csv
+import hashlib
+import subprocess
+import sys
+import tempfile
+from pathlib import Path, PurePosixPath
+
+ROOT = Path(__file__).resolve().parents[2]
+BASE = Path('experiments/glibc/selected-obsidian-provider-authority')
+REVIEW = BASE / 'review'
+FILES = [
+    REVIEW / 'selected-target-manifest.tsv',
+    REVIEW / 'selected-target-manifest-object-bindings.tsv',
+    REVIEW / 'selected-target-manifest-alias-bindings.tsv',
+    REVIEW / 'selected-target-manifest-collisions.tsv',
+    REVIEW / 'selected-target-manifest-metadata.tsv',
+]
+
+
+def read(path: Path) -> list[dict[str, str]]:
+    with path.open(newline='', encoding='utf-8') as fh:
+        return list(csv.DictReader(fh, delimiter='\t'))
+
+
+def meta(path: Path) -> dict[str, str]:
+    return {r['key']: r['value'] for r in read(path)}
+
+
+def fail(message: str) -> None:
+    raise SystemExit(message)
+
+
+for rel in FILES:
+    if not (ROOT / rel).is_file():
+        fail(f'missing target manifest artifact: {rel}')
+
+with tempfile.TemporaryDirectory(prefix='target-manifest-check-') as td:
+    temp = Path(td)
+    subprocess.run([
+        sys.executable,
+        str(ROOT / BASE / 'recipe/generate-selected-target-manifest.py'),
+        '--repo-root', str(ROOT), '--output-root', str(temp),
+    ], check=True)
+    for rel in FILES:
+        if (ROOT / rel).read_bytes() != (temp / rel).read_bytes():
+            fail(f'generated target manifest drift: {rel}')
+
+schema_rows = read(ROOT / BASE / 'profiles/target-layout-schema.tsv')
+schema_fields = [r['field'] for r in sorted(schema_rows, key=lambda r: int(r['ordinal']))]
+manifest = read(ROOT / REVIEW / 'selected-target-manifest.tsv')
+objects = read(ROOT / REVIEW / 'selected-target-manifest-object-bindings.tsv')
+aliases = read(ROOT / REVIEW / 'selected-target-manifest-alias-bindings.tsv')
+collisions = read(ROOT / REVIEW / 'selected-target-manifest-collisions.tsv')
+metadata = meta(ROOT / REVIEW / 'selected-target-manifest-metadata.tsv')
+composition = read(ROOT / REVIEW / 'selected-provider-composition-members.tsv')
+
+with (ROOT / REVIEW / 'selected-target-manifest.tsv').open(newline='', encoding='utf-8') as fh:
+    actual_fields = next(csv.reader(fh, delimiter='\t'))
+if actual_fields != schema_fields:
+    fail('target manifest fields differ from target-layout schema')
+
+expected_meta = {
+    'schema_version': '1',
+    'review_id': 'SELECTED-TARGET-MANIFEST-REVIEW-001',
+    'application_composition_id': 'SELECTED-COMPOSITION-ACCEPT-001',
+    'decision': 'QUALIFIED_NON_MUTATING_SELECTED_TARGET_MANIFEST',
+    'composition_member_count': '42',
+    'included_concrete_member_count': '41',
+    'deferred_member_count': '1',
+    'target_manifest_row_count': '82',
+    'regular_target_row_count': '41',
+    'soname_alias_target_row_count': '41',
+    'unique_target_path_count': '82',
+    'target_path_collision_count': '0',
+    'unresolved_alias_count': '0',
+    'target_domain': 'SHARED_PROVIDER',
+    'target_relative_root': 'lib',
+    'authority_acceptance_state': 'PROVISIONAL_BLOCKED',
+    'population_state': 'UNPOPULATED_SCHEMA_ONLY',
+    'target_population_authorized': 'NO',
+    'materialization_authorized': 'NO',
+    'deployment_authorized': 'NO',
+    'activation_authorized': 'NO',
+    'next_review_tranche': 'NON_MUTATING_SELECTED_TARGET_MANIFEST_BOUNDARY_ACCEPTANCE',
+    'authority_effect': 'DETERMINISTIC_TARGET_REVIEW_ONLY_NO_COPY_INSTALL_POPULATION_MATERIALIZATION_DEPLOYMENT_OR_ACTIVATION',
+}
+for key, value in expected_meta.items():
+    if metadata.get(key) != value:
+        fail(f'target manifest metadata mismatch: {key}')
+
+if len(manifest) != 82 or len(objects) != 41 or len(aliases) != 41 or collisions:
+    fail('target manifest cardinality mismatch')
+if sum(r['target_node_type'] == 'REGULAR' for r in manifest) != 41:
+    fail('regular target count mismatch')
+if sum(r['target_node_type'] == 'SYMLINK' for r in manifest) != 41:
+    fail('alias target count mismatch')
+if len({r['target_record_id'] for r in manifest}) != 82:
+    fail('duplicate target record id')
+if len({r['target_relative_path'] for r in manifest}) != 82:
+    fail('duplicate target path')
+
+by_id = {r['target_record_id']: r for r in manifest}
+object_by_id = {r['provider_object_id']: r for r in objects}
+for row in manifest:
+    path = row['target_relative_path']
+    pure = PurePosixPath(path)
+    if path.startswith('/') or path.endswith('/') or str(pure) != path or '..' in pure.parts or '.' in pure.parts:
+        fail(f'unsafe target path: {path}')
+    if len(pure.parts) != 2 or pure.parts[0] != 'lib':
+        fail(f'unexpected target root: {path}')
+    if row['application_composition_id'] != 'SELECTED-COMPOSITION-ACCEPT-001':
+        fail('composition id mismatch')
+    if row['provider_object_id'] not in object_by_id:
+        fail('target row references absent composition-local object')
+    fixed = {
+        'application_identity_key': '-', 'supply_artifact_id': '-',
+        'source_artifact_member_path': '-', 'target_domain': 'SHARED_PROVIDER',
+        'target_owner_policy': 'PROVIDER_OWNER', 'target_mutability': 'IMMUTABLE',
+        'target_collision_policy': 'ERROR', 'update_domain': 'GENERIC_PROVIDER_UPDATE',
+        'rollback_domain': 'PROVIDER',
+        'validation_gate_ids': 'SELECTED-COMPOSITION-ACCEPT-001;SELECTED-TARGET-MANIFEST-REVIEW-001',
+        'authority_issue_ids': 'TARGET-MANIFEST-ACCEPTANCE-OPEN',
+        'authority_acceptance_state': 'PROVISIONAL_BLOCKED',
+        'population_state': 'UNPOPULATED_SCHEMA_ONLY',
+    }
+    for key, value in fixed.items():
+        if row[key] != value:
+            fail(f'unsafe target row policy: {key}={row[key]}')
+    if row['target_node_type'] == 'REGULAR':
+        if row['target_mode_policy'] != 'IMMUTABLE_READONLY' or row['target_alias_class'] != 'NONE':
+            fail('invalid regular target policy')
+    elif row['target_node_type'] == 'SYMLINK':
+        if row['target_mode_policy'] != 'DOMAIN_DEFAULT' or row['target_alias_class'] != 'SONAME_RUNTIME_ALIAS':
+            fail('invalid alias target policy')
+    else:
+        fail('unexpected node type')
+
+included = [r for r in composition if r['composition_inclusion'] != 'DEFERRED_PROFILE_REQUIREMENT_OPEN']
+deferred = [r for r in composition if r['composition_inclusion'] == 'DEFERRED_PROFILE_REQUIREMENT_OPEN']
+if len(included) != 41 or len(deferred) != 1 or deferred[0]['member_basename'] != 'libtasn1.so.6.6.4':
+    fail('composition inclusion/deferment mismatch')
+if any('libtasn1' in r['target_relative_path'] for r in manifest):
+    fail('deferred libtasn1 entered target candidate')
+
+for obj in objects:
+    expected_id = f"object:{obj['member_sha256'][:24]}"
+    if obj['provider_object_id'] != expected_id:
+        fail('object id is not content-addressed')
+    if obj['binding_state'] != 'CONTENT_ADDRESSED_COMPOSITION_LOCAL_CANONICAL_BINDING':
+        fail('unexpected object binding state')
+    if obj['authority_effect'] != 'TARGET_REVIEW_REFERENCE_ONLY_NO_NEW_PROVIDER_OR_SUPPLY_AUTHORITY':
+        fail('object binding widened authority')
+
+for rel in aliases:
+    alias_row = by_id.get(rel['alias_target_record_id'])
+    target_row = by_id.get(rel['concrete_target_record_id'])
+    if not alias_row or not target_row:
+        fail('alias companion references absent target row')
+    if alias_row['target_node_type'] != 'SYMLINK' or target_row['target_node_type'] != 'REGULAR':
+        fail('alias companion node type mismatch')
+    if alias_row['target_relative_path'] != rel['alias_relative_path']:
+        fail('alias companion path mismatch')
+    if target_row['target_relative_path'] != rel['concrete_relative_path']:
+        fail('concrete companion path mismatch')
+    if PurePosixPath(rel['concrete_relative_path']).name != rel['alias_target_basename']:
+        fail('alias target basename mismatch')
+    if rel['resolution_state'] != 'RESOLVED_TO_EXACT_INCLUDED_CONCRETE_MEMBER':
+        fail('unresolved target alias')
+
+atomic = {'ATSPI2-CORE-PROV-001': 3, 'CAIRO-PROV-001': 2, 'GTK3-CORE-PROV-001': 2, 'PANGO-PROV-001': 3}
+for review_id, count in atomic.items():
+    members = [r for r in objects if r['provider_review_id'] == review_id]
+    if len(members) != count:
+        fail(f'partial atomic family: {review_id}')
+    ids = {r['provider_object_id'] for r in members}
+    if sum(r['provider_object_id'] in ids for r in manifest) != count * 2:
+        fail(f'atomic family target representation incomplete: {review_id}')
+
+state = (ROOT / 'docs/current/STATE.yaml').read_text()
+active = (ROOT / 'docs/current/ACTIVE_TASK.md').read_text()
+brief = (ROOT / 'docs/current/BRIEF.md').read_text()
+status = (ROOT / 'STATUS.md').read_text()
+doc = (ROOT / 'docs/evidence/selected-obsidian-target-manifest-review.md').read_text()
+catalog = (ROOT / 'docs/catalog.tsv').read_text()
+invariants = (ROOT / BASE / 'profiles/target-layout-invariants.md').read_text()
+markers = [
+    ('state route', 'selected_target_manifest_review: docs/evidence/selected-obsidian-target-manifest-review.md' in state),
+    ('state review id', 'target_manifest_review_id: SELECTED-TARGET-MANIFEST-REVIEW-001' in state),
+    ('state rows', 'target_manifest_rows: 82' in state),
+    ('state population false', 'target_population_authorized: false' in state),
+    ('active task', 'Task ID: `review-and-accept-non-mutating-selected-target-manifest-boundary`' in active),
+    ('brief target', 'target manifest: qualified non-mutating candidate (82 rows)' in brief),
+    ('status decision', '`QUALIFIED_NON_MUTATING_SELECTED_TARGET_MANIFEST`' in status),
+    ('doc decision', 'QUALIFIED_NON_MUTATING_SELECTED_TARGET_MANIFEST' in doc),
+    ('doc no population', 'target population authorized:    NO' in doc),
+    ('catalog', 'selected-obsidian-target-manifest-review\tevidence\tcurrent\tcanonical' in catalog),
+    ('invariant candidate', 'QUALIFIED_NON_MUTATING_SELECTED_TARGET_MANIFEST' in invariants),
+]
+for label, ok in markers:
+    if not ok:
+        fail(f'missing current-state marker: {label}')
+
+for text in (state, active, brief, status, doc, invariants):
+    forbidden = [
+        'target population authorized:    YES', 'materialization authorized:      YES',
+        'deployment authorized:           YES', 'activation authorized:           YES',
+        'population_state: AUTHORIZED', 'population_state:\n    AUTHORIZED',
+    ]
+    if any(value in text for value in forbidden):
+        fail('forbidden authority widening in target manifest review')
+
+print('selected-target-manifest-review: PASS: 82 unique review-only rows, 41 exact members, 41 resolved SONAME aliases, zero collisions, no population authority')

@@ -6,6 +6,9 @@
 schema definition:
     PASS
 
+target row candidate review:
+    QUALIFIED_NON_MUTATING_SELECTED_TARGET_MANIFEST
+
 target row population:
     BLOCKED
 
@@ -166,11 +169,14 @@ The 96 first-generation content identities are not the application-local payload
 
 ## Current permitted state
 
-During `NORMALIZE_PROVIDER_AUTHORITY_COVERAGE_AND_LOCK_SEMANTICS`, every target row remains:
+The exact `SELECTED-TARGET-MANIFEST-REVIEW-001` candidate contains 82 reviewed rows under this schema. Every row remains:
 
 ```text
+authority_acceptance_state:
+    PROVISIONAL_BLOCKED
+
 population_state:
     UNPOPULATED_SCHEMA_ONLY
 ```
 
-No populated target manifest, extraction script, staging tree, generation, `current` pointer, launcher change, loader-state mutation, or package operation is authorized.
+The candidate is a repository review artifact, not a populated target. No extraction script, staging tree, generation, `current` pointer, launcher change, loader-state mutation, package operation, directory or symlink creation is authorized.
