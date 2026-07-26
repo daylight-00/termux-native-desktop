@@ -145,3 +145,6 @@ The authoritative work order is maintained in [`docs/current/ACTIVE_TASK.md`](do
 ## Status
 
 This is an active experiment and architecture-refactoring project, not a finished distribution. Failed and superseded paths remain when they define useful boundaries. See [`STATUS.md`](STATUS.md).
+
+
+Current target-population status: `INTERVENTION_RETAINED`; 14 of 41 concrete objects have qualified retained-result binding inputs, 27 require exact result coordinates, and no materializer, population, deployment or activation authority exists.

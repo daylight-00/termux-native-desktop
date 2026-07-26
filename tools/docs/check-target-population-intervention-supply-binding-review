@@ -1,0 +1,47 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+import csv,hashlib,subprocess,tempfile,sys
+from pathlib import Path
+
+def read(p):
+ with p.open(newline='',encoding='utf-8') as f:return list(csv.DictReader(f,delimiter='\t'))
+def fail(msg):print('target-population-supply-review: FAIL:',msg,file=sys.stderr);raise SystemExit(1)
+def main():
+ root=Path(__file__).resolve().parents[2]
+ with tempfile.TemporaryDirectory() as td:
+  subprocess.run([sys.executable,str(root/'experiments/glibc/selected-obsidian-provider-authority/recipe/generate-target-population-intervention-supply-binding-review.py'),'--repo-root',str(root),'--output-root',td],check=True)
+  rels=['selected-target-supply-byte-binding-review.tsv','selected-target-population-intervention-review.tsv','selected-target-population-intervention-supply-review-metadata.tsv']
+  for n in rels:
+   a=root/'experiments/glibc/selected-obsidian-provider-authority/review'/n;b=Path(td)/'experiments/glibc/selected-obsidian-provider-authority/review'/n
+   if a.read_bytes()!=b.read_bytes():fail(f'generated drift: {n}')
+ review=root/'experiments/glibc/selected-obsidian-provider-authority/review'
+ bindings=read(review/'selected-target-supply-byte-binding-review.tsv');intervention=read(review/'selected-target-population-intervention-review.tsv');meta={r['key']:r['value'] for r in read(review/'selected-target-population-intervention-supply-review-metadata.tsv')}
+ if len(bindings)!=41:fail(f'binding rows {len(bindings)}')
+ q=[r for r in bindings if r['binding_state']=='QUALIFIED_READ_ONLY_BINDING_INPUT'];b=[r for r in bindings if r['binding_state']=='BLOCKED_RESULT_COORDINATE_MISSING']
+ if (len(q),len(b))!=(14,27):fail(f'binding split {len(q)}/{len(b)}')
+ if len({r['member_sha256'] for r in bindings})!=41:fail('member digest uniqueness')
+ if any(r['retained_result_sha256']=='-' for r in q):fail('qualified row lacks result digest')
+ if any(r['retained_result_sha256']!='-' for r in b):fail('blocked row unexpectedly has result digest')
+ if any(r['authority_effect'].endswith('POPULATION') is False for r in q):fail('qualified effect not read-only')
+ if len(intervention)!=10:fail(f'intervention rows {len(intervention)}')
+ if sum(r['review_state']=='SATISFIED' for r in intervention)!=3:fail('satisfied prerequisite count')
+ if not any(r['prerequisite_id']=='INT-004' and r['review_state']=='BLOCKED' and '27_' in r['evidence'] for r in intervention):fail('supply blocker missing')
+ expected={'review_id':'TARGET-POPULATION-INTERVENTION-SUPPLY-REVIEW-001','decision':'INTERVENTION_RETAINED','concrete_object_count':'41','qualified_read_only_binding_count':'14','blocked_result_coordinate_count':'27','population_authorized':'NO','materializer_design_authorized':'NO','byte_acquisition_authorized':'NO','next_action':'close-retained-supply-result-coordinate-and-generation-root-prerequisite-gaps'}
+ for k,v in expected.items():
+  if meta.get(k)!=v:fail(f'metadata {k}: {meta.get(k)!r}')
+ docs={
+  'docs/evidence/selected-target-population-intervention-supply-binding-review.md':['INTERVENTION_RETAINED','qualified read-only bindings:      14','blocked result-coordinate gaps:    27'],
+  'docs/current/ACTIVE_TASK.md':['Task ID: `close-retained-supply-result-coordinate-and-generation-root-prerequisite-gaps`','Do not acquire or populate bytes.'],
+  'docs/current/BRIEF.md':['Semantic state version: `2026-07-26.06`','qualified supply binding inputs:   14','blocked result-coordinate gaps:    27'],
+  'docs/current/STATE.yaml':['state_version: 2026-07-26.06','phase: retained-supply-coordinate-and-generation-root-gap-closure'],
+  'STATUS.md':['The active task is metadata-only retained-result coordinate and generation-root prerequisite closure.']}
+ for rel,need in docs.items():
+  text=(root/rel).read_text()
+  for marker in need:
+   if marker not in text:fail(f'{rel} missing {marker}')
+ forbidden=['population authorized:             YES','materializer design authorized:    YES','byte acquisition authorized:       YES','TARGET_POPULATION_STATE=authorized']
+ combined='\n'.join((root/p).read_text() for p in docs)
+ for x in forbidden:
+  if x in combined:fail(f'authority widening {x}')
+ print('target-population-supply-review: PASS: 41 objects, 14 read-only bindings, 27 coordinate gaps, intervention retained')
+if __name__=='__main__':main()

@@ -91,8 +91,8 @@ checks = [
     ('doc target no', 'target manifest generated:     NO' in doc),
     ('state accepted', 'decision: accepted-bounded-complete-selected-provider-composition' in state),
     ('state target false', 'target_manifest_allowed: false' in state),
-    ('active task', 'Task ID: `review-target-population-intervention-lift-and-supply-byte-binding-boundary`' in active),
-    ('brief', 'composition: accepted-bounded-complete-selected-provider-composition' in brief),
+    ('active task', 'Task ID: `close-retained-supply-result-coordinate-and-generation-root-prerequisite-gaps`' in active),
+    ('brief', 'accepted provider decision rows:   42' in brief and 'current-scope concrete members:    41' in brief),
     ('status', 'bounded selected provider composition accepted' in status),
     ('catalog', 'selected-obsidian-provider-composition-boundary-acceptance\tevidence\tcurrent\tcanonical' in catalog),
 ]

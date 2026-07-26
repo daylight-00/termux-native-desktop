@@ -1,0 +1,15 @@
+key	value
+schema_version	1
+review_id	TARGET-POPULATION-INTERVENTION-SUPPLY-REVIEW-001
+decision	INTERVENTION_RETAINED
+concrete_object_count	41
+qualified_read_only_binding_count	14
+blocked_result_coordinate_count	27
+intervention_prerequisite_count	10
+satisfied_prerequisite_count	3
+blocked_or_open_prerequisite_count	7
+population_authorized	NO
+materializer_design_authorized	NO
+byte_acquisition_authorized	NO
+next_action	close-retained-supply-result-coordinate-and-generation-root-prerequisite-gaps
+authority_effect	READ_ONLY_CENSUS_COMPLETED_INTERVENTION_RETAINED_NO_SUPPLY_ACQUISITION_EXTRACTION_COPY_POPULATION_MATERIALIZATION_DEPLOYMENT_OR_ACTIVATION

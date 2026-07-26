@@ -1,9 +1,12 @@
 schema_version: 1
-state_version: 2026-07-26.05
+state_version: 2026-07-26.06
 
-blocking: []
+blocking:
+  - id: retained-supply-result-coordinate-gaps
+    state: open-27-concrete-objects
+    note: Twenty-seven accepted concrete provider objects lack an exact retained result-archive coordinate in their authority record. Artifact and member digests alone are not acquisition authority.
+  - id: generation-root-and-publication-preconditions
+    state: open-read-only-design-review
+    note: Absolute non-live root, same-filesystem staging, space/ownership preflight, verification receipt, rollback selector and failure-observability contracts are not accepted.
 
-non_blocking:
-  - id: target-supply-byte-binding-census
-    state: repository-and-retained-result-review-required
-    note: The next task must bind all 41 concrete objects to retained immutable supply artifacts and exact archive members without acquisition or extraction.
+non_blocking: []

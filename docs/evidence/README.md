@@ -93,3 +93,5 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 - [`missing-glibc-provider-production-boundary.md`](missing-glibc-provider-production-boundary.md) — planning-only production boundary recording completed libXdamage, atomic AT-SPI2/ATK and atomic GTK 3 core lanes, and the libSELinux lane closed by exact consumer reselection without production.
 
 - `libselinux-direct-consumer-necessity-review.md`: exact oracle libmount SELinux edge and dependency-elimination-by-selected-consumer-reselection decision.
+
+- [`selected-target-population-intervention-supply-binding-review.md`](selected-target-population-intervention-supply-binding-review.md) — read-only 41-object supply census, 14 qualified retained-result inputs, 27 coordinate gaps and retained population intervention.

@@ -404,3 +404,7 @@ The exact `at-spi2-core-glibc 2.56.2` package and its three selected runtime mem
 
 
 Current target-policy status: bounded non-mutating selected target manifest accepted; all 82 rows remain `UNPOPULATED_SCHEMA_ONLY`, with supply-byte binding and intervention lift open.
+
+## Target-population intervention review
+
+The exact 82-row non-mutating target policy remains accepted and unpopulated. A read-only 41-object supply census qualifies 14 retained-result binding inputs and records 27 exact result-coordinate gaps. `INTERVENTION_RETAINED` remains in force; materializer design, byte acquisition, target population, deployment and activation are not authorized. The active task is metadata-only retained-result coordinate and generation-root prerequisite closure.
