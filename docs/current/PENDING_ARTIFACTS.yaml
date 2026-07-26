@@ -1,9 +1,9 @@
 schema_version: 1
-state_version: 2026-07-26.04
+state_version: 2026-07-26.05
 
 blocking: []
 
 non_blocking:
-  - id: provider-authority-sup-02-responses
-    state: historical-requests-not-currently-required
-    note: All 28 issued requests remain unanswered historical requests. ADR 0005 classification records 14 narrowed, 7 replaced, and 7 unnecessary requests; zero requests are required now. A request may be revisited only after an explicit Class C reclassification or recorded escalation trigger.
+  - id: target-supply-byte-binding-census
+    state: repository-and-retained-result-review-required
+    note: The next task must bind all 41 concrete objects to retained immutable supply artifacts and exact archive members without acquisition or extraction.

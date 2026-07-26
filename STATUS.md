@@ -401,3 +401,6 @@ Prototype validity, oracle validity, exact supply identity, semantic role, platf
 ## Qualified atomic AT-SPI2 core production candidate
 
 The exact `at-spi2-core-glibc 2.56.2` package and its three selected runtime members remain frozen as an atomic Class C producing record under an exact Class B recipe. A separate bounded Class B decision now accepts the whole family only for selected GTK 3.24.49 accessibility library linkage. Four GIR/typelib artifacts are byte-exact, seven activation metadata files remain disabled, two helpers remain non-executed, and no install, service, target, deployment, or activation occurred. The active task is atomic GTK 3 core production recipe and isolated build design after official source-coordinate correction.
+
+
+Current target-policy status: bounded non-mutating selected target manifest accepted; all 82 rows remain `UNPOPULATED_SCHEMA_ONLY`, with supply-byte binding and intervention lift open.

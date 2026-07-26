@@ -1,0 +1,26 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+import csv,hashlib,subprocess,sys,tempfile
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[2]; BASE=Path('experiments/glibc/selected-obsidian-provider-authority'); REVIEW=BASE/'review'; NAME='selected-target-manifest-boundary-acceptance.tsv'
+def rows(p):
+ with p.open(newline='',encoding='utf-8') as f:return list(csv.DictReader(f,delimiter='\t'))
+def fail(m):raise SystemExit(m)
+with tempfile.TemporaryDirectory(prefix='target-manifest-acceptance-') as td:
+ subprocess.run([sys.executable,str(ROOT/BASE/'recipe/generate-selected-target-manifest-boundary-acceptance.py'),'--repo-root',str(ROOT),'--output-root',td],check=True)
+ if (ROOT/REVIEW/NAME).read_bytes()!=(Path(td)/REVIEW/NAME).read_bytes():fail('target manifest acceptance generated drift')
+r=rows(ROOT/REVIEW/NAME)
+if len(r)!=1:fail('acceptance row count')
+r=r[0]
+expected={'acceptance_id':'SELECTED-TARGET-MANIFEST-ACCEPT-001','decision':'ACCEPTED_BOUNDED_NON_MUTATING_SELECTED_TARGET_MANIFEST','accepted_target_row_count':'82','accepted_regular_row_count':'41','accepted_alias_row_count':'41','accepted_unique_path_count':'82','accepted_collision_count':'0','accepted_unresolved_alias_count':'0','accepted_authority_state':'ACCEPTED_BOUNDED_TARGET_POLICY','population_state':'UNPOPULATED_SCHEMA_ONLY','remaining_gate_ids':'TARGET-POPULATION-INTERVENTION-LIFT-OPEN;SUPPLY-BYTE-BINDING-OPEN','supply_byte_binding_state':'NOT_REVIEWED_NOT_AUTHORIZED','intervention_lift_state':'NOT_REVIEWED_NOT_LIFTED','materializer_design_state':'NOT_AUTHORIZED','target_population_state':'NOT_AUTHORIZED','materialization_state':'NOT_AUTHORIZED','deployment_state':'NOT_AUTHORIZED','activation_state':'NOT_AUTHORIZED','next_action':'review-target-population-intervention-lift-and-supply-byte-binding-boundary'}
+for k,v in expected.items():
+ if r.get(k)!=v:fail(f'acceptance mismatch {k}: {r.get(k)!r}')
+manifest=rows(ROOT/REVIEW/'selected-target-manifest.tsv')
+if len(manifest)!=82 or any(x['population_state']!='UNPOPULATED_SCHEMA_ONLY' for x in manifest):fail('population state widened')
+if any(x['supply_artifact_id']!='-' or x['source_artifact_member_path']!='-' for x in manifest):fail('supply bytes bound')
+if any(x['authority_issue_ids']!='TARGET-MANIFEST-ACCEPTANCE-OPEN' or x['authority_acceptance_state']!='PROVISIONAL_BLOCKED' for x in manifest):fail('frozen candidate rewritten')
+doc=(ROOT/'docs/evidence/selected-obsidian-target-manifest-boundary-acceptance.md').read_text();state=(ROOT/'docs/current/STATE.yaml').read_text();brief=(ROOT/'docs/current/BRIEF.md').read_text();active=(ROOT/'docs/current/ACTIVE_TASK.md').read_text();status=(ROOT/'STATUS.md').read_text();catalog=(ROOT/'docs/catalog.tsv').read_text()
+checks=[('doc decision','ACCEPTED_BOUNDED_NON_MUTATING_SELECTED_TARGET_MANIFEST' in doc),('doc gates','TARGET-POPULATION-INTERVENTION-LIFT-OPEN' in doc and 'SUPPLY-BYTE-BINDING-OPEN' in doc),('state accepted','target_manifest_acceptance: accepted-bounded-non-mutating-selected-target-manifest' in state),('state blocked','target_population_authorized: false' in state and 'materializer_design_authorized: false' in state),('brief','target manifest: accepted bounded non-mutating policy (82 rows)' in brief),('active','Task ID: `review-target-population-intervention-lift-and-supply-byte-binding-boundary`' in active),('status','bounded non-mutating selected target manifest accepted' in status),('catalog','selected-obsidian-target-manifest-boundary-acceptance\tevidence\tcurrent\tcanonical' in catalog)]
+for n,ok in checks:
+ if not ok:fail('missing current marker: '+n)
+print('target-manifest-acceptance: PASS: exact 82-row target policy accepted; supply binding, intervention lift and population remain blocked')

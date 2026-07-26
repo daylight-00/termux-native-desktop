@@ -1,51 +1,59 @@
-# Active task: review and accept the non-mutating selected target manifest boundary
+# Active task: review target-population intervention lift and supply-byte binding
 
-> Task ID: `review-and-accept-non-mutating-selected-target-manifest-boundary`
+> Task ID: `review-target-population-intervention-lift-and-supply-byte-binding-boundary`
 >
-> Expected state on completion: accept the exact reviewed 82-row target policy and companion object/alias relations while preserving `UNPOPULATED_SCHEMA_ONLY` and prohibiting copy, installation, population, materialization, deployment and activation.
+> Expected state on completion: either retain the intervention because one or more exact supply-byte bindings or safety prerequisites are missing, or accept a bounded implementation-design gate without copying or populating any target.
 
 ## Objective
 
-Review the exact `SELECTED-TARGET-MANIFEST-REVIEW-001` output as a Class D target-policy decision. Acceptance may freeze proposed target paths, node types, owner/mode/mutability policy, SONAME alias relations, collision results, update/rollback domains and validation gates. It may not populate a target.
+Review the two conjunctive gates opened by `SELECTED-TARGET-MANIFEST-ACCEPT-001`:
+
+```text
+TARGET-POPULATION-INTERVENTION-LIFT-OPEN
+SUPPLY-BYTE-BINDING-OPEN
+```
+
+For each of the 41 concrete objects, identify an immutable retained supply artifact, exact artifact digest, exact archive member path, member digest and acquisition/verification authority. Separately review filesystem, atomic-family, rollback, collision, ownership, mutation and observability preconditions for lifting the intervention.
 
 ## Why now
 
-The accepted 41-member current composition was translated into 41 concrete `SHARED_PROVIDER/lib/*` rows and 41 SONAME-alias rows. All 82 paths are unique, all aliases resolve to included concrete rows, all atomic families are complete, deferred `libtasn1.so.6.6.4` is absent, and the collision table is empty.
+The exact 82-row target-policy candidate is now accepted, but it contains no supply artifact or archive-member bindings and the project has not audited whether filesystem intervention may be lifted. Both questions must be answered before materializer design.
 
 ## In scope
 
-- verify exact manifest, object-binding, alias-binding, collision and metadata digests;
-- accept or reject the proposed target-policy boundary as one Class D decision;
-- preserve all rows as `UNPOPULATED_SCHEMA_ONLY`;
-- preserve `TARGET-MANIFEST-ACCEPTANCE-OPEN` until the acceptance record is committed;
-- identify the separate intervention-lift and supply-byte-binding gate required before materializer design.
+- exact 41-object supply-byte binding census;
+- retained archive and clean-acquisition authority;
+- archive-member-to-object digest equality;
+- atomic-family and whole-generation materialization requirements;
+- rollback, interruption, collision and protected-state failure model;
+- decision whether materializer design may begin.
 
 ## Out of scope
 
-Copying, extracting or installing bytes; creating directories or symlinks; binding retained archive bytes for population; changing package, loader or live-prefix state; generating caches or schemas; enabling modules or services; target population; immutable generation creation; selector publication; deployment; display execution; or activation.
+Downloading missing bytes, extracting archives, creating target directories or symlinks, writing a materializer, package installation, population, immutable generation creation, deployment, selector publication, loader mutation, service/module/schema/cache generation, display execution or activation.
 
 ## Required reading
 
+- `docs/evidence/selected-obsidian-target-manifest-boundary-acceptance.md`
 - `docs/evidence/selected-obsidian-target-manifest-review.md`
-- `docs/evidence/selected-obsidian-provider-composition-boundary-acceptance.md`
-- `experiments/glibc/selected-obsidian-provider-authority/review/selected-target-manifest.tsv`
-- `experiments/glibc/selected-obsidian-provider-authority/review/selected-target-manifest-alias-bindings.tsv`
-- `experiments/glibc/selected-obsidian-provider-authority/profiles/target-layout-schema.tsv`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-target-manifest-boundary-acceptance.tsv`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-target-manifest-object-bindings.tsv`
+- `experiments/glibc/selected-obsidian-provider-authority/review/unresolved-authority-ledger.tsv`
 - `experiments/glibc/selected-obsidian-provider-authority/profiles/target-layout-invariants.md`
 - `docs/decisions/0005-proportional-assurance-depth.md`
 
 ## Pending external inputs
 
-None. The exact manifest candidate and review evidence are repository-local.
+None required for the initial read-only census. Missing retained artifacts discovered by the census become explicit blockers rather than implicit acquisition authority.
 
 ## Stop conditions
 
-Stop if any digest drifts, any target path or alias collides, any alias target is absent, any atomic family is partial, deferred libtasn1 appears, any row is population-authorized, or acceptance would require supply-byte acquisition or filesystem mutation.
+Stop if any object lacks exact retained supply bytes or archive-member identity, if acquisition trust is ambiguous, if atomic rollback cannot be bounded, if validation would mutate filesystem/package/loader state, or if either gate is inferred from target-policy acceptance alone.
 
 ## Completion criteria
 
-A separate acceptance record freezes the exact candidate digests and changes only target-policy authority. Population, materialization, deployment and activation remain blocked.
+A separate review records all 41 supply bindings and intervention-lift prerequisites, then decides `INTERVENTION_RETAINED` or `BOUNDED_MATERIALIZER_DESIGN_REVIEW_AUTHORIZED`. Neither decision populates a target.
 
 ## Next valid action
 
-Review and accept the exact non-mutating target manifest boundary only. Do not populate a target.
+Run a read-only supply-binding and intervention-lift census. Do not acquire or materialize bytes.

@@ -52,6 +52,7 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 
 - [`selected-obsidian-provider-composition-boundary-acceptance.md`](selected-obsidian-provider-composition-boundary-acceptance.md) accepts that exact review set as a bounded Class D application-runtime composition while target paths, population and activation remain blocked.
 - [`selected-obsidian-target-manifest-review.md`](selected-obsidian-target-manifest-review.md) qualifies the deterministic 82-row non-mutating target candidate for 41 exact concrete members and 41 SONAME aliases while population remains blocked.
+- [`selected-obsidian-target-manifest-boundary-acceptance.md`](selected-obsidian-target-manifest-boundary-acceptance.md) accepts the exact five-file target-policy candidate while supply-byte binding, intervention lift, materializer design and population remain blocked.
 
 - [`gdkpixbuf-core-provider-acquisition-result-review.md`](gdkpixbuf-core-provider-acquisition-result-review.md) binds the exact GLib-family and libpng candidate identities, records the missing Termux GdkPixbuf package/recipe, and routes the upstream 2.42.12 scratch build.
 

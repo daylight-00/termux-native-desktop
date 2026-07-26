@@ -1,47 +1,37 @@
 # Current project brief
 
-> Semantic state version: `2026-07-26.04`
+> Semantic state version: `2026-07-26.05`
 
 ## Purpose and operational boundary
 
-`termux-native-desktop` develops a native Termux/glibc workstation while keeping artifact identity, adaptation, provider authority, composition, target population, and activation separate. User Termux remains authoritative for device execution and remote mutation.
+`termux-native-desktop` develops a native Termux/glibc workstation while keeping artifact identity, provider authority, composition, target policy, population and activation separate. User Termux remains authoritative for execution and remote mutation.
 
-## Current provider and composition boundary
+## Current boundary
 
 ```text
 claims: 95
-Class A/B/C/D: 36 / 52 / 4 / 3
+bounded provider roots: 31
 bounded provider roots accepted overall: 31
-accepted roots inside the 28-root inventory: 21
-open roots inside the 28-root inventory: 7
-accepted exact provider rows: 42
-included current-scope members: 41
+accepted provider decision rows: 42
+current-scope concrete members: 41
 deferred members: 1
 selected identity gaps: 0
-composition: accepted-bounded-complete-selected-provider-composition
+composition: accepted bounded complete
 target manifest: qualified non-mutating candidate (82 rows)
-target path collisions: 0
+target manifest acceptance: accepted bounded non-mutating policy (82 rows)
+target manifest: accepted bounded non-mutating policy (82 rows)
+regular / SONAME alias rows: 41 / 41
+path collisions / unresolved aliases: 0 / 0
+population state: UNPOPULATED_SCHEMA_ONLY
+supply-byte binding: blocked
+intervention lift: blocked
+materializer design: blocked
 target population: blocked
 activation: blocked
 ```
 
-`SELECTED-COMPOSITION-ACCEPT-001` accepts the exact 42-row provider composition boundary as one bounded Class D decision. The current selected GTK/transitive runtime membership contains 41 exact members. `libtasn1.so.6.6.4` remains an accepted provider outside the current profile until a GnuTLS security or printing profile is selected.
+`SELECTED-TARGET-MANIFEST-ACCEPT-001` accepts the exact v105 five-file target-policy candidate by digest. The frozen candidate still contains candidate-time open markers; the separate acceptance record closes that review issue without rewriting evidence. No supply artifact or archive member is bound and no target path exists on disk.
 
-`SELECTED-TARGET-MANIFEST-REVIEW-001` deterministically proposes 41 concrete `SHARED_PROVIDER/lib/*` rows and 41 SONAME alias rows. All 82 paths are unique, every alias resolves to its accepted concrete member, and the accepted atomic families remain complete. The candidate chooses proposed target paths and node policy for review only; it does not choose extraction order, dynamic-loader search order, package installation order, population order or activation order.
+## Current phase
 
-Exact project-produced `libXdamage.so.1.1.0` retains bounded GDK X11 damage authority. The exact atomic `libatk-1.0.so.0.25611.1`, `libatk-bridge-2.0.so.0.0.0`, and `libatspi.so.0.0.1` family retains bounded accessibility library-linkage authority with services inactive. The historical `libselinux.so.1` oracle edge is eliminated by exact libmount consumer reselection.
-
-The exact GTK 3.24.49 pair remains atomic and bounded:
-
-```text
-libgdk-3.so.0.2417.32 -> libgdk-3.so.0
-libgtk-3.so.0.2417.32 -> libgtk-3.so.0
-```
-
-Package-wide development surfaces, tools, `broadwayd`, modules, print backends, schemas, GIR/typelib target membership, services, display execution, deployment, and activation remain excluded.
-
-Web-chat capability failures follow a stop-loss contract: run one bounded representative probe, classify the limitation, stop equivalent retries, and use the registered authority fallback.
-
-## Current project phase
-
-The active task is `review-and-accept-non-mutating-selected-target-manifest-boundary`. It may accept the exact reviewed target-policy digests while every row remains `UNPOPULATED_SCHEMA_ONLY`. It may not copy, install, populate, materialize, deploy or activate anything.
+The active task is `review-target-population-intervention-lift-and-supply-byte-binding-boundary`. It is read-only. It must determine whether the target-population intervention may be lifted and whether every concrete object has an exact retained supply-byte binding before any materializer design. It may not acquire, extract, copy, install, populate, deploy or activate anything.
