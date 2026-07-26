@@ -1,53 +1,54 @@
-# Active task: review and accept the non-mutating selected-provider local-supply-map contract boundary
+# Active task: design and review a read-only selected-provider local-supply-map evidence transaction
 
-> Task ID: `review-and-accept-non-mutating-selected-provider-local-supply-map-contract-boundary`
+> Task ID: `design-and-review-read-only-selected-provider-local-supply-map-evidence-transaction`
 >
-> Expected state on completion: the exact 41-row contract, 24-rule validation contract, canonical receipt schema and metadata are accepted as a bounded non-mutating interface. No local path is populated and execution remains unauthorized.
+> Expected state on completion: a non-executing transaction design defines exact authorized input coordinates, bounded no-follow local reads, 41-row receipt production, failure handling and protected-state checks. No path is searched or read during design.
 
 ## Objective
 
-Review the exact local-supply-map contract candidate produced by `SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-CONTRACT-REVIEW-001` and decide whether its path, file-identity, result/index, container/member, content and failure rules may become accepted project authority.
+Translate the accepted 41-row local-supply-map contract into an auditable read-only evidence transaction design. The design must explain how a future explicitly authorized transaction receives exact path coordinates, validates all 24 rules and emits or rejects a canonical 41-row receipt without creating runtime state.
 
 ## Why now
 
-The accepted materializer design requires a future 41-row local regular-file evidence map before execution authorization can even be reviewed. The candidate now defines all 41 rows, 24 validation rules and a canonical fail-closed receipt schema while preserving zero populated paths.
+`SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-CONTRACT-ACCEPT-001` accepts the exact contract boundary while preserving zero populated paths. Before any evidence collection can be authorized, the read set, input authority, ordering, race resistance, result receipt, failure cleanup and protected-state invariance must be designed separately.
 
 ## In scope
 
-- freeze the exact four candidate artifacts by SHA-256;
-- confirm the 41-row bijection to the accepted materializer object plan;
-- confirm the exact 23/4/14 result-index contract split;
-- confirm zero populated local paths and no local discovery authority;
-- confirm no-follow, regular-file, owner, mode, stable-identity, size, digest, ELF and SONAME rules;
-- confirm whole-map rejection on any failed row;
-- record a separate acceptance decision and next localization-evidence gate.
+- define exact input-coordinate and authorization-token interfaces;
+- define no-search, no-glob and no-environment-inference rules;
+- define component `lstat`, `O_NOFOLLOW`, regular-file, owner and mode checks;
+- define stable identity, size, SHA-256, ELF and SONAME validation order;
+- define 41-row completeness and four atomic-family barriers;
+- define canonical receipt and failure receipt production;
+- define repository, remote, package-database and live-prefix invariance checks;
+- prove that design approval grants no local read or execution authority.
 
 ## Out of scope
 
-Searching local storage, supplying actual local paths, opening or reading provider bytes, downloading retained results, extracting packages or archives, creating the generation root or object store, implementing or executing the materializer, producing a live map receipt, target population, publication, deployment or activation.
+Searching local storage, supplying actual local paths, opening or reading provider bytes, downloading retained results, extracting packages or archives, creating the generation root or object store, implementing or executing the evidence collector or materializer, producing a live accepted map, target population, publication, deployment or activation.
 
 ## Required reading
 
-- `docs/evidence/selected-provider-local-supply-map-contract-review.md`
+- `docs/evidence/selected-provider-local-supply-map-contract-boundary-acceptance.md`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-map-contract-boundary-acceptance.tsv`
 - `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-map-contract.tsv`
 - `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-map-validation-contract.tsv`
 - `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-map-receipt-schema.json`
-- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-map-contract-metadata.tsv`
 
 ## Pending external inputs
 
-None for contract acceptance. An actual local map requires a later separately authorized read-only localization/evidence transaction.
+None for read-only design. Actual path coordinates and provider reads require a later separately approved transaction.
 
 ## Stop conditions
 
-Stop if acceptance populates a path, authorizes search or byte reads, weakens exact result/index/container/member identities, permits symlink following, accepts a partial map, creates execution authority or changes runtime state.
+Stop if design performs discovery, binds a real path, opens a provider file, downloads or extracts evidence, weakens no-follow or exact identity rules, accepts partial rows, authorizes execution or changes runtime state.
 
 ## Completion criteria
 
-A separate acceptance record freezes the exact candidate artifacts and preserves zero local paths. Local-map production, execution, root creation, population, materialization, publication, deployment and activation remain blocked.
+A separate machine-readable and narrative transaction design covers inputs, ordering, validation, receipt, failures and invariance. Local-map production and all runtime effects remain unauthorized.
 
 ## Next valid action
 
-Review and accept the contract boundary only. Do not search for, acquire, read, extract or localize provider bytes.
+Design and review only. Do not search, acquire, open, read, extract, localize, populate or execute.
 
 Do not acquire or populate provider bytes.

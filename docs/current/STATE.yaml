@@ -1,9 +1,9 @@
 schema_version: 1
-state_version: 2026-07-26.12
+state_version: 2026-07-26.13
 updated_on: 2026-07-26
 
 project:
-  phase: qualified-local-supply-map-contract-acceptance-review
+  phase: read-only-local-supply-map-evidence-transaction-design-review
   status: active
 
 repository:
@@ -63,6 +63,7 @@ documentation:
   materializer_runtime_preflight_design_review: docs/evidence/selected-target-materializer-runtime-preflight-design-review.md
   materializer_runtime_preflight_design_acceptance: docs/evidence/selected-target-materializer-runtime-preflight-design-boundary-acceptance.md
   local_supply_map_contract_review: docs/evidence/selected-provider-local-supply-map-contract-review.md
+  local_supply_map_contract_acceptance: docs/evidence/selected-provider-local-supply-map-contract-boundary-acceptance.md
   gdkpixbuf_provider_result_review: docs/evidence/gdkpixbuf-2-42-12-provider-candidate-result-review.md
   gdkpixbuf_reference_dependency_provider_authority: docs/evidence/gdkpixbuf-reference-dependency-provider-authority.md
   gdkpixbuf_exact_util_linux_provider_authority: docs/evidence/gdkpixbuf-exact-util-linux-provider-authority.md
@@ -90,8 +91,8 @@ documentation:
   missing_glibc_provider_production_boundary: docs/evidence/missing-glibc-provider-production-boundary.md
 
 provider_authority:
-  workstream: qualified-non-mutating-local-supply-map-contract-acceptance-review-active
-  boundary: thirty-one-bounded-provider-roots-forty-two-row-composition-eighty-two-row-target-policy-forty-one-exact-objects-final-resource-preflight-59142800-materializer-design-accepted-forty-one-row-local-supply-map-contract-candidate-qualified-zero-populated-paths-contract-acceptance-localization-execution-root-creation-population-materialization-publication-deployment-and-activation-blocked
+  workstream: accepted-local-supply-map-contract-evidence-transaction-design-review-active
+  boundary: thirty-one-bounded-provider-roots-forty-two-row-composition-eighty-two-row-target-policy-forty-one-exact-objects-final-resource-preflight-59142800-materializer-design-accepted-forty-one-row-local-supply-map-contract-accepted-zero-populated-paths-evidence-transaction-design-localization-execution-root-creation-population-materialization-publication-deployment-and-activation-blocked
   claim_inventory:
     total: 95
     class_a: 36
@@ -184,7 +185,7 @@ provider_authority:
     transitive_result_sha256: a18426371acf0339731464eea4a6fd1f8c745cc09154629b69e34d1063073c13
     transitive_recipe_tree: e91a0c476ef4355dbfff46e2bcab23d0085ddd01
     transitive_functional_matrix: jpeg-file-pass-jpeg-memory-pass-png-file-pass-png-memory-pass
-    next_action: review-and-accept-non-mutating-selected-provider-local-supply-map-contract-boundary
+    next_action: design-and-review-read-only-selected-provider-local-supply-map-evidence-transaction
   thai_break_provider:
     result_sha256: 7789ff1a039e3186b04014e4ddf6a7ba68d77fe31a2f1ef77273590aa97b8e1e
     libthai_member: libthai.so.0.3.1
@@ -497,14 +498,14 @@ provider_authority:
     provider_authority_effect: exact-libxdamage-atomic-at-spi2-and-atomic-gtk3-core-bounded-providers-and-bounded-application-runtime-composition-accepted-no-target-display-service-module-schema-print-population-or-activation-effect
     composition_effect: accepted-bounded-complete-selected-provider-composition-target-manifest-not-generated
     target_manifest_allowed: false
-    next_action: review-and-accept-non-mutating-selected-provider-local-supply-map-contract-boundary
+    next_action: design-and-review-read-only-selected-provider-local-supply-map-evidence-transaction
   prohibited_claims:
     - complete-provider-authority
     - target-population-ready
     - selected-generation-activation-ready
 
 active_task:
-  id: review-and-accept-non-mutating-selected-provider-local-supply-map-contract-boundary
+  id: design-and-review-read-only-selected-provider-local-supply-map-evidence-transaction
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:
@@ -528,7 +529,9 @@ selected_target_policy:
   materializer_design_acceptance_id: SELECTED-PROVIDER-MATERIALIZER-DESIGN-ACCEPT-001
   execution_authorized: false
   local_supply_map_contract_reviewed: true
-  local_supply_map_contract_review: qualified-non-mutating-candidate-acceptance-open
+  local_supply_map_contract_review: qualified-non-mutating-candidate-historical
+  local_supply_map_contract_acceptance: accepted-bounded-non-mutating-contract-authority
+  local_supply_map_contract_acceptance_id: SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-CONTRACT-ACCEPT-001
   local_supply_map_contract_review_id: SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-CONTRACT-REVIEW-001
   local_supply_map_contract_rows: 41
   local_supply_map_validation_rules: 24
@@ -537,7 +540,7 @@ selected_target_policy:
   materialization_authorized: false
   deployment_authorized: false
   activation_authorized: false
-  next_task: review-and-accept-non-mutating-selected-provider-local-supply-map-contract-boundary
+  next_task: design-and-review-read-only-selected-provider-local-supply-map-evidence-transaction
 
   retained_result_coordinate_generation_contract_review:
     review_id: RETAINED-SUPPLY-COORDINATE-GENERATION-CONTRACT-001

@@ -440,3 +440,10 @@ bounded non-executing selected-provider materializer/runtime-preflight design ac
 `SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-CONTRACT-REVIEW-001` qualifies an exact 41-row contract and 24 validation rules bound one-to-one to the accepted materializer object plan. The candidate freezes result, index, container/member, size, SHA-256, ELF and SONAME expectations, defines no-follow regular-file ownership/mode/stability checks, and provides a canonical fail-closed receipt schema. All 41 local path fields are empty. Contract acceptance, actual localization, execution, generation-root creation, population, materialization, publication, deployment and activation remain separate and blocked.
 
 non-mutating 41-row selected-provider local-supply-map contract candidate qualified
+
+
+## Bounded non-mutating selected-provider local-supply-map contract acceptance
+
+`SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-CONTRACT-ACCEPT-001` accepts the exact v114 four-artifact contract boundary: 41 object-bound rows, 24 fail-closed validation rules, a canonical empty receipt schema, a 23/4/14 index-contract split and zero populated local paths. Historical candidate evidence remains frozen. Path discovery, byte reads, local-map production, execution, generation-root creation, population, materialization, publication, deployment and activation remain unauthorized.
+
+bounded non-mutating selected-provider local-supply-map contract accepted

@@ -109,7 +109,7 @@ if not errors:
       ('doc decision','ACCEPTED_BOUNDED_PROVIDER' in doc),('doc Class C','producing evidence remains Class C' in doc),('doc scope','GTK 3.24.49 GDK X11 damage-extension' in doc),
       ('candidate later disposition','LIBXDAMAGE-PROV-001' in candoc and 'subsequent' in candoc.lower()),
       ('state provider','provider_authority: accepted-bounded-provider' in state and 'supplier_publication: not-accepted' in state),
-      ('state gaps','unresolved_selected_identities: 0' in state),('active task','Task ID: `review-and-accept-non-mutating-selected-provider-local-supply-map-contract-boundary`' in active),
+      ('state gaps','unresolved_selected_identities: 0' in state),('active task','Task ID: `design-and-review-read-only-selected-provider-local-supply-map-evidence-transaction`' in active),
       ('brief counts','bounded provider roots:' in brief and '31' in brief and 'accepted target-policy rows:' in brief and '82' in brief),
       ('status accepted','exact libXdamage, atomic AT-SPI2 core, and atomic GTK 3.24.49 GDK/GTK project candidates accepted as bounded providers' in status),
       ('catalog','libxdamage-bounded-provider-authority\tevidence\tcurrent\tcanonical' in catalog),('index','libxdamage-bounded-provider-authority.md' in index)

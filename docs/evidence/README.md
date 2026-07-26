@@ -106,3 +106,5 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 - [`selected-target-materializer-runtime-preflight-design-boundary-acceptance.md`](selected-target-materializer-runtime-preflight-design-boundary-acceptance.md) — exact nine-artifact non-executing design acceptance; local supply mapping, execution, population and publication remain blocked.
 
 - [`selected-provider-local-supply-map-contract-review.md`](selected-provider-local-supply-map-contract-review.md) — deterministic 41-row local-supply-map contract and 24 fail-closed validation rules with zero populated paths and no byte-read or execution authority.
+
+- [`selected-provider-local-supply-map-contract-boundary-acceptance.md`](selected-provider-local-supply-map-contract-boundary-acceptance.md) — exact four-artifact 41-row/24-rule contract acceptance with zero populated paths and separate evidence/execution gates.

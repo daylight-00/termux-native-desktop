@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-26.12`
+> Semantic state version: `2026-07-26.13`
 
 ## Purpose and operational boundary
 
@@ -32,7 +32,8 @@ publication/recovery contracts:   11
 materializer design candidate: QUALIFIED_NON_EXECUTING_READ_ONLY_DESIGN_CANDIDATE
 materializer design acceptance: ACCEPTED_BOUNDED_READ_ONLY_DESIGN_AUTHORITY
 intervention: prior retained; conditionally lifted for read-only design review only
-local supply map contract:     QUALIFIED_NON_MUTATING_CANDIDATE_ACCEPTANCE_OPEN
+local supply map contract:     QUALIFIED_NON_MUTATING_CANDIDATE_HISTORICAL
+local supply contract acceptance: ACCEPTED_BOUNDED_NON_MUTATING_CONTRACT_AUTHORITY
 local supply contract rows:       41
 local supply validation rules:    24
 local supply populated paths:      0
@@ -49,6 +50,6 @@ Design acceptance is non-executing. It creates no local supply map, reads no pro
 
 ## Current phase
 
-`SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-CONTRACT-REVIEW-001` qualifies a deterministic 41-row contract, 24 validation rules and a canonical empty receipt schema. The candidate contains zero local paths and grants no path-discovery or byte-read authority.
+`SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-CONTRACT-ACCEPT-001` accepts the exact four-artifact contract boundary: 41 rows, 24 validation rules, a canonical empty receipt schema, the 23/4/14 index-contract split and zero populated local paths. Acceptance grants no path discovery, byte read or execution authority.
 
-The active task is `review-and-accept-non-mutating-selected-provider-local-supply-map-contract-boundary`. It may freeze and accept the exact contract artifacts only. It may not search, acquire, read, extract or localize provider bytes.
+The active task is `design-and-review-read-only-selected-provider-local-supply-map-evidence-transaction`. It may design a future evidence collector only. It may not search, acquire, open, read, extract or localize provider bytes.
