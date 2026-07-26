@@ -1,0 +1,32 @@
+#!/usr/bin/env python3
+from pathlib import Path
+import csv,subprocess,tempfile,sys
+root=Path(__file__).resolve().parents[2]
+review=root/'experiments/glibc/selected-obsidian-provider-authority/review'
+def read(p):
+ with p.open(newline='',encoding='utf-8') as f:return list(csv.DictReader(f,delimiter='\t'))
+with tempfile.TemporaryDirectory() as td:
+ subprocess.run(['python3',str(root/'experiments/glibc/selected-obsidian-provider-authority/recipe/generate-retained-result-coordinate-generation-contract-review.py'),'--repo-root',str(root),'--output-root',td],check=True)
+ for n in ['selected-target-retained-result-coordinate-review.tsv','selected-target-generation-root-contract-review.tsv','selected-target-coordinate-generation-contract-metadata.tsv']:
+  if (review/n).read_bytes()!=(Path(td)/'experiments/glibc/selected-obsidian-provider-authority/review'/n).read_bytes():raise SystemExit('generated drift '+n)
+rows=read(review/'selected-target-retained-result-coordinate-review.tsv');contracts=read(review/'selected-target-generation-root-contract-review.tsv');meta={r['key']:r['value'] for r in read(review/'selected-target-coordinate-generation-contract-metadata.tsv')}
+checks={
+ 'rows_41':len(rows)==41,
+ 'existing_14':sum(r['coordinate_review_state']=='RETAINED_RESULT_DIGEST_ALREADY_BOUND' for r in rows)==14,
+ 'legacy_24':sum(r['coordinate_review_state']=='DRIVE_COORDINATE_AND_OUTER_SHA_BOUND' for r in rows)==24,
+ 'missing_3':sum(r['coordinate_review_state']=='RETAINED_RESULT_COORDINATE_MISSING' for r in rows)==3,
+ 'legacy_have_ids_sha':all(len(r['drive_file_id'])>10 and len(r['retained_result_sha256'])==64 and r['result_index_state']=='LEGACY_RESULT_INDEX_ABSENT' for r in rows if r['coordinate_review_state']=='DRIVE_COORDINATE_AND_OUTER_SHA_BOUND'),
+ 'missing_exact_families':{r['provider_review_id'] for r in rows if r['coordinate_review_state']=='RETAINED_RESULT_COORDINATE_MISSING'}=={'FONTCONFIG-PROV-001','HARFBUZZ-PROV-001','LIBXKBCOMMON-PROV-001'},
+ 'contracts_7':len(contracts)==7 and all(r['review_state']=='BOUNDED_CONTRACT_DEFINED' for r in contracts),
+ 'absolute_non_live_root':contracts[0]['contract_value']=='/data/data/com.termux/files/home/.local/state/termux-native-desktop/selected-provider-runtime',
+ 'same_fs_atomic':any(r['contract_id']=='GEN-003' and 'ST_DEV_EQUAL' in r['runtime_preflight'] for r in contracts),
+ 'receipt_contract':any(r['contract_id']=='GEN-005' and '41_OBJECT_SHA' in r['contract_value'] for r in contracts),
+ 'all_authority_no':meta.get('population_authorized')=='NO' and meta.get('materializer_design_authorized')=='NO' and meta.get('byte_acquisition_authorized')=='NO' and meta.get('generation_root_creation_authorized')=='NO',
+ 'next_action':meta.get('next_action')=='close-three-missing-result-coordinates-upgrade-legacy-indexes-and-census-member-sizes',
+}
+for p in [root/'docs/current/ACTIVE_TASK.md',root/'docs/current/BRIEF.md',root/'docs/current/STATE.yaml',root/'STATUS.md',root/'docs/evidence/selected-target-retained-result-coordinate-generation-contract-review.md']:
+ text=p.read_text()
+ if 'population authorized:          YES' in text or 'materializer design authorized: YES' in text:checks['no_widening_'+p.name]=False
+if not all(checks.values()):
+ print({k:v for k,v in checks.items() if not v},file=sys.stderr);raise SystemExit(1)
+print('retained result coordinate and generation contract review: PASS: 14 existing, 24 legacy coordinates, 3 missing; seven contracts defined; intervention retained')

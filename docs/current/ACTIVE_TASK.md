@@ -1,49 +1,47 @@
-# Active task: close retained supply-result coordinates and generation-root prerequisites
+# Active task: close three missing coordinates, upgrade legacy result indexes and census member sizes
 
-> Task ID: `close-retained-supply-result-coordinate-and-generation-root-prerequisite-gaps`
+> Task ID: `close-three-missing-result-coordinates-upgrade-legacy-indexes-and-census-member-sizes`
 >
-> Expected state on completion: all 41 concrete objects have exact retained result coordinates and verification contracts, and the non-live generation-root, staging, resource, receipt, rollback and failure-observability prerequisites are either bounded or remain explicit blockers. No bytes are acquired or populated.
+> Expected state on completion: Fontconfig, HarfBuzz and libxkbcommon have immutable retained-result coordinates; all twenty-four legacy authority archives have a digest-index upgrade or explicit replacement receipt; and all 41 concrete members have exact byte sizes. No provider bytes are acquired or populated.
 
 ## Objective
 
-Close the 27 `RETAINED-RESULT-COORDINATE-OPEN` gaps recorded by `TARGET-POPULATION-INTERVENTION-SUPPLY-REVIEW-001`. Separately define the absolute non-live generation-root and preflight contracts needed for a future materializer-design review.
+Close the remaining verification blockers after `RETAINED-SUPPLY-COORDINATE-GENERATION-CONTRACT-001`. Preserve the seven accepted generation contracts while upgrading supply evidence only.
 
 ## Why now
 
-The accepted 82-row target policy remains unpopulated. The read-only v107 census found only 14 digest-bound retained-result inputs and 27 missing retained-result coordinates, while seven intervention prerequisites remain blocked or open. These gaps must become explicit immutable metadata and preflight contracts before materializer design can be reviewed.
+Twenty-four formerly blocked objects now have exact Drive file IDs and outer SHA-256 values, but their legacy transaction archives lack `result-index.sha256`. Three provider families still lack a retained result coordinate. The generation-root, publication, receipt, rollback and cleanup contracts are now bounded, but exact object-size input is still missing.
 
 ## In scope
 
-- locate exact retained project result archives by immutable Drive/repository coordinate;
-- bind each coordinate to its recorded result SHA and provider authority row;
-- define result-index and package/member verification contracts;
-- define a non-live immutable generation root without creating it;
-- review same-filesystem staging, byte budget, free space, owner/mode feasibility, verification receipts, rollback selector and orphan-staging policy.
+- locate immutable Fontconfig, HarfBuzz and libxkbcommon result coordinates;
+- define a non-mutating index-upgrade receipt for each legacy archive or bind a newer indexed replacement result;
+- record exact size for all 41 concrete members from trusted artifact/member evidence;
+- recompute the resource preflight budget without creating the generation root.
 
 ## Out of scope
 
-Downloading or extracting provider bytes, creating directories or symlinks, writing a materializer, package installation, target population, immutable-generation creation, selector publication, deployment, loader mutation, service/module/schema/cache generation, display execution or activation.
+Provider-byte download or extraction, directory or symlink creation, materializer implementation, package installation, target population, selector publication, deployment, loader mutation, service/module/schema/cache generation, display execution or activation.
 
 ## Required reading
 
+- `docs/evidence/selected-target-retained-result-coordinate-generation-contract-review.md`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-target-retained-result-coordinate-review.tsv`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-target-generation-root-contract-review.tsv`
 - `docs/evidence/selected-target-population-intervention-supply-binding-review.md`
-- `experiments/glibc/selected-obsidian-provider-authority/review/selected-target-supply-byte-binding-review.tsv`
-- `experiments/glibc/selected-obsidian-provider-authority/review/selected-target-population-intervention-review.tsv`
-- `docs/evidence/selected-obsidian-target-manifest-boundary-acceptance.md`
-- `docs/decisions/0005-proportional-assurance-depth.md`
 
 ## Pending external inputs
 
-None are required to perform metadata-only repository and Drive coordinate discovery. Any result archive that cannot be located by an existing immutable coordinate remains an explicit blocker; its absence does not authorize acquisition or reproduction.
+None for bounded coordinate search and metadata review. A missing immutable result remains a blocker and never creates acquisition or reproduction authority.
 
 ## Stop conditions
 
-Stop if any coordinate cannot be bound to an exact digest, if a result archive lacks an independently verified index, if the proposed root overlaps the live glibc prefix or package database, or if validation would require byte acquisition or filesystem mutation.
+Stop if an archive digest cannot be verified, if an index upgrade would rewrite historical evidence, if size evidence is not bound to the exact member digest, or if any step would create or modify target/runtime state.
 
 ## Completion criteria
 
-A read-only review records 41 exact result coordinates or retains explicit per-object blockers, and records generation-root/preflight decisions. Only a later separate transaction may decide whether bounded materializer design is authorized.
+A separate read-only review records three coordinates or explicit terminal blockers, twenty-four append-only index-upgrade receipts or indexed replacements, and exact 41-member sizes. Population and materializer design remain separate decisions.
 
 ## Next valid action
 
-Perform metadata-only retained-result coordinate discovery and generation-root contract review. Do not acquire or populate bytes.
+Perform metadata-only coordinate, index-upgrade and size census work. Do not acquire or populate provider bytes.

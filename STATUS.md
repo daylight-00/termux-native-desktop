@@ -408,3 +408,6 @@ Current target-policy status: bounded non-mutating selected target manifest acce
 ## Target-population intervention review
 
 The exact 82-row non-mutating target policy remains accepted and unpopulated. A read-only 41-object supply census qualifies 14 retained-result binding inputs and records 27 exact result-coordinate gaps. `INTERVENTION_RETAINED` remains in force; materializer design, byte acquisition, target population, deployment and activation are not authorized. The active task is metadata-only retained-result coordinate and generation-root prerequisite closure.
+
+
+Current supply-evidence status: 14 existing digest-bound results, 24 legacy Drive coordinates with outer SHA verified but result-index upgrades open, and 3 missing coordinates. Seven non-live generation contracts are defined; population and materializer design remain blocked.

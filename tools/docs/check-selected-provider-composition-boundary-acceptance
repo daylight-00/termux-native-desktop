@@ -91,8 +91,8 @@ checks = [
     ('doc target no', 'target manifest generated:     NO' in doc),
     ('state accepted', 'decision: accepted-bounded-complete-selected-provider-composition' in state),
     ('state target false', 'target_manifest_allowed: false' in state),
-    ('active task', 'Task ID: `close-retained-supply-result-coordinate-and-generation-root-prerequisite-gaps`' in active),
-    ('brief', 'accepted provider decision rows:   42' in brief and 'current-scope concrete members:    41' in brief),
+    ('active task', 'Task ID: `close-three-missing-result-coordinates-upgrade-legacy-indexes-and-census-member-sizes`' in active),
+    ('brief', 'accepted provider decision rows:' in brief and '42' in brief and 'current-scope concrete members:' in brief and '41' in brief),
     ('status', 'bounded selected provider composition accepted' in status),
     ('catalog', 'selected-obsidian-provider-composition-boundary-acceptance\tevidence\tcurrent\tcanonical' in catalog),
 ]

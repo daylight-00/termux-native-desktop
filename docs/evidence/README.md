@@ -95,3 +95,4 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 - `libselinux-direct-consumer-necessity-review.md`: exact oracle libmount SELinux edge and dependency-elimination-by-selected-consumer-reselection decision.
 
 - [`selected-target-population-intervention-supply-binding-review.md`](selected-target-population-intervention-supply-binding-review.md) — read-only 41-object supply census, 14 qualified retained-result inputs, 27 coordinate gaps and retained population intervention.
+- [`selected-target-retained-result-coordinate-generation-contract-review.md`](selected-target-retained-result-coordinate-generation-contract-review.md) — binds 24 legacy Drive coordinates, retains 3 coordinate blockers and defines seven non-live generation contracts without population authority.

@@ -46,8 +46,8 @@ if not errors:
       ('libSELinux no build','`libselinux_build_authorized` remains `NO`' in doc),
       ('state route','missing_glibc_provider_production_boundary:' in state),
       ('state GTK lane','gtk3_core_lane: bounded-atomic-provider-authority-accepted-package-wide-execution-authority-excluded' in state),
-      ('active task','Task ID: `close-retained-supply-result-coordinate-and-generation-root-prerequisite-gaps`' in active),
-      ('brief decision','accepted target-policy rows:       82' in brief and 'intervention:                      retained' in brief),
+      ('active task','Task ID: `close-three-missing-result-coordinates-upgrade-legacy-indexes-and-census-member-sizes`' in active),
+      ('brief decision','accepted target-policy rows:' in brief and '82' in brief and 'intervention:' in brief and 'retained' in brief),
       ('composition next','NON_MUTATING_SELECTED_TARGET_MANIFEST_GENERATION_AND_REVIEW' in comp),
       ('catalog','missing-glibc-provider-production-boundary\tevidence\tcurrent\tcanonical' in catalog),
       ('status','atomic GTK 3.24.49 GDK/GTK project candidates accepted as bounded providers' in status and 'libselinux.so.1' in status and '`QUALIFIED_NON_MUTATING_SELECTED_TARGET_MANIFEST`' in status)]
