@@ -1,0 +1,21 @@
+#!/usr/bin/env python3
+from pathlib import Path
+import csv,hashlib,json,subprocess,tempfile,sys
+root=Path(__file__).resolve().parents[2];review=root/'experiments/glibc/selected-obsidian-provider-authority/review'
+def read(p):
+ with p.open(newline='',encoding='utf-8') as f:return list(csv.DictReader(f,delimiter='\t'))
+with tempfile.TemporaryDirectory() as td:
+ subprocess.run(['python3',str(root/'experiments/glibc/selected-obsidian-provider-authority/recipe/generate-pixman-size-resource-budget-intervention-review.py'),'--repo-root',str(root),'--output-root',td],check=True)
+ base=Path(td)/'experiments/glibc/selected-obsidian-provider-authority/review'
+ for n in ['selected-target-pixman-size-evidence.tsv','selected-target-verification-receipt-prototype.json','selected-target-population-intervention-lift-review.tsv','selected-target-resource-budget-metadata.tsv']:
+  if (review/n).read_bytes()!=(base/n).read_bytes():raise SystemExit('generated drift '+n)
+ev=read(review/'selected-target-pixman-size-evidence.tsv');gates=read(review/'selected-target-population-intervention-lift-review.tsv');meta={r['key']:r['value'] for r in read(review/'selected-target-resource-budget-metadata.tsv')};proto=(review/'selected-target-verification-receipt-prototype.json').read_bytes();j=json.loads(proto)
+checks={
+ 'evidence_one':len(ev)==1,'pixman_size':ev[0]['member_size']=='460920','pixman_sha':ev[0]['member_sha256']=='cab54c7f8e4c3a5c1980aa7564b9321114418f2d3c6fa37a3c0723f9f22e1eb2','result_sha':ev[0]['result_sha256']=='3df4f72452b6fb36525ea651f58a0d9d0e551d6ab1f0076653588e767fb1ad9a','result_file_id':ev[0]['drive_file_id']=='1-slSGw5H4_Qn-lL9z8aBeqOBlybW7vBB',
+ 'prototype_counts':j.get('object_count')==41 and j.get('alias_count')==41 and len(j.get('objects',[]))==41 and len(j.get('aliases',[]))==41,'prototype_bytes':len(proto)==44332,'prototype_sha':hashlib.sha256(proto).hexdigest()=='b5e375cef8a47aac3fd298ef855ba0fd179942a005efc6a96817ab3bb9630b79',
+ 'gate_count':len(gates)==10,'all_design_only':all(r['review_result']=='SATISFIED_FOR_READ_ONLY_MATERIALIZER_DESIGN_REVIEW' for r in gates),'all_no_widening':all('DOES_NOT_AUTHORIZE_BYTE_ACQUISITION' in r['prohibited_inference'] for r in gates),
+ 'meta_size':meta.get('exact_member_size_count')=='41' and meta.get('open_member_size_count')=='0' and meta.get('exact_member_bytes')=='29047112','meta_receipt':meta.get('receipt_prototype_bytes')=='44332' and meta.get('receipt_overhead_budget_bytes')=='1048576' and meta.get('receipt_overflow_policy')=='ABORT_BEFORE_GENERATION_PUBLICATION','meta_budget':meta.get('final_resource_preflight_bytes')=='59142800','meta_decision':meta.get('intervention_state')=='CONDITIONALLY_LIFTED_FOR_READ_ONLY_MATERIALIZER_DESIGN_REVIEW_ONLY' and meta.get('materializer_design_authorized')=='YES_READ_ONLY_DESIGN_REVIEW_ONLY','runtime_authority_no':all(meta.get(k)=='NO' for k in ['target_population_authorized','byte_acquisition_authorized','generation_root_creation_authorized','materialization_authorized','publication_authorized','deployment_authorized','activation_authorized']),'next_action':meta.get('next_action')=='design-read-only-selected-provider-materializer-and-runtime-preflight-contract'}
+texts='\n'.join((root/p).read_text() for p in ['docs/current/ACTIVE_TASK.md','docs/current/BRIEF.md','docs/current/STATE.yaml','docs/current/PENDING_ARTIFACTS.yaml','STATUS.md','docs/evidence/selected-target-pixman-size-resource-budget-intervention-review.md'])
+checks.update({'current_task':'Task ID: `design-read-only-selected-provider-materializer-and-runtime-preflight-contract`' in texts,'current_budget':'59,142,800' in texts,'no_population_widening':not any(x in texts for x in ['population authorized: YES','target population authorized: YES','BYTE_ACQUISITION_AUTHORIZED','generation root created'])})
+if not all(checks.values()):print({k:v for k,v in checks.items() if not v},file=sys.stderr);raise SystemExit(1)
+print('Pixman size/resource/intervention review: PASS: 41 exact sizes, 29,047,112 bytes, 1 MiB receipt reservation, 59,142,800-byte preflight, design-only intervention lift')

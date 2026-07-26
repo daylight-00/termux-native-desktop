@@ -416,3 +416,8 @@ Current supply-evidence status: 14 existing digest-bound results, 24 legacy Driv
 ## Indexed supply replacement and member-size review
 
 All retained-result coordinate and result-index gaps are closed as metadata evidence: 14 existing digest-bound inputs, 23 indexed v101 replacements and 4 append-only FreeType legacy index upgrades. Forty exact member sizes sum to 28,586,192 bytes. Exact selected Pixman size and receipt overhead remain open, so intervention, population and materializer design remain blocked.
+
+
+## Pixman size, final budget and design-review intervention decision
+
+Exact retained Pixman evidence records `libpixman-1.so.0.46.4` as 460,920 bytes at the already accepted member digest. All 41 member sizes total 29,047,112 bytes. A 44,332-byte canonical verification-receipt prototype produces a deterministic 1,048,576-byte reservation and a final resource preflight of 59,142,800 bytes. The intervention is conditionally lifted only for read-only materializer design review; byte acquisition, root creation, population, publication, deployment and activation remain blocked.

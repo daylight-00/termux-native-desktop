@@ -1,47 +1,54 @@
-# Active task: close exact Pixman member size and review the population intervention-lift gate
+# Active task: design a read-only selected-provider materializer and runtime preflight contract
 
-> Task ID: `close-exact-pixman-member-size-and-review-population-intervention-lift-gate`
+> Task ID: `design-read-only-selected-provider-materializer-and-runtime-preflight-contract`
 >
-> Expected state on completion: the exact selected `libpixman-1.so.0.46.4` member size and receipt overhead are bound, the final resource budget is calculated, and the intervention-lift prerequisites are reviewed without creating a generation root or populating a target.
+> Expected state on completion: a non-executing design specifies exact input bindings, content-addressed object handling, staging order, verification, receipt generation, publication preflight, rollback and failure cleanup. No provider byte is acquired and no filesystem root or target node is created.
 
 ## Objective
 
-Close the sole remaining member-size gap after all retained-result coordinate and result-index gaps have been closed. Re-evaluate the intervention only from exact size, budget and generation-contract evidence.
+Translate the accepted 82-row target policy, complete 41-member size census, 59,142,800-byte resource budget and seven generation contracts into an auditable materializer/preflight design without implementing or running it.
 
 ## Why now
 
-Fourteen bindings retain existing digest authority, twenty-three use the indexed v101 replacement result, and four FreeType transitive rows use an append-only legacy index receipt. Forty exact member sizes sum to 28,586,192 bytes. Pixman alone remains open, so the final resource budget is not yet valid.
+The exact Pixman member size is 460,920 bytes, all 41 member sizes are exact, and the deterministic receipt reservation closes the final resource-budget blocker. The intervention is conditionally lifted only for read-only design review.
 
 ## In scope
 
-- locate exact size evidence for selected `libpixman-1.so.0.46.4` bound to SHA-256 `cab54c7f8e4c3a5c1980aa7564b9321114418f2d3c6fa37a3c0723f9f22e1eb2`;
-- census receipt overhead;
-- calculate exact generation preflight bytes with the accepted 100% margin;
-- review all intervention-lift prerequisites and decide whether materializer design review may begin.
+- define immutable input and result interfaces;
+- define content-addressed object-store and staging algorithms;
+- define regular-file and relative SONAME-alias ordering;
+- define hash, ELF, SONAME, dependency, collision and loader verification ordering;
+- define receipt serialization and 1 MiB overflow abort behavior;
+- define statvfs, owner, mode, same-device and symlink preflight;
+- define publication, selector rollback, idempotent resume and orphan reporting;
+- prove that every mutating operation remains behind a separate future authorization gate.
 
 ## Out of scope
 
-Using package size as member size, using Pixman 0.44.2 as the selected 0.46.4 member, downloading or extracting provider bytes, creating directories or symlinks, writing a materializer, package installation, target population, selector publication, deployment or activation.
+Downloading or extracting provider bytes, creating the generation root, directories, files or symlinks, package installation, running a materializer, generating a live receipt, publishing selectors, target population, deployment or activation.
 
 ## Required reading
 
-- `docs/evidence/selected-target-indexed-replacement-member-size-review.md`
-- `experiments/glibc/selected-obsidian-provider-authority/review/selected-target-member-size-census.tsv`
-- `experiments/glibc/selected-obsidian-provider-authority/review/selected-target-indexed-replacement-review.tsv`
-- `docs/evidence/selected-target-retained-result-coordinate-generation-contract-review.md`
+- `docs/evidence/selected-target-pixman-size-resource-budget-intervention-review.md`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-target-resource-budget-metadata.tsv`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-target-population-intervention-lift-review.tsv`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-target-generation-root-contract-review.tsv`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-target-manifest-boundary-acceptance.tsv`
 
 ## Pending external inputs
 
-Exact selected Pixman member-size evidence. Absence remains a blocker and does not authorize artifact acquisition or reproduction.
+None for read-only design. Any operation requiring provider or filesystem bytes remains a separate blocked authority decision.
 
 ## Stop conditions
 
-Stop if Pixman evidence is for another version or digest, if package/archive size is substituted for member size, if receipt overhead is guessed, or if validation would mutate target/runtime state.
+Stop if the design begins acquiring bytes, creating paths, relaxing exact digest checks, allowing partial atomic families, publishing selectors, or treating design approval as population authority.
 
 ## Completion criteria
 
-The exact 41-member byte sum, receipt overhead and final margin budget are recorded, and a separate decision retains or conditionally lifts the intervention for materializer design only. No target is populated.
+A separate machine-readable and narrative design covers inputs, ordering, preflight, verification, receipt, publication, rollback and cleanup; negative tests reject mutation and authority widening. Population remains unauthorized.
 
 ## Next valid action
 
-Perform a read-only exact Pixman-size and final-budget review. Do not acquire or populate provider bytes.
+Design and review only. Do not acquire, extract, create, copy, install, populate, publish, deploy or activate.
+
+Do not acquire or populate provider bytes.

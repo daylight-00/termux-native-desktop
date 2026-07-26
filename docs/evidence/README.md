@@ -98,3 +98,5 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 - [`selected-target-retained-result-coordinate-generation-contract-review.md`](selected-target-retained-result-coordinate-generation-contract-review.md) — binds 24 legacy Drive coordinates, retains 3 coordinate blockers and defines seven non-live generation contracts without population authority.
 
 - [`selected-target-indexed-replacement-member-size-review.md`](selected-target-indexed-replacement-member-size-review.md) — closes all retained-result coordinate/index gaps through indexed replacement and append-only receipts, records 40 exact member sizes, and retains the Pixman size blocker.
+
+- [`selected-target-pixman-size-resource-budget-intervention-review.md`](selected-target-pixman-size-resource-budget-intervention-review.md) — binds exact Pixman member size, deterministic receipt reservation and final resource budget, conditionally opening read-only materializer design review while population remains blocked.
