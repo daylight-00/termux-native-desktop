@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-26.14`
+> Semantic state version: `2026-07-27.01`
 
 ## Purpose and operational boundary
 
@@ -38,7 +38,8 @@ local supply contract rows:       41
 local supply validation rules:    24
 local supply populated paths:      0
 local supply map:              NOT_PRODUCED_NOT_AUTHORIZED
-local supply evidence transaction design: QUALIFIED_NON_EXECUTING_READ_ONLY_CANDIDATE
+local supply evidence transaction design: QUALIFIED_NON_EXECUTING_READ_ONLY_CANDIDATE_HISTORICAL
+local supply evidence design acceptance: ACCEPTED_BOUNDED_NON_EXECUTING_READ_ONLY_DESIGN_AUTHORITY
 evidence design inputs/states:  12 / 16
 evidence design operations/failures: 32 / 18
 current authorized coordinates/provider reads: 0 / 0
@@ -58,4 +59,6 @@ Design acceptance is non-executing. It creates no local supply map, reads no pro
 
 `SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-EVIDENCE-TRANSACTION-DESIGN-REVIEW-001` qualifies a deterministic non-executing design: 12 input contracts, 16 states, 32 ordered operations, 18 failure contracts, 24 inherited validation rules and 41 future receipt rows. It contains zero authorized coordinates and zero provider reads.
 
-The active task is `review-and-accept-read-only-selected-provider-local-supply-map-evidence-transaction-design-boundary`. It may freeze and accept the exact design artifacts only. It may not supply coordinates, search, acquire, open, read, extract, localize or execute.
+`SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-EVIDENCE-TRANSACTION-DESIGN-ACCEPT-001` accepts the exact six-artifact design boundary while preserving zero authorized coordinates and zero provider reads. Acceptance grants no evidence execution or runtime authority.
+
+The active task is `generate-and-review-non-mutating-selected-provider-local-supply-evidence-authorization-and-coordinate-receipt-contract`. It may define token and coordinate-receipt schemas only. It may not populate coordinates, search, acquire, open, read, extract, localize or execute.

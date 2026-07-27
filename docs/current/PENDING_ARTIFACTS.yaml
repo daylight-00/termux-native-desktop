@@ -1,15 +1,15 @@
 schema_version: 1
-state_version: 2026-07-26.14
+state_version: 2026-07-27.01
 
 blocking:
-  - id: local-supply-map-evidence-transaction-design-acceptance
-    state: candidate-qualified-acceptance-open
-    note: The exact 12-input, 16-state, 32-operation and 18-failure non-executing design requires a separate Class D acceptance decision.
+  - id: local-supply-evidence-authorization-coordinate-contract
+    state: not-yet-reviewed
+    note: The accepted read-only evidence transaction requires deterministic owner-authorization-token and canonical 41-row coordinate-receipt contracts before any execution authorization can be reviewed.
   - id: local-supply-map-evidence
     state: not-produced-not-authorized
-    note: No authorization token, coordinate receipt, provider path or provider byte has been supplied, opened, read, localized or bound.
+    note: No live authorization token, coordinate receipt, provider path or provider byte has been supplied, opened, read, localized or bound.
   - id: execution-authorization
     state: not-reviewed-not-authorized
-    note: Design acceptance and a future local supply map do not themselves authorize materializer execution or runtime mutation.
+    note: Evidence-design acceptance and future local-map evidence do not themselves authorize materializer execution or runtime mutation.
 
 non_blocking: []

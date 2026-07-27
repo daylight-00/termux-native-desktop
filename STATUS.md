@@ -455,3 +455,10 @@ bounded non-mutating selected-provider local-supply-map contract accepted
 The candidate contains zero authorized coordinates and zero provider reads. Design acceptance, actual evidence execution, local-map acceptance, materializer execution, generation-root creation, population, materialization, publication, deployment and activation remain separate and blocked.
 
 read-only local-supply-map evidence transaction design candidate qualified
+
+
+## Bounded non-executing read-only selected-provider local-supply-map evidence transaction design acceptance
+
+`SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-EVIDENCE-TRANSACTION-DESIGN-ACCEPT-001` accepts the exact v116 six-artifact design boundary: 12 inputs, 16 states, 32 operations, 18 failure contracts, 24 inherited validation rules, 41 future receipt rows, zero authorized coordinates and zero provider reads. Historical candidate evidence remains frozen. Discovery, evidence execution, local-map production, runtime-root creation, population, materialization, publication, deployment and activation remain unauthorized.
+
+bounded non-executing read-only selected-provider local-supply-map evidence transaction design accepted
