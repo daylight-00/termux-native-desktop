@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-27.02`
+> Semantic state version: `2026-07-27.03`
 
 ## Purpose and operational boundary
 
@@ -43,7 +43,8 @@ local supply evidence design acceptance: ACCEPTED_BOUNDED_NON_EXECUTING_READ_ONL
 evidence design inputs/states:  12 / 16
 evidence design operations/failures: 32 / 18
 current authorized coordinates/provider reads: 0 / 0
-authorization/coordinate contract: QUALIFIED_NON_MUTATING_CANDIDATE_ACCEPTANCE_OPEN
+authorization/coordinate contract: QUALIFIED_NON_MUTATING_CANDIDATE_HISTORICAL
+authorization/coordinate contract acceptance: ACCEPTED_BOUNDED_NON_MUTATING_CONTRACT_AUTHORITY
 authorization claims / coordinate rows / validation rules: 18 / 41 / 30
 current live tokens / coordinate rows: 0 / 0
 execution authorization:       NO
@@ -66,4 +67,6 @@ Design acceptance is non-executing. It creates no local supply map, reads no pro
 
 `SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-AUTHORIZATION-COORDINATE-CONTRACT-REVIEW-001` qualifies an 18-claim owner-authorization token schema, canonical 41-row/10-field coordinate-receipt schema and 30 fail-closed validation rules. It contains zero live tokens, zero coordinate rows and zero provider reads.
 
-The active task is `review-and-accept-non-mutating-selected-provider-local-supply-evidence-authorization-and-coordinate-receipt-contract-boundary`. It may freeze and accept the exact four candidate artifacts only. It may not issue a token, populate a coordinate, search, acquire, open, read, extract, localize or execute.
+`SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-AUTHORIZATION-COORDINATE-CONTRACT-ACCEPT-001` accepts the exact four-artifact 18/41/10/30 contract boundary while preserving zero live tokens, zero coordinate rows and zero provider reads. Acceptance grants no issuance, discovery, read or execution authority.
+
+The active task is `design-and-review-non-executing-selected-provider-local-supply-evidence-authorization-issuance-and-coordinate-receipt-production-transaction`. It may design a future issuance/production transaction only. It may not issue a token, populate a coordinate, search, acquire, open, read, extract, localize or execute.

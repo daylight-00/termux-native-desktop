@@ -31,9 +31,9 @@ def main():
   if meta.get(k)!=v:fail(f'metadata {k}: {meta.get(k)!r}')
  docs={
   'docs/evidence/selected-target-population-intervention-supply-binding-review.md':['INTERVENTION_RETAINED','qualified read-only bindings:      14','blocked result-coordinate gaps:    27'],
-  'docs/current/ACTIVE_TASK.md':['Task ID: `review-and-accept-non-mutating-selected-provider-local-supply-evidence-authorization-and-coordinate-receipt-contract-boundary`','Do not acquire or populate provider bytes.'],
-  'docs/current/BRIEF.md':['Semantic state version: `2026-07-27.02`','existing digest-bound results:','indexed v101 replacements:','open member sizes:'],
-  'docs/current/STATE.yaml':['state_version: 2026-07-27.02','phase: non-mutating-local-supply-evidence-authorization-coordinate-contract-acceptance-review'],
+  'docs/current/ACTIVE_TASK.md':['Task ID: `design-and-review-non-executing-selected-provider-local-supply-evidence-authorization-issuance-and-coordinate-receipt-production-transaction`','Do not acquire or populate provider bytes.'],
+  'docs/current/BRIEF.md':['Semantic state version: `2026-07-27.03`','existing digest-bound results:','indexed v101 replacements:','open member sizes:'],
+  'docs/current/STATE.yaml':['state_version: 2026-07-27.03','phase: non-executing-local-supply-evidence-authorization-issuance-coordinate-production-transaction-design-review'],
   'STATUS.md':['The active task is metadata-only retained-result coordinate and generation-root prerequisite closure.']}
  for rel,need in docs.items():
   text=(root/rel).read_text()

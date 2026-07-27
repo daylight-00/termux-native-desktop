@@ -153,3 +153,8 @@ Current target-population status: `INTERVENTION_RETAINED`; 14 of 41 concrete obj
 ## Local-supply evidence authorization and coordinate contract
 
 The current candidate defines an 18-claim immutable owner-authorization token schema and a canonical complete 41-row coordinate-receipt schema with 30 fail-closed validation rules. It contains zero live tokens, paths or provider reads and grants no evidence-execution or runtime authority.
+
+
+## Local-supply evidence authorization and coordinate contract acceptance
+
+The exact 18-claim owner-authorization token schema, canonical 41-row/10-field coordinate-receipt schema and 30 validation rules are accepted as a non-mutating interface. No token or coordinate has been issued, no provider byte has been read and evidence execution remains unauthorized.

@@ -1,10 +1,10 @@
 schema_version: 1
-state_version: 2026-07-27.02
+state_version: 2026-07-27.03
 
 blocking:
-  - id: local-supply-evidence-authorization-coordinate-contract-acceptance
-    state: candidate-qualified-acceptance-open
-    note: The exact 18-claim owner-token schema, 41x10 coordinate-receipt schema, 30 validation rules and metadata require a separate Class D acceptance decision.
+  - id: local-supply-evidence-authorization-issuance-coordinate-production-transaction-design
+    state: not-yet-reviewed
+    note: The accepted authorization/coordinate contract requires a separate non-executing design for owner decision verification, token issuance, explicit 41-row coordinate production, revocation, failure receipts and protected-state invariance.
   - id: local-supply-map-evidence
     state: not-produced-not-authorized
     note: No live authorization token, coordinate receipt, provider path or provider byte has been supplied, opened, read, localized or bound.
