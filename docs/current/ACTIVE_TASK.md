@@ -1,51 +1,52 @@
-# Active task: review and accept the non-executing local-supply evidence authorization issuance and coordinate-receipt production transaction design boundary
+# Active task: generate and review a non-executing local-supply evidence authorization issuance and coordinate-receipt production transaction implementation candidate
 
-> Task ID: `review-and-accept-non-executing-selected-provider-local-supply-evidence-authorization-issuance-and-coordinate-receipt-production-transaction-design-boundary`
+> Task ID: `generate-and-review-non-executing-selected-provider-local-supply-evidence-authorization-issuance-and-coordinate-receipt-production-transaction-implementation-candidate`
 >
-> Expected state on completion: the exact 14-input/18-state/36-operation/20-failure non-executing issuance/production design is accepted as bounded authority while live token issuance, coordinate production, provider reads and evidence execution remain absent and unauthorized.
+> Expected state on completion: a deterministic non-executing implementation candidate enforces the accepted 14-input/18-state/36-operation/20-failure design and 18-claim/41-row/10-field/30-rule interface using synthetic fixtures only, while live token issuance, coordinate production, provider reads and evidence execution remain absent and unauthorized.
 
 ## Objective
 
-Review `SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-AUTHORIZATION-ISSUANCE-COORDINATE-PRODUCTION-DESIGN-REVIEW-001` and decide whether its exact owner-decision, baseline, time, revocation, anti-replay, coordinate-ingestion, canonicalization, inactive staging, failure and invariance contracts may become accepted non-executing design authority.
+Translate `SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-AUTHORIZATION-ISSUANCE-COORDINATE-PRODUCTION-DESIGN-ACCEPT-001` into a reviewable implementation candidate. The candidate must parse and validate explicit owner-decision and coordinate inputs, enforce baselines, time, revocation, replay, canonicalization, inactive staging, failure receipts and protected-state checks without receiving live inputs or creating authority.
 
 ## Why now
 
-The accepted 18-claim/41-row/10-field/30-rule interface defines the data boundary but does not define how a future owner decision and explicit coordinate set are converted into inactive, digest-bound candidate artifacts. The issuance/production ordering, revocation, anti-replay, failure and invariance boundary therefore requires a separate accepted design before any live authority can be considered.
+The exact issuance/production transaction design is accepted, but no implementation exists. A separately reviewed non-executing implementation candidate is required before any owner decision, coordinate receipt or execution authorization can be considered.
 
 ## In scope
 
-- freeze the six candidate artifacts by SHA-256;
-- confirm the 14/18/36/20 structure and inherited 18/41/10/30 contract boundary;
-- confirm zero issued tokens, coordinate rows, provider reads and live authority;
-- confirm explicit input only with no search, glob, environment or basename inference;
-- confirm candidate outputs remain inactive and transaction-scoped;
-- confirm failure results create no live authority;
-- record a separate Class D design acceptance decision.
+- implement deterministic parsers and validators for accepted schemas;
+- implement the 14/18/36/20 state and operation boundary;
+- implement canonical inactive candidate and failure-receipt serialization;
+- implement revocation, expiry, anti-replay and digest cross-binding checks;
+- use synthetic fixtures only;
+- prove zero live token, coordinate, provider read and runtime effect;
+- preserve repository, remote, package-database and live-prefix invariance.
 
 ## Out of scope
 
-Issuing or activating a token, producing or accepting a live coordinate receipt, searching storage, opening or reading provider files, downloading or extracting evidence, executing the evidence collector, producing a local map, creating runtime roots, population, materialization, publication, deployment or activation.
+Supplying a real owner decision, issuing or activating a token, producing or accepting a live coordinate receipt, searching storage, opening or reading provider files, downloading or extracting evidence, running against live coordinates, producing a local map, creating runtime roots, population, materialization, publication, deployment or activation.
 
 ## Required reading
 
-- `docs/evidence/selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-design-review.md`
-- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-design-metadata.tsv`
-- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-evidence-authorization-coordinate-contract-boundary-acceptance.tsv`
+- `docs/evidence/selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-design-boundary-acceptance.md`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-design-boundary-acceptance.tsv`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-operation-contract.tsv`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-failure-contract.tsv`
 
 ## Pending external inputs
 
-None for design acceptance. Actual owner decision and explicit coordinates require later separate authorization.
+None for implementation-candidate generation. Live owner decisions and local coordinates require later separate authorization.
 
 ## Stop conditions
 
-Stop if acceptance issues or activates authority, populates a coordinate, reads provider bytes, permits discovery or inference, changes design cardinality, authorizes evidence execution or changes runtime state.
+Stop if implementation uses a live token or coordinate, searches or infers a path, opens provider bytes, activates authority, changes accepted cardinality, creates runtime state or weakens failure/invariance rules.
 
 ## Completion criteria
 
-A separate acceptance record freezes the exact design artifacts and preserves zero live authority, zero provider reads and zero runtime effects.
+A deterministic implementation candidate and synthetic test suite reproduce the accepted design, emit no live authority and remain behind separate implementation acceptance and execution gates.
 
 ## Next valid action
 
-Review and accept the design boundary only. Do not issue, activate, search, acquire, open, read, extract, localize, populate or execute.
+Generate and review the implementation candidate only. Do not issue, activate, search, acquire, open, read, extract, localize, populate or execute against live inputs.
 
 Do not acquire or populate provider bytes.

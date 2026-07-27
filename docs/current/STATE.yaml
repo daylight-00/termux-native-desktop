@@ -1,9 +1,9 @@
 schema_version: 1
-state_version: 2026-07-27.04
+state_version: 2026-07-27.05
 updated_on: 2026-07-27
 
 project:
-  phase: qualified-non-executing-local-supply-evidence-authorization-issuance-coordinate-production-design-acceptance-review
+  phase: non-executing-local-supply-evidence-authorization-issuance-coordinate-production-implementation-candidate-review
   status: active
 
 repository:
@@ -69,6 +69,7 @@ documentation:
   local_supply_evidence_authorization_coordinate_contract_review: docs/evidence/selected-provider-local-supply-evidence-authorization-coordinate-receipt-contract-review.md
   local_supply_evidence_authorization_coordinate_contract_acceptance: docs/evidence/selected-provider-local-supply-evidence-authorization-coordinate-contract-boundary-acceptance.md
   local_supply_evidence_authorization_issuance_coordinate_production_design_review: docs/evidence/selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-design-review.md
+  local_supply_evidence_authorization_issuance_coordinate_production_design_acceptance: docs/evidence/selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-design-boundary-acceptance.md
   gdkpixbuf_provider_result_review: docs/evidence/gdkpixbuf-2-42-12-provider-candidate-result-review.md
   gdkpixbuf_reference_dependency_provider_authority: docs/evidence/gdkpixbuf-reference-dependency-provider-authority.md
   gdkpixbuf_exact_util_linux_provider_authority: docs/evidence/gdkpixbuf-exact-util-linux-provider-authority.md
@@ -510,7 +511,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: review-and-accept-non-executing-selected-provider-local-supply-evidence-authorization-issuance-and-coordinate-receipt-production-transaction-design-boundary
+  id: generate-and-review-non-executing-selected-provider-local-supply-evidence-authorization-issuance-and-coordinate-receipt-production-transaction-implementation-candidate
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:
@@ -568,7 +569,9 @@ selected_target_policy:
   local_supply_evidence_owner_authorization_issued: false
   local_supply_evidence_coordinate_receipt_issued: false
   local_supply_evidence_authorization_issuance_coordinate_production_design_reviewed: true
-  local_supply_evidence_authorization_issuance_coordinate_production_design: qualified-non-executing-candidate-acceptance-open
+  local_supply_evidence_authorization_issuance_coordinate_production_design: qualified-non-executing-candidate-historical
+  local_supply_evidence_authorization_issuance_coordinate_production_design_acceptance: accepted-bounded-non-executing-design-authority
+  local_supply_evidence_authorization_issuance_coordinate_production_design_acceptance_id: SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-AUTHORIZATION-ISSUANCE-COORDINATE-PRODUCTION-DESIGN-ACCEPT-001
   local_supply_evidence_authorization_issuance_coordinate_production_design_review_id: SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-AUTHORIZATION-ISSUANCE-COORDINATE-PRODUCTION-DESIGN-REVIEW-001
   local_supply_evidence_authorization_issuance_coordinate_production_inputs: 14
   local_supply_evidence_authorization_issuance_coordinate_production_states: 18
@@ -581,7 +584,7 @@ selected_target_policy:
   materialization_authorized: false
   deployment_authorized: false
   activation_authorized: false
-  next_task: review-and-accept-non-executing-selected-provider-local-supply-evidence-authorization-issuance-and-coordinate-receipt-production-transaction-design-boundary
+  next_task: generate-and-review-non-executing-selected-provider-local-supply-evidence-authorization-issuance-and-coordinate-receipt-production-transaction-implementation-candidate
 
   retained_result_coordinate_generation_contract_review:
     review_id: RETAINED-SUPPLY-COORDINATE-GENERATION-CONTRACT-001

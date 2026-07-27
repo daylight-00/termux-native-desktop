@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-27.04`
+> Semantic state version: `2026-07-27.05`
 
 ## Purpose and operational boundary
 
@@ -47,7 +47,8 @@ authorization/coordinate contract: QUALIFIED_NON_MUTATING_CANDIDATE_HISTORICAL
 authorization/coordinate contract acceptance: ACCEPTED_BOUNDED_NON_MUTATING_CONTRACT_AUTHORITY
 authorization claims / coordinate rows / validation rules: 18 / 41 / 30
 current live tokens / coordinate rows: 0 / 0
-authorization issuance/coordinate production design: QUALIFIED_NON_EXECUTING_DESIGN_CANDIDATE
+authorization issuance/coordinate production design: QUALIFIED_NON_EXECUTING_DESIGN_CANDIDATE_HISTORICAL
+authorization issuance/coordinate production design acceptance: ACCEPTED_BOUNDED_NON_EXECUTING_DESIGN_AUTHORITY
 issuance design inputs/states/operations/failures: 14 / 18 / 36 / 20
 execution authorization:       NO
 population state:              UNPOPULATED_SCHEMA_ONLY
@@ -73,4 +74,6 @@ Design acceptance is non-executing. It creates no local supply map, reads no pro
 
 `SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-AUTHORIZATION-ISSUANCE-COORDINATE-PRODUCTION-DESIGN-REVIEW-001` qualifies a deterministic 14-input/18-state/36-operation/20-failure non-executing issuance/production transaction design. It contains zero live tokens, zero coordinate rows, zero provider reads and zero live authority.
 
-The active task is `review-and-accept-non-executing-selected-provider-local-supply-evidence-authorization-issuance-and-coordinate-receipt-production-transaction-design-boundary`. It may freeze and accept the exact design artifacts only. It may not issue or activate a token, produce a coordinate receipt, search, acquire, open, read, extract, localize or execute.
+`SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-AUTHORIZATION-ISSUANCE-COORDINATE-PRODUCTION-DESIGN-ACCEPT-001` accepts the exact six-artifact design boundary while preserving zero issued tokens, coordinate rows, provider reads and live authority. Acceptance grants no issuance, production, discovery, read or execution authority.
+
+The active task is `generate-and-review-non-executing-selected-provider-local-supply-evidence-authorization-issuance-and-coordinate-receipt-production-transaction-implementation-candidate`. It may generate and review a synthetic-input implementation candidate only. It may not issue or activate a token, produce a live coordinate receipt, search, acquire, open, read, extract, localize or execute against live inputs.
