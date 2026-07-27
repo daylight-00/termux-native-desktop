@@ -1,0 +1,210 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import ast
+import csv
+import hashlib
+import importlib.util
+import json
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+BASE = Path("experiments/glibc/selected-obsidian-provider-authority")
+REVIEW = BASE / "review"
+IMPLEMENTATION = BASE / "implementation"
+GENERATOR = BASE / "recipe/generate-selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-implementation.py"
+SOURCE = IMPLEMENTATION / "selected_provider_local_supply_evidence_authorization_issuance_coordinate_production_candidate.py"
+ARTIFACTS = [
+    SOURCE,
+    REVIEW / "selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-implementation-synthetic-fixture.json",
+    REVIEW / "selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-implementation-negative-cases.json",
+    REVIEW / "selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-implementation-coverage.tsv",
+    REVIEW / "selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-implementation-synthetic-success.json",
+    REVIEW / "selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-implementation-metadata.tsv",
+]
+FIXTURE = ARTIFACTS[1]
+NEGATIVES = ARTIFACTS[2]
+COVERAGE = ARTIFACTS[3]
+SUCCESS = ARTIFACTS[4]
+METADATA = ARTIFACTS[5]
+
+
+def fail(message: str) -> None:
+    print(f"local supply issuance/coordinate implementation: FAIL: {message}", file=sys.stderr)
+    raise SystemExit(1)
+
+
+def rows(path: Path) -> list[dict[str, str]]:
+    with path.open(newline="", encoding="utf-8") as handle:
+        return list(csv.DictReader(handle, delimiter="\t"))
+
+
+def load_module(path: Path):
+    spec = importlib.util.spec_from_file_location("checked_issuance_coordinate_implementation", path)
+    if spec is None or spec.loader is None:
+        fail("cannot load implementation source")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+with tempfile.TemporaryDirectory(prefix="issuance-coordinate-implementation-") as tmp:
+    subprocess.run(
+        [sys.executable, str(ROOT / GENERATOR), "--repo-root", str(ROOT), "--output-root", tmp],
+        check=True,
+    )
+    generated_root = Path(tmp)
+    for relative in ARTIFACTS:
+        if (ROOT / relative).read_bytes() != (generated_root / relative).read_bytes():
+            fail(f"generated drift: {relative}")
+
+meta_rows = rows(ROOT / METADATA)
+meta = {row["key"]: row["value"] for row in meta_rows}
+expected_meta = {
+    "implementation_review_id": "SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-AUTHORIZATION-ISSUANCE-COORDINATE-PRODUCTION-IMPLEMENTATION-REVIEW-001",
+    "candidate_state": "QUALIFIED_NON_EXECUTING_SYNTHETIC_IMPLEMENTATION_CANDIDATE",
+    "implementation_acceptance_gate": "SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-AUTHORIZATION-ISSUANCE-COORDINATE-PRODUCTION-IMPLEMENTATION-ACCEPTANCE-OPEN",
+    "design_acceptance_id": "SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-AUTHORIZATION-ISSUANCE-COORDINATE-PRODUCTION-DESIGN-ACCEPT-001",
+    "input_coverage_count": "14",
+    "state_coverage_count": "18",
+    "operation_coverage_count": "36",
+    "failure_coverage_count": "20",
+    "total_coverage_count": "88",
+    "authorization_claim_count": "18",
+    "coordinate_required_row_count": "41",
+    "coordinate_required_row_field_count": "10",
+    "validation_rule_count": "30",
+    "synthetic_success_case_count": "1",
+    "synthetic_negative_case_count": "20",
+    "synthetic_coordinate_row_count": "41",
+    "synthetic_provider_read_count": "0",
+    "synthetic_write_count": "0",
+    "current_issued_token_count": "0",
+    "current_coordinate_receipt_count": "0",
+    "current_coordinate_row_count": "0",
+    "current_provider_read_count": "0",
+    "current_live_authority_count": "0",
+    "implementation_execution_mode": "SYNTHETIC_REPOSITORY_FIXTURE_ONLY",
+    "owner_authorization_issuance_authorized": "NO",
+    "coordinate_receipt_production_authorized": "NO",
+    "local_path_discovery_authorized": "NO",
+    "provider_byte_read_authorized": "NO",
+    "evidence_transaction_execution_authorized": "NO",
+    "local_supply_map_produced": "NO",
+    "generation_root_creation_authorized": "NO",
+    "target_population_authorized": "NO",
+    "materialization_authorized": "NO",
+    "publication_authorized": "NO",
+    "deployment_authorized": "NO",
+    "activation_authorized": "NO",
+    "next_action": "review-and-accept-non-executing-selected-provider-local-supply-evidence-authorization-issuance-and-coordinate-receipt-production-transaction-implementation-candidate-boundary",
+}
+for key, value in expected_meta.items():
+    if meta.get(key) != value:
+        fail(f"metadata mismatch {key}: {meta.get(key)!r}")
+
+for relative, key in [
+    (SOURCE, "implementation_source_sha256"),
+    (FIXTURE, "synthetic_fixture_sha256"),
+    (NEGATIVES, "synthetic_negative_cases_sha256"),
+    (COVERAGE, "implementation_coverage_sha256"),
+    (SUCCESS, "synthetic_success_sha256"),
+]:
+    digest = hashlib.sha256((ROOT / relative).read_bytes()).hexdigest()
+    if meta.get(key) != digest:
+        fail(f"metadata digest mismatch: {key}")
+
+coverage = rows(ROOT / COVERAGE)
+counts = {kind: sum(row["coverage_kind"] == kind for row in coverage) for kind in ("INPUT", "STATE", "OPERATION", "FAILURE")}
+if counts != {"INPUT": 14, "STATE": 18, "OPERATION": 36, "FAILURE": 20} or len(coverage) != 88:
+    fail(f"coverage cardinality mismatch: {counts}")
+if any(row["authority_effect"] != "ZERO_LIVE_AUTHORITY" or row["current_state"] != "MAPPED_NOT_LIVE" for row in coverage):
+    fail("coverage authority widening")
+if len({(row["coverage_kind"], row["source_id"]) for row in coverage}) != 88:
+    fail("coverage source ids not unique")
+
+fixture = json.loads((ROOT / FIXTURE).read_text(encoding="utf-8"))
+if fixture.get("fixture_kind") != "SYNTHETIC_REPOSITORY_FIXTURE_ONLY":
+    fail("fixture is not synthetic-only")
+if any(fixture.get(key) != 0 for key in (
+    "current_live_authority_count", "current_provider_read_count", "current_issued_token_count",
+    "current_coordinate_receipt_count", "current_coordinate_row_count"
+)):
+    fail("fixture contains live authority")
+coordinate_rows = fixture.get("coordinate_source", {}).get("rows", [])
+if len(coordinate_rows) != 41:
+    fail("fixture coordinate row count")
+if any(not row["absolute_canonical_path"].startswith("/__synthetic__/termux-native-desktop/selected-provider/") for row in coordinate_rows):
+    fail("fixture contains non-synthetic coordinate")
+
+negative = json.loads((ROOT / NEGATIVES).read_text(encoding="utf-8"))
+if negative.get("case_count") != 20 or len(negative.get("cases", [])) != 20:
+    fail("negative case count")
+if len({row["failure_id"] for row in negative["cases"]}) != 20 or len({row["case"] for row in negative["cases"]}) != 20:
+    fail("negative cases not unique")
+if any(row["expected_live_authority_count"] != 0 or row["expected_provider_read_count"] != 0 for row in negative["cases"]):
+    fail("negative case authority widening")
+
+source_text = (ROOT / SOURCE).read_text(encoding="utf-8")
+for forbidden in (
+    "import os", "import subprocess", "import socket", "import urllib", "import requests",
+    "os.open", "subprocess.", "socket.", "rclone", "apt ", "dpkg", "tarfile", ".glob(", ".rglob(", "os.walk",
+    ".write_text(", ".write_bytes(", "open(absolute_canonical_path",
+):
+    if forbidden in source_text:
+        fail(f"forbidden implementation surface: {forbidden}")
+parsed = ast.parse(source_text)
+imports = {alias.name.split(".")[0] for node in ast.walk(parsed) if isinstance(node, (ast.Import, ast.ImportFrom)) for alias in node.names}
+if imports & {"os", "subprocess", "socket", "urllib", "requests", "tarfile"}:
+    fail(f"forbidden imports: {sorted(imports)}")
+
+module = load_module(ROOT / SOURCE)
+success = module.execute_synthetic_case(ROOT, fixture, "success")
+expected_success = json.loads((ROOT / SUCCESS).read_text(encoding="utf-8"))
+if success != expected_success or not success.get("pass"):
+    fail("synthetic success drift")
+if success.get("operation_count") != 36 or len(success.get("operation_trace", [])) != 36:
+    fail("success operation trace")
+if success.get("state_count") != 18 or len(success.get("state_trace", [])) != 17:
+    fail("success state trace")
+if success.get("authorization_claim_count") != 18 or success.get("coordinate_row_count") != 41:
+    fail("success interface cardinality")
+if success.get("provider_paths_opened") != [] or success.get("writes_performed") != []:
+    fail("success reports provider reads or writes")
+
+for case in negative["cases"]:
+    result = module.execute_synthetic_case(ROOT, fixture, case["case"])
+    if result.get("pass") is not False or result.get("failure_id") != case["failure_id"] or result.get("failure_code") != case["failure_code"]:
+        fail(f"negative case mismatch: {case['case']}")
+    if result.get("current_live_authority_count") != 0 or result.get("current_provider_read_count") != 0:
+        fail(f"negative case authority widening: {case['case']}")
+    if result.get("provider_paths_opened") != [] or result.get("writes_performed") != []:
+        fail(f"negative case provider read/write: {case['case']}")
+
+outside = ROOT / "README.md"
+cli = subprocess.run(
+    [sys.executable, str(ROOT / SOURCE), "--repo-root", str(ROOT), "--fixture", str(outside), "--case", "success"],
+    capture_output=True,
+    text=True,
+)
+if cli.returncode == 0 or "fixture must be repository-owned review evidence" not in cli.stderr:
+    fail("CLI accepted non-review fixture")
+
+required_docs = [
+    ("docs/evidence/selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-implementation-review.md", "QUALIFIED_NON_EXECUTING_SYNTHETIC_IMPLEMENTATION_CANDIDATE"),
+    ("docs/current/BRIEF.md", "authorization issuance/coordinate production implementation: QUALIFIED_NON_EXECUTING_SYNTHETIC_CANDIDATE"),
+    ("docs/current/STATE.yaml", "local_supply_evidence_authorization_issuance_coordinate_production_implementation: qualified-non-executing-synthetic-candidate"),
+    ("docs/current/ACTIVE_TASK.md", "Task ID: `review-and-accept-non-executing-selected-provider-local-supply-evidence-authorization-issuance-and-coordinate-receipt-production-transaction-implementation-candidate-boundary`"),
+    ("docs/current/PENDING_ARTIFACTS.yaml", "local-supply-evidence-authorization-issuance-coordinate-production-implementation-acceptance"),
+    ("STATUS.md", "selected-provider local-supply evidence authorization issuance and coordinate-receipt production implementation candidate qualified"),
+    ("docs/catalog.tsv", "selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-implementation-review\tevidence\tcurrent\tcanonical"),
+]
+for relative, marker in required_docs:
+    if marker not in (ROOT / relative).read_text(encoding="utf-8"):
+        fail(f"current documentation marker missing: {relative}")
+
+print("local supply issuance/coordinate implementation: PASS: 88-row synthetic-only implementation coverage, 1 success and 20 fail-closed cases, zero live authority")
