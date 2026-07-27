@@ -158,3 +158,8 @@ The current candidate defines an 18-claim immutable owner-authorization token sc
 ## Local-supply evidence authorization and coordinate contract acceptance
 
 The exact 18-claim owner-authorization token schema, canonical 41-row/10-field coordinate-receipt schema and 30 validation rules are accepted as a non-mutating interface. No token or coordinate has been issued, no provider byte has been read and evidence execution remains unauthorized.
+
+
+## Non-executing local-supply evidence authorization issuance and coordinate production design
+
+`SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-AUTHORIZATION-ISSUANCE-COORDINATE-PRODUCTION-DESIGN-REVIEW-001` qualifies a 14/18/36/20 design candidate with zero live authority. Separate design acceptance, owner issuance, coordinate production, provider reads, evidence execution and runtime effects remain blocked.

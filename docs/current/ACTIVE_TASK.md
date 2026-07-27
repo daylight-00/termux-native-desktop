@@ -1,53 +1,51 @@
-# Active task: design and review a non-executing local-supply evidence authorization issuance and coordinate-receipt production transaction
+# Active task: review and accept the non-executing local-supply evidence authorization issuance and coordinate-receipt production transaction design boundary
 
-> Task ID: `design-and-review-non-executing-selected-provider-local-supply-evidence-authorization-issuance-and-coordinate-receipt-production-transaction`
+> Task ID: `review-and-accept-non-executing-selected-provider-local-supply-evidence-authorization-issuance-and-coordinate-receipt-production-transaction-design-boundary`
 >
-> Expected state on completion: a non-executing transaction design defines how a future explicit owner decision may issue one immutable read-only authorization token and how a complete explicit 41-row coordinate receipt may be produced, validated, revoked and archived. No token, coordinate, provider read or execution occurs during design.
+> Expected state on completion: the exact 14-input/18-state/36-operation/20-failure non-executing issuance/production design is accepted as bounded authority while live token issuance, coordinate production, provider reads and evidence execution remain absent and unauthorized.
 
 ## Objective
 
-Translate the accepted 18-claim authorization and 41-row coordinate-receipt contract into an auditable future issuance/production transaction design. The design must define external inputs, owner decision verification, canonical serialization, replay/revocation state, explicit coordinate ingestion, whole-receipt validation, failure receipts and protected-state invariance.
+Review `SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-AUTHORIZATION-ISSUANCE-COORDINATE-PRODUCTION-DESIGN-REVIEW-001` and decide whether its exact owner-decision, baseline, time, revocation, anti-replay, coordinate-ingestion, canonicalization, inactive staging, failure and invariance contracts may become accepted non-executing design authority.
 
 ## Why now
 
-`SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-AUTHORIZATION-COORDINATE-CONTRACT-ACCEPT-001` accepts the exact non-mutating interface while preserving zero live tokens, zero coordinate rows and zero provider reads. Before issuance or coordinate production can be considered, its transaction boundary must be designed separately.
+The accepted 18-claim/41-row/10-field/30-rule interface defines the data boundary but does not define how a future owner decision and explicit coordinate set are converted into inactive, digest-bound candidate artifacts. The issuance/production ordering, revocation, anti-replay, failure and invariance boundary therefore requires a separate accepted design before any live authority can be considered.
 
 ## In scope
 
-- define exact owner-decision and coordinate-input interfaces;
-- define token issuance, expiry, replay and revocation ordering;
-- define explicit 41-row coordinate ingestion with no discovery or inference;
-- define canonical token/receipt serialization and digest binding;
-- define bounded transaction-scoped output and failure receipts;
-- define repository, remote, package-database and live-prefix invariance checks;
-- prove that design approval grants no issuance, read or execution authority.
+- freeze the six candidate artifacts by SHA-256;
+- confirm the 14/18/36/20 structure and inherited 18/41/10/30 contract boundary;
+- confirm zero issued tokens, coordinate rows, provider reads and live authority;
+- confirm explicit input only with no search, glob, environment or basename inference;
+- confirm candidate outputs remain inactive and transaction-scoped;
+- confirm failure results create no live authority;
+- record a separate Class D design acceptance decision.
 
 ## Out of scope
 
-Issuing a live token, supplying or discovering coordinates, opening or reading provider files, downloading or extracting results/packages, implementing or running the evidence collector, producing or accepting a live local map, creating runtime roots, population, materialization, publication, deployment or activation.
+Issuing or activating a token, producing or accepting a live coordinate receipt, searching storage, opening or reading provider files, downloading or extracting evidence, executing the evidence collector, producing a local map, creating runtime roots, population, materialization, publication, deployment or activation.
 
 ## Required reading
 
-- `docs/evidence/selected-provider-local-supply-evidence-authorization-coordinate-contract-boundary-acceptance.md`
+- `docs/evidence/selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-design-review.md`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-design-metadata.tsv`
 - `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-evidence-authorization-coordinate-contract-boundary-acceptance.tsv`
-- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-evidence-owner-authorization-token-schema.json`
-- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-evidence-coordinate-receipt-schema.json`
-- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-evidence-authorization-coordinate-validation-contract.tsv`
 
 ## Pending external inputs
 
-None for design. A live owner decision and explicit complete coordinate set require later separate authorization.
+None for design acceptance. Actual owner decision and explicit coordinates require later separate authorization.
 
 ## Stop conditions
 
-Stop if design issues a token, populates a coordinate, reads provider bytes, permits discovery or inference, weakens baseline/digest/revocation binding, authorizes evidence execution or changes runtime state.
+Stop if acceptance issues or activates authority, populates a coordinate, reads provider bytes, permits discovery or inference, changes design cardinality, authorizes evidence execution or changes runtime state.
 
 ## Completion criteria
 
-A separate machine-readable and narrative transaction design covers issuance, coordinate production, ordering, revocation, failures and invariance. Live authority and all runtime effects remain absent and unauthorized.
+A separate acceptance record freezes the exact design artifacts and preserves zero live authority, zero provider reads and zero runtime effects.
 
 ## Next valid action
 
-Design and review only. Do not issue, search, acquire, open, read, extract, localize, populate or execute.
+Review and accept the design boundary only. Do not issue, activate, search, acquire, open, read, extract, localize, populate or execute.
 
 Do not acquire or populate provider bytes.
