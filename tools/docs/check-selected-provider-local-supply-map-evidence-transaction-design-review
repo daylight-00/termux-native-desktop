@@ -1,0 +1,40 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+import csv,hashlib,json,subprocess,sys,tempfile
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[2]
+BASE=Path('experiments/glibc/selected-obsidian-provider-authority'); REVIEW=BASE/'review'
+FILES=['selected-provider-local-supply-map-evidence-transaction-input-contract.tsv','selected-provider-local-supply-map-evidence-transaction-state-machine.tsv','selected-provider-local-supply-map-evidence-transaction-operation-contract.tsv','selected-provider-local-supply-map-evidence-transaction-failure-contract.tsv','selected-provider-local-supply-map-evidence-transaction-receipt-contract.json','selected-provider-local-supply-map-evidence-transaction-design-metadata.tsv']
+def rows(p):
+ with p.open(newline='',encoding='utf-8') as f:return list(csv.DictReader(f,delimiter='\t'))
+def fail(m):raise SystemExit(m)
+with tempfile.TemporaryDirectory(prefix='lsme-design-') as td:
+ subprocess.run([sys.executable,str(ROOT/BASE/'recipe/generate-selected-provider-local-supply-map-evidence-transaction-design.py'),'--repo-root',str(ROOT),'--output-root',td],check=True)
+ for n in FILES:
+  if (ROOT/REVIEW/n).read_bytes()!=(Path(td)/REVIEW/n).read_bytes():fail('evidence transaction design drift: '+n)
+inputs=rows(ROOT/REVIEW/FILES[0]);states=rows(ROOT/REVIEW/FILES[1]);ops=rows(ROOT/REVIEW/FILES[2]);fails=rows(ROOT/REVIEW/FILES[3]);receipt=json.loads((ROOT/REVIEW/FILES[4]).read_text());meta={r['key']:r['value'] for r in rows(ROOT/REVIEW/FILES[5])}
+if (len(inputs),len(states),len(ops),len(fails))!=(12,16,32,18):fail('design cardinality mismatch')
+if [int(r['sequence']) for r in inputs]!=list(range(1,13)) or [int(r['sequence']) for r in states]!=list(range(1,17)) or [int(r['sequence']) for r in ops]!=list(range(1,33)):fail('design sequence mismatch')
+if len({r['input_id'] for r in inputs})!=12 or len({r['state_id'] for r in states})!=16 or len({r['step_id'] for r in ops})!=32 or len({r['failure_id'] for r in fails})!=18:fail('design identity duplicate')
+if any(r['current_state']!='DESIGN_ONLY_NOT_RUN' for r in inputs if r['input_id'] not in ('LSME-IN-005','LSME-IN-006','LSME-IN-012')):fail('input current state widening')
+if any(r['current_state']!='DESIGN_ONLY_NOT_RUN' for r in states+ops+fails):fail('transaction design unexpectedly executed')
+if any(r['authority_gate']!='SEPARATE_FUTURE_READ_ONLY_EVIDENCE_EXECUTION_AUTHORIZATION_REQUIRED' for r in inputs+states+ops+fails):fail('authorization gate drift')
+if ops[1]['phase']!='AUTH' or ops[12]['phase']!='COMPONENT_LSTAT' or ops[13]['phase']!='OPEN_NOFOLLOW' or ops[-1]['phase']!='ARCHIVE_UPLOAD':fail('critical operation order drift')
+for r in ops:
+ if r['phase'] in ('PATH_CANON','COMPONENT_LSTAT','OPEN_NOFOLLOW','REGULAR','OWNER','MODE','PRE_ID','HASH','POST_ID','SIZE','DIGEST','ELF','SONAME') and int(r['sequence'])<=10:fail('provider path read before authorization/preflight')
+ allowed=('none','logs only','snapshot/log only','row temp receipts only','row temp receipt','candidate receipt temp','candidate/failure receipt temp','result receipt only','result failure receipt only','result index/archive only')
+ if r['permitted_write_scope'] not in allowed:fail('unbounded write scope: '+r['permitted_write_scope'])
+if receipt.get('current_authorized_coordinate_count')!=0 or receipt.get('current_provider_read_count')!=0 or receipt.get('current_receipt_rows')!=[]:fail('receipt contract contains current execution evidence')
+if receipt['future_success_receipt']['required_row_count']!=41 or receipt['future_success_receipt']['validation_rule_count']!=24 or receipt['future_success_receipt']['acceptance_state']!='CANDIDATE_ONLY_SEPARATE_ACCEPTANCE_REQUIRED':fail('future success receipt mismatch')
+if receipt.get('maximum_receipt_bytes')!=1048576 or receipt.get('execution_authority')!='NONE_SEPARATE_FUTURE_DECISION_REQUIRED':fail('receipt cap or authority mismatch')
+expected={'design_review_id':'SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-EVIDENCE-TRANSACTION-DESIGN-REVIEW-001','candidate_state':'QUALIFIED_NON_EXECUTING_READ_ONLY_LOCAL_SUPPLY_MAP_EVIDENCE_TRANSACTION_DESIGN_CANDIDATE','acceptance_gate':'SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-EVIDENCE-TRANSACTION-DESIGN-ACCEPTANCE-OPEN','input_contract_count':'12','state_count':'16','operation_count':'32','failure_contract_count':'18','inherited_validation_rule_count':'24','expected_future_receipt_row_count':'41','current_authorized_coordinate_count':'0','current_provider_read_count':'0','current_populated_local_path_count':'0','local_path_discovery_authorized':'NO','provider_byte_read_authorized':'NO','evidence_transaction_execution_authorized':'NO','local_supply_map_produced':'NO','materializer_execution_authorized':'NO','generation_root_creation_authorized':'NO','target_population_authorized':'NO','materialization_authorized':'NO','publication_authorized':'NO','deployment_authorized':'NO','activation_authorized':'NO','next_action':'review-and-accept-read-only-selected-provider-local-supply-map-evidence-transaction-design-boundary'}
+for k,v in expected.items():
+ if meta.get(k)!=v:fail(f'metadata mismatch {k}: {meta.get(k)!r}')
+doc=(ROOT/'docs/evidence/selected-provider-local-supply-map-evidence-transaction-design-review.md').read_text();state=(ROOT/'docs/current/STATE.yaml').read_text();brief=(ROOT/'docs/current/BRIEF.md').read_text();active=(ROOT/'docs/current/ACTIVE_TASK.md').read_text();pending=(ROOT/'docs/current/PENDING_ARTIFACTS.yaml').read_text();status=(ROOT/'STATUS.md').read_text();catalog=(ROOT/'docs/catalog.tsv').read_text()
+checks=[('doc decision','QUALIFIED_NON_EXECUTING_READ_ONLY_LOCAL_SUPPLY_MAP_EVIDENCE_TRANSACTION_DESIGN_CANDIDATE' in doc),('doc counts','input contracts:                12' in doc and 'ordered operations:             32' in doc),('state candidate','local_supply_map_evidence_transaction_design: qualified-non-executing-read-only-candidate-acceptance-open' in state),('state no execution','local_supply_map_evidence_transaction_execution_authorized: false' in state and 'local_supply_map_produced: false' in state),('brief','local supply evidence transaction design: QUALIFIED_NON_EXECUTING_READ_ONLY_CANDIDATE' in brief),('active','Task ID: `review-and-accept-read-only-selected-provider-local-supply-map-evidence-transaction-design-boundary`' in active),('pending','local-supply-map-evidence-transaction-design-acceptance' in pending),('status','read-only local-supply-map evidence transaction design candidate qualified' in status),('catalog','selected-provider-local-supply-map-evidence-transaction-design-review\tevidence\tcurrent\tcanonical' in catalog)]
+for n,ok in checks:
+ if not ok:fail('missing current marker: '+n)
+texts='\n'.join([doc,state,brief,active,pending,status]+[(ROOT/REVIEW/n).read_text() for n in FILES])
+for forbidden in ['local_supply_map_produced: true','local_supply_map_evidence_transaction_execution_authorized: true','provider_byte_read_authorized: true','TARGET_POPULATION_AUTHORIZED','GENERATION_ROOT_CREATED','CURRENT_AUTHORIZED_COORDINATE_COUNT=41']:
+ if forbidden in texts:fail('authority widening: '+forbidden)
+print('local supply map evidence transaction design: PASS: 12 inputs, 16 states, 32 operations, 18 failures, zero coordinates/reads; acceptance and execution remain separate')

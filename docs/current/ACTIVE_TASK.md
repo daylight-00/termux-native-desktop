@@ -1,54 +1,56 @@
-# Active task: design and review a read-only selected-provider local-supply-map evidence transaction
+# Active task: review and accept the read-only selected-provider local-supply-map evidence transaction design boundary
 
-> Task ID: `design-and-review-read-only-selected-provider-local-supply-map-evidence-transaction`
+> Task ID: `review-and-accept-read-only-selected-provider-local-supply-map-evidence-transaction-design-boundary`
 >
-> Expected state on completion: a non-executing transaction design defines exact authorized input coordinates, bounded no-follow local reads, 41-row receipt production, failure handling and protected-state checks. No path is searched or read during design.
+> Expected state on completion: the exact non-executing transaction design is accepted as bounded project authority while actual authorization tokens, coordinate receipts, provider reads, local-map production and runtime mutation remain absent and unauthorized.
 
 ## Objective
 
-Translate the accepted 41-row local-supply-map contract into an auditable read-only evidence transaction design. The design must explain how a future explicitly authorized transaction receives exact path coordinates, validates all 24 rules and emits or rejects a canonical 41-row receipt without creating runtime state.
+Review `SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-EVIDENCE-TRANSACTION-DESIGN-REVIEW-001` and decide whether its exact input, state, operation, failure and receipt contracts may become accepted non-executing design authority.
 
 ## Why now
 
-`SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-CONTRACT-ACCEPT-001` accepts the exact contract boundary while preserving zero populated paths. Before any evidence collection can be authorized, the read set, input authority, ordering, race resistance, result receipt, failure cleanup and protected-state invariance must be designed separately.
+The accepted 41-row/24-rule local-supply-map contract now has a deterministic design candidate covering 12 input contracts, 16 states, 32 ordered operations and 18 transaction failure classes. Acceptance must remain distinct from future evidence execution.
 
 ## In scope
 
-- define exact input-coordinate and authorization-token interfaces;
-- define no-search, no-glob and no-environment-inference rules;
-- define component `lstat`, `O_NOFOLLOW`, regular-file, owner and mode checks;
-- define stable identity, size, SHA-256, ELF and SONAME validation order;
-- define 41-row completeness and four atomic-family barriers;
-- define canonical receipt and failure receipt production;
-- define repository, remote, package-database and live-prefix invariance checks;
-- prove that design approval grants no local read or execution authority.
+- freeze the exact six design artifacts by SHA-256;
+- confirm the 12/16/32/18 structure and inherited 41/24 contract boundary;
+- confirm zero authorized coordinates and zero current provider reads;
+- confirm authorization, baseline and contract gates precede any future provider read;
+- confirm no-search, no-glob, no-environment-inference and no-basename-fallback rules;
+- confirm bounded evidence-output writes and protected-state invariance;
+- confirm successful output remains a candidate requiring separate acceptance;
+- record a separate Class D design acceptance decision.
 
 ## Out of scope
 
-Searching local storage, supplying actual local paths, opening or reading provider bytes, downloading retained results, extracting packages or archives, creating the generation root or object store, implementing or executing the evidence collector or materializer, producing a live accepted map, target population, publication, deployment or activation.
+Providing an execution token or coordinate receipt, searching local storage, opening or reading provider files, downloading or extracting results/packages, implementing or running the collector, producing or accepting a live local map, creating the generation root, target population, materialization, publication, deployment or activation.
 
 ## Required reading
 
-- `docs/evidence/selected-provider-local-supply-map-contract-boundary-acceptance.md`
-- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-map-contract-boundary-acceptance.tsv`
-- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-map-contract.tsv`
-- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-map-validation-contract.tsv`
-- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-map-receipt-schema.json`
+- `docs/evidence/selected-provider-local-supply-map-evidence-transaction-design-review.md`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-map-evidence-transaction-input-contract.tsv`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-map-evidence-transaction-state-machine.tsv`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-map-evidence-transaction-operation-contract.tsv`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-map-evidence-transaction-failure-contract.tsv`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-map-evidence-transaction-receipt-contract.json`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-map-evidence-transaction-design-metadata.tsv`
 
 ## Pending external inputs
 
-None for read-only design. Actual path coordinates and provider reads require a later separately approved transaction.
+None for design acceptance. Actual evidence execution requires a later explicit owner authorization token and canonical coordinate receipt.
 
 ## Stop conditions
 
-Stop if design performs discovery, binds a real path, opens a provider file, downloads or extracts evidence, weakens no-follow or exact identity rules, accepts partial rows, authorizes execution or changes runtime state.
+Stop if acceptance supplies a path, authorizes a provider read, permits discovery or inference, changes the contract counts, accepts runtime writes, produces a local map, authorizes execution or mutates protected state.
 
 ## Completion criteria
 
-A separate machine-readable and narrative transaction design covers inputs, ordering, validation, receipt, failures and invariance. Local-map production and all runtime effects remain unauthorized.
+A separate acceptance record freezes the exact candidate artifacts and preserves zero coordinates, zero reads and zero runtime effects. Future evidence execution and map acceptance remain separate blocked gates.
 
 ## Next valid action
 
-Design and review only. Do not search, acquire, open, read, extract, localize, populate or execute.
+Review and accept the design boundary only. Do not search, acquire, open, read, extract, localize, populate or execute.
 
 Do not acquire or populate provider bytes.

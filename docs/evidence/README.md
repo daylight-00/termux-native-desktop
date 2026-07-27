@@ -108,3 +108,5 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 - [`selected-provider-local-supply-map-contract-review.md`](selected-provider-local-supply-map-contract-review.md) — deterministic 41-row local-supply-map contract and 24 fail-closed validation rules with zero populated paths and no byte-read or execution authority.
 
 - [`selected-provider-local-supply-map-contract-boundary-acceptance.md`](selected-provider-local-supply-map-contract-boundary-acceptance.md) — exact four-artifact 41-row/24-rule contract acceptance with zero populated paths and separate evidence/execution gates.
+
+- [`selected-provider-local-supply-map-evidence-transaction-design-review.md`](selected-provider-local-supply-map-evidence-transaction-design-review.md) — deterministic non-executing 12-input/16-state/32-operation/18-failure evidence transaction design with zero coordinates or provider reads and separate acceptance/execution gates.

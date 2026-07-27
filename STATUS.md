@@ -447,3 +447,11 @@ non-mutating 41-row selected-provider local-supply-map contract candidate qualif
 `SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-CONTRACT-ACCEPT-001` accepts the exact v114 four-artifact contract boundary: 41 object-bound rows, 24 fail-closed validation rules, a canonical empty receipt schema, a 23/4/14 index-contract split and zero populated local paths. Historical candidate evidence remains frozen. Path discovery, byte reads, local-map production, execution, generation-root creation, population, materialization, publication, deployment and activation remain unauthorized.
 
 bounded non-mutating selected-provider local-supply-map contract accepted
+
+## Read-only selected-provider local-supply-map evidence transaction design candidate
+
+`SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-EVIDENCE-TRANSACTION-DESIGN-REVIEW-001` qualifies a deterministic non-executing candidate with 12 input contracts, 16 states, 32 ordered operations and 18 transaction failure contracts. It inherits the accepted 41-row/24-rule local-supply contract, requires explicit owner-authorized coordinates, forbids search/glob/environment inference, defines no-follow stable-file reads and canonical candidate/failure receipts, and preserves protected-state invariance.
+
+The candidate contains zero authorized coordinates and zero provider reads. Design acceptance, actual evidence execution, local-map acceptance, materializer execution, generation-root creation, population, materialization, publication, deployment and activation remain separate and blocked.
+
+read-only local-supply-map evidence transaction design candidate qualified
