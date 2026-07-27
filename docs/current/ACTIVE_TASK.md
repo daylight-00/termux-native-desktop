@@ -1,54 +1,53 @@
-# Active task: generate and review non-mutating local-supply evidence authorization and coordinate-receipt contracts
+# Active task: review and accept the non-mutating local-supply evidence authorization and coordinate-receipt contract boundary
 
-> Task ID: `generate-and-review-non-mutating-selected-provider-local-supply-evidence-authorization-and-coordinate-receipt-contract`
+> Task ID: `review-and-accept-non-mutating-selected-provider-local-supply-evidence-authorization-and-coordinate-receipt-contract-boundary`
 >
-> Expected state on completion: deterministic non-mutating schemas define an owner authorization token and canonical 41-row coordinate receipt while all live coordinate values remain absent and provider reads remain unauthorized.
+> Expected state on completion: the exact owner-authorization token schema, canonical 41-row coordinate-receipt schema, 30 validation rules and metadata are accepted as a bounded non-mutating interface. No token, coordinate, provider read or execution authority is created.
 
 ## Objective
 
-Translate the accepted read-only evidence-transaction design into exact token and coordinate-receipt interface contracts. The contracts must bind owner approval, repository and remote baselines, executor identity, expiry, the accepted design and contract digests, and a complete 41-row coordinate set without supplying any actual local path.
+Review the exact candidate produced by `SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-AUTHORIZATION-COORDINATE-CONTRACT-REVIEW-001` and decide whether its owner approval, time/replay/revocation, repository/remote/executor binding, complete coordinate-set and canonical digest rules may become accepted project authority.
 
 ## Why now
 
-`SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-EVIDENCE-TRANSACTION-DESIGN-ACCEPT-001` accepts the exact 12-input/16-state/32-operation/18-failure design while preserving zero coordinates and zero reads. Before evidence execution can be considered, its two external authority inputs require separate deterministic schemas and fail-closed validation rules.
+The accepted read-only evidence-transaction design requires two future external inputs before execution can ever be considered. The candidate now defines an 18-claim immutable owner token, a canonical 41×10 coordinate receipt and 30 fail-closed validation rules while preserving zero live tokens and zero coordinates.
 
 ## In scope
 
-- define an immutable owner-authorization token schema;
-- define a canonical 41-row coordinate-receipt schema;
-- bind both schemas to the accepted contract and evidence-design digests;
-- require exact repository HEAD/tree and remote HEAD coordinates;
-- require executor UID, transaction ID, issue/expiry times and receipt SHA-256;
-- require 41 unique contract row IDs and zero missing/duplicate coordinates;
-- define no-search, no-glob, no-environment-inference and no-basename-fallback rules;
-- preserve zero current coordinate values and zero provider reads;
-- define update, revocation and replay boundaries.
+- freeze the exact four candidate artifacts by SHA-256;
+- confirm the 18 required owner-authorization claims;
+- confirm the exact accepted contract/design, repository, remote, executor, expiry, revocation and receipt-digest bindings;
+- confirm the exact 41-row/10-field coordinate-receipt contract;
+- confirm all 30 validation rules and whole-receipt rejection on any missing, duplicate, unknown or inferred coordinate;
+- confirm zero current tokens, receipts, coordinates, paths and provider reads;
+- record a separate acceptance decision and next evidence-authorization issuance design gate.
 
 ## Out of scope
 
-Supplying a live token or coordinate receipt, searching local storage, opening or reading provider files, downloading or extracting results/packages, implementing or running the evidence collector, producing or accepting a local map, creating runtime roots, population, materialization, publication, deployment or activation.
+Issuing a live owner token, supplying a coordinate receipt, searching local storage, opening or reading provider files, downloading or extracting results/packages, implementing or running the evidence collector, producing or accepting a local map, creating runtime roots, population, materialization, publication, deployment or activation.
 
 ## Required reading
 
-- `docs/evidence/selected-provider-local-supply-map-evidence-transaction-design-boundary-acceptance.md`
-- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-map-evidence-transaction-design-boundary-acceptance.tsv`
-- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-map-evidence-transaction-input-contract.tsv`
-- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-map-contract.tsv`
+- `docs/evidence/selected-provider-local-supply-evidence-authorization-coordinate-receipt-contract-review.md`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-evidence-owner-authorization-token-schema.json`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-evidence-coordinate-receipt-schema.json`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-evidence-authorization-coordinate-validation-contract.tsv`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-evidence-authorization-coordinate-contract-metadata.tsv`
 
 ## Pending external inputs
 
-None for contract generation. Live owner approval and local coordinates require a later separately authorized transaction.
+None for contract acceptance. A live owner decision, immutable token and complete local coordinate receipt require later separately reviewed transactions.
 
 ## Stop conditions
 
-Stop if a contract contains a live local path, grants discovery or provider-read authority, permits incomplete or inferred coordinates, weakens baseline/digest binding, authorizes execution or changes runtime state.
+Stop if acceptance issues a token, populates a coordinate or path, grants discovery or provider-read authority, permits partial or inferred coordinates, weakens baseline/digest/revocation binding, authorizes execution or changes runtime state.
 
 ## Completion criteria
 
-Machine-readable token and coordinate-receipt candidate schemas are deterministic, digest-bound, complete for 41 future rows and contain zero live coordinates. Evidence execution and all runtime effects remain blocked.
+A separate acceptance record freezes the exact four candidate artifacts and preserves zero live authority. Token issuance, coordinate receipt production, evidence execution and all runtime effects remain blocked.
 
 ## Next valid action
 
-Generate and review schemas only. Do not search, acquire, open, read, extract, localize, populate or execute.
+Review and accept the contract boundary only. Do not issue, search, acquire, open, read, extract, localize, populate or execute.
 
 Do not acquire or populate provider bytes.

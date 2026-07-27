@@ -148,3 +148,8 @@ This is an active experiment and architecture-refactoring project, not a finishe
 
 
 Current target-population status: `INTERVENTION_RETAINED`; 14 of 41 concrete objects have qualified retained-result binding inputs, 27 require exact result coordinates, and no materializer, population, deployment or activation authority exists.
+
+
+## Local-supply evidence authorization and coordinate contract
+
+The current candidate defines an 18-claim immutable owner-authorization token schema and a canonical complete 41-row coordinate-receipt schema with 30 fail-closed validation rules. It contains zero live tokens, paths or provider reads and grants no evidence-execution or runtime authority.

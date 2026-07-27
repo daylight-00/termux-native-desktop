@@ -112,3 +112,5 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 - [`selected-provider-local-supply-map-evidence-transaction-design-review.md`](selected-provider-local-supply-map-evidence-transaction-design-review.md) — deterministic non-executing 12-input/16-state/32-operation/18-failure evidence transaction design with zero coordinates or provider reads and separate acceptance/execution gates.
 
 - [`selected-provider-local-supply-map-evidence-transaction-design-boundary-acceptance.md`](selected-provider-local-supply-map-evidence-transaction-design-boundary-acceptance.md) — exact six-artifact read-only evidence-transaction design acceptance with zero coordinates, zero provider reads and separate input-contract/execution gates.
+
+- [`selected-provider-local-supply-evidence-authorization-coordinate-receipt-contract-review.md`](selected-provider-local-supply-evidence-authorization-coordinate-receipt-contract-review.md) — deterministic 18-claim owner-authorization token schema, canonical 41×10 coordinate-receipt schema and 30 fail-closed validation rules with zero live authority.

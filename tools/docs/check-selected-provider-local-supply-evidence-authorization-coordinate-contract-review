@@ -1,0 +1,54 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+import csv,hashlib,json,subprocess,sys,tempfile
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[2]
+BASE=Path('experiments/glibc/selected-obsidian-provider-authority')
+REVIEW=BASE/'review'
+FILES=[
+ 'selected-provider-local-supply-evidence-owner-authorization-token-schema.json',
+ 'selected-provider-local-supply-evidence-coordinate-receipt-schema.json',
+ 'selected-provider-local-supply-evidence-authorization-coordinate-validation-contract.tsv',
+ 'selected-provider-local-supply-evidence-authorization-coordinate-contract-metadata.tsv',
+]
+def rows(p):
+ with p.open(newline='',encoding='utf-8') as f:return list(csv.DictReader(f,delimiter='\t'))
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+def fail(m):raise SystemExit(m)
+with tempfile.TemporaryDirectory(prefix='local-supply-auth-coordinate-') as td:
+ subprocess.run([sys.executable,str(ROOT/BASE/'recipe/generate-selected-provider-local-supply-evidence-authorization-coordinate-contract.py'),'--repo-root',str(ROOT),'--output-root',td],check=True)
+ for name in FILES:
+  if (ROOT/REVIEW/name).read_bytes()!=(Path(td)/REVIEW/name).read_bytes():fail('generated drift: '+name)
+token=json.loads((ROOT/REVIEW/FILES[0]).read_text());coord=json.loads((ROOT/REVIEW/FILES[1]).read_text());vals=rows(ROOT/REVIEW/FILES[2]);meta={x['key']:x['value'] for x in rows(ROOT/REVIEW/FILES[3])}
+if token.get('review_id')!='SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-AUTHORIZATION-COORDINATE-CONTRACT-REVIEW-001':fail('token review id')
+if token.get('candidate_state')!='SCHEMA_QUALIFIED_NOT_ISSUED' or token.get('current_token') is not None or token.get('current_token_count')!=0 or token.get('current_authorization_state')!='NOT_ISSUED_NOT_AUTHORIZED':fail('live token authority present')
+if token.get('required_claim_count')!=18 or len(token.get('required_claims',[]))!=18:fail('token claim count')
+if token.get('required_authorization_kind')!='READ_ONLY_LOCAL_SUPPLY_EVIDENCE_TRANSACTION_ONLY':fail('authorization kind')
+if token.get('maximum_validity_seconds')!=86400 or token.get('clock_skew_tolerance_seconds')!=0:fail('time boundary')
+if coord.get('candidate_state')!='SCHEMA_QUALIFIED_ZERO_LIVE_COORDINATES' or coord.get('current_receipt') is not None or coord.get('current_receipt_count')!=0 or coord.get('current_coordinate_row_count')!=0 or coord.get('current_rows')!=[]:fail('live coordinate receipt present')
+if coord.get('future_required_row_count')!=41 or coord.get('future_required_unique_contract_row_count')!=41 or len(coord.get('contract_row_ids',[]))!=41 or len(set(coord.get('contract_row_ids',[])))!=41:fail('coordinate row set')
+if coord.get('future_required_row_field_count')!=10 or len(coord.get('future_required_row_fields',[]))!=10:fail('coordinate row fields')
+if len(vals)!=30 or [x['sequence'] for x in vals]!=[str(i) for i in range(1,31)] or len({x['validation_id'] for x in vals})!=30:fail('validation contract count/order')
+expected={
+ 'review_id':'SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-AUTHORIZATION-COORDINATE-CONTRACT-REVIEW-001','candidate_state':'QUALIFIED_NON_MUTATING_AUTHORIZATION_AND_COORDINATE_RECEIPT_CONTRACT_CANDIDATE','acceptance_gate':'SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-AUTHORIZATION-COORDINATE-CONTRACT-ACCEPTANCE-OPEN','authorization_required_claim_count':'18','coordinate_required_row_count':'41','coordinate_required_row_field_count':'10','validation_rule_count':'30','current_token_count':'0','current_coordinate_receipt_count':'0','current_coordinate_row_count':'0','current_provider_read_count':'0','current_populated_local_path_count':'0','owner_authorization_issued':'NO','coordinate_receipt_issued':'NO','local_path_discovery_authorized':'NO','provider_byte_read_authorized':'NO','evidence_transaction_execution_authorized':'NO','local_supply_map_produced':'NO','materializer_execution_authorized':'NO','generation_root_creation_authorized':'NO','target_population_authorized':'NO','materialization_authorized':'NO','publication_authorized':'NO','deployment_authorized':'NO','activation_authorized':'NO','next_action':'review-and-accept-non-mutating-selected-provider-local-supply-evidence-authorization-and-coordinate-receipt-contract-boundary'}
+for k,v in expected.items():
+ if meta.get(k)!=v:fail(f'metadata mismatch {k}: {meta.get(k)!r}')
+for k,name in [('owner_authorization_token_schema_sha256',FILES[0]),('coordinate_receipt_schema_sha256',FILES[1]),('validation_contract_sha256',FILES[2])]:
+ if meta.get(k)!=sha(ROOT/REVIEW/name):fail('metadata digest mismatch '+k)
+doc=(ROOT/'docs/evidence/selected-provider-local-supply-evidence-authorization-coordinate-receipt-contract-review.md').read_text();state=(ROOT/'docs/current/STATE.yaml').read_text();brief=(ROOT/'docs/current/BRIEF.md').read_text();active=(ROOT/'docs/current/ACTIVE_TASK.md').read_text();pending=(ROOT/'docs/current/PENDING_ARTIFACTS.yaml').read_text();status=(ROOT/'STATUS.md').read_text();catalog=(ROOT/'docs/catalog.tsv').read_text()
+checks=[
+ ('doc decision','QUALIFIED_NON_MUTATING_AUTHORIZATION_AND_COORDINATE_RECEIPT_CONTRACT_CANDIDATE' in doc),('doc zero','current token count: 0' in doc and 'current coordinate rows: 0' in doc),
+ ('state candidate','local_supply_evidence_authorization_coordinate_contract: qualified-non-mutating-candidate-acceptance-open' in state),('state counts','local_supply_evidence_authorization_required_claims: 18' in state and 'local_supply_evidence_coordinate_required_rows: 41' in state and 'local_supply_evidence_coordinate_validation_rules: 30' in state),
+ ('state zero','local_supply_evidence_current_token_count: 0' in state and 'local_supply_evidence_current_coordinate_row_count: 0' in state and 'local_supply_map_evidence_transaction_execution_authorized: false' in state),
+ ('brief','authorization/coordinate contract: QUALIFIED_NON_MUTATING_CANDIDATE_ACCEPTANCE_OPEN' in brief),
+ ('active','Task ID: `review-and-accept-non-mutating-selected-provider-local-supply-evidence-authorization-and-coordinate-receipt-contract-boundary`' in active),
+ ('pending','local-supply-evidence-authorization-coordinate-contract-acceptance' in pending and 'execution-authorization' in pending),
+ ('status','non-mutating selected-provider local-supply evidence authorization and coordinate-receipt contract candidate qualified' in status),
+ ('catalog','selected-provider-local-supply-evidence-authorization-coordinate-receipt-contract-review\tevidence\tcurrent\tcanonical' in catalog),
+]
+for n,ok in checks:
+ if not ok:fail('missing current marker: '+n)
+texts='\n'.join([doc,state,brief,active,pending,status,(ROOT/REVIEW/FILES[0]).read_text(),(ROOT/REVIEW/FILES[1]).read_text(),(ROOT/REVIEW/FILES[3]).read_text()])
+for forbidden in ['current_token_count: 1','local_supply_evidence_current_token_count: 1','local_supply_evidence_current_coordinate_row_count: 41','local_supply_map_evidence_transaction_execution_authorized: true','owner_authorization_issued\tYES','coordinate_receipt_issued\tYES','PROVIDER_BYTE_READ_AUTHORIZED','LOCAL_PATH_DISCOVERY_AUTHORIZED','GENERATION_ROOT_CREATED']:
+ if forbidden in texts:fail('authority widening: '+forbidden)
+print('local supply evidence authorization/coordinate contract review: PASS: 18-claim token schema, 41x10 coordinate schema and 30 rules qualified with zero live authority')
