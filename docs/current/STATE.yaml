@@ -1,5 +1,5 @@
 schema_version: 1
-state_version: 2026-07-28.03
+state_version: 2026-07-28.04
 updated_on: 2026-07-28
 
 project:
@@ -71,6 +71,7 @@ documentation:
   local_supply_evidence_live_input_adapter_execution_authorization_contract_review: docs/evidence/selected-provider-local-supply-evidence-live-input-adapter-execution-authorization-contract-review.md
   local_supply_evidence_live_input_adapter_execution_authorization_contract_acceptance: docs/evidence/selected-provider-local-supply-evidence-live-input-adapter-execution-authorization-contract-boundary-acceptance.md
   local_supply_evidence_live_input_adapter_execution_authorization_implementation_review: docs/evidence/selected-provider-local-supply-evidence-live-input-adapter-execution-authorization-implementation-review.md
+  local_supply_evidence_live_input_adapter_execution_authorization_implementation_acceptance: docs/evidence/selected-provider-local-supply-evidence-live-input-adapter-execution-authorization-implementation-boundary-acceptance.md
   local_supply_evidence_authorization_coordinate_contract_review: docs/evidence/selected-provider-local-supply-evidence-authorization-coordinate-receipt-contract-review.md
   local_supply_evidence_authorization_coordinate_contract_acceptance: docs/evidence/selected-provider-local-supply-evidence-authorization-coordinate-contract-boundary-acceptance.md
   local_supply_evidence_authorization_issuance_coordinate_production_design_review: docs/evidence/selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-design-review.md
@@ -102,8 +103,8 @@ documentation:
   missing_glibc_provider_production_boundary: docs/evidence/missing-glibc-provider-production-boundary.md
 
 provider_authority:
-  workstream: qualified-live-input-adapter-execution-authorization-implementation-candidate-acceptance-review-active
-  boundary: thirty-one-bounded-provider-roots-forty-two-row-composition-eighty-two-row-target-policy-forty-one-exact-objects-final-resource-preflight-59142800-materializer-design-local-supply-contract-read-only-evidence-transaction-design-owner-token-coordinate-contract-and-issuance-coordinate-production-design-accepted-synthetic-implementation-accepted-as-immutable-oracle-live-input-adapter-execution-authorization-contract-accepted-synthetic-adapter-implementation-candidate-164-coverage-one-success-twenty-failures-zero-live-inputs-zero-provider-reads-zero-writes-live-adapter-acceptance-root-creation-population-materialization-publication-deployment-and-activation-blocked
+  workstream: accepted-live-input-adapter-execution-authorization-implementation-evidence-transaction-implementation-generation-active
+  boundary: thirty-one-bounded-provider-roots-forty-two-row-composition-eighty-two-row-target-policy-forty-one-exact-objects-final-resource-preflight-59142800-materializer-design-local-supply-contract-read-only-evidence-transaction-design-owner-token-coordinate-contract-and-issuance-coordinate-production-design-accepted-synthetic-implementation-accepted-as-immutable-oracle-live-input-adapter-execution-authorization-contract-and-synthetic-adapter-implementation-accepted-164-coverage-one-success-twenty-failures-zero-live-inputs-zero-provider-reads-zero-writes-evidence-transaction-implementation-root-creation-population-materialization-publication-deployment-and-activation-blocked
   claim_inventory:
     total: 95
     class_a: 36
@@ -196,7 +197,7 @@ provider_authority:
     transitive_result_sha256: a18426371acf0339731464eea4a6fd1f8c745cc09154629b69e34d1063073c13
     transitive_recipe_tree: e91a0c476ef4355dbfff46e2bcab23d0085ddd01
     transitive_functional_matrix: jpeg-file-pass-jpeg-memory-pass-png-file-pass-png-memory-pass
-    next_action: review-and-accept-non-executing-selected-provider-local-supply-evidence-live-input-adapter-and-execution-authorization-implementation-candidate-boundary
+    next_action: generate-and-review-non-executing-selected-provider-local-supply-map-evidence-transaction-implementation-candidate
   thai_break_provider:
     result_sha256: 7789ff1a039e3186b04014e4ddf6a7ba68d77fe31a2f1ef77273590aa97b8e1e
     libthai_member: libthai.so.0.3.1
@@ -509,14 +510,14 @@ provider_authority:
     provider_authority_effect: exact-libxdamage-atomic-at-spi2-and-atomic-gtk3-core-bounded-providers-and-bounded-application-runtime-composition-accepted-no-target-display-service-module-schema-print-population-or-activation-effect
     composition_effect: accepted-bounded-complete-selected-provider-composition-target-manifest-not-generated
     target_manifest_allowed: false
-    next_action: review-and-accept-non-executing-selected-provider-local-supply-evidence-live-input-adapter-and-execution-authorization-implementation-candidate-boundary
+    next_action: generate-and-review-non-executing-selected-provider-local-supply-map-evidence-transaction-implementation-candidate
   prohibited_claims:
     - complete-provider-authority
     - target-population-ready
     - selected-generation-activation-ready
 
 active_task:
-  id: review-and-accept-non-executing-selected-provider-local-supply-evidence-live-input-adapter-and-execution-authorization-implementation-candidate-boundary
+  id: generate-and-review-non-executing-selected-provider-local-supply-map-evidence-transaction-implementation-candidate
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:
@@ -619,9 +620,10 @@ selected_target_policy:
   local_supply_evidence_live_to_synthetic_path_rewrite: forbidden
   local_supply_evidence_future_live_adapter_implementation_authorized: false
   local_supply_evidence_live_input_adapter_execution_authorization_implementation_reviewed: true
-  local_supply_evidence_live_input_adapter_execution_authorization_implementation: qualified-non-executing-synthetic-candidate
+  local_supply_evidence_live_input_adapter_execution_authorization_implementation: qualified-non-executing-synthetic-candidate-historical
   local_supply_evidence_live_input_adapter_execution_authorization_implementation_review_id: SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-LIVE-INPUT-ADAPTER-EXECUTION-AUTHORIZATION-IMPLEMENTATION-REVIEW-001
-  local_supply_evidence_live_input_adapter_execution_authorization_implementation_acceptance: open-separate-acceptance-required
+  local_supply_evidence_live_input_adapter_execution_authorization_implementation_acceptance: accepted-bounded-non-executing-synthetic-implementation-authority
+  local_supply_evidence_live_input_adapter_execution_authorization_implementation_acceptance_id: SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-LIVE-INPUT-ADAPTER-EXECUTION-AUTHORIZATION-IMPLEMENTATION-ACCEPT-001
   local_supply_evidence_live_input_adapter_execution_authorization_implementation_coverage: 164
   local_supply_evidence_live_input_adapter_execution_authorization_implementation_success_cases: 1
   local_supply_evidence_live_input_adapter_execution_authorization_implementation_failure_cases: 20
@@ -635,7 +637,7 @@ selected_target_policy:
   materialization_authorized: false
   deployment_authorized: false
   activation_authorized: false
-  next_task: review-and-accept-non-executing-selected-provider-local-supply-evidence-live-input-adapter-and-execution-authorization-implementation-candidate-boundary
+  next_task: generate-and-review-non-executing-selected-provider-local-supply-map-evidence-transaction-implementation-candidate
 
   retained_result_coordinate_generation_contract_review:
     review_id: RETAINED-SUPPLY-COORDINATE-GENERATION-CONTRACT-001

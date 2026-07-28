@@ -1,54 +1,53 @@
-# Active task: review and accept the non-executing live-input adapter and execution-authorization implementation candidate
+# Active task: generate and review the non-executing read-only local-supply evidence transaction implementation candidate
 
-> Task ID: `review-and-accept-non-executing-selected-provider-local-supply-evidence-live-input-adapter-and-execution-authorization-implementation-candidate-boundary`
+> Task ID: `generate-and-review-non-executing-selected-provider-local-supply-map-evidence-transaction-implementation-candidate`
 >
-> Expected state on completion: the exact six-artifact repository-owned synthetic implementation is accepted as bounded non-executing implementation authority while live inputs, authorization issuance, replay persistence, provider reads, evidence execution and runtime effects remain unauthorized.
+> Expected state on completion: a deterministic repository-owned synthetic implementation candidate covers the already accepted 12-input, 16-state, 32-operation and 18-failure read-only evidence-transaction design while live coordinates, provider opens, provider reads, receipt production and runtime effects remain unauthorized.
 
 ## Objective
 
-Review the exact implementation candidate qualified by `SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-LIVE-INPUT-ADAPTER-EXECUTION-AUTHORIZATION-IMPLEMENTATION-REVIEW-001` and, if unchanged, freeze its source, fixture, negative cases, 164-row coverage ledger, synthetic success result and metadata as a separate acceptance boundary.
+Implement the exact accepted local-supply-map evidence transaction design as a non-executing synthetic candidate, preserving explicit-coordinate-only input, bounded read semantics and fail-closed behavior without opening any provider path.
 
 ## Why now
 
-The accepted contract is implemented with exact coverage for ten input channels, twenty adapter-envelope fields, 27 execution-authorization claims, 37 validations, 18 states, 32 operations and 20 failures. The candidate has one deterministic success case and twenty fail-closed cases, with zero provider reads, zero writes and zero live authority.
+The live-input adapter and execution-authorization implementation is now accepted as an immutable synthetic-only boundary. Evidence delegation intentionally remains unexecuted and requires a separate implementation review and acceptance before any live provider read can be considered.
 
 ## In scope
 
-- regenerate and byte-compare the six candidate artifacts;
-- verify all frozen SHA-256 values and exact cardinalities;
-- run the positive and twenty negative synthetic cases;
-- prove the CLI accepts only the exact repository-owned fixture;
-- prove the accepted synthetic implementation remains an immutable oracle and is not invoked;
-- prove live-to-synthetic rewriting, replay persistence, provider opening, provider reads and writes remain absent;
-- record append-only implementation acceptance and advance the next task.
+- map the accepted 12 inputs, 16 states, 32 operations and 18 failures to implementation coverage;
+- create deterministic repository-owned success and fail-closed fixtures;
+- validate explicit synthetic coordinates as text only;
+- model bounded provider-read sequencing without opening files;
+- prove zero provider reads, writes and live authority;
+- add a separate implementation candidate review and acceptance gate.
 
 ## Out of scope
 
-Supplying live owner decisions, tokens, coordinates, revocation snapshots or execution authorization; accepting arbitrary input paths; searching storage; opening or reading provider files; persisting a replay tuple; delegating to a live evidence executor; producing a local-supply map; generation-root creation; population, materialization, publication, deployment or activation.
+Live owner decisions, tokens, coordinate receipts, revocation snapshots or execution authorization; path discovery; opening or reading provider files; producing a live local-supply map; replay persistence; generation-root creation; population, materialization, publication, deployment or activation.
 
 ## Required reading
 
-- `docs/evidence/selected-provider-local-supply-evidence-live-input-adapter-execution-authorization-implementation-review.md`
-- `docs/evidence/selected-provider-local-supply-evidence-live-input-adapter-execution-authorization-contract-boundary-acceptance.md`
-- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-evidence-live-input-adapter-execution-authorization-implementation-metadata.tsv`
-- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-evidence-live-input-adapter-execution-authorization-implementation-coverage.tsv`
-- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-evidence-live-input-adapter-execution-authorization-implementation-negative-cases.json`
+- `docs/evidence/selected-provider-local-supply-evidence-live-input-adapter-execution-authorization-implementation-boundary-acceptance.md`
+- `docs/evidence/selected-provider-local-supply-map-evidence-transaction-design-boundary-acceptance.md`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-map-evidence-transaction-design-metadata.tsv`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-map-evidence-transaction-operation-contract.tsv`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-map-evidence-transaction-failure-contract.tsv`
 
 ## Pending external inputs
 
-None. Live documents and authorization belong to later separate transactions and must not be supplied during implementation acceptance.
+None. Live coordinate and authorization documents belong to a later execution transaction and must not be supplied during synthetic implementation review.
 
 ## Stop conditions
 
-Stop if regeneration differs, any artifact digest or cardinality differs, a negative case does not fail closed, the CLI accepts a non-exact fixture, the implementation imports discovery/network/process surfaces, any provider path is opened, any provider byte is read, any replay tuple is persisted, the accepted synthetic implementation is invoked, or current live authority becomes nonzero.
+Stop if the implementation accepts arbitrary paths, searches storage, opens a provider file, reads provider bytes, persists replay state, writes runtime state, weakens any accepted cardinality or creates live authority.
 
 ## Completion criteria
 
-The exact six-artifact candidate is accepted without changing its bytes and with all live-input, provider-read, replay-persistence, evidence-execution and runtime gates still closed.
+A reproducible synthetic-only implementation candidate covers the exact accepted evidence-transaction design and passes deterministic positive and fail-closed tests with zero provider reads, writes and live authority.
 
 ## Next valid action
 
-Review and accept the exact non-executing implementation candidate boundary only.
+Generate and review the synthetic-only evidence-transaction implementation candidate only.
 
 Do not supply, discover, open, read, localize, populate or execute against live provider inputs.
 
