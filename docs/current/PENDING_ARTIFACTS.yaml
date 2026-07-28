@@ -1,15 +1,24 @@
 schema_version: 1
-state_version: 2026-07-27.07
+state_version: 2026-07-28.01
 
 blocking:
-  - id: local-supply-evidence-implementation-live-input-adapter-execution-authorization-contract
-    state: not-yet-reviewed
-    note: The accepted synthetic-only implementation requires a separate non-executing live-input adapter and evidence-execution authorization contract before any live owner decision, coordinate receipt or provider read can be considered.
+  - id: local-supply-evidence-live-input-adapter-execution-authorization-contract-acceptance
+    state: candidate-qualified-acceptance-open
+    note: The exact eight-artifact contract candidate requires a separate Class D acceptance decision before any future live adapter implementation may be considered.
+  - id: local-supply-evidence-live-adapter-implementation
+    state: not-designed-not-authorized
+    note: The accepted synthetic implementation remains an immutable oracle only; a live-capable adapter and executor require a separate implementation candidate and acceptance and may not rewrite live paths into the synthetic namespace.
   - id: local-supply-map-evidence
     state: not-produced-not-authorized
     note: No live authorization token, coordinate receipt, provider path or provider byte has been supplied, opened, read, localized or bound.
   - id: execution-authorization
-    state: not-reviewed-not-authorized
-    note: Implementation acceptance and future adapter contracts do not themselves authorize issuance, provider reads, materializer execution or runtime mutation.
+    state: not-issued-not-authorized
+    note: Contract qualification does not issue or activate the 27-claim execution authorization and does not open the provider-read gate.
 
-non_blocking: []
+non_blocking:
+  - id: downstream-application-data-service-closure
+    state: intentionally-deferred-until-provider-population
+    note: Fontconfig configuration/cache, locale, GSettings/accessibility services, D-Bus/TLS policy, GTK modules/loaders and the Thai dictionary remain separate capability work after the selected provider bytes are safely localized.
+  - id: glibc-substrate-lifecycle
+    state: intentionally-separate
+    note: The glibc 2.42 hold and known 2.43 incompatibility require an independent substrate lifecycle and must not be folded into provider materialization.

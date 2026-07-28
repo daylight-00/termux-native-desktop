@@ -1,0 +1,197 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import csv
+import hashlib
+import json
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+BASE = Path("experiments/glibc/selected-obsidian-provider-authority")
+REVIEW = BASE / "review"
+GENERATOR = BASE / "recipe/generate-selected-provider-local-supply-evidence-live-input-adapter-execution-authorization-contract.py"
+ADAPTER = REVIEW / "selected-provider-local-supply-evidence-live-input-adapter-contract.json"
+EXECUTION = REVIEW / "selected-provider-local-supply-evidence-execution-authorization-schema.json"
+VALIDATION = REVIEW / "selected-provider-local-supply-evidence-live-input-adapter-execution-authorization-validation-contract.tsv"
+STATE = REVIEW / "selected-provider-local-supply-evidence-live-input-adapter-execution-authorization-state-machine.tsv"
+OPERATION = REVIEW / "selected-provider-local-supply-evidence-live-input-adapter-execution-authorization-operation-contract.tsv"
+FAILURE = REVIEW / "selected-provider-local-supply-evidence-live-input-adapter-execution-authorization-failure-contract.tsv"
+RECEIPT = REVIEW / "selected-provider-local-supply-evidence-live-input-adapter-execution-authorization-receipt-contract.json"
+METADATA = REVIEW / "selected-provider-local-supply-evidence-live-input-adapter-execution-authorization-contract-metadata.tsv"
+ARTIFACTS = [ADAPTER, EXECUTION, VALIDATION, STATE, OPERATION, FAILURE, RECEIPT, METADATA]
+
+
+def fail(message: str) -> None:
+    print(f"live-input adapter/execution-authorization contract: FAIL: {message}", file=sys.stderr)
+    raise SystemExit(1)
+
+
+def rows(path: Path) -> list[dict[str, str]]:
+    with path.open(newline="", encoding="utf-8") as handle:
+        return list(csv.DictReader(handle, delimiter="\t"))
+
+
+def digest(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+with tempfile.TemporaryDirectory(prefix="live-input-adapter-execution-contract-") as tmp:
+    subprocess.run(
+        [sys.executable, str(ROOT / GENERATOR), "--repo-root", str(ROOT), "--output-root", tmp],
+        check=True,
+    )
+    generated = Path(tmp)
+    for relative in ARTIFACTS:
+        if (ROOT / relative).read_bytes() != (generated / relative).read_bytes():
+            fail(f"generated drift: {relative}")
+
+meta = {row["key"]: row["value"] for row in rows(ROOT / METADATA)}
+expected_meta = {
+    "contract_review_id": "SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-LIVE-INPUT-ADAPTER-EXECUTION-AUTHORIZATION-CONTRACT-REVIEW-001",
+    "candidate_state": "QUALIFIED_NON_EXECUTING_LIVE_INPUT_ADAPTER_EXECUTION_AUTHORIZATION_CONTRACT_CANDIDATE",
+    "acceptance_gate": "SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-LIVE-INPUT-ADAPTER-EXECUTION-AUTHORIZATION-CONTRACT-ACCEPTANCE-OPEN",
+    "source_implementation_acceptance_id": "SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-AUTHORIZATION-ISSUANCE-COORDINATE-PRODUCTION-IMPLEMENTATION-ACCEPT-001",
+    "source_implementation_sha256": "039593be6144845b8be817bc45144be58c0f9a03bc60278a73748213d269df61",
+    "explicit_input_channel_count": "10",
+    "adapter_envelope_required_field_count": "20",
+    "execution_authorization_required_claim_count": "27",
+    "validation_rule_count": "37",
+    "state_count": "18",
+    "operation_count": "32",
+    "failure_count": "20",
+    "coordinate_required_row_count": "41",
+    "coordinate_required_row_field_count": "10",
+    "maximum_provider_bytes": "29047112",
+    "maximum_result_receipt_bytes": "1048576",
+    "current_live_input_count": "0",
+    "current_adapter_envelope_count": "0",
+    "current_execution_authorization_count": "0",
+    "current_provider_read_count": "0",
+    "current_write_count": "0",
+    "current_live_authority_count": "0",
+    "synthetic_implementation_role": "IMMUTABLE_SEMANTIC_AND_REGRESSION_ORACLE_ONLY_NOT_LIVE_EXECUTOR",
+    "live_to_synthetic_path_rewrite": "FORBIDDEN",
+    "future_adapter_implementation_authorized": "NO",
+    "execution_authorization_issuance_authorized": "NO",
+    "provider_byte_read_authorized": "NO",
+    "evidence_transaction_execution_authorized": "NO",
+    "local_supply_map_produced": "NO",
+    "generation_root_creation_authorized": "NO",
+    "target_population_authorized": "NO",
+    "materialization_authorized": "NO",
+    "publication_authorized": "NO",
+    "deployment_authorized": "NO",
+    "activation_authorized": "NO",
+    "next_action": "review-and-accept-non-executing-selected-provider-local-supply-evidence-live-input-adapter-and-execution-authorization-contract-candidate-boundary",
+}
+for key, expected in expected_meta.items():
+    if meta.get(key) != expected:
+        fail(f"metadata mismatch {key}: {meta.get(key)!r}")
+
+for relative, key in [
+    (ADAPTER, "adapter_contract_sha256"),
+    (EXECUTION, "execution_authorization_schema_sha256"),
+    (VALIDATION, "validation_contract_sha256"),
+    (STATE, "state_machine_sha256"),
+    (OPERATION, "operation_contract_sha256"),
+    (FAILURE, "failure_contract_sha256"),
+    (RECEIPT, "receipt_contract_sha256"),
+]:
+    if meta.get(key) != digest(ROOT / relative):
+        fail(f"metadata digest mismatch: {key}")
+
+adapter = json.loads((ROOT / ADAPTER).read_text(encoding="utf-8"))
+if adapter.get("future_explicit_input_channel_count") != 10 or len(adapter.get("future_explicit_input_channels", [])) != 10:
+    fail("adapter explicit input cardinality")
+if adapter.get("future_required_envelope_field_count") != 20 or len(adapter.get("future_required_envelope_fields", [])) != 20:
+    fail("adapter envelope cardinality")
+if any(adapter.get(key) != 0 for key in (
+    "current_live_input_count", "current_adapter_envelope_count", "current_execution_authorization_count",
+    "current_provider_read_count", "current_write_count", "current_live_authority_count",
+)):
+    fail("adapter current authority widening")
+impl = adapter.get("accepted_synthetic_implementation", {})
+if impl.get("implementation_sha256") != expected_meta["source_implementation_sha256"]:
+    fail("synthetic implementation digest")
+if impl.get("role") != "IMMUTABLE_SEMANTIC_AND_REGRESSION_ORACLE_ONLY" or impl.get("live_input_invocation_authority") != "NONE":
+    fail("synthetic implementation role widening")
+if impl.get("live_path_rewrite_to_synthetic_namespace") != "FORBIDDEN" or impl.get("mutation") != "FORBIDDEN_NEW_CLASS_D_IMPLEMENTATION_REVIEW_REQUIRED":
+    fail("synthetic rewrite or mutation allowed")
+coord = adapter.get("coordinate_binding", {})
+if coord.get("required_row_count") != 41 or coord.get("required_row_field_count") != 10 or coord.get("provider_path_open") != "FORBIDDEN_DURING_ADAPTER_VALIDATION":
+    fail("adapter coordinate boundary")
+if adapter.get("future_adapter_implementation_authority") != "NONE_SEPARATE_IMPLEMENTATION_REVIEW_AND_ACCEPTANCE_REQUIRED":
+    fail("adapter implementation authority widened")
+
+execution = json.loads((ROOT / EXECUTION).read_text(encoding="utf-8"))
+if execution.get("required_claim_count") != 27 or len(execution.get("required_claims", [])) != 27:
+    fail("execution authorization claim cardinality")
+if execution.get("current_authorization") is not None or any(execution.get(key) != 0 for key in (
+    "current_authorization_count", "current_consumed_replay_tuple_count", "current_provider_read_count",
+    "current_write_count", "current_live_authority_count",
+)):
+    fail("execution authorization current authority widening")
+if execution.get("required_exact_provider_path_count") != 41 or execution.get("maximum_provider_bytes") != 29047112:
+    fail("execution resource boundary")
+if execution.get("maximum_result_receipt_bytes") != 1048576 or execution.get("maximum_validity_seconds") != 3600:
+    fail("execution receipt/time boundary")
+if len(execution.get("required_permitted_effects", [])) != 4:
+    fail("execution effect allowlist cardinality")
+if execution.get("binding_rules", {}).get("first_provider_open") != "ONLY_AFTER_ALL_VALIDATIONS_AND_ATOMIC_REPLAY_TUPLE_CONSUMPTION":
+    fail("first provider-open gate")
+if "PACKAGE_DATABASES_AND_LIVE_GLIBC_PREFIX_IDENTICAL" not in execution.get("protected_state_rule", ""):
+    fail("protected state rule")
+
+validation = rows(ROOT / VALIDATION)
+states = rows(ROOT / STATE)
+operations = rows(ROOT / OPERATION)
+failures = rows(ROOT / FAILURE)
+for name, data, count, id_field in [
+    ("validation", validation, 37, "validation_id"),
+    ("state", states, 18, "state_id"),
+    ("operation", operations, 32, "operation_id"),
+    ("failure", failures, 20, "failure_id"),
+]:
+    if len(data) != count:
+        fail(f"{name} cardinality: {len(data)}")
+    if [int(row["sequence"]) for row in data] != list(range(1, count + 1)):
+        fail(f"{name} sequence")
+    if len({row[id_field] for row in data}) != count:
+        fail(f"{name} identity uniqueness")
+
+if not any(row["category"] == "NO_SYNTHETIC_REWRITE" for row in validation):
+    fail("missing synthetic rewrite validation")
+if not any("separately accepted read-only evidence implementation" in row["operation"] for row in operations):
+    fail("missing separate live implementation delegation")
+if any("open exact" in row["operation"].lower() and int(row["sequence"]) < 28 for row in operations):
+    fail("provider open appears before replay consumption")
+if any(row["current_state"] != "CONTRACT_ONLY_NOT_RUN" for row in states + operations + failures):
+    fail("contract rows claim execution")
+if any(row["authority_effect"] != "FUTURE_INTERFACE_RULE_ONLY_ZERO_CURRENT_LIVE_INPUTS_PROVIDER_READS_WRITES_OR_AUTHORITY" for row in validation):
+    fail("validation authority widening")
+
+receipt = json.loads((ROOT / RECEIPT).read_text(encoding="utf-8"))
+if any(receipt.get(key) not in ([], 0) for key in (
+    "current_live_inputs", "current_adapter_envelopes", "current_execution_authorizations",
+    "current_provider_read_count", "current_write_count", "current_live_authority_count",
+)):
+    fail("receipt contains live state")
+if receipt.get("synthetic_implementation_role") != "IMMUTABLE_SEMANTIC_AND_REGRESSION_ORACLE_ONLY_NOT_LIVE_EXECUTOR":
+    fail("receipt synthetic role")
+if receipt.get("future_adapter_success_receipt", {}).get("provider_read_count") != 0:
+    fail("adapter receipt permits provider read")
+
+required_docs = [
+    ("docs/evidence/selected-provider-local-supply-evidence-live-input-adapter-execution-authorization-contract-review.md", "QUALIFIED_NON_EXECUTING_LIVE_INPUT_ADAPTER_EXECUTION_AUTHORIZATION_CONTRACT_CANDIDATE"),
+    ("docs/current/BRIEF.md", "live-input adapter / execution-authorization contract"),
+    ("docs/current/ACTIVE_TASK.md", "review-and-accept-non-executing-selected-provider-local-supply-evidence-live-input-adapter-and-execution-authorization-contract-candidate-boundary"),
+    ("docs/current/PENDING_ARTIFACTS.yaml", "candidate-qualified-acceptance-open"),
+]
+for rel, marker in required_docs:
+    if marker not in (ROOT / rel).read_text(encoding="utf-8"):
+        fail(f"missing current authority marker: {rel}: {marker}")
+
+print("live-input adapter/execution-authorization contract: all checks passed")

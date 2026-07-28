@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-27.07`
+> Semantic state version: `2026-07-28.01`
 
 ## Purpose and operational boundary
 
@@ -55,6 +55,13 @@ implementation coverage inputs/states/operations/failures: 14 / 18 / 36 / 20
 implementation total coverage / synthetic cases: 88 / 1+20
 implementation synthetic coordinate rows/provider reads/writes: 41 / 0 / 0
 implementation acceptance: ACCEPTED_BOUNDED_NON_EXECUTING_SYNTHETIC_IMPLEMENTATION_AUTHORITY
+live-input adapter / execution-authorization contract: QUALIFIED_NON_EXECUTING_CANDIDATE
+adapter inputs / envelope fields: 10 / 20
+execution authorization claims: 27
+adapter validation/states/operations/failures: 37 / 18 / 32 / 20
+current live inputs / adapter envelopes / execution authorizations: 0 / 0 / 0
+synthetic implementation role: IMMUTABLE_ORACLE_NOT_LIVE_EXECUTOR
+live-to-synthetic path rewrite: FORBIDDEN
 execution authorization:       NO
 population state:              UNPOPULATED_SCHEMA_ONLY
 materialization/publication:   blocked / blocked
@@ -85,4 +92,8 @@ Design acceptance is non-executing. It creates no local supply map, reads no pro
 
 `SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-AUTHORIZATION-ISSUANCE-COORDINATE-PRODUCTION-IMPLEMENTATION-ACCEPT-001` accepts the exact six-artifact synthetic-only implementation boundary while preserving zero issued tokens, coordinates, provider reads, writes and live authority. Acceptance grants no live-input, issuance, production, read or execution authority.
 
-The active task is `design-and-review-non-executing-selected-provider-local-supply-evidence-implementation-live-input-adapter-and-execution-authorization-contract`. It may define a non-executing adapter and authorization contract only. It may not supply live inputs, issue or activate a token, produce live coordinates, search, acquire, open, read, extract, localize or execute.
+`SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-LIVE-INPUT-ADAPTER-EXECUTION-AUTHORIZATION-CONTRACT-REVIEW-001` qualifies an exact eight-artifact non-executing contract candidate: ten explicit input channels, a twenty-field inactive adapter envelope, a 27-claim execution authorization, 37 validation rules, 18 states, 32 operations and 20 failure contracts. It preserves zero live inputs, zero provider reads, zero writes and zero live authority.
+
+The review corrects an important boundary: the accepted synthetic implementation remains immutable as a semantic/regression oracle and is not a live executor. Rewriting live paths or origins into the synthetic namespace and invoking the synthetic CLI with live inputs are forbidden. A future live adapter/executor requires a separate implementation review and acceptance.
+
+The active task is `review-and-accept-non-executing-selected-provider-local-supply-evidence-live-input-adapter-and-execution-authorization-contract-candidate-boundary`. It may accept or reject the exact frozen contract candidate only. It may not implement a live adapter, supply live inputs, issue or activate authorization, search, open, read, localize or execute.

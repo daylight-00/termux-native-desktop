@@ -502,3 +502,11 @@ selected-provider local-supply evidence authorization issuance and coordinate-re
 `SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-AUTHORIZATION-ISSUANCE-COORDINATE-PRODUCTION-IMPLEMENTATION-ACCEPT-001` accepts the exact implementation source, synthetic fixture, negative cases, 88-row coverage, synthetic success receipt and metadata digests. Historical candidate evidence remains frozen. Current issued token, coordinate receipt, coordinate row, provider-read, write and live-authority counts remain zero.
 
 bounded non-executing synthetic selected-provider local-supply evidence implementation accepted
+
+## Non-executing selected-provider live-input adapter and execution-authorization contract candidate
+
+`SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-LIVE-INPUT-ADAPTER-EXECUTION-AUTHORIZATION-CONTRACT-REVIEW-001` qualifies the exact adapter, execution-authorization, validation, state, operation, failure, receipt and metadata artifacts. The contract binds future explicit owner/token/41-row coordinate inputs to repository HEAD/tree, remote HEAD, executor, revocation, replay, resource and output limits while keeping current live-input, provider-read, write and live-authority counts at zero.
+
+The accepted synthetic implementation is frozen as an oracle only. Rewriting live paths into the synthetic namespace or treating the synthetic CLI as a live execution engine is explicitly rejected.
+
+selected-provider local-supply evidence live-input adapter and execution-authorization contract candidate qualified
