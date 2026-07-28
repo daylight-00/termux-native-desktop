@@ -1,15 +1,15 @@
 schema_version: 1
-state_version: 2026-07-27.06
+state_version: 2026-07-27.07
 
 blocking:
-  - id: local-supply-evidence-authorization-issuance-coordinate-production-implementation-acceptance
-    state: candidate-qualified-acceptance-open
-    note: The exact synthetic-only implementation candidate with 88 design-coverage rows, one success case and twenty fail-closed cases requires a separate Class D acceptance decision.
+  - id: local-supply-evidence-implementation-live-input-adapter-execution-authorization-contract
+    state: not-yet-reviewed
+    note: The accepted synthetic-only implementation requires a separate non-executing live-input adapter and evidence-execution authorization contract before any live owner decision, coordinate receipt or provider read can be considered.
   - id: local-supply-map-evidence
     state: not-produced-not-authorized
     note: No live authorization token, coordinate receipt, provider path or provider byte has been supplied, opened, read, localized or bound.
   - id: execution-authorization
     state: not-reviewed-not-authorized
-    note: Design and implementation acceptance do not themselves authorize issuance, provider reads, materializer execution or runtime mutation.
+    note: Implementation acceptance and future adapter contracts do not themselves authorize issuance, provider reads, materializer execution or runtime mutation.
 
 non_blocking: []

@@ -1,52 +1,52 @@
-# Active task: review and accept the non-executing local-supply evidence authorization issuance and coordinate-receipt production implementation candidate boundary
+# Active task: design and review a non-executing local-supply evidence implementation live-input adapter and execution-authorization contract
 
-> Task ID: `review-and-accept-non-executing-selected-provider-local-supply-evidence-authorization-issuance-and-coordinate-receipt-production-transaction-implementation-candidate-boundary`
+> Task ID: `design-and-review-non-executing-selected-provider-local-supply-evidence-implementation-live-input-adapter-and-execution-authorization-contract`
 >
-> Expected state on completion: the exact synthetic-only implementation candidate is accepted as bounded non-executing project authority while live token issuance, coordinate production, provider reads, evidence execution and runtime mutation remain absent and unauthorized.
+> Expected state on completion: a deterministic non-executing contract defines how a future explicit owner decision and canonical 41-row coordinate receipt may be presented to the accepted synthetic implementation through a separate adapter, while live inputs, provider reads, evidence execution and runtime mutation remain absent and unauthorized.
 
 ## Objective
 
-Review `SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-AUTHORIZATION-ISSUANCE-COORDINATE-PRODUCTION-IMPLEMENTATION-REVIEW-001` and decide whether its exact implementation source, synthetic fixture, 88-row coverage, 1 success case and 20 fail-closed cases may become accepted non-executing implementation authority.
+Define the interface and authorization boundary between the accepted synthetic-only implementation and any future live owner-decision or coordinate-receipt inputs. The contract must preserve explicit-input-only semantics, digest and baseline binding, revocation and replay controls, inactive staging, no provider read before separate execution authorization, and protected-state invariance.
 
 ## Why now
 
-The accepted 14-input/18-state/36-operation/20-failure design now has a deterministic implementation candidate that operates only on repository-owned synthetic fixtures. Acceptance must remain distinct from any future owner decision, coordinate production, token activation or evidence execution.
+`SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-AUTHORIZATION-ISSUANCE-COORDINATE-PRODUCTION-IMPLEMENTATION-ACCEPT-001` accepts the exact synthetic-only implementation boundary. That implementation deliberately cannot accept arbitrary or live input. Before any live transaction can be considered, a separate adapter and execution-authorization contract must define the allowed interface without enabling it.
 
 ## In scope
 
-- freeze the exact implementation artifacts by SHA-256;
-- confirm 14/18/36/20 design coverage and inherited 18/41/10/30 interface coverage;
-- confirm one deterministic synthetic success case and twenty exact failure cases;
-- confirm the implementation rejects arbitrary fixture paths and non-synthetic coordinates;
-- confirm no provider path is opened, no provider byte is read and no write is performed;
-- confirm zero live token, coordinate receipt, coordinate row and live authority counts;
-- record a separate Class D implementation acceptance decision.
+- define a non-executing live-input adapter contract;
+- bind owner decision, authorization token, coordinate receipt, repository HEAD/tree, remote HEAD, executor and time window;
+- require exact 41-row coordinate completeness and digest cross-binding;
+- define revocation, replay, expiry and stale-baseline rejection;
+- require zero provider reads before a separate evidence-execution authorization;
+- define inactive staging, failure receipt and protected-state invariance;
+- preserve synthetic implementation bytes unchanged.
 
 ## Out of scope
 
-Supplying a real owner decision, issuing or activating a token, producing or accepting a live coordinate receipt, searching storage, opening or reading provider files, downloading or extracting evidence, running against live coordinates, producing a local map, creating runtime roots, population, materialization, publication, deployment or activation.
+Supplying a real owner decision, issuing or activating a token, producing or accepting live coordinates, searching storage, opening or reading provider files, downloading or extracting evidence, executing evidence collection, producing a local map, creating runtime roots, population, materialization, publication, deployment or activation.
 
 ## Required reading
 
-- `docs/evidence/selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-implementation-review.md`
-- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-implementation-metadata.tsv`
-- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-implementation-coverage.tsv`
-- `experiments/glibc/selected-obsidian-provider-authority/implementation/selected_provider_local_supply_evidence_authorization_issuance_coordinate_production_candidate.py`
+- `docs/evidence/selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-implementation-boundary-acceptance.md`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-implementation-boundary-acceptance.tsv`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-design-boundary-acceptance.tsv`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-evidence-authorization-coordinate-contract-boundary-acceptance.tsv`
 
 ## Pending external inputs
 
-None for implementation acceptance. Live owner decisions, coordinates and execution authority require later separate decisions and transactions.
+None for contract design. Live owner decisions, coordinates and execution authority require later separate transactions.
 
 ## Stop conditions
 
-Stop if acceptance changes candidate source or fixture bytes, introduces a live token or coordinate, permits arbitrary input, searches or opens provider paths, reads provider bytes, authorizes execution or changes protected state.
+Stop if the contract embeds a live token or path, permits discovery or inference, allows provider reads before separate execution authorization, modifies the accepted implementation, creates runtime state or weakens revocation, replay, failure or invariance boundaries.
 
 ## Completion criteria
 
-A separate acceptance record freezes the exact synthetic-only candidate and preserves zero live tokens, coordinates, provider reads, writes and runtime effects. Future issuance, coordinate production and evidence execution remain separate blocked gates.
+Machine-readable adapter and authorization contracts are deterministic and contain zero live inputs, zero provider reads, zero writes and zero live authority. Implementation execution and all runtime effects remain blocked.
 
 ## Next valid action
 
-Review and accept the exact implementation candidate only. Do not issue, activate, search, acquire, open, read, extract, localize, populate or execute against live inputs.
+Design and review contracts only. Do not issue, activate, search, acquire, open, read, extract, localize, populate or execute against live inputs.
 
 Do not acquire or populate provider bytes.

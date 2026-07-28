@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-27.06`
+> Semantic state version: `2026-07-27.07`
 
 ## Purpose and operational boundary
 
@@ -50,11 +50,11 @@ current live tokens / coordinate rows: 0 / 0
 authorization issuance/coordinate production design: QUALIFIED_NON_EXECUTING_DESIGN_CANDIDATE_HISTORICAL
 authorization issuance/coordinate production design acceptance: ACCEPTED_BOUNDED_NON_EXECUTING_DESIGN_AUTHORITY
 issuance design inputs/states/operations/failures: 14 / 18 / 36 / 20
-authorization issuance/coordinate production implementation: QUALIFIED_NON_EXECUTING_SYNTHETIC_CANDIDATE
+authorization issuance/coordinate production implementation: QUALIFIED_NON_EXECUTING_SYNTHETIC_CANDIDATE_HISTORICAL
 implementation coverage inputs/states/operations/failures: 14 / 18 / 36 / 20
 implementation total coverage / synthetic cases: 88 / 1+20
 implementation synthetic coordinate rows/provider reads/writes: 41 / 0 / 0
-implementation acceptance: OPEN_SEPARATE_ACCEPTANCE_REQUIRED
+implementation acceptance: ACCEPTED_BOUNDED_NON_EXECUTING_SYNTHETIC_IMPLEMENTATION_AUTHORITY
 execution authorization:       NO
 population state:              UNPOPULATED_SCHEMA_ONLY
 materialization/publication:   blocked / blocked
@@ -83,4 +83,6 @@ Design acceptance is non-executing. It creates no local supply map, reads no pro
 
 `SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-AUTHORIZATION-ISSUANCE-COORDINATE-PRODUCTION-IMPLEMENTATION-REVIEW-001` qualifies a deterministic synthetic-only implementation candidate. It maps all 14 inputs, 18 states, 36 operations and 20 failures into 88 coverage rows, validates one 41-row success fixture and rejects twenty exact failure cases. The implementation accepts repository-owned synthetic fixtures only, opens no provider path, reads no provider byte, performs no write and creates no live authority.
 
-The active task is `review-and-accept-non-executing-selected-provider-local-supply-evidence-authorization-issuance-and-coordinate-receipt-production-transaction-implementation-candidate-boundary`. It may freeze and accept the exact implementation candidate only. It may not issue or activate a token, produce live coordinates, search, acquire, open, read, extract, localize or execute against live inputs.
+`SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-AUTHORIZATION-ISSUANCE-COORDINATE-PRODUCTION-IMPLEMENTATION-ACCEPT-001` accepts the exact six-artifact synthetic-only implementation boundary while preserving zero issued tokens, coordinates, provider reads, writes and live authority. Acceptance grants no live-input, issuance, production, read or execution authority.
+
+The active task is `design-and-review-non-executing-selected-provider-local-supply-evidence-implementation-live-input-adapter-and-execution-authorization-contract`. It may define a non-executing adapter and authorization contract only. It may not supply live inputs, issue or activate a token, produce live coordinates, search, acquire, open, read, extract, localize or execute.

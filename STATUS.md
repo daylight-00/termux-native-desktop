@@ -496,3 +496,9 @@ bounded non-executing selected-provider local-supply evidence authorization issu
 `SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-AUTHORIZATION-ISSUANCE-COORDINATE-PRODUCTION-IMPLEMENTATION-REVIEW-001` qualifies an exact synthetic-only implementation candidate. It maps 14 inputs, 18 states, 36 operations and 20 failures into 88 coverage rows, passes one 41-row synthetic success case and rejects twenty exact failure cases. Current issued token, coordinate receipt, coordinate row, provider-read, write and live-authority counts remain zero.
 
 selected-provider local-supply evidence authorization issuance and coordinate-receipt production implementation candidate qualified
+
+## Bounded non-executing synthetic selected-provider local-supply evidence implementation acceptance
+
+`SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-AUTHORIZATION-ISSUANCE-COORDINATE-PRODUCTION-IMPLEMENTATION-ACCEPT-001` accepts the exact implementation source, synthetic fixture, negative cases, 88-row coverage, synthetic success receipt and metadata digests. Historical candidate evidence remains frozen. Current issued token, coordinate receipt, coordinate row, provider-read, write and live-authority counts remain zero.
+
+bounded non-executing synthetic selected-provider local-supply evidence implementation accepted
