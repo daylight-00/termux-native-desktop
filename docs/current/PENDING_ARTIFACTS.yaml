@@ -1,13 +1,10 @@
 schema_version: 1
-state_version: 2026-07-28.01
+state_version: 2026-07-28.02
 
 blocking:
-  - id: local-supply-evidence-live-input-adapter-execution-authorization-contract-acceptance
-    state: candidate-qualified-acceptance-open
-    note: The exact eight-artifact contract candidate requires a separate Class D acceptance decision before any future live adapter implementation may be considered.
   - id: local-supply-evidence-live-adapter-implementation
     state: not-designed-not-authorized
-    note: The accepted synthetic implementation remains an immutable oracle only; a live-capable adapter and executor require a separate implementation candidate and acceptance and may not rewrite live paths into the synthetic namespace.
+    note: The live-input adapter and execution-authorization contract is accepted; a live-capable adapter and validator still require a separately reviewed non-executing implementation candidate and acceptance and may not rewrite live paths into the synthetic namespace.
   - id: local-supply-map-evidence
     state: not-produced-not-authorized
     note: No live authorization token, coordinate receipt, provider path or provider byte has been supplied, opened, read, localized or bound.

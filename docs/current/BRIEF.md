@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-28.01`
+> Semantic state version: `2026-07-28.02`
 
 ## Purpose and operational boundary
 
@@ -55,7 +55,8 @@ implementation coverage inputs/states/operations/failures: 14 / 18 / 36 / 20
 implementation total coverage / synthetic cases: 88 / 1+20
 implementation synthetic coordinate rows/provider reads/writes: 41 / 0 / 0
 implementation acceptance: ACCEPTED_BOUNDED_NON_EXECUTING_SYNTHETIC_IMPLEMENTATION_AUTHORITY
-live-input adapter / execution-authorization contract: QUALIFIED_NON_EXECUTING_CANDIDATE
+live-input adapter / execution-authorization contract: QUALIFIED_NON_EXECUTING_CANDIDATE_HISTORICAL
+live-input adapter / execution-authorization contract acceptance: ACCEPTED_BOUNDED_NON_EXECUTING_CONTRACT_AUTHORITY
 adapter inputs / envelope fields: 10 / 20
 execution authorization claims: 27
 adapter validation/states/operations/failures: 37 / 18 / 32 / 20
@@ -92,8 +93,8 @@ Design acceptance is non-executing. It creates no local supply map, reads no pro
 
 `SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-AUTHORIZATION-ISSUANCE-COORDINATE-PRODUCTION-IMPLEMENTATION-ACCEPT-001` accepts the exact six-artifact synthetic-only implementation boundary while preserving zero issued tokens, coordinates, provider reads, writes and live authority. Acceptance grants no live-input, issuance, production, read or execution authority.
 
-`SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-LIVE-INPUT-ADAPTER-EXECUTION-AUTHORIZATION-CONTRACT-REVIEW-001` qualifies an exact eight-artifact non-executing contract candidate: ten explicit input channels, a twenty-field inactive adapter envelope, a 27-claim execution authorization, 37 validation rules, 18 states, 32 operations and 20 failure contracts. It preserves zero live inputs, zero provider reads, zero writes and zero live authority.
+`SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-LIVE-INPUT-ADAPTER-EXECUTION-AUTHORIZATION-CONTRACT-REVIEW-001` historically qualifies the exact eight-artifact non-executing contract candidate: ten explicit input channels, a twenty-field inactive adapter envelope, a 27-claim execution authorization, 37 validation rules, 18 states, 32 operations and 20 failure contracts.
 
-The review corrects an important boundary: the accepted synthetic implementation remains immutable as a semantic/regression oracle and is not a live executor. Rewriting live paths or origins into the synthetic namespace and invoking the synthetic CLI with live inputs are forbidden. A future live adapter/executor requires a separate implementation review and acceptance.
+`SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-LIVE-INPUT-ADAPTER-EXECUTION-AUTHORIZATION-CONTRACT-ACCEPT-001` accepts that exact boundary while preserving zero live inputs, zero adapter envelopes, zero execution authorizations, zero provider reads, zero writes and zero live authority. The accepted synthetic implementation remains an immutable semantic/regression oracle and is not a live executor. Live-to-synthetic rewriting and live synthetic invocation remain forbidden.
 
-The active task is `review-and-accept-non-executing-selected-provider-local-supply-evidence-live-input-adapter-and-execution-authorization-contract-candidate-boundary`. It may accept or reject the exact frozen contract candidate only. It may not implement a live adapter, supply live inputs, issue or activate authorization, search, open, read, localize or execute.
+The active task is `generate-and-review-non-executing-selected-provider-local-supply-evidence-live-input-adapter-and-execution-authorization-implementation-candidate`. It may create deterministic repository-owned synthetic implementation evidence only. It may not supply live inputs, issue authorization, search, open, read, localize or execute provider bytes.

@@ -510,3 +510,9 @@ bounded non-executing synthetic selected-provider local-supply evidence implemen
 The accepted synthetic implementation is frozen as an oracle only. Rewriting live paths into the synthetic namespace or treating the synthetic CLI as a live execution engine is explicitly rejected.
 
 selected-provider local-supply evidence live-input adapter and execution-authorization contract candidate qualified
+
+## Bounded non-executing selected-provider live-input adapter and execution-authorization contract acceptance
+
+`SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-LIVE-INPUT-ADAPTER-EXECUTION-AUTHORIZATION-CONTRACT-ACCEPT-001` freezes all eight candidate digests and preserves the accepted synthetic implementation as an immutable oracle only. Live-to-synthetic rewriting, live synthetic invocation, authorization issuance, provider reads and runtime mutation remain unauthorized.
+
+bounded non-executing selected-provider live-input adapter and execution-authorization contract accepted
