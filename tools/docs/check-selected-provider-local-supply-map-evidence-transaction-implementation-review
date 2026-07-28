@@ -1,0 +1,81 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+import ast,csv,hashlib,importlib.util,json,subprocess,sys,tempfile
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[2]
+BASE=Path('experiments/glibc/selected-obsidian-provider-authority');REVIEW=BASE/'review';IMPL=BASE/'implementation'
+SOURCE=IMPL/'selected_provider_local_supply_map_evidence_transaction_candidate.py';FIXTURE=REVIEW/'selected-provider-local-supply-map-evidence-transaction-implementation-synthetic-fixture.json';NEGATIVES=REVIEW/'selected-provider-local-supply-map-evidence-transaction-implementation-negative-cases.json';COVERAGE=REVIEW/'selected-provider-local-supply-map-evidence-transaction-implementation-coverage.tsv';SUCCESS=REVIEW/'selected-provider-local-supply-map-evidence-transaction-implementation-synthetic-success.json';METADATA=REVIEW/'selected-provider-local-supply-map-evidence-transaction-implementation-metadata.tsv';GEN=BASE/'recipe/generate-selected-provider-local-supply-map-evidence-transaction-implementation.py'
+def fail(m):raise SystemExit(m)
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+def rows(p):
+ with p.open(newline='',encoding='utf-8') as f:return list(csv.DictReader(f,delimiter='\t'))
+def load(path):
+ spec=importlib.util.spec_from_file_location('lsme_impl_check',path);m=importlib.util.module_from_spec(spec);sys.modules[spec.name]=m;spec.loader.exec_module(m);return m
+with tempfile.TemporaryDirectory(prefix='lsme-implementation-') as td:
+ subprocess.run([sys.executable,str(ROOT/GEN),'--repo-root',str(ROOT),'--output-root',td],check=True)
+ for rel in (SOURCE,FIXTURE,NEGATIVES,COVERAGE,SUCCESS,METADATA):
+  if (ROOT/rel).read_bytes()!=(Path(td)/rel).read_bytes():fail('generated drift: '+str(rel))
+meta={r['key']:r['value'] for r in rows(ROOT/METADATA)}
+expected={
+ 'candidate_state':'QUALIFIED_NON_EXECUTING_SYNTHETIC_READ_ONLY_LOCAL_SUPPLY_MAP_EVIDENCE_TRANSACTION_IMPLEMENTATION_CANDIDATE',
+ 'implementation_acceptance_gate':'SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-EVIDENCE-TRANSACTION-IMPLEMENTATION-ACCEPTANCE-OPEN',
+ 'input_coverage_count':'12','state_coverage_count':'16','operation_coverage_count':'32','failure_coverage_count':'18','total_coverage_count':'78','inherited_validation_rule_count':'24',
+ 'synthetic_success_case_count':'1','synthetic_negative_case_count':'18','synthetic_coordinate_row_count':'41','synthetic_coordinate_row_field_count':'10',
+ 'synthetic_provider_open_count':'0','synthetic_provider_read_count':'0','synthetic_write_count':'0','current_authorized_coordinate_count':'0','current_provider_read_count':'0','current_write_count':'0','current_live_authority_count':'0','local_supply_map_produced':'NO',
+ 'implementation_execution_mode':'SYNTHETIC_REPOSITORY_FIXTURE_ONLY_TEXT_MODEL_NO_PROVIDER_OPEN_OR_READ','provider_read_operations':'MODELED_ONLY_NOT_EXECUTED','evidence_transaction_execution_authorized':'NO','local_path_discovery_authorized':'NO','provider_byte_read_authorized':'NO','replay_persistence_performed':'NO','next_action':'review-and-accept-non-executing-selected-provider-local-supply-map-evidence-transaction-implementation-candidate-boundary'}
+for k,v in expected.items():
+ if meta.get(k)!=v:fail(f'metadata mismatch {k}: {meta.get(k)!r}')
+for rel,key in [(SOURCE,'implementation_source_sha256'),(FIXTURE,'synthetic_fixture_sha256'),(NEGATIVES,'synthetic_negative_cases_sha256'),(COVERAGE,'implementation_coverage_sha256'),(SUCCESS,'synthetic_success_sha256')]:
+ if meta.get(key)!=sha(ROOT/rel):fail('metadata digest mismatch: '+key)
+coverage=rows(ROOT/COVERAGE);counts={k:sum(r['coverage_kind']==k for r in coverage) for k in ('INPUT','STATE','OPERATION','FAILURE')}
+if counts!={'INPUT':12,'STATE':16,'OPERATION':32,'FAILURE':18} or len(coverage)!=78:fail(f'coverage cardinality mismatch: {counts}')
+if len({(r['coverage_kind'],r['source_id']) for r in coverage})!=78:fail('coverage source ids not unique')
+if any(r['current_state']!='MAPPED_SYNTHETIC_NOT_EXECUTED' for r in coverage):fail('coverage state widened')
+if any(r['authority_effect']!='ZERO_PROVIDER_READS_ZERO_WRITES_ZERO_LIVE_AUTHORITY' for r in coverage):fail('coverage authority widened')
+fixture=json.loads((ROOT/FIXTURE).read_text())
+if fixture.get('fixture_kind')!='SYNTHETIC_REPOSITORY_FIXTURE_ONLY':fail('fixture marker')
+coord=fixture.get('coordinate_receipt',{});cr=coord.get('rows',[])
+if coord.get('coordinate_count')!=41 or coord.get('row_field_count')!=10 or len(cr)!=41 or any(len(r)!=10 for r in cr):fail('coordinate cardinality')
+if any(not r['absolute_canonical_path'].startswith('/__synthetic__/termux-native-desktop/selected-provider/') for r in cr):fail('non-synthetic coordinate')
+if any(r['coordinate_origin']!='SYNTHETIC_REPOSITORY_FIXTURE_ORIGIN' for r in cr):fail('coordinate origin')
+if any(coord.get(k) is not False for k in ('discovery_used','environment_inference_used','basename_fallback_used')):fail('discovery marker')
+for k in ('current_authorized_coordinate_count','current_provider_read_count','current_write_count','current_live_authority_count','provider_descriptors_opened','provider_bytes_read','persistent_replay_writes'):
+ if fixture.get(k)!=0:fail('fixture nonzero: '+k)
+if fixture.get('provider_paths_opened')!=[] or fixture.get('writes_performed')!=[] or fixture.get('local_supply_map_produced') is not False:fail('fixture effect widened')
+negative=json.loads((ROOT/NEGATIVES).read_text())
+if negative.get('case_count')!=18 or len(negative.get('cases',[]))!=18:fail('negative count')
+if len({x['failure_id'] for x in negative['cases']})!=18 or len({x['case'] for x in negative['cases']})!=18:fail('negative uniqueness')
+source_text=(ROOT/SOURCE).read_text()
+for forbidden in ('import os','import subprocess','import socket','import urllib','import requests','import tarfile','os.open','subprocess.','socket.','.glob(','.rglob(','os.walk','O_NOFOLLOW','lstat(','fstat(','readlink(','read_bytes(absolute','open(absolute'):
+ if forbidden in source_text:fail('forbidden implementation surface: '+forbidden)
+parsed=ast.parse(source_text);imports=set()
+for node in ast.walk(parsed):
+ if isinstance(node,ast.Import):imports.update(a.name.split('.')[0] for a in node.names)
+ elif isinstance(node,ast.ImportFrom) and node.module:imports.add(node.module.split('.')[0])
+if imports & {'os','subprocess','socket','urllib','requests','tarfile'}:fail('forbidden imports')
+module=load(ROOT/SOURCE);success=module.execute_synthetic_case(ROOT,fixture,'success');expected_success=json.loads((ROOT/SUCCESS).read_text())
+if success!=expected_success or success.get('pass') is not True:fail('success drift')
+if success.get('coverage_count')!=78 or success.get('operation_count')!=32 or len(success.get('operation_trace',[]))!=32:fail('success trace')
+if success.get('state_count')!=16 or len(success.get('state_trace',[]))!=15:fail('state trace')
+if len(success.get('synthetic_row_receipts',[]))!=41 or len(success.get('atomic_family_results',[]))!=4:fail('success receipt model')
+if success.get('provider_paths_opened')!=[] or success.get('provider_bytes_read')!=0 or success.get('writes_performed')!=[] or success.get('local_supply_map_produced') is not False:fail('success effect widened')
+for case in negative['cases']:
+ result=module.execute_synthetic_case(ROOT,fixture,case['case'])
+ if result.get('pass') is not False or result.get('failure_id')!=case['failure_id'] or result.get('failure_code')!=case['failure_code']:fail('negative mismatch: '+case['case'])
+ if result.get('current_provider_read_count')!=0 or result.get('current_write_count')!=0 or result.get('current_live_authority_count')!=0:fail('negative authority widened')
+cli=subprocess.run([sys.executable,str(ROOT/SOURCE),'--repo-root',str(ROOT),'--fixture',str(ROOT/'README.md'),'--case','success'],capture_output=True,text=True)
+if cli.returncode==0 or 'fixture must be the exact repository-owned synthetic evidence-transaction implementation fixture' not in cli.stderr:fail('CLI accepted non-exact fixture')
+required=[
+ ('docs/evidence/selected-provider-local-supply-map-evidence-transaction-implementation-review.md','QUALIFIED_NON_EXECUTING_SYNTHETIC_READ_ONLY_LOCAL_SUPPLY_MAP_EVIDENCE_TRANSACTION_IMPLEMENTATION_CANDIDATE'),
+ ('docs/current/BRIEF.md','local supply evidence transaction implementation: QUALIFIED_NON_EXECUTING_SYNTHETIC_CANDIDATE'),
+ ('docs/current/STATE.yaml','local_supply_map_evidence_transaction_implementation: qualified-non-executing-synthetic-candidate'),
+ ('docs/current/ACTIVE_TASK.md','Task ID: `review-and-accept-non-executing-selected-provider-local-supply-map-evidence-transaction-implementation-candidate-boundary`'),
+ ('docs/current/PENDING_ARTIFACTS.yaml','local-supply-map-evidence-transaction-implementation-acceptance'),
+ ('STATUS.md','selected-provider local-supply-map evidence transaction implementation candidate qualified'),
+ ('docs/catalog.tsv','selected-provider-local-supply-map-evidence-transaction-implementation-review\tevidence\tcurrent\tcanonical')]
+for rel,marker in required:
+ if marker not in (ROOT/rel).read_text():fail('current documentation marker missing: '+rel)
+texts='\n'.join((ROOT/r).read_text() for r in ['docs/current/STATE.yaml','docs/current/BRIEF.md','docs/current/ACTIVE_TASK.md','docs/current/PENDING_ARTIFACTS.yaml','STATUS.md'])
+for forbidden in ('local_supply_map_produced: true','local_supply_map_evidence_transaction_execution_authorized: true','provider_byte_read_authorized: true','target_population_authorized: true','GENERATION_ROOT_CREATED'):
+ if forbidden in texts:fail('authority widening: '+forbidden)
+print('local supply evidence transaction implementation: PASS: 78-row synthetic-only coverage, 1 success, 18 fail-closed cases, zero provider opens/reads/writes/live authority')

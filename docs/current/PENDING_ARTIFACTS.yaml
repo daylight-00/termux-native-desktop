@@ -1,16 +1,16 @@
 schema_version: 1
-state_version: 2026-07-28.04
+state_version: 2026-07-28.05
 
 blocking:
-  - id: local-supply-map-evidence-transaction-implementation
-    state: not-generated-not-authorized
-    note: The adapter and execution-authorization implementation is accepted, but the separate repository-owned synthetic implementation of the accepted read-only evidence-transaction design has not yet been generated. Provider opens, reads and evidence execution remain unauthorized.
+  - id: local-supply-map-evidence-transaction-implementation-acceptance
+    state: qualified-candidate-acceptance-open
+    note: The exact 78-row repository-owned synthetic implementation candidate is qualified. Separate acceptance is required before any later live-capable evidence execution work.
   - id: local-supply-map-evidence
     state: not-produced-not-authorized
     note: No live authorization token, coordinate receipt, provider path or provider byte has been supplied, opened, read, localized or bound.
   - id: execution-authorization
     state: not-issued-not-authorized
-    note: Contract qualification does not issue or activate the 27-claim execution authorization and does not open the provider-read gate.
+    note: Synthetic implementation qualification does not issue or activate execution authorization and does not open the provider-read gate.
 
 non_blocking:
   - id: downstream-application-data-service-closure

@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-28.04`
+> Semantic state version: `2026-07-28.05`
 
 ## Purpose and operational boundary
 
@@ -40,6 +40,11 @@ local supply populated paths:      0
 local supply map:              NOT_PRODUCED_NOT_AUTHORIZED
 local supply evidence transaction design: QUALIFIED_NON_EXECUTING_READ_ONLY_CANDIDATE_HISTORICAL
 local supply evidence design acceptance: ACCEPTED_BOUNDED_NON_EXECUTING_READ_ONLY_DESIGN_AUTHORITY
+local supply evidence transaction implementation: QUALIFIED_NON_EXECUTING_SYNTHETIC_CANDIDATE
+local supply evidence transaction implementation coverage: 12 + 16 + 32 + 18 = 78
+local supply evidence transaction synthetic cases: 1 success + 18 fail-closed
+local supply evidence transaction synthetic rows: 41
+local supply evidence transaction provider opens / reads / writes / live authority: 0 / 0 / 0 / 0
 evidence design inputs/states:  12 / 16
 evidence design operations/failures: 32 / 18
 current authorized coordinates/provider reads: 0 / 0
@@ -106,4 +111,6 @@ Design acceptance is non-executing. It creates no local supply map, reads no pro
 
 `SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-LIVE-INPUT-ADAPTER-EXECUTION-AUTHORIZATION-IMPLEMENTATION-ACCEPT-001` accepts the exact six-artifact, 164-row synthetic-only implementation boundary with zero live inputs, provider reads, writes, replay persistence and live authority.
 
-The active task is `generate-and-review-non-executing-selected-provider-local-supply-map-evidence-transaction-implementation-candidate`. It may generate a repository-owned synthetic implementation of the already accepted read-only evidence-transaction design only. It may not supply live inputs, open provider paths, read provider bytes or create runtime authority.
+`SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-EVIDENCE-TRANSACTION-IMPLEMENTATION-REVIEW-001` qualifies a deterministic repository-owned synthetic-only implementation candidate. It maps twelve inputs, sixteen states, thirty-two operations and eighteen failures into 78 coverage rows. One success and eighteen fail-closed cases preserve zero provider opens, reads, writes and live authority. The no-follow, hash, stability, ELF and SONAME operations are modeled only and are not executed.
+
+The active task is `review-and-accept-non-executing-selected-provider-local-supply-map-evidence-transaction-implementation-candidate-boundary`. It may accept the exact six-artifact synthetic implementation boundary only. It may not supply live inputs, open provider paths, read provider bytes or create runtime authority.
