@@ -1,0 +1,57 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+import csv,hashlib,subprocess,sys,tempfile
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[2]
+BASE=Path("experiments/glibc/selected-obsidian-provider-authority")
+REVIEW=BASE/"review"
+NAME='selected-provider-local-supply-map-evidence-transaction-implementation-boundary-acceptance.tsv'
+ARTIFACTS={'implementation/selected_provider_local_supply_map_evidence_transaction_candidate.py': '8c3e0cb0866e7d40807126a65130b1fd654db50241af1758a1397735fd513b42', 'review/selected-provider-local-supply-map-evidence-transaction-implementation-synthetic-fixture.json': 'b19929b19de45d9c6147060f9025dbbff13ce662cc7eeeff7bec3f178aeef020', 'review/selected-provider-local-supply-map-evidence-transaction-implementation-negative-cases.json': 'b2a8047076502b30fca2b659b16b9ce4d741523a72175a828d5774aa105a7c82', 'review/selected-provider-local-supply-map-evidence-transaction-implementation-coverage.tsv': '8fe3cf19c7cace1f9e7087b51551caa7a86c75c5300d3f586da32a003b0ae785', 'review/selected-provider-local-supply-map-evidence-transaction-implementation-synthetic-success.json': '1aa5d18db7f0ca871bb7a1925ef96d35c82a15d8b445c2cd648de61e7ff26efb', 'review/selected-provider-local-supply-map-evidence-transaction-implementation-metadata.tsv': 'ed33fe8025ba8db12465425fc231b4c568d215c34bad2e040eaec266f53a56c9'}
+EXPECTED={'acceptance_id': 'SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-EVIDENCE-TRANSACTION-IMPLEMENTATION-ACCEPT-001', 'decision': 'ACCEPTED_BOUNDED_NON_EXECUTING_SYNTHETIC_READ_ONLY_LOCAL_SUPPLY_MAP_EVIDENCE_TRANSACTION_IMPLEMENTATION_AUTHORITY', 'candidate_review_id': 'SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-EVIDENCE-TRANSACTION-IMPLEMENTATION-REVIEW-001', 'source_implementation_sha256': '8c3e0cb0866e7d40807126a65130b1fd654db50241af1758a1397735fd513b42', 'source_synthetic_fixture_sha256': 'b19929b19de45d9c6147060f9025dbbff13ce662cc7eeeff7bec3f178aeef020', 'source_negative_cases_sha256': 'b2a8047076502b30fca2b659b16b9ce4d741523a72175a828d5774aa105a7c82', 'source_coverage_sha256': '8fe3cf19c7cace1f9e7087b51551caa7a86c75c5300d3f586da32a003b0ae785', 'source_synthetic_success_sha256': '1aa5d18db7f0ca871bb7a1925ef96d35c82a15d8b445c2cd648de61e7ff26efb', 'source_metadata_sha256': 'ed33fe8025ba8db12465425fc231b4c568d215c34bad2e040eaec266f53a56c9', 'accepted_input_coverage_count': '12', 'accepted_state_coverage_count': '16', 'accepted_operation_coverage_count': '32', 'accepted_failure_coverage_count': '18', 'accepted_total_coverage_count': '78', 'accepted_inherited_validation_rule_count': '24', 'accepted_synthetic_success_case_count': '1', 'accepted_synthetic_negative_case_count': '18', 'accepted_synthetic_coordinate_row_count': '41', 'accepted_synthetic_coordinate_row_field_count': '10', 'accepted_synthetic_provider_open_count': '0', 'accepted_synthetic_provider_read_count': '0', 'accepted_synthetic_write_count': '0', 'accepted_persistent_replay_write_count': '0', 'accepted_current_authorized_coordinate_count': '0', 'accepted_current_provider_read_count': '0', 'accepted_current_write_count': '0', 'accepted_current_live_authority_count': '0', 'accepted_local_supply_map_produced': 'NO', 'candidate_issue_closed': 'SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-EVIDENCE-TRANSACTION-IMPLEMENTATION-ACCEPTANCE-OPEN', 'accepted_authority_state': 'ACCEPTED_BOUNDED_NON_EXECUTING_SYNTHETIC_READ_ONLY_LOCAL_SUPPLY_MAP_EVIDENCE_TRANSACTION_IMPLEMENTATION_AUTHORITY', 'implementation_execution_mode': 'SYNTHETIC_REPOSITORY_FIXTURE_ONLY_TEXT_MODEL_NO_PROVIDER_OPEN_OR_READ', 'provider_read_operations_state': 'MODELED_ONLY_NOT_EXECUTED', 'synthetic_implementation_role': 'IMMUTABLE_SEMANTIC_AND_REGRESSION_ORACLE_ONLY_NOT_LIVE_EXECUTOR', 'owner_authorization_issuance_state': 'NOT_AUTHORIZED', 'coordinate_receipt_production_state': 'NOT_AUTHORIZED', 'execution_authorization_issuance_state': 'NOT_AUTHORIZED', 'local_path_discovery_state': 'NOT_AUTHORIZED', 'provider_open_state': 'NOT_AUTHORIZED', 'provider_byte_read_state': 'NOT_AUTHORIZED', 'evidence_transaction_execution_state': 'NOT_AUTHORIZED', 'local_supply_map_state': 'NOT_PRODUCED_NOT_AUTHORIZED', 'replay_persistence_state': 'NOT_PERFORMED_MEMORY_ONLY_MODEL', 'generation_root_state': 'NOT_CREATED_NOT_AUTHORIZED', 'target_population_state': 'NOT_AUTHORIZED_UNPOPULATED_SCHEMA_ONLY', 'materialization_state': 'NOT_AUTHORIZED', 'publication_state': 'NOT_AUTHORIZED', 'deployment_state': 'NOT_AUTHORIZED', 'activation_state': 'NOT_AUTHORIZED', 'update_boundary': 'ANY_IMPLEMENTATION_SOURCE_FIXTURE_COVERAGE_SERIALIZATION_PROVIDER_READ_MODEL_OUTPUT_SCOPE_OR_AUTHORITY_CHANGE_REQUIRES_NEW_CLASS_D_IMPLEMENTATION_REVIEW', 'rollback_boundary': 'REMOVE_ACCEPTANCE_RECORD_AND_RESTORE_IMPLEMENTATION_ACCEPTANCE_OPEN_NO_PROVIDER_PATH_OPEN_READ_WRITE_REPLAY_OR_RUNTIME_STATE_EXISTS', 'next_action': 'generate-and-review-non-executing-selected-provider-local-supply-live-evidence-orchestration-production-implementation-candidate', 'authority_effect': 'EXACT_SYNTHETIC_ONLY_READ_ONLY_LOCAL_SUPPLY_MAP_EVIDENCE_TRANSACTION_IMPLEMENTATION_ACCEPTED_12_INPUTS_16_STATES_32_OPERATIONS_18_FAILURES_78_COVERAGE_24_VALIDATIONS_1_SUCCESS_18_FAIL_CLOSED_41_SYNTHETIC_ROWS_ZERO_PROVIDER_OPENS_READS_WRITES_REPLAY_PERSISTENCE_OR_LIVE_AUTHORITY', 'prohibited_inference': 'IMPLEMENTATION_ACCEPTANCE_DOES_NOT_ENABLE_LIVE_INPUTS_OWNER_TOKEN_OR_COORDINATE_ISSUANCE_EXECUTION_AUTHORIZATION_DISCOVERY_PROVIDER_OPEN_OR_READ_LOCAL_MAP_PRODUCTION_REPLAY_PERSISTENCE_GENERATION_ROOT_POPULATION_MATERIALIZATION_PUBLICATION_DEPLOYMENT_OR_ACTIVATION'}
+def fail(m): raise SystemExit("local-supply-map evidence transaction implementation acceptance: FAIL: "+m)
+def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
+def rows(p):
+ with p.open(newline="",encoding="utf-8") as f:return list(csv.DictReader(f,delimiter="\t"))
+with tempfile.TemporaryDirectory(prefix="local-supply-evidence-implementation-acceptance-") as td:
+ subprocess.run([sys.executable,str(ROOT/BASE/"recipe/generate-selected-provider-local-supply-map-evidence-transaction-implementation-boundary-acceptance.py"),"--repo-root",str(ROOT),"--output-root",td],check=True)
+ if (ROOT/REVIEW/NAME).read_bytes()!=(Path(td)/REVIEW/NAME).read_bytes(): fail("generated drift")
+r=rows(ROOT/REVIEW/NAME)
+if len(r)!=1: fail("row count")
+r=r[0]
+for k,v in EXPECTED.items():
+ if r.get(k)!=v: fail(f"{k}: {r.get(k)!r}")
+for rel,digest in ARTIFACTS.items():
+ if sha(ROOT/BASE/rel)!=digest: fail("source digest "+rel)
+meta={x["key"]:x["value"] for x in rows(ROOT/BASE/"review/selected-provider-local-supply-map-evidence-transaction-implementation-metadata.tsv")}
+for k,v in {
+ "candidate_state":"QUALIFIED_NON_EXECUTING_SYNTHETIC_READ_ONLY_LOCAL_SUPPLY_MAP_EVIDENCE_TRANSACTION_IMPLEMENTATION_CANDIDATE",
+ "implementation_acceptance_gate":"SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-EVIDENCE-TRANSACTION-IMPLEMENTATION-ACCEPTANCE-OPEN",
+ "input_coverage_count":"12","state_coverage_count":"16","operation_coverage_count":"32","failure_coverage_count":"18","total_coverage_count":"78",
+ "inherited_validation_rule_count":"24","synthetic_success_case_count":"1","synthetic_negative_case_count":"18","synthetic_coordinate_row_count":"41",
+ "synthetic_provider_open_count":"0","synthetic_provider_read_count":"0","synthetic_write_count":"0","current_authorized_coordinate_count":"0",
+ "current_provider_read_count":"0","current_write_count":"0","current_live_authority_count":"0","local_supply_map_produced":"NO",
+ "implementation_execution_mode":"SYNTHETIC_REPOSITORY_FIXTURE_ONLY_TEXT_MODEL_NO_PROVIDER_OPEN_OR_READ","provider_read_operations":"MODELED_ONLY_NOT_EXECUTED",
+ "evidence_transaction_execution_authorized":"NO","replay_persistence_performed":"NO"
+}.items():
+ if meta.get(k)!=v: fail("frozen candidate widened "+k)
+subprocess.run([sys.executable,str(ROOT/"tools/docs/check-selected-provider-local-supply-map-evidence-transaction-implementation-review")],check=True,stdout=subprocess.DEVNULL)
+texts={p:(ROOT/p).read_text() for p in [
+ "docs/evidence/selected-provider-local-supply-map-evidence-transaction-implementation-boundary-acceptance.md",
+ "docs/current/STATE.yaml","docs/current/BRIEF.md","docs/current/ACTIVE_TASK.md","docs/current/PENDING_ARTIFACTS.yaml","STATUS.md","docs/catalog.tsv"]}
+need=[
+ ("docs/evidence/selected-provider-local-supply-map-evidence-transaction-implementation-boundary-acceptance.md",'ACCEPTED_BOUNDED_NON_EXECUTING_SYNTHETIC_READ_ONLY_LOCAL_SUPPLY_MAP_EVIDENCE_TRANSACTION_IMPLEMENTATION_AUTHORITY'),
+ ("docs/current/STATE.yaml","local_supply_map_evidence_transaction_implementation_acceptance: accepted-bounded-non-executing-synthetic-read-only-implementation-authority"),
+ ("docs/current/BRIEF.md","local supply evidence transaction implementation acceptance: ACCEPTED_BOUNDED_NON_EXECUTING_SYNTHETIC_READ_ONLY_IMPLEMENTATION_AUTHORITY"),
+ ("docs/current/ACTIVE_TASK.md",'Task ID: `generate-and-review-non-executing-selected-provider-local-supply-live-evidence-orchestration-production-implementation-candidate`'),
+ ("docs/current/PENDING_ARTIFACTS.yaml","live-evidence-orchestration-production-implementation"),
+ ("STATUS.md","bounded non-executing synthetic selected-provider local-supply-map evidence transaction implementation accepted"),
+ ("docs/catalog.tsv","selected-provider-local-supply-map-evidence-transaction-implementation-boundary-acceptance\tevidence\tcurrent\tcanonical")]
+for p,m in need:
+ if m not in texts[p]: fail("missing marker "+p)
+alltext="\n".join(texts.values())+"\n"+(ROOT/REVIEW/NAME).read_text()
+for forbidden in [
+ "accepted_synthetic_provider_open_count\t1","accepted_synthetic_provider_read_count\t1","accepted_current_live_authority_count\t1",
+ "provider_open_state\tAUTHORIZED","provider_byte_read_state\tAUTHORIZED","evidence_transaction_execution_state\tAUTHORIZED",
+ "accepted_local_supply_map_produced\tYES","replay_persistence_state\tPERSISTED"]:
+ if forbidden in alltext: fail("authority widening "+forbidden)
+print("local-supply-map evidence transaction implementation acceptance: PASS: exact six-artifact 78-row synthetic-only implementation accepted with zero opens, reads, writes, replay persistence and live authority")

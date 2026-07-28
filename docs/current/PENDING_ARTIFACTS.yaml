@@ -1,10 +1,10 @@
 schema_version: 1
-state_version: 2026-07-28.05
+state_version: 2026-07-28.06
 
 blocking:
-  - id: local-supply-map-evidence-transaction-implementation-acceptance
-    state: qualified-candidate-acceptance-open
-    note: The exact 78-row repository-owned synthetic implementation candidate is qualified. Separate acceptance is required before any later live-capable evidence execution work.
+  - id: live-evidence-orchestration-production-implementation
+    state: not-generated-not-authorized
+    note: The exact synthetic evidence implementation is accepted. A separate production-capable orchestration implementation has not been generated or accepted; accepted synthetic CLIs remain immutable oracles and are not live executors.
   - id: local-supply-map-evidence
     state: not-produced-not-authorized
     note: No live authorization token, coordinate receipt, provider path or provider byte has been supplied, opened, read, localized or bound.

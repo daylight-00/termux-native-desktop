@@ -536,3 +536,10 @@ bounded non-executing synthetic selected-provider live-input adapter and executi
 `SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-EVIDENCE-TRANSACTION-IMPLEMENTATION-REVIEW-001` qualifies a deterministic repository-owned synthetic-only implementation candidate. It covers the exact twelve inputs, sixteen states, thirty-two operations and eighteen failures in 78 rows. One success fixture and eighteen fail-closed fixtures model 41 explicit synthetic coordinate rows while opening zero provider paths, reading zero provider bytes, performing zero writes and creating zero live authority. Separate acceptance remains required.
 
 selected-provider local-supply-map evidence transaction implementation candidate qualified
+
+
+## Bounded non-executing synthetic selected-provider local-supply-map evidence transaction implementation acceptance
+
+`SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-EVIDENCE-TRANSACTION-IMPLEMENTATION-ACCEPT-001` freezes the exact implementation source, synthetic fixture, eighteen negative cases, 78-row coverage ledger, synthetic success result and metadata digests. The accepted implementation remains a repository-owned synthetic semantic/regression oracle. Provider opens, reads, replay persistence, live map production and runtime mutation remain unauthorized.
+
+bounded non-executing synthetic selected-provider local-supply-map evidence transaction implementation accepted
