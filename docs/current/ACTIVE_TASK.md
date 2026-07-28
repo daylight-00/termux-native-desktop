@@ -1,55 +1,54 @@
-# Active task: generate and review a non-executing live-input adapter and execution-authorization implementation candidate
+# Active task: review and accept the non-executing live-input adapter and execution-authorization implementation candidate
 
-> Task ID: `generate-and-review-non-executing-selected-provider-local-supply-evidence-live-input-adapter-and-execution-authorization-implementation-candidate`
+> Task ID: `review-and-accept-non-executing-selected-provider-local-supply-evidence-live-input-adapter-and-execution-authorization-implementation-candidate-boundary`
 >
-> Expected state on completion: a deterministic repository-owned implementation candidate validates synthetic representations of the accepted ten-input adapter envelope and 27-claim execution authorization without accepting live inputs, opening provider paths, reading provider bytes, writing runtime state or creating live authority.
+> Expected state on completion: the exact six-artifact repository-owned synthetic implementation is accepted as bounded non-executing implementation authority while live inputs, authorization issuance, replay persistence, provider reads, evidence execution and runtime effects remain unauthorized.
 
 ## Objective
 
-Implement the exact accepted live-input adapter and execution-authorization contract as a bounded non-executing candidate. The candidate must preserve the accepted synthetic issuance/coordinate implementation as an immutable semantic and regression oracle rather than modifying or invoking it as a live executor.
+Review the exact implementation candidate qualified by `SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-LIVE-INPUT-ADAPTER-EXECUTION-AUTHORIZATION-IMPLEMENTATION-REVIEW-001` and, if unchanged, freeze its source, fixture, negative cases, 164-row coverage ledger, synthetic success result and metadata as a separate acceptance boundary.
 
 ## Why now
 
-`SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-LIVE-INPUT-ADAPTER-EXECUTION-AUTHORIZATION-CONTRACT-ACCEPT-001` freezes the exact adapter, authorization, validation, state, operation, failure, receipt and metadata boundary. Implementation work may now begin, but only against repository-owned synthetic fixtures and only as a separate candidate requiring later acceptance.
+The accepted contract is implemented with exact coverage for ten input channels, twenty adapter-envelope fields, 27 execution-authorization claims, 37 validations, 18 states, 32 operations and 20 failures. The candidate has one deterministic success case and twenty fail-closed cases, with zero provider reads, zero writes and zero live authority.
 
 ## In scope
 
-- map all ten explicit input channels, twenty envelope fields, 27 authorization claims, 37 validations, 18 states, 32 operations and 20 failures into deterministic implementation coverage;
-- validate exact 41-row/10-field coordinate binding without opening paths;
-- validate repository HEAD/tree, remote HEAD, executor, time, revocation, replay, resource and output bindings using synthetic values;
-- prove live-to-synthetic rewriting and live invocation of the accepted synthetic CLI remain impossible;
-- produce deterministic synthetic success and fail-closed cases;
-- preserve zero current live inputs, envelopes, authorizations, provider reads, writes and live authority.
+- regenerate and byte-compare the six candidate artifacts;
+- verify all frozen SHA-256 values and exact cardinalities;
+- run the positive and twenty negative synthetic cases;
+- prove the CLI accepts only the exact repository-owned fixture;
+- prove the accepted synthetic implementation remains an immutable oracle and is not invoked;
+- prove live-to-synthetic rewriting, replay persistence, provider opening, provider reads and writes remain absent;
+- record append-only implementation acceptance and advance the next task.
 
 ## Out of scope
 
-Supplying a real owner decision, token or coordinate receipt; issuing execution authorization; accepting live paths; storage search or discovery; opening or reading provider files; consuming a live replay tuple; executing evidence collection; producing a local-supply map; creating generation roots; population, materialization, publication, deployment or activation.
+Supplying live owner decisions, tokens, coordinates, revocation snapshots or execution authorization; accepting arbitrary input paths; searching storage; opening or reading provider files; persisting a replay tuple; delegating to a live evidence executor; producing a local-supply map; generation-root creation; population, materialization, publication, deployment or activation.
 
 ## Required reading
 
+- `docs/evidence/selected-provider-local-supply-evidence-live-input-adapter-execution-authorization-implementation-review.md`
 - `docs/evidence/selected-provider-local-supply-evidence-live-input-adapter-execution-authorization-contract-boundary-acceptance.md`
-- `docs/evidence/selected-provider-local-supply-evidence-live-input-adapter-execution-authorization-contract-review.md`
-- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-evidence-live-input-adapter-contract.json`
-- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-evidence-execution-authorization-schema.json`
-- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-evidence-live-input-adapter-execution-authorization-validation-contract.tsv`
-- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-evidence-live-input-adapter-execution-authorization-operation-contract.tsv`
-- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-evidence-live-input-adapter-execution-authorization-failure-contract.tsv`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-evidence-live-input-adapter-execution-authorization-implementation-metadata.tsv`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-evidence-live-input-adapter-execution-authorization-implementation-coverage.tsv`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-evidence-live-input-adapter-execution-authorization-implementation-negative-cases.json`
 
 ## Pending external inputs
 
-None. Live owner decisions, coordinates and execution authorization belong to later separate transactions and must not be supplied during implementation-candidate work.
+None. Live documents and authorization belong to later separate transactions and must not be supplied during implementation acceptance.
 
 ## Stop conditions
 
-Stop if the candidate accepts non-repository fixtures, opens any coordinate path, imports discovery/network/process surfaces, writes outside an explicitly supplied synthetic output file, mutates the accepted synthetic implementation, rewrites live paths into synthetic paths, permits live synthetic invocation, or claims live authority.
+Stop if regeneration differs, any artifact digest or cardinality differs, a negative case does not fail closed, the CLI accepts a non-exact fixture, the implementation imports discovery/network/process surfaces, any provider path is opened, any provider byte is read, any replay tuple is persisted, the accepted synthetic implementation is invoked, or current live authority becomes nonzero.
 
 ## Completion criteria
 
-A separately reviewable implementation candidate and deterministic synthetic evidence cover the accepted contract exactly while reporting zero live inputs, zero provider reads, zero writes and zero live authority.
+The exact six-artifact candidate is accepted without changing its bytes and with all live-input, provider-read, replay-persistence, evidence-execution and runtime gates still closed.
 
 ## Next valid action
 
-Generate and review the non-executing implementation candidate only.
+Review and accept the exact non-executing implementation candidate boundary only.
 
 Do not supply, discover, open, read, localize, populate or execute against live provider inputs.
 

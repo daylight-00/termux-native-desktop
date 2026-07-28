@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-28.02`
+> Semantic state version: `2026-07-28.03`
 
 ## Purpose and operational boundary
 
@@ -60,6 +60,10 @@ live-input adapter / execution-authorization contract acceptance: ACCEPTED_BOUND
 adapter inputs / envelope fields: 10 / 20
 execution authorization claims: 27
 adapter validation/states/operations/failures: 37 / 18 / 32 / 20
+live-input adapter / execution-authorization implementation: QUALIFIED_NON_EXECUTING_SYNTHETIC_CANDIDATE
+adapter implementation coverage: 10 + 20 + 27 + 37 + 18 + 32 + 20 = 164
+adapter implementation synthetic cases: 1 success + 20 fail-closed
+adapter implementation provider reads / writes / live authority: 0 / 0 / 0
 current live inputs / adapter envelopes / execution authorizations: 0 / 0 / 0
 synthetic implementation role: IMMUTABLE_ORACLE_NOT_LIVE_EXECUTOR
 live-to-synthetic path rewrite: FORBIDDEN
@@ -97,4 +101,6 @@ Design acceptance is non-executing. It creates no local supply map, reads no pro
 
 `SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-LIVE-INPUT-ADAPTER-EXECUTION-AUTHORIZATION-CONTRACT-ACCEPT-001` accepts that exact boundary while preserving zero live inputs, zero adapter envelopes, zero execution authorizations, zero provider reads, zero writes and zero live authority. The accepted synthetic implementation remains an immutable semantic/regression oracle and is not a live executor. Live-to-synthetic rewriting and live synthetic invocation remain forbidden.
 
-The active task is `generate-and-review-non-executing-selected-provider-local-supply-evidence-live-input-adapter-and-execution-authorization-implementation-candidate`. It may create deterministic repository-owned synthetic implementation evidence only. It may not supply live inputs, issue authorization, search, open, read, localize or execute provider bytes.
+`SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-LIVE-INPUT-ADAPTER-EXECUTION-AUTHORIZATION-IMPLEMENTATION-REVIEW-001` qualifies a deterministic repository-owned synthetic-only implementation candidate. It maps ten inputs, twenty envelope fields, 27 authorization claims, 37 validations, 18 states, 32 operations and 20 failures into 164 coverage rows. One success and twenty fail-closed cases preserve zero live inputs, provider reads, writes and live authority. Replay consumption is validated in memory only; the accepted synthetic CLI is not invoked and evidence delegation is not executed.
+
+The active task is `review-and-accept-non-executing-selected-provider-local-supply-evidence-live-input-adapter-and-execution-authorization-implementation-candidate-boundary`. It may freeze the exact six-artifact synthetic implementation boundary only. It may not supply live inputs, issue authorization, persist replay state, search, open, read, localize or execute provider bytes.

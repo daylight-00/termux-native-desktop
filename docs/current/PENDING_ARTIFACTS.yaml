@@ -1,10 +1,10 @@
 schema_version: 1
-state_version: 2026-07-28.02
+state_version: 2026-07-28.03
 
 blocking:
-  - id: local-supply-evidence-live-adapter-implementation
-    state: not-designed-not-authorized
-    note: The live-input adapter and execution-authorization contract is accepted; a live-capable adapter and validator still require a separately reviewed non-executing implementation candidate and acceptance and may not rewrite live paths into the synthetic namespace.
+  - id: local-supply-evidence-live-adapter-implementation-acceptance
+    state: candidate-qualified-acceptance-open
+    note: The exact repository-owned synthetic-only adapter and execution-authorization implementation candidate covers all 164 accepted contract elements and passes one success plus twenty fail-closed cases. Separate acceptance is still required; live inputs, path rewriting, replay persistence, provider reads and evidence execution remain unauthorized.
   - id: local-supply-map-evidence
     state: not-produced-not-authorized
     note: No live authorization token, coordinate receipt, provider path or provider byte has been supplied, opened, read, localized or bound.

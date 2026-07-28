@@ -192,3 +192,7 @@ The accepted synthetic implementation remains immutable as a semantic and regres
 `SELECTED-PROVIDER-LOCAL-SUPPLY-EVIDENCE-LIVE-INPUT-ADAPTER-EXECUTION-AUTHORIZATION-CONTRACT-ACCEPT-001` accepts the exact v124 eight-artifact contract boundary: ten explicit inputs, twenty envelope fields, twenty-seven authorization claims, thirty-seven validations, eighteen states, thirty-two operations and twenty failures. Current live inputs, provider reads, writes and live authority remain zero.
 
 bounded non-executing selected-provider live-input adapter and execution-authorization contract accepted
+
+## Current selected-provider evidence implementation boundary
+
+The accepted live-input adapter and execution-authorization contract now has a repository-owned synthetic-only implementation candidate. It covers the exact ten inputs, twenty envelope fields, twenty-seven authorization claims, thirty-seven validations, eighteen states, thirty-two operations and twenty failures. Its one success fixture and twenty negative fixtures perform zero provider reads, zero writes and create zero live authority. Separate acceptance is required before any later live-capable implementation work.
