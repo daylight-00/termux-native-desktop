@@ -1,0 +1,58 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+import csv,hashlib,json,subprocess,sys,tempfile
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[2]
+BASE=Path("experiments/glibc/selected-obsidian-provider-authority")
+REVIEW=BASE/"review"
+NAME="selected-provider-local-supply-live-authority-transaction-design-boundary-acceptance.tsv"
+ARTIFACTS={'selected-provider-local-supply-live-authority-transaction-input-contract.tsv': '2ab0e1bf4051b85680b63669f44f4e9f0f04fab03dccbdd2397a1ba519842587', 'selected-provider-local-supply-live-authority-transaction-state-machine.tsv': 'e5399a837c7da4c172a43205e2b23907b87485548a5b2ecb1daf6160c4380475', 'selected-provider-local-supply-live-authority-transaction-operation-contract.tsv': 'df0ec93e7b1ebad99a7ebbb872f7299cd0ca3f7080671a4975edb70035ea7abf', 'selected-provider-local-supply-live-authority-transaction-failure-contract.tsv': '8ebb1ed544a03b0b176f88cca844f0473b3bb51c92016c5c6fe666b3aa6a6c40', 'selected-provider-local-supply-live-authority-transaction-receipt-contract.json': 'b2e27553022d22fd6d7ee5c5db48e4b54d75187ca24f1d26f42eb7ce6f70f906', 'selected-provider-local-supply-live-authority-transaction-design-metadata.tsv': 'ddb4a1742760d6e4ada4ac878626ddaf44e99f36abaab956e61d069b92997808'}
+EXPECTED={'acceptance_id': 'SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-DESIGN-ACCEPT-001', 'decision': 'ACCEPTED_BOUNDED_NON_EXECUTING_SELECTED_PROVIDER_LOCAL_SUPPLY_LIVE_AUTHORITY_TRANSACTION_DESIGN', 'candidate_review_id': 'SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-DESIGN-REVIEW-001', 'source_input_contract_sha256': '2ab0e1bf4051b85680b63669f44f4e9f0f04fab03dccbdd2397a1ba519842587', 'source_state_machine_sha256': 'e5399a837c7da4c172a43205e2b23907b87485548a5b2ecb1daf6160c4380475', 'source_operation_contract_sha256': 'df0ec93e7b1ebad99a7ebbb872f7299cd0ca3f7080671a4975edb70035ea7abf', 'source_failure_contract_sha256': '8ebb1ed544a03b0b176f88cca844f0473b3bb51c92016c5c6fe666b3aa6a6c40', 'source_receipt_contract_sha256': 'b2e27553022d22fd6d7ee5c5db48e4b54d75187ca24f1d26f42eb7ce6f70f906', 'source_metadata_sha256': 'ddb4a1742760d6e4ada4ac878626ddaf44e99f36abaab956e61d069b92997808', 'accepted_input_count': '20', 'accepted_state_count': '26', 'accepted_operation_count': '52', 'accepted_failure_count': '30', 'accepted_inherited_issuance_coverage': '88', 'accepted_inherited_adapter_coverage': '164', 'accepted_inherited_evidence_coverage': '78', 'accepted_inherited_orchestration_coverage': '118', 'accepted_inherited_total_coverage': '448', 'accepted_future_live_document_role_count': '5', 'accepted_future_replay_tuple_field_count': '10', 'accepted_current_live_document_count': '0', 'accepted_current_execution_authorization_count': '0', 'accepted_current_replay_write_count': '0', 'accepted_current_selected_provider_open_count': '0', 'accepted_current_selected_provider_read_count': '0', 'accepted_current_provider_byte_count': '0', 'accepted_current_local_supply_map_count': '0', 'accepted_current_live_authority_count': '0', 'candidate_issue_closed': 'SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-DESIGN-ACCEPTANCE-OPEN', 'accepted_authority_state': 'ACCEPTED_BOUNDED_NON_EXECUTING_SELECTED_PROVIDER_LOCAL_SUPPLY_LIVE_AUTHORITY_TRANSACTION_DESIGN_AUTHORITY', 'owner_activation_state': 'NOT_AUTHORIZED', 'owner_authorization_issuance_state': 'NOT_AUTHORIZED', 'coordinate_receipt_production_state': 'NOT_AUTHORIZED', 'revocation_document_state': 'NOT_PROVIDED_NOT_AUTHORIZED', 'trusted_time_evidence_state': 'NOT_PROVIDED_NOT_AUTHORIZED', 'execution_authorization_state': 'NOT_ISSUED_NOT_AUTHORIZED', 'replay_registry_state': 'NOT_OPENED_NOT_WRITTEN', 'provider_open_gate_state': 'CLOSED_NOT_AUTHORIZED', 'local_path_discovery_state': 'NOT_AUTHORIZED', 'evidence_transaction_execution_state': 'NOT_AUTHORIZED', 'local_supply_map_state': 'NOT_PRODUCED_NOT_AUTHORIZED', 'generation_root_state': 'NOT_CREATED_NOT_AUTHORIZED', 'target_population_state': 'NOT_AUTHORIZED_UNPOPULATED_SCHEMA_ONLY', 'materialization_state': 'NOT_AUTHORIZED', 'publication_state': 'NOT_AUTHORIZED', 'deployment_state': 'NOT_AUTHORIZED', 'activation_state': 'NOT_AUTHORIZED', 'update_boundary': 'ANY_INPUT_STATE_OPERATION_FAILURE_RECEIPT_LIVE_DOCUMENT_ROLE_REPLAY_TUPLE_ORDER_PROVIDER_OPEN_GATE_OUTPUT_SCOPE_OR_AUTHORITY_CHANGE_REQUIRES_NEW_CLASS_D_LIVE_AUTHORITY_TRANSACTION_DESIGN_REVIEW', 'rollback_boundary': 'REMOVE_ACCEPTANCE_RECORD_AND_RESTORE_ACCEPTANCE_OPEN_NO_LIVE_DOCUMENT_REPLAY_WRITE_SELECTED_PROVIDER_OPEN_READ_PROVIDER_BYTE_LOCAL_MAP_OR_LIVE_AUTHORITY_EXISTS', 'next_action': 'generate-and-review-non-executing-selected-provider-local-supply-live-authority-transaction-implementation-candidate', 'authority_effect': 'EXACT_20_INPUT_26_STATE_52_OPERATION_30_FAILURE_LIVE_AUTHORITY_TRANSACTION_DESIGN_ACCEPTED_448_INHERITED_COVERAGE_5_FUTURE_DOCUMENT_ROLES_10_REPLAY_TUPLE_FIELDS_ZERO_CURRENT_LIVE_DOCUMENTS_EXECUTION_AUTHORIZATIONS_REPLAY_WRITES_SELECTED_PROVIDER_OPENS_READS_PROVIDER_BYTES_LOCAL_MAPS_OR_LIVE_AUTHORITY', 'prohibited_inference': 'DESIGN_ACCEPTANCE_DOES_NOT_CREATE_ACCEPT_OR_CONSUME_LIVE_AUTHORITY_DOCUMENTS_WRITE_REPLAY_STATE_OPEN_OR_READ_SELECTED_PROVIDER_PATHS_EXECUTE_EVIDENCE_PRODUCE_OR_ACCEPT_A_LOCAL_SUPPLY_MAP_CREATE_A_GENERATION_ROOT_POPULATE_MATERIALIZE_PUBLISH_DEPLOY_OR_ACTIVATE'}
+def fail(m): raise SystemExit("live-authority transaction design acceptance: FAIL: "+m)
+def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
+def rows(p):
+ with p.open(newline="",encoding="utf-8") as f:return list(csv.DictReader(f,delimiter="\t"))
+with tempfile.TemporaryDirectory(prefix="live-authority-design-acceptance.",dir=ROOT.parent) as td:
+ subprocess.run([sys.executable,str(ROOT/BASE/"recipe/generate-selected-provider-local-supply-live-authority-transaction-design-boundary-acceptance.py"),"--repo-root",str(ROOT),"--output-root",td],check=True)
+ if (ROOT/REVIEW/NAME).read_bytes()!=(Path(td)/REVIEW/NAME).read_bytes():fail("generated drift")
+r=rows(ROOT/REVIEW/NAME)
+if len(r)!=1:fail("row count")
+r=r[0]
+for k,v in EXPECTED.items():
+ if r.get(k)!=v:fail(f"{k}: {r.get(k)!r}")
+for name,digest in ARTIFACTS.items():
+ if sha(ROOT/REVIEW/name)!=digest:fail("source digest "+name)
+meta=rows(ROOT/REVIEW/"selected-provider-local-supply-live-authority-transaction-design-metadata.tsv")
+if len(meta)!=1:fail("metadata row count")
+m=meta[0]
+for k,v in {
+ "design_id":"SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-DESIGN-REVIEW-001",
+ "decision":"QUALIFIED_NON_EXECUTING_SELECTED_PROVIDER_LOCAL_SUPPLY_LIVE_AUTHORITY_TRANSACTION_DESIGN_CANDIDATE",
+ "acceptance_gate":"SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-DESIGN-ACCEPTANCE-OPEN",
+ "input_count":"20","state_count":"26","operation_count":"52","failure_count":"30","inherited_total_coverage":"448",
+ "future_live_document_role_count":"5","future_replay_tuple_field_count":"10",
+ "current_live_document_count":"0","current_execution_authorization_count":"0","current_replay_write_count":"0",
+ "current_selected_provider_open_count":"0","current_selected_provider_read_count":"0","current_provider_byte_count":"0","current_local_supply_map_count":"0","current_live_authority_count":"0"
+}.items():
+ if m.get(k)!=v:fail("frozen metadata "+k)
+receipt=json.loads((ROOT/REVIEW/"selected-provider-local-supply-live-authority-transaction-receipt-contract.json").read_text())
+if receipt.get("current_counts")!={"live_documents":0,"execution_authorizations":0,"replay_writes":0,"selected_provider_opens":0,"selected_provider_reads":0,"provider_bytes":0,"local_supply_maps":0,"live_authority":0}:fail("receipt current counts")
+if receipt.get("current_live_documents")!=[] or receipt.get("current_replay_tuples")!=[] or receipt.get("current_selected_provider_paths")!=[] or receipt.get("current_local_supply_map") is not None:fail("candidate current live state")
+texts={p:(ROOT/p).read_text() for p in [
+ "docs/evidence/selected-provider-local-supply-live-authority-transaction-design-boundary-acceptance.md","docs/current/STATE.yaml","docs/current/BRIEF.md","docs/current/ACTIVE_TASK.md","docs/current/PENDING_ARTIFACTS.yaml","STATUS.md","docs/catalog.tsv","docs/evidence/README.md"]}
+need=[
+ ("docs/evidence/selected-provider-local-supply-live-authority-transaction-design-boundary-acceptance.md","ACCEPTED_BOUNDED_NON_EXECUTING_SELECTED_PROVIDER_LOCAL_SUPPLY_LIVE_AUTHORITY_TRANSACTION_DESIGN"),
+ ("docs/current/STATE.yaml","live_authority_transaction_design_acceptance: accepted-bounded-non-executing-design-authority"),
+ ("docs/current/STATE.yaml","live_authority_transaction_current_selected_provider_reads: 0"),
+ ("docs/current/BRIEF.md","live authority transaction design acceptance: ACCEPTED_BOUNDED_NON_EXECUTING_DESIGN_AUTHORITY"),
+ ("docs/current/ACTIVE_TASK.md","Task ID: `generate-and-review-non-executing-selected-provider-local-supply-live-authority-transaction-implementation-candidate`"),
+ ("docs/current/PENDING_ARTIFACTS.yaml","live-authority-transaction-implementation"),
+ ("STATUS.md","bounded non-executing selected-provider local-supply live-authority transaction design accepted"),
+ ("docs/catalog.tsv","selected-provider-local-supply-live-authority-transaction-design-boundary-acceptance\tevidence\tcurrent\tcanonical"),
+ ("docs/evidence/README.md","selected-provider-local-supply-live-authority-transaction-design-boundary-acceptance.md")]
+for p,s in need:
+ if s not in texts[p]:fail("missing marker "+p)
+alltext="\n".join(texts.values())+"\n"+(ROOT/REVIEW/NAME).read_text()
+for forbidden in ["accepted_current_live_document_count\t1","accepted_current_replay_write_count\t1","accepted_current_selected_provider_open_count\t1","accepted_current_selected_provider_read_count\t1","accepted_current_provider_byte_count\t1","accepted_current_local_supply_map_count\t1","accepted_current_live_authority_count\t1","provider_open_gate_state\tOPEN","replay_registry_state\tOPENED_WRITTEN","execution_authorization_state\tISSUED_AUTHORIZED"]:
+ if forbidden in alltext:fail("authority widening "+forbidden)
+print("live-authority transaction design acceptance: PASS: exact six-artifact 20/26/52/30 design accepted with 448 inherited coverage, five future document roles, ten replay fields and zero current live authority")

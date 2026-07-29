@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-28.09`
+> Semantic state version: `2026-07-28.10`
 
 ## Purpose and operational boundary
 
@@ -53,9 +53,10 @@ production orchestration isolated cases: 1 success + 28 fail-closed
 production orchestration isolated rows / opens / reads: 41 / 41 / 41
 production orchestration selected-provider opens / reads / writes / live authority: 0 / 0 / 0 / 0
 production orchestration acceptance: ACCEPTED_BOUNDED_NON_EXECUTING_PRODUCTION_CAPABLE_ISOLATED_FIXTURE_IMPLEMENTATION_AUTHORITY
-live authority transaction design: QUALIFIED_NON_EXECUTING_CANDIDATE_ACCEPTANCE_OPEN
+live authority transaction design: QUALIFIED_NON_EXECUTING_CANDIDATE_HISTORICAL
 live authority transaction design coverage: 20 + 26 + 52 + 30 = 128
 live authority inherited semantic coverage: 88 + 164 + 78 + 118 = 448
+live authority transaction design acceptance: ACCEPTED_BOUNDED_NON_EXECUTING_DESIGN_AUTHORITY
 future live-document roles / replay-tuple fields: 5 / 10
 current live documents / execution authorizations / replay writes: 0 / 0 / 0
 current selected-provider opens / reads / provider bytes / local maps / live authority: 0 / 0 / 0 / 0 / 0
@@ -133,4 +134,6 @@ Design acceptance is non-executing. It creates no local supply map, reads no pro
 
 `SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-DESIGN-REVIEW-001` qualifies the exact non-executing 20-input, 26-state, 52-operation and 30-failure transaction design. It orders five future authority documents, append-only replay preflight and a first selected-provider-open gate while all current live authority counts remain zero.
 
-The active task is `review-and-accept-non-executing-selected-provider-local-supply-live-authority-transaction-design-boundary`. No live documents, replay tuple, selected-provider path or provider byte may be supplied or consumed during acceptance.
+`SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-DESIGN-ACCEPT-001` accepts the exact six-artifact 20/26/52/30 design boundary and 448 inherited semantic rows while preserving zero live documents, execution authorizations, replay writes, selected-provider opens/reads, provider bytes, local maps and live authority.
+
+The active task is `generate-and-review-non-executing-selected-provider-local-supply-live-authority-transaction-implementation-candidate`. No live documents, replay tuple, selected-provider path or provider byte may be supplied or consumed during implementation review.

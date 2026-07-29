@@ -1,16 +1,16 @@
 schema_version: 1
-state_version: 2026-07-28.09
+state_version: 2026-07-28.10
 
 blocking:
-  - id: live-authority-transaction-design
-    state: qualified-non-executing-design-candidate-separate-acceptance-required
-    note: The exact 20-input/26-state/52-operation/30-failure design candidate is generated and reviewed. It remains non-executing and requires separate acceptance before any implementation or live authority can be considered.
+  - id: live-authority-transaction-implementation
+    state: accepted-design-separate-non-executing-implementation-review-required
+    note: The exact 20-input/26-state/52-operation/30-failure design is accepted. No implementation candidate or live execution authority exists yet.
   - id: local-supply-map-evidence
     state: not-produced-not-authorized
-    note: No live authorization token, coordinate receipt, provider path or provider byte has been supplied, opened, read, localized or bound.
+    note: No live authority documents, replay tuple, selected-provider path or provider byte has been supplied, opened, read, localized or bound.
   - id: execution-authorization
     state: not-issued-not-authorized
-    note: Production implementation acceptance does not issue or activate execution authorization and does not open the provider-read gate.
+    note: Design acceptance does not issue or activate execution authorization and does not open the provider-read gate.
 
 non_blocking:
   - id: downstream-application-data-service-closure
