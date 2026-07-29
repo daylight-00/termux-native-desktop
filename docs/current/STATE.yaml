@@ -1,9 +1,9 @@
 schema_version: 1
-state_version: 2026-07-28.08
-updated_on: 2026-07-28
+state_version: 2026-07-28.09
+updated_on: 2026-07-29
 
 project:
-  phase: non-executing-selected-provider-local-supply-live-authority-transaction-design-candidate-review
+  phase: non-executing-selected-provider-local-supply-live-authority-transaction-design-boundary-acceptance-review
   status: active
 
 repository:
@@ -70,6 +70,7 @@ documentation:
   local_supply_map_evidence_transaction_implementation_acceptance: docs/evidence/selected-provider-local-supply-map-evidence-transaction-implementation-boundary-acceptance.md
   live_evidence_orchestration_production_implementation_review: docs/evidence/selected-provider-local-supply-live-evidence-orchestration-production-implementation-review.md
   live_evidence_orchestration_production_implementation_acceptance: docs/evidence/selected-provider-local-supply-live-evidence-orchestration-production-implementation-boundary-acceptance.md
+  local_supply_live_authority_transaction_design_review: docs/evidence/selected-provider-local-supply-live-authority-transaction-design-review.md
   local_supply_evidence_authorization_issuance_coordinate_production_implementation_review: docs/evidence/selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-implementation-review.md
   local_supply_evidence_authorization_issuance_coordinate_production_implementation_acceptance: docs/evidence/selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-implementation-boundary-acceptance.md
   local_supply_evidence_live_input_adapter_execution_authorization_contract_review: docs/evidence/selected-provider-local-supply-evidence-live-input-adapter-execution-authorization-contract-review.md
@@ -521,7 +522,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: generate-and-review-non-executing-selected-provider-local-supply-live-authority-transaction-design-candidate
+  id: review-and-accept-non-executing-selected-provider-local-supply-live-authority-transaction-design-boundary
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:
@@ -672,12 +673,31 @@ selected_target_policy:
   live_evidence_orchestration_candidate_filesystem_writes: 0
   live_evidence_orchestration_persistent_replay_writes: 0
   live_evidence_orchestration_live_authority: 0
+  live_authority_transaction_design_reviewed: true
+  live_authority_transaction_design: qualified-non-executing-candidate-acceptance-open
+  live_authority_transaction_design_review_id: SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-DESIGN-REVIEW-001
+  live_authority_transaction_design_acceptance_gate: open-separate-acceptance-required
+  live_authority_transaction_design_inputs: 20
+  live_authority_transaction_design_states: 26
+  live_authority_transaction_design_operations: 52
+  live_authority_transaction_design_failures: 30
+  live_authority_transaction_inherited_semantic_coverage: 448
+  live_authority_transaction_future_live_document_roles: 5
+  live_authority_transaction_future_replay_tuple_fields: 10
+  live_authority_transaction_current_live_documents: 0
+  live_authority_transaction_current_execution_authorizations: 0
+  live_authority_transaction_current_replay_writes: 0
+  live_authority_transaction_current_selected_provider_opens: 0
+  live_authority_transaction_current_selected_provider_reads: 0
+  live_authority_transaction_current_provider_bytes: 0
+  live_authority_transaction_current_local_supply_maps: 0
+  live_authority_transaction_current_live_authority: 0
   live_evidence_execution_authorized: false
   local_supply_map_produced: false
   materialization_authorized: false
   deployment_authorized: false
   activation_authorized: false
-  next_task: generate-and-review-non-executing-selected-provider-local-supply-live-authority-transaction-design-candidate
+  next_task: review-and-accept-non-executing-selected-provider-local-supply-live-authority-transaction-design-boundary
 
   retained_result_coordinate_generation_contract_review:
     review_id: RETAINED-SUPPLY-COORDINATE-GENERATION-CONTRACT-001

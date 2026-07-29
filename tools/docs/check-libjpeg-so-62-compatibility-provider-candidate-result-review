@@ -73,7 +73,7 @@ markers=[
  ('state version','state_version: 2026-07-21.02' in state),
  ('state first rejection','first_candidate_state: rejected-rebuild-required-no-runpath' in state),
  ('state corrected candidate','corrected_candidate_state: runpath-free-candidate-identity-accepted' in state),
- ('active task','Task ID: `generate-and-review-non-executing-selected-provider-local-supply-live-authority-transaction-design-candidate`' in active),
+ ('active task','Task ID: `review-and-accept-non-executing-selected-provider-local-supply-live-authority-transaction-design-boundary`' in active),
  ('brief current provider boundary','bounded provider roots:' in brief and '31' in brief),
  ('state corrected candidate provider','provider_authority: accepted-bounded-provider' in state),
  ('evidence CMake boundary','CMake was installed separately by the user' in evidence),

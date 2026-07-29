@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-28.08`
+> Semantic state version: `2026-07-28.09`
 
 ## Purpose and operational boundary
 
@@ -53,6 +53,12 @@ production orchestration isolated cases: 1 success + 28 fail-closed
 production orchestration isolated rows / opens / reads: 41 / 41 / 41
 production orchestration selected-provider opens / reads / writes / live authority: 0 / 0 / 0 / 0
 production orchestration acceptance: ACCEPTED_BOUNDED_NON_EXECUTING_PRODUCTION_CAPABLE_ISOLATED_FIXTURE_IMPLEMENTATION_AUTHORITY
+live authority transaction design: QUALIFIED_NON_EXECUTING_CANDIDATE_ACCEPTANCE_OPEN
+live authority transaction design coverage: 20 + 26 + 52 + 30 = 128
+live authority inherited semantic coverage: 88 + 164 + 78 + 118 = 448
+future live-document roles / replay-tuple fields: 5 / 10
+current live documents / execution authorizations / replay writes: 0 / 0 / 0
+current selected-provider opens / reads / provider bytes / local maps / live authority: 0 / 0 / 0 / 0 / 0
 evidence design inputs/states:  12 / 16
 evidence design operations/failures: 32 / 18
 current authorized coordinates/provider reads: 0 / 0
@@ -125,4 +131,6 @@ Design acceptance is non-executing. It creates no local supply map, reads no pro
 
 `SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-EVIDENCE-ORCHESTRATION-PRODUCTION-IMPLEMENTATION-ACCEPT-001` accepts the exact six-artifact, 118-row production-capable isolated-fixture orchestration implementation boundary. Forty-one isolated fixture opens/reads remain accepted test evidence; selected-provider opens/reads, filesystem writes, replay persistence and live authority remain zero.
 
-The active task is `generate-and-review-non-executing-selected-provider-local-supply-live-authority-transaction-design-candidate`. This stage may design the future owner-authorized live transaction only and may not create or consume live documents, persist replay state, open selected-provider paths or produce a local-supply map.
+`SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-DESIGN-REVIEW-001` qualifies the exact non-executing 20-input, 26-state, 52-operation and 30-failure transaction design. It orders five future authority documents, append-only replay preflight and a first selected-provider-open gate while all current live authority counts remain zero.
+
+The active task is `review-and-accept-non-executing-selected-provider-local-supply-live-authority-transaction-design-boundary`. No live documents, replay tuple, selected-provider path or provider byte may be supplied or consumed during acceptance.

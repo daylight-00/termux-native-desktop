@@ -1,53 +1,52 @@
-# Active task: generate and review the non-executing selected-provider local-supply live-authority transaction design candidate
+# Active task: review and accept the non-executing selected-provider local-supply live-authority transaction design boundary
 
-> Task ID: `generate-and-review-non-executing-selected-provider-local-supply-live-authority-transaction-design-candidate`
+> Task ID: `review-and-accept-non-executing-selected-provider-local-supply-live-authority-transaction-design-boundary`
 >
-> Expected state on completion: an exact repository-owned non-executing transaction design defines future owner activation, live-document delivery, replay persistence and invocation of the accepted production orchestration implementation without creating or consuming live authority.
+> Expected state on completion: the exact 20-input, 26-state, 52-operation and 30-failure design artifacts are accepted as a bounded non-executing transaction design while every live-document, replay-write, selected-provider open/read and local-map count remains zero.
 
 ## Objective
 
-Design the first separately owner-authorized transaction boundary that could later deliver exact owner-decision, token, coordinate-receipt, revocation and execution-authorization documents to the accepted production orchestration implementation.
+Review the exact repository-owned live-authority transaction design candidate and accept or reject its frozen input, state, operation, failure, receipt and metadata artifacts.
 
 ## Why now
 
-The production-capable orchestration implementation is accepted only for isolated fixtures. Before any selected-provider path can be opened, the repository needs an explicit design for owner activation, input provenance, append-only replay persistence, protected-state snapshots, indexed receipts and fail-closed rollback.
+The production-capable orchestration implementation is accepted only for isolated fixtures, and the new live-authority transaction design candidate now freezes every future owner-activation, live-document, replay, first-open and rollback gate. That design must be accepted as an exact non-executing boundary before any later implementation work can begin.
 
 ## Required reading
 
+- `docs/evidence/selected-provider-local-supply-live-authority-transaction-design-review.md`
 - `docs/evidence/selected-provider-local-supply-live-evidence-orchestration-production-implementation-boundary-acceptance.md`
 - `docs/evidence/selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-implementation-boundary-acceptance.md`
-- `docs/evidence/selected-provider-local-supply-evidence-live-input-adapter-execution-authorization-contract-boundary-acceptance.md`
-- `docs/evidence/selected-provider-local-supply-map-evidence-transaction-design-boundary-acceptance.md`
+- `docs/evidence/selected-provider-local-supply-evidence-live-input-adapter-execution-authorization-implementation-boundary-acceptance.md`
 
 ## Pending external inputs
 
-None. This stage designs the future transaction only. No owner decision, token, coordinate receipt, execution authorization, provider path or provider byte may be supplied.
+None. This stage reviews repository-owned design artifacts only. No owner decision, token, coordinate receipt, execution authorization, replay tuple, provider path or provider byte may be supplied.
 
 ## In scope
 
-- exact future input and provenance contracts;
-- owner activation and execution-authorization ordering;
-- append-only replay-registry persistence interface;
-- repository HEAD/tree, remote HEAD, executor UID and trusted-time binding;
-- protected-state pre/post snapshots and rollback boundary;
-- first selected-provider open gate and indexed success/failure receipts;
-- deterministic state, operation and fail-closed coverage.
+- exact six-artifact digest and cardinality review;
+- ordering of owner decision, token, coordinate, revocation and execution-authorization gates;
+- append-only replay precheck and single-append interface;
+- first selected-provider-open gate and protected-state invariance;
+- deterministic fail-closed and rollback boundaries;
+- proof that all current live authority counts remain zero.
 
 ## Out of scope
 
-Creating or accepting live authority documents, opening selected-provider paths, reading provider bytes, persisting a replay tuple, executing evidence collection, producing a local-supply map, generation-root creation, target population, materialization, publication, deployment or activation.
+Creating, supplying, accepting or consuming live authority documents; writing a replay tuple; opening selected-provider paths; reading provider bytes; running the orchestration implementation; producing a local-supply map; generation-root creation; population; materialization; publication; deployment or activation.
 
 ## Stop conditions
 
-Stop if the design embeds a live secret or path, treats accepted isolated fixtures as live authority, authorizes a provider open before every authority and replay gate, permits non-append-only replay state, or widens protected-state effects.
+Stop if any accepted artifact grants current live authority, permits provider open before every authority/replay gate, invokes a synthetic oracle as a live executor, permits mutable replay state or widens protected-state effects.
 
 ## Completion criteria
 
-A non-executing transaction design candidate and deterministic review artifacts cover every future live-authority input, state, operation and failure while all current live-document, selected-provider open/read, replay-write and local-map counts remain zero.
+An exact acceptance record freezes the six design artifacts and preserves zero current live documents, execution authorizations, replay writes, selected-provider opens/reads, provider bytes, local-supply maps and live authority.
 
 ## Next valid action
 
-Generate and review the transaction design candidate only. Do not execute it and do not provide live inputs.
+Review and accept or reject the exact transaction design boundary only. Do not implement or execute it and do not provide live inputs.
 
 Do not supply, discover, open, read, localize, populate or execute against live provider inputs.
 

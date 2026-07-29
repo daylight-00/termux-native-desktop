@@ -1,10 +1,10 @@
 schema_version: 1
-state_version: 2026-07-28.08
+state_version: 2026-07-28.09
 
 blocking:
   - id: live-authority-transaction-design
-    state: not-generated-non-executing-design-required
-    note: The isolated-fixture production orchestration implementation is accepted. A separate owner-authorized live-authority transaction design is required before any live documents, replay persistence or selected-provider open/read can be considered.
+    state: qualified-non-executing-design-candidate-separate-acceptance-required
+    note: The exact 20-input/26-state/52-operation/30-failure design candidate is generated and reviewed. It remains non-executing and requires separate acceptance before any implementation or live authority can be considered.
   - id: local-supply-map-evidence
     state: not-produced-not-authorized
     note: No live authorization token, coordinate receipt, provider path or provider byte has been supplied, opened, read, localized or bound.

@@ -192,7 +192,7 @@ with tempfile.TemporaryDirectory(prefix="leo-regenerate-", dir=TEMP_PARENT) as t
 
 required_markers = [
     ("docs/evidence/selected-provider-local-supply-live-evidence-orchestration-production-implementation-review.md", "QUALIFIED_NON_EXECUTING_PRODUCTION_CAPABLE_ISOLATED_FIXTURE_LIVE_EVIDENCE_ORCHESTRATION_IMPLEMENTATION_CANDIDATE"),
-    ("docs/current/ACTIVE_TASK.md", "Task ID: `generate-and-review-non-executing-selected-provider-local-supply-live-authority-transaction-design-candidate`"),
+    ("docs/current/ACTIVE_TASK.md", "Task ID: `review-and-accept-non-executing-selected-provider-local-supply-live-authority-transaction-design-boundary`"),
     ("docs/current/BRIEF.md", "live evidence orchestration production implementation: QUALIFIED_NON_EXECUTING_PRODUCTION_CAPABLE_ISOLATED_FIXTURE_CANDIDATE_HISTORICAL"),
     ("docs/current/STATE.yaml", "live_evidence_orchestration_production_implementation: qualified-non-executing-production-capable-isolated-fixture-candidate-historical"),
     ("docs/current/PENDING_ARTIFACTS.yaml", "live-authority-transaction-design"),

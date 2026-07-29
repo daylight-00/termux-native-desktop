@@ -1,0 +1,60 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+import csv,json,subprocess,sys,tempfile
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[2]
+BASE=Path('experiments/glibc/selected-obsidian-provider-authority')
+REVIEW=BASE/'review'
+GEN=BASE/'recipe/generate-selected-provider-local-supply-live-authority-transaction-design.py'
+FILES=[
+ REVIEW/'selected-provider-local-supply-live-authority-transaction-input-contract.tsv',
+ REVIEW/'selected-provider-local-supply-live-authority-transaction-state-machine.tsv',
+ REVIEW/'selected-provider-local-supply-live-authority-transaction-operation-contract.tsv',
+ REVIEW/'selected-provider-local-supply-live-authority-transaction-failure-contract.tsv',
+ REVIEW/'selected-provider-local-supply-live-authority-transaction-receipt-contract.json',
+ REVIEW/'selected-provider-local-supply-live-authority-transaction-design-metadata.tsv',
+]
+def rows(p):
+ with p.open(newline='',encoding='utf-8') as f:return list(csv.DictReader(f,delimiter='\t'))
+def fail(msg):print('live-authority transaction design: FAIL:',msg,file=sys.stderr);raise SystemExit(1)
+def require(cond,msg):
+ if not cond:fail(msg)
+def main():
+ for rel in [GEN,*FILES]:require((ROOT/rel).is_file(),f'missing {rel}')
+ with tempfile.TemporaryDirectory(prefix='live-authority-design-check.',dir=ROOT.parent) as td:
+  out=Path(td)
+  cp=subprocess.run([sys.executable,str(ROOT/GEN),'--repo-root',str(ROOT),'--output-root',str(out)],text=True,capture_output=True)
+  require(cp.returncode==0,f'regeneration failed: {cp.stderr.strip()}')
+  for rel in FILES:require((ROOT/rel).read_bytes()==(out/rel).read_bytes(),f'regeneration mismatch: {rel}')
+ inputs,states,ops,fails=[rows(ROOT/p) for p in FILES[:4]]
+ meta=rows(ROOT/FILES[5]);receipt=json.loads((ROOT/FILES[4]).read_text())
+ require([len(inputs),len(states),len(ops),len(fails)]==[20,26,52,30],'cardinality mismatch')
+ for expected,items,prefix in [(20,inputs,'LSLA-IN-'),(26,states,'LSLA-ST-'),(52,ops,'LSLA-OP-'),(30,fails,'LSLA-FAIL-')]:
+  require([int(x['sequence']) for x in items]==list(range(1,expected+1)),f'{prefix} sequence mismatch')
+  ids=[next(v for k,v in x.items() if k.endswith('_id')) for x in items]
+  require(len(set(ids))==len(ids),f'{prefix} duplicate id')
+ require(len(meta)==1 and meta[0]['decision']=='QUALIFIED_NON_EXECUTING_SELECTED_PROVIDER_LOCAL_SUPPLY_LIVE_AUTHORITY_TRANSACTION_DESIGN_CANDIDATE','metadata decision')
+ expected={'input_count':'20','state_count':'26','operation_count':'52','failure_count':'30','inherited_total_coverage':'448','future_live_document_role_count':'5','future_replay_tuple_field_count':'10','current_live_document_count':'0','current_execution_authorization_count':'0','current_replay_write_count':'0','current_selected_provider_open_count':'0','current_selected_provider_read_count':'0','current_provider_byte_count':'0','current_local_supply_map_count':'0','current_live_authority_count':'0'}
+ for k,v in expected.items():require(meta[0].get(k)==v,f'metadata {k}')
+ require(receipt['current_counts']=={'live_documents':0,'execution_authorizations':0,'replay_writes':0,'selected_provider_opens':0,'selected_provider_reads':0,'provider_bytes':0,'local_supply_maps':0,'live_authority':0},'receipt current counts')
+ require(len(receipt['future_live_document_roles'])==5 and len(receipt['future_replay_tuple_fields'])==10,'receipt future schema')
+ require(sum(x['provider_open_allowed']!='NO' for x in ops)==3,'provider-open gate operation count')
+ require(sum(x['persistent_write_allowed']!='NO' for x in ops)==2,'persistent write operation count')
+ doc=(ROOT/'docs/evidence/selected-provider-local-supply-live-authority-transaction-design-review.md').read_text()
+ state=(ROOT/'docs/current/STATE.yaml').read_text();brief=(ROOT/'docs/current/BRIEF.md').read_text();active=(ROOT/'docs/current/ACTIVE_TASK.md').read_text();pending=(ROOT/'docs/current/PENDING_ARTIFACTS.yaml').read_text();status=(ROOT/'STATUS.md').read_text();catalog=(ROOT/'docs/catalog.tsv').read_text();eidx=(ROOT/'docs/evidence/README.md').read_text()
+ checks={
+  'doc decision':'QUALIFIED_NON_EXECUTING_SELECTED_PROVIDER_LOCAL_SUPPLY_LIVE_AUTHORITY_TRANSACTION_DESIGN_CANDIDATE' in doc,
+  'doc counts':'future input contracts:           20' in doc and 'transaction failure contracts:    30' in doc and 'inherited semantic coverage:      448' in doc,
+  'state version':'state_version: 2026-07-28.09' in state and 'state_version: 2026-07-28.09' in pending and 'Semantic state version: `2026-07-28.09`' in brief,
+  'state candidate':'live_authority_transaction_design: qualified-non-executing-candidate-acceptance-open' in state,
+  'state zeros':'live_authority_transaction_current_live_documents: 0' in state and 'live_authority_transaction_current_selected_provider_reads: 0' in state and 'live_authority_transaction_current_live_authority: 0' in state,
+  'brief':'live authority transaction design: QUALIFIED_NON_EXECUTING_CANDIDATE_ACCEPTANCE_OPEN' in brief and '20 + 26 + 52 + 30 = 128' in brief,
+  'active':'Task ID: `review-and-accept-non-executing-selected-provider-local-supply-live-authority-transaction-design-boundary`' in active,
+  'pending':'qualified-non-executing-design-candidate-separate-acceptance-required' in pending,
+  'status':'selected-provider local-supply live-authority transaction design candidate qualified' in status,
+  'catalog':'selected-provider-local-supply-live-authority-transaction-design-review\tevidence\tcurrent\tcanonical' in catalog,
+  'evidence index':'selected-provider-local-supply-live-authority-transaction-design-review.md' in eidx,
+ }
+ for k,v in checks.items():require(v,k)
+ print('live-authority transaction design: PASS: 20 inputs, 26 states, 52 operations, 30 fail-closed contracts, 448 inherited coverage, zero current live authority')
+if __name__=='__main__':main()
