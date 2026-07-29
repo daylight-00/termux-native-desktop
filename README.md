@@ -198,3 +198,9 @@ bounded non-executing selected-provider live-input adapter and execution-authori
 The accepted live-input adapter and execution-authorization contract now has a repository-owned synthetic-only implementation candidate. It covers the exact ten inputs, twenty envelope fields, twenty-seven authorization claims, thirty-seven validations, eighteen states, thirty-two operations and twenty failures. Its one success fixture and twenty negative fixtures perform zero provider reads, zero writes and create zero live authority. Separate acceptance is required before any later live-capable implementation work.
 
 - The read-only local-supply-map evidence transaction now has a 78-row repository-owned synthetic implementation candidate with one success, eighteen fail-closed cases and zero provider opens, reads, writes or live authority.
+
+## Production-capable isolated-fixture live-evidence orchestration implementation candidate
+
+`SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-EVIDENCE-ORCHESTRATION-PRODUCTION-IMPLEMENTATION-REVIEW-001` qualifies a separate implementation candidate with 18 inputs, 24 states, 48 operations, 28 failures and 118 coverage rows. It composes the accepted authorization, adapter and read-only evidence boundaries without importing or invoking their synthetic CLIs.
+
+The candidate exercises real component `lstat`, `O_NOFOLLOW`, stable `fstat`, streaming SHA-256 and ELF64/AArch64 `DT_SONAME` validation against 41 test-harness temporary files. Selected-provider opens, selected-provider reads, candidate filesystem writes, persistent replay writes and live authority remain zero. Separate exact acceptance is required before any further authority review.

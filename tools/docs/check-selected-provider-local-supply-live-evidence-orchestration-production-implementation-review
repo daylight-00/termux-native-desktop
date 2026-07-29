@@ -1,0 +1,217 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import ast
+import csv
+import hashlib
+import importlib.util
+import json
+import os
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+BASE = ROOT / "experiments/glibc/selected-obsidian-provider-authority"
+REVIEW = BASE / "review"
+IMPLEMENTATION = BASE / "implementation"
+SOURCE = IMPLEMENTATION / "selected_provider_local_supply_live_evidence_orchestration_production_candidate.py"
+PLAN = REVIEW / "selected-provider-local-supply-live-evidence-orchestration-production-implementation-isolated-fixture-plan.json"
+NEGATIVE = REVIEW / "selected-provider-local-supply-live-evidence-orchestration-production-implementation-negative-cases.json"
+COVERAGE = REVIEW / "selected-provider-local-supply-live-evidence-orchestration-production-implementation-coverage.tsv"
+SUCCESS = REVIEW / "selected-provider-local-supply-live-evidence-orchestration-production-implementation-isolated-fixture-success.json"
+METADATA = REVIEW / "selected-provider-local-supply-live-evidence-orchestration-production-implementation-metadata.tsv"
+GENERATOR = BASE / "recipe/generate-selected-provider-local-supply-live-evidence-orchestration-production-implementation.py"
+EXPECTED = {
+    SOURCE: "4809c979a7ff07aad1aef754e625725ed9118e698f3661278ed32dd2a90d6300",
+    PLAN: "2c481b02e61e89c6033881577704a379fa1f36e0e9225648d9d9c1b01740f804",
+    NEGATIVE: "e321a4631761c0c0876cc34b7f58f03e653f99e4e8f4831ffd7d2d509b1522a5",
+    COVERAGE: "47e89a7b13520da2dc5d5b7546211ebb113483824790eb17e7880bf1462a5b70",
+    SUCCESS: "eda35bdf226c0e21196bc4dd723de76fb6f444e5d01ad8b05016289c112c327d",
+    METADATA: "c94ecc73bdbc2331dd61bc1b04d247f6a5afe07b2ea7d0b92bfee45f42b2fd5b",
+}
+
+
+def fail(message: str) -> None:
+    raise SystemExit("live-evidence orchestration production implementation: FAIL: " + message)
+
+
+def sha(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def load_module(path: Path):
+    spec = importlib.util.spec_from_file_location("leo_checker_candidate", path)
+    if spec is None or spec.loader is None:
+        fail("unable to load implementation source")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+for path, digest in EXPECTED.items():
+    if not path.is_file() or sha(path) != digest:
+        fail(f"artifact digest mismatch: {path.relative_to(ROOT)}")
+
+source_text = SOURCE.read_text(encoding="utf-8")
+for forbidden in (
+    "selected_provider_local_supply_evidence_authorization_issuance_coordinate_production_candidate",
+    "selected_provider_local_supply_evidence_live_input_adapter_execution_authorization_candidate",
+    "selected_provider_local_supply_map_evidence_transaction_candidate",
+    "subprocess", "socket", "requests", "urllib.request", "glob.glob",
+):
+    if forbidden in source_text:
+        fail(f"forbidden import/invocation/search surface: {forbidden}")
+try:
+    tree = ast.parse(source_text)
+except SyntaxError as exc:
+    fail(f"source syntax error: {exc}")
+for node in ast.walk(tree):
+    if isinstance(node, (ast.Import, ast.ImportFrom)):
+        names = [alias.name for alias in node.names]
+        if any(name.split(".")[0] in {"subprocess", "socket", "requests", "urllib", "glob"} for name in names):
+            fail(f"forbidden imported module: {names}")
+
+plan = json.loads(PLAN.read_text())
+if plan.get("execution_marker") != "ISOLATED_TEMP_FIXTURE_ONLY_NOT_SELECTED_PROVIDER_AUTHORITY":
+    fail("isolated fixture marker mismatch")
+if plan.get("row_count") != 41 or plan.get("row_field_count") != 10 or len(plan.get("rows", [])) != 41:
+    fail("fixture row cardinality mismatch")
+if plan.get("candidate_filesystem_write_authority") != "NONE" or plan.get("selected_provider_path_authority") != "NONE":
+    fail("fixture plan authority widening")
+if [row.get("sequence") for row in plan["rows"]] != list(range(1, 42)):
+    fail("fixture row sequence mismatch")
+if len({row.get("contract_row_id") for row in plan["rows"]}) != 41:
+    fail("fixture row identity duplication")
+
+negative = json.loads(NEGATIVE.read_text())
+if negative.get("case_count") != 28 or len(negative.get("cases", [])) != 28:
+    fail("negative case cardinality mismatch")
+if [case.get("expected_failure_id") for case in negative["cases"]] != [f"LEO-FAIL-{i:03d}" for i in range(1, 29)]:
+    fail("negative failure mapping mismatch")
+
+with COVERAGE.open(newline="", encoding="utf-8") as handle:
+    coverage = list(csv.DictReader(handle, delimiter="\t"))
+if len(coverage) != 118:
+    fail("coverage cardinality mismatch")
+counts = {kind: sum(row["coverage_kind"] == kind for row in coverage) for kind in ("input", "state", "operation", "failure")}
+if counts != {"input": 18, "state": 24, "operation": 48, "failure": 28}:
+    fail(f"coverage kind mismatch: {counts}")
+if len({(row["coverage_kind"], row["source_id"]) for row in coverage}) != 118:
+    fail("coverage identity duplication")
+if any(row["selected_provider_effect"] != "ZERO_SELECTED_PROVIDER_OPENS_READS_WRITES_LIVE_AUTHORITY" for row in coverage):
+    fail("coverage selected-provider effect widening")
+
+success = json.loads(SUCCESS.read_text())
+required_success = {
+    "pass": True,
+    "row_count": 41,
+    "isolated_fixture_files_opened": 41,
+    "isolated_fixture_files_read": 41,
+    "selected_provider_paths_opened": 0,
+    "selected_provider_files_read": 0,
+    "candidate_filesystem_write_count": 0,
+    "persistent_replay_write_count": 0,
+    "in_memory_replay_tuple_consumed": 1,
+    "live_authority_count": 0,
+    "local_supply_map_produced": False,
+}
+for key, value in required_success.items():
+    if success.get(key) != value:
+        fail(f"success result mismatch: {key}={success.get(key)!r}")
+if len(success.get("rows", [])) != 41:
+    fail("success result rows mismatch")
+
+with METADATA.open(newline="", encoding="utf-8") as handle:
+    metadata = {row["key"]: row["value"] for row in csv.DictReader(handle, delimiter="\t")}
+expected_metadata = {
+    "candidate_state": "QUALIFIED_NON_EXECUTING_PRODUCTION_CAPABLE_ISOLATED_FIXTURE_LIVE_EVIDENCE_ORCHESTRATION_IMPLEMENTATION_CANDIDATE",
+    "implementation_acceptance_gate": "SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-EVIDENCE-ORCHESTRATION-PRODUCTION-IMPLEMENTATION-ACCEPTANCE-OPEN",
+    "explicit_input_coverage_count": "18", "state_coverage_count": "24",
+    "operation_coverage_count": "48", "failure_coverage_count": "28", "total_coverage_count": "118",
+    "inherited_issuance_implementation_coverage_count": "88",
+    "inherited_adapter_implementation_coverage_count": "164",
+    "inherited_evidence_implementation_coverage_count": "78",
+    "inherited_total_semantic_coverage_count": "330",
+    "isolated_success_case_count": "1", "isolated_negative_case_count": "28",
+    "isolated_coordinate_row_count": "41", "isolated_coordinate_row_field_count": "10",
+    "isolated_fixture_open_count": "41", "isolated_fixture_read_count": "41",
+    "selected_provider_open_count": "0", "selected_provider_read_count": "0",
+    "candidate_filesystem_write_count": "0", "persistent_replay_write_count": "0",
+    "current_live_authority_count": "0", "local_supply_map_produced": "NO",
+    "accepted_synthetic_cli_invocation": "FORBIDDEN_NOT_IMPORTED_NOT_INVOKED",
+    "live_to_synthetic_rewrite": "FORBIDDEN", "live_execution_authorized": "NO",
+    "next_action": "review-and-accept-non-executing-selected-provider-local-supply-live-evidence-orchestration-production-implementation-candidate-boundary",
+}
+for key, value in expected_metadata.items():
+    if metadata.get(key) != value:
+        fail(f"metadata mismatch: {key}={metadata.get(key)!r}")
+for path, key in (
+    (SOURCE, "implementation_source_sha256"), (PLAN, "isolated_fixture_plan_sha256"),
+    (NEGATIVE, "negative_cases_sha256"), (COVERAGE, "implementation_coverage_sha256"),
+    (SUCCESS, "isolated_fixture_success_sha256"),
+):
+    if metadata.get(key) != sha(path):
+        fail(f"metadata digest binding mismatch: {key}")
+
+module = load_module(SOURCE)
+TEMP_PARENT = ROOT.parent
+with tempfile.TemporaryDirectory(prefix="leo-checker-", dir=TEMP_PARENT) as temp:
+    manifest = module.materialize_isolated_fixture(plan, Path(temp) / "fixture", "success")
+    result = module.normalize_result(module.execute_manifest(manifest))
+    if result != success:
+        if not result.get("pass"):
+            fail(f"isolated success execution failed: {result.get('failure_id')}: {result.get('failure_detail')}")
+        expected_digest = hashlib.sha256(module.canonical(success)).hexdigest()
+        actual_digest = hashlib.sha256(module.canonical(result)).hexdigest()
+        differing = sorted(key for key in set(success) | set(result) if success.get(key) != result.get(key))
+        fail(f"isolated success regeneration mismatch: expected={expected_digest} actual={actual_digest} fields={differing}")
+for case in negative["cases"]:
+    with tempfile.TemporaryDirectory(prefix="leo-checker-negative-", dir=TEMP_PARENT) as temp:
+        manifest = module.materialize_isolated_fixture(plan, Path(temp) / "fixture", case["case"])
+        result = module.execute_manifest(manifest)
+        if result.get("failure_id") != case["expected_failure_id"]:
+            fail(f"negative execution mismatch: {case['case']}")
+        if result.get("selected_provider_paths_opened") != 0 or result.get("selected_provider_files_read") != 0:
+            fail(f"selected-provider effect in negative case: {case['case']}")
+        if result.get("candidate_filesystem_write_count") != 0 or result.get("live_authority_count") != 0:
+            fail(f"write/authority widening in negative case: {case['case']}")
+
+with tempfile.TemporaryDirectory(prefix="leo-regenerate-", dir=TEMP_PARENT) as temp:
+    subprocess.run([
+        sys.executable, str(GENERATOR), "--repo-root", str(ROOT), "--output-root", temp,
+    ], check=True, stdout=subprocess.DEVNULL)
+    generated = Path(temp)
+    for original in (SOURCE, PLAN, NEGATIVE, COVERAGE, SUCCESS, METADATA):
+        relative = original.relative_to(ROOT)
+        candidate = generated / relative
+        if not candidate.is_file() or candidate.read_bytes() != original.read_bytes():
+            fail(f"generator reproducibility mismatch: {relative}")
+
+required_markers = [
+    ("docs/evidence/selected-provider-local-supply-live-evidence-orchestration-production-implementation-review.md", "QUALIFIED_NON_EXECUTING_PRODUCTION_CAPABLE_ISOLATED_FIXTURE_LIVE_EVIDENCE_ORCHESTRATION_IMPLEMENTATION_CANDIDATE"),
+    ("docs/current/ACTIVE_TASK.md", "Task ID: `review-and-accept-non-executing-selected-provider-local-supply-live-evidence-orchestration-production-implementation-candidate-boundary`"),
+    ("docs/current/BRIEF.md", "live evidence orchestration production implementation: QUALIFIED_NON_EXECUTING_PRODUCTION_CAPABLE_ISOLATED_FIXTURE_CANDIDATE"),
+    ("docs/current/STATE.yaml", "live_evidence_orchestration_production_implementation: qualified-non-executing-production-capable-isolated-fixture-candidate"),
+    ("docs/current/PENDING_ARTIFACTS.yaml", "live-evidence-orchestration-production-implementation-acceptance"),
+    ("STATUS.md", "selected-provider local-supply live-evidence production orchestration implementation candidate qualified"),
+    ("docs/catalog.tsv", "selected-provider-local-supply-live-evidence-orchestration-production-implementation-review\tevidence\tcurrent\tcanonical"),
+]
+for relative, marker in required_markers:
+    if marker not in (ROOT / relative).read_text(encoding="utf-8"):
+        fail(f"current documentation marker missing: {relative}")
+texts = "\n".join((ROOT / rel).read_text(encoding="utf-8") for rel in (
+    "docs/current/STATE.yaml", "docs/current/BRIEF.md", "docs/current/ACTIVE_TASK.md",
+    "docs/current/PENDING_ARTIFACTS.yaml", "STATUS.md",
+))
+for forbidden in (
+    "selected_provider_open_count: 1", "selected_provider_read_count: 1",
+    "live_evidence_execution_authorized: true", "local_supply_map_produced: true",
+    "target_population_authorized: true", "LIVE_EXECUTION_AUTHORIZED",
+):
+    if forbidden in texts:
+        fail(f"current authority widening: {forbidden}")
+
+print("live-evidence orchestration production implementation: PASS: 118-row production-capable isolated-fixture coverage, 1 success, 28 fail-closed cases, 41 isolated opens/reads, zero selected-provider opens/reads, writes and live authority")

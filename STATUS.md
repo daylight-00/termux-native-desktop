@@ -543,3 +543,11 @@ selected-provider local-supply-map evidence transaction implementation candidate
 `SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-EVIDENCE-TRANSACTION-IMPLEMENTATION-ACCEPT-001` freezes the exact implementation source, synthetic fixture, eighteen negative cases, 78-row coverage ledger, synthetic success result and metadata digests. The accepted implementation remains a repository-owned synthetic semantic/regression oracle. Provider opens, reads, replay persistence, live map production and runtime mutation remain unauthorized.
 
 bounded non-executing synthetic selected-provider local-supply-map evidence transaction implementation accepted
+
+## Production-capable selected-provider local-supply live-evidence orchestration implementation candidate
+
+`SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-EVIDENCE-ORCHESTRATION-PRODUCTION-IMPLEMENTATION-REVIEW-001` qualifies the exact six-artifact production-capable isolated-fixture candidate. The candidate covers 18 explicit inputs, 24 states, 48 ordered operations and 28 fail-closed contracts in 118 rows while preserving the inherited 88/164/78 synthetic semantic authorities as immutable oracles.
+
+One success case opens and reads 41 test-harness temporary ELF64/AArch64 files and verifies component `lstat`, `O_NOFOLLOW`, UID/mode, stable `fstat`, streaming SHA-256 and exact `DT_SONAME`. Twenty-eight negative cases remain fail-closed. Selected-provider opens, selected-provider reads, candidate filesystem writes, persistent replay writes, live maps and live authority remain zero. Exact implementation acceptance remains separate.
+
+selected-provider local-supply live-evidence production orchestration implementation candidate qualified

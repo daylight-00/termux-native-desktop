@@ -1,10 +1,10 @@
 schema_version: 1
-state_version: 2026-07-28.06
+state_version: 2026-07-28.07
 
 blocking:
-  - id: live-evidence-orchestration-production-implementation
-    state: not-generated-not-authorized
-    note: The exact synthetic evidence implementation is accepted. A separate production-capable orchestration implementation has not been generated or accepted; accepted synthetic CLIs remain immutable oracles and are not live executors.
+  - id: live-evidence-orchestration-production-implementation-acceptance
+    state: qualified-isolated-fixture-candidate-acceptance-required-no-live-authority
+    note: The separate production-capable candidate implements explicit document binding, replay and real nofollow/hash/ELF/SONAME surfaces against 41 test-harness temporary files only. Exact six-artifact acceptance remains required; selected-provider opens, reads, writes and live authority remain zero.
   - id: local-supply-map-evidence
     state: not-produced-not-authorized
     note: No live authorization token, coordinate receipt, provider path or provider byte has been supplied, opened, read, localized or bound.
