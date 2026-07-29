@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-28.10`
+> Semantic state version: `2026-07-28.11`
 
 ## Purpose and operational boundary
 
@@ -60,6 +60,12 @@ live authority transaction design acceptance: ACCEPTED_BOUNDED_NON_EXECUTING_DES
 future live-document roles / replay-tuple fields: 5 / 10
 current live documents / execution authorizations / replay writes: 0 / 0 / 0
 current selected-provider opens / reads / provider bytes / local maps / live authority: 0 / 0 / 0 / 0 / 0
+live authority transaction implementation: QUALIFIED_NON_EXECUTING_SYNTHETIC_CANDIDATE
+live authority implementation coverage: 20 + 26 + 52 + 30 = 128
+live authority implementation inherited coverage: 448
+live authority implementation cases: 1 success + 30 fail-closed
+live authority implementation synthetic document roles / coordinate rows / replay fields: 5 / 41 / 10
+live authority implementation current live documents / replay writes / selected-provider opens / reads / provider bytes / local maps / live authority: 0 / 0 / 0 / 0 / 0 / 0 / 0
 evidence design inputs/states:  12 / 16
 evidence design operations/failures: 32 / 18
 current authorized coordinates/provider reads: 0 / 0

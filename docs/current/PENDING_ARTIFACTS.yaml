@@ -1,10 +1,10 @@
 schema_version: 1
-state_version: 2026-07-28.10
+state_version: 2026-07-28.11
 
 blocking:
-  - id: live-authority-transaction-implementation
-    state: accepted-design-separate-non-executing-implementation-review-required
-    note: The exact 20-input/26-state/52-operation/30-failure design is accepted. No implementation candidate or live execution authority exists yet.
+  - id: live-authority-transaction-implementation-acceptance
+    state: qualified-candidate-separate-acceptance-required
+    note: The exact six-artifact 128-row synthetic-only implementation candidate is qualified. It is not accepted or executable and all current authority counts remain zero.
   - id: local-supply-map-evidence
     state: not-produced-not-authorized
     note: No live authority documents, replay tuple, selected-provider path or provider byte has been supplied, opened, read, localized or bound.

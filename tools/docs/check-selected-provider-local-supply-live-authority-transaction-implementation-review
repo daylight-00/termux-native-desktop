@@ -1,0 +1,214 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import ast
+import csv
+import hashlib
+import importlib.util
+import json
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+BASE = Path("experiments/glibc/selected-obsidian-provider-authority")
+REVIEW = BASE / "review"
+IMPL = BASE / "implementation"
+SOURCE = IMPL / "selected_provider_local_supply_live_authority_transaction_candidate.py"
+FIXTURE = REVIEW / "selected-provider-local-supply-live-authority-transaction-implementation-synthetic-fixture.json"
+NEGATIVES = REVIEW / "selected-provider-local-supply-live-authority-transaction-implementation-negative-cases.json"
+COVERAGE = REVIEW / "selected-provider-local-supply-live-authority-transaction-implementation-coverage.tsv"
+SUCCESS = REVIEW / "selected-provider-local-supply-live-authority-transaction-implementation-synthetic-success.json"
+METADATA = REVIEW / "selected-provider-local-supply-live-authority-transaction-implementation-metadata.tsv"
+GEN = BASE / "recipe/generate-selected-provider-local-supply-live-authority-transaction-implementation.py"
+
+
+def fail(message: str) -> None:
+    raise SystemExit("live-authority transaction implementation: FAIL: " + message)
+
+
+def sha(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def rows(path: Path) -> list[dict[str, str]]:
+    with path.open(newline="", encoding="utf-8") as handle:
+        return list(csv.DictReader(handle, delimiter="\t"))
+
+
+def load(path: Path):
+    spec = importlib.util.spec_from_file_location("lsla_impl_check", path)
+    if spec is None or spec.loader is None:
+        fail("unable to load implementation")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+for rel in (SOURCE, FIXTURE, NEGATIVES, COVERAGE, SUCCESS, METADATA, GEN):
+    if not (ROOT / rel).is_file():
+        fail("missing " + str(rel))
+
+with tempfile.TemporaryDirectory(prefix="lsla-implementation-", dir=ROOT.parent) as td:
+    cp = subprocess.run([sys.executable, str(ROOT / GEN), "--repo-root", str(ROOT), "--output-root", td], text=True, capture_output=True)
+    if cp.returncode != 0:
+        fail("regeneration failed: " + cp.stderr.strip())
+    for rel in (SOURCE, FIXTURE, NEGATIVES, COVERAGE, SUCCESS, METADATA):
+        if (ROOT / rel).read_bytes() != (Path(td) / rel).read_bytes():
+            fail("generated drift: " + str(rel))
+
+meta = {row["key"]: row["value"] for row in rows(ROOT / METADATA)}
+expected = {
+    "candidate_state": "QUALIFIED_NON_EXECUTING_SYNTHETIC_LIVE_AUTHORITY_TRANSACTION_IMPLEMENTATION_CANDIDATE",
+    "implementation_acceptance_gate": "SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-IMPLEMENTATION-ACCEPTANCE-OPEN",
+    "input_coverage_count": "20",
+    "state_coverage_count": "26",
+    "operation_coverage_count": "52",
+    "failure_coverage_count": "30",
+    "total_coverage_count": "128",
+    "inherited_semantic_coverage_count": "448",
+    "synthetic_success_case_count": "1",
+    "synthetic_negative_case_count": "30",
+    "synthetic_live_document_role_count": "5",
+    "synthetic_coordinate_row_count": "41",
+    "synthetic_coordinate_row_field_count": "10",
+    "synthetic_replay_tuple_field_count": "10",
+    "synthetic_live_document_count": "0",
+    "synthetic_execution_authorization_count": "0",
+    "synthetic_replay_write_count": "0",
+    "synthetic_selected_provider_open_count": "0",
+    "synthetic_selected_provider_read_count": "0",
+    "synthetic_provider_byte_count": "0",
+    "synthetic_local_supply_map_count": "0",
+    "synthetic_live_authority_count": "0",
+    "accepted_orchestration_invocation": "FORBIDDEN_NOT_IMPORTED_NOT_INVOKED",
+    "accepted_synthetic_oracle_invocation": "FORBIDDEN_NOT_IMPORTED_NOT_INVOKED",
+    "replay_registry_opened": "NO",
+    "replay_persistence_performed": "NO",
+    "provider_open_gate_armed": "NO",
+    "local_supply_map_produced": "NO",
+    "next_action": "review-and-accept-non-executing-selected-provider-local-supply-live-authority-transaction-implementation-candidate-boundary",
+}
+for key, value in expected.items():
+    if meta.get(key) != value:
+        fail(f"metadata mismatch {key}: {meta.get(key)!r}")
+for rel, key in [
+    (SOURCE, "implementation_source_sha256"),
+    (FIXTURE, "synthetic_fixture_sha256"),
+    (NEGATIVES, "synthetic_negative_cases_sha256"),
+    (COVERAGE, "implementation_coverage_sha256"),
+    (SUCCESS, "synthetic_success_sha256"),
+]:
+    if meta.get(key) != sha(ROOT / rel):
+        fail("metadata digest mismatch: " + key)
+
+coverage = rows(ROOT / COVERAGE)
+counts = {kind: sum(row["coverage_kind"] == kind for row in coverage) for kind in ("INPUT", "STATE", "OPERATION", "FAILURE")}
+if counts != {"INPUT": 20, "STATE": 26, "OPERATION": 52, "FAILURE": 30} or len(coverage) != 128:
+    fail("coverage cardinality mismatch")
+if len({(row["coverage_kind"], row["source_id"]) for row in coverage}) != 128:
+    fail("coverage ids not unique")
+if any(row["current_state"] != "MAPPED_SYNTHETIC_NOT_EXECUTED" for row in coverage):
+    fail("coverage execution state widened")
+if any(row["authority_effect"] != "ZERO_LIVE_DOCUMENTS_REPLAY_WRITES_SELECTED_PROVIDER_OPENS_READS_PROVIDER_BYTES_LOCAL_MAPS_LIVE_AUTHORITY" for row in coverage):
+    fail("coverage authority widened")
+
+fixture = json.loads((ROOT / FIXTURE).read_text(encoding="utf-8"))
+if fixture.get("fixture_kind") != "SYNTHETIC_REPOSITORY_FIXTURE_ONLY_NO_LIVE_DOCUMENTS":
+    fail("fixture marker")
+if len(fixture.get("synthetic_documents", [])) != 5 or any(item.get("live") is not False or item.get("accepted_or_consumed") is not False for item in fixture["synthetic_documents"]):
+    fail("synthetic document model")
+receipt = fixture.get("coordinate_receipt", {})
+coord = receipt.get("rows", [])
+if receipt.get("coordinate_count") != 41 or receipt.get("row_field_count") != 10 or len(coord) != 41 or any(len(row) != 10 for row in coord):
+    fail("coordinate cardinality")
+if any(not row["absolute_canonical_path"].startswith("/__synthetic__/termux-native-desktop/live-authority/selected-provider/") for row in coord):
+    fail("coordinate path")
+if len(fixture.get("replay_tuple_preview", {})) != 10 or fixture.get("replay_tuple_persisted") is not False:
+    fail("replay model")
+zero_keys = [
+    "provider_descriptors_opened", "provider_bytes_read", "persistent_replay_writes", "current_live_document_count",
+    "current_execution_authorization_count", "current_selected_provider_open_count", "current_selected_provider_read_count",
+    "current_provider_byte_count", "current_local_supply_map_count", "current_live_authority_count",
+]
+if any(fixture.get(key) != 0 for key in zero_keys):
+    fail("fixture current authority widened")
+if fixture.get("provider_paths_opened") != [] or fixture.get("writes_performed") != [] or fixture.get("provider_open_gate_armed") is not False or fixture.get("local_supply_map_produced") is not False:
+    fail("fixture effect widened")
+
+negative = json.loads((ROOT / NEGATIVES).read_text(encoding="utf-8"))
+if negative.get("case_count") != 30 or len(negative.get("cases", [])) != 30:
+    fail("negative count")
+if len({item["failure_id"] for item in negative["cases"]}) != 30 or len({item["case"] for item in negative["cases"]}) != 30:
+    fail("negative uniqueness")
+
+source_text = (ROOT / SOURCE).read_text(encoding="utf-8")
+for forbidden in (
+    "import os", "import subprocess", "import socket", "import urllib", "import requests", "import tarfile", "os.open", "subprocess.",
+    "selected_provider_local_supply_map_evidence_transaction_candidate", "selected_provider_local_supply_live_evidence_orchestration_candidate",
+    "selected_provider_local_supply_evidence_live_input_adapter_execution_authorization_candidate", "O_NOFOLLOW", "lstat(", "fstat(", "read_bytes(absolute", "open(absolute",
+):
+    if forbidden in source_text:
+        fail("forbidden implementation surface: " + forbidden)
+parsed = ast.parse(source_text)
+imports: set[str] = set()
+for node in ast.walk(parsed):
+    if isinstance(node, ast.Import):
+        imports.update(alias.name.split(".")[0] for alias in node.names)
+    elif isinstance(node, ast.ImportFrom) and node.module:
+        imports.add(node.module.split(".")[0])
+if imports & {"os", "subprocess", "socket", "urllib", "requests", "tarfile"}:
+    fail("forbidden imports")
+
+module = load(ROOT / SOURCE)
+success = module.execute_synthetic_case(ROOT, fixture, "success")
+expected_success = json.loads((ROOT / SUCCESS).read_text(encoding="utf-8"))
+if success != expected_success or success.get("pass") is not True:
+    fail("success drift")
+if success.get("coverage_count") != 128 or len(success.get("operation_trace", [])) != 52 or len(success.get("state_trace", [])) != 26:
+    fail("success trace cardinality")
+if len(success.get("synthetic_document_receipts", [])) != 5 or len(success.get("synthetic_coordinate_receipts", [])) != 41 or len(success.get("replay_tuple_preview", {})) != 10:
+    fail("success document/coordinate/replay model")
+if success.get("provider_paths_opened") != [] or success.get("provider_bytes_read") != 0 or success.get("writes_performed") != [] or success.get("persistent_replay_writes") != 0 or success.get("local_supply_map_produced") is not False:
+    fail("success effect widened")
+for case in negative["cases"]:
+    result = module.execute_synthetic_case(ROOT, fixture, case["case"])
+    if result.get("pass") is not False or result.get("failure_id") != case["failure_id"] or result.get("failure_code") != case["failure_code"]:
+        fail("negative mismatch: " + case["case"])
+    if any(result.get(key) != 0 for key in [
+        "current_live_document_count", "current_execution_authorization_count", "current_replay_write_count",
+        "current_selected_provider_open_count", "current_selected_provider_read_count", "current_provider_byte_count",
+        "current_local_supply_map_count", "current_live_authority_count",
+    ]):
+        fail("negative authority widened")
+
+cli = subprocess.run([sys.executable, str(ROOT / SOURCE), "--repo-root", str(ROOT), "--fixture", str(ROOT / "README.md"), "--case", "success"], text=True, capture_output=True)
+if cli.returncode == 0 or "fixture must be the exact repository-owned synthetic live-authority transaction implementation fixture" not in cli.stderr:
+    fail("CLI accepted non-exact fixture")
+
+required = [
+    ("docs/evidence/selected-provider-local-supply-live-authority-transaction-implementation-review.md", "QUALIFIED_NON_EXECUTING_SYNTHETIC_LIVE_AUTHORITY_TRANSACTION_IMPLEMENTATION_CANDIDATE"),
+    ("docs/current/BRIEF.md", "live authority transaction implementation: QUALIFIED_NON_EXECUTING_SYNTHETIC_CANDIDATE"),
+    ("docs/current/STATE.yaml", "live_authority_transaction_implementation_state: qualified-non-executing-synthetic-candidate-acceptance-open"),
+    ("docs/current/ACTIVE_TASK.md", "Task ID: `review-and-accept-non-executing-selected-provider-local-supply-live-authority-transaction-implementation-candidate-boundary`"),
+    ("docs/current/PENDING_ARTIFACTS.yaml", "live-authority-transaction-implementation-acceptance"),
+    ("STATUS.md", "selected-provider local-supply live-authority transaction implementation candidate qualified"),
+    ("docs/catalog.tsv", "selected-provider-local-supply-live-authority-transaction-implementation-review\tevidence\tcurrent\tcanonical"),
+    ("docs/evidence/README.md", "selected-provider-local-supply-live-authority-transaction-implementation-review.md"),
+]
+for rel, marker in required:
+    if marker not in (ROOT / rel).read_text(encoding="utf-8"):
+        fail("current documentation marker missing: " + rel)
+texts = "\n".join((ROOT / rel).read_text(encoding="utf-8") for rel in ["docs/current/STATE.yaml", "docs/current/BRIEF.md", "docs/current/ACTIVE_TASK.md", "docs/current/PENDING_ARTIFACTS.yaml", "STATUS.md"])
+for forbidden in (
+    "live_authority_transaction_current_live_documents: 1", "live_authority_transaction_current_replay_writes: 1",
+    "live_authority_transaction_current_selected_provider_opens: 1", "live_authority_transaction_current_selected_provider_reads: 1",
+    "live_authority_transaction_current_provider_bytes: 1", "live_authority_transaction_current_local_supply_maps: 1",
+    "live_authority_transaction_current_live_authority: 1", "provider_open_gate_state: open-authorized", "replay_registry_state: opened-written",
+):
+    if forbidden in texts:
+        fail("authority widening: " + forbidden)
+
+print("live-authority transaction implementation: PASS: 128-row synthetic-only coverage, 1 success, 30 fail-closed cases, 5 synthetic document roles, 41 synthetic coordinate rows, 10 replay fields and zero current authority")

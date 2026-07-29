@@ -100,7 +100,7 @@ texts = '\n'.join((root / p).read_text(encoding='utf-8') for p in [
     'docs/evidence/selected-target-materializer-runtime-preflight-design-review.md',
 ])
 checks.update({
-    'current_task': 'Task ID: `generate-and-review-non-executing-selected-provider-local-supply-live-authority-transaction-implementation-candidate`' in texts,
+    'current_task': 'Task ID: `review-and-accept-non-executing-selected-provider-local-supply-live-authority-transaction-implementation-candidate-boundary`' in texts,
     'current_candidate': 'QUALIFIED_NON_EXECUTING_READ_ONLY_DESIGN_CANDIDATE' in texts,
     'current_population_no': not any(s in texts for s in ['target population authorized: YES', 'execution authorized: YES', 'materialization authorized: YES', 'publication authorized: YES']),
     'doc_design_sha': '323d834e58397364561a4b89f4b344a9633e4f3c472728e75e5b620017db44be' in texts,

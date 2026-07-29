@@ -1,51 +1,50 @@
-# Active task: generate and review the non-executing selected-provider local-supply live-authority transaction implementation candidate
+# Active task: review and accept the non-executing selected-provider local-supply live-authority transaction implementation candidate
 
-> Task ID: `generate-and-review-non-executing-selected-provider-local-supply-live-authority-transaction-implementation-candidate`
+> Task ID: `review-and-accept-non-executing-selected-provider-local-supply-live-authority-transaction-implementation-candidate-boundary`
 >
-> Expected state on completion: a repository-owned implementation candidate covers the accepted 20-input, 26-state, 52-operation and 30-failure design while all live-document, replay-write, selected-provider open/read, provider-byte, local-map and live-authority counts remain zero.
+> Expected state on completion: the exact six-artifact 128-row synthetic-only implementation candidate is accepted without creating live documents, replay writes, selected-provider opens or reads, provider bytes, local maps or live authority.
 
 ## Objective
 
-Implement the accepted live-authority transaction semantics as a deterministic non-executing candidate and review its exact coverage, fixtures and fail-closed behavior.
+Review and accept only the exact repository-owned live-authority transaction implementation candidate and its deterministic synthetic fixtures, coverage and fail-closed behavior.
 
 ## Why now
 
-The design boundary is accepted and immutable. A separately reviewed implementation candidate is required before any later owner-authorized execution transaction can be considered. Implementation must not silently convert design authority into live authority.
+The accepted design has been implemented as a separately reviewable synthetic-only candidate. Acceptance must freeze that exact implementation boundary before any later live-authority execution work can be considered.
 
 ## Required reading
 
+- `docs/evidence/selected-provider-local-supply-live-authority-transaction-implementation-review.md`
 - `docs/evidence/selected-provider-local-supply-live-authority-transaction-design-boundary-acceptance.md`
-- `docs/evidence/selected-provider-local-supply-live-authority-transaction-design-review.md`
 - `docs/evidence/selected-provider-local-supply-live-evidence-orchestration-production-implementation-boundary-acceptance.md`
 
 ## Pending external inputs
 
-None. This stage uses repository-owned synthetic or isolated fixtures only. No owner decision, live token, coordinate receipt, revocation document, execution authorization, replay tuple, selected-provider path or provider byte may be supplied.
+None. No owner activation decision, live token, live coordinate receipt, revocation document, trusted-time evidence, execution authorization, replay registry, selected-provider path or provider byte may be supplied.
 
 ## In scope
 
-- exact implementation coverage for all accepted inputs, states, operations and failures;
-- deterministic synthetic or isolated success and fail-closed fixtures;
-- immutable live-document and replay interfaces with no persistent writes;
-- proof that provider-open gates remain closed in every current execution;
-- explicit separation from accepted synthetic oracles and the production orchestration implementation;
-- zero-authority and protected-state regression evidence.
+- exact digest acceptance of the six implementation artifacts;
+- exact 20/26/52/30 and 128-row coverage acceptance;
+- one deterministic success and thirty fail-closed cases;
+- five synthetic non-live document roles, forty-one synthetic coordinates and ten replay fields;
+- proof that every current authority and side-effect count remains zero.
 
 ## Out of scope
 
-Supplying or accepting live authority documents; opening or writing a replay registry; selected-provider discovery/open/read; provider-byte acquisition; live evidence execution; local-map production or acceptance; generation-root creation; population; materialization; publication; deployment or activation.
+Live document acceptance or consumption; replay-registry open or append; provider-open gate arming; selected-provider discovery/open/read; provider-byte acquisition; orchestration execution; local-map production; generation-root creation; population; materialization; publication; deployment or activation.
 
 ## Stop conditions
 
-Stop if the implementation consumes ambient live inputs, writes replay state, opens selected-provider paths, invokes accepted synthetic oracles as live executors, executes production orchestration against live inputs or widens protected-state effects.
+Stop if any artifact digest drifts, a design row is missing, a live input is consumed, replay persistence occurs, the provider-open gate is armed, selected-provider data is opened or read, or any current authority count becomes nonzero.
 
 ## Completion criteria
 
-A separately reviewable candidate and coverage ledger prove exact accepted-design coverage and fail closed while all current authority counts remain zero. Acceptance remains a later transaction.
+A separate acceptance record freezes the exact candidate and preserves zero current authority. Implementation acceptance must remain distinct from execution authorization.
 
 ## Next valid action
 
-Generate and review only the non-executing implementation candidate. Do not accept or execute it and do not provide live inputs.
+Review and accept only the exact non-executing implementation candidate. Do not execute it or provide live inputs.
 
 Do not supply, discover, open, read, localize, populate or execute against live provider inputs.
 

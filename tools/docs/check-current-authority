@@ -49,7 +49,7 @@ require_text docs/history/README.md 'History is excluded from default onboarding
 require_text docs/operations/WORKFLOW.md 'RECEIVE_FULL_BUNDLE' 'operations workflow begins from a full bundle'
 require_text docs/operations/CHECKPOINTS.md 'Normal accepted work requires no narrative handoff' 'checkpoint contract removes mandatory handoff creation'
 require_text docs/evidence/provider-claim-classification.md 'STILL_NECESSARY: 0' 'provider classification removes blanket mandatory SUP-02 execution'
-require_text docs/current/ACTIVE_TASK.md 'Task ID: `generate-and-review-non-executing-selected-provider-local-supply-live-authority-transaction-implementation-candidate`' 'current task is non-executing live-authority transaction implementation generation'
+require_text docs/current/ACTIVE_TASK.md 'Task ID: `review-and-accept-non-executing-selected-provider-local-supply-live-authority-transaction-implementation-candidate-boundary`' 'current task is live-authority transaction implementation acceptance'
 
 reject_text docs/architecture.md 'Current deployment uses source-linked leaves.' 'architecture has no stale source-linked current deployment claim'
 reject_text docs/glibc-layer.md 'Current deployed leaves are source-linked symlinks.' 'glibc guide has no stale source-linked current deployment claim'
@@ -111,6 +111,7 @@ reject_text docs/system-foundation/REFERENCES.md '../../scripts/deploy-gl.sh' 'f
 "$ROOT/tools/docs/check-selected-provider-local-supply-live-evidence-orchestration-production-implementation-boundary-acceptance"
 "$ROOT/tools/docs/check-selected-provider-local-supply-live-authority-transaction-design-review"
 "$ROOT/tools/docs/check-selected-provider-local-supply-live-authority-transaction-design-boundary-acceptance"
+"$ROOT/tools/docs/check-selected-provider-local-supply-live-authority-transaction-implementation-review"
 
 STATE_VERSION=$(awk '$1 == "state_version:" { print $2; exit }' "$ROOT/docs/current/STATE.yaml")
 PENDING_VERSION=$(awk '$1 == "state_version:" { print $2; exit }' "$ROOT/docs/current/PENDING_ARTIFACTS.yaml")
