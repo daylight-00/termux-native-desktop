@@ -1,16 +1,16 @@
 schema_version: 1
-state_version: 2026-07-28.07
+state_version: 2026-07-28.08
 
 blocking:
-  - id: live-evidence-orchestration-production-implementation-acceptance
-    state: qualified-isolated-fixture-candidate-acceptance-required-no-live-authority
-    note: The separate production-capable candidate implements explicit document binding, replay and real nofollow/hash/ELF/SONAME surfaces against 41 test-harness temporary files only. Exact six-artifact acceptance remains required; selected-provider opens, reads, writes and live authority remain zero.
+  - id: live-authority-transaction-design
+    state: not-generated-non-executing-design-required
+    note: The isolated-fixture production orchestration implementation is accepted. A separate owner-authorized live-authority transaction design is required before any live documents, replay persistence or selected-provider open/read can be considered.
   - id: local-supply-map-evidence
     state: not-produced-not-authorized
     note: No live authorization token, coordinate receipt, provider path or provider byte has been supplied, opened, read, localized or bound.
   - id: execution-authorization
     state: not-issued-not-authorized
-    note: Synthetic implementation qualification does not issue or activate execution authorization and does not open the provider-read gate.
+    note: Production implementation acceptance does not issue or activate execution authorization and does not open the provider-read gate.
 
 non_blocking:
   - id: downstream-application-data-service-closure

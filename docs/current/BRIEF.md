@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-28.07`
+> Semantic state version: `2026-07-28.08`
 
 ## Purpose and operational boundary
 
@@ -46,13 +46,13 @@ local supply evidence transaction implementation coverage: 12 + 16 + 32 + 18 = 7
 local supply evidence transaction synthetic cases: 1 success + 18 fail-closed
 local supply evidence transaction synthetic rows: 41
 local supply evidence transaction provider opens / reads / writes / live authority: 0 / 0 / 0 / 0
-live evidence orchestration production implementation: QUALIFIED_NON_EXECUTING_PRODUCTION_CAPABLE_ISOLATED_FIXTURE_CANDIDATE
+live evidence orchestration production implementation: QUALIFIED_NON_EXECUTING_PRODUCTION_CAPABLE_ISOLATED_FIXTURE_CANDIDATE_HISTORICAL
 production orchestration coverage: 18 + 24 + 48 + 28 = 118
 inherited semantic implementation coverage: 88 + 164 + 78 = 330
 production orchestration isolated cases: 1 success + 28 fail-closed
 production orchestration isolated rows / opens / reads: 41 / 41 / 41
 production orchestration selected-provider opens / reads / writes / live authority: 0 / 0 / 0 / 0
-production orchestration acceptance: OPEN_SEPARATE_ACCEPTANCE_REQUIRED
+production orchestration acceptance: ACCEPTED_BOUNDED_NON_EXECUTING_PRODUCTION_CAPABLE_ISOLATED_FIXTURE_IMPLEMENTATION_AUTHORITY
 evidence design inputs/states:  12 / 16
 evidence design operations/failures: 32 / 18
 current authorized coordinates/provider reads: 0 / 0
@@ -123,4 +123,6 @@ Design acceptance is non-executing. It creates no local supply map, reads no pro
 
 `SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-EVIDENCE-TRANSACTION-IMPLEMENTATION-ACCEPT-001` accepts the exact six-artifact, 78-row synthetic-only read-only evidence implementation boundary with zero provider opens, reads, writes, replay persistence and live authority.
 
-The active task is `review-and-accept-non-executing-selected-provider-local-supply-live-evidence-orchestration-production-implementation-candidate-boundary`. The exact six-artifact production-capable isolated-fixture candidate may be reviewed and accepted only. Acceptance may not consume live authority documents, read selected-provider bytes, persist replay state or produce a live local-supply map.
+`SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-EVIDENCE-ORCHESTRATION-PRODUCTION-IMPLEMENTATION-ACCEPT-001` accepts the exact six-artifact, 118-row production-capable isolated-fixture orchestration implementation boundary. Forty-one isolated fixture opens/reads remain accepted test evidence; selected-provider opens/reads, filesystem writes, replay persistence and live authority remain zero.
+
+The active task is `generate-and-review-non-executing-selected-provider-local-supply-live-authority-transaction-design-candidate`. This stage may design the future owner-authorized live transaction only and may not create or consume live documents, persist replay state, open selected-provider paths or produce a local-supply map.
