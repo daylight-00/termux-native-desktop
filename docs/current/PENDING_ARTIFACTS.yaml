@@ -1,13 +1,13 @@
 schema_version: 1
-state_version: 2026-07-28.16
+state_version: 2026-07-28.17
 
 blocking:
   - id: live-authority-transaction-input-set
     state: not-supplied-not-authorized
     note: Owner activation is accepted for one non-executing collection, sealing and review transaction, but the immutable live-authority input set remains unsupplied and unauthorized.
-  - id: exact-input-set-collection-candidate
-    state: not-generated-not-authorized
-    note: The deterministic explicit-path-only collector, canonical submission envelope and fail-closed sealing contract must be generated and reviewed before any live input is received.
+  - id: exact-input-set-collection-candidate-acceptance
+    state: review-qualified-acceptance-open
+    note: The exact six-artifact isolated-fixture collection/sealing candidate is qualified. One owner-authorized transaction remains unconsumed; acceptance is separate from live collection.
   - id: owner-activation-decision
     state: accepted-closed-exact-boundary
     note: The exact v143 candidate and explicit approval are accepted for one non-executing input-set collection, sealing and review transaction only; zero transactions are consumed and one remains.

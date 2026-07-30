@@ -606,3 +606,10 @@ selected-provider local-supply live-authority transaction owner activation decis
 
 explicit owner activation decision accepted for one non-executing exact input-set collection, sealing and review transaction
 
+
+
+## Exact input-set collection and sealing candidate
+
+`SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-EXACT-INPUT-SET-COLLECTION-REVIEW-001` qualifies a production-capable isolated-fixture candidate with twenty accepted input-contract coverage rows, one success, twenty fail-closed cases, five isolated canonical document opens/reads, forty-one provider-coordinate `lstat` captures, one replay-registry `lstat`, repository/remote/executor metadata capture and two isolated envelope writes. It performs zero provider-content opens/reads, provider-byte reads, project replay opens/reads/writes or live-authority execution. The owner transaction remains one accepted, zero consumed and one remaining.
+
+selected-provider local-supply live-authority exact input-set collection candidate qualified

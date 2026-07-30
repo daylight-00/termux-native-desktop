@@ -23,7 +23,7 @@ if m.get("statement_sha256")!="aa143dbbd2b188f7c1000cda2e1a6c89bf4e526569c124d05
 for k in ("live_input_document_count","execution_authorization_count","project_replay_write_count","selected_provider_open_count","selected_provider_read_count","live_authority_count"):
  if m.get(k)!="0":fail("metadata authority widening: "+k)
 texts=(ROOT/"docs/current/STATE.yaml").read_text()+"\n"+(ROOT/"docs/current/ACTIVE_TASK.md").read_text()+"\n"+(ROOT/"docs/current/PENDING_ARTIFACTS.yaml").read_text()+"\n"+(ROOT/"docs/current/BRIEF.md").read_text()
-for marker in ("qualified-explicit-owner-activation-decision-candidate-historical","Task ID: `generate-and-review-non-executing-selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-candidate`","not-supplied-not-authorized"):
+for marker in ("qualified-explicit-owner-activation-decision-candidate-historical","Task ID: `review-and-accept-non-executing-selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-candidate-boundary`","not-supplied-not-authorized"):
  if marker not in texts:fail("missing current marker: "+marker)
 for forbidden in ("execution_authorized: true","provider_open_gate_state: OPEN","current_live_authority_count: 1"):
  if forbidden in texts:fail("current authority widening: "+forbidden)

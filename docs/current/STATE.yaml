@@ -1,9 +1,9 @@
 schema_version: 1
-state_version: 2026-07-28.16
+state_version: 2026-07-28.17
 updated_on: 2026-07-30
 
 project:
-  phase: selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-candidate-review
+  phase: selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-candidate-acceptance
   status: active
 
 repository:
@@ -77,6 +77,7 @@ documentation:
   local_supply_live_authority_transaction_production_implementation_acceptance: docs/evidence/selected-provider-local-supply-live-authority-transaction-production-implementation-boundary-acceptance.md
   local_supply_live_authority_transaction_owner_activation_review: docs/evidence/selected-provider-local-supply-live-authority-transaction-owner-activation-decision-review.md
   local_supply_live_authority_transaction_owner_activation_acceptance: docs/evidence/selected-provider-local-supply-live-authority-transaction-owner-activation-decision-boundary-acceptance.md
+  local_supply_live_authority_transaction_exact_input_set_collection_review: docs/evidence/selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-review.md
   local_supply_evidence_authorization_issuance_coordinate_production_implementation_review: docs/evidence/selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-implementation-review.md
   local_supply_evidence_authorization_issuance_coordinate_production_implementation_acceptance: docs/evidence/selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-implementation-boundary-acceptance.md
   local_supply_evidence_live_input_adapter_execution_authorization_contract_review: docs/evidence/selected-provider-local-supply-evidence-live-input-adapter-execution-authorization-contract-review.md
@@ -528,7 +529,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: generate-and-review-non-executing-selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-candidate
+  id: review-and-accept-non-executing-selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-candidate-boundary
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:
@@ -772,9 +773,33 @@ selected_target_policy:
   owner_activation_accepted_transaction_count: 1
   owner_activation_consumed_transaction_count: 0
   owner_activation_remaining_transaction_count: 1
-  exact_input_set_collection_candidate_state: not-generated-not-authorized
+  exact_input_set_collection_candidate_state: qualified-non-executing-exact-input-set-collection-sealing-candidate-acceptance-open
+  exact_input_set_collection_candidate_reviewed: true
+  exact_input_set_collection_review_id: SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-EXACT-INPUT-SET-COLLECTION-REVIEW-001
+  exact_input_set_collection_acceptance_gate: SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-EXACT-INPUT-SET-COLLECTION-ACCEPTANCE-OPEN
+  exact_input_set_collection_input_contract_coverage: 20
+  exact_input_set_collection_success_cases: 1
+  exact_input_set_collection_failure_cases: 20
+  exact_input_set_collection_document_roles: 5
+  exact_input_set_collection_coordinate_rows: 41
+  exact_input_set_collection_coordinate_metadata_fields: 10
+  exact_input_set_collection_isolated_document_opens: 5
+  exact_input_set_collection_isolated_document_reads: 5
+  exact_input_set_collection_isolated_provider_lstats: 41
+  exact_input_set_collection_isolated_replay_lstats: 1
+  exact_input_set_collection_isolated_repository_metadata_captures: 2
+  exact_input_set_collection_isolated_remote_metadata_captures: 1
+  exact_input_set_collection_isolated_executor_identity_captures: 1
+  exact_input_set_collection_isolated_envelope_writes: 2
+  exact_input_set_collection_selected_provider_opens: 0
+  exact_input_set_collection_selected_provider_reads: 0
+  exact_input_set_collection_provider_bytes: 0
+  exact_input_set_collection_project_replay_opens: 0
+  exact_input_set_collection_project_replay_reads: 0
+  exact_input_set_collection_project_replay_writes: 0
+  exact_input_set_collection_live_authority: 0
   live_authority_transaction_input_set_state: not-supplied-not-authorized
-  next_task: generate-and-review-non-executing-selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-candidate
+  next_task: review-and-accept-non-executing-selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-candidate-boundary
 
   retained_result_coordinate_generation_contract_review:
     review_id: RETAINED-SUPPLY-COORDINATE-GENERATION-CONTRACT-001

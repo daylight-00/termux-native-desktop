@@ -1,0 +1,214 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import ast
+import csv
+import hashlib
+import importlib.util
+import json
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+BASE = Path("experiments/glibc/selected-obsidian-provider-authority")
+REVIEW = BASE / "review"
+SOURCE = BASE / "implementation/selected_provider_local_supply_live_authority_transaction_exact_input_set_collection_candidate.py"
+PLAN = REVIEW / "selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-isolated-fixture-plan.json"
+NEGATIVE = REVIEW / "selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-negative-cases.json"
+COVERAGE = REVIEW / "selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-coverage.tsv"
+SUCCESS = REVIEW / "selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-isolated-success.json"
+METADATA = REVIEW / "selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-metadata.tsv"
+GENERATOR = BASE / "recipe/generate-selected-provider-local-supply-live-authority-transaction-exact-input-set-collection.py"
+
+
+def fail(message: str) -> None:
+    raise SystemExit("exact input-set collection: FAIL: " + message)
+
+
+def sha(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def load(path: Path):
+    spec = importlib.util.spec_from_file_location("exact_input_set_collection_check", path)
+    if spec is None or spec.loader is None: fail("unable to load implementation")
+    module = importlib.util.module_from_spec(spec); sys.modules[spec.name] = module; spec.loader.exec_module(module)
+    return module
+
+
+for relative in (SOURCE, PLAN, NEGATIVE, COVERAGE, SUCCESS, METADATA, GENERATOR):
+    if not (ROOT / relative).is_file(): fail("missing " + str(relative))
+
+source_text = (ROOT / SOURCE).read_text(encoding="utf-8")
+try: tree = ast.parse(source_text)
+except SyntaxError as exc: fail(f"implementation syntax: {exc}")
+for node in ast.walk(tree):
+    if isinstance(node, (ast.Import, ast.ImportFrom)):
+        names = [alias.name for alias in node.names] if isinstance(node, ast.Import) else [node.module or ""]
+        for name in names:
+            if any(token in name for token in (
+                "selected_provider_local_supply_live_authority_transaction_production_candidate",
+                "selected_provider_local_supply_live_authority_transaction_candidate",
+                "selected_provider_local_supply_live_evidence_orchestration",
+            )):
+                fail("accepted implementation/orchestration import forbidden")
+if "os.lstat" not in source_text or "\"ls-remote\", \"origin\"" not in source_text:
+    fail("required metadata-only collection primitives missing")
+
+plan = json.loads((ROOT / PLAN).read_text(encoding="utf-8"))
+negative = json.loads((ROOT / NEGATIVE).read_text(encoding="utf-8"))
+success = json.loads((ROOT / SUCCESS).read_text(encoding="utf-8"))
+if plan.get("input_contract_count") != 20 or plan.get("document_role_count") != 5 or plan.get("coordinate_row_count") != 41:
+    fail("plan structure mismatch")
+if plan.get("coordinate_metadata_field_count") != 10 or plan.get("accepted_transaction_count") != 1 or plan.get("consumed_transaction_count") != 0 or plan.get("remaining_transaction_count") != 1:
+    fail("plan accounting mismatch")
+for key in (
+    "provider_content_open_authority", "provider_content_read_authority", "provider_byte_authority",
+    "project_replay_open_authority", "project_replay_read_authority", "project_replay_write_authority", "live_execution_authority",
+):
+    if plan.get(key) != "NONE": fail("plan authority widening: " + key)
+if negative.get("case_count") != 20 or len(negative.get("cases", [])) != 20:
+    fail("negative case count mismatch")
+expected_failure_ids = {f"LSLA-COLLECT-FAIL-{i:03d}" for i in range(1, 21)}
+if {row.get("failure_id") for row in negative["cases"]} != expected_failure_ids:
+    fail("negative failure IDs mismatch")
+
+with (ROOT / COVERAGE).open(newline="", encoding="utf-8") as handle:
+    coverage = list(csv.DictReader(handle, delimiter="\t"))
+if len(coverage) != 20 or len({row["source_id"] for row in coverage}) != 20:
+    fail("coverage cardinality mismatch")
+if {row["source_id"] for row in coverage} != {f"LSLA-IN-{i:03d}" for i in range(1, 21)}:
+    fail("coverage source IDs mismatch")
+if any(row["authority_effect"] != "ZERO_SELECTED_PROVIDER_OPENS_READS_PROVIDER_BYTES_PROJECT_REPLAY_OPENS_READS_WRITES_LIVE_AUTHORITY" for row in coverage):
+    fail("coverage authority widening")
+
+required_success = {
+    "pass": True,
+    "decision": "QUALIFIED_NON_EXECUTING_EXACT_INPUT_SET_COLLECTION_SEALING_CANDIDATE",
+    "input_contract_count": 20,
+    "document_role_count": 5,
+    "coordinate_row_count": 41,
+    "coordinate_metadata_field_count": 10,
+    "sealed_envelope_member_count": 2,
+    "sealed_document_digest_count": 5,
+    "provider_coordinate_metadata_count": 41,
+    "isolated_document_open_count": 5,
+    "isolated_document_read_count": 5,
+    "isolated_provider_lstat_count": 41,
+    "isolated_replay_lstat_count": 1,
+    "isolated_repository_metadata_capture_count": 2,
+    "isolated_remote_metadata_capture_count": 1,
+    "isolated_executor_identity_capture_count": 1,
+    "isolated_envelope_write_count": 2,
+    "selected_provider_open_count": 0,
+    "selected_provider_read_count": 0,
+    "provider_byte_count": 0,
+    "project_replay_open_count": 0,
+    "project_replay_read_count": 0,
+    "project_replay_write_count": 0,
+    "live_document_count": 0,
+    "execution_authorization_count": 0,
+    "local_supply_map_count": 0,
+    "live_authority_count": 0,
+    "provider_open_gate_armed": False,
+    "accepted_transaction_count": 1,
+    "consumed_transaction_count": 0,
+    "remaining_transaction_count": 1,
+}
+for key, value in required_success.items():
+    if success.get(key) != value: fail(f"success mismatch: {key}={success.get(key)!r}")
+
+with (ROOT / METADATA).open(newline="", encoding="utf-8") as handle:
+    metadata = {row["key"]: row["value"] for row in csv.DictReader(handle, delimiter="\t")}
+expected_metadata = {
+    "candidate_state": "QUALIFIED_NON_EXECUTING_EXACT_INPUT_SET_COLLECTION_SEALING_CANDIDATE",
+    "collection_acceptance_gate": "SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-EXACT-INPUT-SET-COLLECTION-ACCEPTANCE-OPEN",
+    "input_contract_coverage_count": "20",
+    "isolated_success_case_count": "1",
+    "isolated_negative_case_count": "20",
+    "isolated_document_role_count": "5",
+    "isolated_coordinate_row_count": "41",
+    "isolated_coordinate_metadata_field_count": "10",
+    "isolated_document_open_count": "5",
+    "isolated_document_read_count": "5",
+    "isolated_provider_lstat_count": "41",
+    "isolated_replay_lstat_count": "1",
+    "isolated_envelope_write_count": "2",
+    "selected_provider_open_count": "0",
+    "selected_provider_read_count": "0",
+    "provider_byte_count": "0",
+    "project_replay_open_count": "0",
+    "project_replay_read_count": "0",
+    "project_replay_write_count": "0",
+    "current_live_authority_count": "0",
+    "provider_open_gate_armed": "NO",
+    "accepted_transaction_count": "1",
+    "consumed_transaction_count": "0",
+    "remaining_transaction_count": "1",
+    "live_input_set_accepted": "NO",
+    "execution_authorized": "NO",
+    "next_action": "review-and-accept-non-executing-selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-candidate-boundary",
+}
+for key, value in expected_metadata.items():
+    if metadata.get(key) != value: fail(f"metadata mismatch: {key}={metadata.get(key)!r}")
+for relative, key in ((SOURCE, "implementation_source_sha256"), (PLAN, "isolated_fixture_plan_sha256"), (NEGATIVE, "negative_cases_sha256"), (COVERAGE, "collection_coverage_sha256"), (SUCCESS, "isolated_success_sha256")):
+    if metadata.get(key) != sha(ROOT / relative): fail("metadata digest mismatch: " + key)
+
+module = load(ROOT / SOURCE)
+module.verify_source_digests(ROOT)
+with tempfile.TemporaryDirectory(prefix="exact-input-set-collection-success-", dir=ROOT.parent) as temp:
+    manifest = module.materialize_isolated_fixture(plan, Path(temp) / "fixture", "success", ROOT)
+    result = module.normalize_result(module.execute_manifest(manifest))
+    if result != success:
+        differing = sorted(key for key in set(result) | set(success) if result.get(key) != success.get(key))
+        fail(f"success regeneration mismatch: {differing}")
+for case in negative["cases"]:
+    with tempfile.TemporaryDirectory(prefix="exact-input-set-collection-negative-", dir=ROOT.parent) as temp:
+        manifest = module.materialize_isolated_fixture(plan, Path(temp) / "fixture", case["case"], ROOT)
+        result = module.execute_manifest(manifest)
+        if result.get("failure_id") != case["failure_id"]:
+            fail(f"negative mismatch: {case['case']} => {result.get('failure_id')}: {result.get('failure_detail')}")
+        for key in (
+            "selected_provider_open_count", "selected_provider_read_count", "provider_byte_count",
+            "project_replay_open_count", "project_replay_read_count", "project_replay_write_count", "live_authority_count",
+        ):
+            if result.get(key) != 0: fail(f"negative authority widening: {case['case']} {key}")
+
+with tempfile.TemporaryDirectory(prefix="exact-input-set-collection-regenerate-", dir=ROOT.parent) as temp:
+    subprocess.run([sys.executable, str(ROOT / GENERATOR), "--repo-root", str(ROOT), "--output-root", temp], check=True, stdout=subprocess.DEVNULL)
+    generated = Path(temp)
+    for relative in (SOURCE, PLAN, NEGATIVE, COVERAGE, SUCCESS, METADATA):
+        candidate = generated / relative
+        if not candidate.is_file() or candidate.read_bytes() != (ROOT / relative).read_bytes():
+            fail("generator reproducibility mismatch: " + str(relative))
+
+markers = [
+    ("docs/evidence/selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-review.md", "QUALIFIED_NON_EXECUTING_EXACT_INPUT_SET_COLLECTION_SEALING_CANDIDATE"),
+    ("docs/current/ACTIVE_TASK.md", "Task ID: `review-and-accept-non-executing-selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-candidate-boundary`"),
+    ("docs/current/BRIEF.md", "exact input-set collection candidate: QUALIFIED_NON_EXECUTING_EXACT_INPUT_SET_COLLECTION_SEALING_CANDIDATE_ACCEPTANCE_OPEN"),
+    ("docs/current/STATE.yaml", "exact_input_set_collection_candidate_state: qualified-non-executing-exact-input-set-collection-sealing-candidate-acceptance-open"),
+    ("docs/current/PENDING_ARTIFACTS.yaml", "exact-input-set-collection-candidate-acceptance"),
+    ("STATUS.md", "selected-provider local-supply live-authority exact input-set collection candidate qualified"),
+    ("docs/catalog.tsv", "selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-review\tevidence\tcurrent\tcanonical"),
+]
+for relative, marker in markers:
+    path = ROOT / relative
+    if not path.is_file() or marker not in path.read_text(encoding="utf-8"):
+        fail("current documentation marker missing: " + relative)
+texts = "\n".join((ROOT / relative).read_text(encoding="utf-8") for relative in (
+    "docs/current/STATE.yaml", "docs/current/BRIEF.md", "docs/current/ACTIVE_TASK.md", "docs/current/PENDING_ARTIFACTS.yaml", "STATUS.md",
+))
+for forbidden in (
+    "owner_activation_consumed_transaction_count: 1", "owner_activation_remaining_transaction_count: 0",
+    "selected_provider_open_count: 1", "selected_provider_read_count: 1", "provider_byte_count: 1",
+    "project_replay_write_count: 1", "live_authority_count: 1", "LIVE_EXECUTION_AUTHORIZED",
+):
+    if forbidden in texts: fail("current authority widening: " + forbidden)
+
+print(
+    "exact input-set collection: PASS: 20-input production-capable isolated-fixture collection/sealing candidate, "
+    "1 success, 20 fail-closed cases, 5 document opens/reads, 41 provider lstats, 1 replay lstat, "
+    "2 envelope writes, zero selected-provider content opens/reads, project replay opens/reads/writes and live authority"
+)

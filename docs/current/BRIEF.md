@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-28.16`
+> Semantic state version: `2026-07-28.17`
 
 ## Purpose and operational boundary
 
@@ -30,7 +30,14 @@ owner activation statement SHA-256: aa143dbbd2b188f7c1000cda2e1a6c89bf4e526569c1
 owner activation acceptance statement SHA-256: b0e9fb7171f3dec721b505ad47acc09fa74e986ed4a06ff9ba09e682461d1af7
 owner activation authorized scope: ONE_NON_EXECUTING_EXACT_INPUT_SET_COLLECTION_SEALING_AND_REVIEW_TRANSACTION_ONLY
 owner activation transactions accepted / consumed / remaining: 1 / 0 / 1
-exact input-set collection candidate: NOT_GENERATED_NOT_AUTHORIZED
+exact input-set collection candidate: QUALIFIED_NON_EXECUTING_EXACT_INPUT_SET_COLLECTION_SEALING_CANDIDATE_ACCEPTANCE_OPEN
+exact input-set collection coverage / cases: 20 inputs / 1 success + 20 fail-closed
+exact input-set isolated document opens / reads: 5 / 5
+exact input-set isolated provider lstats / replay lstats: 41 / 1
+exact input-set isolated repository / remote / executor captures: 2 / 1 / 1
+exact input-set isolated envelope writes: 2
+exact input-set selected-provider opens / reads / bytes: 0 / 0 / 0
+exact input-set project replay opens / reads / writes / live authority: 0 / 0 / 0 / 0
 live-authority input set: NOT_SUPPLIED_NOT_AUTHORIZED
 materializer object-plan rows:    41
 materializer state rows:          20
