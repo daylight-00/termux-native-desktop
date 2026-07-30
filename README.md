@@ -205,4 +205,4 @@ The accepted live-input adapter and execution-authorization contract now has a r
 
 The candidate exercises real component `lstat`, `O_NOFOLLOW`, stable `fstat`, streaming SHA-256 and ELF64/AArch64 `DT_SONAME` validation against 41 test-harness temporary files. Selected-provider opens, selected-provider reads, candidate filesystem writes, persistent replay writes and live authority remain zero. Separate exact acceptance is required before any further authority review.
 
-- Current live-authority transaction production implementation candidate qualified with 128 direct / 448 inherited coverage, isolated document/replay/receipt effects only, and zero selected-provider or live authority; separate acceptance remains open.
+- The exact live-authority transaction production implementation is accepted with 128 direct / 448 inherited coverage and isolated document/replay/receipt effects only. Owner activation and the five-document live input set remain unsupplied; selected-provider and live authority effects remain zero.

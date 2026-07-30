@@ -46,8 +46,8 @@ need=[
  ("docs/current/STATE.yaml","live_authority_transaction_implementation_acceptance: accepted-bounded-non-executing-synthetic-implementation-authority"),
  ("docs/current/STATE.yaml","live_authority_transaction_implementation_selected_provider_reads: 0"),
  ("docs/current/BRIEF.md","live authority transaction implementation acceptance: ACCEPTED_BOUNDED_NON_EXECUTING_SYNTHETIC_IMPLEMENTATION_AUTHORITY"),
- ("docs/current/ACTIVE_TASK.md","Task ID: `review-and-accept-non-executing-selected-provider-local-supply-live-authority-transaction-production-implementation-candidate-boundary`"),
- ("docs/current/PENDING_ARTIFACTS.yaml","live-authority-transaction-production-implementation"),
+ ("docs/current/ACTIVE_TASK.md","Task ID: `await-owner-activation-and-exact-selected-provider-local-supply-live-authority-transaction-input-set`"),
+ ("docs/current/PENDING_ARTIFACTS.yaml","live-authority-transaction-input-set"),
  ("STATUS.md","bounded non-executing synthetic selected-provider local-supply live-authority transaction implementation accepted"),
  ("docs/catalog.tsv","selected-provider-local-supply-live-authority-transaction-implementation-boundary-acceptance\tevidence\tcurrent\tcanonical"),
  ("docs/evidence/README.md","selected-provider-local-supply-live-authority-transaction-implementation-boundary-acceptance.md")]

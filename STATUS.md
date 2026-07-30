@@ -1,7 +1,7 @@
 # Status
 
 bundle-native documentation and operations control planes active; ADR 0005 claim classification complete with 95 separated claims; exact bounded provider set retained; bounded selected provider composition accepted as `ACCEPTED_BOUNDED_COMPLETE_SELECTED_PROVIDER_COMPOSITION` with 42 decision rows, 41 included members, one deferred libtasn1 member and zero selected identity gaps; non-mutating target manifest qualified as `QUALIFIED_NON_MUTATING_SELECTED_TARGET_MANIFEST` with 41 concrete rows, 41 SONAME alias rows and zero target-path collisions; target population, materialization, deployment and activation blocked
-> **Updated:** 2026-07-26
+> **Updated:** 2026-07-30
 
 ## Repository and deployment consolidation
 
@@ -39,7 +39,7 @@ See `docs/decisions/0004-single-main-and-immutable-release-deployment.md`.
 - Legacy `$HOME/gl/build` and `$HOME/gl/opt` paths remain compatibility symlinks only.
 - Application bodies, selected generations, user data and provider contents were preserved.
 
-- The selected-provider local-supply live-authority transaction production implementation candidate qualified as `QUALIFIED_NON_EXECUTING_PRODUCTION_CAPABLE_ISOLATED_FIXTURE_LIVE_AUTHORITY_TRANSACTION_IMPLEMENTATION_CANDIDATE`: 128 direct coverage rows, 448 inherited semantic rows, one isolated success, thirty fail-closed cases, five isolated authority-document opens/reads, two isolated replay appends, two isolated result writes, and zero selected-provider opens/reads, provider bytes, project replay writes, local maps or live authority. Separate acceptance is required.
+- The selected-provider local-supply live-authority transaction production implementation is accepted as `ACCEPTED_BOUNDED_NON_EXECUTING_PRODUCTION_CAPABLE_ISOLATED_FIXTURE_LIVE_AUTHORITY_TRANSACTION_IMPLEMENTATION_AUTHORITY`: 128 direct rows, 448 inherited rows, one isolated success, thirty fail-closed cases, five isolated authority-document opens/reads, two isolated replay appends and two isolated result writes. Owner activation and the exact live input set remain unsupplied; selected-provider and live authority effects remain zero.
 
 ## Current conclusions
 
@@ -585,3 +585,10 @@ selected-provider local-supply live-authority transaction implementation candida
 `SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-IMPLEMENTATION-ACCEPT-001` freezes the exact six-artifact synthetic-only implementation boundary: 20 inputs, 26 states, 52 operations, 30 failures, 128 direct coverage rows, 448 inherited semantic rows, one success, thirty fail-closed cases, five synthetic document roles, forty-one synthetic coordinates and ten replay fields. Live documents, execution authorizations, replay writes, selected-provider opens/reads, provider bytes, local maps and live authority remain zero.
 
 bounded non-executing synthetic selected-provider local-supply live-authority transaction implementation accepted
+
+
+## Bounded non-executing production-capable selected-provider local-supply live-authority transaction implementation acceptance
+
+`SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-PRODUCTION-IMPLEMENTATION-ACCEPT-001` freezes the exact six-artifact production implementation boundary: 20 inputs, 26 states, 52 operations, 30 failures, 128 direct coverage rows, 448 inherited semantic rows, one isolated success, thirty fail-closed cases, five authority-document opens/reads, two isolated replay appends and two isolated result writes. Live documents, execution authorizations, project replay writes, selected-provider opens/reads, provider bytes, local maps and live authority remain zero.
+
+bounded non-executing production-capable selected-provider local-supply live-authority transaction implementation accepted

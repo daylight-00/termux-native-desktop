@@ -1,16 +1,25 @@
 schema_version: 1
-state_version: 2026-07-28.13
+state_version: 2026-07-28.14
 
 blocking:
-  - id: live-authority-transaction-production-implementation-acceptance
-    state: open-separate-acceptance-required
-    note: The exact six-artifact production-capable isolated-fixture candidate is qualified with 128 direct rows, 448 inherited rows, one success, thirty fail-closed cases and zero selected-provider or live authority. Separate acceptance is required.
+  - id: live-authority-transaction-input-set
+    state: not-supplied-not-authorized
+    note: The production implementation is accepted, but the owner activation decision and immutable five-document live-authority transaction input set have not been supplied or reviewed.
+  - id: owner-activation-decision
+    state: not-supplied-not-authorized
+    note: No owner has activated one exact live-authority transaction.
+  - id: project-replay-registry
+    state: not-supplied-not-opened-not-written
+    note: The accepted implementation used only isolated fixture replay storage. No project replay-registry identity or initial integrity state is supplied.
+  - id: selected-provider-coordinate-set
+    state: not-supplied-not-authorized
+    note: No live selected-provider coordinate set or provider byte has been supplied, opened, read or localized.
+  - id: execution-authorization
+    state: not-issued-not-authorized
+    note: Production implementation acceptance does not issue or activate execution authorization and does not open the provider-read gate.
   - id: local-supply-map-evidence
     state: not-produced-not-authorized
     note: No live authority documents, replay tuple, selected-provider path or provider byte has been supplied, opened, read, localized or bound.
-  - id: execution-authorization
-    state: not-issued-not-authorized
-    note: Design acceptance does not issue or activate execution authorization and does not open the provider-read gate.
 
 non_blocking:
   - id: downstream-application-data-service-closure

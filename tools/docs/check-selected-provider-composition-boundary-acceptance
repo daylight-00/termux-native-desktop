@@ -91,7 +91,7 @@ checks = [
     ('doc target no', 'target manifest generated:     NO' in doc),
     ('state accepted', 'decision: accepted-bounded-complete-selected-provider-composition' in state),
     ('state target false', 'target_manifest_allowed: false' in state),
-    ('active task', 'Task ID: `review-and-accept-non-executing-selected-provider-local-supply-live-authority-transaction-production-implementation-candidate-boundary`' in active),
+    ('active task', 'Task ID: `await-owner-activation-and-exact-selected-provider-local-supply-live-authority-transaction-input-set`' in active),
     ('brief', 'accepted provider decision rows:' in brief and '42' in brief and 'current-scope concrete members:' in brief and '41' in brief),
     ('status', 'bounded selected provider composition accepted' in status),
     ('catalog', 'selected-obsidian-provider-composition-boundary-acceptance\tevidence\tcurrent\tcanonical' in catalog),

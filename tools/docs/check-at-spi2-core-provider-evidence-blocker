@@ -30,7 +30,7 @@ if not errors:
       ('doc no bionic inference','do not supply a Termux glibc archive' in doc),
       ('state blocker','at_spi2_core_provider_blocker:' in state and 'provider_authority: superseded-discovery-blocker-candidate-now-qualified' in state),
       ('state authority','at_spi2_core_provider_authority:' in state and 'decision: accepted-bounded-provider' in state),
-      ('next task','Task ID: `review-and-accept-non-executing-selected-provider-local-supply-live-authority-transaction-production-implementation-candidate-boundary`' in active),
+      ('next task','Task ID: `await-owner-activation-and-exact-selected-provider-local-supply-live-authority-transaction-input-set`' in active),
       ('brief authority','bounded provider roots:' in brief and '31' in brief and 'intervention:' in brief and 'retained' in brief),
       ('catalog','at-spi2-core-provider-evidence-blocker\tevidence\tsuperseded\thistory' in catalog),
       ('status','exact libXdamage, atomic AT-SPI2 core, and atomic GTK 3.24.49 GDK/GTK project candidates accepted as bounded providers' in status)]

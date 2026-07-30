@@ -42,8 +42,8 @@ need=[
  ("docs/evidence/selected-provider-local-supply-live-evidence-orchestration-production-implementation-boundary-acceptance.md",'ACCEPTED_BOUNDED_NON_EXECUTING_PRODUCTION_CAPABLE_ISOLATED_FIXTURE_LIVE_EVIDENCE_ORCHESTRATION_IMPLEMENTATION_AUTHORITY'),
  ("docs/current/STATE.yaml","live_evidence_orchestration_production_implementation_acceptance: accepted-bounded-non-executing-production-capable-isolated-fixture-implementation-authority"),
  ("docs/current/BRIEF.md","production orchestration acceptance: ACCEPTED_BOUNDED_NON_EXECUTING_PRODUCTION_CAPABLE_ISOLATED_FIXTURE_IMPLEMENTATION_AUTHORITY"),
- ("docs/current/ACTIVE_TASK.md",'Task ID: `review-and-accept-non-executing-selected-provider-local-supply-live-authority-transaction-production-implementation-candidate-boundary`'),
- ("docs/current/PENDING_ARTIFACTS.yaml","live-authority-transaction-production-implementation"),
+ ("docs/current/ACTIVE_TASK.md",'Task ID: `await-owner-activation-and-exact-selected-provider-local-supply-live-authority-transaction-input-set`'),
+ ("docs/current/PENDING_ARTIFACTS.yaml","live-authority-transaction-input-set"),
  ("STATUS.md","bounded non-executing production-capable selected-provider local-supply live-evidence orchestration implementation accepted"),
  ("docs/catalog.tsv","selected-provider-local-supply-live-evidence-orchestration-production-implementation-boundary-acceptance\tevidence\tcurrent\tcanonical")]
 for p,m in need:
