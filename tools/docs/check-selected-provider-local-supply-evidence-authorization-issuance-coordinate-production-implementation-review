@@ -198,7 +198,7 @@ required_docs = [
     ("docs/evidence/selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-implementation-review.md", "QUALIFIED_NON_EXECUTING_SYNTHETIC_IMPLEMENTATION_CANDIDATE"),
     ("docs/current/BRIEF.md", "authorization issuance/coordinate production implementation: QUALIFIED_NON_EXECUTING_SYNTHETIC_CANDIDATE_HISTORICAL"),
     ("docs/current/STATE.yaml", "local_supply_evidence_authorization_issuance_coordinate_production_implementation: qualified-non-executing-synthetic-candidate-historical"),
-    ("docs/current/ACTIVE_TASK.md", "Task ID: `await-owner-activation-and-exact-selected-provider-local-supply-live-authority-transaction-input-set`"),
+    ("docs/current/ACTIVE_TASK.md", "Task ID: `review-and-accept-explicit-owner-activation-decision-boundary`"),
     ("docs/current/PENDING_ARTIFACTS.yaml", "live-authority-transaction-input-set"),
     ("STATUS.md", "selected-provider local-supply evidence authorization issuance and coordinate-receipt production implementation candidate qualified"),
     ("docs/catalog.tsv", "selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-implementation-review\tevidence\tcurrent\tcanonical"),

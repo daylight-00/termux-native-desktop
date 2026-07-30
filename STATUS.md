@@ -592,3 +592,10 @@ bounded non-executing synthetic selected-provider local-supply live-authority tr
 `SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-PRODUCTION-IMPLEMENTATION-ACCEPT-001` freezes the exact six-artifact production implementation boundary: 20 inputs, 26 states, 52 operations, 30 failures, 128 direct coverage rows, 448 inherited semantic rows, one isolated success, thirty fail-closed cases, five authority-document opens/reads, two isolated replay appends and two isolated result writes. Live documents, execution authorizations, project replay writes, selected-provider opens/reads, provider bytes, local maps and live authority remain zero.
 
 bounded non-executing production-capable selected-provider local-supply live-authority transaction implementation accepted
+
+
+## Explicit owner activation decision candidate
+
+The exact owner statement `바로 진행하자` was received at `2026-07-30T16:04:00+09:00` and recorded with SHA-256 `aa143dbbd2b188f7c1000cda2e1a6c89bf4e526569c124d0534e5ecdded175d3` as `QUALIFIED_EXPLICIT_OWNER_ACTIVATION_DECISION_CANDIDATE_INPUT_SET_PENDING`. Its only candidate scope is one non-executing exact input-set review transaction. The live input set remains absent, provider/replay gates remain closed and current live authority remains zero.
+
+selected-provider local-supply live-authority transaction owner activation decision candidate qualified

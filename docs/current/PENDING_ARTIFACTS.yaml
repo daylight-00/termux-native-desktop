@@ -1,13 +1,13 @@
 schema_version: 1
-state_version: 2026-07-28.14
+state_version: 2026-07-28.15
 
 blocking:
   - id: live-authority-transaction-input-set
     state: not-supplied-not-authorized
-    note: The production implementation is accepted, but the owner activation decision and immutable five-document live-authority transaction input set have not been supplied or reviewed.
+    note: The production implementation is accepted and an explicit owner activation statement is under separate review; the immutable live-authority transaction input set remains unsupplied and unauthorized.
   - id: owner-activation-decision
-    state: not-supplied-not-authorized
-    note: No owner has activated one exact live-authority transaction.
+    state: qualified-explicit-candidate-acceptance-open
+    note: The exact statement `바로 진행하자` is recorded for one non-executing exact input-set review transaction only; separate acceptance is required.
   - id: project-replay-registry
     state: not-supplied-not-opened-not-written
     note: The accepted implementation used only isolated fixture replay storage. No project replay-registry identity or initial integrity state is supplied.

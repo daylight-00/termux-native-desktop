@@ -1,0 +1,11 @@
+key	value
+statement_sha256	aa143dbbd2b188f7c1000cda2e1a6c89bf4e526569c124d0534e5ecdded175d3
+review_sha256	40d402f0a23595b4058526f579e01f5d19184c557299eb6c17118b7d71b6f884
+artifact_count	3
+owner_activation_statement_count	1
+live_input_document_count	0
+execution_authorization_count	0
+project_replay_write_count	0
+selected_provider_open_count	0
+selected_provider_read_count	0
+live_authority_count	0

@@ -41,7 +41,7 @@ checks=[
  ('state candidate','local_supply_evidence_authorization_coordinate_contract: qualified-non-mutating-candidate-historical' in state),('state counts','local_supply_evidence_authorization_required_claims: 18' in state and 'local_supply_evidence_coordinate_required_rows: 41' in state and 'local_supply_evidence_coordinate_validation_rules: 30' in state),
  ('state zero','local_supply_evidence_current_token_count: 0' in state and 'local_supply_evidence_current_coordinate_row_count: 0' in state and 'local_supply_map_evidence_transaction_execution_authorized: false' in state),
  ('brief','authorization/coordinate contract: QUALIFIED_NON_MUTATING_CANDIDATE_HISTORICAL' in brief),
- ('active','Task ID: `await-owner-activation-and-exact-selected-provider-local-supply-live-authority-transaction-input-set`' in active),
+ ('active','Task ID: `review-and-accept-explicit-owner-activation-decision-boundary`' in active),
  ('pending','live-authority-transaction-input-set' in pending and 'execution-authorization' in pending),
  ('status','non-mutating selected-provider local-supply evidence authorization and coordinate-receipt contract candidate qualified' in status),
  ('catalog','selected-provider-local-supply-evidence-authorization-coordinate-receipt-contract-review\tevidence\tcurrent\tcanonical' in catalog),

@@ -1,0 +1,34 @@
+#!/usr/bin/env python3
+from pathlib import Path
+import csv,hashlib,subprocess,sys,tempfile
+ROOT=Path(__file__).resolve().parents[2]
+BASE=Path("experiments/glibc/selected-obsidian-provider-authority")
+STMT=BASE/"review/selected-provider-local-supply-live-authority-transaction-owner-activation-statement.utf8"
+ROWP=BASE/"review/selected-provider-local-supply-live-authority-transaction-owner-activation-decision-review.tsv"
+META=BASE/"review/selected-provider-local-supply-live-authority-transaction-owner-activation-decision-metadata.tsv"
+GEN=BASE/"recipe/generate-selected-provider-local-supply-live-authority-transaction-owner-activation-decision-review.py"
+def fail(x):raise SystemExit("owner activation decision review: FAIL: "+x)
+for p in (STMT,ROWP,META,GEN):
+ if not (ROOT/p).is_file():fail("missing "+str(p))
+if (ROOT/STMT).read_bytes()!=b"\xeb\xb0\x94\xeb\xa1\x9c \xec\xa7\x84\xed\x96\x89\xed\x95\x98\xec\x9e\x90\n":fail("statement bytes mismatch")
+if hashlib.sha256((ROOT/STMT).read_bytes()).hexdigest()!="aa143dbbd2b188f7c1000cda2e1a6c89bf4e526569c124d0534e5ecdded175d3":fail("statement digest mismatch")
+with (ROOT/ROWP).open(newline="",encoding="utf-8") as h: rows=list(csv.DictReader(h,delimiter="\t"))
+if len(rows)!=1:fail("review row count mismatch")
+r=rows[0]
+expected={'activation_review_id': 'SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-OWNER-ACTIVATION-REVIEW-001', 'candidate_state': 'QUALIFIED_EXPLICIT_OWNER_ACTIVATION_DECISION_CANDIDATE_INPUT_SET_PENDING', 'acceptance_gate': 'SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-OWNER-ACTIVATION-ACCEPTANCE-OPEN', 'statement_sha256': 'aa143dbbd2b188f7c1000cda2e1a6c89bf4e526569c124d0534e5ecdded175d3', 'statement_utf8_bytes': '20', 'statement_received_at': '2026-07-30T16:04:00+09:00', 'statement_timezone': 'Asia/Seoul', 'owner_channel': 'CHAT_OWNER_INSTRUCTION', 'owner_identity_binding': 'CONVERSATION_OWNER_CONTEXT_ONLY_NOT_CRYPTOGRAPHIC_SIGNATURE', 'authorized_review_transaction_count': '1', 'authorized_scope': 'ONE_NON_EXECUTING_EXACT_INPUT_SET_REVIEW_TRANSACTION_ONLY', 'repository_head': 'dcc495d21662724ee4beecb2c431b146b60050c8', 'repository_tree': 'bde1f69387f757dff103cbd130c32ed47b65ffac', 'remote_head': 'dcc495d21662724ee4beecb2c431b146b60050c8', 'live_input_set_state': 'NOT_SUPPLIED_NOT_AUTHORIZED', 'owner_authorization_token_state': 'NOT_SUPPLIED_NOT_AUTHORIZED', 'coordinate_receipt_state': 'NOT_SUPPLIED_NOT_AUTHORIZED', 'revocation_document_state': 'NOT_SUPPLIED_NOT_AUTHORIZED', 'trusted_time_evidence_state': 'NOT_SUPPLIED_NOT_AUTHORIZED', 'execution_authorization_state': 'NOT_SUPPLIED_NOT_AUTHORIZED', 'replay_registry_state': 'NOT_SUPPLIED_NOT_OPENED_NOT_WRITTEN', 'selected_provider_coordinate_set_state': 'NOT_SUPPLIED_NOT_AUTHORIZED', 'provider_open_gate_state': 'CLOSED_NOT_AUTHORIZED', 'execution_authorized': 'NO', 'project_replay_write_authorized': 'NO', 'selected_provider_open_authorized': 'NO', 'selected_provider_read_authorized': 'NO', 'current_live_document_count': '0', 'current_execution_authorization_count': '0', 'current_project_replay_write_count': '0', 'current_selected_provider_open_count': '0', 'current_selected_provider_read_count': '0', 'current_provider_byte_count': '0', 'current_local_supply_map_count': '0', 'current_live_authority_count': '0', 'next_action': 'review-and-accept-explicit-owner-activation-decision-boundary', 'authority_effect': 'EXPLICIT_OWNER_ACTIVATION_STATEMENT_RECORDED_AS_NON_EXECUTING_REVIEW_CANDIDATE_ONE_INPUT_SET_REVIEW_ONLY_ZERO_CURRENT_AUTHORITY', 'prohibited_inference': 'OWNER_ACTIVATION_STATEMENT_DOES_NOT_CREATE_OR_SIGN_OWNER_TOKEN_COORDINATE_RECEIPT_REVOCATION_DOCUMENT_TRUSTED_TIME_EXECUTION_AUTHORIZATION_REPLAY_BASELINE_OR_PROVIDER_COORDINATES_AND_DOES_NOT_AUTHORIZE_EXECUTION_PROVIDER_OPEN_READ_PROJECT_REPLAY_WRITE_OR_LIVE_AUTHORITY'}
+if r!=expected:
+ diff=[k for k in expected if r.get(k)!=expected[k]];fail("review mismatch: "+",".join(diff))
+with (ROOT/META).open(newline="",encoding="utf-8") as h: m={x["key"]:x["value"] for x in csv.DictReader(h,delimiter="\t")}
+if m.get("statement_sha256")!="aa143dbbd2b188f7c1000cda2e1a6c89bf4e526569c124d0534e5ecdded175d3" or m.get("review_sha256")!=hashlib.sha256((ROOT/ROWP).read_bytes()).hexdigest():fail("metadata digest mismatch")
+for k in ("live_input_document_count","execution_authorization_count","project_replay_write_count","selected_provider_open_count","selected_provider_read_count","live_authority_count"):
+ if m.get(k)!="0":fail("metadata authority widening: "+k)
+texts=(ROOT/"docs/current/STATE.yaml").read_text()+"\n"+(ROOT/"docs/current/ACTIVE_TASK.md").read_text()+"\n"+(ROOT/"docs/current/PENDING_ARTIFACTS.yaml").read_text()+"\n"+(ROOT/"docs/current/BRIEF.md").read_text()
+for marker in ("qualified-explicit-owner-activation-decision-candidate-acceptance-open","Task ID: `review-and-accept-explicit-owner-activation-decision-boundary`","NOT_SUPPLIED_NOT_AUTHORIZED"):
+ if marker not in texts:fail("missing current marker: "+marker)
+for forbidden in ("execution_authorized: true","provider_open_gate_state: OPEN","current_live_authority_count: 1"):
+ if forbidden in texts:fail("current authority widening: "+forbidden)
+with tempfile.TemporaryDirectory(prefix="owner-activation-regenerate-",dir=ROOT.parent) as t:
+ subprocess.run([sys.executable,str(ROOT/GEN),"--output-root",t],check=True)
+ for p in (STMT,ROWP,META):
+  if (Path(t)/p).read_bytes()!=(ROOT/p).read_bytes():fail("generator mismatch: "+str(p))
+print("owner activation decision review: PASS: exact owner statement qualified for one non-executing input-set review transaction; input set and current authority remain zero")

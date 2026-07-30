@@ -224,7 +224,7 @@ markers = [
     ),
     (
         "docs/current/ACTIVE_TASK.md",
-        "Task ID: `await-owner-activation-and-exact-selected-provider-local-supply-live-authority-transaction-input-set`",
+        "Task ID: `review-and-accept-explicit-owner-activation-decision-boundary`",
     ),
     (
         "docs/current/BRIEF.md",

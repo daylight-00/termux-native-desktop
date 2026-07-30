@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-28.14`
+> Semantic state version: `2026-07-28.15`
 
 ## Purpose and operational boundary
 
@@ -23,6 +23,11 @@ open member sizes:                0
 exact member bytes:      29,047,112
 receipt reservation:      1,048,576
 final resource preflight: 59,142,800
+
+owner activation decision: QUALIFIED_EXPLICIT_OWNER_ACTIVATION_DECISION_CANDIDATE_INPUT_SET_PENDING
+owner activation statement SHA-256: aa143dbbd2b188f7c1000cda2e1a6c89bf4e526569c124d0534e5ecdded175d3
+owner activation authorized scope: ONE_NON_EXECUTING_EXACT_INPUT_SET_REVIEW_TRANSACTION_ONLY
+live-authority input set: NOT_SUPPLIED_NOT_AUTHORIZED
 materializer object-plan rows:    41
 materializer state rows:          20
 ordered operation rows:           24
@@ -152,3 +157,8 @@ Design acceptance is non-executing. It creates no local supply map, reads no pro
 `SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-DESIGN-ACCEPT-001` accepts the exact six-artifact 20/26/52/30 design boundary and 448 inherited semantic rows while preserving zero live documents, execution authorizations, replay writes, selected-provider opens/reads, provider bytes, local maps and live authority.
 
 The active task is `generate-and-review-non-executing-selected-provider-local-supply-live-authority-transaction-implementation-candidate`. No live documents, replay tuple, selected-provider path or provider byte may be supplied or consumed during implementation review.
+
+
+## Explicit owner activation decision candidate
+
+`SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-OWNER-ACTIVATION-REVIEW-001` records the exact owner statement `바로 진행하자` with SHA-256 `aa143dbbd2b188f7c1000cda2e1a6c89bf4e526569c124d0534e5ecdded175d3` and qualifies it only for one non-executing exact input-set review transaction. It is not a cryptographic signature or execution authorization. All required live documents, replay baseline and selected-provider coordinates remain unsupplied; all current authority counts remain zero. Separate acceptance is required.

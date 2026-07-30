@@ -187,7 +187,7 @@ if receipt.get("future_adapter_success_receipt", {}).get("provider_read_count") 
 required_docs = [
     ("docs/evidence/selected-provider-local-supply-evidence-live-input-adapter-execution-authorization-contract-review.md", "QUALIFIED_NON_EXECUTING_LIVE_INPUT_ADAPTER_EXECUTION_AUTHORIZATION_CONTRACT_CANDIDATE"),
     ("docs/current/BRIEF.md", "live-input adapter / execution-authorization contract"),
-    ("docs/current/ACTIVE_TASK.md", "await-owner-activation-and-exact-selected-provider-local-supply-live-authority-transaction-input-set"),
+    ("docs/current/ACTIVE_TASK.md", "review-and-accept-explicit-owner-activation-decision-boundary"),
     ("docs/current/PENDING_ARTIFACTS.yaml", "live-authority-transaction-input-set"),
 ]
 for rel, marker in required_docs:
