@@ -205,7 +205,7 @@ checks=[
     ('state version','state_version:' in state),
     ('claim count state','total: 95' in state),
     ('SUP-02 state','required_now: 0' in state),
-    ('next task','Task ID: `review-and-accept-explicit-owner-activation-decision-boundary`' in active),
+    ('next task','Task ID: `generate-and-review-non-executing-selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-candidate`' in active),
     ('brief classification','claims:' in brief and '95' in brief),
     ('catalog row','provider-claim-classification\tevidence\tcurrent\tcanonical' in catalog),
     ('status next phase','bounded selected provider composition accepted' in status and '`QUALIFIED_NON_MUTATING_SELECTED_TARGET_MANIFEST`' in status),

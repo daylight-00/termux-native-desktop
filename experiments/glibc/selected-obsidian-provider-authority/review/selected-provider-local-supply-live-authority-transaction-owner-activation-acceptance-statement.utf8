@@ -1,0 +1,1 @@
+v143 owner activation decision을 승인한다. 승인 범위는 exact live input set을 수집·봉인·검토하기 위한 비실행 transaction 1회로 제한하며, provider open/read 또는 live authority execution은 승인하지 않는다.

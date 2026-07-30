@@ -39,7 +39,7 @@ See `docs/decisions/0004-single-main-and-immutable-release-deployment.md`.
 - Legacy `$HOME/gl/build` and `$HOME/gl/opt` paths remain compatibility symlinks only.
 - Application bodies, selected generations, user data and provider contents were preserved.
 
-- The selected-provider local-supply live-authority transaction production implementation is accepted as `ACCEPTED_BOUNDED_NON_EXECUTING_PRODUCTION_CAPABLE_ISOLATED_FIXTURE_LIVE_AUTHORITY_TRANSACTION_IMPLEMENTATION_AUTHORITY`: 128 direct rows, 448 inherited rows, one isolated success, thirty fail-closed cases, five isolated authority-document opens/reads, two isolated replay appends and two isolated result writes. Owner activation and the exact live input set remain unsupplied; selected-provider and live authority effects remain zero.
+- The selected-provider local-supply live-authority transaction production implementation is accepted as `ACCEPTED_BOUNDED_NON_EXECUTING_PRODUCTION_CAPABLE_ISOLATED_FIXTURE_LIVE_AUTHORITY_TRANSACTION_IMPLEMENTATION_AUTHORITY`: 128 direct rows, 448 inherited rows, one isolated success, thirty fail-closed cases, five isolated authority-document opens/reads, two isolated replay appends and two isolated result writes. Owner activation is accepted only for one non-executing exact input-set collection, sealing and review transaction; zero transactions are consumed, the exact input set remains unsupplied, and selected-provider and live authority effects remain zero.
 
 ## Current conclusions
 
@@ -599,3 +599,10 @@ bounded non-executing production-capable selected-provider local-supply live-aut
 The exact owner statement `바로 진행하자` was received at `2026-07-30T16:04:00+09:00` and recorded with SHA-256 `aa143dbbd2b188f7c1000cda2e1a6c89bf4e526569c124d0534e5ecdded175d3` as `QUALIFIED_EXPLICIT_OWNER_ACTIVATION_DECISION_CANDIDATE_INPUT_SET_PENDING`. Its only candidate scope is one non-executing exact input-set review transaction. The live input set remains absent, provider/replay gates remain closed and current live authority remains zero.
 
 selected-provider local-supply live-authority transaction owner activation decision candidate qualified
+
+## Explicit owner activation decision boundary acceptance
+
+`SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-OWNER-ACTIVATION-ACCEPT-001` freezes the exact v143 candidate and the explicit approval statement. It accepts one non-executing exact input-set collection, sealing and review transaction only; zero transactions are consumed and one remains. It does not supply any live document, open/read a selected-provider path, mutate project replay or authorize live execution.
+
+explicit owner activation decision accepted for one non-executing exact input-set collection, sealing and review transaction
+

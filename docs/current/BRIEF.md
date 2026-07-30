@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-28.15`
+> Semantic state version: `2026-07-28.16`
 
 ## Purpose and operational boundary
 
@@ -24,9 +24,13 @@ exact member bytes:      29,047,112
 receipt reservation:      1,048,576
 final resource preflight: 59,142,800
 
-owner activation decision: QUALIFIED_EXPLICIT_OWNER_ACTIVATION_DECISION_CANDIDATE_INPUT_SET_PENDING
+owner activation decision: QUALIFIED_EXPLICIT_OWNER_ACTIVATION_DECISION_CANDIDATE_HISTORICAL
+owner activation decision acceptance: ACCEPTED_EXPLICIT_ONE_NON_EXECUTING_EXACT_INPUT_SET_COLLECTION_SEALING_AND_REVIEW_TRANSACTION_ONLY
 owner activation statement SHA-256: aa143dbbd2b188f7c1000cda2e1a6c89bf4e526569c124d0534e5ecdded175d3
-owner activation authorized scope: ONE_NON_EXECUTING_EXACT_INPUT_SET_REVIEW_TRANSACTION_ONLY
+owner activation acceptance statement SHA-256: b0e9fb7171f3dec721b505ad47acc09fa74e986ed4a06ff9ba09e682461d1af7
+owner activation authorized scope: ONE_NON_EXECUTING_EXACT_INPUT_SET_COLLECTION_SEALING_AND_REVIEW_TRANSACTION_ONLY
+owner activation transactions accepted / consumed / remaining: 1 / 0 / 1
+exact input-set collection candidate: NOT_GENERATED_NOT_AUTHORIZED
 live-authority input set: NOT_SUPPLIED_NOT_AUTHORIZED
 materializer object-plan rows:    41
 materializer state rows:          20
@@ -78,7 +82,7 @@ production transaction isolated replay appends / result writes: 2 / 2
 production transaction selected-provider opens / reads / provider bytes / project replay writes / live authority: 0 / 0 / 0 / 0 / 0
 live authority transaction production implementation acceptance: ACCEPTED_BOUNDED_NON_EXECUTING_PRODUCTION_CAPABLE_ISOLATED_FIXTURE_IMPLEMENTATION_AUTHORITY
 production transaction acceptance gate: ACCEPTED_CLOSED_EXACT_BOUNDARY
-owner activation / exact live-authority input set: NOT_SUPPLIED_NOT_AUTHORIZED
+owner activation / exact live-authority input set: ACCEPTED_ONE_NON_EXECUTING_COLLECTION_REVIEW_ONLY / NOT_SUPPLIED_NOT_AUTHORIZED
 live authority implementation current live documents / replay writes / selected-provider opens / reads / provider bytes / local maps / live authority: 0 / 0 / 0 / 0 / 0 / 0 / 0
 evidence design inputs/states:  12 / 16
 evidence design operations/failures: 32 / 18
@@ -156,9 +160,14 @@ Design acceptance is non-executing. It creates no local supply map, reads no pro
 
 `SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-DESIGN-ACCEPT-001` accepts the exact six-artifact 20/26/52/30 design boundary and 448 inherited semantic rows while preserving zero live documents, execution authorizations, replay writes, selected-provider opens/reads, provider bytes, local maps and live authority.
 
-The active task is `generate-and-review-non-executing-selected-provider-local-supply-live-authority-transaction-implementation-candidate`. No live documents, replay tuple, selected-provider path or provider byte may be supplied or consumed during implementation review.
+The active task is `generate-and-review-non-executing-selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-candidate`. The collector must remain explicit-path-only and fail closed before provider open/read or project replay mutation; no live input is supplied during repository review.
 
 
 ## Explicit owner activation decision candidate
 
 `SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-OWNER-ACTIVATION-REVIEW-001` records the exact owner statement `바로 진행하자` with SHA-256 `aa143dbbd2b188f7c1000cda2e1a6c89bf4e526569c124d0534e5ecdded175d3` and qualifies it only for one non-executing exact input-set review transaction. It is not a cryptographic signature or execution authorization. All required live documents, replay baseline and selected-provider coordinates remain unsupplied; all current authority counts remain zero. Separate acceptance is required.
+
+## Explicit owner activation decision boundary acceptance
+
+`SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-OWNER-ACTIVATION-ACCEPT-001` accepts the exact v143 candidate and the explicit approval statement with SHA-256 `b0e9fb7171f3dec721b505ad47acc09fa74e986ed4a06ff9ba09e682461d1af7`. The accepted scope is one non-executing exact input-set collection, sealing and review transaction only. Zero transactions are consumed and one remains. No input document, provider coordinate, replay baseline or execution authorization is supplied; selected-provider and live-authority effects remain zero.
+

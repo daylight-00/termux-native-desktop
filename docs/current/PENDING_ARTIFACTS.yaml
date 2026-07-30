@@ -1,30 +1,42 @@
 schema_version: 1
-state_version: 2026-07-28.15
+state_version: 2026-07-28.16
 
 blocking:
   - id: live-authority-transaction-input-set
     state: not-supplied-not-authorized
-    note: The production implementation is accepted and an explicit owner activation statement is under separate review; the immutable live-authority transaction input set remains unsupplied and unauthorized.
+    note: Owner activation is accepted for one non-executing collection, sealing and review transaction, but the immutable live-authority input set remains unsupplied and unauthorized.
+  - id: exact-input-set-collection-candidate
+    state: not-generated-not-authorized
+    note: The deterministic explicit-path-only collector, canonical submission envelope and fail-closed sealing contract must be generated and reviewed before any live input is received.
   - id: owner-activation-decision
-    state: qualified-explicit-candidate-acceptance-open
-    note: The exact statement `바로 진행하자` is recorded for one non-executing exact input-set review transaction only; separate acceptance is required.
+    state: accepted-closed-exact-boundary
+    note: The exact v143 candidate and explicit approval are accepted for one non-executing input-set collection, sealing and review transaction only; zero transactions are consumed and one remains.
+  - id: owner-authorization-token
+    state: not-supplied-not-authorized
+    note: No owner authorization token has been supplied, generated or signed.
+  - id: coordinate-receipt
+    state: not-supplied-not-authorized
+    note: No canonical 41-row coordinate receipt has been supplied or accepted.
+  - id: revocation-document
+    state: not-supplied-not-authorized
+    note: No revocation-status document has been supplied or accepted.
+  - id: trusted-time-evidence
+    state: not-supplied-not-authorized
+    note: No trusted-time evidence or bounded validity window has been supplied or accepted.
   - id: project-replay-registry
     state: not-supplied-not-opened-not-written
-    note: The accepted implementation used only isolated fixture replay storage. No project replay-registry identity or initial integrity state is supplied.
+    note: No exact project replay-registry identity or initial integrity state is supplied. The accepted fixture implementation does not authorize opening or writing project replay state.
   - id: selected-provider-coordinate-set
     state: not-supplied-not-authorized
-    note: No live selected-provider coordinate set or provider byte has been supplied, opened, read or localized.
+    note: No exact selected-provider coordinate set or provider baseline is supplied. Search, inference, open, read and provider-byte hashing remain forbidden.
   - id: execution-authorization
-    state: not-issued-not-authorized
-    note: Production implementation acceptance does not issue or activate execution authorization and does not open the provider-read gate.
+    state: not-supplied-not-authorized
+    note: Owner activation acceptance does not issue execution authorization and does not open the provider-read gate.
   - id: local-supply-map-evidence
     state: not-produced-not-authorized
     note: No live authority documents, replay tuple, selected-provider path or provider byte has been supplied, opened, read, localized or bound.
 
 non_blocking:
   - id: downstream-application-data-service-closure
-    state: intentionally-deferred-until-provider-population
-    note: Fontconfig configuration/cache, locale, GSettings/accessibility services, D-Bus/TLS policy, GTK modules/loaders and the Thai dictionary remain separate capability work after the selected provider bytes are safely localized.
-  - id: glibc-substrate-lifecycle
-    state: intentionally-separate
-    note: The glibc 2.42 hold and known 2.43 incompatibility require an independent substrate lifecycle and must not be folded into provider materialization.
+    state: retained-separate
+    note: Application, data and service closure remains outside the selected-provider live-authority transaction input-set collection boundary.

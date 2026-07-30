@@ -70,7 +70,7 @@ markers=[
  ('doc continuity','libxkbcommon.so.0 -> libxkbcommon.so.0.8.0' in doc),
  ('state route','libxkbcommon_provider_authority_review: docs/evidence/libxkbcommon-bounded-provider-authority.md' in state),
  ('state accepted','provider_authority: accepted-bounded-provider' in state and 'libxkbcommon_provider:' in state),
- ('next task','Task ID: `review-and-accept-explicit-owner-activation-decision-boundary`' in active),
+ ('next task','Task ID: `generate-and-review-non-executing-selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-candidate`' in active),
  ('catalog','libxkbcommon-bounded-provider-authority\tevidence\tcurrent\tcanonical' in catalog),
 ]
 for label,ok in markers:
