@@ -39,6 +39,8 @@ See `docs/decisions/0004-single-main-and-immutable-release-deployment.md`.
 - Legacy `$HOME/gl/build` and `$HOME/gl/opt` paths remain compatibility symlinks only.
 - Application bodies, selected generations, user data and provider contents were preserved.
 
+- The selected-provider local-supply live-authority transaction production implementation candidate qualified as `QUALIFIED_NON_EXECUTING_PRODUCTION_CAPABLE_ISOLATED_FIXTURE_LIVE_AUTHORITY_TRANSACTION_IMPLEMENTATION_CANDIDATE`: 128 direct coverage rows, 448 inherited semantic rows, one isolated success, thirty fail-closed cases, five isolated authority-document opens/reads, two isolated replay appends, two isolated result writes, and zero selected-provider opens/reads, provider bytes, project replay writes, local maps or live authority. Separate acceptance is required.
+
 ## Current conclusions
 
 - Existing prototype, ownership, ABI, graphics, selected-generation, passive-runtime, N2/N3, source-recipe, and exact binary-artifact evidence remain valid.

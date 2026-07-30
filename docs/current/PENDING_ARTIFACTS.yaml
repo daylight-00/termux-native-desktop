@@ -1,10 +1,10 @@
 schema_version: 1
-state_version: 2026-07-28.12
+state_version: 2026-07-28.13
 
 blocking:
-  - id: live-authority-transaction-production-implementation
-    state: not-generated-not-authorized
-    note: The synthetic implementation boundary is accepted as an immutable oracle. A separate production-capable candidate has not been generated or authorized, and all current authority counts remain zero.
+  - id: live-authority-transaction-production-implementation-acceptance
+    state: open-separate-acceptance-required
+    note: The exact six-artifact production-capable isolated-fixture candidate is qualified with 128 direct rows, 448 inherited rows, one success, thirty fail-closed cases and zero selected-provider or live authority. Separate acceptance is required.
   - id: local-supply-map-evidence
     state: not-produced-not-authorized
     note: No live authority documents, replay tuple, selected-provider path or provider byte has been supplied, opened, read, localized or bound.

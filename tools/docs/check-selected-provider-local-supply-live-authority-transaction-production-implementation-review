@@ -1,0 +1,270 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import ast
+import csv
+import hashlib
+import importlib.util
+import json
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+BASE = Path("experiments/glibc/selected-obsidian-provider-authority")
+REVIEW = BASE / "review"
+IMPLEMENTATION = BASE / "implementation"
+SOURCE = IMPLEMENTATION / "selected_provider_local_supply_live_authority_transaction_production_candidate.py"
+PLAN = REVIEW / "selected-provider-local-supply-live-authority-transaction-production-implementation-isolated-fixture-plan.json"
+NEGATIVE = REVIEW / "selected-provider-local-supply-live-authority-transaction-production-implementation-negative-cases.json"
+COVERAGE = REVIEW / "selected-provider-local-supply-live-authority-transaction-production-implementation-coverage.tsv"
+SUCCESS = REVIEW / "selected-provider-local-supply-live-authority-transaction-production-implementation-isolated-success.json"
+METADATA = REVIEW / "selected-provider-local-supply-live-authority-transaction-production-implementation-metadata.tsv"
+GENERATOR = BASE / "recipe/generate-selected-provider-local-supply-live-authority-transaction-production-implementation.py"
+
+
+def fail(message: str) -> None:
+    raise SystemExit("live-authority transaction production implementation: FAIL: " + message)
+
+
+def sha(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def load(path: Path):
+    spec = importlib.util.spec_from_file_location("live_authority_production_check", path)
+    if spec is None or spec.loader is None:
+        fail("unable to load production implementation")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+for relative in (SOURCE, PLAN, NEGATIVE, COVERAGE, SUCCESS, METADATA, GENERATOR):
+    if not (ROOT / relative).is_file():
+        fail("missing " + str(relative))
+
+source_text = (ROOT / SOURCE).read_text(encoding="utf-8")
+for forbidden in (
+    "selected_provider_local_supply_live_authority_transaction_candidate",
+    "selected_provider_local_supply_live_evidence_orchestration_production_candidate",
+    "subprocess",
+    "socket",
+    "requests",
+    "urllib.request",
+    "glob.glob",
+):
+    if forbidden in source_text:
+        fail("forbidden import/invocation/search surface: " + forbidden)
+try:
+    tree = ast.parse(source_text)
+except SyntaxError as exc:
+    fail(f"source syntax error: {exc}")
+for node in ast.walk(tree):
+    if isinstance(node, (ast.Import, ast.ImportFrom)):
+        names = [alias.name for alias in node.names]
+        if any(name.split(".")[0] in {"subprocess", "socket", "requests", "urllib", "glob"} for name in names):
+            fail(f"forbidden imported module: {names}")
+
+plan = json.loads((ROOT / PLAN).read_text())
+negative = json.loads((ROOT / NEGATIVE).read_text())
+success = json.loads((ROOT / SUCCESS).read_text())
+if plan.get("execution_marker") != "ISOLATED_TEMP_AUTHORITY_DOCUMENTS_REPLAY_AND_PROVIDER_METADATA_ONLY_NO_SELECTED_PROVIDER_AUTHORITY":
+    fail("execution marker mismatch")
+if (
+    plan.get("document_role_count") != 5
+    or plan.get("coordinate_row_count") != 41
+    or plan.get("coordinate_row_field_count") != 10
+    or plan.get("replay_tuple_field_count") != 10
+):
+    fail("fixture cardinality mismatch")
+if len(plan.get("coordinate_rows", [])) != 41:
+    fail("coordinate row count mismatch")
+if [row.get("sequence") for row in plan["coordinate_rows"]] != list(range(1, 42)):
+    fail("coordinate sequence mismatch")
+for key in (
+    "selected_provider_path_authority", "selected_provider_open_authority",
+    "selected_provider_read_authority", "provider_byte_authority",
+    "project_replay_write_authority", "local_supply_map_authority", "live_authority",
+):
+    if plan.get(key) != "NONE":
+        fail("fixture authority widening: " + key)
+if negative.get("case_count") != 30 or len(negative.get("cases", [])) != 30:
+    fail("negative case count mismatch")
+if [case.get("failure_id") for case in negative["cases"]] != [f"LSLA-FAIL-{index:03d}" for index in range(1, 31)]:
+    fail("negative failure mapping mismatch")
+
+with (ROOT / COVERAGE).open(newline="", encoding="utf-8") as handle:
+    coverage = list(csv.DictReader(handle, delimiter="\t"))
+counts = {
+    kind: sum(row["coverage_kind"] == kind for row in coverage)
+    for kind in ("INPUT", "STATE", "OPERATION", "FAILURE")
+}
+if len(coverage) != 128 or counts != {"INPUT": 20, "STATE": 26, "OPERATION": 52, "FAILURE": 30}:
+    fail(f"coverage mismatch: {counts}")
+if len({(row["coverage_kind"], row["source_id"]) for row in coverage}) != 128:
+    fail("coverage identity duplication")
+if any(
+    row["authority_effect"] != "ZERO_LIVE_DOCUMENTS_PROJECT_REPLAY_WRITES_SELECTED_PROVIDER_OPENS_READS_PROVIDER_BYTES_LOCAL_MAPS_LIVE_AUTHORITY"
+    for row in coverage
+):
+    fail("coverage authority widening")
+
+required_success = {
+    "pass": True,
+    "decision": "QUALIFIED_NON_EXECUTING_PRODUCTION_CAPABLE_ISOLATED_FIXTURE_LIVE_AUTHORITY_TRANSACTION_IMPLEMENTATION_CANDIDATE",
+    "document_role_count": 5,
+    "coordinate_row_count": 41,
+    "replay_tuple_field_count": 10,
+    "completed_operation_count": 52,
+    "isolated_document_open_count": 5,
+    "isolated_document_read_count": 5,
+    "isolated_replay_open_count": 1,
+    "isolated_replay_read_count": 1,
+    "isolated_replay_append_count": 2,
+    "isolated_result_write_count": 2,
+    "selected_provider_open_count": 0,
+    "selected_provider_read_count": 0,
+    "provider_byte_count": 0,
+    "project_replay_write_count": 0,
+    "live_document_count": 0,
+    "execution_authorization_count": 0,
+    "local_supply_map_count": 0,
+    "live_authority_count": 0,
+    "provider_open_gate_armed": False,
+    "accepted_orchestration_invoked": False,
+    "accepted_synthetic_oracle_invoked": False,
+}
+for key, value in required_success.items():
+    if success.get(key) != value:
+        fail(f"success mismatch: {key}={success.get(key)!r}")
+
+with (ROOT / METADATA).open(newline="", encoding="utf-8") as handle:
+    metadata = {row["key"]: row["value"] for row in csv.DictReader(handle, delimiter="\t")}
+expected_metadata = {
+    "candidate_state": "QUALIFIED_NON_EXECUTING_PRODUCTION_CAPABLE_ISOLATED_FIXTURE_LIVE_AUTHORITY_TRANSACTION_IMPLEMENTATION_CANDIDATE",
+    "production_implementation_acceptance_gate": "SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-PRODUCTION-IMPLEMENTATION-ACCEPTANCE-OPEN",
+    "input_coverage_count": "20",
+    "state_coverage_count": "26",
+    "operation_coverage_count": "52",
+    "failure_coverage_count": "30",
+    "total_coverage_count": "128",
+    "inherited_semantic_coverage_count": "448",
+    "isolated_success_case_count": "1",
+    "isolated_negative_case_count": "30",
+    "isolated_document_role_count": "5",
+    "isolated_coordinate_row_count": "41",
+    "isolated_replay_tuple_field_count": "10",
+    "isolated_document_open_count": "5",
+    "isolated_document_read_count": "5",
+    "isolated_replay_append_count": "2",
+    "isolated_result_write_count": "2",
+    "selected_provider_open_count": "0",
+    "selected_provider_read_count": "0",
+    "provider_byte_count": "0",
+    "project_replay_write_count": "0",
+    "current_live_authority_count": "0",
+    "provider_open_gate_armed": "NO",
+    "accepted_orchestration_invocation": "FORBIDDEN_NOT_IMPORTED_NOT_INVOKED",
+    "accepted_synthetic_oracle_invocation": "FORBIDDEN_NOT_IMPORTED_NOT_INVOKED",
+    "next_action": "review-and-accept-non-executing-selected-provider-local-supply-live-authority-transaction-production-implementation-candidate-boundary",
+}
+for key, value in expected_metadata.items():
+    if metadata.get(key) != value:
+        fail(f"metadata mismatch: {key}={metadata.get(key)!r}")
+for relative, key in (
+    (SOURCE, "implementation_source_sha256"),
+    (PLAN, "isolated_fixture_plan_sha256"),
+    (NEGATIVE, "negative_cases_sha256"),
+    (COVERAGE, "implementation_coverage_sha256"),
+    (SUCCESS, "isolated_success_sha256"),
+):
+    if metadata.get(key) != sha(ROOT / relative):
+        fail("metadata digest mismatch: " + key)
+
+module = load(ROOT / SOURCE)
+module.verify_source_digests(ROOT)
+with tempfile.TemporaryDirectory(prefix="live-authority-production-success-", dir=ROOT.parent) as temp:
+    manifest = module.materialize_isolated_fixture(plan, Path(temp) / "fixture", "success", ROOT)
+    result = module.normalize_result(module.execute_manifest(manifest))
+    if result != success:
+        differing = sorted(key for key in set(result) | set(success) if result.get(key) != success.get(key))
+        fail(f"success regeneration mismatch: {differing}")
+for case in negative["cases"]:
+    with tempfile.TemporaryDirectory(prefix="live-authority-production-negative-", dir=ROOT.parent) as temp:
+        manifest = module.materialize_isolated_fixture(plan, Path(temp) / "fixture", case["case"], ROOT)
+        result = module.execute_manifest(manifest)
+        if result.get("failure_id") != case["failure_id"]:
+            fail(f"negative mismatch: {case['case']} => {result.get('failure_id')}: {result.get('failure_detail')}")
+        for key in (
+            "selected_provider_open_count", "selected_provider_read_count",
+            "provider_byte_count", "project_replay_write_count", "live_authority_count",
+        ):
+            if result.get(key) != 0:
+                fail(f"negative authority widening: {case['case']} {key}")
+
+with tempfile.TemporaryDirectory(prefix="live-authority-production-regenerate-", dir=ROOT.parent) as temp:
+    subprocess.run(
+        [sys.executable, str(ROOT / GENERATOR), "--repo-root", str(ROOT), "--output-root", temp],
+        check=True,
+        stdout=subprocess.DEVNULL,
+    )
+    generated = Path(temp)
+    for relative in (SOURCE, PLAN, NEGATIVE, COVERAGE, SUCCESS, METADATA):
+        candidate = generated / relative
+        if not candidate.is_file() or candidate.read_bytes() != (ROOT / relative).read_bytes():
+            fail("generator reproducibility mismatch: " + str(relative))
+
+markers = [
+    (
+        "docs/evidence/selected-provider-local-supply-live-authority-transaction-production-implementation-review.md",
+        "QUALIFIED_NON_EXECUTING_PRODUCTION_CAPABLE_ISOLATED_FIXTURE_LIVE_AUTHORITY_TRANSACTION_IMPLEMENTATION_CANDIDATE",
+    ),
+    (
+        "docs/current/ACTIVE_TASK.md",
+        "Task ID: `review-and-accept-non-executing-selected-provider-local-supply-live-authority-transaction-production-implementation-candidate-boundary`",
+    ),
+    (
+        "docs/current/BRIEF.md",
+        "live authority transaction production implementation: QUALIFIED_NON_EXECUTING_PRODUCTION_CAPABLE_ISOLATED_FIXTURE_CANDIDATE",
+    ),
+    (
+        "docs/current/STATE.yaml",
+        "live_authority_transaction_production_implementation: qualified-non-executing-production-capable-isolated-fixture-candidate",
+    ),
+    (
+        "docs/current/PENDING_ARTIFACTS.yaml",
+        "live-authority-transaction-production-implementation-acceptance",
+    ),
+    ("STATUS.md", "live-authority transaction production implementation candidate qualified"),
+    (
+        "docs/catalog.tsv",
+        "selected-provider-local-supply-live-authority-transaction-production-implementation-review\tevidence\tcurrent\tcanonical",
+    ),
+]
+for relative, marker in markers:
+    if marker not in (ROOT / relative).read_text(encoding="utf-8"):
+        fail("current documentation marker missing: " + relative)
+texts = "\n".join(
+    (ROOT / relative).read_text(encoding="utf-8")
+    for relative in (
+        "docs/current/STATE.yaml", "docs/current/BRIEF.md",
+        "docs/current/ACTIVE_TASK.md", "docs/current/PENDING_ARTIFACTS.yaml", "STATUS.md",
+    )
+)
+for forbidden in (
+    "selected_provider_open_count: 1", "selected_provider_read_count: 1",
+    "provider_byte_count: 1", "project_replay_write_count: 1",
+    "live_authority_count: 1", "LIVE_EXECUTION_AUTHORIZED",
+):
+    if forbidden in texts:
+        fail("current authority widening: " + forbidden)
+
+print(
+    "live-authority transaction production implementation: PASS: "
+    "128-row production-capable isolated-fixture coverage, 1 success, 30 fail-closed cases, "
+    "5 document opens/reads, 2 isolated replay appends, 2 isolated result writes, "
+    "zero selected-provider opens/reads, provider bytes, project replay writes and live authority"
+)

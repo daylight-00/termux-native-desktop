@@ -204,3 +204,5 @@ The accepted live-input adapter and execution-authorization contract now has a r
 `SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-EVIDENCE-ORCHESTRATION-PRODUCTION-IMPLEMENTATION-REVIEW-001` qualifies a separate implementation candidate with 18 inputs, 24 states, 48 operations, 28 failures and 118 coverage rows. It composes the accepted authorization, adapter and read-only evidence boundaries without importing or invoking their synthetic CLIs.
 
 The candidate exercises real component `lstat`, `O_NOFOLLOW`, stable `fstat`, streaming SHA-256 and ELF64/AArch64 `DT_SONAME` validation against 41 test-harness temporary files. Selected-provider opens, selected-provider reads, candidate filesystem writes, persistent replay writes and live authority remain zero. Separate exact acceptance is required before any further authority review.
+
+- Current live-authority transaction production implementation candidate qualified with 128 direct / 448 inherited coverage, isolated document/replay/receipt effects only, and zero selected-provider or live authority; separate acceptance remains open.

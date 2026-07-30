@@ -1,9 +1,9 @@
 schema_version: 1
-state_version: 2026-07-28.12
+state_version: 2026-07-28.13
 updated_on: 2026-07-29
 
 project:
-  phase: non-executing-selected-provider-local-supply-live-authority-transaction-production-implementation-review
+  phase: non-executing-selected-provider-local-supply-live-authority-transaction-production-implementation-candidate-acceptance-review
   status: active
 
 repository:
@@ -73,6 +73,7 @@ documentation:
   local_supply_live_authority_transaction_design_review: docs/evidence/selected-provider-local-supply-live-authority-transaction-design-review.md
   local_supply_live_authority_transaction_implementation_review: docs/evidence/selected-provider-local-supply-live-authority-transaction-implementation-review.md
   local_supply_live_authority_transaction_implementation_acceptance: docs/evidence/selected-provider-local-supply-live-authority-transaction-implementation-boundary-acceptance.md
+  local_supply_live_authority_transaction_production_implementation_review: docs/evidence/selected-provider-local-supply-live-authority-transaction-production-implementation-review.md
   local_supply_evidence_authorization_issuance_coordinate_production_implementation_review: docs/evidence/selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-implementation-review.md
   local_supply_evidence_authorization_issuance_coordinate_production_implementation_acceptance: docs/evidence/selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-implementation-boundary-acceptance.md
   local_supply_evidence_live_input_adapter_execution_authorization_contract_review: docs/evidence/selected-provider-local-supply-evidence-live-input-adapter-execution-authorization-contract-review.md
@@ -111,7 +112,7 @@ documentation:
 
 provider_authority:
   workstream: production-capable-isolated-fixture-live-evidence-orchestration-implementation-live-authority-transaction-design-and-synthetic-implementation-accepted-production-transaction-implementation-open
-  boundary: thirty-one-bounded-provider-roots-forty-two-row-composition-eighty-two-row-target-policy-forty-one-exact-objects-final-resource-preflight-59142800-materializer-design-local-supply-contract-read-only-evidence-transaction-design-owner-token-coordinate-contract-and-issuance-coordinate-production-design-accepted-synthetic-implementation-accepted-as-immutable-oracle-live-input-adapter-execution-authorization-contract-and-synthetic-adapter-implementation-accepted-164-coverage-one-success-twenty-failures-zero-live-inputs-zero-provider-reads-zero-writes-evidence-transaction-synthetic-implementation-accepted-78-coverage-one-success-eighteen-failures-zero-provider-opens-reads-writes-live-authority-production-orchestration-implementation-accepted-118-coverage-one-success-twenty-eight-failures-forty-one-isolated-opens-reads-zero-selected-provider-opens-reads-zero-writes-zero-live-authority-live-authority-transaction-design-and-synthetic-implementation-accepted-128-direct-448-inherited-five-document-roles-ten-replay-fields-zero-live-authority-production-implementation-not-generated-root-creation-population-materialization-publication-deployment-and-activation-blocked
+  boundary: thirty-one-bounded-provider-roots-forty-two-row-composition-eighty-two-row-target-policy-forty-one-exact-objects-final-resource-preflight-59142800-materializer-design-local-supply-contract-read-only-evidence-transaction-design-owner-token-coordinate-contract-and-issuance-coordinate-production-design-accepted-synthetic-implementation-accepted-as-immutable-oracle-live-input-adapter-execution-authorization-contract-and-synthetic-adapter-implementation-accepted-164-coverage-one-success-twenty-failures-zero-live-inputs-zero-provider-reads-zero-writes-evidence-transaction-synthetic-implementation-accepted-78-coverage-one-success-eighteen-failures-zero-provider-opens-reads-writes-live-authority-production-orchestration-implementation-accepted-118-coverage-one-success-twenty-eight-failures-forty-one-isolated-opens-reads-zero-selected-provider-opens-reads-zero-writes-zero-live-authority-live-authority-transaction-design-and-synthetic-implementation-accepted-128-direct-448-inherited-five-document-roles-ten-replay-fields-zero-live-authority-production-implementation-qualified-128-direct-448-inherited-one-success-thirty-failures-five-isolated-document-opens-reads-two-isolated-replay-appends-two-isolated-result-writes-zero-selected-provider-opens-reads-zero-provider-bytes-zero-project-replay-writes-zero-live-authority-root-creation-population-materialization-publication-deployment-and-activation-blocked
   claim_inventory:
     total: 95
     class_a: 36
@@ -524,7 +525,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: generate-and-review-non-executing-selected-provider-local-supply-live-authority-transaction-production-implementation-candidate
+  id: review-and-accept-non-executing-selected-provider-local-supply-live-authority-transaction-production-implementation-candidate-boundary
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:
@@ -726,8 +727,34 @@ selected_target_policy:
   live_authority_transaction_implementation_provider_bytes: 0
   live_authority_transaction_implementation_local_supply_maps: 0
   live_authority_transaction_implementation_live_authority: 0
-  live_authority_transaction_production_implementation_state: not-generated-not-authorized
-  next_task: generate-and-review-non-executing-selected-provider-local-supply-live-authority-transaction-production-implementation-candidate
+  live_authority_transaction_production_implementation_reviewed: true
+  live_authority_transaction_production_implementation: qualified-non-executing-production-capable-isolated-fixture-candidate
+  live_authority_transaction_production_implementation_review_id: SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-PRODUCTION-IMPLEMENTATION-REVIEW-001
+  live_authority_transaction_production_implementation_acceptance_gate: open-separate-acceptance-required
+  live_authority_transaction_production_implementation_inputs: 20
+  live_authority_transaction_production_implementation_states: 26
+  live_authority_transaction_production_implementation_operations: 52
+  live_authority_transaction_production_implementation_failures: 30
+  live_authority_transaction_production_implementation_coverage: 128
+  live_authority_transaction_production_implementation_inherited_semantic_coverage: 448
+  live_authority_transaction_production_implementation_success_cases: 1
+  live_authority_transaction_production_implementation_failure_cases: 30
+  live_authority_transaction_production_implementation_document_roles: 5
+  live_authority_transaction_production_implementation_coordinate_rows: 41
+  live_authority_transaction_production_implementation_replay_fields: 10
+  live_authority_transaction_production_implementation_isolated_document_opens: 5
+  live_authority_transaction_production_implementation_isolated_document_reads: 5
+  live_authority_transaction_production_implementation_isolated_replay_appends: 2
+  live_authority_transaction_production_implementation_isolated_result_writes: 2
+  live_authority_transaction_production_implementation_selected_provider_opens: 0
+  live_authority_transaction_production_implementation_selected_provider_reads: 0
+  live_authority_transaction_production_implementation_provider_bytes: 0
+  live_authority_transaction_production_implementation_project_replay_writes: 0
+  live_authority_transaction_production_implementation_live_documents: 0
+  live_authority_transaction_production_implementation_execution_authorizations: 0
+  live_authority_transaction_production_implementation_local_supply_maps: 0
+  live_authority_transaction_production_implementation_live_authority: 0
+  next_task: review-and-accept-non-executing-selected-provider-local-supply-live-authority-transaction-production-implementation-candidate-boundary
 
   retained_result_coordinate_generation_contract_review:
     review_id: RETAINED-SUPPLY-COORDINATE-GENERATION-CONTRACT-001
