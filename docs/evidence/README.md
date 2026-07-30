@@ -119,3 +119,5 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 
 - [`selected-provider-local-supply-live-authority-transaction-design-boundary-acceptance.md`](selected-provider-local-supply-live-authority-transaction-design-boundary-acceptance.md) — exact six-artifact 20/26/52/30 live-authority transaction design acceptance with 448 inherited coverage and zero current live authority.
 - `selected-provider-local-supply-live-authority-transaction-implementation-review.md` — exact synthetic-only 128-row live-authority transaction implementation candidate with zero current authority.
+
+- [`selected-provider-local-supply-live-authority-transaction-implementation-boundary-acceptance.md`](selected-provider-local-supply-live-authority-transaction-implementation-boundary-acceptance.md) — exact six-artifact 128-row synthetic-only live-authority transaction implementation acceptance with 448 inherited coverage and zero current authority.

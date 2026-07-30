@@ -1,0 +1,59 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+import csv,hashlib,json,subprocess,sys,tempfile
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[2]
+BASE=Path("experiments/glibc/selected-obsidian-provider-authority")
+REVIEW=BASE/"review"
+NAME='selected-provider-local-supply-live-authority-transaction-implementation-boundary-acceptance.tsv'
+ARTIFACTS={'implementation/selected_provider_local_supply_live_authority_transaction_candidate.py': '031fe38849d46c36c99f66d2feb9792de0b3ce88ae71cec0a578dd33541b9ce2', 'review/selected-provider-local-supply-live-authority-transaction-implementation-synthetic-fixture.json': '45f920969ed277baf48d0a24ebc419c31ac86d1d01ca82b292a08bd94ce4c64a', 'review/selected-provider-local-supply-live-authority-transaction-implementation-negative-cases.json': '9d680791b66507507b0886ff71f3b43749283d36dd8bb0349053a9abcd46d748', 'review/selected-provider-local-supply-live-authority-transaction-implementation-coverage.tsv': '1f0887ce0fe90281a21fee0a72afbbb43a86cf9b9232c1e7bee4765c92f831b9', 'review/selected-provider-local-supply-live-authority-transaction-implementation-synthetic-success.json': 'd37fed8c7616967b7254ec1bdddb95cbd80d8cd850593840b4591070813abdd5', 'review/selected-provider-local-supply-live-authority-transaction-implementation-metadata.tsv': '985e0dc8fde66e2aff9b26c6bd64adcdc25d0f8b2fd2473e3931ef2dab66d8e5'}
+EXPECTED={'acceptance_id': 'SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-IMPLEMENTATION-ACCEPT-001', 'decision': 'ACCEPTED_BOUNDED_NON_EXECUTING_SYNTHETIC_LIVE_AUTHORITY_TRANSACTION_IMPLEMENTATION_AUTHORITY', 'candidate_review_id': 'SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-IMPLEMENTATION-REVIEW-001', 'source_implementation_sha256': '031fe38849d46c36c99f66d2feb9792de0b3ce88ae71cec0a578dd33541b9ce2', 'source_synthetic_fixture_sha256': '45f920969ed277baf48d0a24ebc419c31ac86d1d01ca82b292a08bd94ce4c64a', 'source_negative_cases_sha256': '9d680791b66507507b0886ff71f3b43749283d36dd8bb0349053a9abcd46d748', 'source_coverage_sha256': '1f0887ce0fe90281a21fee0a72afbbb43a86cf9b9232c1e7bee4765c92f831b9', 'source_synthetic_success_sha256': 'd37fed8c7616967b7254ec1bdddb95cbd80d8cd850593840b4591070813abdd5', 'source_metadata_sha256': '985e0dc8fde66e2aff9b26c6bd64adcdc25d0f8b2fd2473e3931ef2dab66d8e5', 'accepted_input_coverage_count': '20', 'accepted_state_coverage_count': '26', 'accepted_operation_coverage_count': '52', 'accepted_failure_coverage_count': '30', 'accepted_total_coverage_count': '128', 'accepted_inherited_semantic_coverage_count': '448', 'accepted_synthetic_success_case_count': '1', 'accepted_synthetic_negative_case_count': '30', 'accepted_synthetic_document_role_count': '5', 'accepted_synthetic_coordinate_row_count': '41', 'accepted_synthetic_coordinate_row_field_count': '10', 'accepted_synthetic_replay_tuple_field_count': '10', 'accepted_current_live_document_count': '0', 'accepted_current_execution_authorization_count': '0', 'accepted_current_replay_write_count': '0', 'accepted_current_selected_provider_open_count': '0', 'accepted_current_selected_provider_read_count': '0', 'accepted_current_provider_byte_count': '0', 'accepted_current_local_supply_map_count': '0', 'accepted_current_live_authority_count': '0', 'candidate_issue_closed': 'SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-IMPLEMENTATION-ACCEPTANCE-OPEN', 'accepted_authority_state': 'ACCEPTED_BOUNDED_NON_EXECUTING_SYNTHETIC_LIVE_AUTHORITY_TRANSACTION_IMPLEMENTATION_AUTHORITY', 'implementation_execution_mode': 'SYNTHETIC_REPOSITORY_FIXTURE_ONLY_DOCUMENT_AND_STATE_MODEL_NO_LIVE_INPUTS_OR_EFFECTS', 'accepted_orchestration_invocation_state': 'FORBIDDEN_NOT_IMPORTED_NOT_INVOKED', 'accepted_synthetic_oracle_invocation_state': 'FORBIDDEN_NOT_IMPORTED_NOT_INVOKED', 'owner_activation_state': 'NOT_AUTHORIZED', 'owner_authorization_issuance_state': 'NOT_AUTHORIZED', 'coordinate_receipt_production_state': 'NOT_AUTHORIZED', 'revocation_document_state': 'NOT_PROVIDED_NOT_AUTHORIZED', 'trusted_time_evidence_state': 'NOT_PROVIDED_NOT_AUTHORIZED', 'execution_authorization_state': 'NOT_ISSUED_NOT_AUTHORIZED', 'replay_registry_state': 'NOT_OPENED_NOT_WRITTEN', 'provider_open_gate_state': 'CLOSED_NOT_AUTHORIZED', 'local_path_discovery_state': 'NOT_AUTHORIZED', 'evidence_transaction_execution_state': 'NOT_AUTHORIZED', 'local_supply_map_state': 'NOT_PRODUCED_NOT_AUTHORIZED', 'generation_root_state': 'NOT_CREATED_NOT_AUTHORIZED', 'target_population_state': 'NOT_AUTHORIZED_UNPOPULATED_SCHEMA_ONLY', 'materialization_state': 'NOT_AUTHORIZED', 'publication_state': 'NOT_AUTHORIZED', 'deployment_state': 'NOT_AUTHORIZED', 'activation_state': 'NOT_AUTHORIZED', 'update_boundary': 'ANY_IMPLEMENTATION_SOURCE_FIXTURE_COVERAGE_DOCUMENT_REPLAY_MODEL_SERIALIZATION_VALIDATION_FAILURE_MAPPING_OUTPUT_SCOPE_OR_AUTHORITY_CHANGE_REQUIRES_NEW_CLASS_D_IMPLEMENTATION_REVIEW', 'rollback_boundary': 'REMOVE_ACCEPTANCE_RECORD_AND_RESTORE_IMPLEMENTATION_ACCEPTANCE_OPEN_NO_LIVE_DOCUMENT_REPLAY_PROVIDER_OR_RUNTIME_STATE_EXISTS', 'next_action': 'generate-and-review-non-executing-selected-provider-local-supply-live-authority-transaction-production-implementation-candidate', 'authority_effect': 'EXACT_SYNTHETIC_ONLY_128_ROW_LIVE_AUTHORITY_TRANSACTION_IMPLEMENTATION_ACCEPTED_20_INPUTS_26_STATES_52_OPERATIONS_30_FAILURES_448_INHERITED_1_SUCCESS_30_FAIL_CLOSED_5_DOCUMENT_ROLES_41_COORDINATE_ROWS_10_REPLAY_FIELDS_ZERO_CURRENT_AUTHORITY', 'prohibited_inference': 'IMPLEMENTATION_ACCEPTANCE_DOES_NOT_ACCEPT_OR_CONSUME_LIVE_DOCUMENTS_WRITE_REPLAY_STATE_ARM_PROVIDER_OPEN_GATE_OPEN_OR_READ_SELECTED_PROVIDER_PATHS_EXECUTE_ORCHESTRATION_PRODUCE_A_LOCAL_MAP_CREATE_A_GENERATION_ROOT_POPULATE_MATERIALIZE_PUBLISH_DEPLOY_OR_ACTIVATE'}
+def fail(m): raise SystemExit("live-authority transaction implementation acceptance: FAIL: "+m)
+def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
+def rows(p):
+ with p.open(newline="",encoding="utf-8") as f:return list(csv.DictReader(f,delimiter="\t"))
+cp=subprocess.run([sys.executable,str(ROOT/"tools/docs/check-selected-provider-local-supply-live-authority-transaction-implementation-review")],text=True,capture_output=True)
+if cp.returncode!=0: fail("candidate checker: "+(cp.stderr.strip() or cp.stdout.strip()))
+with tempfile.TemporaryDirectory(prefix="live-authority-implementation-acceptance.",dir=ROOT.parent) as td:
+ cp=subprocess.run([sys.executable,str(ROOT/BASE/"recipe/generate-selected-provider-local-supply-live-authority-transaction-implementation-boundary-acceptance.py"),"--repo-root",str(ROOT),"--output-root",td],text=True,capture_output=True)
+ if cp.returncode!=0:fail("acceptance regeneration: "+cp.stderr.strip())
+ if (ROOT/REVIEW/NAME).read_bytes()!=(Path(td)/REVIEW/NAME).read_bytes():fail("generated acceptance drift")
+r=rows(ROOT/REVIEW/NAME)
+if len(r)!=1:fail("acceptance row count")
+r=r[0]
+for k,v in EXPECTED.items():
+ if r.get(k)!=v:fail(f"acceptance {k}: {r.get(k)!r}")
+for rel,digest in ARTIFACTS.items():
+ if sha(ROOT/BASE/rel)!=digest:fail("source digest "+rel)
+meta={x["key"]:x["value"] for x in rows(ROOT/REVIEW/"selected-provider-local-supply-live-authority-transaction-implementation-metadata.tsv")}
+for k,v in {
+ "implementation_review_id":"SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-IMPLEMENTATION-REVIEW-001",
+ "candidate_state":"QUALIFIED_NON_EXECUTING_SYNTHETIC_LIVE_AUTHORITY_TRANSACTION_IMPLEMENTATION_CANDIDATE",
+ "implementation_acceptance_gate":"SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-IMPLEMENTATION-ACCEPTANCE-OPEN",
+ "input_coverage_count":"20","state_coverage_count":"26","operation_coverage_count":"52","failure_coverage_count":"30","total_coverage_count":"128","inherited_semantic_coverage_count":"448",
+ "synthetic_success_case_count":"1","synthetic_negative_case_count":"30","synthetic_live_document_role_count":"5","synthetic_coordinate_row_count":"41","synthetic_coordinate_row_field_count":"10","synthetic_replay_tuple_field_count":"10",
+ "synthetic_live_document_count":"0","synthetic_execution_authorization_count":"0","synthetic_replay_write_count":"0","synthetic_selected_provider_open_count":"0","synthetic_selected_provider_read_count":"0","synthetic_provider_byte_count":"0","synthetic_local_supply_map_count":"0","synthetic_live_authority_count":"0",
+ "accepted_orchestration_invocation":"FORBIDDEN_NOT_IMPORTED_NOT_INVOKED","accepted_synthetic_oracle_invocation":"FORBIDDEN_NOT_IMPORTED_NOT_INVOKED","provider_open_gate_armed":"NO","replay_registry_opened":"NO","replay_persistence_performed":"NO","local_supply_map_produced":"NO"
+}.items():
+ if meta.get(k)!=v:fail("frozen metadata "+k)
+success=json.loads((ROOT/REVIEW/"selected-provider-local-supply-live-authority-transaction-implementation-synthetic-success.json").read_text())
+for k in ["current_live_document_count","current_execution_authorization_count","current_replay_write_count","current_selected_provider_open_count","current_selected_provider_read_count","current_provider_byte_count","current_local_supply_map_count","current_live_authority_count"]:
+ if success.get(k)!=0:fail("synthetic success widened "+k)
+texts={p:(ROOT/p).read_text() for p in [
+ "docs/evidence/selected-provider-local-supply-live-authority-transaction-implementation-boundary-acceptance.md","docs/current/STATE.yaml","docs/current/BRIEF.md","docs/current/ACTIVE_TASK.md","docs/current/PENDING_ARTIFACTS.yaml","STATUS.md","docs/catalog.tsv","docs/evidence/README.md"]}
+need=[
+ ("docs/evidence/selected-provider-local-supply-live-authority-transaction-implementation-boundary-acceptance.md","ACCEPTED_BOUNDED_NON_EXECUTING_SYNTHETIC_LIVE_AUTHORITY_TRANSACTION_IMPLEMENTATION_AUTHORITY"),
+ ("docs/current/STATE.yaml","live_authority_transaction_implementation_acceptance: accepted-bounded-non-executing-synthetic-implementation-authority"),
+ ("docs/current/STATE.yaml","live_authority_transaction_implementation_selected_provider_reads: 0"),
+ ("docs/current/BRIEF.md","live authority transaction implementation acceptance: ACCEPTED_BOUNDED_NON_EXECUTING_SYNTHETIC_IMPLEMENTATION_AUTHORITY"),
+ ("docs/current/ACTIVE_TASK.md","Task ID: `generate-and-review-non-executing-selected-provider-local-supply-live-authority-transaction-production-implementation-candidate`"),
+ ("docs/current/PENDING_ARTIFACTS.yaml","live-authority-transaction-production-implementation"),
+ ("STATUS.md","bounded non-executing synthetic selected-provider local-supply live-authority transaction implementation accepted"),
+ ("docs/catalog.tsv","selected-provider-local-supply-live-authority-transaction-implementation-boundary-acceptance\tevidence\tcurrent\tcanonical"),
+ ("docs/evidence/README.md","selected-provider-local-supply-live-authority-transaction-implementation-boundary-acceptance.md")]
+for p,s in need:
+ if s not in texts[p]:fail("missing marker "+p)
+alltext="\n".join(texts.values())+"\n"+(ROOT/REVIEW/NAME).read_text()
+for forbidden in ["accepted_current_live_document_count\t1","accepted_current_replay_write_count\t1","accepted_current_selected_provider_open_count\t1","accepted_current_selected_provider_read_count\t1","accepted_current_provider_byte_count\t1","accepted_current_local_supply_map_count\t1","accepted_current_live_authority_count\t1","provider_open_gate_state\tOPEN_AUTHORIZED","replay_registry_state\tOPENED_WRITTEN","execution_authorization_state\tISSUED_AUTHORIZED"]:
+ if forbidden in alltext:fail("authority widening "+forbidden)
+print("live-authority transaction implementation acceptance: PASS: exact six-artifact 128-row synthetic-only implementation accepted with 448 inherited coverage, one success, thirty fail-closed cases and zero current authority")
