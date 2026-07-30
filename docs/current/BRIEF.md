@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-28.17`
+> Semantic state version: `2026-07-28.18`
 
 ## Purpose and operational boundary
 
@@ -30,7 +30,8 @@ owner activation statement SHA-256: aa143dbbd2b188f7c1000cda2e1a6c89bf4e526569c1
 owner activation acceptance statement SHA-256: b0e9fb7171f3dec721b505ad47acc09fa74e986ed4a06ff9ba09e682461d1af7
 owner activation authorized scope: ONE_NON_EXECUTING_EXACT_INPUT_SET_COLLECTION_SEALING_AND_REVIEW_TRANSACTION_ONLY
 owner activation transactions accepted / consumed / remaining: 1 / 0 / 1
-exact input-set collection candidate: QUALIFIED_NON_EXECUTING_EXACT_INPUT_SET_COLLECTION_SEALING_CANDIDATE_ACCEPTANCE_OPEN
+exact input-set collection candidate: QUALIFIED_NON_EXECUTING_EXACT_INPUT_SET_COLLECTION_SEALING_CANDIDATE_HISTORICAL
+exact input-set collection acceptance: ACCEPTED_BOUNDED_NON_EXECUTING_EXACT_INPUT_SET_COLLECTION_SEALING_AUTHORITY
 exact input-set collection coverage / cases: 20 inputs / 1 success + 20 fail-closed
 exact input-set isolated document opens / reads: 5 / 5
 exact input-set isolated provider lstats / replay lstats: 41 / 1
@@ -178,3 +179,8 @@ The active task is `generate-and-review-non-executing-selected-provider-local-su
 
 `SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-OWNER-ACTIVATION-ACCEPT-001` accepts the exact v143 candidate and the explicit approval statement with SHA-256 `b0e9fb7171f3dec721b505ad47acc09fa74e986ed4a06ff9ba09e682461d1af7`. The accepted scope is one non-executing exact input-set collection, sealing and review transaction only. Zero transactions are consumed and one remains. No input document, provider coordinate, replay baseline or execution authorization is supplied; selected-provider and live-authority effects remain zero.
 
+
+
+## Exact input-set collection boundary acceptance
+
+`SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-EXACT-INPUT-SET-COLLECTION-ACCEPT-001` accepts the exact six-artifact non-executing collection/sealing implementation. One owner-authorized transaction remains unconsumed. Live authority documents, exact provider coordinates, replay baseline, trusted time and execution authorization remain unsupplied; selected-provider content access and project replay access remain forbidden.

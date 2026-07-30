@@ -224,7 +224,7 @@ markers = [
     ),
     (
         "docs/current/ACTIVE_TASK.md",
-        "Task ID: `review-and-accept-non-executing-selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-candidate-boundary`",
+        "Task ID: `prepare-and-review-one-non-executing-selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-envelope`",
     ),
     (
         "docs/current/BRIEF.md",

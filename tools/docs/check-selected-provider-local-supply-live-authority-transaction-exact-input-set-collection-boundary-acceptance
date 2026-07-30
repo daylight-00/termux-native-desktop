@@ -1,0 +1,54 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+import csv,hashlib,json,subprocess,sys,tempfile
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[2]
+BASE=Path("experiments/glibc/selected-obsidian-provider-authority")
+REVIEW=BASE/"review"
+ARTIFACTS={'implementation/selected_provider_local_supply_live_authority_transaction_exact_input_set_collection_candidate.py': 'bcbd471b781a9843ba50da269c9686d928a638ede3f440bac5eda9b57bc58b3c', 'review/selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-isolated-fixture-plan.json': 'f983c10db472d2aa2dd969e1366b147b421498386416353bf1840e17e1439496', 'review/selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-negative-cases.json': '74a1168fbf1e3346b99366bb34564fa09a5d5186bfd61f29dce82af6d804bf95', 'review/selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-coverage.tsv': 'd5ce14debc372cb8fc2049d869ff3be1bfeb60c25e828a9875a95e17906e855c', 'review/selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-isolated-success.json': 'b9c844973f7203cb74e106da0ec6e6889a0898304bf2944b822127d5c196edd7', 'review/selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-metadata.tsv': 'e24f13b2faab9098a2314aea4e6062161ba131b4124ebb3ccd281e7a28e86ec9'}
+NAME='selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-boundary-acceptance.tsv'
+EXPECTED={'acceptance_id': 'SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-EXACT-INPUT-SET-COLLECTION-ACCEPT-001', 'decision': 'ACCEPTED_BOUNDED_NON_EXECUTING_EXACT_INPUT_SET_COLLECTION_SEALING_AUTHORITY', 'candidate_review_id': 'SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-EXACT-INPUT-SET-COLLECTION-REVIEW-001', 'source_implementation_sha256': 'bcbd471b781a9843ba50da269c9686d928a638ede3f440bac5eda9b57bc58b3c', 'source_isolated_fixture_plan_sha256': 'f983c10db472d2aa2dd969e1366b147b421498386416353bf1840e17e1439496', 'source_negative_cases_sha256': '74a1168fbf1e3346b99366bb34564fa09a5d5186bfd61f29dce82af6d804bf95', 'source_coverage_sha256': 'd5ce14debc372cb8fc2049d869ff3be1bfeb60c25e828a9875a95e17906e855c', 'source_isolated_success_sha256': 'b9c844973f7203cb74e106da0ec6e6889a0898304bf2944b822127d5c196edd7', 'source_metadata_sha256': 'e24f13b2faab9098a2314aea4e6062161ba131b4124ebb3ccd281e7a28e86ec9', 'accepted_input_contract_coverage_count': '20', 'accepted_success_case_count': '1', 'accepted_failure_case_count': '20', 'accepted_document_role_count': '5', 'accepted_coordinate_row_count': '41', 'accepted_coordinate_metadata_field_count': '10', 'accepted_document_open_count': '5', 'accepted_document_read_count': '5', 'accepted_provider_lstat_count': '41', 'accepted_replay_lstat_count': '1', 'accepted_repository_metadata_capture_count': '2', 'accepted_remote_metadata_capture_count': '1', 'accepted_executor_identity_capture_count': '1', 'accepted_envelope_write_count': '2', 'accepted_selected_provider_open_count': '0', 'accepted_selected_provider_read_count': '0', 'accepted_provider_byte_count': '0', 'accepted_project_replay_open_count': '0', 'accepted_project_replay_read_count': '0', 'accepted_project_replay_write_count': '0', 'accepted_current_live_document_count': '0', 'accepted_current_execution_authorization_count': '0', 'accepted_current_local_supply_map_count': '0', 'accepted_current_live_authority_count': '0', 'accepted_transaction_count': '1', 'accepted_transaction_consumed_count': '0', 'accepted_transaction_remaining_count': '1', 'candidate_issue_closed': 'SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-EXACT-INPUT-SET-COLLECTION-ACCEPTANCE-OPEN', 'accepted_authority_state': 'ACCEPTED_BOUNDED_NON_EXECUTING_EXACT_INPUT_SET_COLLECTION_SEALING_AUTHORITY', 'collection_execution_mode': 'EXPLICIT_INPUT_ENVELOPE_PREPARATION_ONLY_ACCEPTED_IMPLEMENTATION_NOT_YET_RUN_ON_LIVE_INPUTS', 'live_input_set_state': 'NOT_SUPPLIED_NOT_AUTHORIZED', 'owner_authorization_token_state': 'NOT_SUPPLIED_NOT_AUTHORIZED', 'coordinate_receipt_state': 'NOT_SUPPLIED_NOT_AUTHORIZED', 'revocation_document_state': 'NOT_SUPPLIED_NOT_AUTHORIZED', 'trusted_time_evidence_state': 'NOT_SUPPLIED_NOT_AUTHORIZED', 'execution_authorization_state': 'NOT_SUPPLIED_NOT_AUTHORIZED', 'replay_registry_state': 'NOT_SUPPLIED_NOT_OPENED_NOT_WRITTEN', 'selected_provider_coordinate_set_state': 'NOT_SUPPLIED_NOT_AUTHORIZED', 'provider_open_gate_state': 'CLOSED_NOT_AUTHORIZED', 'execution_authorized': 'NO', 'selected_provider_open_authorized': 'NO', 'selected_provider_read_authorized': 'NO', 'project_replay_write_authorized': 'NO', 'update_boundary': 'ANY_COLLECTION_SOURCE_FIXTURE_INPUT_MAPPING_METADATA_CAPTURE_DOCUMENT_SEALING_ENVELOPE_SERIALIZATION_FAILURE_MAPPING_OWNER_ACCOUNTING_PROVIDER_OR_REPLAY_AUTHORITY_CHANGE_REQUIRES_NEW_EXACT_INPUT_SET_COLLECTION_REVIEW', 'rollback_boundary': 'REMOVE_ACCEPTANCE_RECORD_AND_RESTORE_COLLECTION_CANDIDATE_ACCEPTANCE_OPEN_WITH_ONE_OWNER_TRANSACTION_UNCONSUMED_AND_ZERO_LIVE_INPUT_OR_AUTHORITY_STATE', 'next_action': 'prepare-and-review-one-non-executing-selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-envelope', 'authority_effect': 'EXACT_SIX_ARTIFACT_NON_EXECUTING_COLLECTION_SEALING_IMPLEMENTATION_ACCEPTED_20_INPUTS_1_SUCCESS_20_FAIL_CLOSED_5_DOCUMENT_READS_41_PROVIDER_LSTATS_1_REPLAY_LSTAT_2_ENVELOPE_WRITES_ONE_OWNER_TRANSACTION_UNCONSUMED_ZERO_SELECTED_PROVIDER_CONTENT_PROJECT_REPLAY_OR_LIVE_AUTHORITY', 'prohibited_inference': 'COLLECTION_ACCEPTANCE_DOES_NOT_SUPPLY_OR_INFER_LIVE_DOCUMENTS_PROVIDER_PATHS_REPLAY_BASELINE_TRUSTED_TIME_OR_EXECUTION_AUTHORIZATION_CONSUME_OWNER_TRANSACTION_OPEN_OR_READ_SELECTED_PROVIDER_CONTENT_HASH_PROVIDER_BYTES_OPEN_READ_OR_WRITE_PROJECT_REPLAY_EXECUTE_OR_ARM_PROVIDER_GATE_PRODUCE_LOCAL_MAP_POPULATE_MATERIALIZE_PUBLISH_DEPLOY_OR_ACTIVATE'}
+GEN=BASE/"recipe/generate-selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-boundary-acceptance.py"
+def sha(p:Path)->str:return hashlib.sha256(p.read_bytes()).hexdigest()
+def fail(x:str)->None:raise SystemExit("exact input-set collection acceptance: FAIL: "+x)
+for rel,digest in ARTIFACTS.items():
+ p=ROOT/BASE/rel
+ if not p.is_file() or sha(p)!=digest:fail("frozen candidate mismatch: "+rel)
+acc=ROOT/REVIEW/NAME
+if not acc.is_file() or not (ROOT/GEN).is_file():fail("missing acceptance artifact")
+with acc.open(newline="",encoding="utf-8") as h:rows=list(csv.DictReader(h,delimiter="\t"))
+if len(rows)!=1:fail("acceptance row count mismatch")
+if rows[0]!=EXPECTED:
+ diff=[k for k,v in EXPECTED.items() if rows[0].get(k)!=v];fail("acceptance mismatch: "+",".join(diff))
+subprocess.run([sys.executable,str(ROOT/"tools/docs/check-selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-review")],cwd=ROOT,check=True,stdout=subprocess.DEVNULL)
+success=json.loads((ROOT/BASE/"review/selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-isolated-success.json").read_text())
+for k,v in {
+ "pass":True,"input_contract_count":20,"document_role_count":5,"coordinate_row_count":41,"coordinate_metadata_field_count":10,
+ "isolated_document_open_count":5,"isolated_document_read_count":5,"isolated_provider_lstat_count":41,"isolated_replay_lstat_count":1,
+ "isolated_repository_metadata_capture_count":2,"isolated_remote_metadata_capture_count":1,"isolated_executor_identity_capture_count":1,"isolated_envelope_write_count":2,
+ "selected_provider_open_count":0,"selected_provider_read_count":0,"provider_byte_count":0,"project_replay_open_count":0,"project_replay_read_count":0,"project_replay_write_count":0,
+ "live_document_count":0,"execution_authorization_count":0,"local_supply_map_count":0,"live_authority_count":0,"accepted_transaction_count":1,"consumed_transaction_count":0,"remaining_transaction_count":1,
+}.items():
+ if success.get(k)!=v:fail(f"success mismatch: {k}={success.get(k)!r}")
+need=[
+ ("docs/evidence/selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-boundary-acceptance.md",'ACCEPTED_BOUNDED_NON_EXECUTING_EXACT_INPUT_SET_COLLECTION_SEALING_AUTHORITY'),
+ ("docs/current/STATE.yaml","exact_input_set_collection_acceptance: accepted-bounded-non-executing-exact-input-set-collection-sealing-authority"),
+ ("docs/current/STATE.yaml","owner_activation_consumed_transaction_count: 0"),
+ ("docs/current/STATE.yaml","owner_activation_remaining_transaction_count: 1"),
+ ("docs/current/BRIEF.md","exact input-set collection acceptance: ACCEPTED_BOUNDED_NON_EXECUTING_EXACT_INPUT_SET_COLLECTION_SEALING_AUTHORITY"),
+ ("docs/current/ACTIVE_TASK.md","Task ID: `prepare-and-review-one-non-executing-selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-envelope`"),
+ ("docs/current/PENDING_ARTIFACTS.yaml","exact-input-set-collection-transaction-envelope"),
+ ("STATUS.md","selected-provider local-supply live-authority exact input-set collection candidate accepted"),
+ ("docs/catalog.tsv","selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-boundary-acceptance\tevidence\tcurrent\tcanonical"),
+ ("docs/evidence/README.md","selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-boundary-acceptance.md"),
+]
+for rel,marker in need:
+ p=ROOT/rel
+ if not p.is_file() or marker not in p.read_text(encoding="utf-8"):fail("missing current marker: "+rel)
+alltext="\n".join((ROOT/p).read_text(encoding="utf-8") for p in ["docs/current/STATE.yaml","docs/current/BRIEF.md","docs/current/ACTIVE_TASK.md","docs/current/PENDING_ARTIFACTS.yaml","STATUS.md"])+"\n"+acc.read_text()
+for forbidden in ["owner_activation_consumed_transaction_count: 1","owner_activation_remaining_transaction_count: 0","selected_provider_open_authorized\tYES","selected_provider_read_authorized\tYES","project_replay_write_authorized\tYES","live_authority_transaction_input_set_state: supplied-authorized","provider_open_gate_state: open-authorized","current_live_authority_count: 1"]:
+ if forbidden in alltext:fail("authority widening: "+forbidden)
+with tempfile.TemporaryDirectory(prefix="exact-input-set-collection-acceptance-regenerate-",dir=ROOT.parent) as t:
+ subprocess.run([sys.executable,str(ROOT/GEN),"--repo-root",str(ROOT),"--output-root",t],check=True,stdout=subprocess.DEVNULL)
+ if (Path(t)/REVIEW/NAME).read_bytes()!=acc.read_bytes():fail("generator reproducibility mismatch")
+print("exact input-set collection acceptance: PASS: exact six-artifact 20-input collection/sealing implementation accepted with one success, twenty fail-closed cases, bounded isolated metadata/envelope effects, one owner transaction unconsumed and zero current authority")

@@ -46,7 +46,7 @@ if not errors:
       ('libSELinux no build','`libselinux_build_authorized` remains `NO`' in doc),
       ('state route','missing_glibc_provider_production_boundary:' in state),
       ('state GTK lane','gtk3_core_lane: bounded-atomic-provider-authority-accepted-package-wide-execution-authority-excluded' in state),
-      ('active task','Task ID: `review-and-accept-non-executing-selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-candidate-boundary`' in active),
+      ('active task','Task ID: `prepare-and-review-one-non-executing-selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-envelope`' in active),
       ('brief decision','accepted target-policy rows:' in brief and '82' in brief and 'intervention:' in brief and 'retained' in brief),
       ('composition next','NON_MUTATING_SELECTED_PROVIDER_LOCAL_SUPPLY_MAP_CONTRACT_ACCEPTANCE_REVIEW' in comp),
       ('catalog','missing-glibc-provider-production-boundary\tevidence\tcurrent\tcanonical' in catalog),
