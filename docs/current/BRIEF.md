@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-28.18`
+> Semantic state version: `2026-07-28.19`
 
 ## Purpose and operational boundary
 
@@ -40,6 +40,10 @@ exact input-set isolated envelope writes: 2
 exact input-set selected-provider opens / reads / bytes: 0 / 0 / 0
 exact input-set project replay opens / reads / writes / live authority: 0 / 0 / 0 / 0
 live-authority input set: NOT_SUPPLIED_NOT_AUTHORIZED
+exact input-set envelope preparation: REJECTED_FAIL_CLOSED_MISSING_EXPLICIT_INPUTS
+exact input-set envelope required / supplied / missing groups: 10 / 0 / 10
+exact input-set envelope generated: NO
+exact input-set envelope acceptance gate: NOT_OPEN_NO_CANDIDATE
 materializer object-plan rows:    41
 materializer state rows:          20
 ordered operation rows:           24

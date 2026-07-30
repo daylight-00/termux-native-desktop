@@ -186,7 +186,7 @@ with tempfile.TemporaryDirectory(prefix="exact-input-set-collection-regenerate-"
 
 markers = [
     ("docs/evidence/selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-review.md", "QUALIFIED_NON_EXECUTING_EXACT_INPUT_SET_COLLECTION_SEALING_CANDIDATE"),
-    ("docs/current/ACTIVE_TASK.md", "Task ID: `prepare-and-review-one-non-executing-selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-envelope`"),
+    ("docs/current/ACTIVE_TASK.md", "Task ID: `supply-explicit-selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-envelope-inputs`"),
     ("docs/current/BRIEF.md", "exact input-set collection candidate: QUALIFIED_NON_EXECUTING_EXACT_INPUT_SET_COLLECTION_SEALING_CANDIDATE_HISTORICAL"),
     ("docs/current/STATE.yaml", "exact_input_set_collection_candidate_state: qualified-non-executing-exact-input-set-collection-sealing-candidate-historical"),
     ("docs/current/PENDING_ARTIFACTS.yaml", "exact-input-set-collection-candidate-acceptance"),

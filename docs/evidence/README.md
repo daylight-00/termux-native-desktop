@@ -125,3 +125,5 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 - [`selected-provider-local-supply-live-authority-transaction-production-implementation-boundary-acceptance.md`](selected-provider-local-supply-live-authority-transaction-production-implementation-boundary-acceptance.md) — exact six-artifact 128-row production-capable isolated-fixture live-authority transaction implementation acceptance with bounded isolated replay/result effects and zero current authority.
 
 - [`selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-boundary-acceptance.md`](selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-boundary-acceptance.md) — exact six-artifact non-executing collection/sealing acceptance with one owner transaction unconsumed and zero selected-provider content, project replay or live authority.
+
+- `selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-envelope-preparation-review.md` — fail-closed explicit-input-only envelope preparation review with ten missing input groups and zero authority.

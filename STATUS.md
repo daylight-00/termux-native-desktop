@@ -620,3 +620,13 @@ selected-provider local-supply live-authority exact input-set collection candida
 selected-provider local-supply live-authority exact input-set collection candidate accepted
 
 `SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-EXACT-INPUT-SET-COLLECTION-ACCEPT-001` accepts the exact six-artifact, twenty-input, one-success and twenty-fail-closed collection/sealing implementation. Five isolated document reads, forty-one provider `lstat` calls, one replay `lstat` and two isolated envelope writes are accepted test evidence. Selected-provider content access, provider bytes, project replay access and live authority remain zero. Owner accounting remains one accepted, zero consumed and one remaining. The active task is explicit collection-envelope preparation; live inputs remain unsupplied.
+
+## Exact input-set collection envelope preparation fail-closed review
+
+- The exact input-set collection envelope preparation was reviewed and rejected fail-closed as `REJECTED_FAIL_CLOSED_MISSING_EXPLICIT_INPUTS`.
+- Ten explicit input groups are required, zero are supplied and no envelope candidate is generated.
+- Owner accounting remains `1 accepted / 0 consumed / 1 remaining`.
+- Selected-provider opens/reads, provider bytes, project replay access/writes and live authority remain zero.
+- Next action: `supply-explicit-selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-envelope-inputs`.
+
+- exact input-set collection envelope preparation rejected fail-closed; no envelope was generated.
