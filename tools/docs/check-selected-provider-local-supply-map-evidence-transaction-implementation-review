@@ -69,7 +69,7 @@ required=[
  ('docs/evidence/selected-provider-local-supply-map-evidence-transaction-implementation-review.md','QUALIFIED_NON_EXECUTING_SYNTHETIC_READ_ONLY_LOCAL_SUPPLY_MAP_EVIDENCE_TRANSACTION_IMPLEMENTATION_CANDIDATE'),
  ('docs/current/BRIEF.md','local supply evidence transaction implementation: QUALIFIED_NON_EXECUTING_SYNTHETIC_CANDIDATE_HISTORICAL'),
  ('docs/current/STATE.yaml','local_supply_map_evidence_transaction_implementation: qualified-non-executing-synthetic-candidate-historical'),
- ('docs/current/ACTIVE_TASK.md','Task ID: `await-explicit-owner-decision-for-selected-provider-local-supply-map-production-transaction`'),
+ ('docs/current/ACTIVE_TASK.md','Task ID: `execute-one-owner-authorized-selected-provider-local-supply-map-production-transaction`'),
  ('docs/current/PENDING_ARTIFACTS.yaml','live-authority-transaction-input-set'),
  ('STATUS.md','selected-provider local-supply-map evidence transaction implementation candidate qualified'),
  ('docs/catalog.tsv','selected-provider-local-supply-map-evidence-transaction-implementation-review\tevidence\tcurrent\tcanonical')]

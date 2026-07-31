@@ -1,47 +1,43 @@
-# Active task: await explicit owner decision for local-supply map production
+# Active task: execute one owner-authorized local-supply map production transaction
 
-> Task ID: `await-explicit-owner-decision-for-selected-provider-local-supply-map-production-transaction`
+> Task ID: `execute-one-owner-authorized-selected-provider-local-supply-map-production-transaction`
 
 ## Objective
 
-Hold the accepted production exact-input boundary without creating a new transaction or authority.
+Produce and seal one exact 41-row local-supply map while consuming one accepted transaction.
 
 ## Why now
 
-The exact v151 collection is accepted: 9 sources, 33 carriers, 41 members, 29,047,112 bytes, owner accounting `1 / 1 / 0`, an unchanged empty replay baseline and zero live authority. The v153 promotion commit is verified on local and remote `main`.
+The accepted boundary contains 9 sources, 33 carriers, 41 members, 29,047,112 bytes and zero live authority. The owner authorized one map-production transaction with SHA-256 `0a68ff343e98680b6409f603dc67d6b578e859fb0013abb7e2f4bc580c2d68f0`.
 
 ## Required reading
 
+- `docs/evidence/selected-provider-local-supply-map-production-owner-decision-boundary-acceptance.md`
 - `docs/evidence/selected-provider-local-supply-live-authority-transaction-production-exact-input-set-correction-bootstrap-boundary-acceptance.md`
-- `docs/evidence/selected-provider-local-supply-map-evidence-transaction-implementation-boundary-acceptance.md`
-- `docs/evidence/selected-provider-local-supply-live-evidence-orchestration-production-implementation-boundary-acceptance.md`
+- `docs/evidence/selected-provider-local-supply-map-contract-boundary-acceptance.md`
 
 ## Pending external inputs
 
-A new explicit owner decision is required before any local-supply map production transaction may be reviewed.
+None. Use only accepted coordinates and fail closed on missing or changed input.
 
 ## In scope
 
-Preserve the accepted boundary, owner accounting `1 / 1 / 0`, closed provider gate, unchanged project replay state and zero live authority.
+Bind 41 verified isolated members, reuse or reacquire exact carriers, generate and seal the map and receipts, review the result and consume one transaction.
 
 ## Out of scope
 
-Generating or inferring owner authorization, reusing collection-only credentials, opening or reading live provider paths, accessing project replay, producing a local-supply map, population, materialization, publication, deployment, activation or execution.
+Selected-provider live-path discovery, open, read or mutation; project replay mutation; population, materialization, publication, deployment, activation, package installation or live-prefix mutation.
 
 ## Next valid action
 
-Record and review a new explicit owner decision only after the owner supplies one.
+Generate and run one fail-closed production package that emits the exact local-supply map and review evidence without populating a target.
 
 ## Stop conditions
 
-Stop on any attempt to infer authorization from the accepted collection, promotion commit, sealed documents or prior owner statement.
+Stop on any identity, digest, repository, transaction-count or protected-state mismatch, and before population or live mutation.
 
 ## Completion criteria
 
-No repository or runtime transaction proceeds without a new explicit owner decision.
+One 41-row map and its receipts are generated, sealed and reviewed; transaction accounting becomes `1 accepted / 1 consumed / 0 remaining`; repository authority is promoted separately; target population and all later effects remain unauthorized.
 
-Do not acquire, rediscover, open, read, localize, populate or execute against live provider inputs.
-
-Do not supply, discover, open, read, localize, populate or execute against live provider inputs.
-
-Do not acquire or populate provider bytes.
+Do not populate, materialize, publish, deploy or activate.

@@ -31,10 +31,10 @@ def main():
   if meta.get(k)!=v:fail(f'metadata {k}: {meta.get(k)!r}')
  docs={
   'docs/evidence/selected-target-population-intervention-supply-binding-review.md':['INTERVENTION_RETAINED','qualified read-only bindings:      14','blocked result-coordinate gaps:    27'],
-  'docs/current/ACTIVE_TASK.md':['Task ID: `await-explicit-owner-decision-for-selected-provider-local-supply-map-production-transaction`','Do not acquire or populate provider bytes.'],
-  'docs/current/BRIEF.md':['Semantic state version: `2026-07-28.21`','existing digest-bound results:','indexed v101 replacements:','open member sizes:'],
-  'docs/current/STATE.yaml':['state_version: 2026-07-28.21','phase: selected-provider-local-supply-live-authority-transaction-production-exact-input-set-correction-bootstrap-boundary-accepted-owner-decision-pending'],
-  'STATUS.md':['The active task is metadata-only retained-result coordinate and generation-root prerequisite closure.']}
+  'docs/current/ACTIVE_TASK.md':['Task ID: `execute-one-owner-authorized-selected-provider-local-supply-map-production-transaction`','Do not populate, materialize, publish, deploy or activate.'],
+  'docs/current/BRIEF.md':['Semantic state version: `2026-07-28.22`','existing digest-bound results:','indexed v101 replacements:','open member sizes:'],
+  'docs/current/STATE.yaml':['state_version: 2026-07-28.22','phase: selected-provider-local-supply-map-production-owner-decision-accepted-transaction-ready'],
+  'STATUS.md':['selected-provider local-supply map production owner decision accepted for one bounded transaction']}
  for rel,need in docs.items():
   text=(root/rel).read_text()
   for marker in need:

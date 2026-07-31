@@ -645,3 +645,9 @@ selected-provider local-supply production exact input-set bootstrap result quali
 Trusted-time evidence is external and canonical, replay identity is exact and unchanged, the isolated output root is required empty, and authority provenance is distinct from the exact byte carrier. Acceptance creates no new transaction, provider-open authority, project replay authority, local-supply map, population, materialization, publication, deployment or activation.
 
 production exact input-set correction/bootstrap boundary accepted
+
+## Local-supply map production owner decision boundary acceptance
+
+`SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-PRODUCTION-OWNER-DECISION-ACCEPT-001` freezes the exact owner statement SHA-256 `0a68ff343e98680b6409f603dc67d6b578e859fb0013abb7e2f4bc580c2d68f0` and accepts one transaction limited to 41 exact coordinate bindings, isolated map generation, sealing and review. Accounting is `1 / 0 / 1`; no map is produced by acceptance itself. Target population, materialization, publication, deployment, activation, project replay mutation and selected-provider live mutation remain unauthorized.
+
+selected-provider local-supply map production owner decision accepted for one bounded transaction

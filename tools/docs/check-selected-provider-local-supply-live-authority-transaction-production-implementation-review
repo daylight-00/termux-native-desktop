@@ -224,7 +224,7 @@ markers = [
     ),
     (
         "docs/current/ACTIVE_TASK.md",
-        "Task ID: `await-explicit-owner-decision-for-selected-provider-local-supply-map-production-transaction`",
+        "Task ID: `execute-one-owner-authorized-selected-provider-local-supply-map-production-transaction`",
     ),
     (
         "docs/current/BRIEF.md",

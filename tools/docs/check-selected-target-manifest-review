@@ -191,7 +191,7 @@ markers = [
     ('state review id', 'target_manifest_review_id: SELECTED-TARGET-MANIFEST-REVIEW-001' in state),
     ('state rows', 'target_manifest_rows: 82' in state),
     ('state population false', 'target_population_authorized: false' in state),
-    ('active task', 'Task ID: `await-explicit-owner-decision-for-selected-provider-local-supply-map-production-transaction`' in active),
+    ('active task', 'Task ID: `execute-one-owner-authorized-selected-provider-local-supply-map-production-transaction`' in active),
     ('brief target', 'accepted target-policy rows:' in brief and '82' in brief),
     ('status decision', '`QUALIFIED_NON_MUTATING_SELECTED_TARGET_MANIFEST`' in status),
     ('doc decision', 'QUALIFIED_NON_MUTATING_SELECTED_TARGET_MANIFEST' in doc),

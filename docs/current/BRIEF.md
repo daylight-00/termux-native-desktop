@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-28.21`
+> Semantic state version: `2026-07-28.22`
 
 ## Purpose and operational boundary
 
@@ -30,6 +30,9 @@ owner activation statement SHA-256: aa143dbbd2b188f7c1000cda2e1a6c89bf4e526569c1
 owner activation acceptance statement SHA-256: b0e9fb7171f3dec721b505ad47acc09fa74e986ed4a06ff9ba09e682461d1af7
 owner activation authorized scope: ONE_NON_EXECUTING_EXACT_INPUT_SET_COLLECTION_SEALING_AND_REVIEW_TRANSACTION_ONLY
 owner activation transactions accepted / consumed / remaining: 1 / 1 / 0
+map production owner decision: ACCEPTED_EXPLICIT_ONE_EXACT_COORDINATE_BINDING_MAP_GENERATION_SEALING_REVIEW_TRANSACTION_ONLY
+map production statement SHA-256: 0a68ff343e98680b6409f603dc67d6b578e859fb0013abb7e2f4bc580c2d68f0
+map production transactions accepted / consumed / remaining: 1 / 0 / 1
 exact input-set collection candidate: QUALIFIED_NON_EXECUTING_EXACT_INPUT_SET_COLLECTION_SEALING_CANDIDATE_HISTORICAL
 exact input-set collection acceptance: ACCEPTED_BOUNDED_NON_EXECUTING_EXACT_INPUT_SET_COLLECTION_SEALING_AUTHORITY
 exact input-set collection coverage / cases: 20 inputs / 1 success + 20 fail-closed
@@ -63,7 +66,7 @@ local supply contract acceptance: ACCEPTED_BOUNDED_NON_MUTATING_CONTRACT_AUTHORI
 local supply contract rows:       41
 local supply validation rules:    24
 local supply populated paths:      0
-local supply map:              NOT_PRODUCED_NOT_AUTHORIZED
+local supply map:              NOT_PRODUCED_AUTHORIZED_ONE_TRANSACTION
 local supply evidence transaction design: QUALIFIED_NON_EXECUTING_READ_ONLY_CANDIDATE_HISTORICAL
 local supply evidence design acceptance: ACCEPTED_BOUNDED_NON_EXECUTING_READ_ONLY_DESIGN_AUTHORITY
 local supply evidence transaction implementation: QUALIFIED_NON_EXECUTING_SYNTHETIC_CANDIDATE_HISTORICAL
@@ -173,7 +176,7 @@ activation:                    blocked
 
 `SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-DESIGN-ACCEPT-001` accepts the exact six-artifact 20/26/52/30 design boundary and 448 inherited semantic rows while preserving zero live documents, execution authorizations, replay writes, selected-provider opens/reads, provider bytes, local maps and live authority.
 
-The production exact-input boundary is accepted. The repository awaits a new explicit owner decision; live access and local-supply map production remain unauthorized.
+The production boundary is accepted. One exact 41-coordinate map-generation, sealing and review transaction is owner-authorized; population and live mutation remain forbidden.
 
 
 ## Explicit owner activation decision candidate

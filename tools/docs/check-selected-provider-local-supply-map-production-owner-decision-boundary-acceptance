@@ -1,0 +1,43 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+import csv, hashlib, subprocess, sys, tempfile
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[2]
+REL=Path('experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-map-production-owner-decision-boundary-acceptance.tsv')
+GEN=Path('experiments/glibc/selected-obsidian-provider-authority/recipe/generate-selected-provider-local-supply-map-production-owner-decision-boundary-acceptance.py')
+DOC=Path('docs/evidence/selected-provider-local-supply-map-production-owner-decision-boundary-acceptance.md')
+
+def fail(m): raise SystemExit('local-supply map production owner decision acceptance: FAIL: '+m)
+def rows(p):
+    with p.open(newline='',encoding='utf-8') as h: return list(csv.DictReader(h,delimiter='\t'))
+with tempfile.TemporaryDirectory(prefix='map-owner-accept.',dir=ROOT.parent) as td:
+    subprocess.run([sys.executable,str(ROOT/GEN),'--repo-root',str(ROOT),'--output-root',td],cwd=ROOT,check=True)
+    if (Path(td)/REL).read_bytes()!=(ROOT/REL).read_bytes(): fail('generated acceptance drift')
+r=rows(ROOT/REL)
+if len(r)!=1: fail('row count')
+r=r[0]
+expect={
+'acceptance_id':'SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-PRODUCTION-OWNER-DECISION-ACCEPT-001',
+'decision':'ACCEPTED_EXPLICIT_ONE_EXACT_COORDINATE_BINDING_MAP_GENERATION_SEALING_REVIEW_TRANSACTION_ONLY',
+'owner_statement_sha256':'0a68ff343e98680b6409f603dc67d6b578e859fb0013abb7e2f4bc580c2d68f0',
+'owner_statement_received_at':'2026-08-01T03:12:00+09:00','owner_statement_timezone':'Asia/Seoul',
+'bound_repository_head':'017527d92cac73d95b771c9fbd4dcf48ad681a9c','bound_repository_tree':'eb5531119eb5b00a1b455ca51be20d30803274c4','bound_remote_head':'017527d92cac73d95b771c9fbd4dcf48ad681a9c',
+'accepted_provider_member_count':'41','accepted_provider_byte_count':'29047112','accepted_transaction_count':'1','consumed_transaction_count':'0','remaining_transaction_count':'1','local_supply_map_count':'0','selected_provider_live_mutation_authorized':'false','project_replay_mutation_authorized':'false','target_population_authorized':'false','materialization_authorized':'false','publication_authorized':'false','deployment_authorized':'false','activation_authorized':'false','live_authority_count':'0','next_action':'execute-one-owner-authorized-selected-provider-local-supply-map-production-transaction'}
+for k,v in expect.items():
+    if r.get(k)!=v: fail(f'{k}: {r.get(k)!r}')
+texts={p:(ROOT/p).read_text(encoding='utf-8') for p in [DOC,Path('docs/current/STATE.yaml'),Path('docs/current/BRIEF.md'),Path('docs/current/ACTIVE_TASK.md'),Path('docs/current/PENDING_ARTIFACTS.yaml'),Path('STATUS.md'),Path('docs/catalog.tsv'),Path('docs/evidence/README.md')]}
+need=[
+(DOC,'검증된 41개 selected-provider member에 대한 local-supply map production transaction을 승인한다. 범위는 exact coordinate binding과 map 생성·봉인·검토로 제한하며, target population, materialization, publication, deployment, activation 및 live provider mutation은 승인하지 않는다.'),(DOC,'0a68ff343e98680b6409f603dc67d6b578e859fb0013abb7e2f4bc580c2d68f0'),
+(Path('docs/current/STATE.yaml'),'local_supply_map_production_remaining_transaction_count: 1'),
+(Path('docs/current/BRIEF.md'),'map production transactions accepted / consumed / remaining: 1 / 0 / 1'),
+(Path('docs/current/ACTIVE_TASK.md'),'Task ID: `execute-one-owner-authorized-selected-provider-local-supply-map-production-transaction`'),
+(Path('docs/current/PENDING_ARTIFACTS.yaml'),'state: accepted-one-transaction-zero-consumed-one-remaining'),
+(Path('STATUS.md'),'selected-provider local-supply map production owner decision accepted for one bounded transaction'),
+(Path('docs/catalog.tsv'),'selected-provider-local-supply-map-production-owner-decision-boundary-acceptance\tevidence\tcurrent\tcanonical'),
+(Path('docs/evidence/README.md'),'selected-provider-local-supply-map-production-owner-decision-boundary-acceptance.md')]
+for p,m in need:
+    if m not in texts[p]: fail('missing current marker: '+str(p))
+alltext='\n'.join(texts.values())+'\n'+(ROOT/REL).read_text()
+for f in ['local_supply_map_production_remaining_transaction_count: 0','local_supply_map_produced: true','target_population_authorized: true','materialization_authorized: true','deployment_authorized: true','activation_authorized: true','selected_provider_live_mutation_authorized: true']:
+    if f in alltext: fail('authority widening: '+f)
+print('local-supply map production owner decision acceptance: PASS: exact statement accepted for one 41-member map-generation/sealing/review transaction with zero population or live mutation authority')

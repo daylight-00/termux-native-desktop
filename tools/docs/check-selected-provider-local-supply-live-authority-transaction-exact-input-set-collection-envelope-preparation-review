@@ -21,7 +21,7 @@ markers=[
  ('docs/current/STATE.yaml','exact_input_set_collection_envelope_preparation_decision: historical-rejected-fail-closed-missing-explicit-inputs'),
  ('docs/current/STATE.yaml','owner_activation_consumed_transaction_count: 1'),
  ('docs/current/STATE.yaml','owner_activation_remaining_transaction_count: 0'),
- ('docs/current/ACTIVE_TASK.md','await-explicit-owner-decision-for-selected-provider-local-supply-map-production-transaction'),
+ ('docs/current/ACTIVE_TASK.md','execute-one-owner-authorized-selected-provider-local-supply-map-production-transaction'),
  ('docs/current/PENDING_ARTIFACTS.yaml','exact-input-set-collection-envelope'),
  ('docs/current/BRIEF.md','exact input-set envelope preparation: HISTORICAL_REJECTED_FAIL_CLOSED_MISSING_EXPLICIT_INPUTS'),
  ('STATUS.md','exact input-set collection envelope preparation rejected fail-closed'),
