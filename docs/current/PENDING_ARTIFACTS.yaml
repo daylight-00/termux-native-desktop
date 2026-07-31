@@ -1,30 +1,27 @@
 schema_version: 1
-state_version: 2026-07-28.19
+state_version: 2026-07-28.20
 
 blocking:
   - id: live-authority-transaction-input-set
-    state: not-supplied-not-authorized
-    note: The immutable live-authority input set and execution-authorization remain unsupplied and unauthorized.
-  - id: exact-input-set-collection-envelope-preparation
-    state: rejected-fail-closed-missing-explicit-inputs
-    note: Ten explicit input groups are missing; no envelope candidate was generated and no owner transaction was consumed.
-  - id: exact-input-set-collection-envelope-inputs
-    state: ten-required-zero-supplied
-    note: Supply five canonical document paths, trusted-time binding, replay baseline, forty-one ordered provider paths, executor identity and an isolated output root.
+    state: qualified-exact-candidate-acceptance-open
+    note: The exact v151 result is qualified for repository promotion; acceptance remains separate.
+  - id: local-supply-map-evidence
+    state: not-produced-not-authorized
+    note: The sealed input set does not authorize a local-supply map. A separate explicit owner decision is required after promotion acceptance.
   - id: owner-activation-transaction
-    state: one-accepted-zero-consumed-one-remaining
-    note: The accepted transaction remains available only for one non-executing collection, sealing and review operation after a complete envelope is separately accepted.
+    state: one-accepted-one-consumed-zero-remaining
+    note: The single accepted non-executing collection transaction was consumed successfully. No additional transaction is authorized.
 
 non_blocking:
-  - id: collection-implementation
-    state: accepted-closed-exact-boundary
+  - id: production-exact-input-set-bootstrap-result
+    state: qualified-nine-sources-thirty-three-carriers-forty-one-members-29047112-bytes
+  - id: exact-input-set-collection-envelope
+    state: generated-sealed-reviewed-promotion-pending
   - id: provider-open-gate
     state: closed-not-authorized
   - id: execution-authorization
-    state: not-supplied-not-authorized
-  - id: local-supply-map-evidence
-    state: not-produced-not-authorized
-  - id: exact-input-set-collection-candidate-acceptance
-    state: accepted-closed-exact-boundary
-  - id: exact-input-set-collection-transaction-envelope
-    state: rejected-fail-closed-missing-explicit-inputs
+    state: collection-only-expired-with-consumed-transaction
+  - id: replay-registry
+    state: initial-isolated-empty-baseline-verified-unchanged
+  - id: target-population
+    state: not-authorized-unpopulated

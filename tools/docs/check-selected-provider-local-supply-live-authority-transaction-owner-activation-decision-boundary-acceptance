@@ -34,7 +34,7 @@ texts={p:(ROOT/p).read_text(encoding="utf-8") for p in [
  "docs/current/ACTIVE_TASK.md","docs/current/BRIEF.md","docs/current/STATE.yaml","docs/current/PENDING_ARTIFACTS.yaml","STATUS.md","docs/catalog.tsv"]}
 markers={
  "acceptance_doc":"ACCEPTED_EXPLICIT_OWNER_ACTIVATION_DECISION_FOR_ONE_NON_EXECUTING_EXACT_INPUT_SET_COLLECTION_SEALING_AND_REVIEW_TRANSACTION_ONLY",
- "active_task":"Task ID: `supply-explicit-selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-envelope-inputs`",
+ "active_task":"Task ID: `review-and-accept-selected-provider-local-supply-live-authority-transaction-production-exact-input-set-correction-bootstrap-boundary`",
  "state_acceptance":"owner_activation_decision_acceptance: accepted-explicit-one-non-executing-exact-input-set-collection-sealing-and-review-transaction-only",
  "state_acceptance_id":"SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-OWNER-ACTIVATION-ACCEPT-001",
  "brief_acceptance":"owner activation decision acceptance: ACCEPTED_EXPLICIT_ONE_NON_EXECUTING_EXACT_INPUT_SET_COLLECTION_SEALING_AND_REVIEW_TRANSACTION_ONLY",

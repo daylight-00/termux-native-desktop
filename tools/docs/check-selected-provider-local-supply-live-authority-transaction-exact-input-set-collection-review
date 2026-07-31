@@ -186,10 +186,12 @@ with tempfile.TemporaryDirectory(prefix="exact-input-set-collection-regenerate-"
 
 markers = [
     ("docs/evidence/selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-review.md", "QUALIFIED_NON_EXECUTING_EXACT_INPUT_SET_COLLECTION_SEALING_CANDIDATE"),
-    ("docs/current/ACTIVE_TASK.md", "Task ID: `supply-explicit-selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-envelope-inputs`"),
+    ("docs/current/ACTIVE_TASK.md", "Task ID: `review-and-accept-selected-provider-local-supply-live-authority-transaction-production-exact-input-set-correction-bootstrap-boundary`"),
     ("docs/current/BRIEF.md", "exact input-set collection candidate: QUALIFIED_NON_EXECUTING_EXACT_INPUT_SET_COLLECTION_SEALING_CANDIDATE_HISTORICAL"),
     ("docs/current/STATE.yaml", "exact_input_set_collection_candidate_state: qualified-non-executing-exact-input-set-collection-sealing-candidate-historical"),
-    ("docs/current/PENDING_ARTIFACTS.yaml", "exact-input-set-collection-candidate-acceptance"),
+    ("docs/current/PENDING_ARTIFACTS.yaml", "production-exact-input-set-bootstrap-result"),
+    ("docs/current/STATE.yaml", "owner_activation_consumed_transaction_count: 1"),
+    ("docs/current/STATE.yaml", "owner_activation_remaining_transaction_count: 0"),
     ("STATUS.md", "selected-provider local-supply live-authority exact input-set collection candidate accepted"),
     ("docs/catalog.tsv", "selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-review\tevidence\tcurrent\tcanonical"),
 ]
@@ -201,7 +203,6 @@ texts = "\n".join((ROOT / relative).read_text(encoding="utf-8") for relative in 
     "docs/current/STATE.yaml", "docs/current/BRIEF.md", "docs/current/ACTIVE_TASK.md", "docs/current/PENDING_ARTIFACTS.yaml", "STATUS.md",
 ))
 for forbidden in (
-    "owner_activation_consumed_transaction_count: 1", "owner_activation_remaining_transaction_count: 0",
     "selected_provider_open_count: 1", "selected_provider_read_count: 1", "provider_byte_count: 1",
     "project_replay_write_count: 1", "live_authority_count: 1", "LIVE_EXECUTION_AUTHORIZED",
 ):

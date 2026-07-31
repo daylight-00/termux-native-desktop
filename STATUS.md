@@ -610,7 +610,7 @@ explicit owner activation decision accepted for one non-executing exact input-se
 
 ## Exact input-set collection and sealing candidate
 
-`SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-EXACT-INPUT-SET-COLLECTION-REVIEW-001` qualifies a production-capable isolated-fixture candidate with twenty accepted input-contract coverage rows, one success, twenty fail-closed cases, five isolated canonical document opens/reads, forty-one provider-coordinate `lstat` captures, one replay-registry `lstat`, repository/remote/executor metadata capture and two isolated envelope writes. It performs zero provider-content opens/reads, provider-byte reads, project replay opens/reads/writes or live-authority execution. The owner transaction remains one accepted, zero consumed and one remaining.
+`SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-EXACT-INPUT-SET-COLLECTION-REVIEW-001` qualifies a production-capable isolated-fixture candidate with twenty accepted input-contract coverage rows, one success, twenty fail-closed cases, five isolated canonical document opens/reads, forty-one provider-coordinate `lstat` captures, one replay-registry `lstat`, repository/remote/executor metadata capture and two isolated envelope writes. It performs zero provider-content opens/reads, provider-byte reads, project replay opens/reads/writes or live-authority execution. The owner transaction was later consumed by the exact v151 production bootstrap; repository review history remains unchanged.
 
 selected-provider local-supply live-authority exact input-set collection candidate accepted
 
@@ -619,7 +619,7 @@ selected-provider local-supply live-authority exact input-set collection candida
 
 selected-provider local-supply live-authority exact input-set collection candidate accepted
 
-`SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-EXACT-INPUT-SET-COLLECTION-ACCEPT-001` accepts the exact six-artifact, twenty-input, one-success and twenty-fail-closed collection/sealing implementation. Five isolated document reads, forty-one provider `lstat` calls, one replay `lstat` and two isolated envelope writes are accepted test evidence. Selected-provider content access, provider bytes, project replay access and live authority remain zero. Owner accounting remains one accepted, zero consumed and one remaining. The active task is explicit collection-envelope preparation; live inputs remain unsupplied.
+`SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-EXACT-INPUT-SET-COLLECTION-ACCEPT-001` accepts the exact six-artifact, twenty-input, one-success and twenty-fail-closed collection/sealing implementation. Five isolated document reads, forty-one provider `lstat` calls, one replay `lstat` and two isolated envelope writes are accepted test evidence. Selected-provider content access, provider bytes, project replay access and live authority remain zero. Owner accounting is historical at this boundary. The exact v151 production bootstrap later consumed the one transaction while preserving zero live authority.
 
 ## Exact input-set collection envelope preparation fail-closed review
 
@@ -630,3 +630,9 @@ selected-provider local-supply live-authority exact input-set collection candida
 - Next action: `supply-explicit-selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-envelope-inputs`.
 
 - exact input-set collection envelope preparation rejected fail-closed; no envelope was generated.
+
+## Production exact input-set correction/bootstrap result review
+
+`SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-PRODUCTION-EXACT-INPUT-SET-CORRECTION-BOOTSTRAP-REVIEW-001` qualifies the exact v151 result archive `55807be078f3861de6d7f596cb3dcfeefabd8acd122de77e9cae8ba32e65b77d` as `QUALIFIED_EXACT_PRODUCTION_BOOTSTRAP_COLLECTION_PROMOTION_CANDIDATE`. Nine exact source archives and thirty-three byte carriers supplied forty-one ordered provider members totaling 29,047,112 bytes. The sealed manifest, control documents, empty replay baseline and envelope pass independent review. Owner accounting is one accepted, one consumed and zero remaining. Repository, package database, live glibc prefix, selected-provider live access, project replay, local-supply map, target population and live authority remain unchanged.
+
+selected-provider local-supply production exact input-set bootstrap result qualified for repository promotion

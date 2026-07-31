@@ -1,0 +1,62 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+import csv, hashlib
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[2]
+BASE=Path('experiments/glibc/selected-obsidian-provider-authority/review')
+NAME='selected-provider-local-supply-live-authority-transaction-production-exact-input-set-correction-bootstrap'
+REVIEW=ROOT/BASE/(NAME+'-review.tsv')
+MEMBERS=ROOT/BASE/(NAME+'-provider-members.tsv')
+SOURCES=ROOT/BASE/(NAME+'-source-archives.tsv')
+META=ROOT/BASE/(NAME+'-metadata.tsv')
+def fail(x): raise SystemExit('production exact input-set bootstrap review: FAIL: '+x)
+def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
+def rows(p):
+ with p.open(newline='',encoding='utf-8') as h:return list(csv.DictReader(h,delimiter='	'))
+for p in (REVIEW,MEMBERS,SOURCES,META):
+ if not p.is_file():fail('missing '+str(p.relative_to(ROOT)))
+r=rows(REVIEW)
+if len(r)!=1:fail('review row count')
+r=r[0]
+expected={
+ 'review_id':'SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-PRODUCTION-EXACT-INPUT-SET-CORRECTION-BOOTSTRAP-REVIEW-001','decision':'QUALIFIED_EXACT_PRODUCTION_BOOTSTRAP_COLLECTION_PROMOTION_CANDIDATE','acceptance_gate':'SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-PRODUCTION-EXACT-INPUT-SET-CORRECTION-BOOTSTRAP-ACCEPTANCE-OPEN',
+ 'result_archive_sha256':'55807be078f3861de6d7f596cb3dcfeefabd8acd122de77e9cae8ba32e65b77d','result_archive_size_bytes':'133157','result_drive_file_id':'1YVYOLqptqpkCFP5u5JM8Uhm7wasDbdqF',
+ 'transaction_id':'LSLA-PROD-COLLECT-20260731T162143Z','repository_head':'2c2945a8bb2d3a013afb950b1f0d034a1af61b5d','repository_tree':'f55048924e180533bb1a65a6fdf17e2eae429f17','remote_head':'2c2945a8bb2d3a013afb950b1f0d034a1af61b5d',
+ 'owner_approval_statement_sha256':'45637e4377068f284b5fa7b7a1e8908fb2cf5c6ab73c24cb0f56e77817e1a3e2','accepted_transaction_count':'1','consumed_transaction_count':'1','remaining_transaction_count':'0',
+ 'source_archive_count':'9','byte_carrier_count':'33','provider_member_count':'41','provider_byte_count':'29047112','isolated_provider_open_count':'41','isolated_provider_read_count':'41',
+ 'replay_registry_sha256':'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855','replay_registry_size_bytes':'0',
+ 'selected_provider_live_open_count':'0','selected_provider_live_read_count':'0','project_replay_read_count':'0','project_replay_write_count':'0','local_supply_map_count':'0','target_population_write_count':'0','live_authority_count':'0',
+ 'repository_mutated':'NO','package_database_mutated':'NO','live_glibc_prefix_mutated':'NO','next_action':'review-and-accept-selected-provider-local-supply-live-authority-transaction-production-exact-input-set-correction-bootstrap-boundary'}
+for k,v in expected.items():
+ if r.get(k)!=v:fail('review mismatch '+k+'='+repr(r.get(k)))
+m=rows(MEMBERS)
+if len(m)!=41 or [x.get('sequence') for x in m]!=[str(i) for i in range(1,42)]:fail('member ordering')
+if len({x['contract_row_id'] for x in m})!=41 or len({x['provider_object_id'] for x in m})!=41:fail('member identity uniqueness')
+if any(x['expected_member_sha256']!=x['observed_sha256'] for x in m):fail('member digest mismatch')
+if sum(int(x['expected_member_size_bytes']) for x in m)!=29047112:fail('member byte total')
+if len({x['byte_carrier_coordinate'] for x in m})!=33:fail('carrier count')
+if any(x[k]!='YES' for x in m for k in ('elf64','aarch64','little_endian','shared_object','soname')):fail('ELF check')
+s=rows(SOURCES)
+if len(s)!=9 or len({x['source_result_sha256'] for x in s})!=9:fail('source count')
+meta={x['key']:x['value'] for x in rows(META)}
+for k,v in {'review_id':'SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-PRODUCTION-EXACT-INPUT-SET-CORRECTION-BOOTSTRAP-REVIEW-001','decision':'QUALIFIED_EXACT_PRODUCTION_BOOTSTRAP_COLLECTION_PROMOTION_CANDIDATE','acceptance_gate':'SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-PRODUCTION-EXACT-INPUT-SET-CORRECTION-BOOTSTRAP-ACCEPTANCE-OPEN','result_archive_sha256':'55807be078f3861de6d7f596cb3dcfeefabd8acd122de77e9cae8ba32e65b77d','transaction_id':'LSLA-PROD-COLLECT-20260731T162143Z','provider_member_count':'41','provider_byte_count':'29047112','byte_carrier_count':'33','source_archive_count':'9','accepted_transaction_count':'1','consumed_transaction_count':'1','remaining_transaction_count':'0','current_live_authority_count':'0','provider_open_gate_state':'CLOSED_NOT_AUTHORIZED','execution_authorization_state':'COLLECTION_ONLY_EXPIRED_WITH_TRANSACTION','local_supply_map_state':'NOT_PRODUCED_NOT_AUTHORIZED','target_population_state':'NOT_AUTHORIZED_UNPOPULATED','next_action':'review-and-accept-selected-provider-local-supply-live-authority-transaction-production-exact-input-set-correction-bootstrap-boundary'}.items():
+ if meta.get(k)!=v:fail('metadata mismatch '+k)
+for p,k in ((REVIEW,'review_tsv_sha256'),(MEMBERS,'provider_members_tsv_sha256'),(SOURCES,'source_archives_tsv_sha256')):
+ if meta.get(k)!=sha(p):fail('metadata digest '+k)
+markers=[
+ ('docs/evidence/selected-provider-local-supply-live-authority-transaction-production-exact-input-set-correction-bootstrap-review.md','QUALIFIED_EXACT_PRODUCTION_BOOTSTRAP_COLLECTION_PROMOTION_CANDIDATE'),
+ ('docs/current/ACTIVE_TASK.md','review-and-accept-selected-provider-local-supply-live-authority-transaction-production-exact-input-set-correction-bootstrap-boundary'),
+ ('docs/current/BRIEF.md','production exact input-set bootstrap review: QUALIFIED_EXACT_PRODUCTION_BOOTSTRAP_COLLECTION_PROMOTION_CANDIDATE'),
+ ('docs/current/STATE.yaml','production_exact_input_set_bootstrap_decision: qualified-exact-production-bootstrap-collection-promotion-candidate'),
+ ('docs/current/STATE.yaml','owner_activation_consumed_transaction_count: 1'),
+ ('docs/current/STATE.yaml','owner_activation_remaining_transaction_count: 0'),
+ ('docs/current/PENDING_ARTIFACTS.yaml','one-accepted-one-consumed-zero-remaining'),
+ ('STATUS.md','selected-provider local-supply production exact input-set bootstrap result qualified for repository promotion'),
+ ('docs/catalog.tsv','selected-provider-local-supply-live-authority-transaction-production-exact-input-set-correction-bootstrap-review	evidence	current	canonical')]
+for rel,marker in markers:
+ p=ROOT/rel
+ if not p.is_file() or marker not in p.read_text(encoding='utf-8'):fail('missing marker '+rel)
+texts='\n'.join((ROOT/x).read_text(encoding='utf-8') for x in ['docs/current/STATE.yaml','docs/current/BRIEF.md','docs/current/ACTIVE_TASK.md','docs/current/PENDING_ARTIFACTS.yaml','STATUS.md'])
+for forbidden in ('provider_open_gate_state: open-authorized','production_exact_input_set_bootstrap_live_authority: 1','local_supply_map_state: produced-authorized','target_population_state: authorized-populated','owner_activation_remaining_transaction_count: 1'):
+ if forbidden in texts:fail('authority widening '+forbidden)
+print('production exact input-set bootstrap review: PASS: exact v151 archive, 9 sources, 33 carriers, 41 members, 29047112 bytes, owner 1/1/0, zero live authority')

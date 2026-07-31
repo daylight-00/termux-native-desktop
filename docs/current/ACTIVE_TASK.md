@@ -1,43 +1,44 @@
-# Active task: supply explicit exact input-set envelope inputs
+# Active task: accept the v151 production exact-input result
 
-> Task ID: `supply-explicit-selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-envelope-inputs`
+> Task ID: `review-and-accept-selected-provider-local-supply-live-authority-transaction-production-exact-input-set-correction-bootstrap-boundary`
 
 ## Objective
 
-Receive one complete explicit input manifest. Do not generate an envelope while any required group is absent.
+Accept or reject the exact v151 repository-promotion candidate.
 
 ## Why now
 
-Preparation was rejected as `REJECTED_FAIL_CLOSED_MISSING_EXPLICIT_INPUTS`: ten groups are required and zero are supplied. Owner accounting remains `1 / 0 / 1`.
+The one authorized collection completed: 9 sources, 33 carriers, 41 members, 29,047,112 bytes and owner accounting `1 / 1 / 0`, with zero live authority.
 
 ## Required reading
 
+- `docs/evidence/selected-provider-local-supply-live-authority-transaction-production-exact-input-set-correction-bootstrap-review.md`
 - `docs/evidence/selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-boundary-acceptance.md`
-- `docs/evidence/selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-envelope-preparation-review.md`
-- `docs/evidence/selected-provider-local-supply-live-authority-transaction-owner-activation-decision-boundary-acceptance.md`
 
 ## Pending external inputs
 
-Five canonical document paths, trusted-time binding, replay path/baseline, forty-one ordered provider paths, expected UID/GID and an empty isolated output root.
+None. No additional transaction is authorized.
 
 ## In scope
 
-Explicit values and exact baseline validation only.
+Archive, seals, ordered member results, accounting and protected-state invariance.
 
 ## Out of scope
 
-Target population remains blocked. Do not acquire or populate provider bytes. Discovery, inferred defaults, provider or replay content access, transaction consumption, execution, mapping, population, materialization, publication, deployment and activation.
+Rerun, live provider or replay access, local map, population, materialization, publication, deployment, activation and execution.
 
 ## Next valid action
 
-Supply all ten groups in one immutable manifest for separate review.
+Review only the exact v151 promotion candidate.
 
 ## Stop conditions
 
-Stop on absence, placeholders, ambiguous paths, duplicates, baseline mismatch, accounting change or authority widening.
+Stop on any digest, ordering, baseline, accounting or authority mismatch.
 
 ## Completion criteria
 
-A complete manifest is available for review, or the boundary remains fail-closed with no envelope and zero authority.
+The candidate is accepted or rejected with live authority still zero.
+
+Do not acquire or populate provider bytes.
 
 Do not supply, discover, open, read, localize, populate or execute against live provider inputs.

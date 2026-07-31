@@ -33,11 +33,11 @@ for k,v in {
 need=[
  ("docs/evidence/selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-boundary-acceptance.md",'ACCEPTED_BOUNDED_NON_EXECUTING_EXACT_INPUT_SET_COLLECTION_SEALING_AUTHORITY'),
  ("docs/current/STATE.yaml","exact_input_set_collection_acceptance: accepted-bounded-non-executing-exact-input-set-collection-sealing-authority"),
- ("docs/current/STATE.yaml","owner_activation_consumed_transaction_count: 0"),
- ("docs/current/STATE.yaml","owner_activation_remaining_transaction_count: 1"),
+ ("docs/current/STATE.yaml","owner_activation_consumed_transaction_count: 1"),
+ ("docs/current/STATE.yaml","owner_activation_remaining_transaction_count: 0"),
  ("docs/current/BRIEF.md","exact input-set collection acceptance: ACCEPTED_BOUNDED_NON_EXECUTING_EXACT_INPUT_SET_COLLECTION_SEALING_AUTHORITY"),
- ("docs/current/ACTIVE_TASK.md","Task ID: `supply-explicit-selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-envelope-inputs`"),
- ("docs/current/PENDING_ARTIFACTS.yaml","exact-input-set-collection-transaction-envelope"),
+ ("docs/current/ACTIVE_TASK.md","Task ID: `review-and-accept-selected-provider-local-supply-live-authority-transaction-production-exact-input-set-correction-bootstrap-boundary`"),
+ ("docs/current/PENDING_ARTIFACTS.yaml","exact-input-set-collection-envelope"),
  ("STATUS.md","selected-provider local-supply live-authority exact input-set collection candidate accepted"),
  ("docs/catalog.tsv","selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-boundary-acceptance\tevidence\tcurrent\tcanonical"),
  ("docs/evidence/README.md","selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-boundary-acceptance.md"),
@@ -46,9 +46,9 @@ for rel,marker in need:
  p=ROOT/rel
  if not p.is_file() or marker not in p.read_text(encoding="utf-8"):fail("missing current marker: "+rel)
 alltext="\n".join((ROOT/p).read_text(encoding="utf-8") for p in ["docs/current/STATE.yaml","docs/current/BRIEF.md","docs/current/ACTIVE_TASK.md","docs/current/PENDING_ARTIFACTS.yaml","STATUS.md"])+"\n"+acc.read_text()
-for forbidden in ["owner_activation_consumed_transaction_count: 1","owner_activation_remaining_transaction_count: 0","selected_provider_open_authorized\tYES","selected_provider_read_authorized\tYES","project_replay_write_authorized\tYES","live_authority_transaction_input_set_state: supplied-authorized","provider_open_gate_state: open-authorized","current_live_authority_count: 1"]:
+for forbidden in ["selected_provider_open_authorized\tYES","selected_provider_read_authorized\tYES","project_replay_write_authorized\tYES","live_authority_transaction_input_set_state: supplied-authorized","provider_open_gate_state: open-authorized","current_live_authority_count: 1"]:
  if forbidden in alltext:fail("authority widening: "+forbidden)
 with tempfile.TemporaryDirectory(prefix="exact-input-set-collection-acceptance-regenerate-",dir=ROOT.parent) as t:
  subprocess.run([sys.executable,str(ROOT/GEN),"--repo-root",str(ROOT),"--output-root",t],check=True,stdout=subprocess.DEVNULL)
  if (Path(t)/REVIEW/NAME).read_bytes()!=acc.read_bytes():fail("generator reproducibility mismatch")
-print("exact input-set collection acceptance: PASS: exact six-artifact 20-input collection/sealing implementation accepted with one success, twenty fail-closed cases, bounded isolated metadata/envelope effects, one owner transaction unconsumed and zero current authority")
+print("exact input-set collection acceptance: PASS: historical six-artifact collection/sealing boundary retained; current owner accounting is 1/1/0 with zero live authority")

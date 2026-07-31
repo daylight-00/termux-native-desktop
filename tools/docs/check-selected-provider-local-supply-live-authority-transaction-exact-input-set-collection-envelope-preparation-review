@@ -18,22 +18,22 @@ r=rows[0]
 for k,v in {'decision':'REJECTED_FAIL_CLOSED_MISSING_EXPLICIT_INPUTS','required_input_group_count':'10','supplied_input_group_count':'0','missing_input_group_count':'10','envelope_generated':'NO','accepted_transaction_count':'1','consumed_transaction_count':'0','remaining_transaction_count':'1','selected_provider_open_count':'0','selected_provider_read_count':'0','provider_byte_count':'0','project_replay_open_count':'0','project_replay_read_count':'0','project_replay_write_count':'0','live_authority_count':'0','provider_open_gate_state':'CLOSED_NOT_AUTHORIZED','input_set_state':'NOT_SUPPLIED_NOT_AUTHORIZED'}.items():
  if r.get(k)!=v:fail('review mismatch: '+k)
 markers=[
- ('docs/current/STATE.yaml','exact_input_set_collection_envelope_preparation_decision: rejected-fail-closed-missing-explicit-inputs'),
- ('docs/current/STATE.yaml','owner_activation_consumed_transaction_count: 0'),
- ('docs/current/STATE.yaml','owner_activation_remaining_transaction_count: 1'),
- ('docs/current/ACTIVE_TASK.md','supply-explicit-selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-envelope-inputs'),
- ('docs/current/PENDING_ARTIFACTS.yaml','rejected-fail-closed-missing-explicit-inputs'),
- ('docs/current/BRIEF.md','exact input-set envelope preparation: REJECTED_FAIL_CLOSED_MISSING_EXPLICIT_INPUTS'),
+ ('docs/current/STATE.yaml','exact_input_set_collection_envelope_preparation_decision: historical-rejected-fail-closed-missing-explicit-inputs'),
+ ('docs/current/STATE.yaml','owner_activation_consumed_transaction_count: 1'),
+ ('docs/current/STATE.yaml','owner_activation_remaining_transaction_count: 0'),
+ ('docs/current/ACTIVE_TASK.md','review-and-accept-selected-provider-local-supply-live-authority-transaction-production-exact-input-set-correction-bootstrap-boundary'),
+ ('docs/current/PENDING_ARTIFACTS.yaml','exact-input-set-collection-envelope'),
+ ('docs/current/BRIEF.md','exact input-set envelope preparation: HISTORICAL_REJECTED_FAIL_CLOSED_MISSING_EXPLICIT_INPUTS'),
  ('STATUS.md','exact input-set collection envelope preparation rejected fail-closed'),
 ]
 for rel,m in markers:
  p=ROOT/rel
  if not p.is_file() or m not in p.read_text():fail('missing marker: '+rel)
 alltext='\n'.join((ROOT/x).read_text() for x in ['docs/current/STATE.yaml','docs/current/BRIEF.md','docs/current/ACTIVE_TASK.md','docs/current/PENDING_ARTIFACTS.yaml','STATUS.md'])+'\n'+SCHEMA.read_text()+TSV.read_text()
-for f in ['envelope_generated: true','owner_activation_consumed_transaction_count: 1','owner_activation_remaining_transaction_count: 0','provider_open_gate_state: open-authorized','live_authority_transaction_input_set_state: supplied-authorized']:
+for f in ['provider_open_gate_state: open-authorized','live_authority_transaction_input_set_state: supplied-authorized']:
  if f in alltext:fail('authority widening: '+f)
 with tempfile.TemporaryDirectory(prefix='envelope-prep-regenerate-',dir=ROOT.parent) as d:
  subprocess.run([sys.executable,str(GEN),'--repo-root',str(ROOT),'--output-root',d],check=True,stdout=subprocess.DEVNULL)
  q=Path(d)/BASE/'review'
  if (q/(NAME+'-schema.json')).read_bytes()!=SCHEMA.read_bytes() or (q/(NAME+'-review.tsv')).read_bytes()!=TSV.read_bytes():fail('generator reproducibility')
-print('exact input-set envelope preparation: PASS: ten explicit input groups absent, envelope rejected fail-closed, owner transaction unconsumed and zero current authority')
+print('exact input-set envelope preparation: PASS: historical fail-closed envelope-preparation evidence retained; current owner accounting is 1/1/0 and live authority remains zero')

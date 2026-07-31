@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-28.19`
+> Semantic state version: `2026-07-28.20`
 
 ## Purpose and operational boundary
 
@@ -29,7 +29,7 @@ owner activation decision acceptance: ACCEPTED_EXPLICIT_ONE_NON_EXECUTING_EXACT_
 owner activation statement SHA-256: aa143dbbd2b188f7c1000cda2e1a6c89bf4e526569c124d0534e5ecdded175d3
 owner activation acceptance statement SHA-256: b0e9fb7171f3dec721b505ad47acc09fa74e986ed4a06ff9ba09e682461d1af7
 owner activation authorized scope: ONE_NON_EXECUTING_EXACT_INPUT_SET_COLLECTION_SEALING_AND_REVIEW_TRANSACTION_ONLY
-owner activation transactions accepted / consumed / remaining: 1 / 0 / 1
+owner activation transactions accepted / consumed / remaining: 1 / 1 / 0
 exact input-set collection candidate: QUALIFIED_NON_EXECUTING_EXACT_INPUT_SET_COLLECTION_SEALING_CANDIDATE_HISTORICAL
 exact input-set collection acceptance: ACCEPTED_BOUNDED_NON_EXECUTING_EXACT_INPUT_SET_COLLECTION_SEALING_AUTHORITY
 exact input-set collection coverage / cases: 20 inputs / 1 success + 20 fail-closed
@@ -39,11 +39,15 @@ exact input-set isolated repository / remote / executor captures: 2 / 1 / 1
 exact input-set isolated envelope writes: 2
 exact input-set selected-provider opens / reads / bytes: 0 / 0 / 0
 exact input-set project replay opens / reads / writes / live authority: 0 / 0 / 0 / 0
-live-authority input set: NOT_SUPPLIED_NOT_AUTHORIZED
-exact input-set envelope preparation: REJECTED_FAIL_CLOSED_MISSING_EXPLICIT_INPUTS
-exact input-set envelope required / supplied / missing groups: 10 / 0 / 10
-exact input-set envelope generated: NO
-exact input-set envelope acceptance gate: NOT_OPEN_NO_CANDIDATE
+live-authority exact input set: QUALIFIED_SEALED_PRODUCTION_CANDIDATE_PROMOTION_PENDING
+exact input-set envelope preparation: HISTORICAL_REJECTED_FAIL_CLOSED_MISSING_EXPLICIT_INPUTS
+production exact input-set bootstrap review: QUALIFIED_EXACT_PRODUCTION_BOOTSTRAP_COLLECTION_PROMOTION_CANDIDATE
+production source archives / byte carriers / members: 9 / 33 / 41
+production isolated provider bytes: 29,047,112
+production isolated provider opens / reads: 41 / 41
+production envelope generated / sealed / reviewed: YES / YES / YES
+production promotion acceptance gate: OPEN
+production selected-provider live opens / reads / live authority: 0 / 0 / 0
 materializer object-plan rows:    41
 materializer state rows:          20
 ordered operation rows:           24
@@ -172,7 +176,7 @@ Design acceptance is non-executing. It creates no local supply map, reads no pro
 
 `SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-DESIGN-ACCEPT-001` accepts the exact six-artifact 20/26/52/30 design boundary and 448 inherited semantic rows while preserving zero live documents, execution authorizations, replay writes, selected-provider opens/reads, provider bytes, local maps and live authority.
 
-The active task is `generate-and-review-non-executing-selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-candidate`. The collector must remain explicit-path-only and fail closed before provider open/read or project replay mutation; no live input is supplied during repository review.
+The active task is exact v151 promotion acceptance. No new transaction, live provider read or local-supply map is authorized.
 
 
 ## Explicit owner activation decision candidate
@@ -181,7 +185,7 @@ The active task is `generate-and-review-non-executing-selected-provider-local-su
 
 ## Explicit owner activation decision boundary acceptance
 
-`SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-OWNER-ACTIVATION-ACCEPT-001` accepts the exact v143 candidate and the explicit approval statement with SHA-256 `b0e9fb7171f3dec721b505ad47acc09fa74e986ed4a06ff9ba09e682461d1af7`. The accepted scope is one non-executing exact input-set collection, sealing and review transaction only. Zero transactions are consumed and one remains. No input document, provider coordinate, replay baseline or execution authorization is supplied; selected-provider and live-authority effects remain zero.
+`SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-OWNER-ACTIVATION-ACCEPT-001` accepts the exact v143 candidate and the explicit approval statement with SHA-256 `b0e9fb7171f3dec721b505ad47acc09fa74e986ed4a06ff9ba09e682461d1af7`. The accepted scope is one non-executing exact input-set collection, sealing and review transaction only. One transaction is now consumed and zero remain after the separately reviewed v151 production bootstrap. The collection-only documents are sealed evidence and do not create continuing execution authority; selected-provider live and live-authority effects remain zero.
 
 
 
