@@ -1,7 +1,7 @@
 # Status
 
 bundle-native documentation and operations control planes active; ADR 0005 claim classification complete with 95 separated claims; exact bounded provider set retained; bounded selected provider composition accepted as `ACCEPTED_BOUNDED_COMPLETE_SELECTED_PROVIDER_COMPOSITION` with 42 decision rows, 41 included members, one deferred libtasn1 member and zero selected identity gaps; non-mutating target manifest qualified as `QUALIFIED_NON_MUTATING_SELECTED_TARGET_MANIFEST` with 41 concrete rows, 41 SONAME alias rows and zero target-path collisions; target population, materialization, deployment and activation blocked
-> **Updated:** 2026-07-30
+> **Updated:** 2026-08-01
 
 ## Repository and deployment consolidation
 
@@ -636,3 +636,12 @@ selected-provider local-supply live-authority exact input-set collection candida
 `SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-PRODUCTION-EXACT-INPUT-SET-CORRECTION-BOOTSTRAP-REVIEW-001` qualifies the exact v151 result archive `55807be078f3861de6d7f596cb3dcfeefabd8acd122de77e9cae8ba32e65b77d` as `QUALIFIED_EXACT_PRODUCTION_BOOTSTRAP_COLLECTION_PROMOTION_CANDIDATE`. Nine exact source archives and thirty-three byte carriers supplied forty-one ordered provider members totaling 29,047,112 bytes. The sealed manifest, control documents, empty replay baseline and envelope pass independent review. Owner accounting is one accepted, one consumed and zero remaining. Repository, package database, live glibc prefix, selected-provider live access, project replay, local-supply map, target population and live authority remain unchanged.
 
 selected-provider local-supply production exact input-set bootstrap result qualified for repository promotion
+
+
+## Production exact input-set correction/bootstrap boundary acceptance
+
+`SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-PRODUCTION-EXACT-INPUT-SET-CORRECTION-BOOTSTRAP-ACCEPT-001` accepts the exact v151 non-executing production collection boundary after the v153 promotion commit and remote reconciliation. Nine source archives, thirty-three exact byte carriers and forty-one ordered AArch64 provider members totaling 29,047,112 bytes are frozen with owner accounting `1 / 1 / 0`, an unchanged empty replay baseline and zero live authority.
+
+Trusted-time evidence is external and canonical, replay identity is exact and unchanged, the isolated output root is required empty, and authority provenance is distinct from the exact byte carrier. Acceptance creates no new transaction, provider-open authority, project replay authority, local-supply map, population, materialization, publication, deployment or activation.
+
+production exact input-set correction/bootstrap boundary accepted

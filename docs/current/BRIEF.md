@@ -1,10 +1,10 @@
 # Current project brief
 
-> Semantic state version: `2026-07-28.20`
+> Semantic state version: `2026-07-28.21`
 
 ## Purpose and operational boundary
 
-`termux-native-desktop` develops a native Termux/glibc workstation while separating provider authority, composition, target policy, supply evidence, materializer design, design acceptance, local-supply mapping, execution authorization, population and activation. User Termux remains authoritative for execution and remote mutation.
+User Termux remains authoritative for execution and remote mutation.
 
 ## Current boundary
 
@@ -39,14 +39,15 @@ exact input-set isolated repository / remote / executor captures: 2 / 1 / 1
 exact input-set isolated envelope writes: 2
 exact input-set selected-provider opens / reads / bytes: 0 / 0 / 0
 exact input-set project replay opens / reads / writes / live authority: 0 / 0 / 0 / 0
-live-authority exact input set: QUALIFIED_SEALED_PRODUCTION_CANDIDATE_PROMOTION_PENDING
+live-authority exact input set: ACCEPTED_SEALED_PRODUCTION_BOUNDARY_NO_CURRENT_AUTHORIZATION
 exact input-set envelope preparation: HISTORICAL_REJECTED_FAIL_CLOSED_MISSING_EXPLICIT_INPUTS
 production exact input-set bootstrap review: QUALIFIED_EXACT_PRODUCTION_BOOTSTRAP_COLLECTION_PROMOTION_CANDIDATE
 production source archives / byte carriers / members: 9 / 33 / 41
 production isolated provider bytes: 29,047,112
 production isolated provider opens / reads: 41 / 41
 production envelope generated / sealed / reviewed: YES / YES / YES
-production promotion acceptance gate: OPEN
+production promotion acceptance gate: ACCEPTED_CLOSED_EXACT_BOUNDARY
+production exact input-set bootstrap acceptance: ACCEPTED_EXACT_NON_EXECUTING_PRODUCTION_BOOTSTRAP_COLLECTION_BOUNDARY_ZERO_LIVE_AUTHORITY
 production selected-provider live opens / reads / live authority: 0 / 0 / 0
 materializer object-plan rows:    41
 materializer state rows:          20
@@ -134,10 +135,6 @@ materialization/publication:   blocked / blocked
 activation:                    blocked
 ```
 
-`SELECTED-PROVIDER-MATERIALIZER-DESIGN-ACCEPT-001` freezes the exact nine v112 candidate artifacts. Accepted invariants include content-addressed objects, hardlink-only reuse with no copy fallback, regular-before-alias ordering, four atomic-family barriers, a 1 MiB receipt cap, immutable generation publication, `previous`-before-`current` selector ordering, rollback, resume and orphan-reporting contracts.
-
-Design acceptance is non-executing. It creates no local supply map, reads no provider bytes and does not authorize the generation root, object writes, population, materialization, publication, deployment or activation.
-
 ## Current phase
 
 `SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-CONTRACT-ACCEPT-001` accepts the exact four-artifact contract boundary: 41 rows, 24 validation rules, a canonical empty receipt schema, the 23/4/14 index-contract split and zero populated local paths. Acceptance grants no path discovery, byte read or execution authority.
@@ -176,7 +173,7 @@ Design acceptance is non-executing. It creates no local supply map, reads no pro
 
 `SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-DESIGN-ACCEPT-001` accepts the exact six-artifact 20/26/52/30 design boundary and 448 inherited semantic rows while preserving zero live documents, execution authorizations, replay writes, selected-provider opens/reads, provider bytes, local maps and live authority.
 
-The active task is exact v151 promotion acceptance. No new transaction, live provider read or local-supply map is authorized.
+The production exact-input boundary is accepted. The repository awaits a new explicit owner decision; live access and local-supply map production remain unauthorized.
 
 
 ## Explicit owner activation decision candidate

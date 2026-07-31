@@ -1,9 +1,9 @@
 schema_version: 1
-state_version: 2026-07-28.20
+state_version: 2026-07-28.21
 updated_on: 2026-08-01
 
 project:
-  phase: selected-provider-local-supply-live-authority-transaction-production-exact-input-set-correction-bootstrap-promotion-review
+  phase: selected-provider-local-supply-live-authority-transaction-production-exact-input-set-correction-bootstrap-boundary-accepted-owner-decision-pending
   status: active
 
 repository:
@@ -80,6 +80,7 @@ documentation:
   local_supply_live_authority_transaction_exact_input_set_collection_review: docs/evidence/selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-review.md
   local_supply_live_authority_transaction_exact_input_set_collection_acceptance: docs/evidence/selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-boundary-acceptance.md
   local_supply_live_authority_transaction_production_exact_input_set_bootstrap_review: docs/evidence/selected-provider-local-supply-live-authority-transaction-production-exact-input-set-correction-bootstrap-review.md
+  local_supply_live_authority_transaction_production_exact_input_set_bootstrap_acceptance: docs/evidence/selected-provider-local-supply-live-authority-transaction-production-exact-input-set-correction-bootstrap-boundary-acceptance.md
   local_supply_evidence_authorization_issuance_coordinate_production_implementation_review: docs/evidence/selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-implementation-review.md
   local_supply_evidence_authorization_issuance_coordinate_production_implementation_acceptance: docs/evidence/selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-implementation-boundary-acceptance.md
   local_supply_evidence_live_input_adapter_execution_authorization_contract_review: docs/evidence/selected-provider-local-supply-evidence-live-input-adapter-execution-authorization-contract-review.md
@@ -531,7 +532,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: review-and-accept-selected-provider-local-supply-live-authority-transaction-production-exact-input-set-correction-bootstrap-boundary
+  id: await-explicit-owner-decision-for-selected-provider-local-supply-map-production-transaction
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:
@@ -813,7 +814,12 @@ selected_target_policy:
   production_exact_input_set_bootstrap_reviewed: true
   production_exact_input_set_bootstrap_review_id: SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-PRODUCTION-EXACT-INPUT-SET-CORRECTION-BOOTSTRAP-REVIEW-001
   production_exact_input_set_bootstrap_decision: qualified-exact-production-bootstrap-collection-promotion-candidate
-  production_exact_input_set_bootstrap_acceptance_gate: open
+  production_exact_input_set_bootstrap_acceptance_gate: accepted-closed-exact-boundary
+  production_exact_input_set_bootstrap_acceptance: accepted-exact-non-executing-production-bootstrap-collection-boundary-zero-live-authority
+  production_exact_input_set_bootstrap_acceptance_id: SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-PRODUCTION-EXACT-INPUT-SET-CORRECTION-BOOTSTRAP-ACCEPT-001
+  production_exact_input_set_bootstrap_promotion_result_sha256: db2fa441de06edde9dc44ef9e3661dc67db0f14cca90ad50afe8f180e5db1109
+  production_exact_input_set_bootstrap_promotion_commit: 2ac9b6870c1ad9bd7e06c68ec40d8a13863f8d32
+  production_exact_input_set_bootstrap_promotion_tree: 0e565e244f7f52728cb9805a8bfe70eb8a10703a
   production_exact_input_set_bootstrap_result_sha256: 55807be078f3861de6d7f596cb3dcfeefabd8acd122de77e9cae8ba32e65b77d
   production_exact_input_set_bootstrap_transaction_id: LSLA-PROD-COLLECT-20260731T162143Z
   production_exact_input_set_bootstrap_source_archives: 9
@@ -833,8 +839,8 @@ selected_target_policy:
   production_exact_input_set_bootstrap_repository_mutated: false
   production_exact_input_set_bootstrap_package_database_mutated: false
   production_exact_input_set_bootstrap_live_glibc_prefix_mutated: false
-  live_authority_transaction_input_set_state: qualified-sealed-production-candidate-promotion-pending
-  next_task: review-and-accept-selected-provider-local-supply-live-authority-transaction-production-exact-input-set-correction-bootstrap-boundary
+  live_authority_transaction_input_set_state: accepted-sealed-production-boundary-no-current-authorization
+  next_task: await-explicit-owner-decision-for-selected-provider-local-supply-map-production-transaction
 
   retained_result_coordinate_generation_contract_review:
     review_id: RETAINED-SUPPLY-COORDINATE-GENERATION-CONTRACT-001

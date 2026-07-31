@@ -1,22 +1,27 @@
 schema_version: 1
-state_version: 2026-07-28.20
+state_version: 2026-07-28.21
 
 blocking:
-  - id: live-authority-transaction-input-set
-    state: qualified-exact-candidate-acceptance-open
-    note: The exact v151 result is qualified for repository promotion; acceptance remains separate.
+  - id: local-supply-map-production-owner-decision
+    state: not-supplied-not-authorized
+    note: A new explicit owner decision is required before any local-supply map production transaction may be reviewed.
   - id: local-supply-map-evidence
     state: not-produced-not-authorized
-    note: The sealed input set does not authorize a local-supply map. A separate explicit owner decision is required after promotion acceptance.
+    note: Production bootstrap acceptance freezes evidence only and grants no local-supply map authority.
   - id: owner-activation-transaction
     state: one-accepted-one-consumed-zero-remaining
-    note: The single accepted non-executing collection transaction was consumed successfully. No additional transaction is authorized.
+    note: The prior collection-only transaction is consumed and cannot be replayed or reused.
 
 non_blocking:
+  - id: live-authority-transaction-input-set
+    state: accepted-sealed-production-boundary-no-current-authorization
+    note: The exact collection is accepted evidence only; no transaction or execution authorization remains.
+  - id: production-exact-input-set-bootstrap-boundary
+    state: accepted-closed-exact-boundary
   - id: production-exact-input-set-bootstrap-result
-    state: qualified-nine-sources-thirty-three-carriers-forty-one-members-29047112-bytes
+    state: accepted-nine-sources-thirty-three-carriers-forty-one-members-29047112-bytes
   - id: exact-input-set-collection-envelope
-    state: generated-sealed-reviewed-promotion-pending
+    state: generated-sealed-reviewed-accepted-evidence-only
   - id: provider-open-gate
     state: closed-not-authorized
   - id: execution-authorization

@@ -49,7 +49,7 @@ require_text docs/history/README.md 'History is excluded from default onboarding
 require_text docs/operations/WORKFLOW.md 'RECEIVE_FULL_BUNDLE' 'operations workflow begins from a full bundle'
 require_text docs/operations/CHECKPOINTS.md 'Normal accepted work requires no narrative handoff' 'checkpoint contract removes mandatory handoff creation'
 require_text docs/evidence/provider-claim-classification.md 'STILL_NECESSARY: 0' 'provider classification removes blanket mandatory SUP-02 execution'
-require_text docs/current/ACTIVE_TASK.md 'Task ID: `review-and-accept-selected-provider-local-supply-live-authority-transaction-production-exact-input-set-correction-bootstrap-boundary`' 'current task is production exact input-set bootstrap promotion review'
+require_text docs/current/ACTIVE_TASK.md 'Task ID: `await-explicit-owner-decision-for-selected-provider-local-supply-map-production-transaction`' 'current task is production exact input-set bootstrap promotion review'
 
 reject_text docs/architecture.md 'Current deployment uses source-linked leaves.' 'architecture has no stale source-linked current deployment claim'
 reject_text docs/glibc-layer.md 'Current deployed leaves are source-linked symlinks.' 'glibc guide has no stale source-linked current deployment claim'

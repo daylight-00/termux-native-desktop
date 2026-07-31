@@ -224,7 +224,7 @@ markers = [
     ),
     (
         "docs/current/ACTIVE_TASK.md",
-        "Task ID: `review-and-accept-selected-provider-local-supply-live-authority-transaction-production-exact-input-set-correction-bootstrap-boundary`",
+        "Task ID: `await-explicit-owner-decision-for-selected-provider-local-supply-map-production-transaction`",
     ),
     (
         "docs/current/BRIEF.md",
