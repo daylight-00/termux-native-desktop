@@ -1,9 +1,9 @@
 schema_version: 1
-state_version: 2026-07-28.22
+state_version: 2026-07-28.23
 updated_on: 2026-08-01
 
 project:
-  phase: selected-provider-local-supply-map-production-owner-decision-accepted-transaction-ready
+  phase: selected-provider-local-supply-map-production-promotion-review
   status: active
 
 repository:
@@ -82,6 +82,7 @@ documentation:
   local_supply_live_authority_transaction_production_exact_input_set_bootstrap_review: docs/evidence/selected-provider-local-supply-live-authority-transaction-production-exact-input-set-correction-bootstrap-review.md
   local_supply_live_authority_transaction_production_exact_input_set_bootstrap_acceptance: docs/evidence/selected-provider-local-supply-live-authority-transaction-production-exact-input-set-correction-bootstrap-boundary-acceptance.md
   local_supply_map_production_owner_decision_acceptance: docs/evidence/selected-provider-local-supply-map-production-owner-decision-boundary-acceptance.md
+  local_supply_map_production_review: docs/evidence/selected-provider-local-supply-map-production-review.md
   local_supply_evidence_authorization_issuance_coordinate_production_implementation_review: docs/evidence/selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-implementation-review.md
   local_supply_evidence_authorization_issuance_coordinate_production_implementation_acceptance: docs/evidence/selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-implementation-boundary-acceptance.md
   local_supply_evidence_live_input_adapter_execution_authorization_contract_review: docs/evidence/selected-provider-local-supply-evidence-live-input-adapter-execution-authorization-contract-review.md
@@ -533,12 +534,12 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: execute-one-owner-authorized-selected-provider-local-supply-map-production-transaction
+  id: review-and-accept-selected-provider-local-supply-map-production-boundary
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:
   document: docs/current/PENDING_ARTIFACTS.yaml
-  blocking_count: 3
+  blocking_count: 2
 
 selected_target_policy:
   target_manifest_acceptance: accepted-bounded-non-mutating-selected-target-manifest
@@ -703,10 +704,10 @@ selected_target_policy:
   live_authority_transaction_current_selected_provider_opens: 0
   live_authority_transaction_current_selected_provider_reads: 0
   live_authority_transaction_current_provider_bytes: 0
-  live_authority_transaction_current_local_supply_maps: 0
+  live_authority_transaction_current_local_supply_maps: 1
   live_authority_transaction_current_live_authority: 0
   live_evidence_execution_authorized: false
-  local_supply_map_produced: false
+  local_supply_map_produced: true
   materialization_authorized: false
   deployment_authorized: false
   activation_authorized: false
@@ -848,8 +849,8 @@ selected_target_policy:
   local_supply_map_production_owner_statement_timezone: Asia/Seoul
   local_supply_map_production_authorized_scope: exact-41-coordinate-binding-map-generation-sealing-review-only
   local_supply_map_production_accepted_transaction_count: 1
-  local_supply_map_production_consumed_transaction_count: 0
-  local_supply_map_production_remaining_transaction_count: 1
+  local_supply_map_production_consumed_transaction_count: 1
+  local_supply_map_production_remaining_transaction_count: 0
   local_supply_map_production_selected_provider_live_mutation_authorized: false
   local_supply_map_production_target_population_authorized: false
   local_supply_map_production_materialization_authorized: false
@@ -857,7 +858,24 @@ selected_target_policy:
   local_supply_map_production_deployment_authorized: false
   local_supply_map_production_activation_authorized: false
   live_authority_transaction_input_set_state: accepted-sealed-production-boundary-no-current-authorization
-  next_task: await-explicit-owner-decision-for-selected-provider-local-supply-map-production-transaction
+  local_supply_map_production_review: qualified-exact-41-row-local-supply-map-production-promotion-candidate
+  local_supply_map_production_review_id: SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-PRODUCTION-REVIEW-001
+  local_supply_map_production_acceptance_gate: open
+  local_supply_map_production_acceptance_gate_id: SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-PRODUCTION-ACCEPTANCE-OPEN
+  local_supply_map_production_result_archive_sha256: f7112a196f715e729460b27a1ef57922b70bb2a3cff1251f308dd543c8538675
+  local_supply_map_production_result_drive_file_id: 1uwwJkyhiZKGyTMc4wfZ74WoPieSrXjGp
+  local_supply_map_production_transaction_id: LSM-PROD-20260801T001839Z
+  local_supply_map_production_localization_mode: exact-v151-isolated-provider-member-reuse
+  local_supply_map_production_map_file_sha256: ae8d9bdd0b26d084a54e6689b9088a140f0bf19aef62df9ab5c68e4cd8a37375
+  local_supply_map_production_map_receipt_sha256: fc5c6d8cc28aee4b0f1c7b4a8ec229fe2a6b9b4fe8f88f04b2dfd6fcb7b77cdd
+  local_supply_map_production_candidate_count: 1
+  local_supply_map_production_candidate_row_count: 41
+  local_supply_map_production_candidate_byte_count: 29047112
+  local_supply_map_production_validation_pass_count: 24
+  local_supply_map_production_atomic_family_complete_count: 4
+  local_supply_map_production_target_population_writes: 0
+  local_supply_map_production_live_authority: 0
+  next_task: review-and-accept-selected-provider-local-supply-map-production-boundary
 
   retained_result_coordinate_generation_contract_review:
     review_id: RETAINED-SUPPLY-COORDINATE-GENERATION-CONTRACT-001

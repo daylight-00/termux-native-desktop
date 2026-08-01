@@ -192,7 +192,7 @@ required = [
     ("docs/evidence/selected-provider-local-supply-live-authority-transaction-implementation-review.md", "QUALIFIED_NON_EXECUTING_SYNTHETIC_LIVE_AUTHORITY_TRANSACTION_IMPLEMENTATION_CANDIDATE"),
     ("docs/current/BRIEF.md", "live authority transaction implementation: QUALIFIED_NON_EXECUTING_SYNTHETIC_CANDIDATE"),
     ("docs/current/STATE.yaml", "live_authority_transaction_implementation_state: qualified-non-executing-synthetic-candidate-historical"),
-    ("docs/current/ACTIVE_TASK.md", "Task ID: `execute-one-owner-authorized-selected-provider-local-supply-map-production-transaction`"),
+    ("docs/current/ACTIVE_TASK.md", "Task ID: `review-and-accept-selected-provider-local-supply-map-production-boundary`"),
     ("docs/current/PENDING_ARTIFACTS.yaml", "live-authority-transaction-input-set"),
     ("STATUS.md", "selected-provider local-supply live-authority transaction implementation candidate qualified"),
     ("docs/catalog.tsv", "selected-provider-local-supply-live-authority-transaction-implementation-review\tevidence\tcurrent\tcanonical"),
@@ -205,7 +205,7 @@ texts = "\n".join((ROOT / rel).read_text(encoding="utf-8") for rel in ["docs/cur
 for forbidden in (
     "live_authority_transaction_current_live_documents: 1", "live_authority_transaction_current_replay_writes: 1",
     "live_authority_transaction_current_selected_provider_opens: 1", "live_authority_transaction_current_selected_provider_reads: 1",
-    "live_authority_transaction_current_provider_bytes: 1", "live_authority_transaction_current_local_supply_maps: 1",
+    "live_authority_transaction_current_provider_bytes: 1",
     "live_authority_transaction_current_live_authority: 1", "provider_open_gate_state: open-authorized", "replay_registry_state: opened-written",
 ):
     if forbidden in texts:

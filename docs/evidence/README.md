@@ -133,3 +133,5 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 - [`selected-provider-local-supply-live-authority-transaction-production-exact-input-set-correction-bootstrap-boundary-acceptance.md`](selected-provider-local-supply-live-authority-transaction-production-exact-input-set-correction-bootstrap-boundary-acceptance.md) — exact v151 production bootstrap collection boundary acceptance with nine sources, thirty-three carriers, forty-one verified members, owner accounting 1/1/0, an unchanged empty replay baseline and zero live authority.
 
 - [`selected-provider-local-supply-map-production-owner-decision-boundary-acceptance.md`](selected-provider-local-supply-map-production-owner-decision-boundary-acceptance.md) — exact owner acceptance of one 41-member local-supply-map production transaction; population, later lifecycle effects and live mutation remain forbidden.
+
+- [`selected-provider-local-supply-map-production-review.md`](selected-provider-local-supply-map-production-review.md) — exact v158 41-row map-production result promotion review; separate acceptance required and target population remains unauthorized.

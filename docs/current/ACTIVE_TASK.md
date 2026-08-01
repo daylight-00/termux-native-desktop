@@ -1,43 +1,45 @@
-# Active task: execute one owner-authorized local-supply map production transaction
+# Active task: review and accept the selected-provider local-supply map production boundary
 
-> Task ID: `execute-one-owner-authorized-selected-provider-local-supply-map-production-transaction`
+> Task ID: `review-and-accept-selected-provider-local-supply-map-production-boundary`
+>
+> Status: promotion candidate qualified; separate acceptance required
 
 ## Objective
 
-Produce and seal one exact 41-row local-supply map while consuming one accepted transaction.
+Verify the exact v158 41-row map candidate and prepare its bounded repository acceptance.
 
 ## Why now
 
-The accepted boundary contains 9 sources, 33 carriers, 41 members, 29,047,112 bytes and zero live authority. The owner authorized one map-production transaction with SHA-256 `0a68ff343e98680b6409f603dc67d6b578e859fb0013abb7e2f4bc580c2d68f0`.
+The one authorized production transaction is consumed; the sealed result remains candidate-only.
 
 ## Required reading
 
+- `docs/evidence/selected-provider-local-supply-map-production-review.md`
+- `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-map-production-candidate.json`
 - `docs/evidence/selected-provider-local-supply-map-production-owner-decision-boundary-acceptance.md`
-- `docs/evidence/selected-provider-local-supply-live-authority-transaction-production-exact-input-set-correction-bootstrap-boundary-acceptance.md`
-- `docs/evidence/selected-provider-local-supply-map-contract-boundary-acceptance.md`
 
 ## Pending external inputs
 
-None. Use only accepted coordinates and fail closed on missing or changed input.
+None.
 
 ## In scope
 
-Bind 41 verified isolated members, reuse or reacquire exact carriers, generate and seal the map and receipts, review the result and consume one transaction.
+Review the exact map, receipt, `1 / 1 / 0` accounting and zero-later-effect boundary.
 
 ## Out of scope
 
-Selected-provider live-path discovery, open, read or mutation; project replay mutation; population, materialization, publication, deployment, activation, package installation or live-prefix mutation.
+Selected-provider live-path discovery, open, read or mutation; replay mutation; target population and later effects. Do not acquire or populate bytes.
 
 ## Next valid action
 
-Generate and run one fail-closed production package that emits the exact local-supply map and review evidence without populating a target.
+Run one fail-closed acceptance package bound to v158 and the promotion-review commit.
 
 ## Stop conditions
 
-Stop on any identity, digest, repository, transaction-count or protected-state mismatch, and before population or live mutation.
+Stop on any digest, row, seal, repository, accounting, protected-state or authority mismatch.
 
 ## Completion criteria
 
-One 41-row map and its receipts are generated, sealed and reviewed; transaction accounting becomes `1 accepted / 1 consumed / 0 remaining`; repository authority is promoted separately; target population and all later effects remain unauthorized.
+Accept the exact map boundary while population, materialization, publication, deployment and activation remain unauthorized.
 
 Do not populate, materialize, publish, deploy or activate.

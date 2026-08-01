@@ -36,7 +36,7 @@ need=[
  ("docs/current/STATE.yaml","owner_activation_consumed_transaction_count: 1"),
  ("docs/current/STATE.yaml","owner_activation_remaining_transaction_count: 0"),
  ("docs/current/BRIEF.md","exact input-set collection acceptance: ACCEPTED_BOUNDED_NON_EXECUTING_EXACT_INPUT_SET_COLLECTION_SEALING_AUTHORITY"),
- ("docs/current/ACTIVE_TASK.md","Task ID: `execute-one-owner-authorized-selected-provider-local-supply-map-production-transaction`"),
+ ("docs/current/ACTIVE_TASK.md","Task ID: `review-and-accept-selected-provider-local-supply-map-production-boundary`"),
  ("docs/current/PENDING_ARTIFACTS.yaml","exact-input-set-collection-envelope"),
  ("STATUS.md","selected-provider local-supply live-authority exact input-set collection candidate accepted"),
  ("docs/catalog.tsv","selected-provider-local-supply-live-authority-transaction-exact-input-set-collection-boundary-acceptance\tevidence\tcurrent\tcanonical"),

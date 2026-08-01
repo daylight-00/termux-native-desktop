@@ -1,40 +1,37 @@
 schema_version: 1
-state_version: 2026-07-28.22
+state_version: 2026-07-28.23
 
 blocking:
-  - id: local-supply-map-production-result
-    state: authorized-not-executed-one-transaction-remaining
-    note: One exact coordinate-binding, map-generation, sealing and review transaction is accepted but not yet consumed.
-  - id: local-supply-map-evidence
-    state: not-produced-authorized-one-transaction
-    note: The map must be generated only from the accepted 41-member production-bootstrap boundary and reviewed before repository promotion.
+  - id: local-supply-map-production-boundary-acceptance
+    state: qualified-promotion-candidate-acceptance-open
+    note: Exact v158 41-row map and canonical receipt are promoted for separate acceptance.
   - id: target-population
     state: not-authorized-unpopulated
-    note: Map-production authorization does not authorize copying or linking any member into a target tree.
+    note: Map production and promotion review do not authorize copying or linking any member into a target tree.
 
 non_blocking:
+  - id: local-supply-map-production-result
+    state: one-exact-41-row-candidate-produced-sealed-reviewed
+    note: Map file SHA-256 ae8d9bdd0b26d084a54e6689b9088a140f0bf19aef62df9ab5c68e4cd8a37375; receipt seal fc5c6d8cc28aee4b0f1c7b4a8ec229fe2a6b9b4fe8f88f04b2dfd6fcb7b77cdd.
   - id: local-supply-map-production-owner-decision
-    state: accepted-one-transaction-zero-consumed-one-remaining
-    note: Exact owner statement SHA-256 0a68ff343e98680b6409f603dc67d6b578e859fb0013abb7e2f4bc580c2d68f0.
-  - id: owner-activation-transaction
-    state: one-accepted-one-consumed-zero-remaining-historical
-    note: The prior collection-only transaction remains consumed and cannot be replayed or reused.
+    state: one-accepted-one-consumed-zero-remaining
+    note: The exact owner-authorized map-production transaction is exhausted and cannot be replayed.
   - id: live-authority-transaction-input-set
-    state: accepted-sealed-production-boundary-map-production-only
-    note: The exact collection is accepted evidence; no target-population or activation authority follows.
-  - id: production-exact-input-set-bootstrap-result
-    state: accepted-nine-sources-thirty-three-carriers-forty-one-members-29047112-bytes
-    note: Exact accepted evidence remains the sole map-production input authority.
+    state: accepted-sealed-production-boundary-map-candidate-only
+    note: The exact collection and map are evidence; no population or activation authority follows.
   - id: production-exact-input-set-bootstrap-boundary
     state: accepted-closed-exact-boundary
-  - id: execution-authorization
-    state: map-production-only-one-transaction-no-population
-    note: The accepted owner decision authorizes map production only and is not target or activation authority.
   - id: exact-input-set-collection-envelope
     state: generated-sealed-reviewed-accepted-evidence-only
-    note: Historical collection envelope remains sealed evidence and is not a reusable transaction.
+  - id: local-supply-map-evidence
+    state: one-exact-41-row-candidate-produced-sealed-reviewed
+    note: Candidate promotion review is complete; separate acceptance remains blocking.
+  - id: production-exact-input-set-bootstrap-result
+    state: accepted-nine-sources-thirty-three-carriers-forty-one-members-29047112-bytes
+  - id: execution-authorization
+    state: consumed-map-production-only-no-continuing-execution-authority
   - id: provider-open-gate
-    state: isolated-exact-coordinate-transaction-only-live-mutation-forbidden
+    state: closed-after-isolated-exact-coordinate-transaction-live-mutation-forbidden
   - id: replay-registry
     state: initial-isolated-empty-baseline-verified-unchanged
   - id: materialization

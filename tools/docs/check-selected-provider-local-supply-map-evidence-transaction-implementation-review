@@ -69,13 +69,13 @@ required=[
  ('docs/evidence/selected-provider-local-supply-map-evidence-transaction-implementation-review.md','QUALIFIED_NON_EXECUTING_SYNTHETIC_READ_ONLY_LOCAL_SUPPLY_MAP_EVIDENCE_TRANSACTION_IMPLEMENTATION_CANDIDATE'),
  ('docs/current/BRIEF.md','local supply evidence transaction implementation: QUALIFIED_NON_EXECUTING_SYNTHETIC_CANDIDATE_HISTORICAL'),
  ('docs/current/STATE.yaml','local_supply_map_evidence_transaction_implementation: qualified-non-executing-synthetic-candidate-historical'),
- ('docs/current/ACTIVE_TASK.md','Task ID: `execute-one-owner-authorized-selected-provider-local-supply-map-production-transaction`'),
+ ('docs/current/ACTIVE_TASK.md','Task ID: `review-and-accept-selected-provider-local-supply-map-production-boundary`'),
  ('docs/current/PENDING_ARTIFACTS.yaml','live-authority-transaction-input-set'),
  ('STATUS.md','selected-provider local-supply-map evidence transaction implementation candidate qualified'),
  ('docs/catalog.tsv','selected-provider-local-supply-map-evidence-transaction-implementation-review\tevidence\tcurrent\tcanonical')]
 for rel,marker in required:
  if marker not in (ROOT/rel).read_text():fail('current documentation marker missing: '+rel)
 texts='\n'.join((ROOT/r).read_text() for r in ['docs/current/STATE.yaml','docs/current/BRIEF.md','docs/current/ACTIVE_TASK.md','docs/current/PENDING_ARTIFACTS.yaml','STATUS.md'])
-for forbidden in ('local_supply_map_produced: true','local_supply_map_evidence_transaction_execution_authorized: true','provider_byte_read_authorized: true','target_population_authorized: true','GENERATION_ROOT_CREATED'):
+for forbidden in ('local_supply_map_evidence_transaction_execution_authorized: true','provider_byte_read_authorized: true','target_population_authorized: true','GENERATION_ROOT_CREATED'):
  if forbidden in texts:fail('authority widening: '+forbidden)
 print('local supply evidence transaction implementation: PASS: 78-row synthetic-only coverage, 1 success, 18 fail-closed cases, zero provider opens/reads/writes/live authority')
