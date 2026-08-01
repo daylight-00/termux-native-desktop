@@ -1,31 +1,30 @@
 schema_version: 1
-state_version: 2026-07-28.23
+state_version: 2026-07-28.24
 
 blocking:
-  - id: local-supply-map-production-boundary-acceptance
-    state: qualified-promotion-candidate-acceptance-open
-    note: Exact v158 41-row map and canonical receipt are promoted for separate acceptance.
+  - id: target-population-owner-decision
+    state: not-supplied-not-authorized
+    note: A new explicit owner statement is required before any target-population production transaction can be created.
   - id: target-population
     state: not-authorized-unpopulated
-    note: Map production and promotion review do not authorize copying or linking any member into a target tree.
+    note: Acceptance of the exact local-supply map does not authorize copying or linking any member into a target tree.
 
 non_blocking:
-  - id: local-supply-map-production-result
-    state: one-exact-41-row-candidate-produced-sealed-reviewed
-    note: Map file SHA-256 ae8d9bdd0b26d084a54e6689b9088a140f0bf19aef62df9ab5c68e4cd8a37375; receipt seal fc5c6d8cc28aee4b0f1c7b4a8ec229fe2a6b9b4fe8f88f04b2dfd6fcb7b77cdd.
+  - id: local-supply-map-production-boundary
+    state: accepted-closed-exact-boundary
+    note: Exact 41-row map SHA-256 ae8d9bdd0b26d084a54e6689b9088a140f0bf19aef62df9ab5c68e4cd8a37375 and receipt seal fc5c6d8cc28aee4b0f1c7b4a8ec229fe2a6b9b4fe8f88f04b2dfd6fcb7b77cdd are accepted repository authority.
   - id: local-supply-map-production-owner-decision
     state: one-accepted-one-consumed-zero-remaining
     note: The exact owner-authorized map-production transaction is exhausted and cannot be replayed.
   - id: live-authority-transaction-input-set
-    state: accepted-sealed-production-boundary-map-candidate-only
-    note: The exact collection and map are evidence; no population or activation authority follows.
+    state: accepted-sealed-production-boundary-map-accepted-no-current-execution-authorization
+    note: The exact collection and map are accepted evidence; no population or activation authority follows.
   - id: production-exact-input-set-bootstrap-boundary
     state: accepted-closed-exact-boundary
   - id: exact-input-set-collection-envelope
     state: generated-sealed-reviewed-accepted-evidence-only
   - id: local-supply-map-evidence
-    state: one-exact-41-row-candidate-produced-sealed-reviewed
-    note: Candidate promotion review is complete; separate acceptance remains blocking.
+    state: one-exact-41-row-map-accepted-closed-boundary
   - id: production-exact-input-set-bootstrap-result
     state: accepted-nine-sources-thirty-three-carriers-forty-one-members-29047112-bytes
   - id: execution-authorization

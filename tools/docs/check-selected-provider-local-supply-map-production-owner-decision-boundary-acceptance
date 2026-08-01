@@ -30,7 +30,7 @@ need=[
 (DOC,'검증된 41개 selected-provider member에 대한 local-supply map production transaction을 승인한다. 범위는 exact coordinate binding과 map 생성·봉인·검토로 제한하며, target population, materialization, publication, deployment, activation 및 live provider mutation은 승인하지 않는다.'),(DOC,'0a68ff343e98680b6409f603dc67d6b578e859fb0013abb7e2f4bc580c2d68f0'),
 (Path('docs/current/STATE.yaml'),'local_supply_map_production_remaining_transaction_count: 0'),
 (Path('docs/current/BRIEF.md'),'map production transactions accepted / consumed / remaining: 1 / 1 / 0'),
-(Path('docs/current/ACTIVE_TASK.md'),'Task ID: `review-and-accept-selected-provider-local-supply-map-production-boundary`'),
+(Path('docs/current/ACTIVE_TASK.md'),'Task ID: `await-explicit-owner-decision-for-selected-provider-target-population-production-transaction`'),
 (Path('docs/current/PENDING_ARTIFACTS.yaml'),'state: one-accepted-one-consumed-zero-remaining'),
 (Path('STATUS.md'),'selected-provider local-supply map production owner decision accepted for one bounded transaction'),
 (Path('docs/catalog.tsv'),'selected-provider-local-supply-map-production-owner-decision-boundary-acceptance\tevidence\tcurrent\tcanonical'),

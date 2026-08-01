@@ -1,45 +1,45 @@
-# Active task: review and accept the selected-provider local-supply map production boundary
+# Active task: await an explicit target-population owner decision
 
-> Task ID: `review-and-accept-selected-provider-local-supply-map-production-boundary`
+> Task ID: `await-explicit-owner-decision-for-selected-provider-target-population-production-transaction`
 >
-> Status: promotion candidate qualified; separate acceptance required
+> Status: exact 41-row map accepted; target population unauthorized
 
 ## Objective
 
-Verify the exact v158 41-row map candidate and prepare its bounded repository acceptance.
+Preserve the accepted map while awaiting a separate explicit owner decision for target population.
 
 ## Why now
 
-The one authorized production transaction is consumed; the sealed result remains candidate-only.
+The map-production transaction is exhausted. Map acceptance does not authorize copying or linking provider bytes.
 
 ## Required reading
 
+- `docs/evidence/selected-provider-local-supply-map-production-boundary-acceptance.md`
 - `docs/evidence/selected-provider-local-supply-map-production-review.md`
 - `experiments/glibc/selected-obsidian-provider-authority/review/selected-provider-local-supply-map-production-candidate.json`
-- `docs/evidence/selected-provider-local-supply-map-production-owner-decision-boundary-acceptance.md`
 
 ## Pending external inputs
 
-None.
+One explicit owner statement defining a bounded target-population transaction and its exclusions.
 
 ## In scope
 
-Review the exact map, receipt, `1 / 1 / 0` accounting and zero-later-effect boundary.
+Maintain the accepted map, receipt, `1 / 1 / 0` accounting and zero-later-effect boundary.
 
 ## Out of scope
 
-Selected-provider live-path discovery, open, read or mutation; replay mutation; target population and later effects. Do not acquire or populate bytes.
+Selected-provider live-path discovery, open, read or mutation; population and all later effects.
 
 ## Next valid action
 
-Run one fail-closed acceptance package bound to v158 and the promotion-review commit.
+Receive and review the explicit owner statement.
 
 ## Stop conditions
 
-Stop on any digest, row, seal, repository, accounting, protected-state or authority mismatch.
+Stop on any digest, seal, row, accounting, repository, protected-state or authority mismatch.
 
 ## Completion criteria
 
-Accept the exact map boundary while population, materialization, publication, deployment and activation remain unauthorized.
+No execution occurs before a future owner decision is separately reviewed and accepted.
 
 Do not populate, materialize, publish, deploy or activate.

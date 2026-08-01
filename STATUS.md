@@ -1,6 +1,6 @@
 # Status
 
-bundle-native documentation and operations control planes active; ADR 0005 claim classification complete with 95 separated claims; exact bounded provider set retained; bounded selected provider composition accepted as `ACCEPTED_BOUNDED_COMPLETE_SELECTED_PROVIDER_COMPOSITION` with 42 decision rows, 41 included members, one deferred libtasn1 member and zero selected identity gaps; non-mutating target manifest qualified as `QUALIFIED_NON_MUTATING_SELECTED_TARGET_MANIFEST` with 41 concrete rows, 41 SONAME alias rows and zero target-path collisions; target population, materialization, deployment and activation blocked
+bundle-native documentation and operations control planes active; ADR 0005 claim classification complete with 95 separated claims; exact bounded provider set retained; bounded selected provider composition accepted as `ACCEPTED_BOUNDED_COMPLETE_SELECTED_PROVIDER_COMPOSITION` with 42 decision rows, 41 included members, one deferred libtasn1 member and zero selected identity gaps; non-mutating target manifest qualified as `QUALIFIED_NON_MUTATING_SELECTED_TARGET_MANIFEST` with 41 concrete rows, 41 SONAME alias rows and zero target-path collisions; exact 41-row local-supply map accepted; target population, materialization, deployment and activation blocked
 > **Updated:** 2026-08-01
 
 ## Repository and deployment consolidation
@@ -656,3 +656,12 @@ selected-provider local-supply map production owner decision accepted for one bo
 ## Selected-provider local-supply map production promotion review
 
 `SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-PRODUCTION-REVIEW-001` qualifies v158 archive `f7112a196f715e729460b27a1ef57922b70bb2a3cff1251f308dd543c8538675` as `QUALIFIED_EXACT_41_ROW_LOCAL_SUPPLY_MAP_PRODUCTION_PROMOTION_CANDIDATE`. The exact candidate contains forty-one ordered rows totaling 29,047,112 bytes, map file SHA-256 `ae8d9bdd0b26d084a54e6689b9088a140f0bf19aef62df9ab5c68e4cd8a37375`, canonical receipt seal `fc5c6d8cc28aee4b0f1c7b4a8ec229fe2a6b9b4fe8f88f04b2dfd6fcb7b77cdd`, twenty-four passing validation rules and four complete atomic families. The single owner-authorized transaction is consumed (`1 / 1 / 0`). Repository, package database, live glibc prefix, project replay, selected-provider live state and target population were unchanged. Separate acceptance remains required; materialization, publication, deployment and activation are not authorized.
+
+
+## Selected-provider local-supply map production boundary acceptance
+
+`SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-PRODUCTION-ACCEPT-001` accepts the exact v158 41-row, 29,047,112-byte local-supply map after v159 promotion commit `de5ca85c224434ef50517d9a0a955ffad5449868`. Map SHA-256 `ae8d9bdd0b26d084a54e6689b9088a140f0bf19aef62df9ab5c68e4cd8a37375`, receipt seal `fc5c6d8cc28aee4b0f1c7b4a8ec229fe2a6b9b4fe8f88f04b2dfd6fcb7b77cdd`, 41 rows, 29,047,112 bytes, 24 validations, four atomic families and owner accounting `1 / 1 / 0` are frozen. Target population, materialization, publication, deployment, activation, project replay mutation, selected-provider live mutation and live authority remain zero and unauthorized.
+
+selected-provider local-supply map production boundary accepted
+
+Next action: `await-explicit-owner-decision-for-selected-provider-target-population-production-transaction`.

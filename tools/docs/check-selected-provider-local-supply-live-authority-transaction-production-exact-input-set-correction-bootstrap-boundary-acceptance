@@ -42,7 +42,7 @@ need=[
 ("docs/current/STATE.yaml","production_exact_input_set_bootstrap_acceptance: accepted-exact-non-executing-production-bootstrap-collection-boundary-zero-live-authority"),
 ("docs/current/STATE.yaml","owner_activation_remaining_transaction_count: 0"),
 ("docs/current/BRIEF.md","production exact input-set bootstrap acceptance: ACCEPTED_EXACT_NON_EXECUTING_PRODUCTION_BOOTSTRAP_COLLECTION_BOUNDARY_ZERO_LIVE_AUTHORITY"),
-("docs/current/ACTIVE_TASK.md","Task ID: `review-and-accept-selected-provider-local-supply-map-production-boundary`"),
+("docs/current/ACTIVE_TASK.md","Task ID: `await-explicit-owner-decision-for-selected-provider-target-population-production-transaction`"),
 ("docs/current/PENDING_ARTIFACTS.yaml","state: accepted-closed-exact-boundary"),
 ("STATUS.md","production exact input-set correction/bootstrap boundary accepted"),
 ("docs/catalog.tsv","selected-provider-local-supply-live-authority-transaction-production-exact-input-set-correction-bootstrap-boundary-acceptance\tevidence\tcurrent\tcanonical"),

@@ -135,3 +135,5 @@ The OJ-001 `libjpeg.so.62` repository-candidate disposition and pinned-source co
 - [`selected-provider-local-supply-map-production-owner-decision-boundary-acceptance.md`](selected-provider-local-supply-map-production-owner-decision-boundary-acceptance.md) — exact owner acceptance of one 41-member local-supply-map production transaction; population, later lifecycle effects and live mutation remain forbidden.
 
 - [`selected-provider-local-supply-map-production-review.md`](selected-provider-local-supply-map-production-review.md) — exact v158 41-row map-production result promotion review; separate acceptance required and target population remains unauthorized.
+
+- [`selected-provider-local-supply-map-production-boundary-acceptance.md`](selected-provider-local-supply-map-production-boundary-acceptance.md) — exact v158 41-row map-production boundary acceptance; target population and all later lifecycle effects remain unauthorized.

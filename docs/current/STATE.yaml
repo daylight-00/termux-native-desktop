@@ -1,5 +1,5 @@
 schema_version: 1
-state_version: 2026-07-28.23
+state_version: 2026-07-28.24
 updated_on: 2026-08-01
 
 project:
@@ -83,6 +83,7 @@ documentation:
   local_supply_live_authority_transaction_production_exact_input_set_bootstrap_acceptance: docs/evidence/selected-provider-local-supply-live-authority-transaction-production-exact-input-set-correction-bootstrap-boundary-acceptance.md
   local_supply_map_production_owner_decision_acceptance: docs/evidence/selected-provider-local-supply-map-production-owner-decision-boundary-acceptance.md
   local_supply_map_production_review: docs/evidence/selected-provider-local-supply-map-production-review.md
+  local_supply_map_production_acceptance: docs/evidence/selected-provider-local-supply-map-production-boundary-acceptance.md
   local_supply_evidence_authorization_issuance_coordinate_production_implementation_review: docs/evidence/selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-implementation-review.md
   local_supply_evidence_authorization_issuance_coordinate_production_implementation_acceptance: docs/evidence/selected-provider-local-supply-evidence-authorization-issuance-coordinate-production-implementation-boundary-acceptance.md
   local_supply_evidence_live_input_adapter_execution_authorization_contract_review: docs/evidence/selected-provider-local-supply-evidence-live-input-adapter-execution-authorization-contract-review.md
@@ -120,7 +121,7 @@ documentation:
   missing_glibc_provider_production_boundary: docs/evidence/missing-glibc-provider-production-boundary.md
 
 provider_authority:
-  workstream: selected-provider-local-supply-live-authority-transaction-production-exact-input-set-bootstrap-promotion-review
+  workstream: selected-provider-local-supply-map-production-boundary-acceptance
   boundary: thirty-one-bounded-provider-roots-forty-two-row-composition-eighty-two-row-target-policy-forty-one-exact-objects-final-resource-preflight-59142800-materializer-design-local-supply-contract-read-only-evidence-transaction-design-owner-token-coordinate-contract-and-issuance-coordinate-production-design-accepted-synthetic-implementation-accepted-as-immutable-oracle-live-input-adapter-execution-authorization-contract-and-synthetic-adapter-implementation-accepted-164-coverage-one-success-twenty-failures-zero-live-inputs-zero-provider-reads-zero-writes-evidence-transaction-synthetic-implementation-accepted-78-coverage-one-success-eighteen-failures-zero-provider-opens-reads-writes-live-authority-production-orchestration-implementation-accepted-118-coverage-one-success-twenty-eight-failures-forty-one-isolated-opens-reads-zero-selected-provider-opens-reads-zero-writes-zero-live-authority-live-authority-transaction-design-and-synthetic-implementation-accepted-128-direct-448-inherited-five-document-roles-ten-replay-fields-zero-live-authority-production-implementation-accepted-128-direct-448-inherited-one-success-thirty-failures-five-isolated-document-opens-reads-two-isolated-replay-appends-two-isolated-result-writes-zero-selected-provider-opens-reads-zero-provider-bytes-zero-project-replay-writes-zero-live-authority-owner-activation-accepted-one-non-executing-input-set-collection-sealing-review-transaction-one-consumed-zero-remaining-exact-input-set-collection-implementation-accepted-v151-production-input-set-collected-sealed-reviewed-nine-sources-thirty-three-carriers-forty-one-members-29047112-bytes-promotion-pending-root-creation-population-materialization-publication-deployment-and-activation-blocked
   claim_inventory:
     total: 95
@@ -534,7 +535,7 @@ provider_authority:
     - selected-generation-activation-ready
 
 active_task:
-  id: review-and-accept-selected-provider-local-supply-map-production-boundary
+  id: await-explicit-owner-decision-for-selected-provider-target-population-production-transaction
   document: docs/current/ACTIVE_TASK.md
 
 pending_artifacts:
@@ -860,8 +861,13 @@ selected_target_policy:
   live_authority_transaction_input_set_state: accepted-sealed-production-boundary-no-current-authorization
   local_supply_map_production_review: qualified-exact-41-row-local-supply-map-production-promotion-candidate
   local_supply_map_production_review_id: SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-PRODUCTION-REVIEW-001
-  local_supply_map_production_acceptance_gate: open
+  local_supply_map_production_acceptance_gate: accepted-closed-exact-boundary
   local_supply_map_production_acceptance_gate_id: SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-PRODUCTION-ACCEPTANCE-OPEN
+  local_supply_map_production_acceptance: accepted-exact-41-row-local-supply-map-production-boundary-zero-target-population-authority
+  local_supply_map_production_acceptance_id: SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-PRODUCTION-ACCEPT-001
+  local_supply_map_production_promotion_result_sha256: 91385926aa74ed3160d41d9f79cb698700b534059f3564d5b1b0a310e6a3d50b
+  local_supply_map_production_promotion_commit: de5ca85c224434ef50517d9a0a955ffad5449868
+  local_supply_map_production_promotion_tree: 3834d769bb0b03c8136b0d268297ccf88723dee4
   local_supply_map_production_result_archive_sha256: f7112a196f715e729460b27a1ef57922b70bb2a3cff1251f308dd543c8538675
   local_supply_map_production_result_drive_file_id: 1uwwJkyhiZKGyTMc4wfZ74WoPieSrXjGp
   local_supply_map_production_transaction_id: LSM-PROD-20260801T001839Z
@@ -875,7 +881,7 @@ selected_target_policy:
   local_supply_map_production_atomic_family_complete_count: 4
   local_supply_map_production_target_population_writes: 0
   local_supply_map_production_live_authority: 0
-  next_task: review-and-accept-selected-provider-local-supply-map-production-boundary
+  next_task: await-explicit-owner-decision-for-selected-provider-target-population-production-transaction
 
   retained_result_coordinate_generation_contract_review:
     review_id: RETAINED-SUPPLY-COORDINATE-GENERATION-CONTRACT-001

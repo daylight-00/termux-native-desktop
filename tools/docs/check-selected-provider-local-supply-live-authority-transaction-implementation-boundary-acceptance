@@ -46,7 +46,7 @@ need=[
  ("docs/current/STATE.yaml","live_authority_transaction_implementation_acceptance: accepted-bounded-non-executing-synthetic-implementation-authority"),
  ("docs/current/STATE.yaml","live_authority_transaction_implementation_selected_provider_reads: 0"),
  ("docs/current/BRIEF.md","live authority transaction implementation acceptance: ACCEPTED_BOUNDED_NON_EXECUTING_SYNTHETIC_IMPLEMENTATION_AUTHORITY"),
- ("docs/current/ACTIVE_TASK.md","Task ID: `review-and-accept-selected-provider-local-supply-map-production-boundary`"),
+ ("docs/current/ACTIVE_TASK.md","Task ID: `await-explicit-owner-decision-for-selected-provider-target-population-production-transaction`"),
  ("docs/current/PENDING_ARTIFACTS.yaml","live-authority-transaction-input-set"),
  ("STATUS.md","bounded non-executing synthetic selected-provider local-supply live-authority transaction implementation accepted"),
  ("docs/catalog.tsv","selected-provider-local-supply-live-authority-transaction-implementation-boundary-acceptance\tevidence\tcurrent\tcanonical"),

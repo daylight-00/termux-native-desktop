@@ -1,0 +1,170 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import csv
+import hashlib
+import json
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+BASE = Path("experiments/glibc/selected-obsidian-provider-authority")
+REVIEW = BASE / "review"
+NAME = "selected-provider-local-supply-map-production-boundary-acceptance.tsv"
+GEN = BASE / "recipe/generate-selected-provider-local-supply-map-production-boundary-acceptance.py"
+MAP = REVIEW / "selected-provider-local-supply-map-production-candidate.json"
+SOURCES = {
+    "selected-provider-local-supply-map-production-review.tsv": "c5fdb16a226d2c8f5c3ad39ffbafd0596ecfc6e2fba77ef63739683dbdbd249b",
+    "selected-provider-local-supply-map-production-metadata.tsv": "ac9497dc21cf504ecfd8d8ded576da575a1334f394b0759cade05908af2b20aa",
+    "selected-provider-local-supply-map-production-rows.tsv": "9573f77e8233b6b65231970a149ecdb9dd0c065498d287d2e2a97600432db7e9",
+    "selected-provider-local-supply-map-production-candidate.json": "ae8d9bdd0b26d084a54e6689b9088a140f0bf19aef62df9ab5c68e4cd8a37375",
+    "selected-provider-local-supply-map-production-candidate.json.sha256": "0d8e0bab08023ce168832d66f2f45b1c08d5c77c1bdf2b3b696e06ebeef8f06a",
+}
+DOC = Path("docs/evidence/selected-provider-local-supply-map-production-review.md")
+DOC_SHA = "05fe67243223601876749c301cdac116b8785955abc5755e6ddf9a8a21144ae6"
+NEW_DOC = Path("docs/evidence/selected-provider-local-supply-map-production-boundary-acceptance.md")
+CURRENT_TASK = "await-explicit-owner-decision-for-selected-provider-target-population-production-transaction"
+
+
+def fail(message: str) -> None:
+    raise SystemExit("local-supply map production acceptance: FAIL: " + message)
+
+
+def sha(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def rows(path: Path) -> list[dict[str, str]]:
+    with path.open(newline="", encoding="utf-8") as handle:
+        return list(csv.DictReader(handle, delimiter="\t"))
+
+
+for filename, digest in SOURCES.items():
+    path = ROOT / REVIEW / filename
+    if not path.is_file() or sha(path) != digest:
+        fail("source digest " + filename)
+if sha(ROOT / DOC) != DOC_SHA:
+    fail("source review document digest")
+
+subprocess.run(
+    [sys.executable, str(ROOT / "tools/docs/check-selected-provider-local-supply-map-production-review")],
+    cwd=ROOT,
+    check=True,
+    stdout=subprocess.DEVNULL,
+)
+
+with tempfile.TemporaryDirectory(prefix="map-production-acceptance.", dir=ROOT.parent) as temp_dir:
+    subprocess.run(
+        [sys.executable, str(ROOT / GEN), "--repo-root", str(ROOT), "--output-root", temp_dir],
+        cwd=ROOT,
+        check=True,
+    )
+    generated = Path(temp_dir) / REVIEW / NAME
+    if generated.read_bytes() != (ROOT / REVIEW / NAME).read_bytes():
+        fail("generated acceptance drift")
+
+records = rows(ROOT / REVIEW / NAME)
+if len(records) != 1:
+    fail("row count")
+record = records[0]
+expected = {
+    "acceptance_id": "SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-PRODUCTION-ACCEPT-001",
+    "decision": "ACCEPTED_EXACT_41_ROW_LOCAL_SUPPLY_MAP_PRODUCTION_BOUNDARY_ZERO_TARGET_POPULATION_AUTHORITY",
+    "candidate_review_id": "SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-PRODUCTION-REVIEW-001",
+    "candidate_issue_closed": "SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-PRODUCTION-ACCEPTANCE-OPEN",
+    "v158_result_archive_sha256": "f7112a196f715e729460b27a1ef57922b70bb2a3cff1251f308dd543c8538675",
+    "v159_promotion_result_archive_sha256": "91385926aa74ed3160d41d9f79cb698700b534059f3564d5b1b0a310e6a3d50b",
+    "promotion_commit": "de5ca85c224434ef50517d9a0a955ffad5449868",
+    "promotion_tree": "3834d769bb0b03c8136b0d268297ccf88723dee4",
+    "map_file_sha256": "ae8d9bdd0b26d084a54e6689b9088a140f0bf19aef62df9ab5c68e4cd8a37375",
+    "map_receipt_sha256": "fc5c6d8cc28aee4b0f1c7b4a8ec229fe2a6b9b4fe8f88f04b2dfd6fcb7b77cdd",
+    "accepted_transaction_count": "1",
+    "consumed_transaction_count": "1",
+    "remaining_transaction_count": "0",
+    "accepted_source_archive_count": "9",
+    "accepted_byte_carrier_count": "33",
+    "accepted_provider_member_count": "41",
+    "accepted_provider_byte_count": "29047112",
+    "accepted_isolated_provider_open_count": "41",
+    "accepted_isolated_provider_read_count": "41",
+    "accepted_local_supply_map_count": "1",
+    "accepted_target_population_write_count": "0",
+    "accepted_materialization_effect_count": "0",
+    "accepted_publication_effect_count": "0",
+    "accepted_deployment_effect_count": "0",
+    "accepted_activation_effect_count": "0",
+    "accepted_selected_provider_live_mutation_count": "0",
+    "accepted_live_authority_count": "0",
+    "target_population_authorized": "NO",
+    "materialization_authorized": "NO",
+    "publication_authorized": "NO",
+    "deployment_authorized": "NO",
+    "activation_authorized": "NO",
+    "provider_live_mutation_authorized": "NO",
+    "next_action": CURRENT_TASK,
+}
+for key, value in expected.items():
+    if record.get(key) != value:
+        fail(f"{key}: {record.get(key)!r}")
+
+payload = json.loads((ROOT / MAP).read_text(encoding="utf-8"))
+seal = payload.get("receipt_sha256")
+canonical_payload = dict(payload)
+canonical_payload.pop("receipt_sha256", None)
+canonical = (
+    json.dumps(canonical_payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+    + "\n"
+).encode()
+if (
+    sha(ROOT / MAP) != expected["map_file_sha256"]
+    or seal != expected["map_receipt_sha256"]
+    or hashlib.sha256(canonical).hexdigest() != seal
+):
+    fail("map seal")
+
+current_paths = [
+    NEW_DOC,
+    Path("docs/current/STATE.yaml"),
+    Path("docs/current/BRIEF.md"),
+    Path("docs/current/ACTIVE_TASK.md"),
+    Path("docs/current/PENDING_ARTIFACTS.yaml"),
+    Path("STATUS.md"),
+    Path("docs/catalog.tsv"),
+    Path("docs/evidence/README.md"),
+]
+texts = {path: (ROOT / path).read_text(encoding="utf-8") for path in current_paths}
+required = [
+    (NEW_DOC, expected["decision"]),
+    (Path("docs/current/STATE.yaml"), "local_supply_map_production_acceptance: accepted-exact-41-row-local-supply-map-production-boundary-zero-target-population-authority"),
+    (Path("docs/current/STATE.yaml"), "local_supply_map_production_acceptance_gate: accepted-closed-exact-boundary"),
+    (Path("docs/current/BRIEF.md"), "local supply map acceptance: ACCEPTED_EXACT_41_ROW_LOCAL_SUPPLY_MAP_PRODUCTION_BOUNDARY_ZERO_TARGET_POPULATION_AUTHORITY"),
+    (Path("docs/current/ACTIVE_TASK.md"), f"Task ID: `{CURRENT_TASK}`"),
+    (Path("docs/current/PENDING_ARTIFACTS.yaml"), "state: accepted-closed-exact-boundary"),
+    (Path("STATUS.md"), "selected-provider local-supply map production boundary accepted"),
+    (Path("docs/catalog.tsv"), "selected-provider-local-supply-map-production-boundary-acceptance\tevidence\tcurrent\tcanonical"),
+    (Path("docs/evidence/README.md"), "selected-provider-local-supply-map-production-boundary-acceptance.md"),
+]
+for path, marker in required:
+    if marker not in texts[path]:
+        fail("missing current marker " + str(path))
+
+all_text = "\n".join(texts.values()) + "\n" + (ROOT / REVIEW / NAME).read_text(encoding="utf-8")
+for forbidden in [
+    "target_population_authorized: true",
+    "materialization_authorized: true",
+    "publication_authorized: true",
+    "deployment_authorized: true",
+    "activation_authorized: true",
+    "provider_live_mutation_authorized: true",
+    "local_supply_map_production_remaining_transaction_count: 1",
+    "local_supply_map_production_acceptance_gate: open",
+]:
+    if forbidden in all_text:
+        fail("authority widening " + forbidden)
+
+print(
+    "local-supply map production acceptance: PASS: exact v158 map accepted with "
+    "41 rows, 29047112 bytes, owner 1/1/0 and zero target-population/later-effect authority"
+)

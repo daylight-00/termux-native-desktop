@@ -1,6 +1,6 @@
 # Current project brief
 
-> Semantic state version: `2026-07-28.23`
+> Semantic state version: `2026-07-28.24`
 
 ## Purpose and operational boundary
 
@@ -66,11 +66,13 @@ local supply contract acceptance: ACCEPTED_BOUNDED_NON_MUTATING_CONTRACT_AUTHORI
 local supply contract rows:       41
 local supply validation rules:    24
 local supply populated paths:      0
-local supply map:              QUALIFIED_EXACT_41_ROW_PROMOTION_CANDIDATE
+local supply map:              ACCEPTED_EXACT_41_ROW_PRODUCTION_BOUNDARY
 local supply map file SHA-256:  ae8d9bdd0b26d084a54e6689b9088a140f0bf19aef62df9ab5c68e4cd8a37375
 local supply map receipt seal: fc5c6d8cc28aee4b0f1c7b4a8ec229fe2a6b9b4fe8f88f04b2dfd6fcb7b77cdd
+local supply map acceptance: ACCEPTED_EXACT_41_ROW_LOCAL_SUPPLY_MAP_PRODUCTION_BOUNDARY_ZERO_TARGET_POPULATION_AUTHORITY
+local supply map promotion commit / tree: de5ca85c224434ef50517d9a0a955ffad5449868 / 3834d769bb0b03c8136b0d268297ccf88723dee4
 local supply map rows / bytes: 41 / 29,047,112
-local supply map acceptance gate: OPEN
+local supply map acceptance gate: ACCEPTED_CLOSED_EXACT_BOUNDARY
 local supply evidence transaction design: QUALIFIED_NON_EXECUTING_READ_ONLY_CANDIDATE_HISTORICAL
 local supply evidence design acceptance: ACCEPTED_BOUNDED_NON_EXECUTING_READ_ONLY_DESIGN_AUTHORITY
 local supply evidence transaction implementation: QUALIFIED_NON_EXECUTING_SYNTHETIC_CANDIDATE_HISTORICAL

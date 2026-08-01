@@ -16,7 +16,8 @@ RESULT_SHA='f7112a196f715e729460b27a1ef57922b70bb2a3cff1251f308dd543c8538675'
 REVIEW_ID='SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-PRODUCTION-REVIEW-001'
 DECISION='QUALIFIED_EXACT_41_ROW_LOCAL_SUPPLY_MAP_PRODUCTION_PROMOTION_CANDIDATE'
 GATE='SELECTED-PROVIDER-LOCAL-SUPPLY-MAP-PRODUCTION-ACCEPTANCE-OPEN'
-TASK='review-and-accept-selected-provider-local-supply-map-production-boundary'
+RESULT_NEXT_ACTION='review-and-accept-selected-provider-local-supply-map-production-boundary'
+CURRENT_TASK='await-explicit-owner-decision-for-selected-provider-target-population-production-transaction'
 def fail(m): raise SystemExit('local-supply map production review: FAIL: '+m)
 def tsv(p):
  with p.open(newline='',encoding='utf-8') as h:return list(csv.DictReader(h,delimiter='\t'))
@@ -51,7 +52,7 @@ if d.get('failure_codes')!=[] or d.get('protected_state_invariance',{}).get('pas
 rr=tsv(SUMMARY)
 if len(rr)!=1:fail('review summary count')
 r=rr[0]
-expected={'review_id':REVIEW_ID,'decision':DECISION,'acceptance_gate':GATE,'result_archive_sha256':RESULT_SHA,'result_archive_size_bytes':'16674','result_drive_file_id':'1uwwJkyhiZKGyTMc4wfZ74WoPieSrXjGp','transaction_id':'LSM-PROD-20260801T001839Z','repository_head':'062e08c1cd9c9f17e88d2631f3e9e66dff232645','repository_tree':'d1ce96b5a480c7017d79636cfa994cd21155b8bd','remote_head':'062e08c1cd9c9f17e88d2631f3e9e66dff232645','owner_statement_sha256':'0a68ff343e98680b6409f603dc67d6b578e859fb0013abb7e2f4bc580c2d68f0','accepted_transaction_count':'1','consumed_transaction_count':'1','remaining_transaction_count':'0','source_archive_count':'9','byte_carrier_count':'33','provider_member_count':'41','provider_byte_count':'29047112','isolated_provider_open_count':'41','isolated_provider_read_count':'41','localization_mode':'exact-v151-isolated-provider-member-reuse','map_file_sha256':MAP_SHA,'map_receipt_sha256':RECEIPT_SHA,'local_supply_map_count':'1','target_population_write_count':'0','live_authority_count':'0','repository_mutated':'NO','package_database_mutated':'NO','live_glibc_prefix_mutated':'NO','next_action':TASK}
+expected={'review_id':REVIEW_ID,'decision':DECISION,'acceptance_gate':GATE,'result_archive_sha256':RESULT_SHA,'result_archive_size_bytes':'16674','result_drive_file_id':'1uwwJkyhiZKGyTMc4wfZ74WoPieSrXjGp','transaction_id':'LSM-PROD-20260801T001839Z','repository_head':'062e08c1cd9c9f17e88d2631f3e9e66dff232645','repository_tree':'d1ce96b5a480c7017d79636cfa994cd21155b8bd','remote_head':'062e08c1cd9c9f17e88d2631f3e9e66dff232645','owner_statement_sha256':'0a68ff343e98680b6409f603dc67d6b578e859fb0013abb7e2f4bc580c2d68f0','accepted_transaction_count':'1','consumed_transaction_count':'1','remaining_transaction_count':'0','source_archive_count':'9','byte_carrier_count':'33','provider_member_count':'41','provider_byte_count':'29047112','isolated_provider_open_count':'41','isolated_provider_read_count':'41','localization_mode':'exact-v151-isolated-provider-member-reuse','map_file_sha256':MAP_SHA,'map_receipt_sha256':RECEIPT_SHA,'local_supply_map_count':'1','target_population_write_count':'0','live_authority_count':'0','repository_mutated':'NO','package_database_mutated':'NO','live_glibc_prefix_mutated':'NO','next_action':RESULT_NEXT_ACTION}
 for k,v in expected.items():
  if r.get(k)!=v:fail(f'review {k}: {r.get(k)!r}')
 tr=tsv(ROWS)
@@ -61,10 +62,10 @@ for i,(a,b) in enumerate(zip(tr,rows),1):
   if a[k]!=str(b[k]):fail(f'rows TSV {i} {k}')
  if a['sequence']!=str(i) or a['st_size']!=str(b['st_size']):fail('rows TSV sequence/size')
 meta={x['key']:x['value'] for x in tsv(META)}
-for k,v in {'review_id':REVIEW_ID,'decision':DECISION,'map_file_sha256':MAP_SHA,'map_receipt_sha256':RECEIPT_SHA,'owner_transaction_accounting':'1/1/0','provider_member_count':'41','provider_byte_count':'29047112','validation_pass_count':'24','atomic_family_count':'4','target_population_authorized':'false','live_authority_count':'0','next_action':TASK}.items():
+for k,v in {'review_id':REVIEW_ID,'decision':DECISION,'map_file_sha256':MAP_SHA,'map_receipt_sha256':RECEIPT_SHA,'owner_transaction_accounting':'1/1/0','provider_member_count':'41','provider_byte_count':'29047112','validation_pass_count':'24','atomic_family_count':'4','target_population_authorized':'false','live_authority_count':'0','next_action':RESULT_NEXT_ACTION}.items():
  if meta.get(k)!=v:fail('metadata '+k)
 texts={p:(ROOT/p).read_text(encoding='utf-8') for p in [DOC,Path('docs/current/STATE.yaml'),Path('docs/current/BRIEF.md'),Path('docs/current/ACTIVE_TASK.md'),Path('docs/current/PENDING_ARTIFACTS.yaml'),Path('STATUS.md'),Path('docs/catalog.tsv'),Path('docs/evidence/README.md')]}
-need=[(DOC,DECISION),(Path('docs/current/STATE.yaml'),'local_supply_map_production_remaining_transaction_count: 0'),(Path('docs/current/STATE.yaml'),'local_supply_map_produced: true'),(Path('docs/current/BRIEF.md'),'map production transactions accepted / consumed / remaining: 1 / 1 / 0'),(Path('docs/current/ACTIVE_TASK.md'),f'Task ID: `{TASK}`'),(Path('docs/current/PENDING_ARTIFACTS.yaml'),'state: qualified-promotion-candidate-acceptance-open'),(Path('STATUS.md'),REVIEW_ID),(Path('docs/catalog.tsv'),'selected-provider-local-supply-map-production-review\tevidence\tcurrent\tcanonical'),(Path('docs/evidence/README.md'),'selected-provider-local-supply-map-production-review.md')]
+need=[(DOC,DECISION),(Path('docs/current/STATE.yaml'),'local_supply_map_production_remaining_transaction_count: 0'),(Path('docs/current/STATE.yaml'),'local_supply_map_produced: true'),(Path('docs/current/BRIEF.md'),'map production transactions accepted / consumed / remaining: 1 / 1 / 0'),(Path('docs/current/ACTIVE_TASK.md'),f'Task ID: `{CURRENT_TASK}`'),(Path('docs/current/PENDING_ARTIFACTS.yaml'),'state: accepted-closed-exact-boundary'),(Path('STATUS.md'),REVIEW_ID),(Path('docs/catalog.tsv'),'selected-provider-local-supply-map-production-review\tevidence\tcurrent\tcanonical'),(Path('docs/evidence/README.md'),'selected-provider-local-supply-map-production-review.md')]
 for p,m in need:
  if m not in texts[p]:fail('missing current marker '+str(p))
 alltext='\n'.join(texts.values())+'\n'+SUMMARY.read_text()
