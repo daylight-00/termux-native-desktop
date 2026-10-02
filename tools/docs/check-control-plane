@@ -23,9 +23,6 @@ require_file() {
 }
 
 required_files=(
-  START_HERE.md
-  AGENTS.md
-  CLAUDE.md
   docs/INDEX.md
   docs/DOCUMENTATION_MODEL.md
   docs/catalog.tsv
@@ -33,19 +30,12 @@ required_files=(
   docs/constitution/PROJECT.md
   docs/constitution/PRINCIPLES.md
   docs/architecture/README.md
-  docs/operations/README.md
-  docs/operations/COLLABORATION.md
-  docs/operations/WORKFLOW.md
-  docs/operations/EXECUTION.md
-  docs/operations/CHECKPOINTS.md
-  docs/operations/TROUBLESHOOTING.md
   docs/evidence/README.md
   docs/history/README.md
   docs/current/BRIEF.md
   docs/current/STATE.yaml
   docs/current/ACTIVE_TASK.md
   docs/current/PENDING_ARTIFACTS.yaml
-  docs/operations/platforms/chatgpt-web.md
 )
 
 for rel in "${required_files[@]}"; do
@@ -53,23 +43,6 @@ for rel in "${required_files[@]}"; do
 done
 
 [ "$FAILURES" -eq 0 ] || exit 1
-
-grep -Fq 'AGENTS.md' "$ROOT/CLAUDE.md" \
-  && pass 'CLAUDE.md routes to AGENTS.md' \
-  || fail 'CLAUDE.md does not route to AGENTS.md'
-
-grep -Fq 'docs/current/BRIEF.md' "$ROOT/START_HERE.md" \
-  && grep -Fq 'docs/current/ACTIVE_TASK.md' "$ROOT/START_HERE.md" \
-  && pass 'START_HERE.md routes through current state' \
-  || fail 'START_HERE.md current-state route is incomplete'
-
-grep -Fq 'user-provided-full-git-bundle' "$ROOT/docs/current/STATE.yaml" \
-  && pass 'STATE.yaml declares full-bundle web transport' \
-  || fail 'STATE.yaml does not declare full-bundle web transport'
-
-grep -Fq 'lightweight-remote-inspection-only' "$ROOT/docs/current/STATE.yaml" \
-  && pass 'STATE.yaml limits the GitHub connector' \
-  || fail 'STATE.yaml does not limit the GitHub connector'
 
 ACTIVE_TASK_ID=$(awk '
   /^active_task:/ { in_task=1; next }
@@ -125,7 +98,7 @@ done < <(
     | sed -n 's/^- `\([^`]*\)`$/\1/p'
 )
 
-for rel in START_HERE.md AGENTS.md docs/current/BRIEF.md docs/INDEX.md docs/operations/platforms/chatgpt-web.md; do
+for rel in docs/current/BRIEF.md docs/INDEX.md; do
   if grep -Fq 'docs/post-graphics-architecture-audit' "$ROOT/$rel"; then
     fail "$rel contains the deleted topic branch"
   else
@@ -134,20 +107,10 @@ for rel in START_HERE.md AGENTS.md docs/current/BRIEF.md docs/INDEX.md docs/oper
 done
 
 if grep -Eq 'docs/handoff/CURRENT\.md|handoff/CURRENT\.md' \
-    "$ROOT/START_HERE.md" "$ROOT/AGENTS.md" "$ROOT/docs/current/BRIEF.md"; then
+    "$ROOT/docs/current/BRIEF.md"; then
   fail 'default onboarding depends on handoff/CURRENT.md'
 else
   pass 'default onboarding has no handoff/CURRENT.md dependency'
-fi
-
-if grep -Eqi '(^|[^[:alnum:]_-])docker([^[:alnum:]_-]|$)' \
-    "$ROOT/docs/current/ACTIVE_TASK.md" "$ROOT/AGENTS.md" "$ROOT/docs/operations/platforms/chatgpt-web.md"; then
-  if grep -Fq 'Do not use or propose Docker' "$ROOT/AGENTS.md" \
-      && grep -Fq 'Docker is not available' "$ROOT/docs/operations/platforms/chatgpt-web.md"; then
-    pass 'Docker references are explicit prohibitions'
-  else
-    fail 'Docker is mentioned without the required prohibition'
-  fi
 fi
 
 [ "$FAILURES" -eq 0 ] || exit 1

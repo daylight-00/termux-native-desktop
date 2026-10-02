@@ -14,7 +14,6 @@ There is no single total ordering that makes one document class universally supe
 | What is happening now and what should be done next? | current state | [`current/`](current/) |
 | What is this project fundamentally building and what must remain invariant? | constitution | [`constitution/`](constitution/) |
 | How is the current system composed and operated? | architecture | [`architecture/`](architecture/) |
-| How do the user and agent collaborate and exchange work? | operations | [`operations/`](operations/) |
 | Which durable choice was accepted, proposed, superseded, or rejected? | decisions | [`decisions/`](decisions/) |
 | What was observed, tested, or produced? | evidence | [`evidence/`](evidence/) |
 | What happened during an earlier transition? | history | [`history/`](history/) |
@@ -39,7 +38,7 @@ Exactly one active task is allowed. Current state must be updated in the same ac
 
 ### Constitution
 
-The constitutional class has three non-overlapping canonical owners:
+The constitutional class has two non-overlapping canonical owners:
 
 ```text
 docs/constitution/PROJECT.md
@@ -47,9 +46,6 @@ docs/constitution/PROJECT.md
 
 docs/constitution/PRINCIPLES.md
     -> engineering, evidence, promotion and assurance invariants
-
-AGENTS.md
-    -> agent/user authority, context, transport and execution discipline
 ```
 
 Earlier project-context, project-principles, and system-foundation documents are design provenance. Constitutional changes require an explicit accepted decision or a clearly recorded correction. They must not be introduced silently through an experiment report or active-task summary.
@@ -65,10 +61,6 @@ historical or transitional implementation
 ```
 
 A path or helper is not permanent architecture merely because it currently works.
-
-### Operations
-
-`docs/operations/` is the single current authority for progress-independent collaboration, bundle transport, execution transactions, result review, optional checkpoints, troubleshooting, and platform behavior. Its canonical router assigns one owner to each operational question. The retired `docs/session-operations/` surface is historical and must not reappear as current authority.
 
 ### Decisions
 
@@ -129,27 +121,25 @@ Current state cannot silently repeal a constitutional invariant or accepted deci
 
 ## Default onboarding budget
 
-Default web-chat onboarding is intentionally bounded to:
+Default onboarding is intentionally bounded to:
 
 ```text
-START_HERE.md
-AGENTS.md
 docs/current/BRIEF.md
 docs/current/ACTIVE_TASK.md
 ```
 
-The catalog marks these four documents with `default_onboarding=yes`.
+The catalog marks these two documents with `default_onboarding=yes`.
 
 Budget:
 
 ```text
-maximum default-onboarding files: 4
+maximum default-onboarding files: 2
 maximum combined lines: 450
 maximum combined words: 3500
 historical files loaded by default: 0
 ```
 
-The active task may add at most eight required-reading documents. It should select the smallest set that resolves the task. Platform profiles are loaded when the task reaches platform-specific repository transport, file exchange, or device execution, unless the active task explicitly requires one earlier.
+The active task may add at most eight required-reading documents. It should select the smallest set that resolves the task.
 
 ## Physical reorganization rule
 

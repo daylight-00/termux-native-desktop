@@ -8,7 +8,6 @@ This directory is the compact current authority for project identity and stable 
 |---|---|
 | What is the project building, where is its boundary, and what is it not? | [`PROJECT.md`](PROJECT.md) |
 | Which engineering, evidence, promotion, and assurance principles are invariant? | [`PRINCIPLES.md`](PRINCIPLES.md) |
-| What may agents and users do, and which environment is authoritative? | [`../../AGENTS.md`](../../AGENTS.md) |
 | Which durable choices are accepted, proposed, superseded, or rejected? | [`../decisions/README.md`](../decisions/README.md) |
 
 These documents have non-overlapping ownership:
@@ -19,9 +18,6 @@ PROJECT.md
 
 PRINCIPLES.md
     -> engineering invariants, evidence states, promotion and assurance
-
-AGENTS.md
-    -> agent/user authority, context, transport and execution discipline
 ```
 
 ## Design provenance

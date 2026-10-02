@@ -83,7 +83,7 @@ for line_no, row in enumerate(rows, start=2):
         paths.add(rel)
 
 expected_defaults = {
-    'start-here', 'agent-contract', 'current-brief', 'active-task',
+    'current-brief', 'active-task',
 }
 default_rows = [row for row in rows if row['default_onboarding'] == 'yes']
 default_ids = {row['document_id'] for row in default_rows}
@@ -92,8 +92,8 @@ if default_ids != expected_defaults:
         f'default onboarding ids mismatch: expected {sorted(expected_defaults)}, '
         f'got {sorted(default_ids)}'
     )
-if len(default_rows) != 4:
-    errors.append(f'default onboarding must contain exactly 4 files, got {len(default_rows)}')
+if len(default_rows) != 2:
+    errors.append(f'default onboarding must contain exactly 2 files, got {len(default_rows)}')
 
 line_count = 0
 word_count = 0
@@ -132,7 +132,7 @@ else:
             errors.append(f'active-task loads historical document without an explicit evidence rationale: {rel}')
 
 required_router_ids = {
-    'constitution-index', 'architecture-index', 'operations-index',
+    'constitution-index', 'architecture-index',
     'decision-index', 'evidence-index', 'history-index', 'knowledge-index',
 }
 missing_router_ids = sorted(required_router_ids - ids)
@@ -141,7 +141,7 @@ if missing_router_ids:
 
 model_text = (root / 'docs/DOCUMENTATION_MODEL.md').read_text(errors='replace')
 for phrase in [
-    'maximum default-onboarding files: 4',
+    'maximum default-onboarding files: 2',
     'maximum combined lines: 450',
     'maximum combined words: 3500',
     'historical files loaded by default: 0',

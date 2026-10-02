@@ -1,6 +1,6 @@
 # Status
 
-bundle-native documentation and operations control planes active; ADR 0005 claim classification complete with 95 separated claims; exact bounded provider set retained; bounded selected provider composition accepted as `ACCEPTED_BOUNDED_COMPLETE_SELECTED_PROVIDER_COMPOSITION` with 42 decision rows, 41 included members, one deferred libtasn1 member and zero selected identity gaps; non-mutating target manifest qualified as `QUALIFIED_NON_MUTATING_SELECTED_TARGET_MANIFEST` with 41 concrete rows, 41 SONAME alias rows and zero target-path collisions; exact 41-row local-supply map accepted; target population, materialization, deployment and activation blocked
+documentation control plane active; ADR 0005 claim classification complete with 95 separated claims; exact bounded provider set retained; bounded selected provider composition accepted as `ACCEPTED_BOUNDED_COMPLETE_SELECTED_PROVIDER_COMPOSITION` with 42 decision rows, 41 included members, one deferred libtasn1 member and zero selected identity gaps; non-mutating target manifest qualified as `QUALIFIED_NON_MUTATING_SELECTED_TARGET_MANIFEST` with 41 concrete rows, 41 SONAME alias rows and zero target-path collisions; exact 41-row local-supply map accepted; target population, materialization, deployment and activation blocked
 > **Updated:** 2026-08-01
 >
 > - Accumulated ledger; earlier entries are not rewritten when superseded
@@ -23,17 +23,11 @@ bundle-native documentation and operations control planes active; ADR 0005 claim
 
 See `docs/decisions/0004-single-main-and-immutable-release-deployment.md`.
 
-## Documentation and web-session control plane
+## Documentation control plane
 
-- A new web-chat session receives a user-created full Git bundle from authoritative Termux `main`, clones it in the sandbox and starts at `START_HERE.md`.
 - `docs/current/` owns compact current state, the active task and pending external artifacts.
-- Narrative handoffs and numbered refactor records are historical evidence, not default onboarding authority.
-- The GitHub connector is limited to lightweight remote inspection; user Termux local Git/`gh` is authoritative for remote mutation.
-- Repository state transitions update canonical current documents when accepted rather than deferring maintenance to session close.
-- `docs/operations/` is the single current authority for collaboration, bundle transport, execution, result review, optional checkpoints, troubleshooting, and platform capability boundaries.
-- The former `docs/session-operations/` surface and narrative handoffs are historical only.
-- Docker is outside the available and intended workflow.
-- Google Drive is the primary outbound exchange path. A runtime-initialization first-upload file-reference block falls back to a user-visible file only for that delivery; the next outbound upload attempts Drive first again.
+- Numbered refactor records are historical evidence, not default onboarding authority.
+- Repository state transitions update canonical current documents when accepted.
 
 ## Local-layout consolidation
 
@@ -129,7 +123,6 @@ See `docs/decisions/0004-single-main-and-immutable-release-deployment.md`.
 ```text
 main/docs/constitution/PROJECT.md
 main/docs/constitution/PRINCIPLES.md
-main/AGENTS.md
 
 historical design provenance:
 main/docs/system-foundation/README.md
@@ -349,10 +342,6 @@ The exact `libepoxy.so.0.0.0` member is accepted only for the GTK 3.24.49 X11 GL
 The exact Pango 1.54.0 `libpango-1.0.so.0.5400.0`, `libpangoft2-1.0.so.0.5400.0`, and `libpangocairo-1.0.so.0.5400.0` members are accepted as one bounded provider family for selected GTK 3.24.49 text, FreeType/Fontconfig and Cairo capability. The three observed SONAME aliases match the three ELF SONAMEs. The Debian/oracle `5600.3` labels are reference filenames from a different release and are not target-path authority.
 
 CF-001 through CF-004 require SONAME alias continuity, accept the exact 1.54.0 family as the bounded successor, require a new immutable review on update, and roll back all three objects and aliases atomically. No alias is created and no target path, composition, materialization or activation is accepted.
-
-## Web-chat capability fallback contract
-
-Known sandbox, connector, network, filesystem, timeout, context, and device-authority limits are recorded in `docs/operations/platforms/chatgpt-web.md` and the machine-readable `chatgpt-web-limitations.tsv`. The operational rule is one representative probe followed by the registered practical fallback; repeated equivalent attempts are prohibited. Exact bytes blocked by web DNS/egress move to a self-contained user-Termux acquisition/analyzer transaction.
 
 ## Next valid state
 

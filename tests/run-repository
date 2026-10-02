@@ -15,9 +15,6 @@ case "$MODE" in
       tests/repository/current-authority-smoke.sh
       tests/repository/document-model-smoke.sh
       tests/repository/constitution-smoke.sh
-      tests/repository/operations-model-smoke.sh
-      tests/repository/test-authority-model-smoke.sh
-      tests/repository/web-chat-capability-contract-smoke.sh
       tests/repository/provider-claim-classification-smoke.sh
       tests/repository/no-token-recipe-semantic-review-smoke.sh
       tests/repository/xorg-reference-consumed-provider-authority-smoke.sh
@@ -55,9 +52,6 @@ case "$MODE" in
       tests/repository/current-authority-smoke.sh
       tests/repository/document-model-smoke.sh
       tests/repository/constitution-smoke.sh
-      tests/repository/operations-model-smoke.sh
-      tests/repository/test-authority-model-smoke.sh
-      tests/repository/web-chat-capability-contract-smoke.sh
       tests/repository/provider-claim-classification-smoke.sh
       tests/repository/no-token-recipe-semantic-review-smoke.sh
       tests/repository/xorg-reference-consumed-provider-authority-smoke.sh

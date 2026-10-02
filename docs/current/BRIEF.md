@@ -4,9 +4,7 @@
 
 ## Purpose and operational boundary
 
-User Termux remains authoritative for execution and remote mutation.
-
-Web-chat capability failures follow a stop-loss contract.
+Target population, materialization, deployment, and activation of selected providers are not authorized.
 
 ## Current boundary
 

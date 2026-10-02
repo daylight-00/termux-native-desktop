@@ -15,14 +15,12 @@ reject_text() {
   grep -Fq -- "$pattern" "$ROOT/$rel" && fail "$label" || pass "$label"
 }
 
-for rel in docs/constitution/PROJECT.md docs/constitution/PRINCIPLES.md AGENTS.md; do
+for rel in docs/constitution/PROJECT.md docs/constitution/PRINCIPLES.md; do
   [ -f "$ROOT/$rel" ] && pass "$rel exists" || fail "$rel missing"
 done
 
 require_text docs/constitution/PROJECT.md '**Status:** canonical constitutional authority' 'project constitution is canonical'
 require_text docs/constitution/PRINCIPLES.md '**Status:** canonical constitutional authority' 'principles constitution is canonical'
-require_text AGENTS.md 'docs/constitution/PROJECT.md' 'agent contract routes project identity'
-require_text AGENTS.md 'docs/constitution/PRINCIPLES.md' 'agent contract routes engineering principles'
 require_text docs/PROJECT_CONTEXT.md '**Lifecycle:** historical project-context provenance.' 'legacy context is historical provenance'
 require_text docs/PROJECT_PRINCIPLES.md '**Lifecycle:** historical evidence-policy provenance.' 'legacy principles are historical provenance'
 require_text docs/system-foundation/README.md 'This series no longer owns current constitutional or execution authority.' 'foundation index relinquishes current authority'

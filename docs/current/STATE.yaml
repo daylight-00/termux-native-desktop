@@ -8,9 +8,6 @@ project:
 
 repository:
   long_lived_branch: main
-  authoritative_remote_mutation: user-termux-local-git-and-gh
-  web_chat_transport: user-provided-full-git-bundle
-  github_connector_role: lightweight-remote-inspection-only
 
 runtime:
   deployment_model: immutable-release
@@ -27,20 +24,12 @@ local_layout:
 documentation:
   authority_model: docs/DOCUMENTATION_MODEL.md
   catalog: docs/catalog.tsv
-  default_onboarding_files: 4
+  default_onboarding_files: 2
   default_history_files: 0
   constitutional_surface:
     project_identity: docs/constitution/PROJECT.md
     engineering_principles: docs/constitution/PRINCIPLES.md
-    agent_authority: AGENTS.md
-  operations_surface: docs/operations/README.md
-  web_chat_capability_profile: docs/operations/platforms/chatgpt-web.md
-  web_chat_limitation_registry: docs/operations/platforms/chatgpt-web-limitations.tsv
-  capability_failure_policy: one-probe-then-registered-fallback
-  drive_exchange_policy: one-drive-attempt-then-user-visible-only-current-delivery-drive-first-next-artifact
-  former_session_operations: historical-session-operations-v1
   system_foundation_lifecycle: historical-design-provenance
-  narrative_handoffs: historical-only
   assurance_depth_decision: accepted-adr-0005
   provider_claim_classification: docs/evidence/provider-claim-classification.md
   no_token_recipe_semantic_review: docs/evidence/no-token-recipe-semantic-review.md

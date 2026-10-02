@@ -37,8 +37,8 @@ import sys
 p = Path(sys.argv[1])
 text = p.read_text()
 text = text.replace(
-    'handoff-index\thistory\thistorical\thistory\tno\t',
-    'handoff-index\thistory\thistorical\thistory\tyes\t',
+    'refactor-index\thistory\thistorical\thistory\tno\t',
+    'refactor-index\thistory\thistorical\thistory\tyes\t',
 )
 p.write_text(text)
 PY

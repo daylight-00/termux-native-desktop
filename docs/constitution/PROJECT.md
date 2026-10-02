@@ -125,13 +125,12 @@ The project is not:
 
 ## Repository boundary
 
-`termux-native-desktop` owns the end-to-end workstation system: native session, glibc worlds, capability providers, application integration, deployment, validation, and collaboration workflow.
+`termux-native-desktop` owns the end-to-end workstation system: native session, glibc worlds, capability providers, application integration, deployment, and validation.
 
 `cpython-android-cli` remains a companion project. This repository may consume its released runtime contract without absorbing its independent experiment history.
 
 ## Related constitutional authority
 
 - [`PRINCIPLES.md`](PRINCIPLES.md) — engineering invariants, evidence, promotion, and assurance.
-- [`../../AGENTS.md`](../../AGENTS.md) — agent/user authority and execution contract.
 - [`../decisions/README.md`](../decisions/README.md) — durable decision lifecycle.
 - [`../architecture/README.md`](../architecture/README.md) — current system realization and component contracts.

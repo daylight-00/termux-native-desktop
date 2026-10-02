@@ -1,6 +1,4 @@
 document_id	class	status	authority	default_onboarding	path	purpose
-start-here	routing	current	canonical	yes	START_HERE.md	repository initialization order
-agent-contract	constitution	current	canonical	yes	AGENTS.md	platform-neutral project agent contract
 current-brief	current	current	canonical	yes	docs/current/BRIEF.md	compact current project boundary
 active-task	current	current	canonical	yes	docs/current/ACTIVE_TASK.md	current bounded task and required reading
 semantic-state	current	current	canonical	no	docs/current/STATE.yaml	machine-readable current state
@@ -18,16 +16,6 @@ system-architecture	architecture	current	canonical	no	docs/architecture.md	integ
 glibc-architecture	architecture	current	canonical	no	docs/glibc-layer.md	glibc application-world contract
 graphics-architecture	architecture	current	canonical	no	docs/gpu.md	graphics composition contract
 desktop-session	architecture	current	canonical	no	docs/desktop-session.md	Termux X11 session contract
-operations-index	operations	current	canonical	no	docs/operations/README.md	collaboration tooling and platform router
-chatgpt-web-profile	operations	current	operational	no	docs/operations/platforms/chatgpt-web.md	web-chat transport and tool constraints
-chatgpt-web-limitations	operations	current	operational	no	docs/operations/platforms/chatgpt-web-limitations.tsv	machine-readable web-chat limitation and fallback registry
-operations-collaboration	operations	current	canonical	no	docs/operations/COLLABORATION.md	user agent roles repository transport and artifact exchange
-operations-workflow	operations	current	canonical	no	docs/operations/WORKFLOW.md	bundle-native receive-to-accepted-transition workflow
-operations-execution	operations	current	canonical	no	docs/operations/EXECUTION.md	candidate wrapper test result and acceptance discipline
-operations-test-authority	operations	current	canonical	no	docs/operations/TEST_AUTHORITY.md	current test ownership and historical stage smoke lifecycle
-operations-checkpoints	operations	current	canonical	no	docs/operations/CHECKPOINTS.md	clean boundary and optional non-authoritative checkpoint contract
-operations-troubleshooting	operations	current	operational	no	docs/operations/TROUBLESHOOTING.md	proven operational failure mitigations
-session-operations-history	history	historical	history	no	docs/history/session-operations-v1/README.md	former session-operations lifecycle and changelog
 decision-index	decisions	current	canonical	no	docs/decisions/README.md	decision lifecycle index
 adr-0001	decisions	accepted	canonical	no	docs/decisions/0001-no-proot-runtime.md	PRoot runtime boundary
 adr-0002	decisions	superseded	history	no	docs/decisions/0002-glibc-core-from-termux-glibc-repo.md	historical broad sourcing rule
@@ -38,7 +26,6 @@ evidence-index	evidence	current	canonical	no	docs/evidence/README.md	evidence an
 experiments-index	evidence	mixed	source-index	no	experiments/README.md	experiment interpretation contract
 refactor-index	history	historical	history	no	docs/refactor/README.md	transaction-level historical evidence
 history-index	history	current	canonical	no	docs/history/README.md	historical reconstruction router
-handoff-index	history	historical	history	no	docs/handoff/README.md	legacy session-transition archive
 timeline	history	historical	history	no	docs/timeline.md	chronological navigation
 knowledge-index	knowledge	reference	reference	no	docs/knowledge/README.md	reusable systems knowledge router
 provider-claim-classification	evidence	current	canonical	no	docs/evidence/provider-claim-classification.md	ADR 0005 claim inventory and SUP-02 disposition
