@@ -22,7 +22,7 @@ modules/<name>/overlay/home/...    -> $HOME/...
 modules/<name>/overlay/prefix/...  -> $PREFIX/...
 ```
 
-`tools/deploy` materializes the current module selection as leaf symlinks. `tools/adopt-user-env` handles the one-time hash-guarded transition for pre-existing personal files that a normal deploy must not overwrite.
+`tools/deploy` materializes the current module selection as leaf symlinks. `tools/deploy` also adopts a fixed set of pre-existing personal files, only when their hashes match known legacy versions, so a deploy never overwrites other personal files; `tools/adopt-user-env` is a compatibility wrapper around `tools/deploy --profile full`.
 
 A module does not own generated runtime state merely because that state appears beneath one of its live directories. For example:
 

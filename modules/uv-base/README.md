@@ -27,4 +27,4 @@ $HOME/uv-base/.venv
 
 The module consumes the installed custom Android CPython runtime described by `packages/cpython-android-runtime/`. It does not own the CPython build or artifact archive.
 
-`uv-base` coexists with isolated uv tools, `uvx`, project-local uv environments, and the separate future glibc Conda ecosystem.
+`uv-base` coexists with isolated uv tools, `uvx`, project-local uv environments, and the separate glibc Conda pilot.

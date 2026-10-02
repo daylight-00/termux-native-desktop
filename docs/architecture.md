@@ -51,7 +51,7 @@ Android kernel + device hardware
                 +-- protected substrate, selected compatibility providers and rootfs-derived candidates
                 +-- application-local payloads
                 +-- managed graphics providers
-                +-- VS Code, Obsidian, Conda, future workloads
+                +-- VS Code, Obsidian, future workloads (Conda: validated pilot)
 ```
 
 The system is heterogeneous by design, but each process must remain inside one coherent ABI world.
@@ -486,19 +486,15 @@ docs/refactor/0092-post-graphics-closure-architecture-midpoint-audit.md
 ## 13. Next architecture order
 
 ```text
-1. keep the current documentation and agent control plane internally consistent;
-2. consolidate durable document authority and explicitly classify current, superseded and historical material;
-3. define proportional assurance depth for reference-supplied, adapted, independently reproduced and novel providers;
-4. decide whether and how the paused provider-authority workstream resumes;
-5. define ApplicationRuntimeComposition only after owning authorities are accepted;
-6. populate target rows only after composition acceptance;
-7. implement extraction/materialization only after the intervention-lift audit permits it;
-8. use later workloads such as PyMOL to test the resulting reusable objects rather than expanding global compatibility by inertia.
+1. keep documentation and checks internally consistent;
+2. populate target rows only after an explicit owner decision for a bounded target-population transaction;
+3. implement extraction/materialization only after the intervention-lift audit permits it;
+4. use later workloads such as PyMOL to test the resulting reusable objects rather than expanding global compatibility by inertia.
 ```
 
 Immutable repository activation and XDG-state Mesa ownership are already implemented. Do not reopen them as missing architecture work unless a new failure demonstrates a contract gap.
 
-Do not resume SUP-02 production, populate a provider target or start PyMOL by expanding the broad farm or global environment before the assurance and ownership decisions above.
+Assurance depth is decided by [ADR 0005](decisions/0005-proportional-assurance-depth.md) and the bounded provider composition is accepted; current state is owned by [`current/`](current/BRIEF.md). Do not populate a provider target or start PyMOL by expanding the broad farm or global environment.
 
 ## 14. Repository ownership map
 

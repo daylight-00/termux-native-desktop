@@ -14,7 +14,8 @@ CLAIMS=experiments/glibc/selected-obsidian-provider-authority/review/provider-cl
 DISP=experiments/glibc/selected-obsidian-provider-authority/review/provider-sup-02-request-disposition.tsv
 
 # Negative: duplicate claim identity must fail.
-tail -n 1 "$FIXTURE/$CLAIMS" >> "$FIXTURE/$CLAIMS"
+last_claim=$(tail -n 1 "$FIXTURE/$CLAIMS")
+printf '%s\n' "$last_claim" >> "$FIXTURE/$CLAIMS"
 if TND_SKIP_GENERATED_DRIFT=1 bash "$FIXTURE/tools/docs/check-provider-claim-classification" >/dev/null 2>&1; then
   echo 'provider claim smoke: duplicate claim ID was accepted' >&2
   exit 1

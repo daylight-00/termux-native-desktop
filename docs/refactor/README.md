@@ -1,6 +1,6 @@
 # Repository Refactor and Architecture Work Log
 
-> **Authority classification:** this directory is chronological transaction evidence. Current semantic state and active work are owned by [`../current/`](../current/). Open a numbered record only for a specifically named evidence or reconstruction need.
+> **Authority classification:** this directory is chronological transaction evidence. Current semantic state and active work are owned by [`../current/`](../current/). Open a numbered record only for a specifically named evidence or reconstruction need. The "Authority and precedence", "Current state" and "Current next state" sections below are a frozen snapshot as of record 0165 and carry no current authority.
 
 > Canonical history routing: [`../history/README.md`](../history/README.md). Evidence routing: [`../evidence/README.md`](../evidence/README.md).
 

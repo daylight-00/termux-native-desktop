@@ -385,7 +385,7 @@ superseded false-negative model
 
 - official VS Code GPU and CPU branches;
 - extracted Obsidian GPU and CPU branches;
-- Miniforge/Conda/Mamba plus compiled NumPy;
+- Miniforge/Conda/Mamba plus compiled NumPy (validated pilot);
 - glibc OpenGL 4.6 through the current Zink/Turnip composition;
 - bounded D-Bus selected-provider candidate;
 - same-consumer explicit Turnip versus implicit LVP/llvmpipe controls.

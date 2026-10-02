@@ -21,6 +21,19 @@ an intermediate disposition that a later accepted transition superseded
 
 Those fields belong to aggregate current checkers such as `check-current-authority`, `check-provider-claim-classification`, `check-selected-provider-composition-review`, and the checker for the latest accepted transition.
 
+## Known deviation
+
+- Most component checks under `tools/docs/` still pin the active-task ID, against the rule above
+- Changing `docs/current/ACTIVE_TASK.md` therefore requires updating those checks in the same transition (promotion rule, step 3)
+- Not migrated while `ACTIVE_TASK.md` is unchanged; migrate when active work resumes
+
+List the affected checks:
+
+```sh
+id=$(grep -o '`[a-z0-9-]*`' docs/current/ACTIVE_TASK.md | head -1 | tr -d '`')
+grep -l "$id" tools/docs/check-*
+```
+
 ## Historical stage smoke tests
 
 A smoke test that proves an intermediate state transition is preserved under `tests/history/` after that transition is superseded. It remains provenance for the historical commit where it was current, but it is excluded from `--docs`, `--fast`, and current `--full` gates.

@@ -22,7 +22,7 @@ This timeline is a compact navigation aid. Detailed claims belong in experiment 
 
 ## GPU track
 
-- **2026-07-01** — native Chromium/Code OSS conventional GPU acceleration succeeds through ANGLE Vulkan and Turnip. Global Zink forcing is rejected as a desktop-wide policy.
+- **2026-07-01** — native Chromium/Code OSS conventional GPU acceleration succeeds through ANGLE Vulkan and Turnip. Global Zink forcing is rejected for Chromium/Code OSS and glibc consumers; the bionic session still exports `MESA_LOADER_DRIVER_OVERRIDE=zink` for bionic GL clients.
 - **2026-07-01 onward** — video acceleration and native WebGPU investigations branch from the working conventional GPU baseline; neither produces the desired final path.
 - **2026-07-02 to 2026-07-03** — Mesa 26.0.6 is built for the glibc runtime; the real Adreno/Turnip device path is validated and the build becomes a crucial control for later work.
 - **2026-07-02 to 2026-07-03** — official VS Code GPU enablement narrows an Electron/ANGLE swapchain failure to a minimal operational workaround: direct ANGLE Vulkan with `--disable-gpu-vsync`.

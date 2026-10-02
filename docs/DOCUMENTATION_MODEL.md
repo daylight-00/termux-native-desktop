@@ -109,7 +109,7 @@ The machine-readable catalog uses these statuses:
 | `proposed` | explicit review surface, not yet binding |
 | `superseded` | replaced for current use but retained as provenance |
 | `historical` | chronology or past-state record |
-| `evidence` | observation, receipt, or experiment record |
+| `evidence` | observation, receipt, or experiment record; inherited by uncataloged evidence leaves |
 | `reference` | reusable background or external-facing index |
 | `mixed` | index over children with different statuses |
 
@@ -170,7 +170,7 @@ The first structure-consolidation phase therefore adds canonical routers and met
 
 ## Machine-readable catalog
 
-[`catalog.tsv`](catalog.tsv) records the canonical routers and key authority documents. It is intentionally not a 284-file inventory. Large evidence and history trees inherit their class from their canonical directory index.
+[`catalog.tsv`](catalog.tsv) records the canonical routers and key authority documents. It is not a full inventory. Evidence documents that own a bounded decision are cataloged individually (class `evidence`, status `current`, or `superseded` once replaced); the remaining evidence and history trees inherit their class from their canonical directory index.
 
 The catalog is validated by `tools/docs/check-document-model`.
 

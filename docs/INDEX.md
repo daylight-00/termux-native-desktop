@@ -5,7 +5,9 @@ Use this page to route a question to the smallest authoritative document set. Th
 
 ## Current work
 
-- Provider claim classification: [`evidence/provider-claim-classification.md`](evidence/provider-claim-classification.md)
+- Current boundary: [`current/BRIEF.md`](current/BRIEF.md)
+- Active task: [`current/ACTIVE_TASK.md`](current/ACTIVE_TASK.md)
+
 | Question | Read |
 |---|---|
 | What is the project and where is it now? | [`current/BRIEF.md`](current/BRIEF.md) |

@@ -4,7 +4,7 @@ The `gl` module is the current **physical deployment grouping** for project-auth
 
 It is not one final semantic owner.
 
-The active system-foundation model distinguishes responsibilities such as:
+The system-foundation provenance distinguishes responsibilities such as:
 
 ```text
 world.glibc base
@@ -176,11 +176,10 @@ Application-specific launchers belong to their package/application owners, not t
 The repository activation boundary and Mesa local-layout separation are complete. The remaining ownership pressure is semantic rather than a missing filesystem move:
 
 ```text
-1. define proportional assurance depth before resuming provider acquisition;
-2. decide the semantic provider/bridge/family/application split;
-3. preserve or narrow the broad farm based on accepted composition evidence;
-4. move high-risk over-scoped policies only with evidence;
-5. preserve current adapters only when they remain the simplest valid implementation.
+1. decide the semantic provider/bridge/family/application split;
+2. preserve or narrow the broad farm based on accepted composition evidence;
+3. move high-risk over-scoped policies only with evidence;
+4. preserve current adapters only when they remain the simplest valid implementation.
 ```
 
 See:

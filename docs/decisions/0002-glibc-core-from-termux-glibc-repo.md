@@ -8,7 +8,7 @@ Date: 2026-07-01→04
 
 The original protected-world observations remain valid evidence, especially the need for a coherent Termux glibc substrate and Termux-aware X11/xcb behavior. The conclusion that every other generic library should come from one Debian farm is no longer current architecture.
 
-Current interpretation is governed by `docs/architecture.md`, `docs/glibc-layer.md`, the provider-authority records beginning at `docs/refactor/0116-...`, and the active assurance-depth policy task.
+Current interpretation is governed by `docs/architecture.md`, `docs/glibc-layer.md` and `docs/decisions/0005-proportional-assurance-depth.md`.
 
 ## Historical decision
 

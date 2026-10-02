@@ -10,7 +10,7 @@ Live composition:
 $HOME/.bashrc
     -> generic shell files
     -> conf.d/40-gl.sh
-    -> conf.d/60-uv-base.sh
+    -> conf.d/60-uv-base.sh   (full profile only)
     -> conf.d/99-path-policy.sh
 ```
 

@@ -6,6 +6,8 @@
 
 User Termux remains authoritative for execution and remote mutation.
 
+Web-chat capability failures follow a stop-loss contract.
+
 ## Current boundary
 
 ```text
@@ -200,4 +202,4 @@ The production boundary is accepted. One exact 41-coordinate map-generation, sea
 
 ## Exact input-set collection boundary acceptance
 
-`SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-EXACT-INPUT-SET-COLLECTION-ACCEPT-001` accepts the exact six-artifact non-executing collection/sealing implementation. One owner-authorized transaction remains unconsumed. Live authority documents, exact provider coordinates, replay baseline, trusted time and execution authorization remain unsupplied; selected-provider content access and project replay access remain forbidden.
+`SELECTED-PROVIDER-LOCAL-SUPPLY-LIVE-AUTHORITY-TRANSACTION-EXACT-INPUT-SET-COLLECTION-ACCEPT-001` accepts the exact six-artifact non-executing collection/sealing implementation. Live authority documents, exact provider coordinates, replay baseline, trusted time and execution authorization remain unsupplied; selected-provider content access and project replay access remain forbidden.

@@ -2,6 +2,10 @@
 
 bundle-native documentation and operations control planes active; ADR 0005 claim classification complete with 95 separated claims; exact bounded provider set retained; bounded selected provider composition accepted as `ACCEPTED_BOUNDED_COMPLETE_SELECTED_PROVIDER_COMPOSITION` with 42 decision rows, 41 included members, one deferred libtasn1 member and zero selected identity gaps; non-mutating target manifest qualified as `QUALIFIED_NON_MUTATING_SELECTED_TARGET_MANIFEST` with 41 concrete rows, 41 SONAME alias rows and zero target-path collisions; exact 41-row local-supply map accepted; target population, materialization, deployment and activation blocked
 > **Updated:** 2026-08-01
+>
+> - Accumulated ledger; earlier entries are not rewritten when superseded
+> - Present boundary: [`docs/current/BRIEF.md`](docs/current/BRIEF.md), [`docs/current/ACTIVE_TASK.md`](docs/current/ACTIVE_TASK.md)
+> - On conflict, `docs/current/` wins
 
 ## Repository and deployment consolidation
 
@@ -39,7 +43,7 @@ See `docs/decisions/0004-single-main-and-immutable-release-deployment.md`.
 - Legacy `$HOME/gl/build` and `$HOME/gl/opt` paths remain compatibility symlinks only.
 - Application bodies, selected generations, user data and provider contents were preserved.
 
-- The selected-provider local-supply live-authority transaction production implementation is accepted as `ACCEPTED_BOUNDED_NON_EXECUTING_PRODUCTION_CAPABLE_ISOLATED_FIXTURE_LIVE_AUTHORITY_TRANSACTION_IMPLEMENTATION_AUTHORITY`: 128 direct rows, 448 inherited rows, one isolated success, thirty fail-closed cases, five isolated authority-document opens/reads, two isolated replay appends and two isolated result writes. Owner activation is accepted only for one non-executing exact input-set collection, sealing and review transaction; zero transactions are consumed, the exact input set remains unsupplied, and selected-provider and live authority effects remain zero.
+- The selected-provider local-supply live-authority transaction production implementation is accepted as `ACCEPTED_BOUNDED_NON_EXECUTING_PRODUCTION_CAPABLE_ISOLATED_FIXTURE_LIVE_AUTHORITY_TRANSACTION_IMPLEMENTATION_AUTHORITY`: 128 direct rows, 448 inherited rows, one isolated success, thirty fail-closed cases, five isolated authority-document opens/reads, two isolated replay appends and two isolated result writes. Owner activation is accepted only for one non-executing exact input-set collection, sealing and review transaction; that one transaction was later consumed by the v151 production bootstrap (`1 accepted / 1 consumed / 0 remaining`), and selected-provider and live authority effects remain zero.
 
 ## Current conclusions
 
@@ -114,8 +118,8 @@ See `docs/decisions/0004-single-main-and-immutable-release-deployment.md`.
 - Receipt review accepts only that no response was staged at the bounded surface; all requests remain unacknowledged and repeating the same empty acquisition is non-progress.
 - A strict custodian-side producer now executes the actual build command only after exact request and recipe-tree verification, captures bounded invocation, input, environment, toolchain and package-member records, and emits an `0163`-compatible candidate response.
 - Producer implementation is not request execution: canonical responses, acknowledgements, build-attestation acceptance, provider decisions and target population remain zero.
-- The ADR 0005 classification now separates 28 artifact-identity claims, 28 adaptation claims, 28 provider-authority claims, OJ-001, conditional build provenance, composition, target population and activation into 89 rows.
-- Current Class distribution is 36 A, 51 B, 3 C and 3 D. The three Class C rows retain exact project-produced libjpeg, libXdamage and atomic AT-SPI2 producing records; their bounded provider claims remain separate Class B decisions.
+- The ADR 0005 classification now separates 28 artifact-identity claims, 28 adaptation claims, 28 provider-authority claims, OJ-001, conditional build provenance, composition, target population and activation into 89 rows; the inventory has since grown to 95 claims.
+- Class distribution is 36 A, 52 B, 4 C and 3 D (95 claims). The four Class C rows retain exact project-produced libjpeg, libXdamage, atomic AT-SPI2 and atomic GTK3 core producing records; their bounded provider claims remain separate Class B decisions.
 - All 28 SUP-02 requests remain historical: 14 are narrowed to claim-specific escalation only, 7 are replaced by reference/artifact/semantic integration evidence, and 7 are unnecessary at the current boundary. Zero requests are required now.
 - All seven no-token roots have completed exact pinned-recipe semantic review as Class A and bounded provider review. Four X.Org roots cover selected GTK 3.24.49 X11 features, `libtasn1` covers external GnuTLS 3.8.9 ASN.1/security, `libepoxy` covers GTK X11 GLX dispatch, and the exact Pango 1.54.0 three-member family covers selected GTK text/FreeType/Fontconfig/Cairo capability. Pango CF-001–CF-004 define SONAME alias necessity, bounded successor selection, immutable update review and atomic family rollback. Complete composition, target population and activation remain blocked.
 - The OJ-001 provider-candidate review found no exact repository SONAME-62 artifact, keeps the SONAME-8 family rejected, and requires a scratch-built libjpeg-turbo 3.1.0 v6b compatibility candidate with expected member `libjpeg.so.62.4.0`; no provider or target authority is accepted.
@@ -332,7 +336,7 @@ AUTH-005 graphics/X11/XCB provider composition
 AUTH-006 libwayland artifact-to-recipe binding
 AUTH-007 supply/alias/target population contract
 AUTH-008 remaining data capabilities; locale/loader lifecycle bounded
-AUTH-009 non-priority generic capabilities; OJ-001 required identity, exact runpath-free candidate identity and bounded GdkPixbuf JPEG provider authority are resolved, the 89-row ADR 0005 claim inventory is complete, all 28 SUP-02 requests are historical with zero currently required, seven no-token recipes are Class A, and nine exact providers have bounded authority while composition and remaining provider claims stay open
+AUTH-009 non-priority generic capabilities; OJ-001 required identity, exact runpath-free candidate identity and bounded GdkPixbuf JPEG provider authority are resolved, the 95-claim ADR 0005 inventory is complete, all 28 SUP-02 requests are historical with zero currently required, seven no-token recipes are Class A, and nine exact providers have bounded authority while composition and remaining provider claims stay open
 AUTH-010 exact application payload supply, named supplement membership and release execution; launcher source boundary bounded
 ```
 
@@ -352,27 +356,8 @@ Known sandbox, connector, network, filesystem, timeout, context, and device-auth
 
 ## Next valid state
 
-```text
-RERUN_LIBJPEG_SO_62_GDKPIXBUF_WITH_LOADER_ISOLATION
-```
-
-Active task:
-
-```text
-RERUN_LIBJPEG_SO_62_GDKPIXBUF_WITH_LOADER_ISOLATION
-```
-
-Required order:
-
-```text
-1. preserve the 89-row claim inventory and the separation between identity, adaptation, provider, composition, target and activation;
-2. retain the seven Class A recipe decisions and seven bounded provider rows without broadening their scope;
-3. compare the authoritative `libjpeg.so.62` requirement with exact eligible Termux candidates and reject silent SONAME-8 substitution;
-4. use one bounded Termux acquisition/analyzer wrapper only if exact repository bytes or ELF identity are unavailable in the web runtime;
-5. keep broader reference-adapted provider review and complete composition outside this correction tranche;
-6. do not issue SUP-02 without a recorded Class C reclassification or escalation trigger;
-7. do not treat a bounded provider or requirement-correction decision as complete application composition, target membership or activation.
-```
+- Active task: `await-explicit-owner-decision-for-selected-provider-target-population-production-transaction` (see [`docs/current/ACTIVE_TASK.md`](docs/current/ACTIVE_TASK.md))
+- Earlier marker `RERUN_LIBJPEG_SO_62_GDKPIXBUF_WITH_LOADER_ISOLATION` — completed by the loader-isolated libjpeg provider authority review
 
 ## Stop lines
 
